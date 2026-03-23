@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { supabase } from '../lib/supabaseClient'
+import AuthModal from './AuthModal'
 
 // Initialisation Stripe — une seule fois, hors du composant
 const stripeKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
@@ -9,9 +10,9 @@ if (!stripeKey) console.error('❌ REACT_APP_STRIPE_PUBLISHABLE_KEY manquante �
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null
 
 const TIER_META = {
-  ia:         { label: 'IA Spécialisée',    price: '9,90€',  emoji: '💬' },
-  visio:      { label: 'Visio Test Drive',   price: '59€',    emoji: '📹' },
-  inspection: { label: 'Inspection Physique',price: '249€',   emoji: '🔧' },
+  ia:         { label: 'IA Spécialisée',     price: '9,90€',  priceNum: 9.90,   emoji: '💬' },
+  visio:      { label: 'Visio Test Drive',    price: '59€',    priceNum: 59,     emoji: '📹' },
+  inspection: { label: 'Inspection Physique', price: '249€',   priceNum: 249,    emoji: '🔧' },
 }
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -38,7 +39,7 @@ function PaymentForm({ onSuccess, onError }) {
       onError(error.message || 'Paiement refusé. Veuillez réessayer.')
       setLoading(false)
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-      onSuccess()
+      onSuccess(paymentIntent)
     } else {
       onError('Statut inattendu. Contactez contact@inspexo.io.')
       setLoading(false)
@@ -78,37 +79,37 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
   const [clientSecret, setClientSecret] = useState(null)
   const [loadingCheckout, setLoadingCheckout] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const [authModalOpen, setAuthModalOpen] = useState(false)
 
-  // Reset à chaque ouverture
+  // Reset on open
   useEffect(() => {
     if (isOpen) {
       setStep('vehicle')
       setVehicle({ brand: '', model: '', year: '', url: '' })
-      setClientSecret(null)
-      setErrorMsg('')
+      setClientSecret(null); setErrorMsg('')
+      setAuthModalOpen(false)
     }
   }, [isOpen])
 
-  // Lock scroll
+  // Scroll lock
   useEffect(() => {
+    if (authModalOpen) return // AuthModal gère son propre lock
     document.body.style.overflow = isOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+  }, [isOpen, authModalOpen])
 
   // Escape
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Escape') onClose()
-  }, [onClose])
+  const handleKeyDown = useCallback(e => {
+    if (e.key === 'Escape' && !authModalOpen) onClose()
+  }, [onClose, authModalOpen])
   useEffect(() => {
     if (isOpen) window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, handleKeyDown])
 
-  // ── Step 1 : soumettre les infos véhicule → appel Edge Function ──────────
-  const handleVehicleSubmit = async (e) => {
-    e.preventDefault()
-    setLoadingCheckout(true)
-    setErrorMsg('')
+  // ── Appel Edge Function ──────────────────────────────────────────────────
+  const callCreateCheckout = async () => {
+    setLoadingCheckout(true); setErrorMsg('')
 
     const { data, error } = await supabase.functions.invoke('create-checkout', {
       body: {
@@ -122,14 +123,11 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
 
     if (error || !data?.clientSecret) {
       console.group('🔴 create-checkout error')
-      console.error('error  :', error)
-      console.error('data   :', data)
+      console.error('error:', error); console.error('data:', data)
       console.groupEnd()
-      setErrorMsg(
-        data?.error
-          ? `Erreur : ${data.error}`
-          : 'Impossible de créer la session de paiement. Réessayez ou contactez contact@inspexo.io.'
-      )
+      setErrorMsg(data?.error
+        ? `Erreur : ${data.error}`
+        : 'Impossible de créer la session de paiement. Réessayez ou contactez contact@inspexo.io.')
       setLoadingCheckout(false)
       return
     }
@@ -139,24 +137,63 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
     setLoadingCheckout(false)
   }
 
+  // ── Step 1 submit : vérifie auth avant tout ──────────────────────────────
+  const handleVehicleSubmit = async (e) => {
+    e.preventDefault()
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      setAuthModalOpen(true)
+      return
+    }
+    await callCreateCheckout()
+  }
+
+  // ── Après connexion réussie depuis AuthModal ─────────────────────────────
+  const handleAuthSuccess = async () => {
+    setAuthModalOpen(false)
+    await callCreateCheckout()
+  }
+
+  // ── Après paiement réussi : insert mission ───────────────────────────────
+  const handlePaymentSuccess = async (paymentIntent) => {
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (user) {
+      const { error: insertError } = await supabase.from('missions').insert([{
+        user_id:                  user.id,
+        tier,
+        vehicle_brand:            vehicle.brand.trim(),
+        vehicle_model:            vehicle.model.trim(),
+        vehicle_year:             vehicle.year ? parseInt(vehicle.year, 10) : null,
+        vehicle_url:              vehicle.url.trim() || null,
+        status:                   'paid',
+        price:                    meta.priceNum,
+        stripe_payment_intent_id: paymentIntent.id,
+      }])
+
+      if (insertError) {
+        console.error('🔴 missions insert error:', insertError)
+        // Paiement réussi → on continue vers le succès même si l'insert échoue
+      }
+    }
+
+    setStep('success')
+  }
+
   const handleChange = (field) => (e) =>
     setVehicle(prev => ({ ...prev, [field]: e.target.value }))
 
   if (!isOpen) return null
 
-  // Options Stripe Elements
   const stripeOptions = clientSecret ? {
     clientSecret,
     appearance: {
       theme: 'stripe',
       variables: {
-        colorPrimary: '#FF4D00',
-        colorBackground: '#ffffff',
-        colorText: '#0F1B2D',
-        colorDanger: '#DC2626',
+        colorPrimary: '#FF4D00', colorBackground: '#ffffff',
+        colorText: '#0F1B2D', colorDanger: '#DC2626',
         fontFamily: 'Plus Jakarta Sans, sans-serif',
-        borderRadius: '10px',
-        spacingUnit: '4px',
+        borderRadius: '10px', spacingUnit: '4px',
       },
     },
   } : {}
@@ -171,10 +208,7 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
           color: #0F1B2D; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
           box-sizing: border-box; background: #fff; appearance: none;
         }
-        .checkout-input:focus {
-          border-color: #FF4D00;
-          box-shadow: 0 0 0 3px rgba(255,77,0,0.08);
-        }
+        .checkout-input:focus { border-color: #FF4D00; box-shadow: 0 0 0 3px rgba(255,77,0,0.08); }
         .checkout-input::placeholder { color: #9CA3AF; }
         .checkout-label {
           display: block; font-size: 0.875rem; font-weight: 600;
@@ -222,14 +256,13 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
       {/* Overlay */}
       <div
         onClick={onClose}
+        className="modal-overlay"
         style={{
           position: 'fixed', inset: 0, zIndex: 200,
           background: 'rgba(8,14,24,0.78)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '16px',
-          animation: 'overlay-in 0.2s ease',
+          padding: 16, animation: 'overlay-in 0.2s ease',
         }}
-        className="modal-overlay"
       >
         {/* Box */}
         <div
@@ -237,24 +270,15 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
           onClick={e => e.stopPropagation()}
           style={{
             background: '#fff', borderRadius: 20,
-            width: '100%', maxWidth: 560,
-            maxHeight: '92vh',
+            width: '100%', maxWidth: 560, maxHeight: '92vh',
             display: 'flex', flexDirection: 'column',
             boxShadow: '0 24px 80px rgba(0,0,0,0.35)',
             animation: 'modal-in 0.25s ease',
           }}
         >
-          {/* ── Header ── */}
-          <div style={{
-            padding: '24px 28px 18px',
-            borderBottom: '1px solid rgba(0,0,0,0.06)',
-            flexShrink: 0,
-          }}>
-            {/* Tier badge */}
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              marginBottom: 16,
-            }}>
+          {/* Header */}
+          <div style={{ padding: '24px 28px 18px', borderBottom: '1px solid rgba(0,0,0,0.06)', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 background: '#F0F2F5', borderRadius: 100, padding: '5px 14px',
@@ -263,10 +287,7 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
               }}>
                 <span>{meta.emoji}</span>
                 {meta.label}
-                <span style={{
-                  color: '#FF4D00', fontFamily: 'Syne, sans-serif',
-                  fontWeight: 800, marginLeft: 4,
-                }}>
+                <span style={{ color: '#FF4D00', fontFamily: 'Syne, sans-serif', fontWeight: 800, marginLeft: 4 }}>
                   {meta.price}
                 </span>
               </div>
@@ -276,7 +297,7 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
                   width: 32, height: 32, borderRadius: '50%',
                   background: '#F0F2F5', border: 'none', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1rem', color: '#6B7280', transition: 'background 0.15s',
+                  fontSize: '1rem', color: '#6B7280',
                 }}
               >
                 ✕
@@ -286,18 +307,15 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
             {/* Step indicators */}
             {step !== 'success' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                {[
-                  { key: 'vehicle', label: 'Votre véhicule' },
-                  { key: 'payment', label: 'Paiement' },
-                ].map((s, i) => {
+                {[{ key: 'vehicle', label: 'Votre véhicule' }, { key: 'payment', label: 'Paiement' }].map((s, i) => {
                   const isActive = step === s.key
-                  const isDone   = (s.key === 'vehicle' && step === 'payment')
+                  const isDone   = s.key === 'vehicle' && step === 'payment'
                   return (
                     <React.Fragment key={s.key}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <div className="step-dot" style={{
                           background: isDone ? '#22C55E' : isActive ? '#FF4D00' : '#F0F2F5',
-                          color:       isDone ? '#fff'     : isActive ? '#fff'    : '#9CA3AF',
+                          color:       isDone ? '#fff'    : isActive ? '#fff'    : '#9CA3AF',
                         }}>
                           {isDone ? '✓' : i + 1}
                         </div>
@@ -310,9 +328,7 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
                           {s.label}
                         </span>
                       </div>
-                      {i === 0 && (
-                        <div style={{ flex: 1, height: 1, background: '#E5E7EB', maxWidth: 40 }} />
-                      )}
+                      {i === 0 && <div style={{ flex: 1, height: 1, background: '#E5E7EB', maxWidth: 40 }} />}
                     </React.Fragment>
                   )
                 })}
@@ -320,226 +336,137 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
             )}
           </div>
 
-          {/* ── Body ── */}
+          {/* Body */}
           <div className="checkout-scroll" style={{ overflowY: 'auto', padding: '24px 28px', flexGrow: 1 }}>
 
-            {/* ── SUCCESS ── */}
+            {/* SUCCESS */}
             {step === 'success' && (
               <div style={{ textAlign: 'center', padding: '32px 0' }}>
                 <div style={{ fontSize: '3.5rem', marginBottom: 16 }}>🎉</div>
-                <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                  fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10,
-                }}>
+                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10 }}>
                   Paiement confirmé !
                 </div>
-                <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '1rem', fontWeight: 300,
-                  color: '#6B7280', lineHeight: 1.65,
-                  maxWidth: 340, margin: '0 auto 32px',
-                }}>
+                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '1rem', fontWeight: 300, color: '#6B7280', lineHeight: 1.65, maxWidth: 340, margin: '0 auto 24px' }}>
                   Nous vous recontactons sous 2h pour organiser votre {meta.label.toLowerCase()} avec votre expert.
                 </div>
-                <div style={{
-                  background: '#F0FDF4', border: '1px solid #BBF7D0',
-                  borderRadius: 10, padding: '14px 20px',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.875rem', color: '#15803D',
-                  marginBottom: 28,
-                }}>
-                  Un email de confirmation a été envoyé à votre adresse.
+                <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: '14px 20px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#15803D', marginBottom: 28 }}>
+                  Votre mission a été créée. Retrouvez-la dans <strong>Mes missions</strong>.
                 </div>
-                <button
-                  onClick={onClose}
-                  style={{
-                    background: '#0F1B2D', color: '#fff',
-                    padding: '12px 32px', borderRadius: 10,
-                    fontSize: '0.9375rem', fontWeight: 700,
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
-                    border: 'none', cursor: 'pointer',
-                  }}
-                >
+                <button onClick={onClose} style={{ background: '#0F1B2D', color: '#fff', padding: '12px 32px', borderRadius: 10, fontSize: '0.9375rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif', border: 'none', cursor: 'pointer' }}>
                   Fermer
                 </button>
               </div>
             )}
 
-            {/* ── STEP 1 : VEHICLE ── */}
+            {/* STEP 1 : VEHICLE */}
             {step === 'vehicle' && (
               <>
-                <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                  fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4,
-                }}>
+                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4 }}>
                   Votre véhicule
                 </div>
-                <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.875rem', fontWeight: 300,
-                  color: '#6B7280', marginBottom: 24,
-                }}>
+                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', fontWeight: 300, color: '#6B7280', marginBottom: 24 }}>
                   Ces informations permettent à votre expert de préparer l'intervention.
                 </div>
 
                 <form onSubmit={handleVehicleSubmit}>
-                  {/* Marque + Modèle */}
-                  <div className="checkout-row" style={{
-                    display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14,
-                  }}>
+                  <div className="checkout-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
                     <div className="checkout-field" style={{ marginBottom: 0 }}>
                       <label className="checkout-label">Marque <span>*</span></label>
-                      <input
-                        className="checkout-input" type="text"
-                        placeholder="ex : BMW" required
-                        value={vehicle.brand} onChange={handleChange('brand')}
-                      />
+                      <input className="checkout-input" type="text" placeholder="ex : BMW" required
+                        value={vehicle.brand} onChange={handleChange('brand')} />
                     </div>
                     <div className="checkout-field" style={{ marginBottom: 0 }}>
                       <label className="checkout-label">Modèle <span>*</span></label>
-                      <input
-                        className="checkout-input" type="text"
-                        placeholder="ex : Série 3 320d" required
-                        value={vehicle.model} onChange={handleChange('model')}
-                      />
+                      <input className="checkout-input" type="text" placeholder="ex : Série 3 320d" required
+                        value={vehicle.model} onChange={handleChange('model')} />
                     </div>
                   </div>
 
-                  {/* Année */}
                   <div className="checkout-field">
                     <label className="checkout-label">Année <span>*</span></label>
-                    <input
-                      className="checkout-input" type="number"
-                      placeholder="ex : 2019"
-                      min="1990" max={CURRENT_YEAR} required
-                      style={{ maxWidth: 140 }}
-                      value={vehicle.year} onChange={handleChange('year')}
-                    />
+                    <input className="checkout-input" type="number" placeholder="ex : 2019"
+                      min="1990" max={CURRENT_YEAR} required style={{ maxWidth: 140 }}
+                      value={vehicle.year} onChange={handleChange('year')} />
                   </div>
 
-                  {/* Lien annonce */}
                   <div className="checkout-field">
                     <label className="checkout-label">
                       Lien de l'annonce
                       <span style={{ color: '#9CA3AF', fontWeight: 400, marginLeft: 6 }}>(optionnel)</span>
                     </label>
-                    <input
-                      className="checkout-input" type="url"
-                      placeholder="https://www.leboncoin.fr/..."
-                      value={vehicle.url} onChange={handleChange('url')}
-                    />
+                    <input className="checkout-input" type="url" placeholder="https://www.leboncoin.fr/..."
+                      value={vehicle.url} onChange={handleChange('url')} />
                   </div>
 
-                  {/* Error */}
                   {errorMsg && (
-                    <div style={{
-                      background: '#FEF2F2', border: '1px solid #FECACA',
-                      borderRadius: 10, padding: '12px 16px', marginBottom: 16,
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.875rem', color: '#DC2626',
-                      display: 'flex', gap: 8,
-                    }}>
+                    <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
                       <span>⚠️</span> {errorMsg}
                     </div>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={loadingCheckout}
-                    className="checkout-submit"
-                    style={{ background: loadingCheckout ? '#9CA3AF' : '#FF4D00' }}
-                  >
-                    {loadingCheckout ? (
-                      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                        <span className="checkout-spinner" />
-                        Préparation du paiement...
-                      </span>
-                    ) : 'Continuer vers le paiement →'}
+                  <button type="submit" disabled={loadingCheckout} className="checkout-submit"
+                    style={{ background: loadingCheckout ? '#9CA3AF' : '#FF4D00' }}>
+                    {loadingCheckout
+                      ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><span className="checkout-spinner" />Préparation du paiement...</span>
+                      : 'Continuer vers le paiement →'}
                   </button>
                 </form>
               </>
             )}
 
-            {/* ── STEP 2 : PAYMENT ── */}
+            {/* STEP 2 : PAYMENT */}
             {step === 'payment' && clientSecret && (
               <>
-                <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                  fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4,
-                }}>
+                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4 }}>
                   Paiement sécurisé
                 </div>
-                <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.875rem', fontWeight: 300,
-                  color: '#6B7280', marginBottom: 24,
-                }}>
+                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', fontWeight: 300, color: '#6B7280', marginBottom: 24 }}>
                   Votre carte est débitée uniquement après confirmation de l'expert.
                 </div>
 
-                {/* Récap commande */}
-                <div style={{
-                  background: '#F8F9FA', borderRadius: 12,
-                  padding: '14px 18px', marginBottom: 24,
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                }}>
+                {/* Récap */}
+                <div style={{ background: '#F8F9FA', borderRadius: 12, padding: '14px 18px', marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                   <div>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>
-                      {meta.emoji} {meta.label}
-                    </div>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>{meta.emoji} {meta.label}</div>
                     <div style={{ fontSize: '0.8125rem', color: '#6B7280', fontWeight: 300, marginTop: 2 }}>
                       {vehicle.brand} {vehicle.model} {vehicle.year}
                     </div>
                   </div>
-                  <div style={{
-                    fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                    fontSize: '1.25rem', color: '#0F1B2D',
-                  }}>
+                  <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D' }}>
                     {meta.price}
                   </div>
                 </div>
 
                 <Elements stripe={stripePromise} options={stripeOptions}>
                   <PaymentForm
-                    onSuccess={() => setStep('success')}
-                    onError={(msg) => setErrorMsg(msg)}
+                    onSuccess={handlePaymentSuccess}
+                    onError={msg => setErrorMsg(msg)}
                   />
                 </Elements>
 
-                {/* Error paiement */}
                 {errorMsg && (
-                  <div style={{
-                    background: '#FEF2F2', border: '1px solid #FECACA',
-                    borderRadius: 10, padding: '12px 16px', marginTop: 16,
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
-                    fontSize: '0.875rem', color: '#DC2626',
-                    display: 'flex', gap: 8,
-                  }}>
+                  <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginTop: 16, fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
                     <span>⚠️</span> {errorMsg}
                   </div>
                 )}
 
-                {/* Trust badges */}
-                <div style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  gap: 20, marginTop: 20, flexWrap: 'wrap',
-                }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 20, flexWrap: 'wrap' }}>
                   {['🔒 SSL sécurisé', '💳 Powered by Stripe', '🛡️ Paiement protégé'].map((b, i) => (
-                    <span key={i} style={{
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.75rem', color: '#9CA3AF',
-                    }}>
-                      {b}
-                    </span>
+                    <span key={i} style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.75rem', color: '#9CA3AF' }}>{b}</span>
                   ))}
                 </div>
               </>
             )}
-
           </div>
         </div>
       </div>
+
+      {/* AuthModal pour les utilisateurs non connectés */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </>
   )
 }
