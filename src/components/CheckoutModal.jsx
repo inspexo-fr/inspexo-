@@ -3,6 +3,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { supabase } from '../lib/supabaseClient'
 import AuthModal from './AuthModal'
+import ChatIA from './ChatIA'
 
 // Initialisation Stripe — une seule fois, hors du composant
 const stripeKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
@@ -73,13 +74,15 @@ function PaymentForm({ onSuccess, onError }) {
 export default function CheckoutModal({ isOpen, onClose, tier }) {
   const meta = TIER_META[tier] || TIER_META.ia
 
-  // step: 'vehicle' | 'payment' | 'success'
+  // step: 'vehicle' | 'payment' | 'success' | 'ia_ready'
   const [step, setStep] = useState('vehicle')
   const [vehicle, setVehicle] = useState({ brand: '', model: '', year: '', url: '' })
   const [clientSecret, setClientSecret] = useState(null)
   const [loadingCheckout, setLoadingCheckout] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [createdMission, setCreatedMission] = useState(null)
+  const [showChat, setShowChat] = useState(false)
 
   // Reset on open
   useEffect(() => {
@@ -88,6 +91,7 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
       setVehicle({ brand: '', model: '', year: '', url: '' })
       setClientSecret(null); setErrorMsg('')
       setAuthModalOpen(false)
+      setCreatedMission(null); setShowChat(false)
     }
   }, [isOpen])
 
@@ -234,13 +238,16 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
         // Paiement réussi → on continue vers le succès même si l'insert échoue
       } else {
         console.log('✅ mission insérée:', insertData)
+        if (tier === 'ia' && insertData?.[0]) {
+          setCreatedMission(insertData[0])
+        }
       }
     } else {
       console.warn('⚠️ handlePaymentSuccess : pas de user connecté, insert ignoré')
     }
 
     console.groupEnd()
-    setStep('success')
+    setStep(tier === 'ia' ? 'ia_ready' : 'success')
   }
 
   const handleChange = (field) => (e) =>
@@ -309,6 +316,12 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
           font-family: 'Plus Jakarta Sans', sans-serif;
           transition: background 0.2s, color 0.2s;
         }
+        @keyframes ia-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(255,77,0,0.4); }
+          50%       { box-shadow: 0 0 0 12px rgba(255,77,0,0); }
+        }
+        .ia-start-btn { animation: ia-pulse 2s ease-in-out infinite; }
+        .ia-start-btn:hover { opacity: 0.88 !important; transform: translateY(-2px) !important; }
         @media (max-width: 540px) {
           .checkout-row { grid-template-columns: 1fr !important; }
           .modal-box { border-radius: 16px 16px 0 0 !important; margin-top: auto !important; }
@@ -368,7 +381,7 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
             </div>
 
             {/* Step indicators */}
-            {step !== 'success' && (
+            {step !== 'success' && step !== 'ia_ready' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 {[{ key: 'vehicle', label: 'Votre véhicule' }, { key: 'payment', label: 'Paiement' }].map((s, i) => {
                   const isActive = step === s.key
@@ -402,7 +415,7 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
           {/* Body */}
           <div className="checkout-scroll" style={{ overflowY: 'auto', padding: '24px 28px', flexGrow: 1 }}>
 
-            {/* SUCCESS */}
+            {/* SUCCESS — paliers visio / inspection */}
             {step === 'success' && (
               <div style={{ textAlign: 'center', padding: '32px 0' }}>
                 <div style={{ fontSize: '3.5rem', marginBottom: 16 }}>🎉</div>
@@ -418,6 +431,64 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
                 <button onClick={onClose} style={{ background: '#0F1B2D', color: '#fff', padding: '12px 32px', borderRadius: 10, fontSize: '0.9375rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif', border: 'none', cursor: 'pointer' }}>
                   Fermer
                 </button>
+              </div>
+            )}
+
+            {/* IA_READY — palier IA uniquement */}
+            {step === 'ia_ready' && (
+              <div style={{ textAlign: 'center', padding: '36px 16px' }}>
+                <div style={{ fontSize: '3.5rem', marginBottom: 20 }}>✅</div>
+                <div style={{
+                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10,
+                }}>
+                  Paiement confirmé !
+                </div>
+                <div style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.9375rem', fontWeight: 300,
+                  color: '#6B7280', lineHeight: 1.65,
+                  maxWidth: 340, margin: '0 auto 28px',
+                }}>
+                  Ton expert IA Inspexo est prêt à analyser ton{' '}
+                  <strong style={{ color: '#0F1B2D', fontWeight: 700 }}>
+                    {[vehicle.brand, vehicle.model, vehicle.year].filter(Boolean).join(' ')}
+                  </strong>
+                </div>
+
+                <button
+                  className="ia-start-btn"
+                  onClick={() => setShowChat(true)}
+                  style={{
+                    background: '#FF4D00', color: '#fff',
+                    padding: '16px 36px', borderRadius: 12,
+                    fontSize: '1rem', fontWeight: 700,
+                    fontFamily: 'Syne, sans-serif',
+                    border: 'none', cursor: 'pointer',
+                    transition: 'opacity 0.2s, transform 0.2s',
+                    marginBottom: 20,
+                  }}
+                >
+                  💬 Démarrer l'analyse IA
+                </button>
+
+                <div style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.8125rem', color: '#9CA3AF',
+                }}>
+                  Tu peux aussi retrouver cette conversation dans{' '}
+                  <button
+                    onClick={onClose}
+                    style={{
+                      background: 'none', border: 'none', cursor: 'pointer',
+                      color: '#FF4D00', fontWeight: 600,
+                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontSize: '0.8125rem', padding: 0,
+                    }}
+                  >
+                    Mes missions
+                  </button>
+                </div>
               </div>
             )}
 
@@ -530,6 +601,15 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
         onClose={() => setAuthModalOpen(false)}
         onSuccess={handleAuthSuccess}
       />
+
+      {/* Chat IA plein écran — déclenché après paiement IA */}
+      {showChat && createdMission && (
+        <ChatIA
+          mission={createdMission}
+          onClose={() => setShowChat(false)}
+          onMissionUpdate={() => {}}
+        />
+      )}
     </>
   )
 }

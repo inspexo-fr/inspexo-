@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import ChatIA from '../components/ChatIA'
 
 const TIER_META = {
   ia:         { label: 'IA Spécialisée',     emoji: '💬' },
@@ -46,13 +47,11 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
   const [missions, setMissions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [activeChatMission, setActiveChatMission] = useState(null)
 
-  // Fetch missions on open
-  useEffect(() => {
-    if (!isOpen || !user) return
-    setLoading(true)
-    setError(null)
-
+  const fetchMissions = useCallback(() => {
+    if (!user) return
+    setLoading(true); setError(null)
     supabase
       .from('missions')
       .select('*')
@@ -67,7 +66,13 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
         }
         setLoading(false)
       })
-  }, [isOpen, user])
+  }, [user])
+
+  // Fetch missions on open
+  useEffect(() => {
+    if (!isOpen || !user) return
+    fetchMissions()
+  }, [isOpen, user, fetchMissions])
 
   // Scroll lock
   useEffect(() => {
@@ -326,7 +331,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                         {[
                           { label: 'Véhicule', value: `${mission.vehicle_brand || ''} ${mission.vehicle_model || ''}`.trim() || '—' },
                           { label: 'Année',    value: mission.vehicle_year || '—' },
-                          { label: 'Prix',     value: mission.price ? `${mission.price}€` : '—' },
+                          { label: 'Prix',     value: mission.price_total ? `${mission.price_total}€` : '—' },
                         ].map((item, i) => (
                           <div key={i}>
                             <div style={{
@@ -367,8 +372,31 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                         </div>
                       )}
 
-                      {/* Report */}
-                      {mission.report_url && (
+                      {/* Bouton chat IA */}
+                      {mission.tier === 'ia' && (
+                        <div style={{ marginTop: mission.vehicle_url ? 0 : 4 }}>
+                          <button
+                            onClick={() => setActiveChatMission(mission)}
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 7,
+                              background: mission.status === 'completed'
+                                ? '#F0FDF4' : '#FFF4EE',
+                              color: mission.status === 'completed'
+                                ? '#16A34A' : '#FF4D00',
+                              border: `1px solid ${mission.status === 'completed' ? '#BBF7D0' : 'rgba(255,77,0,0.25)'}`,
+                              padding: '8px 18px', borderRadius: 8,
+                              fontSize: '0.8125rem', fontWeight: 700,
+                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              cursor: 'pointer', transition: 'opacity 0.2s',
+                            }}
+                          >
+                            {mission.status === 'completed' ? '📄 Voir le rapport IA' : '💬 Ouvrir le chat IA'}
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Report (palier visio/inspection) */}
+                      {mission.tier !== 'ia' && mission.report_url && (
                         <a
                           href={mission.report_url}
                           target="_blank"
@@ -386,6 +414,21 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
           </div>
         </div>
       </div>
+
+      {/* Chat IA plein écran */}
+      {activeChatMission && (
+        <ChatIA
+          mission={activeChatMission}
+          onClose={() => setActiveChatMission(null)}
+          onMissionUpdate={() => {
+            fetchMissions()
+            setActiveChatMission(prev => prev
+              ? { ...prev, status: 'completed' }
+              : null
+            )
+          }}
+        />
+      )}
     </>
   )
 }
