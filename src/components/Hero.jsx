@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Hero() {
+export default function Hero({ onFreeAnalysis }) {
   return (
     <>
       <style>{`
@@ -108,12 +108,12 @@ export default function Hero() {
 
             {/* CTAs */}
             <div className="hero-ctas" style={{ display: 'flex', gap: 14, marginBottom: 48, flexWrap: 'wrap' }}>
-              <a href="#services" className="hero-btn-primary">
-                Choisir mon expert
+              <button onClick={onFreeAnalysis} className="hero-btn-primary">
+                🔍 Analyser gratuitement
                 <span style={{ fontSize: '1.1rem' }}>→</span>
-              </a>
-              <a href="#how-it-works" className="hero-btn-outline">
-                Comment ça marche ?
+              </button>
+              <a href="#services" className="hero-btn-outline">
+                Voir tous les services
               </a>
             </div>
 

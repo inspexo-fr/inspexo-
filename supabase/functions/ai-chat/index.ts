@@ -159,7 +159,37 @@ Le rapport contient : scores (mécanique/carrosserie/administratif sur 10), scor
 Tutoiement. Direct, factuel, professionnel mais accessible. Comme un ami mécanicien expert. Pas de formules de politesse excessives. Juste les faits, les chiffres, les instructions, les arguments de négo.
 
 ## LANGUE
-Français. Tutoiement. Emojis uniquement pour les catégories (🔴🟠🟡🟢) et la structure.`;
+Français. Tutoiement. Emojis uniquement pour les catégories (🔴🟠🟡🟢) et la structure.
+
+## COLLECTE DE DONNÉES PRIX
+Tu dois NATURELLEMENT demander les devis et factures pendant la conversation. Exemples :
+- "Tu as déjà fait chiffrer cette réparation ? Si oui, dis-moi le montant, le nom du garage et la ville — je te dis si c'est un bon prix."
+- "Si tu as un devis sous la main, tu peux l'uploader directement dans le chat (bouton 📎). Ça me permet de vérifier les prix ligne par ligne."
+- "Pour la distribution, tu as eu un devis ? Donne-moi le montant et le type de garage (concessionnaire ou indépendant)."
+
+Ne force JAMAIS la collecte. C'est naturel, dans le flow de la conversation. L'objectif est d'aider l'acheteur à vérifier ses devis tout en collectant des données.
+
+## MODE GRATUIT (10 ÉCHANGES)
+Quand tu es en mode gratuit, tu as 10 échanges pour couvrir le maximum. Optimise :
+- Échanges 1-2 : Identification complète du véhicule
+- Échanges 3-6 : Diagnostic mécanique + défaillances critiques
+- Échanges 7-8 : Carrosserie + administratif (résumé)
+- Échanges 9-10 : Réponses aux dernières questions
+
+Au 10ème échange, l'utilisateur sera informé que la conversation gratuite se termine. NE MENTIONNE PAS la limite avant le 8ème échange.
+Au 8ème échange, préviens subtilement : "On approche de la fin de l'analyse gratuite — encore 2 questions. Assure-toi de me demander ce qui est le plus important pour toi."
+
+## RAPPORT PARTIEL (mode gratuit)
+Quand on te demande de générer le rapport partiel, tu produis un rapport qui montre :
+- ✅ Les scores (mécanique/carrosserie/administratif sur 10)
+- ✅ La liste des défaillances détectées avec leur gravité (🔴🟠🟡🟢)
+- ✅ Le nombre de points critiques
+- ❌ PAS les coûts détaillés de réparation (remplacés par "🔒 Débloquer avec l'analyse complète")
+- ❌ PAS les arguments de négociation (remplacés par "🔒 Disponible dans le rapport complet")
+- ❌ PAS le dossier de négociation chiffré
+- ✅ La recommandation générale (ACHETER/NÉGOCIER/PRUDENCE/FUIR) mais SANS le prix recommandé
+
+Le rapport partiel doit donner ENVIE de débloquer la version complète. L'utilisateur voit les problèmes mais pas combien ça coûte ni comment négocier.`;
 
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -167,7 +197,7 @@ serve(async (req: Request) => {
   }
 
   try {
-    const { messages, mission_id, generate_report } = await req.json();
+    let { messages, mission_id, generate_report } = await req.json();
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response(
@@ -183,12 +213,45 @@ serve(async (req: Request) => {
       );
     }
 
+    // Check exchange count for free missions
+    const supabaseAdmin = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+    const { data: missionData } = await supabaseAdmin
+      .from("missions")
+      .select("is_free, converted_to_paid, exchange_count")
+      .eq("id", mission_id)
+      .single();
+
+    const userMessageCount = messages.filter((m: any) => m.role === "user").length;
+    let isPartialReport = false;
+
+    if (missionData?.is_free && !missionData?.converted_to_paid) {
+      // Update exchange count
+      await supabaseAdmin
+        .from("missions")
+        .update({ exchange_count: userMessageCount })
+        .eq("id", mission_id);
+
+      // Force partial report at 10th exchange
+      if (userMessageCount >= 10 && !generate_report) {
+        generate_report = true;
+        isPartialReport = true;
+      }
+    }
+
     const finalMessages = [...messages];
+
     if (generate_report) {
-      finalMessages.push({
-        role: "user",
-        content: "INSTRUCTION SYSTÈME : L'utilisateur a cliqué sur 'Générer mon rapport'. Génère maintenant le RAPPORT FINAL COMPLET selon le format défini dans tes instructions (Phase 6). Inclus tous les scores, l'analyse financière, le dossier de négociation, les vérifications effectuées vs non effectuées, la recommandation finale, et les alternatives. C'est la dernière réponse de cette conversation."
-      });
+      if (isPartialReport) {
+        finalMessages.push({
+          role: "user",
+          content: "INSTRUCTION SYSTÈME : L'utilisateur a atteint la limite de 10 échanges gratuits. Génère maintenant un RAPPORT PARTIEL selon les règles du mode gratuit : montre les scores et la liste des défaillances avec gravité, mais remplace TOUS les coûts par '🔒 Débloquer avec l'analyse complète' et TOUS les arguments de négociation par '🔒 Disponible dans le rapport complet'. Donne la recommandation générale (ACHETER/NÉGOCIER/PRUDENCE/FUIR) SANS prix recommandé."
+        });
+      } else {
+        finalMessages.push({
+          role: "user",
+          content: "INSTRUCTION SYSTÈME : L'utilisateur a cliqué sur 'Générer mon rapport'. Génère maintenant le RAPPORT FINAL COMPLET selon le format défini dans tes instructions (Phase 6). Inclus tous les scores, l'analyse financière, le dossier de négociation, les vérifications effectuées vs non effectuées, la recommandation finale, et les alternatives. C'est la dernière réponse de cette conversation."
+        });
+      }
     }
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -224,9 +287,7 @@ serve(async (req: Request) => {
       .map((block: any) => block.text)
       .join("\n");
 
-    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
-
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from("missions")
       .update({
         ai_conversation: [...messages, { role: "assistant", content: aiMessage }],
@@ -246,7 +307,10 @@ serve(async (req: Request) => {
     return new Response(
       JSON.stringify({
         message: aiMessage,
-        is_report: generate_report || false
+        is_report: generate_report || false,
+        is_partial_report: isPartialReport,
+        exchange_count: userMessageCount,
+        max_exchanges: missionData?.is_free && !missionData?.converted_to_paid ? 10 : null,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

@@ -18,14 +18,20 @@ async function callAiChat(messages, missionId, generateReport = false) {
   return res.json()
 }
 
-export default function ChatIA({ mission, onClose, onMissionUpdate }) {
+export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFullAnalysis, onBookExpert }) {
   const [messages, setMessages]             = useState([])
   const [input, setInput]                   = useState('')
   const [loading, setLoading]               = useState(false)
   const [isClosed, setIsClosed]             = useState(false)
   const [showConfirm, setShowConfirm]       = useState(false)
+  const [exchangeCount, setExchangeCount]   = useState(mission?.exchange_count || 0)
+  const [showConversion, setShowConversion] = useState(false)
+  const [uploadingFile, setUploadingFile]   = useState(false)
   const messagesEndRef = useRef(null)
   const textareaRef    = useRef(null)
+  const fileInputRef   = useRef(null)
+
+  const isFree = mission?.is_free && !mission?.converted_to_paid
 
   // Charge la conversation existante ou démarre automatiquement
   useEffect(() => {
@@ -47,6 +53,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
         mission?.vehicle_brand,
         mission?.vehicle_model,
         mission?.vehicle_year ? `(${mission.vehicle_year})` : null,
+        mission?.vehicle_km   ? `— ${mission.vehicle_km} km` : null,
       ].filter(Boolean).join(' ')
 
       const initialMessages = [{
@@ -58,6 +65,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
         const data = await callAiChat(initialMessages, mission.id)
         if (data.message) {
           setMessages([...initialMessages, { role: 'assistant', content: data.message }])
+          if (data.exchange_count !== undefined) setExchangeCount(data.exchange_count)
         }
       } catch (err) {
         console.error('Init chat error:', err)
@@ -82,6 +90,37 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
     }
   }, [input])
 
+  const sendMessageWithMessages = async (msgs, generateReport = false) => {
+    setLoading(true)
+    try {
+      const data = await callAiChat(msgs, mission.id, generateReport)
+
+      if (!data.message) throw new Error(data.error || 'Réponse vide')
+
+      const assistantMsg = { role: 'assistant', content: data.message }
+      setMessages([...msgs, assistantMsg])
+
+      if (data.exchange_count !== undefined) setExchangeCount(data.exchange_count)
+
+      if (data.is_partial_report) {
+        setIsClosed(true)
+        setShowConversion(true)
+        onMissionUpdate?.()
+      } else if (data.is_report) {
+        setIsClosed(true)
+        onMissionUpdate?.()
+      }
+    } catch (err) {
+      console.error('Chat error:', err)
+      setMessages([...msgs, {
+        role: 'assistant',
+        content: '❌ Erreur de connexion avec l\'IA. Réessaie dans quelques secondes.',
+      }])
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const sendMessage = async (generateReport = false) => {
     if ((!input.trim() && !generateReport) || loading || isClosed) return
 
@@ -89,28 +128,50 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
     const newMessages = userMsg ? [...messages, userMsg] : [...messages]
 
     if (userMsg) { setMessages(newMessages); setInput('') }
-    setLoading(true)
+
+    await sendMessageWithMessages(newMessages, generateReport)
+  }
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingFile(true)
 
     try {
-      const data = await callAiChat(newMessages, mission.id, generateReport)
+      const { data: { session } } = await supabase.auth.getSession()
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('mission_id', mission.id)
 
-      if (!data.message) throw new Error(data.error || 'Réponse vide')
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/upload-chat-file`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token || ANON_KEY}`,
+          'apikey': ANON_KEY,
+        },
+        body: formData,
+      })
 
-      const assistantMsg = { role: 'assistant', content: data.message }
-      setMessages([...newMessages, assistantMsg])
+      const data = await response.json()
 
-      if (data.is_report) {
-        setIsClosed(true)
-        onMissionUpdate?.()
+      if (response.ok) {
+        const uploadMsg = {
+          role: 'user',
+          content: `📎 J'ai uploadé un fichier : ${data.file_name} (${file.type === 'application/pdf' ? 'PDF' : 'Image'})`,
+        }
+        const newMessages = [...messages, uploadMsg]
+        setMessages(newMessages)
+        await sendMessageWithMessages(newMessages)
+      } else {
+        alert(data.error || 'Erreur lors de l\'upload')
       }
-    } catch (err) {
-      console.error('Chat error:', err)
-      setMessages([...newMessages, {
-        role: 'assistant',
-        content: '❌ Erreur de connexion avec l\'IA. Réessaie dans quelques secondes.',
-      }])
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Erreur lors de l\'upload du fichier')
     } finally {
-      setLoading(false)
+      setUploadingFile(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
   }
 
@@ -126,6 +187,14 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
     setShowConfirm(true)
   }
 
+  const handleUnlockFullAnalysis = () => {
+    if (onUnlockFullAnalysis) onUnlockFullAnalysis(mission)
+  }
+
+  const handleBookExpert = () => {
+    if (onBookExpert) onBookExpert(mission)
+  }
+
   const vehicleLabel = [mission?.vehicle_brand, mission?.vehicle_model, mission?.vehicle_year]
     .filter(Boolean).join(' ')
 
@@ -139,6 +208,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
         .chat-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
         .chat-msg-ai { white-space: pre-wrap; word-break: break-word; }
         @keyframes chat-spin { to { transform: rotate(360deg); } }
+        .chat-upload-btn:hover { border-color: rgba(255,77,0,0.5) !important; color: #FF4D00 !important; }
       `}</style>
 
       {/* Plein écran */}
@@ -171,7 +241,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
             }}>
               {vehicleLabel || 'Analyse véhicule'}
             </span>
-            {isClosed && (
+            {isClosed && !showConversion && (
               <span style={{
                 background: 'rgba(34,197,94,0.12)', color: '#22C55E',
                 border: '1px solid rgba(34,197,94,0.25)',
@@ -196,6 +266,34 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
           </button>
         </div>
 
+        {/* ── Compteur d'échanges (mode gratuit) ── */}
+        {isFree && (
+          <div style={{
+            padding: '8px 24px', background: 'rgba(255,77,0,0.08)',
+            borderBottom: '1px solid rgba(255,255,255,0.05)',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            flexShrink: 0,
+          }}>
+            <span style={{
+              color: exchangeCount >= 8 ? '#FF4D00' : 'rgba(255,255,255,0.5)',
+              fontSize: '0.8125rem', fontWeight: exchangeCount >= 8 ? 600 : 400,
+            }}>
+              Échange {exchangeCount}/10
+            </span>
+            <div style={{
+              width: 120, height: 4,
+              background: 'rgba(255,255,255,0.1)', borderRadius: 2, overflow: 'hidden',
+            }}>
+              <div style={{
+                width: `${Math.min((exchangeCount / 10) * 100, 100)}%`,
+                height: '100%',
+                background: exchangeCount >= 8 ? '#FF4D00' : '#00c864',
+                borderRadius: 2, transition: 'width 0.3s ease',
+              }} />
+            </div>
+          </div>
+        )}
+
         {/* ── Messages ── */}
         <div className="chat-scroll" style={{
           flex: 1, overflowY: 'auto',
@@ -203,6 +301,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
           display: 'flex', flexDirection: 'column', gap: 16,
           maxWidth: 860, width: '100%', margin: '0 auto',
           alignSelf: 'stretch',
+          position: 'relative',
         }}>
           {messages.length === 0 && !loading && (
             <div style={{ textAlign: 'center', marginTop: 64, color: 'rgba(255,255,255,0.25)' }}>
@@ -267,7 +366,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
         </div>
 
         {/* ── Input ── */}
-        {isClosed ? (
+        {isClosed && !showConversion ? (
           <div style={{
             padding: '16px 24px', background: '#0F1B2D',
             borderTop: '1px solid rgba(255,255,255,0.08)',
@@ -277,7 +376,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
               ✅ Conversation clôturée — Rapport généré
             </span>
           </div>
-        ) : (
+        ) : !showConversion ? (
           <div style={{
             padding: '14px 24px', background: '#0F1B2D',
             borderTop: '1px solid rgba(255,255,255,0.08)',
@@ -285,20 +384,48 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
             flexShrink: 0, maxWidth: 860, width: '100%', margin: '0 auto',
             alignSelf: 'stretch',
           }}>
+            {/* Bouton génerer rapport — masqué en mode gratuit */}
+            {!isFree && (
+              <button
+                onClick={handleGenerateReport}
+                disabled={loading || messages.length < 2}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid rgba(255,77,0,0.5)',
+                  color: messages.length < 2 ? 'rgba(255,77,0,0.3)' : '#FF4D00',
+                  borderRadius: 10, padding: '10px 16px',
+                  cursor: messages.length < 2 ? 'not-allowed' : 'pointer',
+                  fontSize: '0.8125rem', fontWeight: 700,
+                  whiteSpace: 'nowrap', flexShrink: 0,
+                }}
+              >
+                📋 Générer le rapport
+              </button>
+            )}
+
+            {/* Upload fichier */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,application/pdf"
+              style={{ display: 'none' }}
+              onChange={handleFileUpload}
+            />
             <button
-              onClick={handleGenerateReport}
-              disabled={loading || messages.length < 2}
+              className="chat-upload-btn"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingFile || loading || isClosed}
+              title="Uploader un devis ou une facture (JPG, PNG, PDF)"
               style={{
-                background: 'transparent',
-                border: '1px solid rgba(255,77,0,0.5)',
-                color: messages.length < 2 ? 'rgba(255,77,0,0.3)' : '#FF4D00',
-                borderRadius: 10, padding: '10px 16px',
-                cursor: messages.length < 2 ? 'not-allowed' : 'pointer',
-                fontSize: '0.8125rem', fontWeight: 700,
-                whiteSpace: 'nowrap', flexShrink: 0,
+                background: 'none',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRadius: 10, padding: '10px 12px',
+                cursor: uploadingFile || loading ? 'not-allowed' : 'pointer',
+                color: 'rgba(255,255,255,0.5)', fontSize: '1.125rem',
+                flexShrink: 0, transition: 'border-color 0.2s, color 0.2s',
               }}
             >
-              📋 Générer le rapport
+              {uploadingFile ? '⏳' : '📎'}
             </button>
 
             <textarea
@@ -333,10 +460,78 @@ export default function ChatIA({ mission, onClose, onMissionUpdate }) {
               {loading ? '...' : 'Envoyer'}
             </button>
           </div>
+        ) : null}
+
+        {/* ── Écran de conversion (rapport partiel atteint) ── */}
+        {showConversion && (
+          <div style={{
+            borderTop: '2px solid #FF4D00',
+            background: '#0F1B2D',
+            padding: '32px 24px',
+            flexShrink: 0,
+            maxWidth: 860, width: '100%', margin: '0 auto',
+            alignSelf: 'stretch',
+          }}>
+            <h3 style={{
+              color: '#fff', fontFamily: 'Syne, sans-serif', fontWeight: 800,
+              fontSize: '1.25rem', textAlign: 'center', marginBottom: 8,
+            }}>
+              Analyse gratuite terminée
+            </h3>
+            <p style={{
+              color: 'rgba(255,255,255,0.55)', fontSize: '0.875rem',
+              textAlign: 'center', lineHeight: 1.6, marginBottom: 24,
+            }}>
+              Tu as identifié les points critiques. Pour obtenir les coûts détaillés et les arguments de négociation :
+            </p>
+
+            <button
+              onClick={handleUnlockFullAnalysis}
+              style={{
+                width: '100%', background: '#FF4D00', color: '#fff',
+                border: 'none', borderRadius: 12, padding: '16px',
+                fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
+                cursor: 'pointer', marginBottom: 10,
+              }}
+            >
+              🔓 Débloquer l'analyse complète — 9,90€
+            </button>
+
+            <button
+              onClick={handleBookExpert}
+              style={{
+                width: '100%', background: 'transparent', color: '#FF4D00',
+                border: '1px solid #FF4D00', borderRadius: 12, padding: '14px',
+                fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: '0.9rem',
+                cursor: 'pointer', marginBottom: 10,
+              }}
+            >
+              👨‍🔧 Réserver un expert physique — à partir de 59€
+            </button>
+
+            <button
+              onClick={onClose}
+              style={{
+                width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.35)',
+                border: 'none', padding: '10px',
+                fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem',
+                cursor: 'pointer',
+              }}
+            >
+              Quitter avec le rapport partiel
+            </button>
+
+            <p style={{
+              color: 'rgba(255,255,255,0.25)', fontSize: '0.6875rem',
+              textAlign: 'center', marginTop: 14,
+            }}>
+              Tu peux retrouver ton rapport partiel dans "Mes missions"
+            </p>
+          </div>
         )}
       </div>
 
-      {/* ── Modal de confirmation rapport ── */}
+      {/* ── Modal de confirmation rapport (mode payant) ── */}
       {showConfirm && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 10001,

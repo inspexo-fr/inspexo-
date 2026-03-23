@@ -71,7 +71,7 @@ function PaymentForm({ onSuccess, onError }) {
 
 // ─── Composant principal ──────────────────────────────────────────────────────
 
-export default function CheckoutModal({ isOpen, onClose, tier }) {
+export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle }) {
   const meta = TIER_META[tier] || TIER_META.ia
 
   // step: 'vehicle' | 'payment' | 'success' | 'ia_ready'
@@ -88,12 +88,14 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
   useEffect(() => {
     if (isOpen) {
       setStep('vehicle')
-      setVehicle({ brand: '', model: '', year: '', url: '' })
+      setVehicle(prefillVehicle
+        ? { brand: prefillVehicle.brand || '', model: prefillVehicle.model || '', year: prefillVehicle.year || '', url: '' }
+        : { brand: '', model: '', year: '', url: '' })
       setClientSecret(null); setErrorMsg('')
       setAuthModalOpen(false)
       setCreatedMission(null); setShowChat(false)
     }
-  }, [isOpen])
+  }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Scroll lock
   useEffect(() => {
