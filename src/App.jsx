@@ -1,4 +1,5 @@
 import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import StatsBar from './components/StatsBar'
@@ -9,8 +10,9 @@ import BecomeExpert from './components/BecomeExpert'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import FooterNotes from './components/FooterNotes'
+import AdminDashboard from './pages/AdminDashboard'
 
-export default function App() {
+function Site() {
   return (
     <>
       <Navbar />
@@ -26,5 +28,16 @@ export default function App() {
       <Footer />
       <FooterNotes />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Site />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
