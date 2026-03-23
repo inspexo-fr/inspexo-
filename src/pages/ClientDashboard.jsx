@@ -2,10 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import ChatIA from '../components/ChatIA'
 
-const TIER_META = {
-  ia:         { label: 'IA Spécialisée',     emoji: '💬' },
-  visio:      { label: 'Visio Test Drive',    emoji: '📹' },
-  inspection: { label: 'Inspection Physique', emoji: '🔧' },
+const TIER_LABELS = {
+  ia_free:          { label: 'Analyse IA gratuite',    emoji: '💬' },
+  ia:               { label: 'Analyse IA complète',    emoji: '💬' },
+  visio:            { label: 'Visio Test Drive',        emoji: '📹' },
+  inspection:       { label: 'Inspection Physique',     emoji: '🔧' },
+  inspection_nego:  { label: 'Inspection + Négociation', emoji: '🔧' },
+}
+
+function getTierMeta(tier) {
+  return TIER_LABELS[tier] || { label: tier || '—', emoji: '📋' }
 }
 
 const STATUS_CONFIG = {
@@ -292,7 +298,8 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
             {!loading && !error && missions.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {missions.map((mission) => {
-                  const tier = TIER_META[mission.tier] || { label: mission.tier, emoji: '📋' }
+                  const tier = getTierMeta(mission.tier)
+                  const isIaTier = mission.tier === 'ia' || mission.tier === 'ia_free'
                   return (
                     <div key={mission.id} className="mission-card">
                       {/* Top row */}
@@ -331,7 +338,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                         {[
                           { label: 'Véhicule', value: `${mission.vehicle_brand || ''} ${mission.vehicle_model || ''}`.trim() || '—' },
                           { label: 'Année',    value: mission.vehicle_year || '—' },
-                          { label: 'Prix',     value: mission.price_total ? `${mission.price_total}€` : '—' },
+                          { label: 'Prix',     value: mission.is_free ? 'Gratuit' : (mission.price_total ? `${mission.price_total}€` : '—') },
                         ].map((item, i) => (
                           <div key={i}>
                             <div style={{
@@ -373,7 +380,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                       )}
 
                       {/* Bouton chat IA */}
-                      {mission.tier === 'ia' && (
+                      {isIaTier && (
                         <div style={{ marginTop: mission.vehicle_url ? 0 : 4 }}>
                           <button
                             onClick={() => setActiveChatMission(mission)}
@@ -390,7 +397,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               cursor: 'pointer', transition: 'opacity 0.2s',
                             }}
                           >
-                            {mission.status === 'completed' ? '📄 Voir le rapport IA' : '💬 Ouvrir le chat IA'}
+                            {mission.status === 'completed' ? '📋 Voir le rapport' : '💬 Ouvrir le chat IA'}
                           </button>
                         </div>
                       )}

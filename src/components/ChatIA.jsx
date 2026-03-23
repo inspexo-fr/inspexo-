@@ -241,7 +241,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
             }}>
               {vehicleLabel || 'Analyse véhicule'}
             </span>
-            {isClosed && !showConversion && (
+            {isClosed && (
               <span style={{
                 background: 'rgba(34,197,94,0.12)', color: '#22C55E',
                 border: '1px solid rgba(34,197,94,0.25)',
@@ -362,11 +362,79 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
             </div>
           )}
 
+          {/* ── Écran de conversion — dans le flow de scroll, après le rapport ── */}
+          {showConversion && (
+            <div style={{
+              alignSelf: 'stretch',
+              background: '#0F1B2D',
+              border: '2px solid #FF4D00',
+              borderRadius: 16,
+              padding: '28px 24px',
+              marginTop: 8,
+            }}>
+              <h3 style={{
+                color: '#fff', fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                fontSize: '1.125rem', textAlign: 'center', marginBottom: 8,
+              }}>
+                Analyse gratuite terminée
+              </h3>
+              <p style={{
+                color: 'rgba(255,255,255,0.55)', fontSize: '0.875rem',
+                textAlign: 'center', lineHeight: 1.6, marginBottom: 20,
+              }}>
+                Tu as identifié les points critiques. Pour obtenir les coûts détaillés et les arguments de négociation :
+              </p>
+
+              <button
+                onClick={handleUnlockFullAnalysis}
+                style={{
+                  width: '100%', background: '#FF4D00', color: '#fff',
+                  border: 'none', borderRadius: 12, padding: '14px',
+                  fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
+                  cursor: 'pointer', marginBottom: 10,
+                }}
+              >
+                🔓 Débloquer l'analyse complète — 9,90€
+              </button>
+
+              <button
+                onClick={handleBookExpert}
+                style={{
+                  width: '100%', background: 'transparent', color: '#FF4D00',
+                  border: '1px solid #FF4D00', borderRadius: 12, padding: '12px',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: '0.875rem',
+                  cursor: 'pointer', marginBottom: 10,
+                }}
+              >
+                👨‍🔧 Réserver un expert physique — à partir de 59€
+              </button>
+
+              <button
+                onClick={onClose}
+                style={{
+                  width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.35)',
+                  border: 'none', padding: '10px',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Quitter avec le rapport partiel
+              </button>
+
+              <p style={{
+                color: 'rgba(255,255,255,0.25)', fontSize: '0.6875rem',
+                textAlign: 'center', marginTop: 12,
+              }}>
+                Tu peux retrouver ton rapport partiel dans "Mes missions"
+              </p>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
 
         {/* ── Input ── */}
-        {isClosed && !showConversion ? (
+        {isClosed ? (
           <div style={{
             padding: '16px 24px', background: '#0F1B2D',
             borderTop: '1px solid rgba(255,255,255,0.08)',
@@ -461,74 +529,6 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
             </button>
           </div>
         ) : null}
-
-        {/* ── Écran de conversion (rapport partiel atteint) ── */}
-        {showConversion && (
-          <div style={{
-            borderTop: '2px solid #FF4D00',
-            background: '#0F1B2D',
-            padding: '32px 24px',
-            flexShrink: 0,
-            maxWidth: 860, width: '100%', margin: '0 auto',
-            alignSelf: 'stretch',
-          }}>
-            <h3 style={{
-              color: '#fff', fontFamily: 'Syne, sans-serif', fontWeight: 800,
-              fontSize: '1.25rem', textAlign: 'center', marginBottom: 8,
-            }}>
-              Analyse gratuite terminée
-            </h3>
-            <p style={{
-              color: 'rgba(255,255,255,0.55)', fontSize: '0.875rem',
-              textAlign: 'center', lineHeight: 1.6, marginBottom: 24,
-            }}>
-              Tu as identifié les points critiques. Pour obtenir les coûts détaillés et les arguments de négociation :
-            </p>
-
-            <button
-              onClick={handleUnlockFullAnalysis}
-              style={{
-                width: '100%', background: '#FF4D00', color: '#fff',
-                border: 'none', borderRadius: 12, padding: '16px',
-                fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
-                cursor: 'pointer', marginBottom: 10,
-              }}
-            >
-              🔓 Débloquer l'analyse complète — 9,90€
-            </button>
-
-            <button
-              onClick={handleBookExpert}
-              style={{
-                width: '100%', background: 'transparent', color: '#FF4D00',
-                border: '1px solid #FF4D00', borderRadius: 12, padding: '14px',
-                fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: '0.9rem',
-                cursor: 'pointer', marginBottom: 10,
-              }}
-            >
-              👨‍🔧 Réserver un expert physique — à partir de 59€
-            </button>
-
-            <button
-              onClick={onClose}
-              style={{
-                width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.35)',
-                border: 'none', padding: '10px',
-                fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem',
-                cursor: 'pointer',
-              }}
-            >
-              Quitter avec le rapport partiel
-            </button>
-
-            <p style={{
-              color: 'rgba(255,255,255,0.25)', fontSize: '0.6875rem',
-              textAlign: 'center', marginTop: 14,
-            }}>
-              Tu peux retrouver ton rapport partiel dans "Mes missions"
-            </p>
-          </div>
-        )}
       </div>
 
       {/* ── Modal de confirmation rapport (mode payant) ── */}
