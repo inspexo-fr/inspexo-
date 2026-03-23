@@ -10,9 +10,9 @@ if (!stripeKey) console.error('❌ REACT_APP_STRIPE_PUBLISHABLE_KEY manquante �
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null
 
 const TIER_META = {
-  ia:         { label: 'IA Spécialisée',     price: '9,90€',  priceNum: 9.90,   emoji: '💬' },
-  visio:      { label: 'Visio Test Drive',    price: '59€',    priceNum: 59,     emoji: '📹' },
-  inspection: { label: 'Inspection Physique', price: '249€',   priceNum: 249,    emoji: '🔧' },
+  ia:         { label: 'IA Spécialisée',     price: '9,90€',  priceTotal: 9.90,  pricePlatform: 9.90,  priceExpert: 0,   emoji: '💬' },
+  visio:      { label: 'Visio Test Drive',    price: '59€',    priceTotal: 59,    pricePlatform: 19,    priceExpert: 40,  emoji: '📹' },
+  inspection: { label: 'Inspection Physique', price: '249€',   priceTotal: 249,   pricePlatform: 79,    priceExpert: 170, emoji: '🔧' },
 }
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -111,19 +111,56 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
   const callCreateCheckout = async () => {
     setLoadingCheckout(true); setErrorMsg('')
 
-    const { data, error } = await supabase.functions.invoke('create-checkout', {
-      body: {
-        tier,
-        vehicle_brand: vehicle.brand.trim(),
-        vehicle_model: vehicle.model.trim(),
-        vehicle_year:  vehicle.year ? parseInt(vehicle.year, 10) : null,
-        vehicle_url:   vehicle.url.trim() || null,
-      },
-    })
+    // Récupère la session pour extraire le JWT
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      setErrorMsg('Session expirée. Veuillez vous reconnecter.')
+      setLoadingCheckout(false)
+      setAuthModalOpen(true)
+      return
+    }
 
-    if (error || !data?.clientSecret) {
+    const body = {
+      tier,
+      vehicle_brand: vehicle.brand.trim(),
+      vehicle_model: vehicle.model.trim(),
+      vehicle_year:  vehicle.year ? parseInt(vehicle.year, 10) : null,
+      vehicle_url:   vehicle.url.trim() || null,
+    }
+
+    console.group('🟡 create-checkout call')
+    console.log('session.user:', session.user?.email)
+    console.log('access_token (10 chars):', session.access_token?.slice(0, 10) + '...')
+    console.log('body:', body)
+    console.groupEnd()
+
+    // Fetch manuel avec JWT explicite (contourne les problèmes de proxy Supabase JS)
+    const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
+    const anonKey    = process.env.REACT_APP_SUPABASE_ANON_KEY
+
+    let data, httpError
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/create-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+          'apikey':        anonKey,
+        },
+        body: JSON.stringify(body),
+      })
+      data = await res.json()
+      if (!res.ok) httpError = `HTTP ${res.status}`
+      console.log('🟢 create-checkout response:', data)
+    } catch (err) {
+      httpError = err.message
+      console.error('🔴 create-checkout fetch error:', err)
+    }
+
+    if (httpError || !data?.clientSecret) {
       console.group('🔴 create-checkout error')
-      console.error('error:', error); console.error('data:', data)
+      console.error('httpError:', httpError)
+      console.error('data:', data)
       console.groupEnd()
       setErrorMsg(data?.error
         ? `Erreur : ${data.error}`
@@ -158,8 +195,12 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
   const handlePaymentSuccess = async (paymentIntent) => {
     const { data: { user } } = await supabase.auth.getUser()
 
+    console.group('🟡 handlePaymentSuccess')
+    console.log('paymentIntent.id:', paymentIntent.id)
+    console.log('user:', user?.id, user?.email)
+
     if (user) {
-      const { error: insertError } = await supabase.from('missions').insert([{
+      const missionRow = {
         user_id:                  user.id,
         tier,
         vehicle_brand:            vehicle.brand.trim(),
@@ -167,16 +208,38 @@ export default function CheckoutModal({ isOpen, onClose, tier }) {
         vehicle_year:             vehicle.year ? parseInt(vehicle.year, 10) : null,
         vehicle_url:              vehicle.url.trim() || null,
         status:                   'paid',
-        price:                    meta.priceNum,
+        price_total:              meta.priceTotal,
+        price_platform:           meta.pricePlatform,
+        price_expert:             meta.priceExpert,
         stripe_payment_intent_id: paymentIntent.id,
-      }])
+      }
+
+      console.log('📋 insert row:', missionRow)
+
+      const { data: insertData, error: insertError } = await supabase
+        .from('missions')
+        .insert(missionRow)
+        .select()
+
+      console.log('insert result → data:', insertData)
+      console.log('insert result → error:', insertError)
 
       if (insertError) {
-        console.error('🔴 missions insert error:', insertError)
+        console.group('🔴 missions insert error')
+        console.error('code:', insertError.code)
+        console.error('message:', insertError.message)
+        console.error('details:', insertError.details)
+        console.error('hint:', insertError.hint)
+        console.groupEnd()
         // Paiement réussi → on continue vers le succès même si l'insert échoue
+      } else {
+        console.log('✅ mission insérée:', insertData)
       }
+    } else {
+      console.warn('⚠️ handlePaymentSuccess : pas de user connecté, insert ignoré')
     }
 
+    console.groupEnd()
     setStep('success')
   }
 
