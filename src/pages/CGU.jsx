@@ -250,7 +250,7 @@ export default function CGU() {
           </p>
           <p className="legal-p">
             En cas de litige, le Client peut recourir gratuitement au service de médiation :{' '}
-            <em style={{ color: '#9CA3AF' }}>[Médiateur à désigner avant le lancement commercial — ex. Médicys, CMAP ou médiateur du e-commerce FEVAD]</em>
+            Le médiateur de la consommation compétent sera communiqué prochainement. En attendant, pour toute réclamation, contactez-nous à contact@inspexo.io. Nous nous engageons à traiter votre demande sous 30 jours.
           </p>
           <p className="legal-p">
             À défaut de résolution amiable, les tribunaux de Toulouse seront seuls compétents.

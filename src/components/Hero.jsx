@@ -133,7 +133,7 @@ export default function Hero({ onFreeAnalysis }) {
               display: 'flex', gap: 24, flexWrap: 'wrap',
             }}>
               {[
-                { icon: '🔒', label: 'Paiement sécurisé Stripe' },
+                { icon: '🔒', label: 'Paiement sécurisé' },
                 { icon: '✓', label: 'Experts qualifiés vérifiés' },
                 { icon: '⚡', label: 'Dès 9,90€' },
                 { icon: '📍', label: 'Toulouse & Haute-Garonne' },

@@ -646,7 +646,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
                   fontSize: '0.8125rem', color: '#15803D',
                   display: 'flex', alignItems: 'center', gap: 8,
                 }}>
-                  🔒 Paiement sécurisé par Stripe · Données bancaires jamais stockées
+                  Paiement sécurisé 🔒 · Données bancaires jamais stockées
                   {(tier === 'visio' || tier === 'inspection') && ' · Garantie satisfaction 30 jours'}
                 </div>
 

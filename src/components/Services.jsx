@@ -312,7 +312,7 @@ export default function Services({ onFreeAnalysis }) {
                 fontFamily: 'Syne, sans-serif', fontWeight: 800,
                 fontSize: '0.9375rem', color: '#0F1B2D', marginBottom: 2,
               }}>
-                Paiement sécurisé par Stripe
+                Paiement sécurisé 🔒
               </div>
               <div style={{
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
