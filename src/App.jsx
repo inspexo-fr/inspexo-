@@ -86,7 +86,9 @@ function Site() {
         <StatsBar />
         <HowItWorks onFreeAnalysis={handleFreeAnalysis} />
         <Services onFreeAnalysis={handleFreeAnalysis} />
-        <Experts />
+        <Experts onReserve={(_expert, tier) => {
+          setUnlockCheckout({ tier, prefillVehicle: null })
+        }} />
         <BecomeExpert />
         <FAQ onFreeAnalysis={handleFreeAnalysis} />
       </main>

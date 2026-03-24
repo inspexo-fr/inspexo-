@@ -59,7 +59,7 @@ const premium = ['BMW', 'Mercedes', 'Audi', 'Volvo', 'Land Rover', 'Jaguar', 'Le
 
 const INITIAL_LIMIT = 4
 
-export default function Experts() {
+export default function Experts({ onReserve }) {
   const [activeFilter, setActiveFilter]   = useState('Tous')
   const [searchQuery, setSearchQuery]     = useState('')
   const [showAll, setShowAll]             = useState(false)
@@ -310,8 +310,11 @@ export default function Experts() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontFamily: 'Syne, sans-serif', fontWeight: 800,
                         fontSize: '1rem', color: '#fff', flexShrink: 0,
+                        overflow: 'hidden',
                       }}>
-                        {e.initials}
+                        {e.avatar_url
+                          ? <img src={e.avatar_url} alt={e.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          : e.initials}
                       </div>
                       <div>
                         <div style={{
@@ -465,7 +468,10 @@ export default function Experts() {
         <ExpertModal
           expert={selectedExpert}
           onClose={() => setSelectedExpert(null)}
-          onBook={() => { setSelectedExpert(null); /* CheckoutModal s'ouvre via App.jsx */ }}
+          onReserve={(tier) => {
+            setSelectedExpert(null)
+            onReserve?.(selectedExpert, tier)
+          }}
         />
       )}
     </>

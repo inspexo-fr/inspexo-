@@ -18,7 +18,7 @@ function Stars({ note }) {
   )
 }
 
-export default function ExpertModal({ expert, onClose, onBook }) {
+export default function ExpertModal({ expert, onClose, onReserve }) {
   useScrollLock()
 
   return (
@@ -58,8 +58,11 @@ export default function ExpertModal({ expert, onClose, onBook }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'Syne, sans-serif', fontWeight: 800,
                   fontSize: '1.25rem', color: '#fff', flexShrink: 0,
+                  overflow: 'hidden',
                 }}>
-                  {expert.initials}
+                  {expert.avatar_url
+                    ? <img src={expert.avatar_url} alt={expert.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : expert.initials}
                 </div>
                 <div>
                   <div style={{
@@ -234,21 +237,35 @@ export default function ExpertModal({ expert, onClose, onBook }) {
               </div>
             </div>
 
-            {/* CTA */}
-            <button
-              onClick={onBook}
-              style={{
-                width: '100%', background: '#FF4D00', color: '#fff',
-                border: 'none', borderRadius: 12, padding: '15px',
-                fontFamily: 'Syne, sans-serif', fontWeight: 700,
-                fontSize: '1rem', cursor: 'pointer',
-                transition: 'opacity 0.15s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = '0.88' }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
-            >
-              Réserver {expert.nom} →
-            </button>
+            {/* CTAs */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                onClick={() => onReserve('visio')}
+                style={{
+                  width: '100%', background: '#FF4D00', color: '#fff',
+                  border: 'none', borderRadius: 12, padding: '15px',
+                  fontFamily: 'Syne, sans-serif', fontWeight: 700,
+                  fontSize: '1rem', cursor: 'pointer', transition: 'opacity 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '0.88' }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+              >
+                📹 Réserver une Visio — 59€
+              </button>
+              <button
+                onClick={() => onReserve('inspection')}
+                style={{
+                  width: '100%', background: 'transparent', color: '#0F1B2D',
+                  border: '1.5px solid rgba(15,27,45,0.2)', borderRadius: 12, padding: '13px',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600,
+                  fontSize: '0.9375rem', cursor: 'pointer', transition: 'border-color 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(15,27,45,0.5)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(15,27,45,0.2)' }}
+              >
+                🔧 Réserver une Inspection — 249€
+              </button>
+            </div>
           </div>
 
         </div>
