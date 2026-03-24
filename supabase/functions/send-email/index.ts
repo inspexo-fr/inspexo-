@@ -239,6 +239,133 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
     `,
   }),
 
+  expert_new_mission: (data) => ({
+    subject: `Nouvelle mission Inspexo — ${data.brand} ${data.model}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: #0F1B2D; padding: 32px; text-align: center;">
+          <h1 style="color: #ffffff; font-size: 28px; margin: 0; letter-spacing: 3px;">INSPEXO</h1>
+          <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px;">Espace Expert</p>
+        </div>
+        <div style="padding: 40px 32px;">
+          <div style="text-align: center; font-size: 48px; margin-bottom: 16px;">🔔</div>
+          <h2 style="color: #0F1B2D; font-size: 22px; text-align: center; margin: 0 0 8px;">
+            Nouvelle mission assignée !
+          </h2>
+          <p style="color: #6B7280; font-size: 15px; text-align: center; margin: 0 0 32px;">
+            Bonjour ${data.expert_name || ""},
+          </p>
+          <div style="background: #F8F9FA; border-radius: 12px; padding: 24px; margin: 0 0 28px;">
+            <p style="margin: 8px 0; color: #374151; font-size: 14px;"><strong>Véhicule :</strong> ${data.vehicle || "—"}</p>
+            <p style="margin: 8px 0; color: #374151; font-size: 14px;"><strong>Palier :</strong> ${data.tier || "—"}</p>
+          </div>
+          <p style="color: #333; line-height: 1.65; font-size: 15px; margin: 0 0 28px;">
+            Un acheteur a réservé votre expertise. Connectez-vous à votre espace Inspexo pour voir les détails et convenir d'un créneau.
+          </p>
+          <div style="text-align: center; margin: 0 0 24px;">
+            <a href="https://inspexo.io/dashboard" style="background: #FF4D00; color: #ffffff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">
+              Voir la mission →
+            </a>
+          </div>
+          <p style="color: #9CA3AF; font-size: 13px; text-align: center; line-height: 1.5; margin: 0;">
+            Une question ? Écrivez à <a href="mailto:contact@inspexo.io" style="color: #FF4D00; text-decoration: none;">contact@inspexo.io</a>
+          </p>
+        </div>
+        <div style="background: #F8F9FA; padding: 24px 32px; border-top: 1px solid #eee;">
+          <p style="color: #999; font-size: 12px; margin: 0; text-align: center;">
+            Inspexo — Expert automobile spécialisé par marque<br>
+            <a href="https://inspexo.io" style="color: #FF4D00;">inspexo.io</a>
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
+  mission_assigned: (data) => ({
+    subject: `Votre expert ${data.expert_name} est assigné — ${data.vehicle}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: #0F1B2D; padding: 32px; text-align: center;">
+          <h1 style="color: #ffffff; font-size: 28px; margin: 0; letter-spacing: 3px;">INSPEXO</h1>
+          <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px;">Expert automobile à vos côtés</p>
+        </div>
+        <div style="padding: 40px 32px;">
+          <div style="text-align: center; font-size: 48px; margin-bottom: 16px;">✅</div>
+          <h2 style="color: #0F1B2D; font-size: 22px; text-align: center; margin: 0 0 24px;">
+            Bonne nouvelle — votre expert est assigné !
+          </h2>
+          <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 20px 24px; margin: 0 0 28px;">
+            <p style="margin: 0; color: #166534; font-size: 15px; font-weight: 600;">
+              ${data.expert_name || "Un expert Inspexo"}, spécialiste ${data.brand || ""}, va s'occuper de votre ${data.vehicle || "véhicule"}.
+            </p>
+          </div>
+          <p style="color: #333; line-height: 1.65; font-size: 15px; margin: 0 0 12px;">
+            Prochaine étape : réservez votre créneau directement avec votre expert. Vous allez recevoir un lien de réservation.
+          </p>
+          <p style="color: #333; line-height: 1.65; font-size: 15px; margin: 0 0 28px;">
+            Votre expert prendra contact avec vous dans les 24h pour convenir des modalités.
+          </p>
+          <div style="text-align: center; margin: 0 0 24px;">
+            <a href="https://inspexo.io/dashboard" style="background: #FF4D00; color: #ffffff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">
+              Voir ma mission →
+            </a>
+          </div>
+          <p style="color: #9CA3AF; font-size: 13px; text-align: center; line-height: 1.5; margin: 0;">
+            Une question ? Répondez à cet email ou écrivez à <a href="mailto:contact@inspexo.io" style="color: #FF4D00; text-decoration: none;">contact@inspexo.io</a>
+          </p>
+        </div>
+        <div style="background: #F8F9FA; padding: 24px 32px; border-top: 1px solid #eee;">
+          <p style="color: #999; font-size: 12px; margin: 0; text-align: center;">
+            Inspexo — Expert automobile spécialisé par marque<br>
+            <a href="https://inspexo.io" style="color: #FF4D00;">inspexo.io</a>
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
+  admin_no_expert: (data) => ({
+    subject: `⚠️ Mission sans expert — ${data.brand} ${data.model}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: #0F1B2D; padding: 32px; text-align: center;">
+          <h1 style="color: #ffffff; font-size: 28px; margin: 0; letter-spacing: 3px;">INSPEXO</h1>
+          <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px;">Alerte Admin</p>
+        </div>
+        <div style="padding: 40px 32px;">
+          <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 12px; padding: 20px 24px; margin: 0 0 28px;">
+            <p style="margin: 0; color: #991B1B; font-size: 15px; font-weight: 700;">
+              ⚠️ Aucun expert disponible pour cette mission
+            </p>
+          </div>
+          <div style="background: #F8F9FA; border-radius: 12px; padding: 20px 24px; margin: 0 0 28px;">
+            <p style="margin: 8px 0; color: #374151; font-size: 14px;"><strong>ID mission :</strong> ${data.mission_id || "—"}</p>
+            <p style="margin: 8px 0; color: #374151; font-size: 14px;"><strong>Véhicule :</strong> ${data.vehicle || "—"}</p>
+            <p style="margin: 8px 0; color: #374151; font-size: 14px;"><strong>Palier :</strong> ${data.tier || "—"}</p>
+            <p style="margin: 8px 0; color: #DC2626; font-size: 14px; font-weight: 600;"><strong>Marque sans expert :</strong> ${data.brand || "—"}</p>
+          </div>
+          <p style="color: #333; line-height: 1.65; font-size: 15px; margin: 0 0 16px;">
+            Aucun expert avec <code>status = approved</code> et <code>stripe_account_id</code> configuré ne couvre la marque <strong>${data.brand}</strong>.
+          </p>
+          <p style="color: #333; line-height: 1.65; font-size: 15px; margin: 0 0 28px;">
+            Action requise : assigner manuellement un expert depuis le dashboard admin, ou contacter le client pour l'informer du délai.
+          </p>
+          <div style="text-align: center;">
+            <a href="https://inspexo.io/admin" style="background: #0F1B2D; color: #ffffff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">
+              Ouvrir le dashboard admin →
+            </a>
+          </div>
+        </div>
+        <div style="background: #F8F9FA; padding: 24px 32px; border-top: 1px solid #eee;">
+          <p style="color: #999; font-size: 12px; margin: 0; text-align: center;">
+            Inspexo — Expert automobile spécialisé par marque<br>
+            <a href="https://inspexo.io" style="color: #FF4D00;">inspexo.io</a>
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
   free_analysis_ended: (data) => ({
     subject: `🔍 ${data.vehicle} — ${data.critical_count} point(s) critique(s) détecté(s)`,
     html: `
