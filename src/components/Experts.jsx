@@ -58,6 +58,12 @@ export default function Experts() {
           color: #fff;
           border-color: #FF4D00;
         }
+        .brand-pills-row {
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .brand-pills-row::-webkit-scrollbar { display: none; }
         .notif-input {
           flex: 1; background: rgba(255,255,255,0.07);
           border: 1px solid rgba(255,255,255,0.12);
@@ -78,9 +84,11 @@ export default function Experts() {
         .notif-btn:hover { opacity: 0.88; }
         @media (max-width: 768px) {
           .experts-grid { grid-template-columns: 1fr !important; }
-          .experts-header { flex-direction: column !important; align-items: flex-start !important; }
+          .experts-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; margin-bottom: 32px !important; }
           .experts-section { padding: 64px 20px !important; }
-          .brand-pills-row { overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 4px !important; }
+          .experts-title { font-size: 1.625rem !important; line-height: 1.2 !important; }
+          .brand-pills-row { overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 6px !important; }
+          .experts-notify { padding: 24px 20px !important; }
         }
         @media (max-width: 900px) {
           .experts-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -104,7 +112,7 @@ export default function Experts() {
             display: 'flex', justifyContent: 'space-between',
             alignItems: 'flex-end', marginBottom: 48, gap: 24,
           }}>
-            <h2 style={{
+            <h2 className="experts-title" style={{
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
               fontSize: 'clamp(2rem, 4vw, 2.75rem)',
               color: '#fff', lineHeight: 1.1,
@@ -265,7 +273,7 @@ export default function Experts() {
           )}
 
           {/* Notification zone */}
-          <div style={{
+          <div className="experts-notify" style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: 16, padding: '28px 32px',
