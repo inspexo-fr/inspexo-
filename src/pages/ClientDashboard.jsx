@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import ChatIA from '../components/ChatIA'
+import CalBooking from '../components/CalBooking'
 
 const TIER_LABELS = {
   ia_free:          { label: 'Analyse IA gratuite',    emoji: '💬' },
@@ -53,7 +54,8 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
   const [missions, setMissions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [activeChatMission, setActiveChatMission] = useState(null)
+  const [activeChatMission, setActiveChatMission]     = useState(null)
+  const [activeBookingMission, setActiveBookingMission] = useState(null)
 
   const fetchMissions = useCallback(() => {
     if (!user) return
@@ -379,6 +381,27 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                         </div>
                       )}
 
+                      {/* Bouton réserver créneau — visio/inspection payés */}
+                      {(mission.tier === 'visio' || mission.tier === 'inspection') && mission.status === 'paid' && (
+                        <div style={{ marginTop: mission.vehicle_url ? 0 : 4 }}>
+                          <button
+                            onClick={() => setActiveBookingMission(mission)}
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 7,
+                              background: '#FFF4EE',
+                              color: '#FF4D00',
+                              border: '1px solid rgba(255,77,0,0.25)',
+                              padding: '8px 18px', borderRadius: 8,
+                              fontSize: '0.8125rem', fontWeight: 700,
+                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              cursor: 'pointer', transition: 'opacity 0.2s',
+                            }}
+                          >
+                            📅 Réserver mon créneau
+                          </button>
+                        </div>
+                      )}
+
                       {/* Bouton chat IA */}
                       {isIaTier && (
                         <div style={{ marginTop: mission.vehicle_url ? 0 : 4 }}>
@@ -421,6 +444,14 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
           </div>
         </div>
       </div>
+
+      {/* Cal.com réservation */}
+      {activeBookingMission && (
+        <CalBooking
+          tier={activeBookingMission.tier}
+          onClose={() => setActiveBookingMission(null)}
+        />
+      )}
 
       {/* Chat IA plein écran */}
       {activeChatMission && (

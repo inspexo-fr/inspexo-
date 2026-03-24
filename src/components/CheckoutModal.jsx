@@ -4,6 +4,7 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import { supabase } from '../lib/supabaseClient'
 import AuthModal from './AuthModal'
 import ChatIA from './ChatIA'
+import CalBooking from './CalBooking'
 
 // Initialisation Stripe — une seule fois, hors du composant
 const stripeKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
@@ -74,7 +75,7 @@ function PaymentForm({ onSuccess, onError }) {
 export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle }) {
   const meta = TIER_META[tier] || TIER_META.ia
 
-  // step: 'vehicle' | 'payment' | 'success' | 'ia_ready'
+  // step: 'vehicle' | 'payment' | 'success' | 'ia_ready' | 'cal_ready'
   const [step, setStep] = useState('vehicle')
   const [vehicle, setVehicle] = useState({ brand: '', model: '', year: '', url: '' })
   const [clientSecret, setClientSecret] = useState(null)
@@ -83,6 +84,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [createdMission, setCreatedMission] = useState(null)
   const [showChat, setShowChat] = useState(false)
+  const [showCalBooking, setShowCalBooking] = useState(false)
 
   // Reset on open
   useEffect(() => {
@@ -93,7 +95,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
         : { brand: '', model: '', year: '', url: '' })
       setClientSecret(null); setErrorMsg('')
       setAuthModalOpen(false)
-      setCreatedMission(null); setShowChat(false)
+      setCreatedMission(null); setShowChat(false); setShowCalBooking(false)
     }
   }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -249,7 +251,9 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
     }
 
     console.groupEnd()
-    setStep(tier === 'ia' ? 'ia_ready' : 'success')
+    if (tier === 'ia') setStep('ia_ready')
+    else if (tier === 'visio' || tier === 'inspection') setStep('cal_ready')
+    else setStep('success')
   }
 
   const handleChange = (field) => (e) =>
@@ -383,7 +387,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
             </div>
 
             {/* Step indicators */}
-            {step !== 'success' && step !== 'ia_ready' && (
+            {step !== 'success' && step !== 'ia_ready' && step !== 'cal_ready' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 {[{ key: 'vehicle', label: 'Votre véhicule' }, { key: 'payment', label: 'Paiement' }].map((s, i) => {
                   const isActive = step === s.key
@@ -433,6 +437,58 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
                 <button onClick={onClose} style={{ background: '#0F1B2D', color: '#fff', padding: '12px 32px', borderRadius: 10, fontSize: '0.9375rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif', border: 'none', cursor: 'pointer' }}>
                   Fermer
                 </button>
+              </div>
+            )}
+
+            {/* CAL_READY — paliers visio / inspection */}
+            {step === 'cal_ready' && (
+              <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                <div style={{ fontSize: '3.5rem', marginBottom: 16 }}>✅</div>
+                <div style={{
+                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10,
+                }}>
+                  Paiement confirmé !
+                </div>
+                <div style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem',
+                  fontWeight: 300, color: '#6B7280', lineHeight: 1.65,
+                  maxWidth: 340, margin: '0 auto 28px',
+                }}>
+                  Réserve maintenant ton créneau avec un expert spécialisé.
+                  Le rendez-vous sera confirmé par email.
+                </div>
+
+                <button
+                  onClick={() => setShowCalBooking(true)}
+                  style={{
+                    background: '#FF4D00', color: '#fff',
+                    border: 'none', borderRadius: 12,
+                    padding: '16px 36px', cursor: 'pointer',
+                    fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
+                    marginBottom: 20, display: 'inline-block',
+                  }}
+                >
+                  📅 Réserver mon créneau
+                </button>
+
+                <div style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.8125rem', color: '#9CA3AF',
+                }}>
+                  Tu peux aussi réserver plus tard depuis{' '}
+                  <button
+                    onClick={onClose}
+                    style={{
+                      background: 'none', border: 'none', cursor: 'pointer',
+                      color: '#FF4D00', fontWeight: 600,
+                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontSize: '0.8125rem', padding: 0,
+                    }}
+                  >
+                    Mes missions
+                  </button>
+                </div>
               </div>
             )}
 
@@ -603,6 +659,14 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
         onClose={() => setAuthModalOpen(false)}
         onSuccess={handleAuthSuccess}
       />
+
+      {/* Cal.com — réservation après paiement visio/inspection */}
+      {showCalBooking && (
+        <CalBooking
+          tier={tier}
+          onClose={() => setShowCalBooking(false)}
+        />
+      )}
 
       {/* Chat IA plein écran — déclenché après paiement IA */}
       {showChat && createdMission && (
