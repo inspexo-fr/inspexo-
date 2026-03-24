@@ -185,13 +185,136 @@ function MissionsTab() {
   )
 }
 
+// ─── Modale Stripe Connect ────────────────────────────────────────────────────
+
+function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
+  const [copied, setCopied]       = useState(false)
+  const [sending, setSending]     = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+  const [emailError, setEmailError] = useState('')
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleSendEmail = async () => {
+    setSending(true); setEmailError('')
+    const data = await adminFetch('send-email', {
+      method: 'POST',
+      body: JSON.stringify({
+        to: expertEmail,
+        template: 'expert_stripe_onboarding',
+        data: { onboarding_url: url, expert_email: expertEmail },
+      }),
+    })
+    setSending(false)
+    if (data.error) setEmailError(data.error)
+    else setEmailSent(true)
+  }
+
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(15,27,45,0.85)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: '#fff', borderRadius: 20, padding: '36px 32px',
+          maxWidth: 520, width: '100%',
+          fontFamily: 'Plus Jakarta Sans, sans-serif',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 6 }}>
+          🔗 Lien Stripe Connect généré
+        </div>
+        <div style={{ fontSize: '0.875rem', color: '#6B7280', marginBottom: 24 }}>
+          Compte : <code style={{ background: '#F0F2F5', padding: '2px 6px', borderRadius: 4, fontSize: '0.8125rem' }}>{accountId}</code>
+          {expertEmail && <span style={{ marginLeft: 8 }}>· {expertEmail}</span>}
+        </div>
+
+        {/* URL */}
+        <div style={{
+          background: '#F8F9FA', border: '1.5px solid rgba(0,0,0,0.08)',
+          borderRadius: 10, padding: '12px 14px', marginBottom: 20,
+          fontSize: '0.8125rem', color: '#374151', wordBreak: 'break-all',
+          lineHeight: 1.5,
+        }}>
+          {url}
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+          <button
+            onClick={handleCopy}
+            style={{
+              flex: 1, padding: '11px 0', borderRadius: 10,
+              background: copied ? '#F0FDF4' : '#0F1B2D',
+              color: copied ? '#16A34A' : '#fff',
+              border: copied ? '1px solid #BBF7D0' : 'none',
+              fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700,
+              fontSize: '0.9rem', cursor: 'pointer',
+            }}
+          >
+            {copied ? '✓ Copié !' : '📋 Copier le lien'}
+          </button>
+          <button
+            onClick={handleSendEmail}
+            disabled={sending || emailSent || !expertEmail}
+            style={{
+              flex: 1, padding: '11px 0', borderRadius: 10,
+              background: emailSent ? '#F0FDF4' : '#FF4D00',
+              color: emailSent ? '#16A34A' : '#fff',
+              border: emailSent ? '1px solid #BBF7D0' : 'none',
+              fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700,
+              fontSize: '0.9rem', cursor: sending || emailSent || !expertEmail ? 'not-allowed' : 'pointer',
+              opacity: sending ? 0.7 : 1,
+            }}
+          >
+            {emailSent ? '✓ Email envoyé' : sending ? 'Envoi...' : '📧 Envoyer par email'}
+          </button>
+        </div>
+
+        {!expertEmail && (
+          <div style={{ fontSize: '0.8125rem', color: '#F59E0B', marginBottom: 12 }}>
+            ⚠️ Pas d'email associé — envoi impossible
+          </div>
+        )}
+        {emailError && (
+          <div style={{ fontSize: '0.8125rem', color: '#DC2626', marginBottom: 12 }}>
+            ⚠️ {emailError}
+          </div>
+        )}
+
+        <button
+          onClick={onClose}
+          style={{
+            width: '100%', padding: '10px', borderRadius: 10, border: 'none',
+            background: 'transparent', color: 'rgba(0,0,0,0.3)',
+            fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', cursor: 'pointer',
+          }}
+        >
+          Fermer
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── Onglet Candidatures ──────────────────────────────────────────────────────
 
 function ApplicationsTab() {
-  const [apps, setApps]       = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState(null)
-  const [updating, setUpdating] = useState(null)
+  const [apps, setApps]             = useState([])
+  const [loading, setLoading]       = useState(true)
+  const [error, setError]           = useState(null)
+  const [updating, setUpdating]     = useState(null)
+  const [generating, setGenerating] = useState(null)
+  const [stripeModal, setStripeModal] = useState(null) // { url, account_id, email }
 
   const fetchApps = useCallback(async () => {
     setLoading(true); setError(null)
@@ -213,6 +336,20 @@ function ApplicationsTab() {
     setUpdating(null)
   }
 
+  const generateStripeLink = async (a) => {
+    setGenerating(a.id)
+    const data = await adminFetch('create-connect-account', {
+      method: 'POST',
+      body: JSON.stringify({ expert_id: a.expert_id || a.id }),
+    })
+    setGenerating(null)
+    if (data.error) {
+      alert(`Erreur Stripe Connect : ${data.error}`)
+      return
+    }
+    setStripeModal({ url: data.url, account_id: data.account_id, email: a.email })
+  }
+
   if (loading) return <Spinner label="Chargement des candidatures..." />
   if (error)   return <ErrorBox msg={error} />
 
@@ -220,6 +357,15 @@ function ApplicationsTab() {
 
   return (
     <div>
+      {stripeModal && (
+        <StripeConnectModal
+          url={stripeModal.url}
+          accountId={stripeModal.account_id}
+          expertEmail={stripeModal.email}
+          onClose={() => setStripeModal(null)}
+        />
+      )}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
         <div>
           <div style={styles.pageTitle}>Candidatures experts</div>
@@ -291,7 +437,7 @@ function ApplicationsTab() {
                     </div>
                   </td>
                   <td style={styles.td}>
-                    <div style={{ display: 'flex', gap: 6 }}>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {a.status !== 'approved' && (
                         <button
                           disabled={updating === a.id}
@@ -308,6 +454,21 @@ function ApplicationsTab() {
                           style={{ ...styles.actionBtn, background: '#FEF2F2', color: '#DC2626', border: '1px solid #FECACA' }}
                         >
                           ✗ Rejeter
+                        </button>
+                      )}
+                      {a.status === 'approved' && (
+                        <button
+                          disabled={generating === a.id}
+                          onClick={() => generateStripeLink(a)}
+                          style={{
+                            ...styles.actionBtn,
+                            background: generating === a.id ? '#F0F2F5' : '#EEF2FF',
+                            color: '#4F46E5',
+                            border: '1px solid #C7D2FE',
+                            opacity: generating === a.id ? 0.7 : 1,
+                          }}
+                        >
+                          {generating === a.id ? '⏳ Génération...' : '🔗 Stripe Connect'}
                         </button>
                       )}
                     </div>

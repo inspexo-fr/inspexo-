@@ -147,6 +147,57 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
     `,
   }),
 
+  expert_stripe_onboarding: (data) => ({
+    subject: "Inspexo — Finalisez votre inscription pour recevoir vos paiements",
+    html: `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: #0F1B2D; padding: 32px; text-align: center;">
+          <h1 style="color: #ffffff; font-size: 28px; margin: 0; letter-spacing: 3px;">INSPEXO</h1>
+          <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px;">Espace Expert</p>
+        </div>
+        <div style="padding: 40px 32px;">
+          <h2 style="color: #0F1B2D; font-size: 22px; margin: 0 0 16px;">Une dernière étape avant de recevoir vos paiements</h2>
+          <p style="color: #333; line-height: 1.7; font-size: 15px; margin: 0 0 16px;">
+            Bonjour,
+          </p>
+          <p style="color: #333; line-height: 1.7; font-size: 15px; margin: 0 0 16px;">
+            Votre candidature Inspexo a été approuvée. Pour commencer à recevoir vos versements après chaque mission, vous devez finaliser la configuration de votre compte de paiement.
+          </p>
+          <p style="color: #333; line-height: 1.7; font-size: 15px; margin: 0 0 24px;">
+            La procédure est gérée par <strong>Stripe</strong>, le leader mondial du paiement en ligne (utilisé par Amazon, Deliveroo, Doctolib…). Vos données bancaires sont sécurisées et ne transitent jamais par Inspexo. Cela prend environ <strong>5 minutes</strong>.
+          </p>
+
+          <div style="background: #F8F9FA; border-radius: 12px; padding: 20px 24px; margin: 0 0 28px;">
+            <p style="color: #0F1B2D; font-size: 14px; font-weight: 700; margin: 0 0 12px;">Ce que vous devrez fournir :</p>
+            <p style="color: #374151; font-size: 14px; margin: 6px 0; line-height: 1.5;">✓ Vos informations personnelles (nom, adresse)</p>
+            <p style="color: #374151; font-size: 14px; margin: 6px 0; line-height: 1.5;">✓ Votre IBAN pour les virements</p>
+            <p style="color: #374151; font-size: 14px; margin: 6px 0; line-height: 1.5;">✓ Une pièce d'identité (vérification standard Stripe)</p>
+          </div>
+
+          <div style="text-align: center; margin: 32px 0;">
+            <a href="${data.onboarding_url}" style="background: #FF4D00; color: #ffffff; padding: 16px 36px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">
+              Configurer mes versements →
+            </a>
+          </div>
+
+          <p style="color: #9CA3AF; font-size: 13px; line-height: 1.6; text-align: center; margin: 0 0 8px;">
+            Ce lien est personnel et à usage unique. Ne le partagez pas.
+          </p>
+          <p style="color: #9CA3AF; font-size: 13px; line-height: 1.6; text-align: center; margin: 0;">
+            Une question ? Répondez à cet email ou écrivez à
+            <a href="mailto:contact@inspexo.io" style="color: #FF4D00; text-decoration: none;"> contact@inspexo.io</a>
+          </p>
+        </div>
+        <div style="background: #F8F9FA; padding: 24px 32px; border-top: 1px solid #eee;">
+          <p style="color: #999; font-size: 12px; margin: 0; text-align: center;">
+            Inspexo — Expert automobile spécialisé par marque<br>
+            <a href="https://inspexo.io" style="color: #FF4D00;">inspexo.io</a>
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
   nudge_no_analysis: (data) => ({
     subject: `Tu n'as pas encore analysé ton véhicule 🔍`,
     html: `
