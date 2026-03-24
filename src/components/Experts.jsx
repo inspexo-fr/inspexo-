@@ -48,6 +48,8 @@ export default function Experts() {
           background: transparent;
           color: rgba(255,255,255,0.45);
           border-color: rgba(255,255,255,0.1);
+          flex-shrink: 0;
+          white-space: nowrap;
         }
         .brand-pill:hover {
           color: rgba(255,255,255,0.8);
@@ -82,16 +84,16 @@ export default function Experts() {
           transition: opacity 0.2s; white-space: nowrap;
         }
         .notif-btn:hover { opacity: 0.88; }
+        @media (max-width: 900px) {
+          .experts-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 768px) {
           .experts-grid { grid-template-columns: 1fr !important; }
           .experts-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; margin-bottom: 32px !important; }
           .experts-section { padding: 64px 20px !important; }
           .experts-title { font-size: 1.625rem !important; line-height: 1.2 !important; }
-          .brand-pills-row { overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 6px !important; }
+          .brand-pills-row { display: flex !important; overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 6px !important; gap: 6px !important; }
           .experts-notify { padding: 24px 20px !important; }
-        }
-        @media (max-width: 900px) {
-          .experts-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
 
