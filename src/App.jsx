@@ -101,6 +101,10 @@ function Site() {
           user={user}
           onClose={() => setShowFreeAnalysis(false)}
           onMissionCreated={handleMissionCreated}
+          onUnlockPaid={(tier) => {
+            setShowFreeAnalysis(false)
+            setUnlockCheckout({ tier, prefillVehicle: null })
+          }}
         />
       )}
 

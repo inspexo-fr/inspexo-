@@ -8,7 +8,7 @@ export default function CalBooking({ tier, onClose }) {
   useEffect(() => {
     if (!window.Cal) return
 
-    window.Cal('init', { origin: 'https://app.cal.com' })
+    window.Cal('init', { origin: 'https://app.cal.eu' })
     window.Cal('inline', {
       elementOrSelector: '#cal-embed',
       calLink,
