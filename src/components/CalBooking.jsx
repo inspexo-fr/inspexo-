@@ -1,14 +1,12 @@
 import { useEffect } from 'react'
+import useScrollLock from '../hooks/useScrollLock'
 
 export default function CalBooking({ tier, onClose }) {
   const calLink = tier === 'visio'
     ? 'cal.eu-inspexo/visio-test-drive'
     : 'cal.eu-inspexo/inspection-physique'
 
-  useEffect(() => {
-    document.body.classList.add('modal-open')
-    return () => document.body.classList.remove('modal-open')
-  }, [])
+  useScrollLock()
 
   useEffect(() => {
     if (!window.Cal) return

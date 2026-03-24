@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import useScrollLock from '../hooks/useScrollLock'
 
 export default function ReviewModal({ mission, onClose, onSubmitted }) {
   const [rating, setRating]           = useState(0)
@@ -8,10 +9,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
   const [loading, setLoading]         = useState(false)
   const [submitted, setSubmitted]     = useState(false)
 
-  useEffect(() => {
-    document.body.classList.add('modal-open')
-    return () => document.body.classList.remove('modal-open')
-  }, [])
+  useScrollLock()
 
   const handleSubmit = async () => {
     if (rating === 0) return

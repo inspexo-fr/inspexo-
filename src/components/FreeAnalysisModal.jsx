@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import useScrollLock from '../hooks/useScrollLock'
 
 const MAX_FREE = 3
 
@@ -12,11 +13,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
   const [error, setError]           = useState('')
   const [freeCount, setFreeCount]   = useState(null) // null = chargement en cours
 
-  // Masquer StickyCTA
-  useEffect(() => {
-    document.body.classList.add('modal-open')
-    return () => document.body.classList.remove('modal-open')
-  }, [])
+  useScrollLock()
 
   // Compter les analyses gratuites au montage
   useEffect(() => {

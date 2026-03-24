@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import useScrollLock from '../hooks/useScrollLock'
 
 const ADMIN_EMAILS = ['contact@inspexo.io']
 
@@ -188,6 +189,7 @@ function MissionsTab() {
 // ─── Modale Stripe Connect ────────────────────────────────────────────────────
 
 function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
+  useScrollLock()
   const [copied, setCopied]       = useState(false)
   const [sending, setSending]     = useState(false)
   const [emailSent, setEmailSent] = useState(false)

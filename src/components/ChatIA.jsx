@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import useScrollLock from '../hooks/useScrollLock'
 
 const SUPABASE_URL  = process.env.REACT_APP_SUPABASE_URL
 const ANON_KEY      = process.env.REACT_APP_SUPABASE_ANON_KEY
@@ -30,10 +31,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
   const messagesEndRef = useRef(null)
   const textareaRef    = useRef(null)
 
-  useEffect(() => {
-    document.body.classList.add('modal-open')
-    return () => document.body.classList.remove('modal-open')
-  }, [])
+  useScrollLock()
   const fileInputRef   = useRef(null)
 
   const isFree = mission?.is_free && !mission?.converted_to_paid

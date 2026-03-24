@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import useScrollLock from '../hooks/useScrollLock'
 
 const SUPABASE_URL  = process.env.REACT_APP_SUPABASE_URL
 const ANON_KEY      = process.env.REACT_APP_SUPABASE_ANON_KEY
@@ -34,18 +35,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
     }
   }, [isOpen])
 
-  // modal-open class pour masquer StickyCTA
-  useEffect(() => {
-    if (isOpen) document.body.classList.add('modal-open')
-    else document.body.classList.remove('modal-open')
-    return () => document.body.classList.remove('modal-open')
-  }, [isOpen])
-
-  // Scroll lock
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+  useScrollLock(isOpen)
 
   // Escape
   const handleKeyDown = useCallback(e => { if (e.key === 'Escape') onClose() }, [onClose])
