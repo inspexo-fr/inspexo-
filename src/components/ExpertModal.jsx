@@ -121,6 +121,22 @@ export default function ExpertModal({ expert, onClose, onBook }) {
               </span>
             </div>
 
+            {/* Bio */}
+            {expert.bio && (
+              <div style={{ marginBottom: 20 }}>
+                <p style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.9375rem', fontWeight: 400,
+                  color: '#374151', lineHeight: 1.65,
+                  fontStyle: 'italic',
+                  borderLeft: '3px solid #FF4D00',
+                  paddingLeft: 14,
+                }}>
+                  "{expert.bio}"
+                </p>
+              </div>
+            )}
+
             {/* Spécialité */}
             <div style={{ marginBottom: 20 }}>
               <div style={{

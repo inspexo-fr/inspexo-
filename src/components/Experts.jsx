@@ -2,16 +2,56 @@ import React, { useState } from 'react'
 import ExpertModal from './ExpertModal'
 
 const experts = [
-  { nom: 'Thomas R.', marque: 'BMW', specialite: 'Série 3, M3 — moteurs N52 et S55', exp: '12 ans', missions: 847, note: '4.9', gradient: 'linear-gradient(135deg, #1a3a5c, #2563eb)', initials: 'TR' },
-  { nom: 'Marc D.', marque: 'Mercedes', specialite: 'Classe C, E — moteurs OM651 et M276', exp: '9 ans', missions: 634, note: '4.8', gradient: 'linear-gradient(135deg, #1c1c1c, #374151)', initials: 'MD' },
-  { nom: 'Sophie L.', marque: 'Porsche', specialite: '911, Cayenne — moteurs MA1 et M48', exp: '7 ans', missions: 312, note: '5.0', gradient: 'linear-gradient(135deg, #7c3aed, #a855f7)', initials: 'SL' },
-  { nom: 'Kevin M.', marque: 'Audi', specialite: 'A4, RS4 — moteurs CDNC et CGWB', exp: '11 ans', missions: 521, note: '4.9', gradient: 'linear-gradient(135deg, #991b1b, #dc2626)', initials: 'KM' },
-  { nom: 'Laura M.', marque: 'Ferrari', specialite: '488, F8 — moteurs V8 biturbo', exp: '8 ans', missions: 89, note: '5.0', gradient: 'linear-gradient(135deg, #b91c1c, #ff4d00)', initials: 'LM' },
-  { nom: 'Pierre V.', marque: 'Land Rover', specialite: 'Defender, Discovery — châssis 4x4', exp: '14 ans', missions: 198, note: '5.0', gradient: 'linear-gradient(135deg, #064e3b, #059669)', initials: 'PV' },
-  { nom: 'Nicolas F.', marque: 'Volkswagen', specialite: 'Golf, Passat — boîtes DSG et moteurs TSI', exp: '10 ans', missions: 398, note: '4.9', gradient: 'linear-gradient(135deg, #1e3a5f, #1d4ed8)', initials: 'NF' },
-  { nom: 'Antoine B.', marque: 'Renault', specialite: 'Mégane, Clio — moteurs K9K et H4M', exp: '8 ans', missions: 445, note: '4.8', gradient: 'linear-gradient(135deg, #7c2d12, #ff4d00)', initials: 'AB' },
-  { nom: 'Sarah C.', marque: 'Maserati', specialite: 'Ghibli, Quattroporte — V6 biturbo', exp: '9 ans', missions: 112, note: '4.8', gradient: 'linear-gradient(135deg, #312e81, #6366f1)', initials: 'SC' },
-  { nom: 'Paul T.', marque: 'Alfa Romeo', specialite: 'Giulia, Stelvio — moteurs GME', exp: '11 ans', missions: 203, note: '4.9', gradient: 'linear-gradient(135deg, #881337, #e11d48)', initials: 'PT' },
+  {
+    nom: 'Thomas R.', marque: 'BMW', specialite: 'Série 3, M3 — moteurs N52 et S55',
+    bio: "Ancien technicien BMW Série 3 et Série 5 pendant 8 ans. Je connais chaque point faible des moteurs N47, N52 et S55. Mon objectif : que vous sachiez exactement ce que vous achetez.",
+    exp: '12 ans', missions: 847, note: '4.9', gradient: 'linear-gradient(135deg, #1a3a5c, #2563eb)', initials: 'TR',
+  },
+  {
+    nom: 'Marc D.', marque: 'Mercedes', specialite: 'Classe C, E — moteurs OM651 et M276',
+    bio: "Spécialiste Mercedes depuis 12 ans, des Classe A aux Classe E. Moteurs OM651, OM654, M276 — je sais où chercher les problèmes que le vendeur ne vous montrera pas.",
+    exp: '9 ans', missions: 634, note: '4.8', gradient: 'linear-gradient(135deg, #1c1c1c, #374151)', initials: 'MD',
+  },
+  {
+    nom: 'Sophie L.', marque: 'Porsche', specialite: '911, Cayenne — moteurs MA1 et M48',
+    bio: "7 ans chez un préparateur Porsche officiel. 911, Cayenne, Macan — je connais chaque point de vigilance, du moteur à plat 6 aux transferts de couple PDK. Aucune surprise cachée.",
+    exp: '7 ans', missions: 312, note: '5.0', gradient: 'linear-gradient(135deg, #7c3aed, #a855f7)', initials: 'SL',
+  },
+  {
+    nom: 'Kevin M.', marque: 'Audi', specialite: 'A4, RS4 — moteurs CDNC et CGWB',
+    bio: "Passionné et technicien VW/Audi depuis 9 ans. Golf, Tiguan, Passat — moteurs TSI, TDI, DSG, je vous dis tout ce qu'il faut vérifier avant de signer.",
+    exp: '11 ans', missions: 521, note: '4.9', gradient: 'linear-gradient(135deg, #991b1b, #dc2626)', initials: 'KM',
+  },
+  {
+    nom: 'Laura M.', marque: 'Ferrari', specialite: '488, F8 — moteurs V8 biturbo',
+    bio: "8 ans en atelier spécialisé Ferrari Italie. 488, F8, Roma — chaque Ferrari a ses points critiques. Je vous évite une mauvaise surprise à 6 chiffres.",
+    exp: '8 ans', missions: 89, note: '5.0', gradient: 'linear-gradient(135deg, #b91c1c, #ff4d00)', initials: 'LM',
+  },
+  {
+    nom: 'Pierre V.', marque: 'Land Rover', specialite: 'Defender, Discovery — châssis 4x4',
+    bio: "14 ans de terrain sur Defender, Discovery et Range Rover. Châssis 4x4, transferts, suspensions pneumatiques — je sais exactement ce qui cède en premier et comment le détecter.",
+    exp: '14 ans', missions: 198, note: '5.0', gradient: 'linear-gradient(135deg, #064e3b, #059669)', initials: 'PV',
+  },
+  {
+    nom: 'Nicolas F.', marque: 'Volkswagen', specialite: 'Golf, Passat — boîtes DSG et moteurs TSI',
+    bio: "10 ans en atelier indépendant spécialisé groupe VAG. Golf, Passat, Tiguan — boîtes DSG, moteurs TSI et TDI, je vous dis tout ce qu'il faut vérifier avant de signer.",
+    exp: '10 ans', missions: 398, note: '4.9', gradient: 'linear-gradient(135deg, #1e3a5f, #1d4ed8)', initials: 'NF',
+  },
+  {
+    nom: 'Antoine B.', marque: 'Renault', specialite: 'Mégane, Clio — moteurs K9K et H4M',
+    bio: "Ancien mécanicien Renault, 7 ans d'expérience sur Clio, Mégane, Captur. Je repère en 30 minutes ce qu'un non-initié ne verrait jamais.",
+    exp: '8 ans', missions: 445, note: '4.8', gradient: 'linear-gradient(135deg, #7c2d12, #ff4d00)', initials: 'AB',
+  },
+  {
+    nom: 'Sarah C.', marque: 'Maserati', specialite: 'Ghibli, Quattroporte — V6 biturbo',
+    bio: "9 ans de passion et de rigueur sur les Maserati. Ghibli, Quattroporte, Levante — moteurs V6 biturbo, boîtes ZF, je connais les faiblesses que les vendeurs taisent.",
+    exp: '9 ans', missions: 112, note: '4.8', gradient: 'linear-gradient(135deg, #312e81, #6366f1)', initials: 'SC',
+  },
+  {
+    nom: 'Paul T.', marque: 'Alfa Romeo', specialite: 'Giulia, Stelvio — moteurs GME',
+    bio: "11 ans spécialisé sur les Alfa Romeo modernes. Giulia, Stelvio, moteurs GME 2.0 et V6 — les faiblesses sont connues, je vous les explique avant que vous signiez.",
+    exp: '11 ans', missions: 203, note: '4.9', gradient: 'linear-gradient(135deg, #881337, #e11d48)', initials: 'PT',
+  },
 ]
 
 const generalistes = ['Renault', 'Peugeot', 'Citroën', 'Volkswagen', 'Toyota', 'Dacia', 'Ford', 'Opel', 'Nissan', 'Hyundai', 'Kia', 'Fiat', 'Skoda', 'Seat', 'Mazda', 'Subaru', 'Mitsubishi', 'Honda', 'Mini', 'Jeep']
@@ -298,9 +338,21 @@ export default function Experts() {
                       fontFamily: 'Plus Jakarta Sans, sans-serif',
                       fontSize: '0.8125rem', fontWeight: 300,
                       color: 'rgba(255,255,255,0.45)',
-                      lineHeight: 1.55, marginBottom: 16,
+                      lineHeight: 1.55, marginBottom: 8,
                     }}>
                       {e.specialite}
+                    </p>
+                    <p style={{
+                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontSize: '0.8125rem', fontWeight: 400,
+                      color: 'rgba(255,255,255,0.35)',
+                      lineHeight: 1.5, marginBottom: 16,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}>
+                      {e.bio}
                     </p>
 
                     <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 12 }}>
