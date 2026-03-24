@@ -254,6 +254,25 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
 
           {/* Messages */}
           <div className="chat-messages">
+            {/* Message système — affiché en dur, non stocké */}
+            <div style={{
+              display: 'flex', justifyContent: 'center', marginBottom: 6,
+            }}>
+              <div style={{
+                background: 'rgba(15,27,45,0.06)',
+                borderRadius: 10,
+                padding: '8px 14px',
+                maxWidth: '90%',
+                textAlign: 'center',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontSize: '12px',
+                color: '#6B7280',
+                lineHeight: 1.5,
+              }}>
+                🔒 Vos échanges via Inspexo garantissent un suivi de mission complet, un rapport détaillé et notre garantie satisfaction 30 jours.
+              </div>
+            </div>
+
             {loading ? (
               <div style={{
                 textAlign: 'center', color: '#9CA3AF',
