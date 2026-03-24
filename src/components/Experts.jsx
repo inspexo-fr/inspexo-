@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ExpertModal from './ExpertModal'
 
 const experts = [
   { nom: 'Thomas R.', marque: 'BMW', specialite: 'Série 3, M3 — moteurs N52 et S55', exp: '12 ans', missions: 847, note: '4.9', gradient: 'linear-gradient(135deg, #1a3a5c, #2563eb)', initials: 'TR' },
@@ -19,11 +20,12 @@ const premium = ['BMW', 'Mercedes', 'Audi', 'Volvo', 'Land Rover', 'Jaguar', 'Le
 const INITIAL_LIMIT = 4
 
 export default function Experts() {
-  const [activeFilter, setActiveFilter] = useState('Tous')
-  const [searchQuery, setSearchQuery]   = useState('')
-  const [showAll, setShowAll]           = useState(false)
-  const [email, setEmail]               = useState('')
-  const [submitted, setSubmitted]       = useState(false)
+  const [activeFilter, setActiveFilter]   = useState('Tous')
+  const [searchQuery, setSearchQuery]     = useState('')
+  const [showAll, setShowAll]             = useState(false)
+  const [selectedExpert, setSelectedExpert] = useState(null)
+  const [email, setEmail]                 = useState('')
+  const [submitted, setSubmitted]         = useState(false)
 
   const searchLower = searchQuery.trim().toLowerCase()
 
@@ -260,7 +262,7 @@ export default function Experts() {
                 display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24,
               }}>
                 {displayedExperts.map((e, i) => (
-                  <div key={i} className="expert-card">
+                  <div key={i} className="expert-card" onClick={() => setSelectedExpert(e)} style={{ cursor: 'pointer' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
                       <div style={{
                         width: 48, height: 48, borderRadius: '50%',
@@ -313,10 +315,10 @@ export default function Experts() {
                 ))}
               </div>
 
-              {hasMore && !showAll && (
+              {(hasMore || showAll) && (
                 <div style={{ textAlign: 'center', marginBottom: 40 }}>
                   <button
-                    onClick={() => setShowAll(true)}
+                    onClick={() => setShowAll(v => !v)}
                     style={{
                       background: 'transparent',
                       border: '1px solid rgba(255,255,255,0.2)',
@@ -329,11 +331,12 @@ export default function Experts() {
                     onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.color = '#fff' }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)' }}
                   >
-                    Voir plus d'experts ({filtered.length - INITIAL_LIMIT} de plus)
+                    {showAll
+                      ? 'Voir moins'
+                      : `Voir plus d'experts (${filtered.length - INITIAL_LIMIT} de plus)`}
                   </button>
                 </div>
               )}
-              {showAll && <div style={{ marginBottom: 40 }} />}
             </>
           ) : (
             <div style={{
@@ -405,6 +408,14 @@ export default function Experts() {
 
         </div>
       </section>
+
+      {selectedExpert && (
+        <ExpertModal
+          expert={selectedExpert}
+          onClose={() => setSelectedExpert(null)}
+          onBook={() => { setSelectedExpert(null); /* CheckoutModal s'ouvre via App.jsx */ }}
+        />
+      )}
     </>
   )
 }
