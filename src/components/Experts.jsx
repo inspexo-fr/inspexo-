@@ -226,8 +226,6 @@ export default function Experts() {
                   </p>
 
                   <div style={{
-                    display: 'flex', justifyContent: 'space-between',
-                    alignItems: 'center',
                     borderTop: '1px solid rgba(255,255,255,0.06)',
                     paddingTop: 12,
                   }}>
@@ -236,13 +234,6 @@ export default function Experts() {
                       fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)',
                     }}>
                       {e.exp} d'expérience · {e.missions} missions
-                    </div>
-                    <div style={{
-                      display: 'flex', alignItems: 'center', gap: 4,
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.8125rem', fontWeight: 700, color: '#FFC107',
-                    }}>
-                      ★ {e.note}
                     </div>
                   </div>
                 </div>

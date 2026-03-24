@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import ChatIA from '../components/ChatIA'
 import CalBooking from '../components/CalBooking'
+import ReviewModal from '../components/ReviewModal'
 
 const TIER_LABELS = {
   ia_free:          { label: 'Analyse IA gratuite',    emoji: '💬' },
@@ -57,6 +58,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
   const [activeChatMission, setActiveChatMission]       = useState(null)
   const [activeBookingMission, setActiveBookingMission] = useState(null)
   const [showDeleteConfirm, setShowDeleteConfirm]       = useState(false)
+  const [reviewMission, setReviewMission]               = useState(null)
 
   const fetchMissions = useCallback(() => {
     if (!user) return
@@ -437,6 +439,38 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                           📄 Voir le rapport
                         </a>
                       )}
+
+                      {/* Bouton avis — visio/inspection terminées avec expert */}
+                      {mission.status === 'completed' && mission.expert_id && (
+                        mission.review_submitted ? (
+                          <div style={{
+                            marginTop: 10,
+                            fontFamily: 'Plus Jakarta Sans, sans-serif',
+                            fontSize: '0.8125rem', color: '#9CA3AF',
+                            display: 'inline-flex', alignItems: 'center', gap: 5,
+                          }}>
+                            ✅ Avis envoyé
+                          </div>
+                        ) : (
+                          <div style={{ marginTop: 10 }}>
+                            <button
+                              onClick={() => setReviewMission(mission)}
+                              style={{
+                                display: 'inline-flex', alignItems: 'center', gap: 6,
+                                background: '#FFFBEB',
+                                color: '#92400E',
+                                border: '1px solid rgba(251,191,36,0.3)',
+                                padding: '8px 18px', borderRadius: 8,
+                                fontSize: '0.8125rem', fontWeight: 700,
+                                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                                cursor: 'pointer', transition: 'opacity 0.2s',
+                              }}
+                            >
+                              ⭐ Laisser un avis
+                            </button>
+                          </div>
+                        )
+                      )}
                     </div>
                   )
                 })}
@@ -537,6 +571,18 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
               ? { ...prev, status: 'completed' }
               : null
             )
+          }}
+        />
+      )}
+
+      {/* Modale avis */}
+      {reviewMission && (
+        <ReviewModal
+          mission={reviewMission}
+          onClose={() => setReviewMission(null)}
+          onSubmitted={() => {
+            setReviewMission(null)
+            fetchMissions()
           }}
         />
       )}
