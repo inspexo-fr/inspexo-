@@ -227,6 +227,8 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
         style={{
           background: '#fff', borderRadius: 20, padding: '36px 32px',
           maxWidth: 520, width: '100%',
+          maxHeight: '90vh', overflowX: 'hidden', overflowY: 'auto',
+          overscrollBehavior: 'contain',
           fontFamily: 'Plus Jakarta Sans, sans-serif',
         }}
         onClick={e => e.stopPropagation()}

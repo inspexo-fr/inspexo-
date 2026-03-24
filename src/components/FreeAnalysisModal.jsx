@@ -86,7 +86,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
         @media (max-width: 540px) {
           .free-modal-box { padding: 28px 20px !important; }
           .free-modal-overlay { align-items: flex-end !important; padding: 0 !important; }
-          .free-modal-box { border-radius: 20px 20px 0 0 !important; }
+          .free-modal-box { border-radius: 20px !important; }
         }
       `}</style>
 
@@ -107,7 +107,8 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
             borderRadius: 20,
             padding: '40px 32px',
             maxWidth: 480, width: '100%',
-            maxHeight: '90vh', overflowY: 'auto',
+            maxHeight: '90vh', overflowX: 'hidden', overflowY: 'auto',
+            overscrollBehavior: 'contain',
             border: '1px solid rgba(255,255,255,0.1)',
             fontFamily: 'Plus Jakarta Sans, sans-serif',
           }}

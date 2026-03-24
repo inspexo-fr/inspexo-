@@ -344,7 +344,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
         .ia-start-btn:hover { opacity: 0.88 !important; transform: translateY(-2px) !important; }
         @media (max-width: 540px) {
           .checkout-row { grid-template-columns: 1fr !important; }
-          .modal-box { border-radius: 16px 16px 0 0 !important; margin-top: auto !important; }
+          .modal-box { border-radius: 16px !important; margin-top: auto !important; }
           .modal-overlay { align-items: flex-end !important; }
         }
       `}</style>
@@ -368,6 +368,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
             background: '#fff', borderRadius: 20,
             width: '100%', maxWidth: 560, maxHeight: '92vh',
             display: 'flex', flexDirection: 'column',
+            overflow: 'hidden',
             boxShadow: '0 24px 80px rgba(0,0,0,0.35)',
             animation: 'modal-in 0.25s ease',
           }}
@@ -433,7 +434,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
           </div>
 
           {/* Body */}
-          <div className="checkout-scroll" style={{ overflowY: 'auto', padding: '24px 28px', flexGrow: 1 }}>
+          <div className="checkout-scroll" style={{ overflowY: 'auto', overscrollBehavior: 'contain', padding: '24px 28px', flexGrow: 1 }}>
 
             {/* SUCCESS — paliers visio / inspection */}
             {step === 'success' && (

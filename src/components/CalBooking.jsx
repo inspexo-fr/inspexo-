@@ -6,6 +6,11 @@ export default function CalBooking({ tier, onClose }) {
     : 'cal.eu-inspexo/inspection-physique'
 
   useEffect(() => {
+    document.body.classList.add('modal-open')
+    return () => document.body.classList.remove('modal-open')
+  }, [])
+
+  useEffect(() => {
     if (!window.Cal) return
 
     window.Cal('init', { origin: 'https://app.cal.eu' })
@@ -60,7 +65,7 @@ export default function CalBooking({ tier, onClose }) {
       </div>
 
       {/* Cal.com embed */}
-      <div id="cal-embed" style={{ flex: 1, overflow: 'auto' }} />
+      <div id="cal-embed" style={{ flex: 1, overflow: 'auto', overscrollBehavior: 'contain' }} />
     </div>
   )
 }
