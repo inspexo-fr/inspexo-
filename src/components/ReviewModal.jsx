@@ -58,7 +58,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
   }
 
   const overlayStyle = {
-    position: 'fixed', inset: 0, zIndex: 9999,
+    position: 'fixed', inset: 0, zIndex: 10000,
     background: 'rgba(15,27,45,0.88)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: 16,

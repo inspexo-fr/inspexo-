@@ -349,7 +349,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
         onClick={onClose}
         className="modal-overlay"
         style={{
-          position: 'fixed', inset: 0, zIndex: 200,
+          position: 'fixed', inset: 0, zIndex: 10000,
           background: 'rgba(8,14,24,0.78)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 16, animation: 'overlay-in 0.2s ease',

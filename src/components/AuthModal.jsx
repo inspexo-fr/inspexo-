@@ -145,7 +145,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
       <div
         onClick={onClose}
         style={{
-          position: 'fixed', inset: 0, zIndex: 300,
+          position: 'fixed', inset: 0, zIndex: 10000,
           background: 'rgba(8,14,24,0.8)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 16, animation: 'auth-overlay-in 0.2s ease',

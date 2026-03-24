@@ -217,7 +217,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
   return (
     <div
       style={{
-        position: 'fixed', inset: 0, zIndex: 9999,
+        position: 'fixed', inset: 0, zIndex: 10000,
         background: 'rgba(15,27,45,0.85)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
       }}

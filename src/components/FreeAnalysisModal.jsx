@@ -87,7 +87,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
       <div
         className="free-modal-overlay"
         style={{
-          position: 'fixed', inset: 0, zIndex: 9998,
+          position: 'fixed', inset: 0, zIndex: 10000,
           background: 'rgba(15,27,45,0.92)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 16,
