@@ -107,7 +107,7 @@ export default function Hero({ onFreeAnalysis }) {
             </p>
 
             {/* CTAs */}
-            <div className="hero-ctas" style={{ display: 'flex', gap: 14, marginBottom: 48, flexWrap: 'wrap' }}>
+            <div className="hero-ctas" style={{ display: 'flex', gap: 14, marginBottom: 16, flexWrap: 'wrap' }}>
               <button onClick={onFreeAnalysis} className="hero-btn-primary">
                 🔍 Analyser gratuitement
                 <span style={{ fontSize: '1.1rem' }}>→</span>
@@ -115,6 +115,17 @@ export default function Hero({ onFreeAnalysis }) {
               <a href="#services" className="hero-btn-outline">
                 Voir tous les services
               </a>
+            </div>
+
+            {/* Reassurance */}
+            <div style={{
+              marginBottom: 40,
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontSize: '0.8125rem', fontWeight: 500,
+              color: 'rgba(255,255,255,0.35)',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              ✅ 100% gratuit · 10 échanges avec l'expert IA · Sans engagement
             </div>
 
             {/* Trust badges */}

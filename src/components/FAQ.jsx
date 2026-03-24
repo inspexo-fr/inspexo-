@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+
 const faqs = [
   {
     q: 'Les experts sont-ils vraiment indépendants ?',
@@ -31,7 +32,7 @@ const faqs = [
   },
 ]
 
-export default function FAQ() {
+export default function FAQ({ onFreeAnalysis }) {
   const [open, setOpen] = useState(null)
 
   return (
@@ -126,6 +127,38 @@ export default function FAQ() {
                   )}
                 </div>
               ))}
+
+              {/* CTA après la FAQ */}
+              <div style={{
+                marginTop: 32, padding: '24px',
+                background: '#FFF0EA', borderRadius: 14,
+                display: 'flex', alignItems: 'center',
+                justifyContent: 'space-between', gap: 16, flexWrap: 'wrap',
+              }}>
+                <div style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.9375rem', fontWeight: 500,
+                  color: '#374151', lineHeight: 1.55,
+                }}>
+                  Encore des doutes ?<br />
+                  <span style={{ color: '#FF4D00', fontWeight: 700 }}>
+                    Lance une analyse gratuite
+                  </span>{' '}— notre expert IA répond à tes questions.
+                </div>
+                <button
+                  onClick={onFreeAnalysis}
+                  style={{
+                    background: '#FF4D00', color: '#fff',
+                    border: 'none', borderRadius: 10,
+                    padding: '11px 24px', cursor: 'pointer',
+                    fontFamily: 'Syne, sans-serif', fontWeight: 700,
+                    fontSize: '0.9rem', whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                  }}
+                >
+                  🔍 Analyser gratuitement
+                </button>
+              </div>
             </div>
           </div>
         </div>

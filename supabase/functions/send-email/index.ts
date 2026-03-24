@@ -147,6 +147,47 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
     `,
   }),
 
+  nudge_no_analysis: (data) => ({
+    subject: `Tu n'as pas encore analysé ton véhicule 🔍`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: #0F1B2D; padding: 32px; text-align: center;">
+          <h1 style="color: #ffffff; font-size: 28px; margin: 0; letter-spacing: 3px;">INSPEXO</h1>
+          <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px;">Expert automobile à tes côtés</p>
+        </div>
+        <div style="padding: 32px;">
+          <h2 style="color: #0F1B2D; font-size: 22px;">Tu envisages encore un achat ?</h2>
+          <p style="color: #333; line-height: 1.6; font-size: 15px;">
+            Tu t'es inscrit sur Inspexo mais tu n'as pas encore lancé d'analyse.
+            ${data.vehicle ? `Tu regardes un <strong>${data.vehicle}</strong> ?` : 'Quel que soit le véhicule que tu vises,'}
+            notre expert IA peut t'aider à éviter les mauvaises surprises.
+          </p>
+          <div style="background: #FFF0EA; border-radius: 12px; padding: 20px; margin: 24px 0;">
+            <p style="color: #0F1B2D; font-size: 14px; margin: 0 0 12px; font-weight: 700;">Ce que l'analyse gratuite te donne :</p>
+            <p style="color: #333; font-size: 14px; margin: 6px 0; line-height: 1.5;">✓ Les défauts connus du modèle</p>
+            <p style="color: #333; font-size: 14px; margin: 6px 0; line-height: 1.5;">✓ Les questions à poser au vendeur</p>
+            <p style="color: #333; font-size: 14px; margin: 6px 0; line-height: 1.5;">✓ Les signaux d'alerte à surveiller</p>
+            <p style="color: #FF4D00; font-size: 14px; margin: 6px 0; line-height: 1.5; font-weight: 600;">→ 10 échanges gratuits, sans CB</p>
+          </div>
+          <div style="text-align: center; margin: 32px 0;">
+            <a href="https://inspexo.io" style="background: #FF4D00; color: #ffffff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">
+              🔍 Lancer mon analyse gratuite
+            </a>
+          </div>
+          <p style="color: #999; font-size: 13px; line-height: 1.5; text-align: center;">
+            Il te reste <strong>${data.remaining_free ?? 3} analyse(s) gratuite(s)</strong> sur ton compte
+          </p>
+        </div>
+        <div style="background: #F8F9FA; padding: 24px 32px; border-top: 1px solid #eee;">
+          <p style="color: #999; font-size: 12px; margin: 0; text-align: center;">
+            Inspexo — Expert automobile spécialisé par marque<br>
+            <a href="https://inspexo.io" style="color: #FF4D00;">inspexo.io</a>
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
   free_analysis_ended: (data) => ({
     subject: `🔍 ${data.vehicle} — ${data.critical_count} point(s) critique(s) détecté(s)`,
     html: `

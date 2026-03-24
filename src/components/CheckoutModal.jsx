@@ -21,7 +21,7 @@ const CURRENT_YEAR = new Date().getFullYear()
 
 // ─── Formulaire Stripe (step 2) ──────────────────────────────────────────────
 
-function PaymentForm({ onSuccess, onError }) {
+function PaymentForm({ onSuccess, onError, priceLabel, tier }) {
   const stripe = useStripe()
   const elements = useElements()
   const [loading, setLoading] = useState(false)
@@ -64,8 +64,17 @@ function PaymentForm({ onSuccess, onError }) {
             <span className="checkout-spinner" />
             Traitement en cours...
           </span>
-        ) : 'Confirmer le paiement →'}
+        ) : `Payer ${priceLabel} →`}
       </button>
+      {(tier === 'visio' || tier === 'inspection') && (
+        <div style={{
+          textAlign: 'center', marginTop: 10,
+          fontFamily: 'Plus Jakarta Sans, sans-serif',
+          fontSize: '0.8125rem', color: '#9CA3AF',
+        }}>
+          Annulation gratuite jusqu'à {tier === 'inspection' ? '48h' : '24h'} avant le rendez-vous
+        </div>
+      )}
     </form>
   )
 }
@@ -629,10 +638,24 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
                   </div>
                 </div>
 
+                {/* Social proof */}
+                <div style={{
+                  background: '#F0FDF4', border: '1px solid #BBF7D0',
+                  borderRadius: 10, padding: '11px 16px', marginBottom: 20,
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.8125rem', color: '#15803D',
+                  display: 'flex', alignItems: 'center', gap: 8,
+                }}>
+                  🔒 Paiement sécurisé par Stripe · Données bancaires jamais stockées
+                  {(tier === 'visio' || tier === 'inspection') && ' · Garantie satisfaction 30 jours'}
+                </div>
+
                 <Elements stripe={stripePromise} options={stripeOptions}>
                   <PaymentForm
                     onSuccess={handlePaymentSuccess}
                     onError={msg => setErrorMsg(msg)}
+                    priceLabel={meta.price}
+                    tier={tier}
                   />
                 </Elements>
 

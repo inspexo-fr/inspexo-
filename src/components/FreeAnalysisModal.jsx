@@ -318,6 +318,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                 textAlign: 'center', marginTop: 14, lineHeight: 1.5,
               }}>
                 10 échanges gratuits · Rapport partiel inclus · Sans engagement
+                <br />🔒 Tes données restent confidentielles et ne sont jamais partagées
               </p>
             </>
           )}

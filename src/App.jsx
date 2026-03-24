@@ -20,6 +20,9 @@ import AuthModal from './components/AuthModal'
 import FreeAnalysisModal from './components/FreeAnalysisModal'
 import ChatIA from './components/ChatIA'
 import CheckoutModal from './components/CheckoutModal'
+import StickyCTA from './components/StickyCTA'
+import NotFound from './pages/NotFound'
+import ClientDashboard from './pages/ClientDashboard'
 
 function Site() {
   const [user, setUser] = useState(null)
@@ -81,11 +84,11 @@ function Site() {
       <main>
         <Hero onFreeAnalysis={handleFreeAnalysis} />
         <StatsBar />
-        <HowItWorks />
-        <Services />
+        <HowItWorks onFreeAnalysis={handleFreeAnalysis} />
+        <Services onFreeAnalysis={handleFreeAnalysis} />
         <Experts />
         <BecomeExpert />
-        <FAQ />
+        <FAQ onFreeAnalysis={handleFreeAnalysis} />
       </main>
       <Footer />
       <FooterNotes />
@@ -132,6 +135,12 @@ function Site() {
           prefillVehicle={unlockCheckout.prefillVehicle}
         />
       )}
+
+      {/* Sticky CTA mobile — caché quand une modale/chat est ouvert */}
+      <StickyCTA
+        onClick={handleFreeAnalysis}
+        isVisible={!showAuthForFreeAnalysis && !showFreeAnalysis && !freeMission && !unlockCheckout}
+      />
     </>
   )
 }
@@ -141,10 +150,12 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Site />} />
+        <Route path="/dashboard" element={<ClientDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />
         <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
         <Route path="/cgu" element={<CGU />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <CookieBanner />
     </BrowserRouter>

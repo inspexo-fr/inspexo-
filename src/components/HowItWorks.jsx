@@ -21,7 +21,7 @@ const steps = [
   },
 ]
 
-export default function HowItWorks() {
+export default function HowItWorks({ onFreeAnalysis }) {
   return (
     <>
       <style>{`
@@ -72,7 +72,7 @@ export default function HowItWorks() {
           </div>
 
           <div className="steps-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24,
+            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 48,
           }}>
             {steps.map((s, i) => (
               <div key={i} className="step-card">
@@ -107,6 +107,33 @@ export default function HowItWorks() {
                 </p>
               </div>
             ))}
+          </div>
+
+          {/* CTA tunnel */}
+          <div style={{ textAlign: 'center' }}>
+            <button
+              onClick={onFreeAnalysis}
+              style={{
+                background: '#FF4D00', color: '#fff',
+                border: 'none', borderRadius: 10,
+                padding: '14px 36px', cursor: 'pointer',
+                fontFamily: 'Syne, sans-serif', fontWeight: 700,
+                fontSize: '1rem', display: 'inline-flex',
+                alignItems: 'center', gap: 8,
+                transition: 'opacity 0.2s, transform 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'none' }}
+            >
+              🔍 Commencer mon analyse gratuite
+            </button>
+            <div style={{
+              marginTop: 12,
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontSize: '0.8125rem', color: '#9CA3AF',
+            }}>
+              Gratuit · 10 échanges avec l'expert IA · Sans engagement
+            </div>
           </div>
         </div>
       </section>

@@ -62,7 +62,7 @@ const services = [
   },
 ]
 
-export default function Services() {
+export default function Services({ onFreeAnalysis }) {
   const [modalTier, setModalTier] = useState(null)
 
   return (
@@ -258,9 +258,50 @@ export default function Services() {
             ))}
           </div>
 
+          {/* CTA analyse gratuite */}
+          <div style={{
+            marginTop: 40, textAlign: 'center',
+            padding: '32px 24px',
+            background: '#fff',
+            border: '1.5px dashed rgba(255,77,0,0.25)',
+            borderRadius: 16,
+          }}>
+            <div style={{
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontSize: '0.9375rem', fontWeight: 500,
+              color: '#6B7280', marginBottom: 16,
+            }}>
+              Pas encore décidé ? Commence par l'analyse gratuite.
+            </div>
+            <button
+              onClick={onFreeAnalysis}
+              style={{
+                background: 'transparent', color: '#FF4D00',
+                border: '1.5px solid #FF4D00',
+                borderRadius: 10, padding: '11px 28px',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontWeight: 700, fontSize: '0.9375rem',
+                cursor: 'pointer', display: 'inline-flex',
+                alignItems: 'center', gap: 7,
+                transition: 'background 0.2s, color 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#FF4D00'; e.currentTarget.style.color = '#fff' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#FF4D00' }}
+            >
+              🔍 Analyser gratuitement
+            </button>
+            <div style={{
+              marginTop: 10,
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontSize: '0.8125rem', color: '#9CA3AF',
+            }}>
+              10 échanges · Rapport partiel · Sans CB
+            </div>
+          </div>
+
           {/* Garantie */}
           <div style={{
-            marginTop: 40, background: '#fff',
+            marginTop: 20, background: '#fff',
             border: '1.5px solid rgba(0,0,0,0.07)',
             borderRadius: 12, padding: '20px 28px',
             display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
