@@ -209,6 +209,12 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
         .chat-msg-ai { white-space: pre-wrap; word-break: break-word; }
         @keyframes chat-spin { to { transform: rotate(360deg); } }
         .chat-upload-btn:hover { border-color: rgba(255,77,0,0.5) !important; color: #FF4D00 !important; }
+        @media (max-width: 768px) {
+          .chat-msg-bubble { max-width: 90% !important; }
+          .chat-header-label { font-size: 0.875rem !important; }
+          .chat-report-btn { padding: 8px 10px !important; font-size: 0.75rem !important; }
+          .chat-input-area { padding: 10px 12px !important; }
+        }
       `}</style>
 
       {/* Plein écran */}
@@ -311,7 +317,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
           )}
 
           {messages.map((msg, i) => (
-            <div key={i} style={{
+            <div key={i} className="chat-msg-bubble" style={{
               alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
               maxWidth: '82%',
             }}>
@@ -445,12 +451,13 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
             </span>
           </div>
         ) : !showConversion ? (
-          <div style={{
+          <div className="chat-input-area" style={{
             padding: '14px 24px', background: '#0F1B2D',
             borderTop: '1px solid rgba(255,255,255,0.08)',
             display: 'flex', gap: 10, alignItems: 'flex-end',
             flexShrink: 0, maxWidth: 860, width: '100%', margin: '0 auto',
             alignSelf: 'stretch',
+            paddingBottom: 'max(14px, env(safe-area-inset-bottom))',
           }}>
             {/* Bouton génerer rapport — masqué en mode gratuit */}
             {!isFree && (

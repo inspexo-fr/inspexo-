@@ -11,9 +11,13 @@ export default function CGU() {
         .legal-a  { color: #FF4D00; text-decoration: none; }
         .legal-a:hover { text-decoration: underline; }
         .legal-sep { border: none; border-top: 1px solid rgba(0,0,0,0.07); margin: 32px 0; }
+        @media (max-width: 640px) {
+          .legal-container { padding: 40px 16px 60px !important; }
+          .legal-p { font-size: 0.875rem !important; }
+        }
       `}</style>
 
-      <div style={{ background: '#fff', minHeight: '100vh', padding: '60px 24px 80px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+      <div className="legal-container" style={{ background: '#fff', minHeight: '100vh', padding: '60px 24px 80px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
           <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#FF4D00', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: '0.875rem', textDecoration: 'none', marginBottom: 40 }}>

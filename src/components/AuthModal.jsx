@@ -156,9 +156,9 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
           style={{
             background: '#fff', borderRadius: 20,
             width: '100%', maxWidth: 420,
+            maxHeight: '90vh', overflowY: 'auto',
             boxShadow: '0 24px 80px rgba(0,0,0,0.35)',
             animation: 'auth-modal-in 0.25s ease',
-            overflow: 'hidden',
           }}
         >
           {/* Header */}

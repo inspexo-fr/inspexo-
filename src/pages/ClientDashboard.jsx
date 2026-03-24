@@ -130,6 +130,10 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
         @media (max-width: 640px) {
           .mission-meta-grid { flex-direction: column !important; gap: 8px !important; }
           .mission-header-row { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+          .dashboard-panel { max-width: 100% !important; }
+          .dashboard-header { padding: 24px 20px 20px !important; }
+          .dashboard-body { padding: 20px !important; }
+          .report-btn { width: 100% !important; justify-content: center !important; }
         }
       `}</style>
 
@@ -145,7 +149,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
         {/* Panel */}
         <div
           onClick={e => e.stopPropagation()}
-          className="dashboard-scroll"
+          className="dashboard-scroll dashboard-panel"
           style={{
             width: '100%', maxWidth: 720,
             height: '100%', overflowY: 'auto',
@@ -156,7 +160,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
           }}
         >
           {/* Header */}
-          <div style={{
+          <div className="dashboard-header" style={{
             background: '#0F1B2D',
             padding: '32px 36px 28px',
             flexShrink: 0,
@@ -233,7 +237,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
           </div>
 
           {/* Body */}
-          <div style={{ padding: '32px 36px', flexGrow: 1 }}>
+          <div className="dashboard-body" style={{ padding: '32px 36px', flexGrow: 1 }}>
 
             {/* Loading */}
             {loading && (

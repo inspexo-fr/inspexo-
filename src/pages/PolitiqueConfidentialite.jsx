@@ -12,9 +12,13 @@ export default function PolitiqueConfidentialite() {
         .legal-ul li { margin-bottom: 4px; }
         .legal-a  { color: #FF4D00; text-decoration: none; }
         .legal-a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+          .legal-container { padding: 40px 16px 60px !important; }
+          .legal-p, .legal-ul { font-size: 0.875rem !important; }
+        }
       `}</style>
 
-      <div style={{ background: '#fff', minHeight: '100vh', padding: '60px 24px 80px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+      <div className="legal-container" style={{ background: '#fff', minHeight: '100vh', padding: '60px 24px 80px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
           {/* Retour */}

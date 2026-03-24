@@ -65,8 +65,10 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
   }
 
   const modalStyle = {
-    background: '#fff', borderRadius: 20, padding: '40px 36px',
+    background: '#fff', borderRadius: 20,
+    padding: window.innerWidth < 540 ? '28px 20px' : '40px 36px',
     maxWidth: 480, width: '100%', textAlign: 'center',
+    maxHeight: '90vh', overflowY: 'auto',
   }
 
   const titleStyle = {

@@ -10,9 +10,13 @@ export default function MentionsLegales() {
         .legal-p  { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9375rem; color: #333; line-height: 1.75; margin: 0 0 12px; }
         .legal-a  { color: #FF4D00; text-decoration: none; }
         .legal-a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+          .legal-container { padding: 40px 16px 60px !important; }
+          .legal-p { font-size: 0.875rem !important; }
+        }
       `}</style>
 
-      <div style={{ background: '#fff', minHeight: '100vh', padding: '60px 24px 80px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+      <div className="legal-container" style={{ background: '#fff', minHeight: '100vh', padding: '60px 24px 80px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
           {/* Retour */}

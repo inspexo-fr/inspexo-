@@ -38,6 +38,11 @@ export default function FAQ() {
     <>
       <style>{`
         .faq-item { border-bottom: 1px solid rgba(0,0,0,0.07); }
+        @media (max-width: 768px) {
+          .faq-layout { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .faq-sidebar { position: static !important; }
+          .faq-section { padding: 64px 20px !important; }
+        }
         .faq-question {
           display: flex; justify-content: space-between; align-items: center;
           padding: 22px 0; cursor: pointer; gap: 16;
@@ -60,13 +65,13 @@ export default function FAQ() {
         }
       `}</style>
 
-      <section id="faq" style={{ background: '#fff', padding: '96px 24px' }}>
+      <section id="faq" className="faq-section" style={{ background: '#fff', padding: '96px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 72, alignItems: 'start' }}>
+          <div className="faq-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 72, alignItems: 'start' }}>
 
             {/* Left */}
-            <div style={{ position: 'sticky', top: 100 }}>
+            <div className="faq-sidebar" style={{ position: 'sticky', top: 100 }}>
               <div style={{
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '0.8125rem', fontWeight: 600,

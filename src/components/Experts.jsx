@@ -79,13 +79,15 @@ export default function Experts() {
         @media (max-width: 768px) {
           .experts-grid { grid-template-columns: 1fr !important; }
           .experts-header { flex-direction: column !important; align-items: flex-start !important; }
+          .experts-section { padding: 64px 20px !important; }
+          .brand-pills-row { overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 4px !important; }
         }
         @media (max-width: 900px) {
           .experts-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
 
-      <section id="experts" style={{ background: '#0F1B2D', padding: '96px 24px' }}>
+      <section id="experts" className="experts-section" style={{ background: '#0F1B2D', padding: '96px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
           {/* Label */}
@@ -140,7 +142,7 @@ export default function Experts() {
               }}>
                 🚗 Généralistes
               </span>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div className="brand-pills-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {generalistes.map(b => (
                   <button
                     key={b}
@@ -164,7 +166,7 @@ export default function Experts() {
               }}>
                 💎 Premium & Sportives
               </span>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <div className="brand-pills-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {premium.map(b => (
                   <button
                     key={b}

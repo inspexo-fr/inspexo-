@@ -77,9 +77,15 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
           border-color: rgba(255,77,0,0.5) !important;
         }
         .free-modal-input::placeholder { color: rgba(255,255,255,0.25); }
+        @media (max-width: 540px) {
+          .free-modal-box { padding: 28px 20px !important; }
+          .free-modal-overlay { align-items: flex-end !important; padding: 0 !important; }
+          .free-modal-box { border-radius: 20px 20px 0 0 !important; }
+        }
       `}</style>
 
       <div
+        className="free-modal-overlay"
         style={{
           position: 'fixed', inset: 0, zIndex: 9998,
           background: 'rgba(15,27,45,0.92)',
@@ -89,11 +95,13 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
         onClick={onClose}
       >
         <div
+          className="free-modal-box"
           style={{
             background: '#1A2E45',
             borderRadius: 20,
             padding: '40px 32px',
             maxWidth: 480, width: '100%',
+            maxHeight: '90vh', overflowY: 'auto',
             border: '1px solid rgba(255,255,255,0.1)',
             fontFamily: 'Plus Jakarta Sans, sans-serif',
           }}
