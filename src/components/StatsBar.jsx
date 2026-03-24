@@ -24,9 +24,18 @@ export default function StatsBar() {
     <>
       <style>{`
         @media (max-width: 640px) {
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; }
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 32px 16px !important;
+            padding: 0 4px !important;
+          }
+          .stat-label {
+            font-size: 0.75rem !important;
+            letter-spacing: 0.03em !important;
+          }
         }
         .stat-item {
+          position: relative;
           opacity: 0; transform: translateY(12px);
           transition: opacity 0.4s ease, transform 0.4s ease;
         }
@@ -37,7 +46,7 @@ export default function StatsBar() {
         .stat-item:nth-child(4) { transition-delay: 0.24s; }
       `}</style>
 
-      <section ref={ref} style={{ background: '#FF4D00', padding: '52px 24px' }}>
+      <section ref={ref} style={{ background: '#FF4D00', padding: '52px 20px', overflowX: 'hidden' }}>
         <div
           className="stats-grid"
           style={{
@@ -50,13 +59,13 @@ export default function StatsBar() {
             <div key={i} className={`stat-item${visible ? ' visible' : ''}`}>
               <div style={{
                 fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
+                fontSize: 'clamp(1.75rem, 4.5vw, 3.25rem)',
                 color: '#fff', lineHeight: 1, marginBottom: 8,
                 letterSpacing: '-1px',
               }}>
                 {s.value}
               </div>
-              <div style={{
+              <div className="stat-label" style={{
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '0.875rem', fontWeight: 500,
                 color: 'rgba(255,255,255,0.75)',
