@@ -12,6 +12,10 @@ import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import FooterNotes from './components/FooterNotes'
 import AdminDashboard from './pages/AdminDashboard'
+import MentionsLegales from './pages/MentionsLegales'
+import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
+import CGU from './pages/CGU'
+import CookieBanner from './components/CookieBanner'
 import AuthModal from './components/AuthModal'
 import FreeAnalysisModal from './components/FreeAnalysisModal'
 import ChatIA from './components/ChatIA'
@@ -138,7 +142,11 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Site />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/mentions-legales" element={<MentionsLegales />} />
+        <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
+        <Route path="/cgu" element={<CGU />} />
       </Routes>
+      <CookieBanner />
     </BrowserRouter>
   )
 }

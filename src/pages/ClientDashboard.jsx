@@ -54,8 +54,9 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
   const [missions, setMissions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [activeChatMission, setActiveChatMission]     = useState(null)
+  const [activeChatMission, setActiveChatMission]       = useState(null)
   const [activeBookingMission, setActiveBookingMission] = useState(null)
+  const [showDeleteConfirm, setShowDeleteConfirm]       = useState(false)
 
   const fetchMissions = useCallback(() => {
     if (!user) return
@@ -442,8 +443,80 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
               </div>
             )}
           </div>
+
+          {/* Suppression de compte */}
+          <div style={{ marginTop: 48, paddingTop: 28, borderTop: '1px solid rgba(0,0,0,0.07)', textAlign: 'center' }}>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              style={{
+                background: 'none', border: 'none',
+                color: '#9CA3AF', cursor: 'pointer',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontSize: '0.8125rem', fontWeight: 500,
+                textDecoration: 'underline', padding: 0,
+              }}
+            >
+              Supprimer mon compte
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Modale confirmation suppression */}
+      {showDeleteConfirm && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 300,
+          background: 'rgba(0,0,0,0.6)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 16,
+        }}>
+          <div style={{
+            background: '#fff', borderRadius: 20, padding: '36px 32px',
+            maxWidth: 420, width: '100%', textAlign: 'center',
+            fontFamily: 'Plus Jakarta Sans, sans-serif',
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: 12 }}>🗑️</div>
+            <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10 }}>
+              Supprimer mon compte
+            </div>
+            <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: 1.65, marginBottom: 24 }}>
+              Pour supprimer votre compte et toutes vos données, envoyez une demande à{' '}
+              <a href={`mailto:contact@inspexo.io?subject=Demande%20de%20suppression%20de%20compte&body=Bonjour%2C%0A%0AJe%20souhaite%20supprimer%20mon%20compte%20Inspexo%20associ%C3%A9%20%C3%A0%20l%27adresse%20${encodeURIComponent(user?.email || '')}.%0A%0AMerci.`}
+                style={{ color: '#FF4D00', fontWeight: 600 }}>
+                contact@inspexo.io
+              </a>
+              . Nous traiterons votre demande sous 30 jours.
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                style={{
+                  background: '#F3F4F6', color: '#0F1B2D',
+                  border: 'none', borderRadius: 10,
+                  padding: '10px 24px', cursor: 'pointer',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.875rem', fontWeight: 600,
+                }}
+              >
+                Annuler
+              </button>
+              <a
+                href={`mailto:contact@inspexo.io?subject=Demande%20de%20suppression%20de%20compte&body=Bonjour%2C%0A%0AJe%20souhaite%20supprimer%20mon%20compte%20Inspexo%20associ%C3%A9%20%C3%A0%20l%27adresse%20${encodeURIComponent(user?.email || '')}.%0A%0AMerci.`}
+                style={{
+                  background: '#DC2626', color: '#fff',
+                  border: 'none', borderRadius: 10,
+                  padding: '10px 24px', cursor: 'pointer',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontSize: '0.875rem', fontWeight: 700,
+                  textDecoration: 'none', display: 'inline-block',
+                }}
+              >
+                Envoyer la demande
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Cal.com réservation */}
       {activeBookingMission && (

@@ -77,10 +77,9 @@ export default function Footer() {
               }}>
                 Légal
               </div>
-              <span className="footer-link" style={{ cursor: 'pointer' }}>Mentions légales</span>
-              <span className="footer-link" style={{ cursor: 'pointer' }}>CGU / CGV</span>
-              <span className="footer-link" style={{ cursor: 'pointer' }}>Politique de confidentialité</span>
-              <span className="footer-link" style={{ cursor: 'pointer' }}>Gestion des cookies</span>
+              <a href="/mentions-legales" className="footer-link">Mentions légales</a>
+              <a href="/cgu" className="footer-link">CGU / CGV</a>
+              <a href="/politique-de-confidentialite" className="footer-link">Politique de confidentialité</a>
             </div>
           </div>
 
