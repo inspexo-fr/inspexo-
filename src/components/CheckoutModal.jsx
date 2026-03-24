@@ -82,7 +82,7 @@ function PaymentForm({ onSuccess, onError, priceLabel, tier }) {
 
 // ─── Composant principal ──────────────────────────────────────────────────────
 
-export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle }) {
+export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, expertId = null }) {
   const meta = TIER_META[tier] || TIER_META.ia
 
   // step: 'vehicle' | 'payment' | 'success' | 'ia_ready' | 'cal_ready'
@@ -227,6 +227,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
         price_platform:           meta.pricePlatform,
         price_expert:             meta.priceExpert,
         stripe_payment_intent_id: paymentIntent.id,
+        ...(expertId ? { expert_id: expertId } : {}),
       }
 
       console.log('📋 insert row:', missionRow)

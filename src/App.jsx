@@ -86,8 +86,8 @@ function Site() {
         <StatsBar />
         <HowItWorks onFreeAnalysis={handleFreeAnalysis} />
         <Services onFreeAnalysis={handleFreeAnalysis} />
-        <Experts onReserve={(_expert, tier) => {
-          setUnlockCheckout({ tier, prefillVehicle: null })
+        <Experts onReserve={(expert, tier) => {
+          setUnlockCheckout({ tier, prefillVehicle: null, expertId: expert?.id ?? null })
         }} />
         <BecomeExpert />
         <FAQ onFreeAnalysis={handleFreeAnalysis} />
@@ -135,6 +135,7 @@ function Site() {
           onClose={() => setUnlockCheckout(null)}
           tier={unlockCheckout.tier}
           prefillVehicle={unlockCheckout.prefillVehicle}
+          expertId={unlockCheckout.expertId ?? null}
         />
       )}
 

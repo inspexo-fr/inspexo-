@@ -52,10 +52,11 @@ async function adminFetch(path, options = {}) {
 // ─── Onglet Missions ──────────────────────────────────────────────────────────
 
 function MissionsTab() {
-  const [missions, setMissions] = useState([])
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(null)
-  const [updating, setUpdating] = useState(null)
+  const [missions, setMissions]           = useState([])
+  const [loading, setLoading]             = useState(true)
+  const [error, setError]                 = useState(null)
+  const [updating, setUpdating]           = useState(null)
+  const [showUnassignedOnly, setShowUnassignedOnly] = useState(false)
 
   const fetchMissions = useCallback(async () => {
     setLoading(true); setError(null)
@@ -82,16 +83,38 @@ function MissionsTab() {
   if (loading) return <Spinner label="Chargement des missions..." />
   if (error)   return <ErrorBox msg={error} />
 
+  const displayedMissions = showUnassignedOnly ? missions.filter(m => !m.expert_id) : missions
   const totalCA = missions.reduce((sum, m) => sum + (m.price_platform || 0), 0)
+  const unassignedCount = missions.filter(m => !m.expert_id && ['paid', 'expert_assigned', 'in_progress'].includes(m.status)).length
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <div>
           <div style={styles.pageTitle}>Missions</div>
           <div style={styles.pageSub}>{missions.length} mission{missions.length !== 1 ? 's' : ''} — CA plateforme : <strong>{totalCA.toFixed(2)}€</strong></div>
         </div>
         <button onClick={fetchMissions} style={styles.refreshBtn}>↻ Actualiser</button>
+      </div>
+      <div style={{ marginBottom: 20, display: 'flex', gap: 8, alignItems: 'center' }}>
+        <button
+          onClick={() => setShowUnassignedOnly(v => !v)}
+          style={{
+            padding: '6px 14px', borderRadius: 8, border: '1.5px solid',
+            borderColor: showUnassignedOnly ? '#FF4D00' : 'rgba(0,0,0,0.12)',
+            background: showUnassignedOnly ? '#FFF4EE' : '#fff',
+            color: showUnassignedOnly ? '#FF4D00' : '#6B7280',
+            fontSize: '0.8125rem', fontWeight: 600,
+            fontFamily: 'Plus Jakarta Sans, sans-serif', cursor: 'pointer',
+          }}
+        >
+          👤 Non assignées {unassignedCount > 0 && `(${unassignedCount})`}
+        </button>
+        {showUnassignedOnly && (
+          <span style={{ fontSize: '0.8125rem', color: '#9CA3AF', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+            {displayedMissions.length} mission{displayedMissions.length !== 1 ? 's' : ''} sans expert
+          </span>
+        )}
       </div>
 
       {missions.length === 0 ? (
@@ -101,13 +124,13 @@ function MissionsTab() {
           <table style={styles.table}>
             <thead>
               <tr style={styles.thead}>
-                {['ID', 'Client', 'Palier', 'Véhicule', 'Prix', 'Statut', 'Date', 'Actions'].map(h => (
+                {['ID', 'Client', 'Palier', 'Véhicule', 'Prix', 'Statut', 'Date', 'Expert', 'Actions'].map(h => (
                   <th key={h} style={styles.th}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {missions.map((m, i) => (
+              {displayedMissions.map((m, i) => (
                 <tr key={m.id} style={{ ...styles.tr, background: i % 2 === 0 ? '#fff' : '#FAFAFA' }}>
                   <td style={styles.td}>
                     <span style={styles.idBadge}>{shortId(m.id)}</span>
@@ -161,6 +184,28 @@ function MissionsTab() {
                     <div style={{ fontSize: '0.8125rem', color: '#6B7280', whiteSpace: 'nowrap' }}>
                       {formatDate(m.created_at)}
                     </div>
+                  </td>
+                  <td style={styles.td}>
+                    {m.expert_id ? (
+                      <span style={{
+                        fontSize: '0.75rem', fontWeight: 600,
+                        color: '#16A34A', background: '#F0FDF4',
+                        padding: '3px 10px', borderRadius: 100,
+                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      }}>
+                        ✓ Assigné
+                      </span>
+                    ) : (
+                      <span style={{
+                        fontSize: '0.75rem', fontWeight: 600,
+                        color: '#FF4D00', background: '#FFF4EE',
+                        padding: '3px 10px', borderRadius: 100,
+                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        Non assigné
+                      </span>
+                    )}
                   </td>
                   <td style={styles.td}>
                     <button
