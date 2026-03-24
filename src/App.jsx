@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { supabase } from './lib/supabaseClient'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -81,6 +82,11 @@ function Site() {
 
   return (
     <>
+      <Helmet>
+        <title>Inspexo — Expert automobile indépendant, spécialisé par marque | Toulouse</title>
+        <meta name="description" content="Faites inspecter votre véhicule d'occasion par un expert qualifié, spécialisé par marque. 100% côté acheteur. Analyse IA dès 0€. Toulouse & Haute-Garonne." />
+        <link rel="canonical" href="https://www.inspexo.io/" />
+      </Helmet>
       <Navbar />
       <main>
         <Hero onFreeAnalysis={handleFreeAnalysis} />

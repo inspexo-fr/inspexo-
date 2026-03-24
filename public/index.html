@@ -12,11 +12,99 @@
       }
       body.modal-open { overflow: hidden; }
     </style>
+
+    <!-- Favicon -->
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
-    <meta name="description" content="Inspexo — Expert automobile indépendant spécialisé par marque. Achetez votre voiture d'occasion sans mauvaise surprise." />
-    <title>Inspexo — Expert automobile indépendant</title>
+
+    <!-- SEO primaire -->
+    <title>Inspexo — Expert automobile indépendant, spécialisé par marque | Toulouse</title>
+    <meta name="description" content="Faites inspecter votre véhicule d'occasion par un expert qualifié, spécialisé par marque. 100% côté acheteur. Analyse IA dès 0€. Toulouse &amp; Haute-Garonne." />
+    <meta name="keywords" content="expert automobile occasion, inspection véhicule occasion, vérification voiture avant achat, expert BMW occasion, expert Mercedes occasion, Toulouse" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.inspexo.io/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.inspexo.io" />
+    <meta property="og:title" content="Inspexo — Expert automobile indépendant, spécialisé par marque" />
+    <meta property="og:description" content="Faites inspecter votre véhicule d'occasion par un expert qualifié. 100% côté acheteur. Analyse IA dès 0€." />
+    <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Inspexo" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Inspexo — Expert automobile indépendant" />
+    <meta name="twitter:description" content="Inspection véhicule d'occasion par des experts spécialisés par marque. 100% côté acheteur." />
+    <meta name="twitter:image" content="https://www.inspexo.io/og-image.png" />
+
+    <!-- Schema.org LocalBusiness -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Inspexo",
+  "description": "Plateforme d'inspection de véhicules d'occasion par des experts automobiles spécialisés par marque",
+  "url": "https://www.inspexo.io",
+  "logo": "https://www.inspexo.io/favicon-256.png",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "17 rue Pierre Deldi",
+    "addressLocality": "Toulouse",
+    "postalCode": "31100",
+    "addressCountry": "FR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 43.5772,
+    "longitude": 1.4778
+  },
+  "areaServed": {
+    "@type": "GeoCircle",
+    "geoMidpoint": {"@type": "GeoCoordinates", "latitude": 43.6047, "longitude": 1.4442},
+    "geoRadius": "50000"
+  },
+  "priceRange": "€-€€€",
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    "opens": "08:00",
+    "closes": "20:00"
+  },
+  "sameAs": [],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services Inspexo",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "name": "Analyse IA Spécialisée",
+        "description": "Analyse automatique des points de défaillance connus de votre véhicule",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      {
+        "@type": "Offer",
+        "name": "Visio Test Drive",
+        "description": "Un expert vous accompagne en visio pendant votre essai routier",
+        "price": "59",
+        "priceCurrency": "EUR"
+      },
+      {
+        "@type": "Offer",
+        "name": "Inspection Physique",
+        "description": "Un expert se déplace et inspecte le véhicule sur place",
+        "price": "249",
+        "priceCurrency": "EUR"
+      }
+    ]
+  }
+}
+    </script>
+
+    <!-- Cal.com embed -->
     <script type="text/javascript">
       (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.eu/embed/embed.js", "init");
     </script>

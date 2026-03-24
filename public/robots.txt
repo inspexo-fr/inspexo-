@@ -1,3 +1,6 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /expert
+Disallow: /dashboard
+Sitemap: https://www.inspexo.io/sitemap.xml

@@ -313,7 +313,7 @@ export default function Experts({ onReserve }) {
                         overflow: 'hidden',
                       }}>
                         {e.avatar_url
-                          ? <img src={e.avatar_url} alt={e.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ? <img src={e.avatar_url} alt={e.nom} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           : e.initials}
                       </div>
                       <div>

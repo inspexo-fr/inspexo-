@@ -1,8 +1,15 @@
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 
 export default function CGU() {
   return (
     <>
+      <Helmet>
+        <title>Conditions Générales d'Utilisation et de Vente | Inspexo</title>
+        <meta name="description" content="CGU et CGV d'Inspexo — conditions d'utilisation de la plateforme et de vente des services d'inspection automobile." />
+        <meta name="robots" content="noindex, follow" />
+        <link rel="canonical" href="https://www.inspexo.io/cgu" />
+      </Helmet>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');
         .legal-h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.125rem; color: #0F1B2D; margin: 36px 0 12px; }

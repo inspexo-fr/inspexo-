@@ -1,8 +1,15 @@
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 
 export default function MentionsLegales() {
   return (
     <>
+      <Helmet>
+        <title>Mentions légales | Inspexo</title>
+        <meta name="description" content="Mentions légales d'Inspexo — informations sur l'éditeur, l'hébergement et les conditions d'utilisation du site inspexo.io." />
+        <meta name="robots" content="noindex, follow" />
+        <link rel="canonical" href="https://www.inspexo.io/mentions-legales" />
+      </Helmet>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');
         .legal-h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.125rem; color: #0F1B2D; margin: 36px 0 12px; }
