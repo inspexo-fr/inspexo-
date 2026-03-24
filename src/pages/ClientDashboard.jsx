@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import useScrollLock from '../hooks/useScrollLock'
 import ChatIA from '../components/ChatIA'
 import CalBooking from '../components/CalBooking'
 import ReviewModal from '../components/ReviewModal'
@@ -85,11 +86,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
     fetchMissions()
   }, [isOpen, user, fetchMissions])
 
-  // Scroll lock
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+  useScrollLock(isOpen)
 
   // Escape
   const handleKeyDown = useCallback(e => { if (e.key === 'Escape') onClose() }, [onClose])

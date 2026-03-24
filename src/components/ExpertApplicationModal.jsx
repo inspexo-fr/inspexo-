@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import useScrollLock from '../hooks/useScrollLock'
 
 const MARQUES_GENERALISTES = [
   'Renault', 'Peugeot', 'Citroën', 'Volkswagen', 'Toyota', 'Dacia', 'Ford',
@@ -28,15 +29,7 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
   const [status, setStatus] = useState('idle') // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('')
 
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => { document.body.style.overflow = '' }
-  }, [isOpen])
+  useScrollLock(isOpen)
 
   // Close on Escape key
   const handleKeyDown = useCallback((e) => {

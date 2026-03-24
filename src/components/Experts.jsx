@@ -16,14 +16,44 @@ const experts = [
 const generalistes = ['Renault', 'Peugeot', 'Citroën', 'Volkswagen', 'Toyota', 'Dacia', 'Ford', 'Opel', 'Nissan', 'Hyundai', 'Kia', 'Fiat', 'Skoda', 'Seat', 'Mazda', 'Subaru', 'Mitsubishi', 'Honda', 'Mini', 'Jeep']
 const premium = ['BMW', 'Mercedes', 'Audi', 'Volvo', 'Land Rover', 'Jaguar', 'Lexus', 'Genesis', 'Cadillac', 'Tesla', 'Porsche', 'Maserati', 'Ferrari', 'Lamborghini', 'Alfa Romeo', 'Lotus', 'Aston Martin', 'McLaren', 'Bentley', 'Rolls-Royce', 'Dodge', 'Chevrolet']
 
+const INITIAL_LIMIT = 4
+
 export default function Experts() {
   const [activeFilter, setActiveFilter] = useState('Tous')
-  const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const [searchQuery, setSearchQuery]   = useState('')
+  const [showAll, setShowAll]           = useState(false)
+  const [email, setEmail]               = useState('')
+  const [submitted, setSubmitted]       = useState(false)
 
-  const filtered = activeFilter === 'Tous'
-    ? experts
-    : experts.filter(e => e.marque === activeFilter)
+  const searchLower = searchQuery.trim().toLowerCase()
+
+  const filtered = searchLower
+    ? experts.filter(e => e.marque.toLowerCase().includes(searchLower))
+    : activeFilter === 'Tous'
+      ? experts
+      : experts.filter(e => e.marque === activeFilter)
+
+  const displayedExperts = showAll ? filtered : filtered.slice(0, INITIAL_LIMIT)
+  const hasMore = filtered.length > INITIAL_LIMIT
+
+  const visibleGeneralistes = searchLower
+    ? generalistes.filter(b => b.toLowerCase().includes(searchLower))
+    : generalistes
+  const visiblePremium = searchLower
+    ? premium.filter(b => b.toLowerCase().includes(searchLower))
+    : premium
+
+  const handlePillClick = (brand) => {
+    setActiveFilter(brand)
+    setSearchQuery('')
+    setShowAll(false)
+  }
+
+  const handleSearch = (q) => {
+    setSearchQuery(q)
+    if (q) setActiveFilter('Tous')
+    setShowAll(false)
+  }
 
   return (
     <>
@@ -44,35 +74,37 @@ export default function Experts() {
           font-size: 0.75rem; font-weight: 600;
           font-family: 'Plus Jakarta Sans', sans-serif;
           cursor: pointer; transition: all 0.15s;
-          border: 1px solid transparent;
+          border: 1px solid rgba(255,255,255,0.1);
           background: transparent;
           color: rgba(255,255,255,0.45);
-          border-color: rgba(255,255,255,0.1);
           flex-shrink: 0;
           white-space: nowrap;
         }
-        .brand-pill:hover {
-          color: rgba(255,255,255,0.8);
-          border-color: rgba(255,255,255,0.25);
-        }
-        .brand-pill.active {
-          background: #FF4D00;
-          color: #fff;
-          border-color: #FF4D00;
-        }
+        .brand-pill:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.25); }
+        .brand-pill.active { background: #FF4D00; color: #fff; border-color: #FF4D00; }
         .brand-pills-row {
+          display: flex; flex-wrap: wrap; gap: 6px;
           -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
+          scrollbar-width: none; -ms-overflow-style: none;
         }
         .brand-pills-row::-webkit-scrollbar { display: none; }
+        .experts-search-input {
+          width: 100%; box-sizing: border-box;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 10px; padding: 11px 16px 11px 42px;
+          color: #fff; font-size: 16px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          outline: none; transition: border-color 0.2s;
+        }
+        .experts-search-input::placeholder { color: rgba(255,255,255,0.3); }
+        .experts-search-input:focus { border-color: rgba(255,255,255,0.3); }
         .notif-input {
           flex: 1; background: rgba(255,255,255,0.07);
           border: 1px solid rgba(255,255,255,0.12);
           border-radius: 8px; padding: 11px 16px;
           color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: 0.9375rem; outline: none;
-          transition: border-color 0.2s;
+          font-size: 16px; outline: none; transition: border-color 0.2s;
         }
         .notif-input::placeholder { color: rgba(255,255,255,0.3); }
         .notif-input:focus { border-color: rgba(255,255,255,0.3); }
@@ -92,7 +124,7 @@ export default function Experts() {
           .experts-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; margin-bottom: 32px !important; }
           .experts-section { padding: 64px 20px !important; }
           .experts-title { font-size: 1.625rem !important; line-height: 1.2 !important; }
-          .brand-pills-row { display: flex !important; overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 6px !important; gap: 6px !important; }
+          .brand-pills-row { overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 6px !important; padding-left: 2px !important; }
           .experts-notify { padding: 24px 20px !important; }
         }
       `}</style>
@@ -130,127 +162,179 @@ export default function Experts() {
             </p>
           </div>
 
+          {/* Search */}
+          <div style={{ position: 'relative', marginBottom: 24 }}>
+            <svg
+              style={{
+                position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                color: 'rgba(255,255,255,0.3)', pointerEvents: 'none',
+              }}
+              width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input
+              className="experts-search-input"
+              type="search"
+              placeholder="Rechercher une marque..."
+              value={searchQuery}
+              onChange={e => handleSearch(e.target.value)}
+            />
+          </div>
+
           {/* Filters */}
           <div style={{ marginBottom: 36 }}>
             {/* All */}
-            <button
-              className={`brand-pill${activeFilter === 'Tous' ? ' active' : ''}`}
-              onClick={() => setActiveFilter('Tous')}
-              style={{ marginBottom: 12, marginRight: 6 }}
-            >
-              Tous
-            </button>
+            {!searchLower && (
+              <button
+                className={`brand-pill${activeFilter === 'Tous' ? ' active' : ''}`}
+                onClick={() => { setActiveFilter('Tous'); setShowAll(false) }}
+                style={{ marginBottom: 12, marginRight: 6 }}
+              >
+                Tous
+              </button>
+            )}
 
             {/* Généralistes */}
-            <div style={{ marginBottom: 12 }}>
-              <span style={{
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: '0.75rem', fontWeight: 600,
-                color: 'rgba(255,255,255,0.3)',
-                textTransform: 'uppercase', letterSpacing: '0.1em',
-                marginRight: 12, display: 'inline-block', marginBottom: 8,
-              }}>
-                🚗 Généralistes
-              </span>
-              <div className="brand-pills-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {generalistes.map(b => (
-                  <button
-                    key={b}
-                    className={`brand-pill${activeFilter === b ? ' active' : ''}`}
-                    onClick={() => setActiveFilter(b)}
-                  >
-                    {b}
-                  </button>
-                ))}
+            {visibleGeneralistes.length > 0 && (
+              <div style={{ marginBottom: 12 }}>
+                {!searchLower && (
+                  <span style={{
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: '0.75rem', fontWeight: 600,
+                    color: 'rgba(255,255,255,0.3)',
+                    textTransform: 'uppercase', letterSpacing: '0.1em',
+                    display: 'block', marginBottom: 8,
+                  }}>
+                    🚗 Généralistes
+                  </span>
+                )}
+                <div className="brand-pills-row">
+                  {visibleGeneralistes.map(b => (
+                    <button
+                      key={b}
+                      className={`brand-pill${activeFilter === b && !searchLower ? ' active' : ''}`}
+                      onClick={() => handlePillClick(b)}
+                    >
+                      {b}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Premium */}
-            <div>
-              <span style={{
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: '0.75rem', fontWeight: 600,
-                color: 'rgba(255,255,255,0.3)',
-                textTransform: 'uppercase', letterSpacing: '0.1em',
-                marginRight: 12, display: 'inline-block', marginBottom: 8,
-              }}>
-                💎 Premium & Sportives
-              </span>
-              <div className="brand-pills-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {premium.map(b => (
-                  <button
-                    key={b}
-                    className={`brand-pill${activeFilter === b ? ' active' : ''}`}
-                    onClick={() => setActiveFilter(b)}
-                  >
-                    {b}
-                  </button>
-                ))}
+            {visiblePremium.length > 0 && (
+              <div>
+                {!searchLower && (
+                  <span style={{
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: '0.75rem', fontWeight: 600,
+                    color: 'rgba(255,255,255,0.3)',
+                    textTransform: 'uppercase', letterSpacing: '0.1em',
+                    display: 'block', marginBottom: 8,
+                  }}>
+                    💎 Premium & Sportives
+                  </span>
+                )}
+                <div className="brand-pills-row">
+                  {visiblePremium.map(b => (
+                    <button
+                      key={b}
+                      className={`brand-pill${activeFilter === b && !searchLower ? ' active' : ''}`}
+                      onClick={() => handlePillClick(b)}
+                    >
+                      {b}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Expert grid */}
           {filtered.length > 0 ? (
-            <div className="experts-grid" style={{
-              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 40,
-            }}>
-              {filtered.map((e, i) => (
-                <div key={i} className="expert-card">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
-                    <div style={{
-                      width: 48, height: 48, borderRadius: '50%',
-                      background: e.gradient,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                      fontSize: '1rem', color: '#fff', flexShrink: 0,
-                    }}>
-                      {e.initials}
-                    </div>
-                    <div>
+            <>
+              <div className="experts-grid" style={{
+                display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24,
+              }}>
+                {displayedExperts.map((e, i) => (
+                  <div key={i} className="expert-card">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
                       <div style={{
+                        width: 48, height: 48, borderRadius: '50%',
+                        background: e.gradient,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                        fontSize: '1rem', color: '#fff', marginBottom: 2,
+                        fontSize: '1rem', color: '#fff', flexShrink: 0,
                       }}>
-                        {e.nom}
+                        {e.initials}
                       </div>
-                      <div style={{
-                        display: 'inline-flex', alignItems: 'center',
-                        background: 'rgba(255,77,0,0.12)',
-                        border: '1px solid rgba(255,77,0,0.2)',
-                        borderRadius: 100, padding: '2px 10px',
-                        fontSize: '0.75rem', fontWeight: 600,
-                        color: '#FF4D00',
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      }}>
-                        {e.marque}
+                      <div>
+                        <div style={{
+                          fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                          fontSize: '1rem', color: '#fff', marginBottom: 2,
+                        }}>
+                          {e.nom}
+                        </div>
+                        <div style={{
+                          display: 'inline-flex', alignItems: 'center',
+                          background: 'rgba(255,77,0,0.12)',
+                          border: '1px solid rgba(255,77,0,0.2)',
+                          borderRadius: 100, padding: '2px 10px',
+                          fontSize: '0.75rem', fontWeight: 600,
+                          color: '#FF4D00',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif',
+                        }}>
+                          {e.marque}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <p style={{
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
-                    fontSize: '0.8125rem', fontWeight: 300,
-                    color: 'rgba(255,255,255,0.45)',
-                    lineHeight: 1.55, marginBottom: 16,
-                  }}>
-                    {e.specialite}
-                  </p>
-
-                  <div style={{
-                    borderTop: '1px solid rgba(255,255,255,0.06)',
-                    paddingTop: 12,
-                  }}>
-                    <div style={{
+                    <p style={{
                       fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)',
+                      fontSize: '0.8125rem', fontWeight: 300,
+                      color: 'rgba(255,255,255,0.45)',
+                      lineHeight: 1.55, marginBottom: 16,
                     }}>
-                      {e.exp} d'expérience · {e.missions} missions
+                      {e.specialite}
+                    </p>
+
+                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 12 }}>
+                      <div style={{
+                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                        fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)',
+                      }}>
+                        {e.exp} d'expérience · {e.missions} missions
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+
+              {hasMore && !showAll && (
+                <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                  <button
+                    onClick={() => setShowAll(true)}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      borderRadius: 10, padding: '11px 28px',
+                      color: 'rgba(255,255,255,0.7)',
+                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontSize: '0.875rem', fontWeight: 600,
+                      cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.color = '#fff' }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)' }}
+                  >
+                    Voir plus d'experts ({filtered.length - INITIAL_LIMIT} de plus)
+                  </button>
                 </div>
-              ))}
-            </div>
+              )}
+              {showAll && <div style={{ marginBottom: 40 }} />}
+            </>
           ) : (
             <div style={{
               textAlign: 'center', padding: '60px 24px',
@@ -262,7 +346,7 @@ export default function Experts() {
                 fontFamily: 'Syne, sans-serif', fontWeight: 800,
                 fontSize: '1.125rem', color: '#fff', marginBottom: 8,
               }}>
-                Pas encore disponible dans votre ville
+                Aucun expert trouvé
               </div>
               <div style={{
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
