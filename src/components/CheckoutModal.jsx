@@ -85,6 +85,11 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle })
   const meta = TIER_META[tier] || TIER_META.ia
 
   // step: 'vehicle' | 'payment' | 'success' | 'ia_ready' | 'cal_ready'
+  useEffect(() => {
+    document.body.classList.add('modal-open')
+    return () => document.body.classList.remove('modal-open')
+  }, [])
+
   const [step, setStep] = useState('vehicle')
   const [vehicle, setVehicle] = useState({ brand: '', model: '', year: '', url: '' })
   const [clientSecret, setClientSecret] = useState(null)

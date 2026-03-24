@@ -29,6 +29,11 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
   const [uploadingFile, setUploadingFile]   = useState(false)
   const messagesEndRef = useRef(null)
   const textareaRef    = useRef(null)
+
+  useEffect(() => {
+    document.body.classList.add('modal-open')
+    return () => document.body.classList.remove('modal-open')
+  }, [])
   const fileInputRef   = useRef(null)
 
   const isFree = mission?.is_free && !mission?.converted_to_paid

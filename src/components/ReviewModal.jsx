@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
 export default function ReviewModal({ mission, onClose, onSubmitted }) {
@@ -7,6 +7,11 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
   const [comment, setComment]         = useState('')
   const [loading, setLoading]         = useState(false)
   const [submitted, setSubmitted]     = useState(false)
+
+  useEffect(() => {
+    document.body.classList.add('modal-open')
+    return () => document.body.classList.remove('modal-open')
+  }, [])
 
   const handleSubmit = async () => {
     if (rating === 0) return

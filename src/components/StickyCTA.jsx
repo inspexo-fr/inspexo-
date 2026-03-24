@@ -16,6 +16,7 @@ export default function StickyCTA({ onClick, isVisible }) {
       <style>{`
         .sticky-cta-bar { display: none; }
         @media (max-width: 768px) { .sticky-cta-bar { display: block; } }
+        body.modal-open .sticky-cta-bar { display: none !important; }
       `}</style>
       <div
         className="sticky-cta-bar"

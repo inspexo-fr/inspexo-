@@ -12,6 +12,12 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
   const [error, setError]           = useState('')
   const [freeCount, setFreeCount]   = useState(null) // null = chargement en cours
 
+  // Masquer StickyCTA
+  useEffect(() => {
+    document.body.classList.add('modal-open')
+    return () => document.body.classList.remove('modal-open')
+  }, [])
+
   // Compter les analyses gratuites au montage
   useEffect(() => {
     supabase

@@ -34,6 +34,13 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
     }
   }, [isOpen])
 
+  // modal-open class pour masquer StickyCTA
+  useEffect(() => {
+    if (isOpen) document.body.classList.add('modal-open')
+    else document.body.classList.remove('modal-open')
+    return () => document.body.classList.remove('modal-open')
+  }, [isOpen])
+
   // Scroll lock
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
