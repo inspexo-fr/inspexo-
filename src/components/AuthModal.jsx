@@ -1,6 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
+const SUPABASE_URL  = process.env.REACT_APP_SUPABASE_URL
+const ANON_KEY      = process.env.REACT_APP_SUPABASE_ANON_KEY
+
+async function sendWelcomeEmail(email) {
+  try {
+    await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ANON_KEY,
+      },
+      body: JSON.stringify({ to: email, template: 'welcome', data: {} }),
+    })
+  } catch (err) {
+    console.error('Welcome email error:', err)
+  }
+}
+
 export default function AuthModal({ isOpen, onClose, onSuccess }) {
   const [tab, setTab] = useState('login')         // 'login' | 'signup'
   const [email, setEmail] = useState('')
@@ -53,6 +71,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
           : error.message)
         setStatus('error')
       } else {
+        sendWelcomeEmail(email)
         setStatus('check_email')
       }
     }

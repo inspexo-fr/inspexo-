@@ -217,7 +217,7 @@ serve(async (req: Request) => {
     const supabaseAdmin = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     const { data: missionData } = await supabaseAdmin
       .from("missions")
-      .select("is_free, converted_to_paid, exchange_count")
+      .select("is_free, converted_to_paid, exchange_count, user_id, vehicle_brand, vehicle_model")
       .eq("id", mission_id)
       .single();
 
@@ -302,6 +302,42 @@ serve(async (req: Request) => {
 
     if (updateError) {
       console.error("Supabase update error:", updateError);
+    }
+
+    // Send email when a report is generated
+    if (generate_report && missionData?.user_id) {
+      try {
+        const { data: profileData } = await supabaseAdmin
+          .from("profiles")
+          .select("email")
+          .eq("id", missionData.user_id)
+          .single();
+
+        if (profileData?.email) {
+          const vehicle = [missionData.vehicle_brand, missionData.vehicle_model]
+            .filter(Boolean).join(" ");
+
+          await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            },
+            body: JSON.stringify({
+              to: profileData.email,
+              template: isPartialReport ? "free_analysis_ended" : "report_ready",
+              data: {
+                vehicle,
+                brand: missionData.vehicle_brand,
+                is_partial: isPartialReport,
+                critical_count: 3,
+              },
+            }),
+          });
+        }
+      } catch (emailError) {
+        console.error("Email send error:", emailError);
+      }
     }
 
     return new Response(
