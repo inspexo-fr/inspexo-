@@ -23,6 +23,7 @@ import CheckoutModal from './components/CheckoutModal'
 import StickyCTA from './components/StickyCTA'
 import NotFound from './pages/NotFound'
 import ClientDashboard from './pages/ClientDashboard'
+import ExpertDashboard from './pages/ExpertDashboard'
 
 function Site() {
   const [user, setUser] = useState(null)
@@ -154,6 +155,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Site />} />
         <Route path="/dashboard" element={<ClientDashboard />} />
+        <Route path="/expert" element={<ExpertDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/mentions-legales" element={<MentionsLegales />} />
         <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />

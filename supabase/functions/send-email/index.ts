@@ -366,6 +366,48 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
     `,
   }),
 
+  new_message: (data) => ({
+    subject: `💬 Nouveau message Inspexo — ${data.vehicle || 'votre mission'}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <div style="background: #0F1B2D; padding: 32px; text-align: center;">
+          <h1 style="color: #ffffff; font-size: 28px; margin: 0; letter-spacing: 3px;">INSPEXO</h1>
+          <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px;">Messagerie mission</p>
+        </div>
+        <div style="padding: 40px 32px;">
+          <div style="text-align: center; font-size: 48px; margin-bottom: 16px;">💬</div>
+          <h2 style="color: #0F1B2D; font-size: 22px; text-align: center; margin: 0 0 8px;">
+            Vous avez un nouveau message
+          </h2>
+          <p style="color: #6B7280; font-size: 15px; text-align: center; margin: 0 0 28px;">
+            ${data.sender_name || "Votre interlocuteur"} vous a envoyé un message concernant votre mission.
+          </p>
+          <div style="background: #F8F9FA; border-radius: 12px; padding: 20px 24px; margin: 0 0 28px;">
+            <p style="margin: 0 0 8px; color: #9CA3AF; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;">Véhicule</p>
+            <p style="margin: 0; color: #0F1B2D; font-size: 15px; font-weight: 600;">${data.vehicle || '—'}</p>
+          </div>
+          <p style="color: #333; line-height: 1.65; font-size: 15px; margin: 0 0 28px;">
+            Connectez-vous à votre espace pour lire et répondre au message.
+          </p>
+          <div style="text-align: center; margin: 0 0 24px;">
+            <a href="https://inspexo.io/dashboard" style="background: #FF4D00; color: #ffffff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">
+              Lire le message →
+            </a>
+          </div>
+          <p style="color: #9CA3AF; font-size: 13px; text-align: center; line-height: 1.5; margin: 0;">
+            Une question ? Écrivez à <a href="mailto:contact@inspexo.io" style="color: #FF4D00; text-decoration: none;">contact@inspexo.io</a>
+          </p>
+        </div>
+        <div style="background: #F8F9FA; padding: 24px 32px; border-top: 1px solid #eee;">
+          <p style="color: #999; font-size: 12px; margin: 0; text-align: center;">
+            Inspexo — Expert automobile spécialisé par marque<br>
+            <a href="https://inspexo.io" style="color: #FF4D00;">inspexo.io</a>
+          </p>
+        </div>
+      </div>
+    `,
+  }),
+
   free_analysis_ended: (data) => ({
     subject: `🔍 ${data.vehicle} — ${data.critical_count} point(s) critique(s) détecté(s)`,
     html: `

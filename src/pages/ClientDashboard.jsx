@@ -4,6 +4,7 @@ import useScrollLock from '../hooks/useScrollLock'
 import ChatIA from '../components/ChatIA'
 import CalBooking from '../components/CalBooking'
 import ReviewModal from '../components/ReviewModal'
+import MissionChat from '../components/MissionChat'
 
 const TIER_LABELS = {
   ia_free:          { label: 'Analyse IA gratuite',    emoji: '💬' },
@@ -60,6 +61,8 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
   const [activeBookingMission, setActiveBookingMission] = useState(null)
   const [showDeleteConfirm, setShowDeleteConfirm]       = useState(false)
   const [reviewMission, setReviewMission]               = useState(null)
+  const [missionChatOpen, setMissionChatOpen]           = useState(null)
+  const [expertEmails, setExpertEmails]                 = useState({}) // expertId → email
 
   const fetchMissions = useCallback(() => {
     if (!user) return
@@ -69,12 +72,25 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
-      .then(({ data, error: err }) => {
+      .then(async ({ data, error: err }) => {
         if (err) {
           console.error('missions fetch error:', err)
           setError('Impossible de charger vos missions.')
         } else {
           setMissions(data || [])
+          // Fetch expert emails for missions with expert_id
+          const expertIds = [...new Set((data || []).map(m => m.expert_id).filter(Boolean))]
+          if (expertIds.length > 0) {
+            const { data: experts } = await supabase
+              .from('experts')
+              .select('id, email, full_name')
+              .in('id', expertIds)
+            if (experts) {
+              const map = {}
+              experts.forEach(e => { map[e.id] = { email: e.email, name: e.full_name } })
+              setExpertEmails(map)
+            }
+          }
         }
         setLoading(false)
       })
@@ -406,6 +422,27 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                         </div>
                       )}
 
+                      {/* Bouton chat expert — visio/inspection avec expert assigné */}
+                      {(mission.tier === 'visio' || mission.tier === 'inspection') && mission.expert_id && (
+                        <div style={{ marginTop: 10 }}>
+                          <button
+                            onClick={() => setMissionChatOpen(mission)}
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 7,
+                              background: '#EFF6FF',
+                              color: '#3B82F6',
+                              border: '1px solid rgba(59,130,246,0.25)',
+                              padding: '8px 18px', borderRadius: 8,
+                              fontSize: '0.8125rem', fontWeight: 700,
+                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              cursor: 'pointer', transition: 'opacity 0.2s',
+                            }}
+                          >
+                            💬 Chat avec l'expert
+                          </button>
+                        </div>
+                      )}
+
                       {/* Bouton chat IA */}
                       {isIaTier && (
                         <div style={{ marginTop: mission.vehicle_url ? 0 : 4 }}>
@@ -585,6 +622,18 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
             setReviewMission(null)
             fetchMissions()
           }}
+        />
+      )}
+
+      {/* Chat expert */}
+      {missionChatOpen && (
+        <MissionChat
+          mission={missionChatOpen}
+          currentUser={user}
+          senderRole="client"
+          recipientEmail={missionChatOpen.expert_id ? expertEmails[missionChatOpen.expert_id]?.email : null}
+          recipientName={missionChatOpen.expert_id ? expertEmails[missionChatOpen.expert_id]?.name : null}
+          onClose={() => setMissionChatOpen(null)}
         />
       )}
     </>
