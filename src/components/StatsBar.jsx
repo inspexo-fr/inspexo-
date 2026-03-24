@@ -46,7 +46,7 @@ export default function StatsBar() {
         .stat-item:nth-child(4) { transition-delay: 0.24s; }
       `}</style>
 
-      <section ref={ref} style={{ background: '#FF4D00', padding: '52px 20px', overflowX: 'hidden' }}>
+      <section ref={ref} style={{ background: '#FF4D00', padding: '52px 20px', width: '100%', boxSizing: 'border-box' }}>
         <div
           className="stats-grid"
           style={{

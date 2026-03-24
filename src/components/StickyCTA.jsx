@@ -21,8 +21,9 @@ export default function StickyCTA({ onClick, isVisible }) {
         className="sticky-cta-bar"
         style={{
           position: 'fixed', bottom: 0, left: 0, right: 0,
-          padding: '12px 16px',
-          paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
+          paddingTop: 12,
+          paddingLeft: 16, paddingRight: 16,
+          paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))',
           background: '#0F1B2D',
           borderTop: '1px solid rgba(255,255,255,0.1)',
           zIndex: 9990,
