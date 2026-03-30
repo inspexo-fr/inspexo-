@@ -7,7 +7,7 @@ export default function PolitiqueConfidentialite() {
       <Helmet>
         <title>Politique de confidentialité | Inspexo</title>
         <meta name="description" content="Politique de confidentialité d'Inspexo — collecte, traitement et protection de vos données personnelles conformément au RGPD." />
-        <meta name="robots" content="noindex, follow" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.inspexo.io/politique-de-confidentialite" />
       </Helmet>
       <style>{`

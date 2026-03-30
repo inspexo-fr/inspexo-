@@ -7,7 +7,7 @@ export default function CGU() {
       <Helmet>
         <title>Conditions Générales d'Utilisation et de Vente | Inspexo</title>
         <meta name="description" content="CGU et CGV d'Inspexo — conditions d'utilisation de la plateforme et de vente des services d'inspection automobile." />
-        <meta name="robots" content="noindex, follow" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.inspexo.io/cgu" />
       </Helmet>
       <style>{`

@@ -7,7 +7,7 @@ export default function MentionsLegales() {
       <Helmet>
         <title>Mentions légales | Inspexo</title>
         <meta name="description" content="Mentions légales d'Inspexo — informations sur l'éditeur, l'hébergement et les conditions d'utilisation du site inspexo.io." />
-        <meta name="robots" content="noindex, follow" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.inspexo.io/mentions-legales" />
       </Helmet>
       <style>{`
