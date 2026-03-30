@@ -3,6 +3,34 @@ import React, { useState } from 'react'
 
 const faqs = [
   {
+    q: 'Quelle différence entre un contrôle technique et une inspection Inspexo ?',
+    a: 'Le contrôle technique vérifie la conformité réglementaire (freins, pollution, éclairage). L\'inspection Inspexo va bien au-delà : notre expert spécialisé examine l\'état réel du véhicule sur plus de 150 points, estime les frais à prévoir, et vous donne un verdict technique complet pour décider en connaissance de cause.',
+  },
+  {
+    q: 'L\'inspection permet-elle de négocier le prix ?',
+    a: 'Oui. Chaque défaut identifié par votre expert est chiffré avec une estimation de réparation. Vous disposez d\'arguments concrets pour négocier le prix avec le vendeur. Nos clients économisent en moyenne plusieurs centaines d\'euros grâce au rapport d\'inspection.',
+  },
+  {
+    q: 'Pourquoi un expert spécialisé par marque ?',
+    a: 'Un expert généraliste connaît les bases. Un expert spécialisé BMW, Mercedes ou Peugeot connaît les défauts récurrents de chaque motorisation, les rappels constructeur, les pièces qui lâchent à quel kilométrage. C\'est la différence entre un médecin généraliste et un spécialiste.',
+  },
+  {
+    q: 'Que contient le rapport d\'inspection ?',
+    a: 'Un diagnostic complet : état mécanique, carrosserie, intérieur, essai routier, vérification administrative. Chaque point est noté (conforme, à surveiller, défaut). Les défauts sont chiffrés avec deux estimations : garage indépendant et concession. Vous recevez aussi un verdict technique global.',
+  },
+  {
+    q: 'L\'expert peut-il se déplacer sans moi ?',
+    a: 'Pour l\'inspection physique, l\'expert se déplace sur le lieu du véhicule. Vous pouvez être présent ou non — dans les deux cas, vous recevez le rapport complet et pouvez échanger avec l\'expert via la messagerie Inspexo.',
+  },
+  {
+    q: 'Comment fonctionne l\'analyse IA gratuite ?',
+    a: 'Vous indiquez la marque, le modèle et l\'année du véhicule. Notre IA spécialisée vous expose les points de défaillance connus de cette motorisation exacte, les coûts de réparation associés, et les vérifications à faire. C\'est gratuit, 10 échanges, sans engagement.',
+  },
+  {
+    q: 'Quelle est la différence entre Inspexo et les autres services d\'inspection ?',
+    a: 'Trois différences majeures : nos experts sont spécialisés par marque (pas des généralistes), nous offrons une analyse IA gratuite en amont (personne d\'autre ne le fait), et notre visio test drive à 59€ est la solution la plus accessible du marché pour un premier avis expert.',
+  },
+  {
     q: 'Les experts sont-ils vraiment indépendants ?',
     a: 'Oui, totalement. Nos experts sont rémunérés exclusivement par l\'acheteur. Ils n\'ont aucune relation financière avec les vendeurs, garages ou concessionnaires. C\'est la garantie d\'un avis objectif.',
   },
