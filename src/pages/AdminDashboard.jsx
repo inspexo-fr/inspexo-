@@ -357,6 +357,13 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
 
 // ─── Onglet Candidatures ──────────────────────────────────────────────────────
 
+const EXP_BADGE = (exp) => {
+  if (!exp) return { bg: '#F0F2F5', color: '#6B7280', label: '—' }
+  if (exp === '10+ ans') return { bg: '#F0FDF4', color: '#16A34A', label: exp }
+  if (exp === '5-10 ans') return { bg: '#FFF4EE', color: '#FF4D00', label: exp }
+  return { bg: '#F0F2F5', color: '#6B7280', label: exp }
+}
+
 function ApplicationsTab() {
   const [apps, setApps]             = useState([])
   const [loading, setLoading]       = useState(true)
@@ -364,6 +371,7 @@ function ApplicationsTab() {
   const [updating, setUpdating]     = useState(null)
   const [generating, setGenerating] = useState(null)
   const [stripeModal, setStripeModal] = useState(null) // { url, account_id, email }
+  const [expandedApp, setExpandedApp] = useState(null)
 
   const fetchApps = useCallback(async () => {
     setLoading(true); setError(null)
@@ -430,21 +438,27 @@ function ApplicationsTab() {
           <table style={styles.table}>
             <thead>
               <tr style={styles.thead}>
-                {['Candidat', 'Email', 'Marques', 'Expérience', 'Ville', 'Statut', 'Date', 'Actions'].map(h => (
+                {['Candidat', 'Email', 'Marques', 'Exp.', 'Structure', 'Ville', 'Statut', 'Actions'].map(h => (
                   <th key={h} style={styles.th}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {apps.map((a, i) => (
-                <tr key={a.id} style={{ ...styles.tr, background: i % 2 === 0 ? '#fff' : '#FAFAFA' }}>
+              {apps.map((a, i) => {
+                const expBadge = EXP_BADGE(a.experience_years)
+                const isExpanded = expandedApp === a.id
+                return (
+                <React.Fragment key={a.id}>
+                <tr style={{ ...styles.tr, background: i % 2 === 0 ? '#fff' : '#FAFAFA', cursor: 'pointer' }} onClick={() => setExpandedApp(isExpanded ? null : a.id)}>
                   <td style={styles.td}>
                     <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>
-                      {a.first_name} {a.last_name}
+                      {a.full_name || `${a.first_name || ''} ${a.last_name || ''}`.trim() || '—'}
                     </div>
+                    <div style={{ fontSize: '0.6875rem', color: '#9CA3AF' }}>{formatDate(a.created_at)}</div>
                   </td>
                   <td style={styles.td}>
                     <div style={{ fontSize: '0.8125rem', color: '#374151' }}>{a.email}</div>
+                    {a.phone && <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>{a.phone}</div>}
                   </td>
                   <td style={styles.td}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, maxWidth: 200 }}>
@@ -457,12 +471,20 @@ function ApplicationsTab() {
                     </div>
                   </td>
                   <td style={styles.td}>
-                    <div style={{ fontSize: '0.875rem', color: '#374151' }}>
-                      {a.experience_years ? `${a.experience_years} ans` : '—'}
-                    </div>
+                    <span style={{
+                      display: 'inline-block', padding: '3px 9px', borderRadius: 100,
+                      fontSize: '0.75rem', fontWeight: 600,
+                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      background: expBadge.bg, color: expBadge.color,
+                    }}>
+                      {expBadge.label}
+                    </span>
                   </td>
                   <td style={styles.td}>
-                    <div style={{ fontSize: '0.875rem', color: '#374151' }}>{a.city || '—'}</div>
+                    <div style={{ fontSize: '0.8125rem', color: '#374151' }}>{a.structure_type || '—'}</div>
+                  </td>
+                  <td style={styles.td}>
+                    <div style={{ fontSize: '0.8125rem', color: '#374151' }}>{a.city || '—'}{a.postal_code ? ` (${a.postal_code})` : ''}</div>
                   </td>
                   <td style={styles.td}>
                     <span style={{
@@ -480,12 +502,7 @@ function ApplicationsTab() {
                       {APP_STATUS_LABELS[a.status] || a.status}
                     </span>
                   </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.8125rem', color: '#6B7280', whiteSpace: 'nowrap' }}>
-                      {formatDate(a.created_at)}
-                    </div>
-                  </td>
-                  <td style={styles.td}>
+                  <td style={styles.td} onClick={e => e.stopPropagation()}>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                       {a.status !== 'approved' && (
                         <button
@@ -523,7 +540,58 @@ function ApplicationsTab() {
                     </div>
                   </td>
                 </tr>
-              ))}
+                {/* Expanded detail row */}
+                {isExpanded && (
+                  <tr style={{ background: '#F8F9FA' }}>
+                    <td colSpan={8} style={{ padding: '16px 20px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 16 }}>
+                        {[
+                          { label: 'Diplôme', value: a.diploma },
+                          { label: 'Assurance RC Pro', value: a.has_insurance },
+                          { label: 'Disponibilité', value: a.availability },
+                        ].map((item, idx) => (
+                          <div key={idx}>
+                            <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{item.label}</div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#0F1B2D', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{item.value || '—'}</div>
+                          </div>
+                        ))}
+                      </div>
+                      {a.technical_answer && (
+                        <div style={{ marginBottom: 12 }}>
+                          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Réponse technique</div>
+                          <div style={{
+                            background: '#fff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10,
+                            padding: '14px 16px', fontSize: '0.875rem', color: '#374151',
+                            lineHeight: 1.65, fontFamily: 'Plus Jakarta Sans, sans-serif',
+                            borderLeft: '3px solid #FF4D00',
+                          }}>
+                            {a.technical_answer}
+                          </div>
+                        </div>
+                      )}
+                      <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                        {a.motivation && (
+                          <div style={{ fontSize: '0.8125rem', color: '#6B7280', fontStyle: 'italic', fontFamily: 'Plus Jakarta Sans, sans-serif', flex: 1, minWidth: 200 }}>
+                            « {a.motivation} »
+                          </div>
+                        )}
+                        {a.cv_url && (
+                          <a href={a.cv_url} target="_blank" rel="noopener noreferrer" style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 5,
+                            background: '#EFF6FF', color: '#3B82F6', border: '1px solid rgba(59,130,246,0.25)',
+                            padding: '5px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
+                            fontFamily: 'Plus Jakarta Sans, sans-serif', textDecoration: 'none',
+                          }}>
+                            📄 Voir le CV
+                          </a>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                </React.Fragment>
+                )
+              })}
             </tbody>
           </table>
         </div>

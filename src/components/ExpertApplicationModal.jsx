@@ -14,18 +14,31 @@ const MARQUES_PREMIUM = [
   'Bentley', 'Rolls-Royce', 'Dodge', 'Chevrolet',
 ]
 
+const EXPERIENCE_OPTIONS = ['1-3 ans', '3-5 ans', '5-10 ans', '10+ ans']
+const STRUCTURE_OPTIONS = ['Garage indépendant', 'Ex-concession', 'Mécanicien indépendant', 'Passionné/Autodidacte', 'Autre']
+const DIPLOMA_OPTIONS = ['CAP Mécanique', 'BEP Mécanique', 'Bac Pro MV', 'BTS MV', 'Expert automobile agréé', 'Aucun diplôme formel', 'Autre']
+const AVAILABILITY_OPTIONS = ['Moins de 5h/semaine', '5-10h/semaine', '10-20h/semaine', 'Plus de 20h/semaine']
+const INSURANCE_OPTIONS = ['Oui', 'Non', 'Je ne sais pas']
+
 const INITIAL_FORM = {
   full_name: '',
   email: '',
   phone: '',
-  years_experience: '',
+  experience_years: '',
+  structure_type: '',
+  diploma: '',
   city: '',
+  postal_code: '',
+  availability: '',
+  has_insurance: '',
   motivation: '',
+  technical_answer: '',
 }
 
 export default function ExpertApplicationModal({ isOpen, onClose }) {
   const [form, setForm] = useState(INITIAL_FORM)
   const [selectedBrands, setSelectedBrands] = useState([])
+  const [cvFile, setCvFile] = useState(null)
   const [status, setStatus] = useState('idle') // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -57,17 +70,47 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
       setErrorMsg('Sélectionnez au moins une marque de spécialité.')
       return
     }
+    if (!form.experience_years || !form.structure_type || !form.diploma || !form.availability || !form.has_insurance) {
+      setErrorMsg('Merci de remplir tous les champs obligatoires.')
+      return
+    }
+    if ((form.technical_answer || '').trim().length < 100) {
+      setErrorMsg('La réponse technique doit contenir au moins 100 caractères.')
+      return
+    }
     setStatus('loading')
     setErrorMsg('')
+
+    // Upload CV if provided
+    let cv_url = null
+    if (cvFile) {
+      const ext = cvFile.name.split('.').pop()
+      const path = `${Date.now()}_${form.email.replace(/[^a-z0-9]/gi, '_')}.${ext}`
+      const { error: uploadErr } = await supabase.storage.from('expert-documents').upload(path, cvFile)
+      if (uploadErr) {
+        setErrorMsg(`Erreur upload fichier : ${uploadErr.message}`)
+        setStatus('error')
+        return
+      }
+      const { data: urlData } = supabase.storage.from('expert-documents').getPublicUrl(path)
+      cv_url = urlData?.publicUrl || null
+    }
 
     const { error } = await supabase.from('expert_applications').insert([{
       full_name: form.full_name.trim(),
       email: form.email.trim().toLowerCase(),
       phone: form.phone.trim() || null,
       brands: selectedBrands,
-      experience_years: form.years_experience ? parseInt(form.years_experience, 10) : null,
+      experience_years: form.experience_years,
+      structure_type: form.structure_type,
+      diploma: form.diploma,
       city: form.city.trim() || null,
+      postal_code: form.postal_code.trim() || null,
+      availability: form.availability,
+      has_insurance: form.has_insurance,
       motivation: form.motivation.trim() || null,
+      technical_answer: form.technical_answer.trim(),
+      cv_url,
       status: 'pending',
     }])
 
@@ -89,6 +132,7 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
   const handleReset = () => {
     setForm(INITIAL_FORM)
     setSelectedBrands([])
+    setCvFile(null)
     setStatus('idle')
     setErrorMsg('')
     onClose()
@@ -264,32 +308,76 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                {/* Row : Téléphone + Ville */}
+                {/* Row : Téléphone */}
+                <div style={{ marginBottom: 14 }}>
+                  <label className="modal-label">Téléphone</label>
+                  <input
+                    className="modal-input" type="tel" placeholder="06 12 34 56 78"
+                    value={form.phone} onChange={handleChange('phone')}
+                  />
+                </div>
+
+                {/* Row : Expérience + Structure */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                   <div>
-                    <label className="modal-label">Téléphone</label>
+                    <label className="modal-label">Années d'expérience <span>*</span></label>
+                    <select className="modal-input" required value={form.experience_years} onChange={handleChange('experience_years')}>
+                      <option value="">Sélectionner</option>
+                      {EXPERIENCE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="modal-label">Type de structure <span>*</span></label>
+                    <select className="modal-input" required value={form.structure_type} onChange={handleChange('structure_type')}>
+                      <option value="">Sélectionner</option>
+                      {STRUCTURE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Row : Diplôme + Assurance RC Pro */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                  <div>
+                    <label className="modal-label">Diplôme ou certification <span>*</span></label>
+                    <select className="modal-input" required value={form.diploma} onChange={handleChange('diploma')}>
+                      <option value="">Sélectionner</option>
+                      {DIPLOMA_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="modal-label">Assurance RC Pro <span>*</span></label>
+                    <select className="modal-input" required value={form.has_insurance} onChange={handleChange('has_insurance')}>
+                      <option value="">Sélectionner</option>
+                      {INSURANCE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Row : Ville + Code postal */}
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14, marginBottom: 14 }}>
+                  <div>
+                    <label className="modal-label">Ville <span>*</span></label>
                     <input
-                      className="modal-input" type="tel" placeholder="06 12 34 56 78"
-                      value={form.phone} onChange={handleChange('phone')}
+                      className="modal-input" type="text" placeholder="Toulouse" required
+                      value={form.city} onChange={handleChange('city')}
                     />
                   </div>
                   <div>
-                    <label className="modal-label">Ville</label>
+                    <label className="modal-label">Code postal <span>*</span></label>
                     <input
-                      className="modal-input" type="text" placeholder="Toulouse"
-                      value={form.city} onChange={handleChange('city')}
+                      className="modal-input" type="text" placeholder="31000" required
+                      value={form.postal_code} onChange={handleChange('postal_code')}
                     />
                   </div>
                 </div>
 
-                {/* Années d'expérience */}
+                {/* Disponibilité */}
                 <div style={{ marginBottom: 20 }}>
-                  <label className="modal-label">Années d'expérience</label>
-                  <input
-                    className="modal-input" type="number" placeholder="5" min="1" max="50"
-                    style={{ maxWidth: 120 }}
-                    value={form.years_experience} onChange={handleChange('years_experience')}
-                  />
+                  <label className="modal-label">Disponibilité estimée <span>*</span></label>
+                  <select className="modal-input" required value={form.availability} onChange={handleChange('availability')}>
+                    <option value="">Sélectionner</option>
+                    {AVAILABILITY_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                  </select>
                 </div>
 
                 {/* Marques — multi-select pills */}
@@ -352,16 +440,82 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
+                {/* Question technique */}
+                <div style={{ marginBottom: 20 }}>
+                  <label className="modal-label">
+                    Question technique <span>*</span>
+                  </label>
+                  <div style={{
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: '0.8125rem', fontWeight: 400,
+                    color: '#6B7280', lineHeight: 1.5, marginBottom: 8,
+                  }}>
+                    Pour la marque principale que vous avez sélectionnée, décrivez un défaut mécanique récurrent, comment vous le diagnostiquez, et l'estimation du coût de réparation.
+                  </div>
+                  <textarea
+                    className="modal-input" required minLength={100}
+                    placeholder="Ex : Sur les BMW Série 3 F30 avec moteur N47, le défaut récurrent est..."
+                    rows={5}
+                    style={{ resize: 'vertical', minHeight: 110, lineHeight: 1.6 }}
+                    value={form.technical_answer} onChange={handleChange('technical_answer')}
+                  />
+                  <div style={{
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: '0.75rem', color: (form.technical_answer || '').length >= 100 ? '#16A34A' : '#9CA3AF',
+                    marginTop: 4,
+                  }}>
+                    {(form.technical_answer || '').length}/100 caractères minimum
+                  </div>
+                </div>
+
                 {/* Motivation */}
-                <div style={{ marginBottom: 24 }}>
+                <div style={{ marginBottom: 20 }}>
                   <label className="modal-label">Motivation (optionnel)</label>
                   <textarea
                     className="modal-input"
                     placeholder="Parlez-nous de votre parcours, de votre spécialité, et de ce qui vous motive à rejoindre Inspexo..."
-                    rows={4}
-                    style={{ resize: 'vertical', minHeight: 90, lineHeight: 1.6 }}
+                    rows={3}
+                    style={{ resize: 'vertical', minHeight: 70, lineHeight: 1.6 }}
                     value={form.motivation} onChange={handleChange('motivation')}
                   />
+                </div>
+
+                {/* Upload CV */}
+                <div style={{ marginBottom: 24 }}>
+                  <label className="modal-label">CV ou justificatif (optionnel)</label>
+                  <div style={{
+                    border: '1.5px dashed rgba(0,0,0,0.15)',
+                    borderRadius: 10, padding: '16px 14px',
+                    textAlign: 'center', cursor: 'pointer',
+                    background: cvFile ? '#F0FDF4' : '#FAFAFA',
+                    transition: 'background 0.2s',
+                  }}
+                    onClick={() => document.getElementById('cv-upload').click()}
+                  >
+                    <input
+                      id="cv-upload" type="file" accept=".pdf,.jpg,.jpeg,.png"
+                      style={{ display: 'none' }}
+                      onChange={(e) => {
+                        const f = e.target.files?.[0]
+                        if (!f) return
+                        if (f.size > 5 * 1024 * 1024) {
+                          setErrorMsg('Le fichier ne doit pas dépasser 5 Mo.')
+                          return
+                        }
+                        setCvFile(f)
+                        setErrorMsg('')
+                      }}
+                    />
+                    {cvFile ? (
+                      <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#16A34A', fontWeight: 600 }}>
+                        ✅ {cvFile.name}
+                      </div>
+                    ) : (
+                      <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#6B7280' }}>
+                        📎 Cliquez pour uploader (PDF, JPG, PNG — max 5 Mo)
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Error message */}
