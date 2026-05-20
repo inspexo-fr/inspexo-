@@ -1,0 +1,341 @@
+/**
+ * INSPEXO — DEFECT ATLAS
+ * Base de défauts chroniques par marque, vérifiés auprès de mécaniciens spécialistes
+ * et de forums techniques de référence (BimmerForums, AudiZine, BenzWorld, Planète Renault, etc.)
+ *
+ * Sévérité :
+ *   - CRITIQUE : panne immobilisante ou risque sécurité (> 2000€ ou rouler dangereux)
+ *   - MAJEUR   : panne coûteuse mais non immobilisante (500-2000€)
+ *   - MINEUR   : défaut récurrent à surveiller (< 500€)
+ *
+ * Chaque entrée doit pouvoir être défendue par un expert de la marque.
+ * Source à compléter si on veut ajouter une référence forum/TSB.
+ */
+
+export const defectAtlas = {
+  BMW: {
+    label: "BMW",
+    logo: "/logos/bmw.svg",
+    defects: [
+      {
+        id: "bmw-n47-chaine",
+        severity: "CRITIQUE",
+        title: "Chaîne de distribution N47 défaillante",
+        description:
+          "Sur les moteurs diesel N47 (2007-2014), la chaîne de distribution placée côté boîte de vitesses peut s'étirer et casser. Réparation = dépose moteur. Coût constaté : 2 500 à 4 500€.",
+        models: "Série 1 (E81/E87), Série 3 (E90/E91), Série 5 (E60), X1, X3",
+        years: "2007-2014",
+      },
+      {
+        id: "bmw-n20-chaine",
+        severity: "CRITIQUE",
+        title: "Tendeur de chaîne N20/N26 sous-dimensionné",
+        description:
+          "Moteurs essence 4 cylindres N20/N26 : le tendeur de chaîne d'origine est connu pour lâcher avant 100 000 km, entraînant la rupture de la chaîne et la casse moteur. Kit de mise à jour BMW obligatoire.",
+        models: "Série 3 (F30) 320i/328i, Série 5 (F10) 528i, X1, X3, X5 sDrive35i",
+        years: "2011-2017",
+      },
+      {
+        id: "bmw-vanos-fuites",
+        severity: "MAJEUR",
+        title: "Joints VANOS / Valvetronic fuyards",
+        description:
+          "Les joints du système VANOS (calage variable) et du Valvetronic durcissent et fuient. Symptômes : ralenti instable, à-coups à froid, voyant moteur. Réparation 800 à 1 500€.",
+        models: "Série 3, Série 5, X3, X5 — moteurs N52/N53/N54",
+        years: "2005-2013",
+      },
+      {
+        id: "bmw-n54-injecteurs",
+        severity: "MAJEUR",
+        title: "Injecteurs et pompe HPFP N54",
+        description:
+          "Le moteur biturbo N54 souffre de défaillances chroniques des injecteurs piezo et de la pompe haute pression. Rappels constructeur partiels. Compter 1 500 à 2 500€ hors garantie.",
+        models: "335i (E90/E92), 535i (E60), 135i, Z4 sDrive35i",
+        years: "2006-2013",
+      },
+      {
+        id: "bmw-fap-egr",
+        severity: "MAJEUR",
+        title: "Vanne EGR et FAP encrassés (diesel)",
+        description:
+          "Usage urbain prolongé = encrassement EGR + colmatage FAP. Coût décrassage 300-600€, remplacement EGR 800-1 200€, FAP neuf 1 500€+. Vérifier l'historique des régénérations.",
+        models: "Tous diesels 118d, 318d, 320d, 520d des années concernées",
+        years: "2007-2018",
+      },
+    ],
+  },
+
+  AUDI: {
+    label: "Audi",
+    logo: "/logos/audi.svg",
+    defects: [
+      {
+        id: "audi-tfsi-conso-huile",
+        severity: "CRITIQUE",
+        title: "Consommation d'huile excessive 2.0 TFSI EA888 gen 2",
+        description:
+          "Moteur 2.0 TFSI première et deuxième génération : segmentation défectueuse entraînant une consommation jusqu'à 1L/1000 km. Réparation = dépose moteur + segments + pistons. Coût 3 000-5 000€.",
+        models: "A4 B8, A5, A6 C7, Q5 — 1.8 et 2.0 TFSI 211 ch",
+        years: "2008-2012",
+      },
+      {
+        id: "audi-dsg-mecatronique",
+        severity: "CRITIQUE",
+        title: "Mécatronique DSG DQ200 7 rapports défaillante",
+        description:
+          "Boîte robotisée à sec DSG 7 rapports (DQ200) : défaillance du module mécatronique fréquente entre 60 000 et 130 000 km. Symptômes : passages saccadés, perte de rapports. Coût 2 000-3 500€.",
+        models: "A1, A3 (8P/8V), Q3, S-tronic 7",
+        years: "2009-2018",
+      },
+      {
+        id: "audi-chaine-tfsi",
+        severity: "CRITIQUE",
+        title: "Tendeur de chaîne 2.0 TFSI EA888",
+        description:
+          "Tendeur de chaîne hydraulique défectueux : si la voiture reste à l'arrêt, la chaîne se détend et peut sauter au démarrage = casse moteur. Bruit caractéristique au démarrage à froid.",
+        models: "A3, A4, A5, A6, Q3, Q5 essence 1.8/2.0 TFSI",
+        years: "2008-2013",
+      },
+      {
+        id: "audi-multitronic",
+        severity: "MAJEUR",
+        title: "Boîte Multitronic (CVT) fragile",
+        description:
+          "Variateur à chaîne Multitronic : usure prématurée de la chaîne et calculateur fragile. Vidanges tous les 60 000 km impératives mais souvent oubliées. Remplacement 4 000€+.",
+        models: "A4, A5, A6, A8 — traction (FWD) uniquement",
+        years: "2000-2014",
+      },
+      {
+        id: "audi-tdi-pompe-injection",
+        severity: "MAJEUR",
+        title: "Pompe à injection CP4 (2.0/3.0 TDI)",
+        description:
+          "Pompe Bosch CP4 sensible à la qualité du gazole et à la moindre trace d'eau. En cas de casse, débris dans tout le circuit = remplacement injecteurs + pompe + rails. Devis 5 000€+ courants.",
+        models: "A3, A4, A6, Q5 — 2.0 TDI et 3.0 TDI",
+        years: "2008-2016",
+      },
+    ],
+  },
+
+  MERCEDES: {
+    label: "Mercedes-Benz",
+    logo: "/logos/mercedes.svg",
+    defects: [
+      {
+        id: "mb-om651-injecteurs",
+        severity: "CRITIQUE",
+        title: "Injecteurs Delphi OM651 (2.1 CDI)",
+        description:
+          "Injecteurs Delphi du moteur OM651 (220 CDI, 250 CDI) : durée de vie souvent limitée à 150 000 km. Symptômes : démarrage difficile, fumée noire, à-coups. Jeu complet 2 000-3 000€.",
+        models: "Classe C (W204/W205), Classe E (W212), GLK, Vito",
+        years: "2008-2017",
+      },
+      {
+        id: "mb-7g-tronic-conducteur",
+        severity: "CRITIQUE",
+        title: "Plaque conductrice 7G-Tronic (722.9)",
+        description:
+          "Boîte automatique 7G-Tronic : la plaque conductrice (capteur N3/Y3) lâche fréquemment vers 100 000-180 000 km. Symptômes : passages erratiques, mode dégradé. Remplacement 1 500-2 500€.",
+        models: "Classe C, E, S, GLK, GLE, ML, Sprinter",
+        years: "2003-2016",
+      },
+      {
+        id: "mb-rouille-w211-w203",
+        severity: "MAJEUR",
+        title: "Corrosion structurelle (W203, W211, W210)",
+        description:
+          "Période 1995-2009 : qualité d'apprêt et de protection anti-corrosion défaillante. Bas de caisse, passages de roues, plancher, ailes. Vérifier impérativement les soubassements.",
+        models: "Classe C (W203), Classe E (W210/W211), Classe A (W168)",
+        years: "1995-2009",
+      },
+      {
+        id: "mb-airmatic",
+        severity: "MAJEUR",
+        title: "Suspension Airmatic — compresseur et coussins",
+        description:
+          "Suspension pneumatique Airmatic : fuites des coussins (avant et arrière) et compresseur qui rend l'âme. Coussin = 600-900€ pièce, compresseur 500-800€. Voiture s'affaisse côté ou complètement.",
+        models: "Classe E, S, CLS, GL, ML, GLE équipées Airmatic",
+        years: "1999-2018",
+      },
+      {
+        id: "mb-balanciers-m272",
+        severity: "MAJEUR",
+        title: "Pignon de balancier moteur M272/M273",
+        description:
+          "Moteurs V6 M272 et V8 M273 : pignon de l'arbre d'équilibrage en alliage trop tendre, usure rapide. Symptômes : voyant moteur, codes défaut calage AAC. Réparation lourde 3 000-5 000€.",
+        models: "Classe C 280/350, E 280/350, S 350, R 350, ML 350, CLK 280/350",
+        years: "2004-2008",
+      },
+    ],
+  },
+
+  PEUGEOT: {
+    label: "Peugeot",
+    logo: "/logos/peugeot.svg",
+    defects: [
+      {
+        id: "psa-1.2-puretech-courroie",
+        severity: "CRITIQUE",
+        title: "Courroie de distribution 1.2 PureTech dans le bain d'huile",
+        description:
+          "Moteur 1.2 PureTech (EB2DT, EB2ADT) : courroie immergée dans l'huile qui se délite. Particules obstruent la pompe à huile = casse moteur. Action commerciale Stellantis en cours, mais pas tous les modèles couverts.",
+        models: "208, 2008, 308, 3008, 5008 — 1.2 PureTech 110/130 ch",
+        years: "2014-2022",
+      },
+      {
+        id: "psa-1.6-hdi-fap",
+        severity: "MAJEUR",
+        title: "FAP et turbo 1.6 HDi (DV6)",
+        description:
+          "Moteur 1.6 HDi 90/110 ch : FAP qui se colmate vite en usage urbain + turbo Garrett fragile (axe usé, fuite huile). Décrassage FAP 400-800€, turbo échange standard 900-1 400€.",
+        models: "207, 208, 308, 3008, 5008, Partner",
+        years: "2004-2018",
+      },
+      {
+        id: "psa-1.6-thp-chaine",
+        severity: "MAJEUR",
+        title: "Distribution 1.6 THP (EP6) — chaîne et VVT",
+        description:
+          "Moteur 1.6 THP (coopération BMW-PSA) : chaîne de distribution qui s'étire prématurément + déphaseurs d'arbre à cames bruyants. Consommation d'huile importante également. Réparation 1 500-2 500€.",
+        models: "207, 208, 308 GT/GTI, 3008, 5008, RCZ, DS3, DS4",
+        years: "2007-2017",
+      },
+      {
+        id: "psa-bvm6-ms6",
+        severity: "MAJEUR",
+        title: "Boîte manuelle BVM6 (MS6/MA6) — synchros 2e",
+        description:
+          "Boîte manuelle 6 rapports : synchros de 2e fragiles, craquements au passage à froid. Embrayage volant moteur bi-masse aussi connu pour lâcher avant 150 000 km. Kit embrayage + VMD 1 200-1 800€.",
+        models: "308, 3008, 5008, 508 — boîtes BE6/MS6",
+        years: "2008-2018",
+      },
+      {
+        id: "psa-electronique-bsi",
+        severity: "MINEUR",
+        title: "BSI capricieux — bugs électroniques",
+        description:
+          "Boîtier de Servitude Intelligent (BSI) sensible à l'humidité et aux mises à jour ratées. Symptômes variés : essuie-glaces qui s'activent seuls, clignotants HS, démarrage refusé. Reprogrammation 80-150€, remplacement 600€+.",
+        models: "Toute la gamme 207-508-3008 ère 2005-2016",
+        years: "2005-2016",
+      },
+    ],
+  },
+
+  RENAULT: {
+    label: "Renault",
+    logo: "/logos/renault.svg",
+    defects: [
+      {
+        id: "renault-1.2-tce-conso-huile",
+        severity: "CRITIQUE",
+        title: "1.2 TCe (H5Ft) — consommation d'huile et casse moteur",
+        description:
+          "Moteur 1.2 TCe 115/120 ch : consommation d'huile excessive due à segmentation défectueuse + risque de casse moteur (bielle). Programme de prise en charge Renault existant mais conditionnel.",
+        models: "Clio IV, Captur, Mégane III/IV, Scénic III, Kadjar",
+        years: "2012-2018",
+      },
+      {
+        id: "renault-edc-mecatronique",
+        severity: "CRITIQUE",
+        title: "Boîte EDC (DC4) — mécatronique et double embrayage",
+        description:
+          "Boîte robotisée Getrag DC4 6 rapports : défaillances mécatronique (à-coups, perte de rapport) et usure prématurée des disques d'embrayage à sec. Réparation 1 500-3 500€.",
+        models: "Clio IV RS, Mégane III/IV, Scénic, Captur, Kadjar EDC",
+        years: "2010-2019",
+      },
+      {
+        id: "renault-1.5-dci-injecteurs",
+        severity: "MAJEUR",
+        title: "Injecteurs Delphi 1.5 dCi (K9K)",
+        description:
+          "Moteur 1.5 dCi très répandu : injecteurs Delphi fragiles (grippage, fuites de retour). Symptômes : démarrage difficile, fumée blanche, mode dégradé. Jeu complet 1 200-1 800€.",
+        models: "Clio, Mégane, Scénic, Captur, Kadjar, Kangoo, Twingo dCi",
+        years: "2001-2019",
+      },
+      {
+        id: "renault-2.0-dci-fap",
+        severity: "MAJEUR",
+        title: "FAP et vanne EGR 2.0 dCi (M9R)",
+        description:
+          "Moteur 2.0 dCi : encrassement EGR sévère, FAP colmaté en usage urbain. Pompe à huile aussi fragile sur premières séries. Vérifier voyant moteur et historique des régénérations.",
+        models: "Mégane III, Scénic III, Laguna III, Espace IV, Trafic",
+        years: "2006-2016",
+      },
+      {
+        id: "renault-corrosion-mégane2",
+        severity: "MINEUR",
+        title: "Cartes mains-libres et électronique",
+        description:
+          "Système carte mains-libres connu pour ses caprices : refus de démarrage, voiture qui ne reconnaît plus la carte, pile à changer souvent. Reprogrammation parfois nécessaire. 100-400€ selon le cas.",
+        models: "Laguna II/III, Mégane II/III, Espace IV — équipées carte mains-libres",
+        years: "2002-2015",
+      },
+    ],
+  },
+
+  VW: {
+    label: "Volkswagen",
+    logo: "/logos/vw.svg",
+    defects: [
+      {
+        id: "vw-tfsi-conso-huile",
+        severity: "CRITIQUE",
+        title: "Consommation d'huile 2.0 TFSI EA888 (gen 2)",
+        description:
+          "Identique au problème Audi : 2.0 TFSI 200-211 ch consomme jusqu'à 1L/1000 km. Segmentation défectueuse, réparation = dépose moteur. Programme constructeur partiel selon VIN.",
+        models: "Golf VI/VII GTI, Passat B7, Tiguan, Scirocco, Eos",
+        years: "2008-2014",
+      },
+      {
+        id: "vw-dsg-dq200",
+        severity: "CRITIQUE",
+        title: "Mécatronique DSG 7 (DQ200) sèche",
+        description:
+          "Même boîte que Audi DQ200 : mécatronique défaillante entre 60 000 et 130 000 km. Symptômes : à-coups en ville, passage neutre intempestif. Coût 2 000-3 500€.",
+        models: "Polo, Golf, Touran, Tiguan, T-Roc — DSG 7 rapports à sec",
+        years: "2009-2018",
+      },
+      {
+        id: "vw-tdi-pompe-injection",
+        severity: "CRITIQUE",
+        title: "Pompe HPFP CP4 (TDI EA189/EA288)",
+        description:
+          "Pompe haute pression Bosch CP4 sensible. En cas de casse, débris métalliques dans tout le circuit haute pression. Devis 5 000-8 000€ selon contamination.",
+        models: "Golf, Passat, Touran, Tiguan, Sharan 2.0 TDI",
+        years: "2008-2018",
+      },
+      {
+        id: "vw-distrib-1.4-tsi",
+        severity: "MAJEUR",
+        title: "Chaîne de distribution 1.4 TSI",
+        description:
+          "Moteur 1.4 TSI (CAVA, CTHE) : tendeur et chaîne de distribution défaillants avant 100 000 km. Bruit de chaîne au démarrage. Réparation 1 200-2 000€.",
+        models: "Golf VI/VII, Polo, Touran, Tiguan, Caddy 1.4 TSI 122/140 ch",
+        years: "2007-2015",
+      },
+      {
+        id: "vw-dieselgate-egr",
+        severity: "MINEUR",
+        title: "Séquelles update Dieselgate (EA189)",
+        description:
+          "Suite à la mise à jour antipollution post-Dieselgate, recrudescence de pannes EGR, FAP colmatés et turbo fatigué. Vérifier impérativement si l'update a été appliqué et si des problèmes sont apparus depuis.",
+        models: "Tous TDI 1.6 et 2.0 EA189 (2008-2015)",
+        years: "2008-2015",
+      },
+    ],
+  },
+};
+
+// Helper : récupérer la liste des marques disponibles
+export const availableBrands = Object.keys(defectAtlas);
+
+// Helper : compter le nombre de défauts par sévérité pour une marque
+export const getDefectStats = (brand) => {
+  const defects = defectAtlas[brand]?.defects || [];
+  return {
+    total: defects.length,
+    critique: defects.filter((d) => d.severity === "CRITIQUE").length,
+    majeur: defects.filter((d) => d.severity === "MAJEUR").length,
+    mineur: defects.filter((d) => d.severity === "MINEUR").length,
+  };
+};
