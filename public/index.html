@@ -4,14 +4,25 @@
     <meta charset="utf-8" />
     <meta name="google-site-verification" content="z74CwbcogZxp8xrVosPIk1_tlfRB5JgS4xDynyeZcVw" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="theme-color" content="#0F1B2D" />
+    <meta name="theme-color" content="#0A0A0B" />
+
+    <!-- Geist + Geist Mono — pattern async (Phase 2.8 : preload + onload swap pour non-blocking) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;900&family=Geist+Mono:wght@400;500&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;900&family=Geist+Mono:wght@400;500&display=swap">
+    </noscript>
+
     <style>
       html, body {
         margin: 0; padding: 0;
         width: 100%; overflow-x: hidden;
-        background-color: #0F1B2D;
+        background-color: #0A0A0B;
       }
-      body.modal-open { overflow: hidden; }
+      body.modal-open, body.loader-active { overflow: hidden; }
     </style>
 
     <!-- Favicon -->

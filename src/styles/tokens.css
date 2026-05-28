@@ -1,0 +1,70 @@
+/* ============================================================
+   INSPEXO V2 — DESIGN TOKENS
+   "Precision Engineering meets Intelligence"
+   ============================================================ */
+
+:root {
+  /* ── Couleurs ── */
+  --ink:         #0A0A0B;       /* Fond sombre principal */
+  --ink-soft:    #161618;       /* Hover ligne tableau */
+  --paper:       #F5F3EE;       /* Fond clair principal */
+  --white:       #FAFAF8;       /* Blanc cassé */
+  --ember:       #FF5B1F;       /* Accent unique */
+  --ember-soft:  #FFE9DD;       /* Fond accent doux */
+  --steel:       #6B6B70;       /* Texte mute */
+  --mist:        #E5E3DD;       /* Borders, séparateurs sur clair */
+  --signal:      #00C896;       /* Success */
+  --alert:       #E63946;       /* Critique */
+
+  /* Opacités texte sur ink */
+  --on-ink-50:   rgba(250, 250, 248, 0.50);
+  --on-ink-60:   rgba(250, 250, 248, 0.60);
+  --on-ink-70:   rgba(250, 250, 248, 0.70);
+  --on-ink-100:  rgba(250, 250, 248, 1);
+
+  /* ── Typographie ── Geist (Vercel/Basement) — variable font, OFL ── */
+  --font-display: 'Geist', system-ui, -apple-system, sans-serif;
+  --font-body:    'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono:    'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Type scale fluide */
+  --text-xs:     clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);    /* 12-13 */
+  --text-sm:     clamp(0.875rem, 0.8rem + 0.3vw, 0.95rem);  /* 14-15 */
+  --text-base:   clamp(1rem, 0.95rem + 0.2vw, 1.1rem);      /* 16-18 */
+  --text-lg:     clamp(1.125rem, 1rem + 0.5vw, 1.35rem);    /* 18-22 */
+  --text-xl:     clamp(1.5rem, 1.3rem + 1vw, 2rem);         /* 24-32 */
+  --text-2xl:    clamp(2rem, 1.5rem + 2vw, 3rem);           /* 32-48 */
+  --text-3xl:    clamp(2.75rem, 2rem + 3vw, 4.5rem);        /* 44-72 */
+  --display-sm:  clamp(3.5rem, 2.5rem + 4vw, 6rem);         /* 56-96 */
+  --display:     clamp(3rem, 2rem + 6vw, 9rem);             /* 48-144 (Phase 2.7 : rééquilibré) */
+  --display-xl:  clamp(5rem, 3rem + 9vw, 13rem);            /* 80-208 */
+
+  /* ── Espacement (8px scale) ── */
+  --space-1:  0.5rem;     /* 8 */
+  --space-2:  1rem;       /* 16 */
+  --space-3:  1.5rem;     /* 24 */
+  --space-4:  2rem;       /* 32 */
+  --space-6:  3rem;       /* 48 */
+  --space-8:  4rem;       /* 64 */
+  --space-12: 6rem;       /* 96 */
+  --space-16: 8rem;       /* 128 */
+  --space-24: 12rem;      /* 192 */
+
+  /* ── Radius ── */
+  --radius-sm: 4px;
+  --radius:    8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* ── Easing ── */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Z-index ── */
+  --z-nav:    100;
+  --z-loader: 9999;
+
+  /* ── Navbar metrics ── */
+  --nav-h-desktop: 72px;
+  --nav-h-mobile:  60px;
+}
