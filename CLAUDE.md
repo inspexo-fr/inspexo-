@@ -214,7 +214,11 @@ const experts = [
 |---------|-------|--------|
 | 1-3 | Frontend React en composants + design system + déploiement | 🔄 En cours |
 | 4 | Supabase — tables users, experts, missions, paiements | ⬜ |
-| 5 | Stripe + Stripe Connect | ⬜ |
+| 5 | Stripe + Stripe Connect | 
+
+
+
+⬜ |
 | 6 | Espace client post-paiement | ⬜ |
 | 7 | Dashboard admin | ⬜ |
 | 8 | IA Anthropic palier 9,90€ | ⬜ |
@@ -226,6 +230,11 @@ const experts = [
 | 14 | Optimisation mobile | ⬜ |
 | 15 | Tunnel conversion end-to-end | ⬜ |
 | 16 | Inspection Distancielle (Phase 2) | ⬜ |
+
+## Items trackés (durcissement post-Étapes 5/6)
+
+- **Hero — H1 statique dans `public/index.html`** : aujourd'hui le H1 est rendu par React → peint après parse du bundle JS, ce qui creuse le render delay LCP (~68 ms sur la lab simulée Slow 4G, ~75 ms observed). Quand le wording de l'opening sera figé (post-Étape 5/6, après les effets typo traces de pneus), injecter le markup du H1 + CSS critique inline dans `public/index.html`. React hydrate par-dessus. Objectif : LCP qui peint au FCP (~0,8 s simulé), pas après le JS. Audit à refaire avec DevTools throttling « applied » (plus fiable que `simulate` pour confirmer).
+- **Render-blocking `main.css`** : 2,6 KB gzipped, ~150 ms savings estimés (Lighthouse). Solution = inliner le CSS critique du Hero dans `<head>` au même moment que le fix H1 statique.
 
 ## Conventions de Code
 

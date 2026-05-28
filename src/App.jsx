@@ -3,9 +3,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { supabase } from './lib/supabaseClient'
 
-/* ── Legacy navbar + hero (chargés immédiatement car potentiellement above-the-fold en mode legacy) ── */
+/* ── Legacy navbar (chargée immédiatement) ── */
 import LegacyNavbar from './components/Navbar'
-import LegacyHero   from './components/Hero'
+
+/* ── Hero (nouveau, branche hero, étape 3 = DOM only).
+       Remplace LegacyHero ET V2Hero — un seul Hero désormais. */
+import Hero from './components/hero/Hero'
 
 /* ── Sections legacy lazy-loaded (sous le Hero, jamais critiques LCP) ── */
 const StatsBar     = lazy(() => import('./components/StatsBar'))
@@ -17,10 +20,9 @@ const FAQ          = lazy(() => import('./components/FAQ'))
 const Footer       = lazy(() => import('./components/Footer'))
 const FooterNotes  = lazy(() => import('./components/FooterNotes'))
 
-/* ── V2 components ── */
+/* ── V2 components (préservés en historique — V2Hero plus monté, remplacé par hero/Hero) ── */
 import V2Loader     from './components/v2/Loader'
 import V2Navbar     from './components/v2/Navbar'
-import V2Hero       from './components/v2/Hero'
 import V2TrustTicker from './components/v2/TrustTicker'
 
 /* ── Pages — lazy (jamais critiques LCP, chargées au routing) ── */
@@ -234,7 +236,10 @@ function Site() {
       {helmet}
       <LegacyNavbar />
       <main>
-        <LegacyHero onFreeAnalysis={handleFreeAnalysis} />
+        <Hero
+          onPrimaryCta={handleFreeAnalysis}
+          onSecondaryCta={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+        />
         <Suspense fallback={null}>
           <StatsBar />
           <HowItWorks onFreeAnalysis={handleFreeAnalysis} />
@@ -265,7 +270,10 @@ function V2SiteLayout({ helmet, onFreeAnalysis, onReserve, sharedModals, skipLoa
       {!loaderDone && <V2Loader onComplete={() => setLoaderDone(true)} />}
       <V2Navbar onPrimaryCta={onFreeAnalysis} />
       <main>
-        <V2Hero onFreeAnalysis={onFreeAnalysis} />
+        <Hero
+          onPrimaryCta={onFreeAnalysis}
+          onSecondaryCta={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+        />
         <V2TrustTicker />
         {/* Sections legacy lazy-loaded — refonte Phases 3-5 */}
         <Suspense fallback={null}>

@@ -1,7 +1,17 @@
 /* Fonts ────────────────────────────────────────────────── */
-/* Geist + Geist Mono sont chargés via <link rel="stylesheet"> dans public/index.html
-   (placés tout en haut du <head> pour minimiser le LCP). */
+/* Syne self-hostée + fallback métrique-ajusté : @font-face inlinés dans
+   public/index.html (CRA css-loader ne résout pas les paths /fonts/* absolus
+   au build time, contournement éprouvé). Plus Jakarta + JBMono via Google async. */
 @import url('./styles/tokens.css');
+
+/* ── CSS variables globales (Hero / app-wide) — depuis lib/constants.js ── */
+:root {
+  --ink:   #0F0E0D;
+  --ember: #E85D2F;
+  --gold:  #D4AF7A;
+  --cream: #F4F1EB;
+  --smoke: #B2ACA3;
+}
 
 /* Reset universel — safe pour les deux modes (legacy & V2) ── */
 *, *::before, *::after {
