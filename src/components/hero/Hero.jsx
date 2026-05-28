@@ -1,10 +1,30 @@
-import React, { useRef } from 'react'
+import React, { useRef, Suspense, lazy } from 'react'
 import styles from './Hero.module.css'
 import useScrollProgress from '../../hooks/useScrollProgress'
 import useLenis from '../../hooks/useLenis'
 import ChapterCounter from './ChapterCounter'
 import SkipLink from './SkipLink'
 import { SEQUENCES, COPY } from '../../lib/constants'
+
+// HeroScene3D — lazy : R3F + three (~230 KB gz) hors du main bundle.
+// Fallback null → la coquille HTML+H1 peint en premier (LCP preserved).
+const HeroScene3D = lazy(() => import('./HeroScene3D'))
+
+/**
+ * SceneErrorBoundary — garde contre WebGL indisponible (Chrome corporate,
+ * extensions anti-fingerprint, vieux Android, GPU drivers cassés). Si la
+ * scène 3D throw, on retourne null et le reste du Hero (H1 + CTAs + DOM)
+ * continue de fonctionner. Pas de log Sentry à l'Étape 4 (à wirer post-RGPD).
+ */
+class SceneErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { hasError: false } }
+  static getDerivedStateFromError() { return { hasError: true } }
+  componentDidCatch(err) {
+    // eslint-disable-next-line no-console
+    console.warn('[HeroScene3D] disabled —', err?.message || err)
+  }
+  render() { return this.state.hasError ? null : this.props.children }
+}
 
 /**
  * Hero orchestrateur (étape 3 : DOM-only, pas de 3D).
@@ -65,6 +85,11 @@ export default function Hero({ onPrimaryCta, onSecondaryCta, onAfter }) {
   return (
     <section ref={ref} className={styles.hero} id="hero">
       <div className={styles.stage}>
+        <SceneErrorBoundary>
+          <Suspense fallback={null}>
+            <HeroScene3D progress={progress} />
+          </Suspense>
+        </SceneErrorBoundary>
         <div className={styles.frame}>
           <div className={styles.overline}>{COPY.overline}</div>
 
