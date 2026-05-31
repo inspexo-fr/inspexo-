@@ -12,3 +12,8 @@ build/
 # misc
 .DS_Store
 *.log
+
+# Hero cinematic — placeholders ffmpeg testsrc2, regen via commande dans
+# docs/hero-spec.md ou le commit refactor(hero): swap R3F → video scrub.
+# Les vrais hero_wide/vert.mp4 (delivery Blender) seront livrés séparément.
+public/hero/*.mp4

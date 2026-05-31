@@ -44,6 +44,52 @@
   margin: 0 0 28px;
 }
 
+/* ── Cinematic (vidéo all-intra scrubée OU poster img si reduced-motion) ── */
+.cinematic {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  pointer-events: none;
+  /* La vidéo est purement décorative — opacité 1 par défaut, ajustable
+     post-MVP si on veut un fade-in à la première frame chargée. */
+}
+
+/* ── Voile radial : assure la lisibilité du texte sur la vidéo qui s'éclaircit
+   (acte 4 notamment). Sombre aux bords, transparent au centre. ── */
+.voile {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(15, 14, 13, 0.0)  0%,
+    rgba(15, 14, 13, 0.45) 50%,
+    rgba(15, 14, 13, 0.85) 100%
+  );
+}
+
+/* ── H1 stack — CSS grid stacking. Tous les variants H1 occupent la même
+   cellule (grid-area: 1/1), opacité-driven via inline style.
+   font + font-size hérités de .h1 → résolution correcte de `ch` dans
+   grid-template-columns (sinon `ch` se résout sur la police par défaut du
+   Stack = 8px/ch au lieu de ~40px/ch pour Syne 78px). ── */
+.h1Stack {
+  display: grid;
+  font-family: 'Syne', 'Syne-fallback', system-ui, sans-serif;
+  font-size: clamp(2rem, 1rem + 4.3vw, 5.5rem);
+  grid-template-columns: minmax(0, 22ch);
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+.h1Stack > * {
+  grid-area: 1 / 1;
+  width: 100%;
+}
+
 /* ── H1 (Syne 700-800, fallback métrique-ajusté pour CLS ~0) ── */
 .h1 {
   font-family: 'Syne', 'Syne-fallback', system-ui, sans-serif;
@@ -53,8 +99,11 @@
   line-height: 0.98;
   letter-spacing: -0.025em;
   color: var(--cream);
-  margin: 0 auto 24px;
+  margin: 0;
   max-width: 22ch;
+  /* Transition douce sur l'opacité pour adoucir les sauts si le rAF
+     du scroll progress échantillonne moins finement que les frames. */
+  transition: opacity 180ms ease-out;
   /* Garde anti-overflow : si la police de fallback (Arial Black) est plus large
      que Syne au moment du swap, force le break propre. hyphens=auto enclenche
      la coupure douce sur les mots longs ("d'occasion"). */
@@ -71,6 +120,19 @@
   color: var(--ember);
 }
 
+/* ── Sub stack — même logique. Sub utilise px (560px), pas besoin d'hériter
+   la police pour le calcul de ch. ── */
+.subStack {
+  display: grid;
+  grid-template-columns: minmax(0, 560px);
+  justify-content: center;
+  margin: 0 auto 36px;
+}
+.subStack > * {
+  grid-area: 1 / 1;
+  width: 100%;
+}
+
 /* ── Sub ── */
 .sub {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -78,8 +140,18 @@
   font-weight: 400;
   line-height: 1.5;
   color: var(--smoke);
-  margin: 0 auto 36px;
+  margin: 0;
   max-width: 560px;
+  transition: opacity 180ms ease-out;
+}
+
+/* ── CTA wrap — fade-in container piloté inline (opacity + pointerEvents) ── */
+.ctaWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: opacity 220ms ease-out;
 }
 
 /* ── CTAs (pill, style Linear) ── */
