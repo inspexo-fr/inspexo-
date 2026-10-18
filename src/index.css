@@ -1,95 +1,13 @@
-/* Fonts ────────────────────────────────────────────────── */
-/* Syne self-hostée + fallback métrique-ajusté : @font-face inlinés dans
-   public/index.html (CRA css-loader ne résout pas les paths /fonts/* absolus
-   au build time, contournement éprouvé). Plus Jakarta + JBMono via Google async. */
-@import url('./styles/tokens.css');
-
-/* ── CSS variables globales (Hero / app-wide) — depuis lib/constants.js ── */
-:root {
-  --ink:   #0F0E0D;
-  --ember: #E85D2F;
-  --gold:  #D4AF7A;
-  --cream: #F4F1EB;
-  --smoke: #B2ACA3;
-}
-
-/* Reset universel — safe pour les deux modes (legacy & V2) ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-/* ────────────────────────────────────────────────────────────
-   V2 — Body/HTML rules scoped to .v2-active
-   Si le flag V2 n'est pas actif, l'ancien site garde son
-   styling tel quel (public/index.html + styles inline).
-   ──────────────────────────────────────────────────────────── */
-
-html.v2-active {
-  background: var(--ink);
-  color: var(--white);
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
-body.v2-active {
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  font-weight: 400;
-  line-height: 1.55;
-  letter-spacing: -0.01em;
-  color: var(--white);
-  background: var(--ink);
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
-
-body.modal-open,
-body.loader-active { overflow: hidden; }
-
-.v2-active ::selection {
-  background: var(--ember);
-  color: var(--white);
-}
-
-/* Focus visible scoped V2 — ne bouscule pas les focus existants legacy */
-.v2-active :focus { outline: none; }
-.v2-active :focus-visible {
-  outline: 2px solid var(--ember);
-  outline-offset: 2px;
-}
-
-.v2-active button {
-  font-family: inherit;
-  font-size: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-  padding: 0;
-}
-.v2-active a {
-  color: inherit;
-  text-decoration: none;
-}
-.v2-active img,
-.v2-active video,
-.v2-active svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
-/* Tabular numerals sur le mono */
-.v2-active .font-mono,
-.v2-active [class*="mono"] {
-  font-feature-settings: "tnum" 1, "ss01" 1;
-}
-
-/* Lenis (V2 uniquement) ────────────────────────────────────── */
-html.lenis,
-html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: hidden; }

@@ -1,7 +1,12 @@
 # INSPEXO — Contexte Projet pour Claude Code
 
 ## Mission
-Inspexo est une plateforme React qui met en relation des acheteurs de véhicules d'occasion avec des experts automobiles **spécialisés par marque**. L'indépendance est totale : les experts sont payés exclusivement par l'acheteur, jamais par le vendeur.
+Inspexo aide les acheteurs de véhicules d'occasion à éviter les mauvaises affaires. **Pivot (oct. 2026) : l'IA est le produit principal.**
+- Le **score d'annonce gratuit** (`/score`) est l'outil d'acquisition : verdict vert/orange/rouge en < 20 s.
+- Le **Pass achat à 29 €** (à venir) est la montée en gamme : accompagnement IA complet jusqu'à la signature.
+- Les **experts humains** spécialisés par marque (Visio, Inspection) sont en **liste d'attente** le temps de constituer le réseau.
+
+L'indépendance reste totale : payé exclusivement par l'acheteur, jamais par le vendeur.
 
 ## URLs & Accès
 - **Site déployé** : inspexo-k2dv.vercel.app
@@ -14,7 +19,7 @@ Inspexo est une plateforme React qui met en relation des acheteurs de véhicules
 - **Hébergement** : Vercel
 - **Base de données** : Supabase (Auth + PostgreSQL + Row Level Security + Edge Functions)
 - **Paiement** : Stripe + Stripe Connect — JAMAIS de virement manuel
-- **IA palier 1** : API Anthropic Claude Sonnet (appel via Supabase Edge Function, JAMAIS côté client)
+- **IA** : API Anthropic Claude (`claude-sonnet-5` pour le score) — appel via Supabase Edge Function, JAMAIS côté client
 - **Réservation** : Cal.com
 - **Emails** : Resend
 - **Visio** : Google Meet
@@ -24,32 +29,36 @@ Inspexo est une plateforme React qui met en relation des acheteurs de véhicules
 ### Structure des fichiers
 ```
 inspexo/
+├── api/
+│   └── og.js                # Fonction Vercel : meta Open Graph de /a/:id pour les crawlers
 ├── public/
 │   └── index.html
 ├── src/
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── Hero.jsx
-│   │   ├── StatsBar.jsx
-│   │   ├── HowItWorks.jsx
-│   │   ├── Services.jsx
-│   │   ├── Experts.jsx
-│   │   ├── BecomeExpert.jsx
-│   │   ├── FAQ.jsx
-│   │   ├── Footer.jsx
-│   │   └── FooterNotes.jsx
-│   ├── pages/              # Pour les futures pages (dashboard, paiement...)
+│   ├── components/          # Navbar, Hero, StatsBar, HowItWorks, Services,
+│   │                        # Experts (waitlist), BecomeExpert, FAQ, Footer,
+│   │                        # FooterNotes, LeadEmailForm, modales legacy…
+│   ├── pages/
+│   │   ├── ScorePage.jsx    # /score — formulaire d'analyse d'annonce
+│   │   ├── ResultPage.jsx   # /a/:id — résultat public partageable
+│   │   └── …                # dashboards, pages légales
+│   ├── data/
+│   │   └── defectAtlas.js   # Defect Atlas (source de vérité, copié côté functions)
 │   ├── lib/
-│   │   └── supabaseClient.js
-│   ├── styles/
-│   │   └── global.css
-│   ├── App.jsx              # ~20 lignes max — assemblage des composants
+│   │   ├── supabaseClient.js
+│   │   ├── scoreApi.js      # appels edge functions + RPC (leads, events)
+│   │   └── imageUtils.js    # redim 1600px + suppression EXIF via canvas
+│   ├── App.jsx              # routes + assemblage
 │   └── index.js
+├── supabase/
+│   ├── functions/
+│   │   ├── score/           # analyse d'annonce (Claude Sonnet 5)
+│   │   ├── rappels/         # RappelConso + Takata
+│   │   └── _shared/         # defectAtlas.json, takata_models.json, brandAliases.ts
+│   └── migrations/
+├── vercel.json              # rewrite OG (user-agent bots) + fallback SPA
 ├── .env.local               # JAMAIS commité
-├── .gitignore
 ├── CLAUDE.md
-├── package.json
-└── README.md
+└── package.json
 ```
 
 ### Design System — STRICTEMENT RESPECTER
@@ -83,13 +92,19 @@ Le site utilise un style éditorial/magazine avec :
 - Badges arrondis (border-radius: 100px) pour les tags et filtres
 - Séparateurs subtils entre les items de liste (borderBottom)
 
-### Structure du site (10 sections dans l'ordre)
-1. **Navbar** — fixe 64px, bleu nuit, logo "INSPEXO" (Syne, letterspacing 3px, E en orange), liens desktop + hamburger mobile, CTA "Trouver mon expert"
-2. **Hero** — bleu nuit, min-height 100vh, badge orange arrondi, titre Syne 68px+ avec text-outline, sous-titre italique, 2 boutons (orange + outline), badges de confiance
+### Routes
+- `/` — landing (sections ci-dessous)
+- `/score` — score d'annonce gratuit (mobile d'abord, sans login)
+- `/a/:id` — résultat public partageable (OG dynamique pour les bots via `api/og.js`)
+- dashboards et pages légales existants
+
+### Structure de la landing (10 sections dans l'ordre)
+1. **Navbar** — fixe 64px, bleu nuit, logo "INSPEXO" (Syne, letterspacing 3px, E en orange), liens desktop + hamburger mobile, CTA "Analyser une annonce" → `/score` (ancres en `/#section` pour fonctionner depuis les sous-pages)
+2. **Hero** — bleu nuit, min-height 100vh, badge orange arrondi, titre Syne 68px+ avec text-outline, sous-titre italique, CTA principal "Analyser une annonce" → `/score` + bouton outline, badges de confiance (le badge « Experts qualifiés vérifiés » a été retiré)
 3. **Barre Stats** — fond orange, 4 stats : "5,5M Transactions VO/an", "30+ Marques couvertes", "9,90€ Pour commencer", "100% Côté acheteur"
 4. **Comment ça marche** — fond blanc, 3 étapes avec icônes dans cercles orange pâle, numérotées "Étape 01/02/03"
-5. **Nos Services** — fond gris clair, 3 cards (IA / Visio featured / Inspection), encart garantie en bas
-6. **Nos Experts** — fond bleu nuit, filtres marques séparés Généralistes / Premium & Sportives en pills, cards experts, zone notification email pour villes non couvertes
+5. **Nos Services** — fond gris clair, 3 cards (IA / Visio featured / Inspection), encart garantie en bas. CTA Visio & Inspection = « Rejoindre la liste d'attente » (formulaire email inline, lead `expert_waitlist`)
+6. **Nos Experts** — fond bleu nuit, bloc « Réseau d'experts en construction » + capture email (lead `expert_waitlist`) + pills des marques prioritaires. Les profils fictifs et leurs chiffres ont été retirés (sprint 1)
 7. **Devenir Expert** — fond orange pâle, grille revenus (40€ / 175€), CTA bleu nuit
 8. **FAQ** — fond blanc, accordéon avec chevron +/rotate(45deg)
 9. **Footer** — bleu nuit, logo atténué, grille 3 colonnes (Navigation, Contact, Légal)
@@ -99,61 +114,48 @@ Le site utilise un style éditorial/magazine avec :
 La navbar contient uniquement : Comment ça marche, Nos services, Nos experts, Devenir expert + CTA.
 PAS de lien FAQ dans la navbar.
 
-## Modèle Économique — 3 paliers (PRIX DE LANCEMENT)
+## Modèle Économique — pivot IA
 
-| Palier | Prix | Plateforme | Expert | Split |
-|--------|------|-----------|--------|-------|
-| IA Spécialisée | 9,90€ | 9,90€ | 0€ | 100/0 |
-| Visio Test Drive | 59€ | 19€ | 40€ | 32/68 |
-| Inspection Physique | 249€ | 79€ | 170€ | 32/68 |
+| Offre | Prix | Statut |
+|-------|------|--------|
+| Score d'annonce | Gratuit (5 analyses / 24 h / IP) | ✅ En ligne — acquisition |
+| Pass achat | 29 € | ⬜ À venir — produit principal |
+| Visio Test Drive | 59 € (prix de lancement) | ⏸ Liste d'attente |
+| Inspection Physique | 249 € (prix de lancement) | ⏸ Liste d'attente |
 
-### Détail des paliers
+- Le score gratuit crée du doute UTILE (factuel, jamais alarmiste) et pousse vers le Pass achat.
+- Le Pass achat (29 €) : accompagnement IA complet jusqu'à la signature — à spécifier. Les leads sont collectés dès maintenant (source `pass_waitlist`).
+- Visio (59 €, split 19/40) et Inspection (249 €, split 79/170) restent affichés sur le site avec CTA « Rejoindre la liste d'attente » (source `expert_waitlist`) tant que le réseau d'experts n'est pas opérationnel. Hausse prévue post-traction : Visio → 75 €, Inspection → 299 € (part expert inchangée).
+- L'ancien palier « IA Spécialisée 9,90 € » (chat 10 échanges : FreeAnalysisModal / ChatIA / fonction `ai-chat`) existe toujours dans le code mais n'est plus le produit mis en avant.
 
-**Palier 1 — IA Spécialisée (9,90€)**
-- Disponible 48h après achat
-- Entraînée sur la marque spécifique
-- Défauts et maladies fréquents du modèle
-- Script de questions au vendeur
-- Estimation du juste prix marché
-- Signaux d'alerte à ne pas manquer
-- Rapport détaillé
-- L'IA doit CRÉER DU DOUTE, pas rassurer
-- Chaque défaillance catégorisée : 🟢 "Vérifiable par vous" / 🔴 "Nécessite un expert"
-- 60-70% des défaillances doivent être en rouge → pousse vers palier supérieur
-- Formulation : "Découvrez les points de défaillance connus de ce modèle — et décidez si vous avez besoin d'un expert sur place"
-- Badge sur la card : "Éclairez votre décision"
-- Emoji card : 💬
+## Score d'annonce gratuit (Sprint 1 — livré oct. 2026)
 
-**Palier 2 — Visio Test Drive (59€) — CARD FEATURED (fond bleu nuit)**
-- Expert qualifié sur la marque
-- En direct pendant la visite de l'acheteur
-- Guidage pendant l'essai routier
-- Vérification identité véhicule *
-- Historique administratif
-- Avis et recommandations du spécialiste
-- Compte-rendu détaillé sous 24h
-- Badge : "⭐ Recommandé"
-- Emoji card : 📹
-- Ce que la visio PEUT vérifier : documents, cohérence kilométrique, état visuel, bruits moteur au démarrage
-- Ce que la visio NE PEUT PAS vérifier : mécanique sous capot en détail, suspensions, freins, zones repeintes, essai routier complet
+### Produit
+- `/score` : texte d'annonce (≤ 6 000 car.) + jusqu'à 3 captures (redimensionnées à 1 600 px côté client, EXIF supprimé par réencodage canvas, JAMAIS stockées — seul `images_count` persiste) + jusqu'à 5 annonces comparables.
+- Résultat en < 20 s : verdict `vert|orange|rouge`, score 0-100, exactement 3 raisons, pannes connues (gravité `securite|majeure|mineure` + confiance `haute|moyenne|basse` affichées), incohérences, questions au vendeur, avis prix (médiane des comparables).
+- `/a/:id` : page publique partageable — bloc rappels constructeur + bandeau Takata, boutons Partager / « Recevoir ce rapport par email » (lead `rapport`) / « Être prévenu du Pass achat » (lead `pass_waitlist`).
+- Mention obligatoire sous chaque résultat : « Analyse automatique à partir du texte de l'annonce. Ne remplace pas un examen du véhicule. »
 
-**Palier 3 — Inspection Physique (249€)**
-- Tout le palier Visio +
-- Déplacement de l'expert sur place
-- Inspection compartiment moteur
-- Essai statique et routier complet
-- Frappe à froid *
-- Détection zones repeintes
-- Analyse du contrôle technique
-- Rapport photo complet sous 24h
-- Rapport chiffré des défauts constatés (estimation frais de remise en état)
-- Badge : "Rien au hasard"
-- Emoji card : 🔧
+### Edge function `score`
+- Modèle `claude-sonnet-5`, tool use strict forcé (`rendre_verdict`), `thinking: disabled`, `max_tokens: 2000`. ⚠️ Sonnet 5 rejette `temperature` (400).
+- System prompt avec `cache_control`, contenant le Defect Atlas complet (`src/data/defectAtlas.js`, copié en `_shared/defectAtlas.json`). Règle : panne de l'atlas → confiance « haute » ; connaissances générales non vérifiées → « basse ».
+- Le texte d'annonce est traité comme DONNÉE NON FIABLE : toute instruction qu'il contient est ignorée (anti prompt-injection).
+- Jamais de récupération d'URL (pas de scraping) : lien collé seul → 422 avec message demandant le texte.
+- Rate limit : 5 analyses / 24 h par `ip_hash` = sha256(IP_HASH_SALT + IP). ⚠️ Seule source d'IP fiable : header `cf-connecting-ip` (stable, non spoofable) ; le `x-forwarded-for` Supabase varie à chaque requête.
+- Coût mesuré : ≈ 0,028 $ / analyse (~1 350 tokens de sortie), latence 11-16 s. Tokens loggés dans l'event `score_done`.
 
-### Stratégie prix
-- Afficher "Prix de lancement" sur le site
-- Le palier IA est le moteur d'acquisition (marge ~100%, volume)
-- Hausse prévue post-traction : Visio → 75€, Inspection → 299€ (part expert inchangée)
+### Edge function `rappels`
+- RappelConso v2 : dataset `rappelconso-v2-gtin-espaces` (data.economie.gouv.fr, API Explore v2.1 — l'ancien `rappelconso0` n'existe plus). Catégorie exacte : `"automobiles et moyens de déplacement"`. Marques en minuscules et incohérentes (« vw », « mercedes-benz », « citroen » ET « citroën ») → alias dans `_shared/brandAliases.ts` (fichier commenté, à enrichir à la main).
+- Filtre modèle côté serveur par candidats (phrase complète, bigrammes « serie 3 », codes châssis/moteur « f30 », « 320d »). Dédoublonnage par `numero_fiche`. Cache 24 h en table `rappels_cache`.
+- Takata : `_shared/takata_models.json` (33 marques, 235 modèles, source https://www.ecologie.gouv.fr/rappel-airbag-takata — à régénérer périodiquement). Match marque + modèle + année → bandeau « Modèle concerné par la campagne airbags Takata — vérifiez avec le numéro de série (VIN) sur le site du constructeur avant tout achat ». Année inconnue = bandeau affiché par prudence.
+
+### Base de données (migration `20261018120000_sprint1_score`)
+- Tables : `analyses`, `leads` (source ∈ `pass_waitlist|expert_waitlist|rapport`), `events`, `rappels_cache`. RLS activée partout, AUCUNE policy anon — les edge functions écrivent en service role.
+- Accès public UNIQUEMENT via RPC SECURITY DEFINER :
+  - `get_public_analysis(p_id, p_track)` — lecture par id uniquement (pas de listing), incrémente `share_views` + event `result_viewed` ; `p_track=false` pour les crawlers OG.
+  - `submit_lead(p_email, p_source, p_analysis_id)` — insert lead + event `lead_submitted`.
+  - `track_event(p_name, p_analysis_id, p_props)` — whitelist stricte (`share_clicked`).
+- Événements de mesure : `score_started`, `score_done` (durée + tokens dans `props_json` → base du calcul de coût), `rappels_found`, `result_viewed`, `share_clicked`, `lead_submitted`.
 
 ## Marques Couvertes
 
@@ -168,22 +170,9 @@ Un expert peut couvrir 2-3 marques du même groupe (ex: expert VAG = VW + Skoda 
 
 Marques rares sans expert disponible → "Disponibilité sur demande"
 
-## Experts fictifs pour le lancement
+## Experts
 
-```javascript
-const experts = [
-  { nom: 'Thomas R.', marque: 'BMW', specialite: 'Série 3, M3 — moteurs N52 et S55', exp: '12 ans', missions: 847, note: '4.9' },
-  { nom: 'Marc D.', marque: 'Mercedes', specialite: 'Classe C, E — moteurs OM651 et M276', exp: '9 ans', missions: 634, note: '4.8' },
-  { nom: 'Sophie L.', marque: 'Porsche', specialite: '911, Cayenne — moteurs MA1 et M48', exp: '7 ans', missions: 312, note: '5.0' },
-  { nom: 'Kevin M.', marque: 'Audi', specialite: 'A4, RS4 — moteurs CDNC et CGWB', exp: '11 ans', missions: 521, note: '4.9' },
-  { nom: 'Laura M.', marque: 'Ferrari', specialite: '488, F8 — moteurs V8 biturbo', exp: '8 ans', missions: 89, note: '5.0' },
-  { nom: 'Pierre V.', marque: 'Land Rover', specialite: 'Defender, Discovery — châssis 4x4', exp: '14 ans', missions: 198, note: '5.0' },
-  { nom: 'Nicolas F.', marque: 'Volkswagen', specialite: 'Golf, Passat — boîtes DSG et moteurs TSI', exp: '10 ans', missions: 398, note: '4.9' },
-  { nom: 'Antoine B.', marque: 'Renault', specialite: 'Mégane, Clio — moteurs K9K et H4M', exp: '8 ans', missions: 445, note: '4.8' },
-  { nom: 'Sarah C.', marque: 'Maserati', specialite: 'Ghibli, Quattroporte — V6 biturbo', exp: '9 ans', missions: 112, note: '4.8' },
-  { nom: 'Paul T.', marque: 'Alfa Romeo', specialite: 'Giulia, Stelvio — moteurs GME', exp: '11 ans', missions: 203, note: '4.9' },
-];
-```
+Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (sprint 1). La section « Nos experts » affiche un bloc « Réseau d'experts en construction » avec capture email (lead `expert_waitlist`). Ne pas réintroduire de faux profils ni de faux chiffres.
 
 ## Décisions Actées — NE JAMAIS VIOLER
 
@@ -191,14 +180,20 @@ const experts = [
 - 3 astérisques max en bas de page
 - Garantie 30 jours → dans les CGU uniquement, pas sur le site
 - Autorisation Stripe avant confirmation expert (éviter chargebacks)
-- Avis experts fictifs au lancement → activer notation vérifiée dès premières missions
+- Aucun faux profil ni faux avis — notation vérifiée dès les premières missions réelles
 - Stripe Connect obligatoire — JAMAIS de virement manuel
-- Palier IA = créer du doute, PAS rassurer
+- L'IA crée du doute UTILE (factuel), elle ne rassure PAS
 - Inspection Distancielle en Phase 2 uniquement
 - L'expert ne négocie PAS — le rapport chiffré donne les arguments à l'acheteur
-- 3 paliers uniquement (pas 4)
+- Offre simple : score gratuit → Pass achat 29 € → experts en liste d'attente (pas d'empilement de paliers)
 - Prix de lancement affichés clairement
 - Pas de lien FAQ dans la navbar
+- Images d'analyse JAMAIS stockées (envoyées à Claude puis oubliées, seul `images_count` persiste) ; EXIF supprimé côté client
+- Mention de consentement d'une ligne sous chaque champ email ; lien de désinscription dans chaque email envoyé
+- Jamais de récupération automatique d'URL (pas de scraping) : on demande le texte de l'annonce
+- Le verdict porte sur l'annonce et le modèle, jamais sur le vendeur en tant que personne
+- Aucun chiffre d'économies affiché
+- Accès public à la base UNIQUEMENT via RPC SECURITY DEFINER — aucune policy RLS anon directe
 
 ## Sécurité — OBLIGATIONS
 
@@ -212,13 +207,11 @@ const experts = [
 
 | Session | Tâche | Statut |
 |---------|-------|--------|
-| 1-3 | Frontend React en composants + design system + déploiement | 🔄 En cours |
+| 1-3 | Frontend React en composants + design system + déploiement | ✅ |
+| S1 | Pivot IA : score d'annonce gratuit + rappels/Takata + waitlists | ✅ Livré (oct. 2026) |
+| S2 | Pass achat 29 € (produit principal) | ⬜ |
 | 4 | Supabase — tables users, experts, missions, paiements | ⬜ |
-| 5 | Stripe + Stripe Connect | 
-
-
-
-⬜ |
+| 5 | Stripe + Stripe Connect | ⬜ |
 | 6 | Espace client post-paiement | ⬜ |
 | 7 | Dashboard admin | ⬜ |
 | 8 | IA Anthropic palier 9,90€ | ⬜ |
@@ -230,11 +223,6 @@ const experts = [
 | 14 | Optimisation mobile | ⬜ |
 | 15 | Tunnel conversion end-to-end | ⬜ |
 | 16 | Inspection Distancielle (Phase 2) | ⬜ |
-
-## Items trackés (durcissement post-Étapes 5/6)
-
-- **Hero — H1 statique dans `public/index.html`** : aujourd'hui le H1 est rendu par React → peint après parse du bundle JS, ce qui creuse le render delay LCP (~68 ms sur la lab simulée Slow 4G, ~75 ms observed). Quand le wording de l'opening sera figé (post-Étape 5/6, après les effets typo traces de pneus), injecter le markup du H1 + CSS critique inline dans `public/index.html`. React hydrate par-dessus. Objectif : LCP qui peint au FCP (~0,8 s simulé), pas après le JS. Audit à refaire avec DevTools throttling « applied » (plus fiable que `simulate` pour confirmer).
-- **Render-blocking `main.css`** : 2,6 KB gzipped, ~150 ms savings estimés (Lighthouse). Solution = inliner le CSS critique du Hero dans `<head>` au même moment que le fix H1 statique.
 
 ## Conventions de Code
 

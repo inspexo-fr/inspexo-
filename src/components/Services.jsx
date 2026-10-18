@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import CheckoutModal from './CheckoutModal'
+import LeadEmailForm from './LeadEmailForm'
 
 const services = [
   {
@@ -38,7 +39,7 @@ const services = [
       { label: 'Historique administratif', status: 'green' },
       { label: 'Compte-rendu détaillé sous 24h', status: 'green' },
     ],
-    cta: 'Réserver une visio',
+    cta: 'Rejoindre la liste d\'attente',
     limitations: ['Documents & état visuel vérifiables', 'Mécanique sous capot non inspectable'],
   },
   {
@@ -58,12 +59,13 @@ const services = [
       { label: 'Essai statique et routier complet', status: 'green' },
       { label: 'Rapport photo complet sous 24h **', status: 'green' },
     ],
-    cta: 'Réserver une inspection',
+    cta: 'Rejoindre la liste d\'attente',
   },
 ]
 
 export default function Services({ onFreeAnalysis }) {
-  const [modalTier, setModalTier] = useState(null)
+  const [modalTier, setModalTier]       = useState(null)
+  const [waitlistTier, setWaitlistTier] = useState(null)
 
   return (
     <>
@@ -246,14 +248,31 @@ export default function Services({ onFreeAnalysis }) {
                   </div>
                 )}
 
-                {/* CTA */}
-                <button
-                  className="service-cta"
-                  style={{ background: s.featured ? '#FF4D00' : '#0F1B2D', color: '#fff' }}
-                  onClick={() => setModalTier(s.tier)}
-                >
-                  {s.cta}
-                </button>
+                {/* CTA — paliers experts : liste d'attente (lead expert_waitlist) */}
+                {s.tier === 'ia' ? (
+                  <button
+                    className="service-cta"
+                    style={{ background: '#0F1B2D', color: '#fff' }}
+                    onClick={() => setModalTier(s.tier)}
+                  >
+                    {s.cta}
+                  </button>
+                ) : waitlistTier === s.tier ? (
+                  <LeadEmailForm
+                    source="expert_waitlist"
+                    buttonLabel="Rejoindre"
+                    variant={s.featured ? 'dark' : 'light'}
+                    successMessage="✓ Enregistré ! Vous serez prévenu dès l'ouverture."
+                  />
+                ) : (
+                  <button
+                    className="service-cta"
+                    style={{ background: s.featured ? '#FF4D00' : '#0F1B2D', color: '#fff' }}
+                    onClick={() => setWaitlistTier(s.tier)}
+                  >
+                    {s.cta}
+                  </button>
+                )}
               </div>
             ))}
           </div>

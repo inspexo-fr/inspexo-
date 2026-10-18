@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-export default function Hero({ onFreeAnalysis }) {
+export default function Hero() {
   return (
     <>
       <style>{`
@@ -108,10 +109,10 @@ export default function Hero({ onFreeAnalysis }) {
 
             {/* CTAs */}
             <div className="hero-ctas" style={{ display: 'flex', gap: 14, marginBottom: 16, flexWrap: 'wrap' }}>
-              <button onClick={onFreeAnalysis} className="hero-btn-primary">
-                🔍 Analyser gratuitement
+              <Link to="/score" className="hero-btn-primary">
+                🔍 Analyser une annonce
                 <span style={{ fontSize: '1.1rem' }}>→</span>
-              </button>
+              </Link>
               <a href="#services" className="hero-btn-outline">
                 Voir tous les services
               </a>
@@ -125,7 +126,7 @@ export default function Hero({ onFreeAnalysis }) {
               color: 'rgba(255,255,255,0.35)',
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
-              ✅ 100% gratuit · 10 échanges avec l'expert IA · Sans engagement
+              ✅ 100% gratuit · Verdict en moins de 20 secondes · Sans inscription
             </div>
 
             {/* Trust badges */}
@@ -134,7 +135,6 @@ export default function Hero({ onFreeAnalysis }) {
             }}>
               {[
                 { icon: '🔒', label: 'Paiement sécurisé' },
-                { icon: '✓', label: 'Experts qualifiés vérifiés' },
                 { icon: '⚡', label: 'Dès 9,90€' },
                 { icon: '📍', label: 'Toulouse & Haute-Garonne' },
               ].map((b, i) => (

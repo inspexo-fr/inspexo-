@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import AuthModal from './AuthModal'
 import ClientDashboard from '../pages/ClientDashboard'
@@ -60,11 +61,12 @@ export default function Navbar() {
     setDashboardOpen(true)
   }
 
+  // Ancres préfixées par "/" pour fonctionner aussi depuis /score et /a/:id
   const links = [
-    { label: 'Comment ça marche', href: '#how-it-works' },
-    { label: 'Nos services',      href: '#services' },
-    { label: 'Nos experts',       href: '#experts' },
-    { label: 'Devenir expert',    href: '#devenir-expert' },
+    { label: 'Comment ça marche', href: '/#how-it-works' },
+    { label: 'Nos services',      href: '/#services' },
+    { label: 'Nos experts',       href: '/#experts' },
+    { label: 'Devenir expert',    href: '/#devenir-expert' },
   ]
 
   return (
@@ -253,7 +255,7 @@ export default function Navbar() {
               </button>
             )}
 
-            <a href="#services" className="nav-cta">Trouver mon expert</a>
+            <Link to="/score" className="nav-cta">Analyser une annonce</Link>
           </div>
 
           {/* Hamburger */}
@@ -309,10 +311,10 @@ export default function Navbar() {
                 👤 Se connecter
               </button>
               <div style={{ marginTop: 12 }}>
-                <a href="#services" className="nav-cta" style={{ display: 'block', textAlign: 'center' }}
+                <Link to="/score" className="nav-cta" style={{ display: 'block', textAlign: 'center' }}
                   onClick={() => setMenuOpen(false)}>
-                  Trouver mon expert
-                </a>
+                  Analyser une annonce
+                </Link>
               </div>
             </>
           )}

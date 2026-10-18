@@ -4,49 +4,14 @@
     <meta charset="utf-8" />
     <meta name="google-site-verification" content="z74CwbcogZxp8xrVosPIk1_tlfRB5JgS4xDynyeZcVw" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="theme-color" content="#0F0E0D" />
-
-    <!-- Syne self-hostée — preload du woff2 + @font-face inlinés (paths absolus
-         /fonts/* bypassent le css-loader CRA qui les résoudrait au build). -->
-    <link rel="preload" href="%PUBLIC_URL%/fonts/syne-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <style>
-      @font-face {
-        font-family: 'Syne';
-        src: url('/fonts/syne-latin.woff2') format('woff2-variations');
-        font-weight: 700 800;
-        font-style: normal;
-        font-display: swap;
-      }
-      /* Fallback métrique-ajusté — évite le CLS au font swap (calibré sur Syne 800). */
-      @font-face {
-        font-family: 'Syne-fallback';
-        src: local('Arial Black'), local('Helvetica Bold'), local('Impact');
-        font-weight: 700 800;
-        font-style: normal;
-        size-adjust: 95%;
-        ascent-override: 90%;
-        descent-override: 22%;
-        line-gap-override: 0%;
-      }
-    </style>
-
-    <!-- Plus Jakarta + JetBrains Mono via Google async (non-critique LCP). -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-    </noscript>
-
+    <meta name="theme-color" content="#0F1B2D" />
     <style>
       html, body {
         margin: 0; padding: 0;
-        width: 100%;
-        background-color: #0F0E0D;
+        width: 100%; overflow-x: hidden;
+        background-color: #0F1B2D;
       }
-      body.modal-open, body.loader-active { overflow: hidden; }
+      body.modal-open { overflow: hidden; }
     </style>
 
     <!-- Favicon -->

@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {
+      "source": "/a/:id",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*([Ff]acebookexternalhit|[Ff]acebookcatalog|Facebot|[Tt]witterbot|[Ww]hats[Aa]pp|[Ll]inked[Ii]n[Bb]ot|[Tt]elegram[Bb]ot|[Ss]lackbot|Slack-ImgProxy|[Dd]iscordbot|[Pp]interest|redditbot|SkypeUriPreview|vkShare|iMessageLinkPreview).*"
+        }
+      ],
+      "destination": "/api/og?id=:id"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
