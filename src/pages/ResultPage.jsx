@@ -286,6 +286,7 @@ export default function ResultPage() {
           marque: analysis.marque,
           modele: analysis.modele,
           annee: analysis.annee,
+          carburant: analysis.result?.vehicule?.carburant ?? null,
           analysis_id: analysis.id,
         })
         if (!cancelled) setRappels(data)
@@ -510,12 +511,18 @@ export default function ResultPage() {
                         ▸
                       </span>
                       <span style={{ flexGrow: 1, fontWeight: 600 }}>{AXE_LABELS[key] || key}</span>
-                      <span style={{
-                        fontFamily: FONT_TITRE, fontWeight: 800,
-                        color: axe.note >= 14 ? '#16A34A' : axe.note >= 8 ? '#D97706' : '#DC2626',
-                      }}>
-                        {axe.note}<span style={{ fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600 }}>/20</span>
-                      </span>
+                      {axe.note == null ? (
+                        <span style={{ fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', fontWeight: 600 }}>
+                          non évalué
+                        </span>
+                      ) : (
+                        <span style={{
+                          fontFamily: FONT_TITRE, fontWeight: 800,
+                          color: axe.note >= 14 ? '#16A34A' : axe.note >= 8 ? '#D97706' : '#DC2626',
+                        }}>
+                          {axe.note}<span style={{ fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600 }}>/20</span>
+                        </span>
+                      )}
                     </summary>
                     <div style={{
                       fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280',
@@ -688,6 +695,16 @@ export default function ResultPage() {
                         {g.label}
                       </span>
                     </div>
+                    {p.rappel_officiel && (
+                      <div style={{
+                        display: 'inline-block', fontFamily: FONT, fontSize: '0.75rem',
+                        fontWeight: 700, color: '#1E4D8C', background: 'rgba(30,77,140,0.08)',
+                        border: '1px solid rgba(30,77,140,0.25)', borderRadius: 8,
+                        padding: '4px 10px', marginBottom: 8,
+                      }}>
+                        {p.rappel_officiel}
+                      </div>
+                    )}
                     <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.6, marginBottom: 6 }}>
                       {p.symptome}
                     </div>
@@ -776,6 +793,37 @@ export default function ResultPage() {
                   confirmez toujours avec le VIN auprès du constructeur.
                 </div>
               </>
+            )}
+            {(rappels?.autres_rappels || []).length > 0 && (
+              <details style={{ marginTop: 14, borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: 10 }}>
+                <summary style={{
+                  cursor: 'pointer', fontFamily: FONT, fontSize: '0.8125rem',
+                  fontWeight: 600, color: '#6B7280',
+                }}>
+                  Autres rappels de la gamme ({rappels.autres_rappels.length}) — générations possiblement différentes
+                </summary>
+                {rappels.autres_rappels.map((rap, i) => (
+                  <div key={i} style={{ padding: '10px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
+                    <div style={{ fontFamily: FONT, fontSize: '0.8125rem', fontWeight: 700, color: '#374151', textTransform: 'capitalize' }}>
+                      {rap.titre}
+                      {rap.periode_production ? (
+                        <span style={{ fontWeight: 400, color: '#9CA3AF' }}> — production {rap.periode_production}</span>
+                      ) : null}
+                    </div>
+                    <div style={{
+                      fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2,
+                      display: 'flex', gap: 10, flexWrap: 'wrap',
+                    }}>
+                      {rap.date && <span>{new Date(rap.date).toLocaleDateString('fr-FR')}</span>}
+                      {rap.lien && (
+                        <a href={rap.lien} target="_blank" rel="noopener noreferrer" style={{ color: '#1E4D8C' }}>
+                          Fiche officielle
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </details>
             )}
           </Card>
 

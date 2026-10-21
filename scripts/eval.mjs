@@ -100,6 +100,7 @@ async function runCase(name) {
         marque: r.vehicule.marque,
         modele: r.vehicule.modele,
         annee: r.vehicule.annee,
+        carburant: r.vehicule.carburant ?? null,
         analysis_id: json.id,
       }, 30_000)
       rappels = rr.json
@@ -146,9 +147,10 @@ async function runCase(name) {
     }
   }
 
-  // Rappels minimum
+  // Rappels minimum (principaux + bloc replié « autres générations »)
   if (expected.rappels_min != null) {
-    const n = Array.isArray(rappels?.rappels) ? rappels.rappels.length : 0
+    const n = (Array.isArray(rappels?.rappels) ? rappels.rappels.length : 0) +
+      (Array.isArray(rappels?.autres_rappels) ? rappels.autres_rappels.length : 0)
     if (n < expected.rappels_min) failures.push(`rappels ${n} < min ${expected.rappels_min}`)
   }
 

@@ -11,6 +11,10 @@
       "crépine",
       "tamis d'huile",
       "oil strainer"
+    ],
+    [
+      "21h7",
+      "rappel constructeur officiel"
     ]
   ],
   "must_not_include": [
@@ -19,6 +23,8 @@
     "suspension pneumatique",
     "q4 e-tron",
     "q8 e-tron",
-    "confiance basse"
+    "confiance basse",
+    "wastegate",
+    "moteurs similaires"
   ]
 }

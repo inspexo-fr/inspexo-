@@ -222,6 +222,7 @@ async function fetchRappelConso(marque: string, modele: string) {
       risques: r.risques_encourus,
       date: r.date_publication,
       lien: r.lien_vers_la_fiche_rappel,
+      texte_production: `${r.modeles_ou_references ?? ""} ${r.libelle ?? ""}`.slice(0, 1200),
     });
     if (matches.length >= MAX_CACHE_MATCHES) break;
   }
@@ -229,21 +230,67 @@ async function fetchRappelConso(marque: string, modele: string) {
 }
 
 /**
- * Filtre d'années STRICT : un rappel publié avant (année-modèle − 1) ne peut
- * pas concerner ce véhicule. Appliqué APRÈS le cache (le cache est par
- * marque+modèle, l'année varie par requête).
+ * Extrait la plage d'années de production / première immatriculation
+ * mentionnée dans le texte d'une fiche (formats constatés : "2013-2017",
+ * "entre le 03/09/2015 et le 20/10/2016", "produits entre 2011 et 2019",
+ * "depuis 2015"). Renvoie null si aucune plage identifiable.
+ */
+function extractYearRange(texte: string): { debut: number; fin: number } | null {
+  const t = texte ?? "";
+  const years: number[] = [];
+  // dates jj/mm/aaaa
+  for (const m of t.matchAll(/\b\d{1,2}\/\d{1,2}\/((?:19|20)\d{2})\b/g)) years.push(parseInt(m[1], 10));
+  // plages AAAA-AAAA / AAAA à AAAA / AAAA et AAAA
+  for (const m of t.matchAll(/\b((?:19|20)\d{2})\s*(?:-|–|à|a|au|et)\s*((?:19|20)\d{2})\b/gi)) {
+    years.push(parseInt(m[1], 10), parseInt(m[2], 10));
+  }
+  const dep = t.match(/depuis\s+((?:19|20)\d{2})/i);
+  if (dep) return { debut: parseInt(dep[1], 10), fin: 9999 };
+  if (years.length === 0) return null;
+  return { debut: Math.min(...years), fin: Math.max(...years) };
+}
+
+/** Motorisations absentes d'un véhicule purement thermique. */
+const MOTIF_ELECTRIQUE_RE =
+  /batterie\s+haute\s+tension|haute\s+tension|hybride|tfsi[\s-]?e\b|e[\s-]tron|phev|recharge|module.{0,20}batterie/i;
+
+/**
+ * Tri post-cache des rappels :
+ *  - exclusion des rappels de publication antérieure à (année-modèle − 1) ;
+ *  - exclusion des motifs de motorisation absente (hybride/HT sur thermique) ;
+ *  - split générationnel : en premier les rappels dont la plage de production
+ *    extraite couvre l'année du véhicule ; les autres (sans plage ou d'une
+ *    autre génération) vont dans un bloc secondaire replié.
  */
 // deno-lint-ignore no-explicit-any
-function filterByYear(rappels: any[], annee: number | null): any[] {
-  if (annee == null) return rappels.slice(0, MAX_RAPPELS);
-  const cutoff = new Date(`${annee - 1}-01-01T00:00:00Z`).getTime();
-  return rappels
-    .filter((r) => {
-      if (!r?.date) return true; // date absente : on garde par prudence
+function splitRappels(rappels: any[], annee: number | null, carburant: string | null, modele: string): { principaux: any[]; autres: any[] } {
+  const cutoff = annee != null ? new Date(`${annee - 1}-01-01T00:00:00Z`).getTime() : null;
+  const thermique = carburant != null &&
+    !/hybride|electrique|électrique/i.test(carburant) &&
+    !/e[\s-]?tron|tfsi[\s-]?e/i.test(norm(modele));
+
+  const principaux: any[] = [];
+  const autres: any[] = [];
+  for (const r of rappels) {
+    // filtre de publication
+    if (cutoff != null && r?.date) {
       const t = new Date(r.date).getTime();
-      return !Number.isFinite(t) || t >= cutoff;
-    })
-    .slice(0, MAX_RAPPELS);
+      if (Number.isFinite(t) && t < cutoff) continue;
+    }
+    // motorisation absente du véhicule
+    if (thermique && MOTIF_ELECTRIQUE_RE.test(`${r?.motif ?? ""} ${r?.titre ?? ""}`)) continue;
+
+    const range = extractYearRange(r?.texte_production ?? "");
+    const { texte_production: _tp, ...pub } = r;
+    if (annee != null && range && annee >= range.debut - 1 && annee <= range.fin + 1) {
+      principaux.push({ ...pub, periode_production: `${range.debut}–${range.fin === 9999 ? "…" : range.fin}` });
+    } else if (annee != null) {
+      autres.push({ ...pub, periode_production: range ? `${range.debut}–${range.fin === 9999 ? "…" : range.fin}` : null });
+    } else {
+      principaux.push(pub);
+    }
+  }
+  return { principaux: principaux.slice(0, MAX_RAPPELS), autres: autres.slice(0, MAX_RAPPELS) };
 }
 
 serve(async (req: Request) => {
@@ -268,6 +315,7 @@ serve(async (req: Request) => {
       typeof body?.annee === "number" && Number.isFinite(body.annee)
         ? Math.round(body.annee)
         : null;
+    const carburant = typeof body?.carburant === "string" ? body.carburant.trim() : null;
     const analysisId =
       typeof body?.analysis_id === "string" &&
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(body.analysis_id)
@@ -320,8 +368,11 @@ serve(async (req: Request) => {
       }
     }
 
-    // Filtre d'années strict, appliqué après le cache (cache = marque+modèle).
-    const rappelsFiltres = Array.isArray(rappels) ? filterByYear(rappels, annee) : rappels;
+    // Tri post-cache : années de publication, motorisation, générations.
+    const split = Array.isArray(rappels)
+      ? splitRappels(rappels, annee, carburant, modele)
+      : null;
+    const rappelsFiltres = split ? split.principaux : rappels;
 
     // ---------------- Event rappels_found ----------------
     const foundCount = Array.isArray(rappelsFiltres) ? rappelsFiltres.length : 0;
@@ -342,6 +393,7 @@ serve(async (req: Request) => {
 
     return jsonResponse({
       rappels: rappelsFiltres,
+      autres_rappels: split ? split.autres : null,
       takata,
       source: {
         nom: "RappelConso (data.economie.gouv.fr)",
