@@ -824,10 +824,17 @@ serve(async (req: Request) => {
     };
     const pannesJoined: PanneOut[] = [];
     const seenRefs = new Set<string>();
+    const orphanRefs: string[] = [];
+    // Normalisation tolérante de la réf ("f1", "(A2)", "ref F3" → "F1"/"A2"/"F3")
+    const normRef = (raw: unknown) => {
+      const m = String(raw ?? "").toUpperCase().match(/([AF]\d{1,2})/);
+      return m ? m[1] : "";
+    };
     // deno-lint-ignore no-explicit-any
     for (const p of (analyse.pannes_retenues ?? []).slice(0, 8) as any[]) {
-      const src = catalogueByRef.get(String(p.source_ref ?? "").trim());
-      if (!src || seenRefs.has(src.ref)) continue;
+      const src = catalogueByRef.get(normRef(p.source_ref));
+      if (!src) { orphanRefs.push(String(p.source_ref ?? "")); continue; }
+      if (seenRefs.has(src.ref)) continue;
       seenRefs.add(src.ref);
       pannesJoined.push({
         id: `P${pannesJoined.length + 1}`,
@@ -846,11 +853,18 @@ serve(async (req: Request) => {
       });
     }
 
+    if (orphanRefs.length > 0) {
+      await logPipelineError(admin, "pannes_ref_mismatch", {
+        error: "orphan_refs",
+        detail: `refs inconnues: ${orphanRefs.join(", ")} | catalogue: ${catalogue.map((c) => c.ref).join(",")}`,
+      });
+    }
+
     // Budget : uniquement des refs du catalogue AVEC coût chiffré à la source.
     // deno-lint-ignore no-explicit-any
     const budget = ((analyse.budget_12_mois ?? []) as any[])
       .map((b) => {
-        const src = catalogueByRef.get(String(b.source_ref ?? "").trim());
+        const src = catalogueByRef.get(normRef(b.source_ref));
         if (!src || (src.cout_min_eur == null && src.cout_max_eur == null)) return null;
         return {
           poste: String(b.poste ?? src.titre).slice(0, 150),
