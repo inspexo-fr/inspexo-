@@ -3,6 +3,17 @@
   "verdict_max": "orange",
   "statut_vendeur": "particulier",
   "famille_moteur": "EB2",
-  "must_include": ["courroie", "puretech"],
-  "must_not_include": ["EA888", "confiance basse"]
+  "must_include": [
+    "courroie",
+    "puretech"
+  ],
+  "must_not_include": [
+    "EA888",
+    "confiance basse"
+  ],
+  "checklist_must_include": [
+    "pneu",
+    "frein",
+    "démarrage à froid"
+  ]
 }

@@ -3,7 +3,7 @@ import { useParams, useLocation, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { getPublicAnalysis, fetchRappels, submitLead, trackEvent } from '../lib/scoreApi'
+import { getPublicAnalysis, fetchRappels, getDefectSheet, submitLead, trackEvent } from '../lib/scoreApi'
 
 const VERDICT_STYLE = {
   vert:   { color: '#16A34A', bg: '#F0FDF4', border: 'rgba(22,163,74,0.3)',  label: 'Feu vert' },
@@ -239,6 +239,7 @@ export default function ResultPage() {
   const [notFound, setNotFound]   = useState(false)
   const [loadError, setLoadError] = useState(false)
   const [rappels, setRappels]     = useState(undefined)
+  const [ficheLive, setFicheLive] = useState(null)
   const [shareDone, setShareDone] = useState(false)
 
   useEffect(() => {
@@ -294,6 +295,30 @@ export default function ResultPage() {
     }
     loadRappels()
     return () => { cancelled = true }
+  }, [analysis])
+
+  // Fiche moteur générée en arrière-plan : polling léger jusqu'à son arrivée,
+  // puis injection des pannes + points de checklist sans recharger la page.
+  useEffect(() => {
+    const res = analysis?.result
+    if (!res || res.fiche?.cache !== 'pending') return
+    const famille = res.vehicule?.famille_moteur
+    const marque = res.vehicule?.marque
+    if (!famille || !marque) return
+    let cancelled = false
+    let tries = 0
+    const interval = setInterval(async () => {
+      tries += 1
+      if (tries > 15) { clearInterval(interval); return } // ~2 min max
+      try {
+        const sheet = await getDefectSheet(marque, famille)
+        if (!cancelled && sheet?.pannes?.length > 0) {
+          setFicheLive(sheet)
+          clearInterval(interval)
+        }
+      } catch (_) { /* on retentera au tick suivant */ }
+    }, 8000)
+    return () => { cancelled = true; clearInterval(interval) }
   }, [analysis])
 
   const handleShare = async () => {
@@ -365,7 +390,34 @@ export default function ResultPage() {
   const takata = rappels?.takata
   const axes = r.score_detail ? Object.entries(r.score_detail) : []
 
-  const checklistText = (r.checklist_sur_place || [])
+  // Fiche arrivée après coup (génération en arrière-plan) : fusion à l'affichage
+  const lower = (x) => String(x || '').toLowerCase()
+  const fichePending = r.fiche?.cache === 'pending' && !ficheLive
+  const extraPannes = (ficheLive?.pannes || [])
+    .filter(p => !(r.pannes_connues || []).some(x => lower(x.titre) === lower(p.titre)))
+    .map(p => ({
+      titre: p.titre,
+      organe: p.organe ?? null,
+      symptome: p.symptomes,
+      pertinence: null,
+      verification_sur_place: null,
+      gravite: p.gravite,
+      source_statut: ficheLive?.statut === 'validee' ? 'base_inspexo' : 'en_ligne',
+      urls: p.url_source || [],
+      cout_min_eur: p.cout_indicatif_eur_min ?? null,
+      cout_max_eur: p.cout_indicatif_eur_max ?? null,
+    }))
+  const pannesAffichees = [...(r.pannes_connues || []), ...extraPannes]
+  const checklistAffichee = [
+    ...(r.checklist_sur_place || []),
+    ...extraPannes.map(p => ({
+      quoi: p.titre,
+      comment: 'Point issu de la fiche moteur (sources en ligne) — contrôlez ce symptôme sur place et à l\'essai.',
+      signal_rouge: String(p.symptome || '').slice(0, 180),
+    })),
+  ]
+
+  const checklistText = checklistAffichee
     .map((c, i) => `${i + 1}. ${c.quoi}\n   Comment : ${c.comment}\n   Signal rouge : ${c.signal_rouge}`)
     .join('\n')
 
@@ -561,7 +613,7 @@ export default function ResultPage() {
           )}
 
           {/* ========== 5. CHECKLIST SUR PLACE ========== */}
-          {(r.checklist_sur_place || []).length > 0 && (
+          {checklistAffichee.length > 0 && (
             <Card>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                 <SectionTitle>Checklist sur place</SectionTitle>
@@ -583,7 +635,7 @@ export default function ResultPage() {
                   </button>
                 </div>
               </div>
-              {r.checklist_sur_place.map((c, i) => (
+              {checklistAffichee.map((c, i) => (
                 <div key={i} style={{ padding: '10px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
                   <div style={{ fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, color: '#0F1B2D', marginBottom: 3 }}>
                     {i + 1}. {c.quoi}
@@ -600,10 +652,27 @@ export default function ResultPage() {
           )}
 
           {/* ========== 6. PANNES CONNUES ========== */}
-          {(r.pannes_connues || []).length > 0 && (
+          {(pannesAffichees.length > 0 || fichePending) && (
             <Card>
               <SectionTitle>Points de défaillance connus</SectionTitle>
-              {r.pannes_connues.map((p, i) => {
+              {fichePending && (
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  background: '#F0F2F5', borderRadius: 10, padding: '12px 14px',
+                  marginBottom: pannesAffichees.length > 0 ? 12 : 0,
+                  fontFamily: FONT, fontSize: '0.8125rem', color: '#374151',
+                }}>
+                  <span style={{
+                    display: 'inline-block', width: 12, height: 12, flexShrink: 0,
+                    border: '2px solid #FF4D00', borderTopColor: 'transparent',
+                    borderRadius: '50%', animation: 'spin 0.8s linear infinite',
+                  }} />
+                  Fiche moteur en préparation (environ 1 minute) — les défauts connus
+                  sourcés s'ajouteront ici automatiquement.
+                  <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+                </div>
+              )}
+              {pannesAffichees.map((p, i) => {
                 const g = GRAVITE_STYLE[p.gravite] || GRAVITE_STYLE.mineure
                 return (
                   <div key={i} style={{ padding: '14px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.06)' : 'none' }}>

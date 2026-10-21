@@ -128,8 +128,8 @@ type AnthropicUsage = {
 
 export type SheetResult = {
   sheet: DefectSheet | null;
-  // "pending" : génération lancée mais poursuivie en arrière-plan (budget dépassé)
-  cacheStatus: "hit" | "created" | "failed" | "none" | "pending";
+  // "pending" : génération en cours côté worker ; "cooldown" : 3 échecs/24 h
+  cacheStatus: "hit" | "created" | "failed" | "none" | "pending" | "cooldown";
   usage: AnthropicUsage | null;
   searches: number;
 };
@@ -305,12 +305,7 @@ export async function lookupDefectSheet(
       ((row.annee_debut != null && params.annee < row.annee_debut - 1) ||
         (row.annee_fin != null && params.annee > row.annee_fin + 1))
     ) continue;
-    const age = now - new Date(row.updated_at).getTime();
-    const vide = !Array.isArray(row.pannes) || row.pannes.length === 0;
-    // Une fiche 'generee' VIDE résulte en général d'un échec de recherche :
-    // on ne l'honore que 6 h (évite de marteler l'API) au lieu de 90 jours.
-    const ttl = row.statut === "validee" ? Infinity : vide ? 6 * 3600 * 1000 : SHEET_TTL_MS;
-    if (age < ttl) {
+    if (row.statut === "validee" || now - new Date(row.updated_at).getTime() < SHEET_TTL_MS) {
       return row as DefectSheet;
     }
   }
@@ -334,6 +329,18 @@ export async function getOrCreateDefectSheet(
   const cached = await lookupDefectSheet(admin, params);
   if (cached) return { sheet: cached, cacheStatus: "hit", usage: null, searches: 0 };
 
+  // Garde-fou : max 3 tentatives infructueuses par famille et par 24 h
+  // (une génération réussie est mise en cache et ne repasse pas ici).
+  const { count: emptyCount } = await admin
+    .from("events")
+    .select("id", { count: "exact", head: true })
+    .eq("name", "sheet_empty")
+    .contains("props_json", { marque: marqueNorm, famille: familleNorm })
+    .gte("created_at", new Date(Date.now() - 24 * 3600 * 1000).toISOString());
+  if ((emptyCount ?? 0) >= 3) {
+    return { sheet: null, cacheStatus: "cooldown", usage: null, searches: 0 };
+  }
+
   // ---------- Génération web search ----------
   const startedAt = Date.now();
   const generated = await generateSheet(
@@ -346,6 +353,29 @@ export async function getOrCreateDefectSheet(
   if (!generated) return { sheet: null, cacheStatus: "failed", usage: null, searches: 0 };
 
   const pannes = sanitizePannes(generated.input.pannes, params.famille_moteur);
+
+  // JAMAIS de fiche vide en cache : on logue la raison et on retentera au
+  // prochain appel (plafonné par le garde-fou ci-dessus).
+  if (pannes.length === 0) {
+    const note = String(generated.input.note ?? "");
+    const raison = /limite|erreur|exceeded|échec|echec|indisponible/i.test(note)
+      ? "recherche_echouee"
+      : "aucune_source_fiable";
+    await admin.from("events").insert({
+      name: "sheet_empty",
+      props_json: {
+        marque: marqueNorm,
+        famille: familleNorm,
+        raison,
+        note: note.slice(0, 300),
+        searches_count: generated.searches,
+        input_tokens: generated.usage.input_tokens,
+        output_tokens: generated.usage.output_tokens,
+      },
+    });
+    return { sheet: null, cacheStatus: "failed", usage: generated.usage, searches: generated.searches };
+  }
+
   const moteur = generated.input.moteur ?? {};
   const sheetRow = {
     marque: params.marque,

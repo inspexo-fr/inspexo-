@@ -10,15 +10,13 @@ const MAX_TEXT = 6000
 const MAX_IMAGES = 3
 const MAX_COMPARABLES = 5
 
+// Les 4 étapes réelles du pipeline, avec leur seuil de temps typique (s).
 const LOADING_STEPS = [
-  'Lecture de l\'annonce…',
-  'Identification précise du véhicule…',
-  'Constitution de la fiche fiabilité du moteur…',
-  'Analyse complète de l\'annonce…',
-  'Contre-vérification de chaque affirmation…',
-  'Rédaction du verdict…',
+  { label: 'Identification du véhicule…', at: 0 },
+  { label: 'Fiche moteur — défauts connus sourcés…', at: 9 },
+  { label: 'Analyse de l\'annonce…', at: 52 },
+  { label: 'Vérification de chaque affirmation…', at: 78 },
 ]
-const STEP_INTERVAL_MS = 14000 // pipeline 3 appels : 50 s à 2 min
 
 export default function ScorePage() {
   const navigate = useNavigate()
@@ -34,13 +32,17 @@ export default function ScorePage() {
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
-  // Avancement visuel des étapes pendant l'analyse
+  // Avancement des étapes indexé sur le temps écoulé (seuils réels du pipeline)
   useEffect(() => {
     if (!loading) return
     setLoadingStep(0)
+    const t0 = Date.now()
     const interval = setInterval(() => {
-      setLoadingStep(s => Math.min(s + 1, LOADING_STEPS.length - 1))
-    }, STEP_INTERVAL_MS)
+      const elapsed = (Date.now() - t0) / 1000
+      let idx = 0
+      LOADING_STEPS.forEach((st, i) => { if (elapsed >= st.at) idx = i })
+      setLoadingStep(idx)
+    }, 1000)
     return () => clearInterval(interval)
   }, [loading])
 
@@ -181,7 +183,7 @@ export default function ScorePage() {
               }}>
                 Analyse approfondie en 3 passes — comptez 1 à 2 minutes.
               </div>
-              {LOADING_STEPS.map((step, i) => (
+              {LOADING_STEPS.map(({ label: step }, i) => (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 0',

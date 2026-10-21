@@ -43,6 +43,16 @@ export async function getPublicAnalysis(id) {
   return data // null si introuvable
 }
 
+/** Fiche famille moteur publiée (pannes sourcées) — null si pas encore prête. */
+export async function getDefectSheet(marque, famille) {
+  const { data, error } = await supabase.rpc('get_defect_sheet', {
+    p_marque: marque,
+    p_famille: famille,
+  })
+  if (error) throw error
+  return data
+}
+
 /** Lead email — source ∈ pass_waitlist | expert_waitlist | rapport */
 export async function submitLead(email, source, analysisId = null) {
   const { error } = await supabase.rpc('submit_lead', {

@@ -152,6 +152,17 @@ async function runCase(name) {
     if (n < expected.rappels_min) failures.push(`rappels ${n} < min ${expected.rappels_min}`)
   }
 
+  // checklist_must_include : présence exigée DANS la checklist précisément
+  if (expected.checklist_must_include?.length) {
+    const chk = norm(JSON.stringify(r.checklist_sur_place || []))
+    for (const needle of expected.checklist_must_include) {
+      const alts = Array.isArray(needle) ? needle : [needle]
+      if (!alts.some((a) => chk.includes(norm(a)))) {
+        failures.push(`checklist_must_include manquant : "${alts.join('|')}"`)
+      }
+    }
+  }
+
   // must_include / must_not_include (une entrée tableau = alternatives, OU logique)
   for (const needle of expected.must_include || []) {
     const alts = Array.isArray(needle) ? needle : [needle]

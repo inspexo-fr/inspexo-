@@ -289,7 +289,8 @@ const CRITIQUE_SYSTEM = `Tu es l'auditeur interne d'Inspexo. On te donne : le te
 N'émets dans decisions QUE les affirmations supprimées ou reformulées. Toute affirmation ABSENTE de ta réponse est considérée gardée (c'est le comportement par défaut) : ne liste donc jamais une décision "gardee".
 
 ## RÈGLES
-1. Chaque affirmation doit être traçable à une source : "annonce" (le texte la contient ou la contredit), "fiche" (le catalogue la contient), "droit" (règle juridique française réelle), "socle" (vérification universelle d'achat VO : CT, pneus, freins, carrosserie, OBD, essai, démarrage à froid), "rappelconso"/"takata" (bases officielles). Rien de tout ça → source "aucune" → decision OBLIGATOIREMENT "supprimee".
+1. Chaque affirmation doit être traçable à une source : "annonce" (le texte la contient ou la contredit), "fiche" (le catalogue la contient), "droit" (règle juridique française réelle), "socle", "rappelconso"/"takata" (bases officielles). Rien de tout ça → source "aucune" → decision OBLIGATOIREMENT "supprimee".
+1bis. Le SOCLE UNIVERSEL d'achat VO — démarrage à froid, contrôle technique et documents, pneus, freins, carrosserie/peinture, lecture OBD, essai routier — est une source VALIDE à part entière (étiquette "socle") pour les points de checklist (C*) et les questions (Q*). Il est INTERDIT d'écarter un point de ce socle au motif qu'il « ne vient pas de la fiche » ou qu'il est « générique » : ces points sont gardés d'office.
 2. Tu SUPPRIMES, tu ne nuances pas : une affirmation technique non tracée est supprimée, pas atténuée.
 3. "reformulee" uniquement pour les items R*, I* et Q* quand l'affirmation est tracée mais exagérée ou imprécise — texte_reformule contient alors la version corrigée (sinon null).
 4. INTERDIT d'ajouter du contenu, une panne, une question ou un point de checklist.
@@ -408,6 +409,20 @@ async function callForcedTool(body: Record<string, unknown>, toolName: string): 
     return { error: "no_tool_use", detail: `stop_reason=${data.stop_reason} out=${data.usage?.output_tokens}` };
   }
   return { input: block.input, usage: readUsage(data) };
+}
+
+/** Comparaison en temps constant du header x-eval-secret (via digests SHA-256
+ * de longueur fixe : ni la longueur ni le contenu ne fuient par le timing). */
+async function evalSecretMatches(req: Request): Promise<boolean> {
+  if (!EVAL_BYPASS_SECRET) return false;
+  const given = req.headers.get("x-eval-secret");
+  if (!given) return false;
+  const digest = async (v: string) =>
+    new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v)));
+  const [a, b] = await Promise.all([digest(given), digest(EVAL_BYPASS_SECRET)]);
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+  return diff === 0;
 }
 
 /** Trace une erreur de pipeline en base (diagnostic — les logs console sont peu accessibles). */
@@ -557,8 +572,7 @@ serve(async (req: Request) => {
     const admin = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
     // ---------------- Rate limit (bypass eval signé) ----------------
-    const isEval = EVAL_BYPASS_SECRET !== null &&
-      req.headers.get("x-eval-secret") === EVAL_BYPASS_SECRET;
+    const isEval = await evalSecretMatches(req);
     const ipHash = await sha256Hex(IP_HASH_SALT + clientIp(req));
 
     // Anti-TOCTOU : la tentative est insérée AVANT le comptage, qui l'inclut.
@@ -921,6 +935,12 @@ serve(async (req: Request) => {
       await logPipelineError(admin, "critique", critiqueCall as { error: string; detail?: string });
     }
 
+    // Garde serveur : le socle universel ne peut pas être supprimé par la
+    // critique (checklist et questions uniquement).
+    const isSocleItem = (texte: string) =>
+      /pneu|frein|carrosserie|peinture|essai\s+routier|obd|d[ée]marrage\s+[àa]\s+froid|contr[ôo]le\s+technique|\bct\b|carte\s+grise|document/i
+        .test(texte);
+
     let dropped: Array<{ id: string; texte: string; justification: string; source: string }> = [];
     let critiqueApplied = false;
     if (!("error" in critiqueCall)) {
@@ -956,7 +976,11 @@ serve(async (req: Request) => {
         .map((x, i) => keepOrRephrase(`I${i + 1}`, x))
         .filter((x): x is string => x !== null);
       questions = questions
-        .map((q, i) => keepOrRephrase(`Q${i + 1}`, q))
+        .map((q, i) => {
+          const d = decisions.get(`Q${i + 1}`);
+          if (d?.decision === "supprimee" && isSocleItem(q)) return q; // socle protégé
+          return keepOrRephrase(`Q${i + 1}`, q);
+        })
         .filter((q): q is string => q !== null);
 
       const pannesKept: PanneOut[] = [];
@@ -974,6 +998,7 @@ serve(async (req: Request) => {
       checklist = checklist.filter((c, i) => {
         const d = decisions.get(`C${i + 1}`);
         if (d && (d.decision === "supprimee" || d.source === "aucune")) {
+          if (isSocleItem(`${c.quoi} ${c.comment} ${c.signal_rouge}`)) return true; // socle protégé
           dropped.push({ id: `C${i + 1}`, texte: claimText.get(`C${i + 1}`) ?? c.quoi, justification: String(d.justification ?? ""), source: String(d.source ?? "aucune") });
           return false;
         }

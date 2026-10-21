@@ -223,6 +223,8 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 
 ## Sécurité — OBLIGATIONS
 
+0. **Agents et prod** : aucun agent (subagent, workflow d'audit, script de test) ne teste JAMAIS contre la base Supabase de production — sonde, injection, lecture ou écriture de table incluses. Tout test de ce type se fait sur `supabase start` en local ou sur une branche de preview Supabase. Seule exception : `npm run eval`, qui passe exclusivement par la whitelist d'éval (header `x-eval-secret`).
+
 1. **Variables d'environnement** : Clés API dans `.env.local` uniquement, JAMAIS dans le code
 2. **Supabase RLS** : Row Level Security sur TOUTES les tables
 3. **Logique sensible côté serveur** : Calcul de prix, webhooks Stripe, appels API Anthropic → Supabase Edge Functions ou Vercel Serverless, JAMAIS côté client
