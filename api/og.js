@@ -80,6 +80,8 @@ export default async function handler(req, res) {
 </html>`
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
-  res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=600')
+  // Pas de cache CDN sur l'échec : une panne passagère de Supabase ne doit pas
+  // figer un 404 pendant 10 minutes.
+  res.setHeader('Cache-Control', row ? 'public, max-age=300, s-maxage=600' : 'no-store')
   res.status(row ? 200 : 404).send(html)
 }

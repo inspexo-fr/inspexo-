@@ -1,0 +1,24 @@
+{
+  "verdict_min": "rouge",
+  "verdict_max": "orange",
+  "statut_vendeur": "intermediaire_pour_particulier",
+  "statut_in_raisons12": true,
+  "famille_moteur": "EA824",
+  "rappels_min": 1,
+  "must_include": [
+    "turbo",
+    [
+      "crépine",
+      "tamis d'huile",
+      "oil strainer"
+    ]
+  ],
+  "must_not_include": [
+    "EA888",
+    "4.2",
+    "suspension pneumatique",
+    "q4 e-tron",
+    "q8 e-tron",
+    "confiance basse"
+  ]
+}

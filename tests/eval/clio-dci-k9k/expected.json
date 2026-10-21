@@ -1,0 +1,8 @@
+{
+  "verdict_min": "rouge",
+  "verdict_max": "orange",
+  "statut_vendeur": "particulier",
+  "famille_moteur": "K9K",
+  "must_include": ["K9K"],
+  "must_not_include": ["confiance basse"]
+}

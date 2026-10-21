@@ -12,11 +12,13 @@ const MAX_COMPARABLES = 5
 
 const LOADING_STEPS = [
   'Lecture de l\'annonce…',
-  'Identification du véhicule…',
-  'Recherche des défauts connus du modèle…',
-  'Vérification de la cohérence de l\'annonce…',
+  'Identification précise du véhicule…',
+  'Constitution de la fiche fiabilité du moteur…',
+  'Analyse complète de l\'annonce…',
+  'Contre-vérification de chaque affirmation…',
   'Rédaction du verdict…',
 ]
+const STEP_INTERVAL_MS = 14000 // pipeline 3 appels : 50 s à 2 min
 
 export default function ScorePage() {
   const navigate = useNavigate()
@@ -38,7 +40,7 @@ export default function ScorePage() {
     setLoadingStep(0)
     const interval = setInterval(() => {
       setLoadingStep(s => Math.min(s + 1, LOADING_STEPS.length - 1))
-    }, 3200)
+    }, STEP_INTERVAL_MS)
     return () => clearInterval(interval)
   }, [loading])
 
@@ -155,9 +157,10 @@ export default function ScorePage() {
             fontSize: '0.9375rem', fontWeight: 300, color: '#6B7280',
             lineHeight: 1.65, marginBottom: 28,
           }}>
-            Collez le texte de l'annonce. En moins de 20 secondes : verdict
-            vert / orange / rouge, défauts connus du modèle, rappels constructeur
-            (dont airbags Takata) et questions à poser au vendeur. Gratuit, sans inscription.
+            Collez le texte de l'annonce. En 1 à 2 minutes : verdict
+            vert / orange / rouge noté sur 5 axes, pannes connues sourcées, rappels
+            constructeur (dont airbags Takata), message prêt à envoyer au vendeur
+            et checklist d'inspection. Gratuit, sans inscription.
           </p>
 
           {loading ? (
@@ -168,9 +171,15 @@ export default function ScorePage() {
             }}>
               <div style={{
                 fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 24,
+                fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 6,
               }}>
                 Analyse en cours…
+              </div>
+              <div style={{
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontSize: '0.8125rem', color: '#9CA3AF', marginBottom: 20,
+              }}>
+                Analyse approfondie en 3 passes — comptez 1 à 2 minutes.
               </div>
               {LOADING_STEPS.map((step, i) => (
                 <div key={i} style={{

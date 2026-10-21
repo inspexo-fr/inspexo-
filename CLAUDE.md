@@ -128,7 +128,33 @@ PAS de lien FAQ dans la navbar.
 - Visio (59 €, split 19/40) et Inspection (249 €, split 79/170) restent affichés sur le site avec CTA « Rejoindre la liste d'attente » (source `expert_waitlist`) tant que le réseau d'experts n'est pas opérationnel. Hausse prévue post-traction : Visio → 75 €, Inspection → 299 € (part expert inchangée).
 - L'ancien palier « IA Spécialisée 9,90 € » (chat 10 échanges : FreeAnalysisModal / ChatIA / fonction `ai-chat`) existe toujours dans le code mais n'est plus le produit mis en avant.
 
-## Score d'annonce gratuit (Sprint 1 — livré oct. 2026)
+## Score d'annonce gratuit (Sprint 1 livré, approfondi au Sprint 1.5 — oct. 2026)
+
+### Règle d'or (Sprint 1.5)
+ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catalogue (Defect Atlas « base Inspexo » + fiche famille moteur web-sourcée) — jointure par identifiant côté serveur, une panne inventée est structurellement impossible. Le budget 12 mois ne garde que les postes au coût chiffré à la source. Un 3e appel (critique) supprime tout ce qui n'est tracé à rien (events `claim_dropped`). Jamais « confiance basse » à l'écran : « source : base Inspexo » ou « sources en ligne, à confirmer sur place ».
+
+### Pipeline (3 appels claude-sonnet-5, tool use strict, thinking désactivé)
+1. **Identification** : marque/modèle/génération/famille moteur UNIQUE (jamais « A ou B » ; déduction autorisée quand modèle+motorisation+année déterminent une seule famille), prix texte vs prix visuel, CT, `statut_vendeur` ∈ particulier|pro|intermediaire_pour_particulier|pro_deguise_probable (indices : « frais de mise en main », « nos véhicules », dépôt-vente…). Court-circuit si pas une annonce véhicule.
+2. **Fiche famille moteur** (`defect_sheets`, clé marque+famille+plage d'années) : cache 90 j (`generee`) ou permanent (`validee` après relecture humaine via `admin-defect-sheets`). Génération par la fonction dédiée `sheet-builder` (web search Anthropic, 3 recherches max, TOUTE panne sans URL rejetée, familles étrangères rejetées) — `score` la déclenche puis POLLE la table ≤ 50 s ; sinon l'analyse continue sans fiche (`cache: pending`) et le prochain appel la trouve. ⚠️ wall-clock edge functions = 150 s (plan gratuit) : c'est la contrainte qui a imposé ce découplage.
+3. **Analyse** : 5 axes /20 (prix, km/âge, historique, risques mécaniques, vendeur/cadre juridique), score = somme, verdict par bandes (≥70 vert, 40-69 orange, <40 rouge, le plus sévère gagne) ; raisons par impact financier (statut intermédiaire/pro déguisé FORCÉ serveur en raison 1-2) ; questions → message vendeur composé SERVEUR (+ VIN/carte grise/HistoVec) ; checklist 12-15 (démarrage à froid en premier) ; cadre juridique = constantes serveur par statut ; avertissement = constante serveur.
+4. **Critique** : décisions gardee/supprimee/reformulee par claim, sources {annonce, fiche, rappelconso, takata, droit, socle, aucune}, « aucune » ⇒ suppression ; n'émet QUE les non-gardées (économie de tokens) ; > 50 % des pannes supprimées ⇒ bandeau « Analyse limitée ».
+
+### Sécurité (audit ultracode oct. 2026 — corrigé)
+- Anti-injection : chevrons neutralisés (‹ ›) dans annonce/comparables ; images et contenu web du catalogue déclarés non fiables dans les 3 prompts + celui de la fiche.
+- RPC durcies : `submit_lead` (dédup unique (email, source), 10/ip/24 h), `track_event` (props ≤ 2 Ko, schéma strict verdict_feedback, 120/ip/24 h), `get_public_analysis` (share_views/result_viewed dédupliqués 1/ip/h) — ip hachée côté SQL via `_request_ip_hash` (header cf-connecting-ip, pgcrypto).
+- Rate limit score anti-TOCTOU : insertion de la tentative AVANT comptage. IP_HASH_SALT sans fallback (fail-fast). Clause where RappelConso filtrée (`"`/`\`/`*` interdits).
+- Bypass d'éval : header `x-eval-secret` = secret `EVAL_BYPASS_SECRET` (supabase secrets + .env.local, jamais commité).
+
+### Éval de non-régression — BLOQUANTE avant deploy
+`npm run eval` (tests/eval/, 8 cas : 6 historiques + Audi S7 intermédiaire/EA824 + injection de prompt). Un cas = annonce.txt + expected.json {http_status, verdict_min/max, score_min/max, statut_vendeur, famille_moteur (préfixe compatible), statut_in_raisons12, rappels_min, must_include[], must_not_include[]}. Rejoue contre la fonction déployée ; retry automatique si fiche `pending`.
+
+### Rappels / Takata (Sprint 1.5)
+- Filtre d'années strict : date_publication ≥ année-modèle − 1 (appliqué après le cache, qui reste par marque+modèle).
+- Carrosseries et badges moteur exclus du matching (sportback, tfsi…) ; dérivés sportifs mappés vers le modèle de base (S7/RS7 → A7 — RappelConso n'étiquette que « a7 »).
+- Bloc Takata TOUJOURS affiché : positif = bandeau rouge ; négatif = « modèle non listé dans la campagne officielle (liste du JJ/MM/AAAA) ».
+- HistoVec (https://histovec.interieur.gouv.fr) dans le bloc cadre juridique.
+
+## Détails Sprint 1 (historique)
 
 ### Produit
 - `/score` : texte d'annonce (≤ 6 000 car.) + jusqu'à 3 captures (redimensionnées à 1 600 px côté client, EXIF supprimé par réencodage canvas, JAMAIS stockées — seul `images_count` persiste) + jusqu'à 5 annonces comparables.

@@ -6,54 +6,149 @@ import Footer from '../components/Footer'
 import { getPublicAnalysis, fetchRappels, submitLead, trackEvent } from '../lib/scoreApi'
 
 const VERDICT_STYLE = {
-  vert:   { color: '#16A34A', bg: '#F0FDF4', border: 'rgba(22,163,74,0.3)',  emoji: '🟢', label: 'Feu vert' },
-  orange: { color: '#D97706', bg: '#FFFBEB', border: 'rgba(217,119,6,0.3)',  emoji: '🟠', label: 'Prudence' },
-  rouge:  { color: '#DC2626', bg: '#FEF2F2', border: 'rgba(220,38,38,0.3)',  emoji: '🔴', label: 'Signaux rouges' },
+  vert:   { color: '#16A34A', bg: '#F0FDF4', border: 'rgba(22,163,74,0.3)',  label: 'Feu vert' },
+  orange: { color: '#D97706', bg: '#FFFBEB', border: 'rgba(217,119,6,0.3)',  label: 'Prudence' },
+  rouge:  { color: '#DC2626', bg: '#FEF2F2', border: 'rgba(220,38,38,0.3)',  label: 'Signaux rouges' },
 }
 
 const GRAVITE_STYLE = {
-  securite: { label: 'Sécurité',  color: '#DC2626', bg: '#FEF2F2' },
-  majeure:  { label: 'Majeure',   color: '#D97706', bg: '#FFFBEB' },
-  mineure:  { label: 'Mineure',   color: '#6B7280', bg: '#F0F2F5' },
+  securite: { label: 'Sécurité', color: '#DC2626', bg: '#FEF2F2' },
+  majeure:  { label: 'Majeure',  color: '#D97706', bg: '#FFFBEB' },
+  mineure:  { label: 'Mineure',  color: '#6B7280', bg: '#F0F2F5' },
 }
 
-const CONFIANCE_LABEL = { haute: 'confiance haute', moyenne: 'confiance moyenne', basse: 'confiance basse' }
+const AXE_LABELS = {
+  prix: 'Prix',
+  kilometrage_age: 'Kilométrage et âge',
+  historique_entretien: 'Historique et entretien',
+  risques_mecaniques: 'Risques mécaniques connus',
+  vendeur_cadre: 'Vendeur et cadre juridique',
+}
+
+const STATUT_VENDEUR_LABELS = {
+  particulier: 'Particulier',
+  pro: 'Professionnel',
+  intermediaire_pour_particulier: 'Intermédiaire pour particulier',
+  pro_deguise_probable: 'Professionnel déguisé probable',
+}
 
 const CONSENT_TEXT = 'En laissant votre email, vous acceptez d\'être recontacté par Inspexo à ce sujet. Lien de désinscription dans chaque email.'
 
-function EmailCapture({ title, buttonLabel, source, analysisId }) {
-  const [email, setEmail]   = useState('')
-  const [state, setState]   = useState('idle') // idle | sending | done | error
+const FONT = 'Plus Jakarta Sans, sans-serif'
+const FONT_TITRE = 'Syne, sans-serif'
 
+/* ---------- Adaptateur schéma v1 → forme affichable ---------- */
+function adaptResult(raw) {
+  if (!raw) return null
+  if (raw.schema_version === 2) return raw
+  // Anciennes analyses (sprint 1) : adaptation minimale
+  return {
+    schema_version: 1,
+    type: 'vehicule',
+    vehicule: raw.vehicule || {},
+    statut_vendeur: null,
+    verdict: raw.verdict,
+    score: raw.score,
+    score_detail: null,
+    raisons_principales: raw.raisons || [],
+    cadre_juridique: null,
+    message_vendeur: null,
+    questions_vendeur: raw.questions_au_vendeur || [],
+    checklist_sur_place: [],
+    pannes_connues: (raw.pannes_connues || []).map(p => ({
+      titre: p.titre,
+      organe: null,
+      symptome: p.symptome,
+      pertinence: null,
+      verification_sur_place: p.verification_sur_place,
+      gravite: p.gravite,
+      source_statut: p.confiance === 'haute' ? 'base_inspexo' : 'en_ligne',
+      urls: [],
+      cout_min_eur: null,
+      cout_max_eur: null,
+    })),
+    incoherences: raw.incoherences_annonce || [],
+    budget_12_mois: [],
+    prix: raw.prix || { commentaire: null, mediane_comparables: null },
+    analyse_limitee: null,
+    avertissement: raw.avertissement ||
+      'Analyse automatique à partir du texte de l\'annonce. Ne remplace pas un examen du véhicule.',
+  }
+}
+
+/* ---------- Petits composants ---------- */
+function CopyButton({ text, label = 'Copier', style }) {
+  const [done, setDone] = useState(false)
+  return (
+    <button
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(text)
+          setDone(true)
+          setTimeout(() => setDone(false), 2000)
+        } catch (_) { /* clipboard indisponible */ }
+      }}
+      style={{
+        background: '#0F1B2D', color: '#fff', border: 'none', borderRadius: 8,
+        padding: '9px 16px', fontFamily: FONT, fontSize: '0.8125rem',
+        fontWeight: 700, cursor: 'pointer', ...style,
+      }}
+    >
+      {done ? 'Copié' : label}
+    </button>
+  )
+}
+
+function SourceLabel({ statut, urls }) {
+  if (statut === 'base_inspexo') {
+    return (
+      <span style={{
+        fontFamily: FONT, fontSize: '0.6875rem', fontWeight: 600,
+        color: '#1E4D8C', background: 'rgba(30,77,140,0.08)',
+        borderRadius: 100, padding: '2px 10px',
+      }}>
+        source : base Inspexo
+      </span>
+    )
+  }
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      <span style={{
+        fontFamily: FONT, fontSize: '0.6875rem', fontWeight: 600,
+        color: '#6B7280', background: '#F0F2F5', borderRadius: 100, padding: '2px 10px',
+      }}>
+        sources en ligne, à confirmer sur place
+      </span>
+      {(urls || []).slice(0, 3).map((u, i) => (
+        <a key={i} href={u} target="_blank" rel="noopener noreferrer" style={{
+          fontFamily: FONT, fontSize: '0.6875rem', color: '#1E4D8C',
+        }}>
+          source {i + 1}
+        </a>
+      ))}
+    </span>
+  )
+}
+
+function EmailCapture({ title, buttonLabel, source, analysisId }) {
+  const [email, setEmail] = useState('')
+  const [state, setState] = useState('idle')
   const submit = async (e) => {
     e.preventDefault()
     if (!email || state === 'sending') return
     setState('sending')
-    try {
-      await submitLead(email, source, analysisId)
-      setState('done')
-    } catch (_) {
-      setState('error')
-    }
+    try { await submitLead(email, source, analysisId); setState('done') } catch (_) { setState('error') }
   }
-
   if (state === 'done') {
     return (
-      <div style={{
-        fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem',
-        fontWeight: 600, color: '#16A34A', padding: '10px 0',
-      }}>
-        ✓ C'est noté ! Vous recevrez un email à cette adresse.
+      <div style={{ fontFamily: FONT, fontSize: '0.875rem', fontWeight: 600, color: '#16A34A', padding: '10px 0' }}>
+        C'est noté. Vous recevrez un email à cette adresse.
       </div>
     )
   }
-
   return (
     <form onSubmit={submit}>
-      <div style={{
-        fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem',
-        fontWeight: 600, color: '#0F1B2D', marginBottom: 8,
-      }}>
+      <div style={{ fontFamily: FONT, fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D', marginBottom: 8 }}>
         {title}
       </div>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -63,29 +158,24 @@ function EmailCapture({ title, buttonLabel, source, analysisId }) {
           style={{
             flex: '1 1 180px', boxSizing: 'border-box',
             border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8,
-            padding: '11px 14px', fontSize: 16,
-            fontFamily: 'Plus Jakarta Sans, sans-serif', outline: 'none',
+            padding: '11px 14px', fontSize: 16, fontFamily: FONT, outline: 'none',
           }}
         />
         <button type="submit" disabled={state === 'sending'} style={{
           background: '#0F1B2D', color: '#fff', border: 'none',
           borderRadius: 8, padding: '11px 18px', cursor: 'pointer',
-          fontFamily: 'Plus Jakarta Sans, sans-serif',
-          fontSize: '0.875rem', fontWeight: 700, whiteSpace: 'nowrap',
+          fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, whiteSpace: 'nowrap',
           opacity: state === 'sending' ? 0.6 : 1,
         }}>
           {state === 'sending' ? '…' : buttonLabel}
         </button>
       </div>
       {state === 'error' && (
-        <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem', color: '#DC2626', marginTop: 6 }}>
+        <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#DC2626', marginTop: 6 }}>
           Email invalide ou erreur réseau — réessayez.
         </div>
       )}
-      <div style={{
-        marginTop: 8, fontFamily: 'Plus Jakarta Sans, sans-serif',
-        fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5,
-      }}>
+      <div style={{ marginTop: 8, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5 }}>
         {CONSENT_TEXT}
       </div>
     </form>
@@ -94,10 +184,7 @@ function EmailCapture({ title, buttonLabel, source, analysisId }) {
 
 function SectionTitle({ children }) {
   return (
-    <h2 style={{
-      fontFamily: 'Syne, sans-serif', fontWeight: 800,
-      fontSize: '1.125rem', color: '#0F1B2D', margin: '0 0 14px',
-    }}>
+    <h2 style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.0625rem', color: '#0F1B2D', margin: '0 0 14px' }}>
       {children}
     </h2>
   )
@@ -108,7 +195,7 @@ function Card({ children, style }) {
     <div style={{
       background: '#fff', borderRadius: 16,
       border: '1.5px solid rgba(0,0,0,0.07)',
-      padding: '22px 20px', marginBottom: 16,
+      padding: '22px 20px', marginBottom: 14,
       ...style,
     }}>
       {children}
@@ -116,23 +203,50 @@ function Card({ children, style }) {
   )
 }
 
+function VerdictFeedback({ analysisId }) {
+  const [sent, setSent] = useState(false)
+  if (sent) {
+    return (
+      <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#16A34A', fontWeight: 600, textAlign: 'center' }}>
+        Merci pour votre retour.
+      </div>
+    )
+  }
+  const btn = {
+    background: '#fff', color: '#0F1B2D', border: '1.5px solid rgba(0,0,0,0.15)',
+    borderRadius: 8, padding: '10px 26px', fontFamily: FONT,
+    fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer',
+  }
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{ fontFamily: FONT, fontSize: '0.9375rem', fontWeight: 600, color: '#0F1B2D', marginBottom: 12 }}>
+        Ce verdict vous a aidé ?
+      </div>
+      <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+        <button style={btn} onClick={() => { trackEvent('verdict_feedback', analysisId, { helpful: true }); setSent(true) }}>Oui</button>
+        <button style={btn} onClick={() => { trackEvent('verdict_feedback', analysisId, { helpful: false }); setSent(true) }}>Non</button>
+      </div>
+    </div>
+  )
+}
+
+/* ================================================================== */
 export default function ResultPage() {
   const { id } = useParams()
   const location = useLocation()
 
-  const [analysis, setAnalysis]   = useState(null) // { result, marque, modele, annee, ... }
+  const [analysis, setAnalysis]   = useState(null)
   const [notFound, setNotFound]   = useState(false)
   const [loadError, setLoadError] = useState(false)
-  const [rappels, setRappels]     = useState(undefined) // undefined = chargement
+  const [rappels, setRappels]     = useState(undefined)
   const [shareDone, setShareDone] = useState(false)
 
-  // Chargement de l'analyse (state de navigation ou RPC publique)
   useEffect(() => {
     window.scrollTo(0, 0)
     let cancelled = false
     async function load() {
       if (location.state?.result) {
-        const r = location.state.result
+        const r = adaptResult(location.state.result)
         setAnalysis({
           id,
           result: r,
@@ -148,7 +262,7 @@ export default function ResultPage() {
         if (!row) { setNotFound(true); return }
         setAnalysis({
           id: row.id,
-          result: row.result_json,
+          result: adaptResult(row.result_json),
           marque: row.marque,
           modele: row.modele,
           annee: row.annee,
@@ -161,7 +275,6 @@ export default function ResultPage() {
     return () => { cancelled = true }
   }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Rappels constructeur + Takata
   useEffect(() => {
     if (!analysis) return
     let cancelled = false
@@ -197,18 +310,17 @@ export default function ResultPage() {
     } catch (_) { /* partage annulé */ }
   }
 
-  // ---------------- États intermédiaires ----------------
+  /* ---------- États intermédiaires ---------- */
   if (notFound || loadError) {
     return (
       <>
         <Navbar />
         <main style={{ background: '#F8F9FA', minHeight: '100vh', padding: '140px 24px' }}>
           <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 16 }}>🔍</div>
-            <h1 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 12 }}>
+            <h1 style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 12 }}>
               {notFound ? 'Analyse introuvable' : 'Erreur de chargement'}
             </h1>
-            <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#6B7280', marginBottom: 24 }}>
+            <p style={{ fontFamily: FONT, color: '#6B7280', marginBottom: 24 }}>
               {notFound
                 ? 'Ce lien ne correspond à aucune analyse. Il a peut-être été mal copié.'
                 : 'Impossible de charger cette analyse. Vérifiez votre connexion et réessayez.'}
@@ -216,7 +328,7 @@ export default function ResultPage() {
             <Link to="/score" style={{
               display: 'inline-block', background: '#FF4D00', color: '#fff',
               borderRadius: 10, padding: '13px 26px', textDecoration: 'none',
-              fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: '0.9375rem',
+              fontFamily: FONT, fontWeight: 700, fontSize: '0.9375rem',
             }}>
               Analyser une annonce
             </Link>
@@ -237,19 +349,25 @@ export default function ResultPage() {
             border: '3px solid #FF4D00', borderTopColor: 'transparent',
             borderRadius: '50%', animation: 'spin 0.8s linear infinite',
           }} />
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
         </main>
       </>
     )
   }
 
-  // ---------------- Rendu principal ----------------
+  /* ---------- Rendu principal ---------- */
   const r = analysis.result
   const vs = VERDICT_STYLE[r.verdict] || VERDICT_STYLE.orange
+  const vh = r.vehicule || {}
   const vehiculeLabel = [analysis.marque, analysis.modele].filter(Boolean).join(' ') || 'Véhicule non identifié'
   const ogTitle = `Verdict Inspexo : ${r.verdict} — ${vehiculeLabel}`
   const pageUrl = `https://www.inspexo.io/a/${id}`
   const takata = rappels?.takata
+  const axes = r.score_detail ? Object.entries(r.score_detail) : []
+
+  const checklistText = (r.checklist_sur_place || [])
+    .map((c, i) => `${i + 1}. ${c.quoi}\n   Comment : ${c.comment}\n   Signal rouge : ${c.signal_rouge}`)
+    .join('\n')
 
   return (
     <>
@@ -257,22 +375,28 @@ export default function ResultPage() {
         <title>{ogTitle}</title>
         <meta name="robots" content="noindex" />
         <meta property="og:title" content={ogTitle} />
-        <meta property="og:description" content={(r.raisons || []).join(' · ')} />
+        <meta property="og:description" content={(r.raisons_principales || []).join(' · ')} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={pageUrl} />
         <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
         <meta name="twitter:card" content="summary" />
       </Helmet>
 
+      <style>{`
+        details.axe-detail summary { cursor: pointer; list-style: none; }
+        details.axe-detail summary::-webkit-details-marker { display: none; }
+        details.axe-detail[open] .axe-chevron { transform: rotate(90deg); }
+      `}</style>
+
       <Navbar />
 
       <main style={{ background: '#F8F9FA', minHeight: '100vh' }}>
         <div style={{ maxWidth: 680, margin: '0 auto', padding: '92px 16px 64px' }}>
 
-          {/* ---------- Carte verdict ---------- */}
+          {/* ========== 1. VERDICT + 5 AXES ========== */}
           <div style={{
             background: vs.bg, border: `1.5px solid ${vs.border}`,
-            borderRadius: 18, padding: '26px 22px', marginBottom: 16,
+            borderRadius: 18, padding: '26px 22px', marginBottom: 14,
           }}>
             <div style={{
               display: 'flex', justifyContent: 'space-between',
@@ -280,125 +404,266 @@ export default function ResultPage() {
             }}>
               <div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.75rem', fontWeight: 600, color: '#6B7280',
-                  textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4,
+                  fontFamily: FONT, fontSize: '0.75rem', fontWeight: 600, color: '#6B7280',
+                  textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6,
                 }}>
                   Verdict Inspexo
                 </div>
                 <h1 style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: FONT_TITRE, fontWeight: 800,
                   fontSize: 'clamp(1.5rem, 5.5vw, 2rem)', color: vs.color,
-                  margin: 0, lineHeight: 1.1,
+                  margin: 0, lineHeight: 1.1, display: 'flex', alignItems: 'center', gap: 10,
                 }}>
-                  {vs.emoji} {vs.label}
+                  <span style={{
+                    width: 16, height: 16, borderRadius: '50%',
+                    background: vs.color, display: 'inline-block', flexShrink: 0,
+                  }} />
+                  {vs.label}
                 </h1>
-                <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.9375rem', fontWeight: 600, color: '#0F1B2D', marginTop: 8,
-                }}>
+                <div style={{ fontFamily: FONT, fontSize: '0.9375rem', fontWeight: 600, color: '#0F1B2D', marginTop: 8 }}>
                   {vehiculeLabel}
-                  {r.vehicule?.motorisation ? ` · ${r.vehicule.motorisation}` : ''}
+                  {vh.motorisation ? ` · ${vh.motorisation}` : ''}
                   {analysis.annee ? ` · ${analysis.annee}` : ''}
+                  {vh.kilometrage ? ` · ${vh.kilometrage.toLocaleString('fr-FR')} km` : ''}
                 </div>
+                {r.statut_vendeur && (
+                  <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280', marginTop: 4 }}>
+                    Vendeur : {STATUT_VENDEUR_LABELS[r.statut_vendeur] || r.statut_vendeur}
+                  </div>
+                )}
               </div>
               <div style={{ textAlign: 'center', flexShrink: 0 }}>
-                <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                  fontSize: '2.5rem', color: vs.color, lineHeight: 1,
-                }}>
+                <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '2.5rem', color: vs.color, lineHeight: 1 }}>
                   {r.score}
                 </div>
-                <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600,
-                }}>
+                <div style={{ fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600 }}>
                   / 100
                 </div>
               </div>
             </div>
 
-            {(r.raisons || []).map((raison, i) => (
-              <div key={i} style={{
-                display: 'flex', gap: 10, padding: '7px 0',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: '0.9375rem', color: '#0F1B2D', lineHeight: 1.55,
-                borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
-              }}>
-                <span style={{ color: vs.color, fontWeight: 700, flexShrink: 0 }}>{i + 1}.</span>
-                {raison}
+            {/* 5 axes dépliables */}
+            {axes.length > 0 && (
+              <div style={{ borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: 6 }}>
+                {axes.map(([key, axe]) => (
+                  <details key={key} className="axe-detail" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                    <summary style={{
+                      display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0',
+                      fontFamily: FONT, fontSize: '0.875rem', color: '#0F1B2D',
+                    }}>
+                      <span className="axe-chevron" style={{
+                        fontSize: '0.65rem', color: '#9CA3AF', transition: 'transform 0.15s',
+                        display: 'inline-block', width: 10,
+                      }}>
+                        ▸
+                      </span>
+                      <span style={{ flexGrow: 1, fontWeight: 600 }}>{AXE_LABELS[key] || key}</span>
+                      <span style={{
+                        fontFamily: FONT_TITRE, fontWeight: 800,
+                        color: axe.note >= 14 ? '#16A34A' : axe.note >= 8 ? '#D97706' : '#DC2626',
+                      }}>
+                        {axe.note}<span style={{ fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600 }}>/20</span>
+                      </span>
+                    </summary>
+                    <div style={{
+                      fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280',
+                      lineHeight: 1.6, padding: '0 0 10px 20px',
+                    }}>
+                      {axe.commentaire}
+                    </div>
+                  </details>
+                ))}
               </div>
-            ))}
+            )}
 
-            {/* Boutons d'action */}
-            <div style={{ display: 'flex', gap: 10, marginTop: 18, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
               <button onClick={handleShare} style={{
                 flex: '1 1 140px', background: '#0F1B2D', color: '#fff',
                 border: 'none', borderRadius: 10, padding: '13px 16px',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer',
+                fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer',
               }}>
-                {shareDone ? '✓ Lien copié !' : '🔗 Partager'}
+                {shareDone ? 'Lien copié' : 'Partager'}
               </button>
               <Link to="/score" style={{
                 flex: '1 1 140px', textAlign: 'center',
                 background: 'transparent', color: '#0F1B2D',
                 border: '1.5px solid rgba(15,27,45,0.25)', borderRadius: 10,
                 padding: '12px 16px', textDecoration: 'none',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: '0.875rem', fontWeight: 700,
+                fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700,
               }}>
                 Analyser une autre annonce
               </Link>
             </div>
           </div>
 
-          {/* ---------- Bandeau Takata ---------- */}
-          {takata?.concerne && (
+          {/* Bandeau analyse limitée */}
+          {r.analyse_limitee?.actif && (
             <div style={{
-              background: '#7F1D1D', borderRadius: 14,
-              padding: '18px 20px', marginBottom: 16,
+              background: '#FFFBEB', border: '1.5px solid rgba(217,119,6,0.35)',
+              borderRadius: 12, padding: '12px 16px', marginBottom: 14,
+              fontFamily: FONT, fontSize: '0.875rem', color: '#92400E', fontWeight: 600,
             }}>
-              <div style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                fontSize: '0.9375rem', color: '#fff', marginBottom: 6,
-              }}>
-                ⚠️ Airbags Takata
-              </div>
-              <div style={{
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: '0.875rem', color: 'rgba(255,255,255,0.9)', lineHeight: 1.6,
-              }}>
-                {takata.message}
-              </div>
-              <div style={{
-                marginTop: 8, fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: '0.75rem', color: 'rgba(255,255,255,0.55)',
-              }}>
-                Modèle listé : {takata.modele_takata} ({takata.periode}) ·{' '}
-                <a href={takata.source} target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                  Liste officielle du ministère
-                </a>
-              </div>
+              {r.analyse_limitee.message}
             </div>
           )}
 
-          {/* ---------- Rappels constructeur ---------- */}
+          {/* ========== 2. RAISONS ========== */}
+          {(r.raisons_principales || []).length > 0 && (
+            <Card>
+              <SectionTitle>Raisons principales</SectionTitle>
+              {r.raisons_principales.map((raison, i) => (
+                <div key={i} style={{
+                  display: 'flex', gap: 10, padding: '8px 0',
+                  fontFamily: FONT, fontSize: '0.9375rem', color: '#0F1B2D', lineHeight: 1.55,
+                  borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+                }}>
+                  <span style={{ color: vs.color, fontWeight: 700, flexShrink: 0 }}>{i + 1}.</span>
+                  {raison}
+                </div>
+              ))}
+            </Card>
+          )}
+
+          {/* ========== 3. CADRE JURIDIQUE + HISTOVEC ========== */}
+          {r.cadre_juridique && (
+            <Card>
+              <SectionTitle>Cadre juridique</SectionTitle>
+              <p style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#374151', lineHeight: 1.65, margin: '0 0 12px' }}>
+                {r.cadre_juridique.texte}
+              </p>
+              <div style={{
+                background: '#F0F2F5', borderRadius: 10, padding: '12px 14px',
+                fontFamily: FONT, fontSize: '0.8125rem', color: '#374151', lineHeight: 1.6,
+              }}>
+                {r.cadre_juridique.histovec_conseil || 'Demandez au vendeur le rapport HistoVec gratuit (historique, sinistres, gages).'}{' '}
+                <a href={r.cadre_juridique.histovec_url || 'https://histovec.interieur.gouv.fr'} target="_blank" rel="noopener noreferrer" style={{ color: '#1E4D8C', fontWeight: 600 }}>
+                  histovec.interieur.gouv.fr
+                </a>
+              </div>
+            </Card>
+          )}
+
+          {/* ========== 4. MESSAGE VENDEUR ========== */}
+          {r.message_vendeur && (
+            <Card>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                <SectionTitle>Message prêt à envoyer au vendeur</SectionTitle>
+                <CopyButton text={r.message_vendeur} />
+              </div>
+              <pre style={{
+                fontFamily: FONT, fontSize: '0.8125rem', color: '#374151',
+                lineHeight: 1.6, whiteSpace: 'pre-wrap', margin: 0,
+                background: '#F8F9FA', borderRadius: 10, padding: '14px 16px',
+              }}>
+                {r.message_vendeur}
+              </pre>
+            </Card>
+          )}
+
+          {/* ========== 5. CHECKLIST SUR PLACE ========== */}
+          {(r.checklist_sur_place || []).length > 0 && (
+            <Card>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                <SectionTitle>Checklist sur place</SectionTitle>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <CopyButton text={`Checklist Inspexo — ${vehiculeLabel}\n\n${checklistText}`} />
+                  <button
+                    onClick={() => {
+                      const text = `Checklist Inspexo — ${vehiculeLabel}\n\n${checklistText}`
+                      if (navigator.share) navigator.share({ title: 'Checklist Inspexo', text }).catch(() => {})
+                      else navigator.clipboard.writeText(text).catch(() => {})
+                    }}
+                    style={{
+                      background: '#fff', color: '#0F1B2D', border: '1.5px solid rgba(0,0,0,0.15)',
+                      borderRadius: 8, padding: '9px 16px', fontFamily: FONT,
+                      fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer',
+                    }}
+                  >
+                    Partager
+                  </button>
+                </div>
+              </div>
+              {r.checklist_sur_place.map((c, i) => (
+                <div key={i} style={{ padding: '10px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
+                  <div style={{ fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, color: '#0F1B2D', marginBottom: 3 }}>
+                    {i + 1}. {c.quoi}
+                  </div>
+                  <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.55 }}>
+                    {c.comment}
+                  </div>
+                  <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#B91C1C', lineHeight: 1.55, marginTop: 2 }}>
+                    Signal rouge : {c.signal_rouge}
+                  </div>
+                </div>
+              ))}
+            </Card>
+          )}
+
+          {/* ========== 6. PANNES CONNUES ========== */}
+          {(r.pannes_connues || []).length > 0 && (
+            <Card>
+              <SectionTitle>Points de défaillance connus</SectionTitle>
+              {r.pannes_connues.map((p, i) => {
+                const g = GRAVITE_STYLE[p.gravite] || GRAVITE_STYLE.mineure
+                return (
+                  <div key={i} style={{ padding: '14px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.06)' : 'none' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
+                      <span style={{ fontFamily: FONT, fontSize: '0.9375rem', fontWeight: 700, color: '#0F1B2D' }}>
+                        {p.titre}
+                      </span>
+                      <span style={{
+                        background: g.bg, color: g.color, borderRadius: 100, padding: '2px 10px',
+                        fontSize: '0.6875rem', fontWeight: 700, fontFamily: FONT,
+                        textTransform: 'uppercase', letterSpacing: '0.04em',
+                      }}>
+                        {g.label}
+                      </span>
+                    </div>
+                    <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.6, marginBottom: 6 }}>
+                      {p.symptome}
+                    </div>
+                    {p.pertinence && (
+                      <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#374151', lineHeight: 1.6, marginBottom: 6 }}>
+                        <strong>Pour ce véhicule :</strong> {p.pertinence}
+                      </div>
+                    )}
+                    {p.verification_sur_place && (
+                      <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#374151', lineHeight: 1.6, marginBottom: 8 }}>
+                        <strong>À vérifier sur place :</strong> {p.verification_sur_place}
+                      </div>
+                    )}
+                    {(p.cout_min_eur != null || p.cout_max_eur != null) && (
+                      <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#374151', marginBottom: 8 }}>
+                        <strong>Coût indicatif :</strong>{' '}
+                        {p.cout_min_eur != null ? `${p.cout_min_eur.toLocaleString('fr-FR')} €` : ''}
+                        {p.cout_min_eur != null && p.cout_max_eur != null ? ' – ' : ''}
+                        {p.cout_max_eur != null ? `${p.cout_max_eur.toLocaleString('fr-FR')} €` : ''}
+                      </div>
+                    )}
+                    <SourceLabel statut={p.source_statut} urls={p.urls} />
+                  </div>
+                )
+              })}
+            </Card>
+          )}
+
+          {/* ========== 7. RAPPELS ========== */}
           <Card>
-            <SectionTitle>📋 Rappels constructeur</SectionTitle>
+            <SectionTitle>Rappels constructeur</SectionTitle>
             {rappels === undefined ? (
-              <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#9CA3AF' }}>
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#9CA3AF' }}>
                 Vérification des rappels en cours…
               </div>
             ) : rappels === null || rappels.rappels === null ? (
-              <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#6B7280', lineHeight: 1.6 }}>
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#6B7280', lineHeight: 1.6 }}>
                 {analysis.marque && analysis.modele
                   ? 'La base RappelConso est momentanément indisponible. Vérifiez directement sur rappel.conso.gouv.fr.'
                   : 'Véhicule non identifié dans l\'annonce — impossible de vérifier les rappels.'}
               </div>
             ) : rappels.rappels.length === 0 ? (
-              <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#16A34A', fontWeight: 600 }}>
-                ✓ Aucun rappel trouvé pour {vehiculeLabel} dans la base RappelConso.
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#16A34A', fontWeight: 600 }}>
+                Aucun rappel trouvé pour ce modèle dans RappelConso
+                {rappels.fetched_at ? ` (vérifié le ${new Date(rappels.fetched_at).toLocaleDateString('fr-FR')})` : ''}.
                 <div style={{ color: '#9CA3AF', fontWeight: 400, marginTop: 4, fontSize: '0.75rem' }}>
                   Base officielle data.economie.gouv.fr — couvre les rappels publiés depuis avril 2021.
                 </div>
@@ -406,205 +671,185 @@ export default function ResultPage() {
             ) : (
               <>
                 {rappels.rappels.map((rap, i) => (
-                  <div key={i} style={{
-                    padding: '12px 0',
-                    borderTop: i > 0 ? '1px solid rgba(0,0,0,0.06)' : 'none',
-                  }}>
+                  <div key={i} style={{ padding: '12px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.06)' : 'none' }}>
                     <div style={{
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.875rem', fontWeight: 700, color: '#0F1B2D',
+                      fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, color: '#0F1B2D',
                       marginBottom: 4, textTransform: 'capitalize',
                     }}>
                       {rap.titre}
                     </div>
                     {rap.motif && (
                       <div style={{
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                        fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.55,
-                        marginBottom: 6,
-                        display: '-webkit-box', WebkitLineClamp: 3,
+                        fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.55,
+                        marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 3,
                         WebkitBoxOrient: 'vertical', overflow: 'hidden',
                       }}>
                         {rap.motif}
                       </div>
                     )}
                     <div style={{
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.75rem', color: '#9CA3AF',
+                      fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF',
                       display: 'flex', gap: 12, flexWrap: 'wrap',
                     }}>
                       {rap.date && <span>{new Date(rap.date).toLocaleDateString('fr-FR')}</span>}
                       {rap.risques && <span style={{ color: '#D97706' }}>{rap.risques.replace(/\|/g, ', ')}</span>}
                       {rap.lien && (
                         <a href={rap.lien} target="_blank" rel="noopener noreferrer" style={{ color: '#1E4D8C' }}>
-                          Fiche officielle →
+                          Fiche officielle
                         </a>
                       )}
                     </div>
                   </div>
                 ))}
-                <div style={{
-                  marginTop: 10, fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.6875rem', color: '#9CA3AF',
-                }}>
-                  Source : RappelConso (data.economie.gouv.fr) — vérifiez toujours avec le VIN auprès du constructeur.
+                <div style={{ marginTop: 10, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF' }}>
+                  Source : RappelConso (data.economie.gouv.fr)
+                  {rappels.fetched_at ? ` — vérifié le ${new Date(rappels.fetched_at).toLocaleDateString('fr-FR')}` : ''} —
+                  confirmez toujours avec le VIN auprès du constructeur.
                 </div>
               </>
             )}
           </Card>
 
-          {/* ---------- Pannes connues ---------- */}
-          {(r.pannes_connues || []).length > 0 && (
+          {/* ========== 8. TAKATA (toujours affiché) ========== */}
+          {takata && (takata.concerne ? (
+            <div style={{
+              background: '#7F1D1D', borderRadius: 14,
+              padding: '18px 20px', marginBottom: 14,
+            }}>
+              <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '0.9375rem', color: '#fff', marginBottom: 6 }}>
+                Airbags Takata
+              </div>
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: 'rgba(255,255,255,0.9)', lineHeight: 1.6 }}>
+                {takata.message}
+              </div>
+              <div style={{ marginTop: 8, fontFamily: FONT, fontSize: '0.75rem', color: 'rgba(255,255,255,0.55)' }}>
+                Modèle listé : {takata.modele_takata} ({takata.periode})
+                {takata.liste_date ? ` · liste du ${takata.liste_date}` : ''} ·{' '}
+                <a href={takata.source} target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                  Liste officielle du ministère
+                </a>
+              </div>
+            </div>
+          ) : (
             <Card>
-              <SectionTitle>🔧 Points de défaillance connus</SectionTitle>
-              {r.pannes_connues.map((p, i) => {
-                const g = GRAVITE_STYLE[p.gravite] || GRAVITE_STYLE.mineure
-                return (
-                  <div key={i} style={{
-                    padding: '14px 0',
-                    borderTop: i > 0 ? '1px solid rgba(0,0,0,0.06)' : 'none',
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
-                      <span style={{
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                        fontSize: '0.9375rem', fontWeight: 700, color: '#0F1B2D',
-                      }}>
-                        {p.titre}
-                      </span>
-                      <span style={{
-                        background: g.bg, color: g.color,
-                        borderRadius: 100, padding: '2px 10px',
-                        fontSize: '0.6875rem', fontWeight: 700,
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                        textTransform: 'uppercase', letterSpacing: '0.04em',
-                      }}>
-                        {g.label}
-                      </span>
-                      <span style={{
-                        background: '#F0F2F5', color: '#6B7280',
-                        borderRadius: 100, padding: '2px 10px',
-                        fontSize: '0.6875rem', fontWeight: 600,
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      }}>
-                        {CONFIANCE_LABEL[p.confiance] || p.confiance}
-                      </span>
-                    </div>
-                    <div style={{
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.6, marginBottom: 6,
-                    }}>
-                      <strong style={{ color: '#374151' }}>Symptôme :</strong> {p.symptome}
-                    </div>
-                    <div style={{
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
-                      fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.6,
-                    }}>
-                      <strong style={{ color: '#374151' }}>À vérifier sur place :</strong> {p.verification_sur_place}
-                    </div>
-                  </div>
-                )
-              })}
+              <SectionTitle>Airbags Takata</SectionTitle>
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#374151', lineHeight: 1.6 }}>
+                {takata.message || `Airbags Takata : modèle non listé dans la campagne officielle${takata.liste_date ? ` (liste du ${takata.liste_date})` : ''}.`}
+              </div>
+              <div style={{ marginTop: 6, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF' }}>
+                <a href={takata.source} target="_blank" rel="noopener noreferrer" style={{ color: '#1E4D8C' }}>
+                  Liste officielle du ministère
+                </a>
+              </div>
             </Card>
-          )}
+          ))}
 
-          {/* ---------- Incohérences ---------- */}
-          {(r.incoherences_annonce || []).length > 0 && (
+          {/* ========== 9. INCOHÉRENCES ========== */}
+          {(r.incoherences || []).length > 0 && (
             <Card style={{ borderColor: 'rgba(217,119,6,0.3)', background: '#FFFBEB' }}>
-              <SectionTitle>⚠️ Incohérences relevées dans l'annonce</SectionTitle>
-              {r.incoherences_annonce.map((inc, i) => (
+              <SectionTitle>Incohérences relevées dans l'annonce</SectionTitle>
+              {r.incoherences.map((inc, i) => (
                 <div key={i} style={{
                   display: 'flex', gap: 10, padding: '6px 0',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.875rem', color: '#78350F', lineHeight: 1.55,
+                  fontFamily: FONT, fontSize: '0.875rem', color: '#78350F', lineHeight: 1.55,
                 }}>
-                  <span style={{ flexShrink: 0 }}>•</span>
+                  <span style={{ flexShrink: 0 }}>–</span>
                   {inc}
                 </div>
               ))}
             </Card>
           )}
 
-          {/* ---------- Questions au vendeur ---------- */}
-          {(r.questions_au_vendeur || []).length > 0 && (
-            <Card>
-              <SectionTitle>💬 Questions à poser au vendeur</SectionTitle>
-              {r.questions_au_vendeur.map((q, i) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 10, padding: '8px 0',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.875rem', color: '#374151', lineHeight: 1.55,
-                  borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
-                }}>
-                  <span style={{ color: '#FF4D00', fontWeight: 700, flexShrink: 0 }}>{i + 1}.</span>
-                  {q}
-                </div>
-              ))}
-            </Card>
-          )}
-
-          {/* ---------- Prix ---------- */}
-          {(r.prix?.commentaire || r.vehicule?.prix_affiche) && (
-            <Card>
-              <SectionTitle>💶 Prix</SectionTitle>
-              <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginBottom: r.prix?.commentaire ? 12 : 0 }}>
-                {r.vehicule?.prix_affiche != null && (
-                  <div>
-                    <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase' }}>
-                      Prix affiché
-                    </div>
-                    <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D' }}>
-                      {r.vehicule.prix_affiche.toLocaleString('fr-FR')} €
-                    </div>
+          {/* ========== 10. PRIX ========== */}
+          <Card>
+            <SectionTitle>Prix</SectionTitle>
+            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginBottom: 10 }}>
+              {vh.prix_affiche != null && (
+                <div>
+                  <div style={{ fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase' }}>
+                    Prix affiché
                   </div>
-                )}
-                {r.prix?.mediane_comparables != null && (
-                  <div>
-                    <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase' }}>
-                      Médiane des comparables
-                    </div>
-                    <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#1E4D8C' }}>
-                      {r.prix.mediane_comparables.toLocaleString('fr-FR')} €
-                    </div>
+                  <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D' }}>
+                    {vh.prix_affiche.toLocaleString('fr-FR')} €
                   </div>
-                )}
-              </div>
-              {r.prix?.commentaire && (
-                <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
-                  fontSize: '0.875rem', color: '#6B7280', lineHeight: 1.65,
-                }}>
-                  {r.prix.commentaire}
                 </div>
               )}
+              {r.prix?.mediane_comparables != null && (
+                <div>
+                  <div style={{ fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase' }}>
+                    Médiane des comparables
+                  </div>
+                  <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.25rem', color: '#1E4D8C' }}>
+                    {r.prix.mediane_comparables.toLocaleString('fr-FR')} €
+                  </div>
+                </div>
+              )}
+            </div>
+            {r.prix?.commentaire ? (
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#6B7280', lineHeight: 1.65 }}>
+                {r.prix.commentaire}
+              </div>
+            ) : (
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#6B7280', lineHeight: 1.65 }}>
+                Collez 3 annonces comparables (même modèle, année proche) lors de l'analyse pour situer le prix.
+                Sans comparables, aucune estimation n'est avancée.
+              </div>
+            )}
+          </Card>
+
+          {/* ========== 11. BUDGET 12 MOIS (si présent) ========== */}
+          {(r.budget_12_mois || []).length > 0 && (
+            <Card>
+              <SectionTitle>Budget prévisible sur 12 mois</SectionTitle>
+              {r.budget_12_mois.map((b, i) => (
+                <div key={i} style={{
+                  display: 'flex', justifyContent: 'space-between', gap: 12,
+                  padding: '9px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+                  fontFamily: FONT, fontSize: '0.875rem', color: '#374151',
+                }}>
+                  <span>{b.poste}</span>
+                  <span style={{ fontWeight: 700, whiteSpace: 'nowrap' }}>
+                    {b.cout_min_eur != null ? `${b.cout_min_eur.toLocaleString('fr-FR')} €` : ''}
+                    {b.cout_min_eur != null && b.cout_max_eur != null ? ' – ' : ''}
+                    {b.cout_max_eur != null ? `${b.cout_max_eur.toLocaleString('fr-FR')} €` : ''}
+                  </span>
+                </div>
+              ))}
+              <div style={{ marginTop: 8, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF' }}>
+                Uniquement des coûts chiffrés par les sources (base Inspexo ou sources en ligne). Fourchettes indicatives, hors entretien courant.
+              </div>
             </Card>
           )}
 
-          {/* ---------- Leads ---------- */}
+          {/* ========== 12. FEEDBACK ========== */}
+          <Card>
+            <VerdictFeedback analysisId={id} />
+          </Card>
+
+          {/* ========== 13. EMAILS ========== */}
           <Card>
             <EmailCapture
-              title="📩 Recevoir ce rapport par email"
+              title="Recevoir ce rapport par email"
               buttonLabel="Recevoir"
               source="rapport"
               analysisId={id}
             />
           </Card>
-
           <Card style={{ background: '#FFF0EA', borderColor: 'rgba(255,77,0,0.25)' }}>
             <EmailCapture
-              title="🚀 Le Pass achat arrive : accompagnement complet jusqu'à la signature. Être prévenu du lancement ?"
+              title="Le Pass achat arrive : accompagnement complet jusqu'à la signature. Être prévenu du lancement ?"
               buttonLabel="Être prévenu"
               source="pass_waitlist"
               analysisId={id}
             />
           </Card>
 
-          {/* ---------- Mention ---------- */}
+          {/* ========== Avertissement (complet, non tronqué) ========== */}
           <div style={{
             textAlign: 'center', padding: '18px 16px 0',
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
-            fontSize: '0.75rem', color: '#9CA3AF', lineHeight: 1.6,
+            fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', lineHeight: 1.6,
           }}>
-            Analyse automatique à partir du texte de l'annonce. Ne remplace pas un examen du véhicule.
+            {r.avertissement}
           </div>
         </div>
       </main>

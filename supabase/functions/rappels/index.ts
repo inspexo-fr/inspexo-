@@ -22,7 +22,8 @@ const RAPPELCONSO_BASE =
   `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/${RAPPELCONSO_DATASET}/records`;
 const CATEGORIE_AUTO = "automobiles et moyens de déplacement"; // valeur exacte du facet
 const CACHE_TTL_MS = 24 * 3600 * 1000;
-const MAX_RAPPELS = 10;
+const MAX_RAPPELS = 10;        // renvoyés au client (après filtre d'années)
+const MAX_CACHE_MATCHES = 30;  // stockés en cache (avant filtre d'années)
 
 const TAKATA_MESSAGE =
   "Modèle concerné par la campagne airbags Takata — vérifiez avec le numéro de série (VIN) sur le site du constructeur avant tout achat";
@@ -51,11 +52,18 @@ function containsWord(haystack: string, needle: string): boolean {
   return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`).test(haystack);
 }
 
-// Mots trop génériques pour identifier un modèle à eux seuls.
+// Mots trop génériques pour identifier un modèle à eux seuls :
+// carrosseries, finitions et badges moteur partagés entre modèles.
 const GENERIC_WORDS = new Set([
   "serie", "classe", "type", "grand", "grande", "voiture", "berline",
   "break", "cabriolet", "coupe", "pack", "phase", "sport", "line",
   "edition", "tourisme", "utilitaire", "van", "diesel", "essence",
+  // carrosseries / silhouettes
+  "sportback", "allroad", "touring", "estate", "limousine", "roadster",
+  "gran", "turismo", "crossback", "tourer", "avant",
+  // badges moteur/transmission partagés dans toute une gamme
+  "tfsi", "tdi", "tsi", "fsi", "hdi", "bluehdi", "dci", "tce", "cdi",
+  "crdi", "vti", "thp", "puretech", "etsi", "xdrive", "quattro", "4matic",
 ]);
 
 /**
@@ -74,6 +82,12 @@ function modelCandidates(modele: string): string[] {
   for (const t of tokens) {
     if (/\d/.test(t) && t.length >= 2 && !/^(19|20)\d{2}$/.test(t)) out.add(t); // codes : f30, 320d, c3, 308
     else if (t.length >= 4 && !GENERIC_WORDS.has(t)) out.add(t); // noms : golf, megane
+  }
+  // Dérivés sportifs étiquetés par leur modèle de base dans les sources
+  // officielles : Audi S7/RS7 → A7, S6/RS6 → A6, etc.
+  for (const t of [...out]) {
+    const m = t.match(/^(?:rs|s)(\d)$/);
+    if (m) out.add(`a${m[1]}`);
   }
   return [...out];
 }
@@ -128,11 +142,27 @@ function checkTakata(marque: string, modele: string, annee: number | null) {
             ? `${entry.debut}–${entry.fin ?? "?"}`
             : "toutes années",
           source: (takataModels as { _source: string })._source,
+          liste_date: takataListeDate(),
         };
       }
     }
   }
-  return { concerne: false, message: null, modele_takata: null, periode: null, source: (takataModels as { _source: string })._source };
+  // Bloc TOUJOURS affiché côté UI : message négatif explicite avec la date de liste.
+  return {
+    concerne: false,
+    message: `Airbags Takata : modèle non listé dans la campagne officielle (liste du ${takataListeDate()}).`,
+    modele_takata: null,
+    periode: null,
+    source: (takataModels as { _source: string })._source,
+    liste_date: takataListeDate(),
+  };
+}
+
+/** Date de la liste Takata embarquée, au format JJ/MM/AAAA. */
+function takataListeDate(): string {
+  const iso = (takataModels as { _updated?: string })._updated ?? "";
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
 }
 
 type RappelConsoRecord = {
@@ -146,11 +176,16 @@ type RappelConsoRecord = {
 };
 
 async function fetchRappelConso(marque: string, modele: string) {
-  const variants = rawBrandVariants(marque);
-  const inList = variants.map((v) => `"${v.replace(/"/g, '\\"')}"`).join(",");
-  // `in (...)` pour les valeurs connues + `like "xxx*"` sur le préfixe de la
-  // forme normalisée pour attraper les variantes à suffixe ("ds automobiles"…).
-  const primary = normalizeBrand(marque).replace(/"/g, "");
+  // Anti-injection ODSQL : une valeur n'entre dans la clause where que si elle
+  // ne contient ni guillemet ni backslash ni astérisque (seuls caractères
+  // capables de sortir de la chaîne ou d'élargir le like). Les accents des
+  // variantes connues ("citroën") sont préservés.
+  const isSafe = (v: string) => v.length > 0 && v.length <= 40 && !/["\\*]/.test(v);
+  const variants = rawBrandVariants(marque).filter(isSafe);
+  if (variants.length === 0) return [];
+  const inList = variants.map((v) => `"${v}"`).join(",");
+  const primary = normalizeBrand(marque);
+  if (!isSafe(primary)) return [];
   const where =
     `categorie_produit="${CATEGORIE_AUTO}" and ` +
     `(marque_produit in (${inList}) or marque_produit like "${primary}*")`;
@@ -188,9 +223,27 @@ async function fetchRappelConso(marque: string, modele: string) {
       date: r.date_publication,
       lien: r.lien_vers_la_fiche_rappel,
     });
-    if (matches.length >= MAX_RAPPELS) break;
+    if (matches.length >= MAX_CACHE_MATCHES) break;
   }
   return matches;
+}
+
+/**
+ * Filtre d'années STRICT : un rappel publié avant (année-modèle − 1) ne peut
+ * pas concerner ce véhicule. Appliqué APRÈS le cache (le cache est par
+ * marque+modèle, l'année varie par requête).
+ */
+// deno-lint-ignore no-explicit-any
+function filterByYear(rappels: any[], annee: number | null): any[] {
+  if (annee == null) return rappels.slice(0, MAX_RAPPELS);
+  const cutoff = new Date(`${annee - 1}-01-01T00:00:00Z`).getTime();
+  return rappels
+    .filter((r) => {
+      if (!r?.date) return true; // date absente : on garde par prudence
+      const t = new Date(r.date).getTime();
+      return !Number.isFinite(t) || t >= cutoff;
+    })
+    .slice(0, MAX_RAPPELS);
 }
 
 serve(async (req: Request) => {
@@ -267,8 +320,11 @@ serve(async (req: Request) => {
       }
     }
 
+    // Filtre d'années strict, appliqué après le cache (cache = marque+modèle).
+    const rappelsFiltres = Array.isArray(rappels) ? filterByYear(rappels, annee) : rappels;
+
     // ---------------- Event rappels_found ----------------
-    const foundCount = Array.isArray(rappels) ? rappels.length : 0;
+    const foundCount = Array.isArray(rappelsFiltres) ? rappelsFiltres.length : 0;
     if (foundCount > 0 || takata.concerne) {
       await admin.from("events").insert({
         name: "rappels_found",
@@ -278,13 +334,14 @@ serve(async (req: Request) => {
           takata: takata.concerne,
           marque: normalizeBrand(marque),
           modele: norm(modele),
+          annee,
           from_cache: fromCache,
         },
       });
     }
 
     return jsonResponse({
-      rappels,
+      rappels: rappelsFiltres,
       takata,
       source: {
         nom: "RappelConso (data.economie.gouv.fr)",
