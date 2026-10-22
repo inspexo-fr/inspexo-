@@ -85,8 +85,8 @@ function Site() {
   return (
     <>
       <Helmet>
-        <title>Inspexo — Expert automobile indépendant, spécialisé par marque | Toulouse</title>
-        <meta name="description" content="Faites inspecter votre véhicule d'occasion par un expert qualifié, spécialisé par marque. 100% côté acheteur. Analyse IA dès 0€. Toulouse & Haute-Garonne." />
+        <title>Inspexo — Analysez gratuitement une annonce de voiture d'occasion</title>
+        <meta name="description" content="Collez une annonce Leboncoin ou La Centrale : verdict en 1 minute, rappels constructeur, airbags Takata, pannes connues du moteur, questions à poser au vendeur. Gratuit, 100 % côté acheteur." />
         <link rel="canonical" href="https://www.inspexo.io/" />
       </Helmet>
       <Navbar />
