@@ -165,6 +165,16 @@ async function runCase(name) {
     }
   }
 
+  // incoherences_must_not_include : interdit DANS le champ incoherences précisément
+  if (expected.incoherences_must_not_include?.length) {
+    const inc = norm(JSON.stringify(r.incoherences || []))
+    for (const needle of expected.incoherences_must_not_include) {
+      if (inc.includes(norm(needle))) {
+        failures.push(`incoherences_must_not_include présent : "${needle}"`)
+      }
+    }
+  }
+
   // must_include / must_not_include (une entrée tableau = alternatives, OU logique)
   for (const needle of expected.must_include || []) {
     const alts = Array.isArray(needle) ? needle : [needle]

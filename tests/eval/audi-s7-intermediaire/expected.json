@@ -23,7 +23,8 @@
     [
       "33 885",
       "33885"
-    ]
+    ],
+    "mandat"
   ],
   "must_not_include": [
     "EA888",
@@ -34,5 +35,8 @@
     "confiance basse",
     "wastegate",
     "moteurs similaires"
+  ],
+  "incoherences_must_not_include": [
+    "moteur a chaine"
   ]
 }
