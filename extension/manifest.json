@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Inspexo — Analyser une annonce auto",
+  "version": "1.0.0",
+  "description": "Verdict gratuit sur une annonce de voiture d'occasion : rappels constructeur, airbags Takata, pannes connues du moteur, questions au vendeur.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.leboncoin.fr/*",
+    "*://*.lacentrale.fr/*",
+    "*://*.autoscout24.fr/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.leboncoin.fr/*",
+        "*://*.lacentrale.fr/*",
+        "*://*.autoscout24.fr/*"
+      ],
+      "js": [
+        "sites/common.js",
+        "sites/leboncoin.js",
+        "sites/lacentrale.js",
+        "sites/autoscout24.js",
+        "content.js"
+      ],
+      "css": [
+        "button.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

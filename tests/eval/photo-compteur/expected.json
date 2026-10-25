@@ -1,0 +1,23 @@
+{
+  "http_status": 200,
+  "verdict_min": "rouge",
+  "verdict_max": "orange",
+  "famille_moteur": "EB2",
+  "photos_bloc": true,
+  "incoherences_must_include": [
+    "compteur"
+  ],
+  "must_include": [
+    [
+      "188452",
+      "188 452"
+    ],
+    [
+      "120 000",
+      "120000"
+    ]
+  ],
+  "must_not_include": [
+    "confiance basse"
+  ]
+}

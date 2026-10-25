@@ -184,6 +184,9 @@ function publicReason(justification) {
   if (/mill[ée]sime|ann[ée]e|g[ée]n[ée]ration|p[ée]riode de production|ne concerne pas ce/.test(j)) {
     return "Ce point concerne d'autres années ou une autre génération que ce véhicule."
   }
+  if (/photo|visible|visuel|estimation de valeur|cote/.test(j)) {
+    return "Ce constat n'était pas vérifiable sur la photo."
+  }
   return "Non prouvé par l'annonce ni par la fiche moteur."
 }
 
@@ -1029,6 +1032,35 @@ export default function ResultPage() {
                   {inc}
                 </div>
               ))}
+            </Card>
+          )}
+
+          {/* ========== 8bis. CE QUE MONTRENT LES PHOTOS ========== */}
+          {(r.constats_photo || []).length > 0 && (
+            <Card>
+              <SectionTitle>Ce que montrent les photos</SectionTitle>
+              {r.constats_photo.map((c, i) => (
+                <div key={i} style={{
+                  display: 'flex', gap: 10, alignItems: 'flex-start', padding: '9px 0',
+                  borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+                  fontFamily: FONT, fontSize: '0.875rem', color: '#0F1B2D', lineHeight: 1.55,
+                }}>
+                  <span style={{
+                    width: 10, height: 10, borderRadius: '50%', flexShrink: 0, marginTop: 6,
+                    background: c.signal === 'rouge' ? '#DC2626' : c.signal === 'attention' ? '#D97706' : '#16A34A',
+                  }} />
+                  <span>
+                    {c.constat}
+                    <span style={{ color: '#9CA3AF', fontSize: '0.75rem' }}> — photo n°{c.photo_index}</span>
+                  </span>
+                </div>
+              ))}
+              <div style={{
+                marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(0,0,0,0.07)',
+                fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', lineHeight: 1.5,
+              }}>
+                Constats automatiques sur les photos jointes à l'analyse. Les photos ne sont jamais conservées.
+              </div>
             </Card>
           )}
 

@@ -65,6 +65,17 @@ async function runCase(name) {
   const input = existsSync(join(dir, 'input.json'))
     ? JSON.parse(readFileSync(join(dir, 'input.json'), 'utf8'))
     : {}
+  // Photos du cas (photos/*.jpg|png) → images base64, comme le ferait /score.
+  const photosDir = join(dir, 'photos')
+  if (existsSync(photosDir)) {
+    input.images = readdirSync(photosDir)
+      .filter((f) => /\.(jpe?g|png)$/i.test(f))
+      .sort()
+      .map((f) => {
+        const mime = /\.png$/i.test(f) ? 'image/png' : 'image/jpeg'
+        return `data:${mime};base64,${readFileSync(join(photosDir, f)).toString('base64')}`
+      })
+  }
 
   const failures = []
   const t0 = Date.now()
@@ -165,6 +176,17 @@ async function runCase(name) {
     }
   }
 
+  // incoherences_must_include : présence exigée DANS le champ incoherences
+  if (expected.incoherences_must_include?.length) {
+    const inc = norm(JSON.stringify(r.incoherences || []))
+    for (const needle of expected.incoherences_must_include) {
+      const alts = Array.isArray(needle) ? needle : [needle]
+      if (!alts.some((a) => inc.includes(norm(a)))) {
+        failures.push(`incoherences_must_include manquant : "${alts.join('|')}"`)
+      }
+    }
+  }
+
   // incoherences_must_not_include : interdit DANS le champ incoherences précisément
   if (expected.incoherences_must_not_include?.length) {
     const inc = norm(JSON.stringify(r.incoherences || []))
@@ -173,6 +195,13 @@ async function runCase(name) {
         failures.push(`incoherences_must_not_include présent : "${needle}"`)
       }
     }
+  }
+
+  // photos_bloc : true = des constats photo doivent exister ; false = aucun
+  if ('photos_bloc' in expected) {
+    const n = Array.isArray(r.constats_photo) ? r.constats_photo.length : 0
+    if (expected.photos_bloc && n === 0) failures.push('photos_bloc attendu mais constats_photo vide')
+    if (!expected.photos_bloc && n > 0) failures.push(`photos_bloc interdit mais ${n} constat(s) photo`)
   }
 
   // must_include / must_not_include (une entrée tableau = alternatives, OU logique)

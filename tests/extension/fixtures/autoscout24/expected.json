@@ -1,0 +1,23 @@
+[
+  {
+    "titre_contient": "Dacia",
+    "prix_contient": "2980",
+    "kilometrage_contient": "88000",
+    "type_vendeur": "professionnel",
+    "photos_min": 1
+  },
+  {
+    "titre_contient": "Dodge",
+    "prix_contient": "1190",
+    "kilometrage_contient": "186195",
+    "type_vendeur": "professionnel",
+    "photos_min": 1
+  },
+  {
+    "titre_contient": "Fiat",
+    "prix_contient": "2490",
+    "kilometrage_contient": "123600",
+    "type_vendeur": "professionnel",
+    "photos_min": 1
+  }
+]

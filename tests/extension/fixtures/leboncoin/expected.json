@@ -1,0 +1,31 @@
+[
+  {
+    "titre": "Peugeot 308 1.2 PureTech 130 Allure",
+    "prix_contient": "12900",
+    "annee": "2017",
+    "kilometrage": "98 000 km",
+    "carburant": "Essence",
+    "boite": "Manuelle",
+    "type_vendeur": "particulier",
+    "photos_min": 2,
+    "description_contient": "courroie"
+  },
+  {
+    "titre": "BMW 320d 184ch F30 Sport",
+    "prix_contient": "15490",
+    "annee": "2013",
+    "kilometrage": "142 000 km",
+    "type_vendeur": "professionnel",
+    "photos_min": 1,
+    "description_contient": "chaîne"
+  },
+  {
+    "titre": "Renault Clio IV 1.5 dCi 90",
+    "prix_contient": "8990",
+    "annee": "2016",
+    "kilometrage_contient": "121000",
+    "carburant": "Diesel",
+    "photos_min": 1,
+    "description_contient": "embrayage"
+  }
+]

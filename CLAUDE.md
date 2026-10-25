@@ -158,7 +158,7 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 ## Détails Sprint 1 (historique)
 
 ### Produit
-- `/score` : texte d'annonce (≤ 6 000 car.) + jusqu'à 3 captures (redimensionnées à 1 600 px côté client, EXIF supprimé par réencodage canvas, JAMAIS stockées — seul `images_count` persiste) + jusqu'à 5 annonces comparables.
+- `/score` : texte d'annonce (≤ 6 000 car.) + jusqu'à 6 photos (redimensionnées à 1 600 px côté client, EXIF supprimé par réencodage canvas, JAMAIS stockées — seul `images_count` persiste) + jusqu'à 5 annonces comparables.
 - Résultat en < 20 s : verdict `vert|orange|rouge`, score 0-100, exactement 3 raisons, pannes connues (gravité `securite|majeure|mineure` + confiance `haute|moyenne|basse` affichées), incohérences, questions au vendeur, avis prix (médiane des comparables).
 - `/a/:id` : page publique partageable — bloc rappels constructeur + bandeau Takata, boutons Partager / « Recevoir ce rapport par email » (lead `rapport`) / « Être prévenu du Pass achat » (lead `pass_waitlist`).
 - Mention obligatoire sous chaque résultat : « Analyse automatique à partir du texte de l'annonce. Ne remplace pas un examen du véhicule. »
@@ -183,6 +183,13 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
   - `submit_lead(p_email, p_source, p_analysis_id)` — insert lead + event `lead_submitted`.
   - `track_event(p_name, p_analysis_id, p_props)` — whitelist stricte (`share_clicked`).
 - Événements de mesure : `score_started`, `score_done` (durée + tokens dans `props_json` → base du calcul de coût), `rappels_found`, `result_viewed`, `share_clicked`, `lead_submitted`.
+
+## Extension Chrome + analyse photos (Sprint 2C — oct. 2026)
+
+- **Extension MV3** (`extension/`) : bouton flottant « Analyser avec Inspexo » sur les pages d'annonce leboncoin.fr / lacentrale.fr / autoscout24.fr. Extracteurs par site dans `extension/sites/*.js` (__NEXT_DATA__ → JSON-LD → dataLayer), testés sur fixtures (`tests/extension/`, `node tests/extension/run.mjs` ; AS24 = 3 pages réelles, LBC/LaCentrale = reconstituées, DataDome bloquant la capture). Photos téléchargées par le service worker, redimensionnées 1 600 px, EXIF supprimé, base64. Échec d'extraction → fallback `/score?texte=`. Permissions minimales (activeTab, scripting, 3 hôtes). Zip de soumission + `extension/STORE.md`. Pages site : `/extension` (présentation, `STORE_URL` à renseigner après publication) et `/extension/confidentialite`.
+- **Chaîne d'envoi** : extension → `https://www.inspexo.io/api/intake` (proxy Vercel, seul domaine contacté — engagement Web Store) → fonction `intake` (secret `INTAKE_PROXY_SECRET` des deux côtés, IP réelle transmise) → fonction `score` en service→service (`x-intake-ip-hash`) : rate limit 5/24 h partagé avec /score. `source_url` conservée dans `result_json`.
+- **Analyse photos** (score et intake) : jusqu'à 6 photos. Appel vision dédié `claude-sonnet-5` (tool `rendre_constats_photo`, lancé en parallèle de la fiche) → `constats_photo[]` {organe ∈ compteur|pneus|carrosserie|jantes|interieur|moteur|document_ct|autre, constat, signal ∈ ok|attention|rouge, photo_index, confiance}. Règles SERVEUR : km compteur vs annoncé (écart > 2 % ⇒ incohérence en tête), PV de CT lu → `ct_defauts` reliés aux pannes par l'analyse, jamais d'estimation de valeur, constats uniquement sur le visible. Chaque constat passe par la critique (claims `PH*`, source `photo`) ; les écartés alimentent le bandeau de rigueur. UI : bloc « Ce que montrent les photos » après les incohérences (pastilles, photos jamais affichées ni stockées). Usage loggé par appel dans `score_done` (`calls.photos`).
+- **Éval** : cas `photo-compteur` (3 photos générées, compteur 188 452 km vs 120 000 km annoncés ⇒ incohérence exigée) ; assertions `photos_bloc`, `incoherences_must_include` ; les photos d'un cas se placent dans `tests/eval/<cas>/photos/`.
 
 ## Marques Couvertes
 

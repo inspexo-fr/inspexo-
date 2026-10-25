@@ -27,6 +27,8 @@ import NotFound from './pages/NotFound'
 import ClientDashboard from './pages/ClientDashboard'
 import ExpertDashboard from './pages/ExpertDashboard'
 import ScorePage from './pages/ScorePage'
+import ExtensionPage from './pages/ExtensionPage'
+import ExtensionPrivacy from './pages/ExtensionPrivacy'
 import ResultPage from './pages/ResultPage'
 
 function Site() {
@@ -166,6 +168,8 @@ export default function App() {
         <Route path="/" element={<Site />} />
         <Route path="/score" element={<ScorePage />} />
         <Route path="/a/:id" element={<ResultPage />} />
+        <Route path="/extension" element={<ExtensionPage />} />
+        <Route path="/extension/confidentialite" element={<ExtensionPrivacy />} />
         <Route path="/dashboard" element={<ClientDashboard />} />
         <Route path="/expert" element={<ExpertDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />

@@ -15,5 +15,6 @@
     "pneu",
     "frein",
     "démarrage à froid"
-  ]
+  ],
+  "photos_bloc": false
 }

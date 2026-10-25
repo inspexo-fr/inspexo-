@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidentialité de l'extension Chrome — Inspexo</title>
+<!-- Version autonome de la page publiée sur https://www.inspexo.io/extension/confidentialite
+     (source de vérité : src/pages/ExtensionPrivacy.jsx — garder les deux synchrones). -->
+<style>
+  body { margin: 0; background: #F8F9FA; color: #0F1B2D; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.65; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 20px 64px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; }
+  .date { color: #9CA3AF; font-size: 0.8125rem; margin: 0 0 28px; }
+  section { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 14px; padding: 20px 22px; margin-bottom: 12px; }
+  h2 { font-size: 1rem; margin: 0 0 8px; }
+  p { font-size: 0.9rem; color: #374151; margin: 0; }
+  footer { font-size: 0.8125rem; color: #6B7280; }
+  a { color: #1E4D8C; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Confidentialité de l'extension Chrome</h1>
+  <p class="date">Dernière mise à jour : 26 octobre 2026 — s'applique à l'extension « Inspexo — Analyser une annonce auto ».</p>
+  <section>
+    <h2>Aucune collecte, aucun suivi</h2>
+    <p>L'extension ne contient aucun traceur, aucune statistique d'usage, aucun cookie. Elle n'enregistre rien sur votre navigation et ne lit le contenu d'une page qu'au moment précis où vous cliquez sur le bouton « Analyser avec Inspexo ».</p>
+  </section>
+  <section>
+    <h2>Ce qui est envoyé, et à qui</h2>
+    <p>Au clic, l'extension extrait de la page d'annonce : titre, prix, année, kilométrage, carburant, boîte, description, type de vendeur affiché par le site, URL de l'annonce et jusqu'à 6 photos. Ces données sont envoyées exclusivement à inspexo.io pour produire l'analyse. Aucune requête n'est faite vers un autre service.</p>
+  </section>
+  <section>
+    <h2>Photos : jamais stockées</h2>
+    <p>Les photos sont téléchargées et redimensionnées dans votre navigateur (1 600 px maximum) ; le ré-encodage supprime les métadonnées EXIF (dont la localisation GPS). Elles servent uniquement à l'analyse automatique puis sont oubliées : Inspexo ne conserve que leur nombre.</p>
+  </section>
+  <section>
+    <h2>Ce qui est conservé</h2>
+    <p>Seul le résultat d'analyse (verdict, score, constats) est conservé pour alimenter la page de résultat partageable. Le texte de l'annonce analysée est conservé à des fins de fonctionnement du service. Aucune donnée d'identité n'est demandée : l'extension fonctionne sans compte.</p>
+  </section>
+  <section>
+    <h2>Permissions demandées</h2>
+    <p>activeTab et scripting : afficher le bouton et lire la page d'annonce au clic. Accès limité à leboncoin.fr, lacentrale.fr et autoscout24.fr : le bouton n'existe que sur ces trois sites, l'extension est inerte partout ailleurs.</p>
+  </section>
+  <section>
+    <h2>Vos droits</h2>
+    <p>Conformément au RGPD, vous pouvez demander la suppression d'une analyse en écrivant à contact@inspexo.io. L'adresse IP est utilisée uniquement sous forme hachée pour limiter le nombre d'analyses gratuites (5 par 24 heures).</p>
+  </section>
+  <footer>Éditeur : Inspexo — contact@inspexo.io — <a href="https://www.inspexo.io/politique-de-confidentialite">politique de confidentialité générale du site</a>.</footer>
+</main>
+</body>
+</html>

@@ -7,7 +7,7 @@ import { analyzeListing } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
 
 const MAX_TEXT = 6000
-const MAX_IMAGES = 3
+const MAX_IMAGES = 6
 const MAX_COMPARABLES = 5
 
 // Les 4 étapes réelles du pipeline, avec leur seuil de temps typique (s).
@@ -22,7 +22,13 @@ export default function ScorePage() {
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
 
-  const [text, setText]               = useState('')
+  const [text, setText]               = useState(() => {
+    // Fallback de l'extension Chrome : /score?texte=<annonce encodée>
+    try {
+      const t = new URLSearchParams(window.location.search).get('texte')
+      return t ? t.slice(0, 6000) : ''
+    } catch (_) { return '' }
+  })
   const [images, setImages]           = useState([]) // data URLs
   const [comparables, setComparables] = useState([])
   const [showComparables, setShowComparables] = useState(false)
