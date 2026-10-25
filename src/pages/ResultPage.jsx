@@ -99,6 +99,26 @@ function CopyButton({ text, label = 'Copier', style }) {
   )
 }
 
+/** Libellé lisible d'une URL source : domaine + titre dérivé du chemin.
+ *  Rien n'est inventé : tout provient de l'URL elle-même. */
+function sourceLinkLabel(u) {
+  try {
+    const url = new URL(u)
+    const domain = url.hostname.replace(/^www\./, '')
+    const segment = decodeURIComponent(
+      (url.pathname.split('/').filter(Boolean).pop() || ''),
+    )
+      .replace(/\.(html?|php|pdf|aspx?|jsp)$/i, '')
+      .replace(/[-_+]+/g, ' ')
+      .trim()
+    if (!segment || /^(index|default)$/i.test(segment)) return domain
+    const title = segment.length > 60 ? `${segment.slice(0, 57)}…` : segment
+    return `${domain} — ${title}`
+  } catch (_) {
+    return u
+  }
+}
+
 function SourceLabel({ statut, urls }) {
   if (statut === 'base_inspexo') {
     return (
@@ -112,7 +132,7 @@ function SourceLabel({ statut, urls }) {
     )
   }
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+    <span style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-start' }}>
       <span style={{
         fontFamily: FONT, fontSize: '0.6875rem', fontWeight: 600,
         color: '#6B7280', background: '#F0F2F5', borderRadius: 100, padding: '2px 10px',
@@ -121,12 +141,65 @@ function SourceLabel({ statut, urls }) {
       </span>
       {(urls || []).slice(0, 3).map((u, i) => (
         <a key={i} href={u} target="_blank" rel="noopener noreferrer" style={{
-          fontFamily: FONT, fontSize: '0.6875rem', color: '#1E4D8C',
+          fontFamily: FONT, fontSize: '0.75rem', color: '#1E4D8C',
+          wordBreak: 'break-word', lineHeight: 1.4,
         }}>
-          source {i + 1}
+          {sourceLinkLabel(u)}
         </a>
       ))}
     </span>
+  )
+}
+
+/** Bandeau de rigueur : affirmations écartées par l'appel critique. */
+function RigorBanner({ count, items }) {
+  if (count == null) return null
+  const base = {
+    borderRadius: 12, padding: '12px 16px', marginBottom: 14,
+    fontFamily: FONT, fontSize: '0.875rem',
+  }
+  if (count === 0) {
+    return (
+      <div data-testid="rigor-banner" style={{
+        ...base, background: 'rgba(30,77,140,0.06)',
+        border: '1.5px solid rgba(30,77,140,0.2)', color: '#1E4D8C', fontWeight: 600,
+      }}>
+        Toutes les affirmations sont sourcées
+      </div>
+    )
+  }
+  const label = count === 1
+    ? '1 affirmation écartée faute de source'
+    : `${count} affirmations écartées faute de source`
+  return (
+    <details data-testid="rigor-banner" style={{
+      ...base, background: 'rgba(30,77,140,0.06)',
+      border: '1.5px solid rgba(30,77,140,0.2)', color: '#1E4D8C',
+    }}>
+      <summary style={{ cursor: 'pointer', fontWeight: 600, listStyle: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span className="rigor-chevron" style={{ fontSize: '0.65rem', transition: 'transform 0.15s', display: 'inline-block' }}>▸</span>
+        {label}
+      </summary>
+      {items.length > 0 ? (
+        <div style={{ marginTop: 10 }}>
+          {items.map((c, i) => (
+            <div key={i} style={{
+              padding: '8px 0', borderTop: '1px solid rgba(30,77,140,0.12)',
+              fontSize: '0.8125rem', lineHeight: 1.5,
+            }}>
+              <div style={{ color: '#0F1B2D', fontWeight: 600 }}>{c.texte}</div>
+              {c.justification && (
+                <div style={{ color: '#6B7280', marginTop: 2 }}>{c.justification}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ marginTop: 10, fontSize: '0.8125rem', color: '#6B7280' }}>
+          Le détail de ces affirmations n'est pas disponible sur cette page.
+        </div>
+      )}
+    </details>
   )
 }
 
@@ -240,6 +313,7 @@ export default function ResultPage() {
   const [loadError, setLoadError] = useState(false)
   const [rappels, setRappels]     = useState(undefined)
   const [ficheLive, setFicheLive] = useState(null)
+  const [ficheInfo, setFicheInfo] = useState(null)
   const [shareDone, setShareDone] = useState(false)
 
   useEffect(() => {
@@ -254,6 +328,10 @@ export default function ResultPage() {
           marque: r.vehicule?.marque ?? null,
           modele: r.vehicule?.modele ?? null,
           annee: r.vehicule?.annee ?? null,
+          // Arrivée directe depuis /score : les events claim_dropped ne sont
+          // pas encore relus ; on retombe sur le compteur du résultat.
+          claimsDroppedCount: r.critique?.supprimees ?? null,
+          claimsDropped: [],
         })
         return
       }
@@ -267,6 +345,8 @@ export default function ResultPage() {
           marque: row.marque,
           modele: row.modele,
           annee: row.annee,
+          claimsDroppedCount: row.claims_dropped_count ?? null,
+          claimsDropped: Array.isArray(row.claims_dropped) ? row.claims_dropped : [],
         })
       } catch (_) {
         if (!cancelled) setLoadError(true)
@@ -315,11 +395,26 @@ export default function ResultPage() {
         const sheet = await getDefectSheet(marque, famille)
         if (!cancelled && sheet?.pannes?.length > 0) {
           setFicheLive(sheet)
+          setFicheInfo(sheet)
           clearInterval(interval)
         }
       } catch (_) { /* on retentera au tick suivant */ }
     }, 8000)
     return () => { cancelled = true; clearInterval(interval) }
+  }, [analysis])
+
+  // Pied du bloc pannes : métadonnées de la fiche (nb de sources, date,
+  // statut), chargées une fois même quand la fiche était déjà prête.
+  useEffect(() => {
+    const res = analysis?.result
+    const famille = res?.vehicule?.famille_moteur
+    const marque = res?.vehicule?.marque
+    if (!famille || !marque || res.fiche?.cache === 'pending') return
+    let cancelled = false
+    getDefectSheet(marque, famille)
+      .then(sheet => { if (!cancelled && sheet) setFicheInfo(sheet) })
+      .catch(() => { /* pied de bloc simplement absent */ })
+    return () => { cancelled = true }
   }, [analysis])
 
   const handleShare = async () => {
@@ -439,6 +534,8 @@ export default function ResultPage() {
         details.axe-detail summary { cursor: pointer; list-style: none; }
         details.axe-detail summary::-webkit-details-marker { display: none; }
         details.axe-detail[open] .axe-chevron { transform: rotate(90deg); }
+        details[data-testid="rigor-banner"] summary::-webkit-details-marker { display: none; }
+        details[data-testid="rigor-banner"][open] .rigor-chevron { transform: rotate(90deg); }
       `}</style>
 
       <Navbar />
@@ -554,6 +651,9 @@ export default function ResultPage() {
               </Link>
             </div>
           </div>
+
+          {/* Bandeau de rigueur : affirmations écartées par la critique */}
+          <RigorBanner count={analysis.claimsDroppedCount} items={analysis.claimsDropped || []} />
 
           {/* Bandeau analyse limitée */}
           {r.analyse_limitee?.actif && (
@@ -698,8 +798,8 @@ export default function ResultPage() {
                     {p.rappel_officiel && (
                       <div style={{
                         display: 'inline-block', fontFamily: FONT, fontSize: '0.75rem',
-                        fontWeight: 700, color: '#1E4D8C', background: 'rgba(30,77,140,0.08)',
-                        border: '1px solid rgba(30,77,140,0.25)', borderRadius: 8,
+                        fontWeight: 700, color: '#C2410C', background: '#FFF0EA',
+                        border: '1px solid rgba(255,77,0,0.4)', borderRadius: 8,
                         padding: '4px 10px', marginBottom: 8,
                       }}>
                         {p.rappel_officiel}
@@ -730,6 +830,26 @@ export default function ResultPage() {
                   </div>
                 )
               })}
+              {ficheInfo && r.fiche?.famille && (() => {
+                const urlsFiche = new Set()
+                for (const p of (ficheInfo.pannes || [])) {
+                  for (const u of (p.url_source || [])) urlsFiche.add(u)
+                }
+                const dateFiche = ficheInfo.updated_at
+                  ? new Date(ficheInfo.updated_at).toLocaleDateString('fr-FR')
+                  : null
+                if (urlsFiche.size === 0) return null
+                return (
+                  <div data-testid="fiche-footer" style={{
+                    marginTop: 14, paddingTop: 12, borderTop: '1px solid rgba(0,0,0,0.07)',
+                    fontFamily: FONT, fontSize: '0.75rem', color: '#6B7280', lineHeight: 1.5,
+                  }}>
+                    Fiche moteur {r.fiche.famille} : {urlsFiche.size} source{urlsFiche.size > 1 ? 's' : ''} vérifiée{urlsFiche.size > 1 ? 's' : ''}
+                    {dateFiche ? ` le ${dateFiche}` : ''} — statut{' '}
+                    {ficheInfo.statut === 'validee' ? 'base Inspexo' : 'sources en ligne'}
+                  </div>
+                )
+              })()}
             </Card>
           )}
 

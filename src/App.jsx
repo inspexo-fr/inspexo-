@@ -5,6 +5,7 @@ import { supabase } from './lib/supabaseClient'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import StatsBar from './components/StatsBar'
+import WhyInspexo from './components/WhyInspexo'
 import HowItWorks from './components/HowItWorks'
 import Services from './components/Services'
 import Experts from './components/Experts'
@@ -92,6 +93,7 @@ function Site() {
       <Navbar />
       <main>
         <Hero onFreeAnalysis={handleFreeAnalysis} />
+        <WhyInspexo />
         <StatsBar />
         <HowItWorks onFreeAnalysis={handleFreeAnalysis} />
         <Services onFreeAnalysis={handleFreeAnalysis} />

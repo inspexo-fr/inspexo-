@@ -101,6 +101,7 @@ Le site utilise un style éditorial/magazine avec :
 ### Structure de la landing (10 sections dans l'ordre)
 1. **Navbar** — fixe 64px, bleu nuit, logo "INSPEXO" (Syne, letterspacing 3px, E en orange), liens desktop + hamburger mobile, CTA "Analyser une annonce" → `/score` (ancres en `/#section` pour fonctionner depuis les sous-pages)
 2. **Hero** — bleu nuit, min-height 100vh, badge orange arrondi, titre Syne 68px+ avec text-outline, sous-titre italique, CTA principal "Analyser une annonce" → `/score` + bouton outline, badges de confiance (le badge « Experts qualifiés vérifiés » a été retiré)
+2bis. **Pourquoi Inspexo** (sprint 2A) — fond blanc, 4 colonnes sobres sans emoji (Chaque panne a sa source / Rappels officiels / Airbags Takata vérifiés / Le cadre juridique du vendeur), phrase de clôture « Ce qui n'est pas prouvé n'apparaît pas. »
 3. **Barre Stats** — fond orange, 4 stats : "5,5M Transactions VO/an", "30+ Marques couvertes", "9,90€ Pour commencer", "100% Côté acheteur"
 4. **Comment ça marche** — fond blanc, 3 étapes avec icônes dans cercles orange pâle, numérotées "Étape 01/02/03"
 5. **Nos Services** — fond gris clair, 3 cards (IA / Visio featured / Inspection), encart garantie en bas. CTA Visio & Inspection = « Rejoindre la liste d'attente » (formulaire email inline, lead `expert_waitlist`)

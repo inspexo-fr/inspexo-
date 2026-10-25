@@ -355,6 +355,18 @@ export default function ScorePage() {
               </div>
             </form>
           )}
+
+          {!loading && (
+            <div style={{
+              marginTop: 20, textAlign: 'center',
+              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D', lineHeight: 2,
+            }}>
+              <div>Analyse en 60 s</div>
+              <div>Sources affichées</div>
+              <div>Aucun lien avec les vendeurs</div>
+            </div>
+          )}
         </div>
       </main>
 
