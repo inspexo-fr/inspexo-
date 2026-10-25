@@ -16,3 +16,4 @@ build/
 .env*
 supabase/.temp/
 .env
+deno.lock
