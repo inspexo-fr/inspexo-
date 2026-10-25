@@ -202,9 +202,9 @@ console.log(`Éval Inspexo — ${cases.length} cas contre ${URL_BASE}\n`)
 for (const name of cases) {
   process.stdout.write(`▶ ${name}\n`)
   try {
-    const { failures, ms, verdict, score } = await runCase(name)
+    const { failures, ms, verdict, score, id } = await runCase(name)
     if (failures.length === 0) {
-      console.log(`  PASS (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})\n`)
+      console.log(`  PASS (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})${id ? ` — /a/${id}` : ''}\n`)
     } else {
       failed++
       console.log(`  FAIL (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})`)

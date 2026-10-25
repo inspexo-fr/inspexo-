@@ -151,6 +151,15 @@ function SourceLabel({ statut, urls }) {
   )
 }
 
+/** Texte d'un claim écarté : on retire les marqueurs internes de la critique
+ *  ("[en ligne]", "— pertinence : …", "— sources : …") pour l'affichage. */
+function cleanClaimText(t) {
+  return String(t || '')
+    .split(/ — (?:pertinence|à vérifier|sources) :/)[0]
+    .replace(/\s*\[(?:base Inspexo|en ligne)\]/g, '')
+    .trim()
+}
+
 /** Bandeau de rigueur : affirmations écartées par l'appel critique. */
 function RigorBanner({ count, items }) {
   if (count == null) return null
@@ -187,7 +196,7 @@ function RigorBanner({ count, items }) {
               padding: '8px 0', borderTop: '1px solid rgba(30,77,140,0.12)',
               fontSize: '0.8125rem', lineHeight: 1.5,
             }}>
-              <div style={{ color: '#0F1B2D', fontWeight: 600 }}>{c.texte}</div>
+              <div style={{ color: '#0F1B2D', fontWeight: 600 }}>{cleanClaimText(c.texte)}</div>
               {c.justification && (
                 <div style={{ color: '#6B7280', marginTop: 2 }}>{c.justification}</div>
               )}
