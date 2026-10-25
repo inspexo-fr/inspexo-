@@ -69,13 +69,13 @@ serve(async (req: Request) => {
         // familles étrangères rejetées, champs typés/bornés.
         const { data: row } = await admin
           .from("defect_sheets")
-          .select("famille_moteur")
+          .select("famille_moteur, marque")
           .eq("id", body.id)
           .maybeSingle();
         if (!row) {
           return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 404, headers: cors });
         }
-        const cleaned = sanitizePannes(body.pannes, row.famille_moteur);
+        const { pannes: cleaned } = sanitizePannes(body.pannes, row.famille_moteur, row.marque);
         if (cleaned.length !== body.pannes.length) {
           return new Response(
             JSON.stringify({

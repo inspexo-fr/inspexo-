@@ -459,6 +459,7 @@ type CatalogueEntry = {
   cout_min_eur: number | null;
   cout_max_eur: number | null;
   urls: string[];
+  sources: Array<{ url: string; title: string | null }>;
   source_statut: "base_inspexo" | "en_ligne";
   contexte: string | null; // modèles/années côté atlas
   rappel_code: string | null;
@@ -500,6 +501,7 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
           cout_min_eur: cost.min,
           cout_max_eur: cost.max,
           urls: [],
+          sources: [],
           source_statut: "base_inspexo",
           contexte: [d.models, d.years].filter(Boolean).join(" — ") || null,
           rappel_code: null,
@@ -523,6 +525,9 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
         cout_min_eur: p.cout_indicatif_eur_min ?? null,
         cout_max_eur: p.cout_indicatif_eur_max ?? null,
         urls: p.url_source ?? [],
+        sources: Array.isArray(p.sources)
+          ? p.sources
+          : (p.url_source ?? []).map((u: string) => ({ url: u, title: null })),
         source_statut: sheetStatut,
         contexte: null,
         rappel_code: p.rappel_code ?? null,
@@ -842,6 +847,7 @@ serve(async (req: Request) => {
       id: string; titre: string; organe: string | null; symptome: string;
       pertinence: string; verification_sur_place: string; gravite: string;
       km_typique: string | null; source_statut: string; urls: string[];
+      sources: Array<{ url: string; title: string | null }>;
       cout_min_eur: number | null; cout_max_eur: number | null; source_ref: string;
       rappel_code: string | null; rappel_date: string | null; rappel_vehicules: string | null;
     };
@@ -870,6 +876,7 @@ serve(async (req: Request) => {
         km_typique: src.km_typique,
         source_statut: src.source_statut,
         urls: src.urls,
+        sources: src.sources,
         cout_min_eur: src.cout_min_eur,
         cout_max_eur: src.cout_max_eur,
         source_ref: src.ref,

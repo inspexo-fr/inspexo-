@@ -28,12 +28,53 @@ export type SheetPanne = {
   cout_indicatif_eur_min: number | null;
   cout_indicatif_eur_max: number | null;
   url_source: string[];
+  // Mêmes URLs avec le titre HTML réel de la page (null si la page n'a pas
+  // répondu — l'affichage retombe alors sur un libellé dérivé de l'URL).
+  sources?: Array<{ url: string; title: string | null }>;
   date_consultee: string;
   // Rappel constructeur officiel (code type 21H7 / NHTSA / Transports Canada)
   rappel_code: string | null;
   rappel_date: string | null;
   rappel_vehicules: string | null;
 };
+
+/** Récupère le <title> HTML de chaque URL (timeout court, échec = null).
+ *  Le titre est une DONNÉE non fiable issue du web : tronqué, jamais interprété. */
+export async function fetchSourceTitles(urls: string[]): Promise<Map<string, string | null>> {
+  const unique = [...new Set(urls)].slice(0, 16);
+  const out = new Map<string, string | null>();
+  await Promise.all(unique.map(async (url) => {
+    try {
+      const res = await fetch(url, {
+        signal: AbortSignal.timeout(6000),
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; InspexoBot/1.0)", Accept: "text/html" },
+        redirect: "follow",
+      });
+      const type = res.headers.get("content-type") ?? "";
+      if (!res.ok || !type.includes("html")) { out.set(url, null); return; }
+      const html = (await res.text()).slice(0, 60_000);
+      const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+      if (!m) { out.set(url, null); return; }
+      const title = m[1]
+        .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+        .replace(/&#0?39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&nbsp;/g, " ")
+        .replace(/\s+/g, " ").trim().slice(0, 150);
+      out.set(url, title || null);
+    } catch (_) {
+      out.set(url, null);
+    }
+  }));
+  return out;
+}
+
+/** Attache sources: [{url, title}] à chaque panne à partir de ses url_source. */
+export async function attachSourceTitles(pannes: SheetPanne[]): Promise<SheetPanne[]> {
+  const titles = await fetchSourceTitles(pannes.flatMap((p) => p.url_source));
+  return pannes.map((p) => ({
+    ...p,
+    sources: p.url_source.map((url) => ({ url, title: titles.get(url) ?? null })),
+  }));
+}
 
 export type DefectSheet = {
   id: string;
@@ -227,7 +268,18 @@ export function sanitizePannes(
       urls.push(url);
     }
     if (urls.length === 0) continue; // RÈGLE D'OR : pas de source rattachée → rejet
+    // Titres déjà connus (re-validation admin d'une fiche existante) : conservés.
+    const knownTitles = new Map<string, string | null>(
+      (Array.isArray(p.sources) ? p.sources : [])
+        .filter((s: unknown): s is { url: string; title: string | null } =>
+          typeof (s as { url?: unknown })?.url === "string")
+        .map((s: { url: string; title: string | null }): [string, string | null] =>
+          [s.url, typeof s.title === "string" ? s.title.slice(0, 150) : null]),
+    );
     clean.push({
+      ...(knownTitles.size > 0
+        ? { sources: urls.slice(0, 4).map((u) => ({ url: u, title: knownTitles.get(u) ?? null })) }
+        : {}),
       titre: String(p.titre).slice(0, 200),
       organe: p.organe ? String(p.organe).slice(0, 100) : null,
       symptomes: String(p.symptomes).slice(0, 500),
@@ -463,6 +515,9 @@ export async function getOrCreateDefectSheet(
     return { sheet: null, cacheStatus: "failed", usage: generated.usage, searches: generated.searches };
   }
 
+  // Titre HTML réel de chaque source (affiché « domaine — titre » côté public).
+  const pannesTitrees = await attachSourceTitles(pannes);
+
   const moteur = generated.input.moteur ?? {};
   const sheetRow = {
     marque: params.marque,
@@ -473,7 +528,7 @@ export async function getOrCreateDefectSheet(
     annee_debut: typeof moteur.annee_debut === "number" ? moteur.annee_debut : null,
     annee_fin: typeof moteur.annee_fin === "number" ? moteur.annee_fin : null,
     statut: "generee",
-    pannes,
+    pannes: pannesTitrees,
     meta: {
       recherches: generated.input.recherches_effectuees ?? [],
       note: generated.input.note ?? null,

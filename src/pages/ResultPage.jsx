@@ -119,7 +119,7 @@ function sourceLinkLabel(u) {
   }
 }
 
-function SourceLabel({ statut, urls }) {
+function SourceLabel({ statut, urls, sources }) {
   if (statut === 'base_inspexo') {
     return (
       <span style={{
@@ -130,6 +130,17 @@ function SourceLabel({ statut, urls }) {
         source : base Inspexo
       </span>
     )
+  }
+  // Titre HTML réel quand il est stocké ; sinon libellé dérivé de l'URL.
+  const titleByUrl = new Map((sources || []).filter(s => s && s.url).map(s => [s.url, s.title]))
+  const label = (u) => {
+    const title = titleByUrl.get(u)
+    if (!title) return sourceLinkLabel(u)
+    try {
+      const domain = new URL(u).hostname.replace(/^www\./, '')
+      const t = title.length > 90 ? `${title.slice(0, 87)}…` : title
+      return `${domain} — ${t}`
+    } catch (_) { return sourceLinkLabel(u) }
   }
   return (
     <span style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-start' }}>
@@ -144,7 +155,7 @@ function SourceLabel({ statut, urls }) {
           fontFamily: FONT, fontSize: '0.75rem', color: '#1E4D8C',
           wordBreak: 'break-word', lineHeight: 1.4,
         }}>
-          {sourceLinkLabel(u)}
+          {label(u)}
         </a>
       ))}
     </span>
@@ -158,6 +169,22 @@ function cleanClaimText(t) {
     .split(/ — (?:pertinence|à vérifier|sources) :/)[0]
     .replace(/\s*\[(?:base Inspexo|en ligne)\]/g, '')
     .trim()
+}
+
+/** Raison d'écartement en langage acheteur : mapping fixe par type de raison,
+ *  jamais la justification brute de la critique, jamais d'appel IA. */
+function publicReason(justification) {
+  const j = String(justification || '').toLowerCase()
+  if (/dit vrai|exact|v[ée]ridique|pas une incoh[ée]rence|constat/.test(j)) {
+    return "L'annonce dit vrai sur ce point : ce n'était pas une incohérence."
+  }
+  if (/autre (famille|moteur|v[ée]hicule|mod[èe]le)|famille diff[ée]rente|ea\d{3}|cayenne|porsche/.test(j)) {
+    return 'Cette panne concerne un autre moteur que celui de ce véhicule.'
+  }
+  if (/mill[ée]sime|ann[ée]e|g[ée]n[ée]ration|p[ée]riode de production|ne concerne pas ce/.test(j)) {
+    return "Ce point concerne d'autres années ou une autre génération que ce véhicule."
+  }
+  return "Non prouvé par l'annonce ni par la fiche moteur."
 }
 
 /** Bandeau de rigueur : affirmations écartées par l'appel critique. */
@@ -197,9 +224,7 @@ function RigorBanner({ count, items }) {
               fontSize: '0.8125rem', lineHeight: 1.5,
             }}>
               <div style={{ color: '#0F1B2D', fontWeight: 600 }}>{cleanClaimText(c.texte)}</div>
-              {c.justification && (
-                <div style={{ color: '#6B7280', marginTop: 2 }}>{c.justification}</div>
-              )}
+              <div style={{ color: '#6B7280', marginTop: 2 }}>{publicReason(c.justification)}</div>
             </div>
           ))}
         </div>
@@ -509,6 +534,7 @@ export default function ResultPage() {
       gravite: p.gravite,
       source_statut: ficheLive?.statut === 'validee' ? 'base_inspexo' : 'en_ligne',
       urls: p.url_source || [],
+      sources: p.sources || null,
       cout_min_eur: p.cout_indicatif_eur_min ?? null,
       cout_max_eur: p.cout_indicatif_eur_max ?? null,
     }))
@@ -835,7 +861,7 @@ export default function ResultPage() {
                         {p.cout_max_eur != null ? `${p.cout_max_eur.toLocaleString('fr-FR')} €` : ''}
                       </div>
                     )}
-                    <SourceLabel statut={p.source_statut} urls={p.urls} />
+                    <SourceLabel statut={p.source_statut} urls={p.urls} sources={p.sources} />
                   </div>
                 )
               })}
