@@ -11,15 +11,22 @@ globalThis.INSPEXO_SITES.push({
     // Photos pleine taille : pictures.lacentrale.fr/classifieds/<id>_STANDARD_<n>.jpg
     // (on retire les paramètres de redimensionnement ; dédoublonnage par index).
     const photosPleineTaille = () => {
-      const vus = new Map()
-      const re = /https:\/\/pictures\.lacentrale\.fr\/classifieds\/([A-Z0-9]+_STANDARD_(\d+))\.(?:jpg|jpeg|webp)/gi
-      const html = doc.documentElement ? doc.documentElement.innerHTML : ''
+      // Les URLs pictures.lacentrale.fr sont SIGNÉES (signature obligatoire) :
+      // on garde, pour chaque index, la variante signée de plus grande taille.
+      const meilleures = new Map() // idx → { url, aire }
+      const re = /https:\/\/pictures\.lacentrale\.fr\/classifieds\/[A-Z0-9]+_STANDARD_(\d+)\.(?:jpg|jpeg|webp)[^"'\s\\<>]*/gi
+      const html = (doc.documentElement ? doc.documentElement.innerHTML : '')
       let m
-      while ((m = re.exec(html)) !== null && vus.size < 12) {
-        const idx = parseInt(m[2], 10)
-        if (!vus.has(idx)) vus.set(idx, `https://pictures.lacentrale.fr/classifieds/${m[1]}.jpg`)
+      while ((m = re.exec(html)) !== null) {
+        const url = m[0].replace(/&amp;/g, '&')
+        if (!/[?&]signature=/.test(url)) continue
+        const idx = parseInt(m[1], 10)
+        const t = url.match(/[?&]size=(\d+)x(\d+)/)
+        const aire = t ? parseInt(t[1], 10) * parseInt(t[2], 10) : 0
+        const cur = meilleures.get(idx)
+        if (!cur || aire > cur.aire) meilleures.set(idx, { url, aire })
       }
-      return [...vus.entries()].sort((a, b) => a[0] - b[0]).map(([, u]) => u).slice(0, 6)
+      return [...meilleures.entries()].sort((a, b) => a[0] - b[0]).map(([, v]) => v.url).slice(0, 6)
     }
 
     // --- Voie 1 : JSON-LD ---
