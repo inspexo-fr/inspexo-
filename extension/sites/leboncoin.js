@@ -38,15 +38,17 @@ globalThis.INSPEXO_SITES.push({
       const o = globalThis.inspexoJsonLdByType(doc, ['Car', 'Vehicle', 'Product'])
       if (o && (o.name || o.description)) {
         const offer = Array.isArray(o.offers) ? o.offers[0] : o.offers
+        const vendeur = (offer?.seller && offer.seller['@type']) || (o.seller && o.seller['@type']) || null
         return {
           titre: o.name ?? null,
           prix: globalThis.inspexoNum(offer?.price, '€'),
-          annee: o.vehicleModelDate ?? o.productionDate ?? null,
+          annee: o.vehicleModelDate ?? o.productionDate ?? o.dateVehicleFirstRegistered ?? null,
           kilometrage: globalThis.inspexoNum(o.mileageFromOdometer, 'km'),
           carburant: o.fuelType ?? null,
           boite: o.vehicleTransmission ?? null,
           description: o.description ?? null,
-          type_vendeur: null,
+          type_vendeur: vendeur === 'Person' ? 'particulier'
+            : (vendeur === 'Organization' || vendeur === 'AutoDealer') ? 'professionnel' : null,
           photos: globalThis.inspexoImages(o.image ?? [], 6),
           url: doc.location.href.split('?')[0],
         }
