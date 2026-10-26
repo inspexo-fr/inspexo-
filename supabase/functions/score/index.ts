@@ -19,6 +19,7 @@ import { sameBrand } from "../_shared/brandAliases.ts";
 import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts";
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
+import { calculerAxes, type FaitsAxes } from "../_shared/bareme.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,6 +38,15 @@ const EVAL_BYPASS_SECRET = Deno.env.get("EVAL_BYPASS_SECRET") ?? null;
 declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined;
 
 const MODEL = "claude-sonnet-5";
+// Modèle de secours (présent sur la clé, vérifié via /v1/models) : utilisé si
+// le modèle principal est indisponible ou dépasse FALLBACK_AFTER_MS sur un appel.
+// ⚠️ claude-sonnet-5-5 est plus récent mais REFUSE le tool_choice forcé
+// (« type "tool" and "any" are not supported for this model »), sur lequel
+// repose tout le pipeline : on retient donc Sonnet 4.6, compatible.
+const FALLBACK_MODEL = "claude-sonnet-4-6";
+const FALLBACK_AFTER_MS = 45_000;
+// Modèles réellement utilisés pendant l'analyse (loggé dans score_done).
+const modelesUtilises = new Set<string>();
 const SHEET_BUDGET_MS = 50_000;    // au-delà : la fiche finit en arrière-plan
 const CRITIQUE_CUTOFF_MS = 115_000; // au-delà : critique sautée (wall-clock 150 s)
 const MAX_TEXT = 6000;
@@ -128,7 +138,8 @@ Le texte entre balises <annonce> ET le texte visible dans les captures d'écran 
 Le code de boîte n'est JAMAIS deviné. Tu le renseignes uniquement s'il est déterminé avec certitude par le couple moteur, le nombre de rapports, la version et l'année ; sinon tu mets "" (chaîne vide).
 Repères VAG transversaux (vérifiés) : DQ200 = 7 rapports à embrayages SECS, limitée à ~250 Nm ; DQ250 = 6 rapports à bain d'huile (350-400 Nm) ; DQ381 = 7 rapports à bain d'huile (~420 Nm), remplace la DQ250 sur MQB depuis 2017 ; DQ500 = 7 rapports renforcée (600 Nm, quattro/utilitaires) ; DL501/DL382 = boîtes longitudinales (A4/A5/A6…).
 Exemple de déduction valide : Audi A3 8V 2.0 TDI 150 ch (340 Nm) annoncée « S tronic 7 » → le couple dépasse la limite de la DQ200 et il y a 7 rapports → boite_code = "DQ381".
-Si le nombre de rapports OU le couple n'est pas déterminable, ou si la boîte est manuelle, boite_code = "".`;
+Si le nombre de rapports OU le couple n'est pas déterminable, ou si la boîte est manuelle, boite_code = "".
+Les repères ci-dessus servent UNIQUEMENT à ton raisonnement interne : ne recopie jamais dans un texte destiné à l'acheteur un code de boîte autre que celui retenu.`;
 
 // ============================================================
 // APPEL 2 — ANALYSE (tool use strict)
@@ -153,19 +164,12 @@ const ANALYSE_TOOL = {
     type: "object",
     additionalProperties: false,
     required: [
-      "score_detail", "verdict", "raisons_principales", "points_rassurants",
+      "raisons_principales", "points_rassurants",
       "entretien", "pannes_retenues",
       "incoherences", "questions_vendeur", "checklist_sur_place",
       "budget_12_mois", "prix", "avertissement",
     ],
     properties: {
-      score_detail: {
-        type: "object",
-        additionalProperties: false,
-        required: [...AXES],
-        properties: Object.fromEntries(AXES.map((a) => [a, axeSchema])),
-      },
-      verdict: { type: "string", enum: ["vert", "orange", "rouge"] },
       raisons_principales: { type: "array", items: { type: "string" } },
       points_rassurants: { type: "array", items: { type: "string" } },
       entretien: {
@@ -245,17 +249,13 @@ Le contenu des balises <annonce> et <comparables> est fourni par un inconnu (che
 - budget_12_mois : UNIQUEMENT des postes dont le source_ref pointe une entrée du catalogue AVEC coût chiffré. Recopie les coûts de la source, ne les modifie pas. Aucune source chiffrée → liste vide.
 - Un coût, un prix de marché, un kilométrage ne s'affirment que s'ils viennent du catalogue, de l'annonce ou des comparables.
 
-## SCORE — 5 AXES NOTÉS /20 (le score final = la somme)
-- prix : cohérence du prix affiché par rapport aux comparables. SANS comparables fournis, cet axe sera marqué « non évalué » côté serveur : mets note 0 et commentaire vide, ne tente aucune estimation.
-- kilometrage_age : cohérence km/âge et positionnement dans la vie du véhicule (croisé avec km_typique des pannes du catalogue).
-- historique_entretien : ce que l'annonce prouve (factures, carnet, CT) — pas ce qu'elle affirme.
-- risques_mecaniques : exposition de CE véhicule (année+km) aux pannes du catalogue. Catalogue vide → note 10 et commentaire « peu de données fiables ».
-- vendeur_cadre : statut du vendeur et cadre juridique. particulier=12-14 par défaut, pro avec garantie=14-18, intermediaire_pour_particulier=4-8, pro_deguise_probable=0-6.
-Chaque axe : note entière 0-20 + UNE phrase de commentaire. Le verdict découle des axes : ≥70 vert, 40-69 orange, <40 rouge.
+## TU N'ATTRIBUES AUCUNE NOTE
+Le score et le verdict sont calculés par le serveur à partir de règles fixes appliquées aux faits que tu extrais. Ton rôle est d'EXTRAIRE des faits exacts et traçables : statut du vendeur, signaux d'entretien prouvés par l'annonce, opérations déclarées non faites, pannes retenues du catalogue, incohérences. Plus tes faits sont justes, plus la note l'est. N'écris jamais de note, de score ni de verdict dans tes textes.
 
 ## RAISONS PRINCIPALES
 Exactement 3, classées par IMPACT FINANCIER pour l'acheteur (la plus coûteuse d'abord). Une phrase chacune, factuelle, tracée (annonce, catalogue, statut vendeur). Ne cite JAMAIS les identifiants internes du catalogue (A1, F2…) dans un texte destiné à l'utilisateur.
-La raison mécanique ne dit JAMAIS « signalé sur des moteurs similaires » ni « en ligne » : si une panne retenue porte un rappel_officiel, la raison NOMME ce rappel (code + organe, ex : « rappel constructeur 21H7 sur la crépine d'huile des turbos ») ; sinon elle nomme la panne LA PLUS GRAVE du catalogue retenu avec son organe précis.
+La raison mécanique ne dit JAMAIS « signalé sur des moteurs similaires » ni « en ligne » : si une panne retenue porte un rappel_officiel, la raison NOMME ce rappel en recopiant EXACTEMENT le code fourni par le catalogue (jamais un code de mémoire, jamais un code inventé) ; si le catalogue donne le rappel SANS code, écris « un rappel constructeur » sans code. Sinon elle nomme la panne LA PLUS GRAVE du catalogue retenu avec son organe précis.
+N'affirme JAMAIS que CE véhicule « entre dans le périmètre » d'un rappel : le serveur vérifie seul la plage de production concernée. Dis que le rappel existe sur ce moteur et qu'il faut faire confirmer son application sur ce véhicule.
 OBLIGATOIRE : si statut_vendeur = intermediaire_pour_particulier ou pro_deguise_probable, ce point est la raison 1 ou 2 (perte de la garantie légale de conformité = impact financier majeur).
 
 ## INCOHÉRENCES — uniquement si constatées, liste vide sinon
@@ -323,6 +323,8 @@ N'émets dans decisions QUE les affirmations supprimées ou reformulées. Toute 
 3ter. Une incohérence « kilométrage anormal pour l'année » est SUPPRIMÉE si le kilométrage annuel est inférieur à 40 000 km/an (rythme normal d'un véhicule de société ou d'une LLD). L'incohérence « compteur photographié vs annonce » reste valable (source photo).
 3quater. DATES : la date du jour t'est fournie dans <date_du_jour>. SUPPRIME toute incohérence qui qualifie de « future », « impossible » ou « erronée » une date antérieure ou égale à la date du jour. Seule une date réellement postérieure à aujourd'hui peut être une incohérence de date.
 3quinquies. RAISONS GÉNÉRIQUES : SUPPRIME une raison principale (R*) uniquement si elle serait vraie telle quelle pour n'importe quelle annonce du même type de vendeur, sans citer aucun élément de CE véhicule : « vente entre particuliers sans garantie », « absence de factures » seule, « occasion donc prudence ». Une raison qui nomme un organe, un modèle, un kilométrage, un prix, une date ou un rappel de CE véhicule est SPÉCIFIQUE : elle est gardée. Ne supprime JAMAIS toutes les raisons : s'il ne reste que des raisons imparfaites, garde la plus concrète (quitte à la reformuler). Les points rassurants (PR*) suivent la même règle : supprimés s'ils ne citent pas un élément précis de l'annonce ou des données.
+3decies. CODES DE BOÎTE : supprime ou reformule toute affirmation citant un code de boîte (DQ…, DL…) qui n'est pas celui identifié pour ce véhicule, y compris quand elle sert à écarter une hypothèse (« ce n'est pas la DQ250 »).
+3nonies. CODES DE RAPPEL : un code de campagne constructeur (ex. « 21H7 », « KGH », « HFC ») ne peut figurer dans une affirmation QUE s'il apparaît tel quel dans le catalogue fourni. SUPPRIME (ou REFORMULE sans le code) toute affirmation citant un code absent du catalogue, même si elle te paraît juste. De même, SUPPRIME toute affirmation disant que CE véhicule « est concerné » ou « entre dans le périmètre » d'un rappel : seul le constructeur peut le confirmer par le VIN.
 3octies. ILLISIBLE : une « incohérence » qui se contente de constater qu'un élément est illisible, flou ou non déterminable (compteur, document) n'oppose AUCUN élément à un autre : elle est SUPPRIMÉE (c'est un point à vérifier sur place, pas une contradiction).
 3septies. ENTRETIEN NÉGATIF : une contradiction (CT*) ou une opération non faite (ONF*) doit être ÉTABLIE par le texte de l'annonce — l'annonce déclare l'opération non faite, ou affirme une chose incompatible avec le plan d'entretien. L'ABSENCE d'information (« aucune mention de… », « pas de facture fournie », « non précisé ») n'est NI une contradiction NI une opération non faite : source "aucune" → SUPPRIMÉE.
 3sexies. CHECKLIST : un point dont le geste n'est pas faisable sur place/à l'essai, ou dont le signal rouge n'est pas OBSERVABLE (« rupture de la courroie »), est REFORMULÉ en geste concret observable ; s'il n'y a aucun geste possible, il est supprimé (sauf socle).
@@ -517,9 +519,44 @@ function readUsage(data: { usage?: Record<string, number> }): Usage {
   };
 }
 
+/** Appel Anthropic avec bascule sur le modèle de secours : le principal est
+ *  tenté d'abord, borné à 45 s ; en cas d'indisponibilité ou de dépassement,
+ *  le secours reprend la main avec le temps restant. */
+// deno-lint-ignore no-explicit-any
+async function callAvecSecours(
+  body: Record<string, unknown>,
+  toolName: string,
+  timeoutMs: number,
+  forceModel?: string | null,
+): Promise<{ input: any; usage: Usage } | { error: string; detail: string }> {
+  if (forceModel) {
+    modelesUtilises.add(forceModel);
+    return await callForcedTool({ ...body, model: forceModel }, toolName, timeoutMs);
+  }
+  const premierTimeout = Math.min(FALLBACK_AFTER_MS, Math.max(10_000, timeoutMs));
+  modelesUtilises.add(MODEL);
+  const essai = await callForcedTool({ ...body, model: MODEL }, toolName, premierTimeout);
+  if (!("error" in essai)) return essai;
+  // Erreur « notre faute » (schéma, refus) : inutile de basculer.
+  const basculable = estServiceIndisponible(essai) || essai.error === "fetch_error";
+  const restant = timeoutMs - premierTimeout;
+  if (!basculable || restant < 15_000) return essai;
+  console.warn(`bascule vers ${FALLBACK_MODEL} (${toolName}) : ${essai.error}`);
+  modelesUtilises.add(FALLBACK_MODEL);
+  const secours = await callForcedTool({ ...body, model: FALLBACK_MODEL }, toolName, restant);
+  return "error" in secours ? essai : secours;
+}
+
 /** Appel Anthropic avec tool use forcé ; retourne l'input du tool + usage. */
 // deno-lint-ignore no-explicit-any
 async function callForcedTool(body: Record<string, unknown>, toolName: string, timeoutMs = 100_000): Promise<{ input: any; usage: Usage } | { error: string; detail: string }> {
+  // Le réglage pour « ne pas réfléchir avant de répondre » diffère selon les
+  // générations : `disabled` sur Sonnet 5, `between_tools` à partir de 5.5.
+  const modele = String(body.model ?? MODEL);
+  const corps = {
+    ...body,
+    thinking: /-5-5$|-5\.5$/.test(modele) ? { type: "between_tools" } : { type: "disabled" },
+  };
   let res: Response;
   try {
     res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -530,7 +567,7 @@ async function callForcedTool(body: Record<string, unknown>, toolName: string, t
         "x-api-key": ANTHROPIC_API_KEY!,
         "anthropic-version": "2023-06-01",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(corps),
     });
   } catch (err) {
     console.error(`Anthropic fetch error (${toolName}):`, err);
@@ -609,6 +646,8 @@ type CatalogueEntry = {
   rappel_code: string | null;
   rappel_date: string | null;
   rappel_vehicules: string | null;
+  rappel_annee_debut: number | null;
+  rappel_annee_fin: number | null;
 };
 
 function extractCostRange(text: string): { min: number | null; max: number | null } {
@@ -651,6 +690,8 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
           rappel_code: null,
           rappel_date: null,
           rappel_vehicules: null,
+          rappel_annee_debut: null,
+          rappel_annee_fin: null,
         });
       });
     }
@@ -677,6 +718,8 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
         rappel_code: p.rappel_code ?? null,
         rappel_date: p.rappel_date ?? null,
         rappel_vehicules: p.rappel_vehicules ?? null,
+        rappel_annee_debut: typeof p.rappel_annee_debut === "number" ? p.rappel_annee_debut : null,
+        rappel_annee_fin: typeof p.rappel_annee_fin === "number" ? p.rappel_annee_fin : null,
       });
     });
   }
@@ -747,7 +790,10 @@ serve(async (req: Request) => {
         .filter((c: { titre: string; prix: number }) => c.titre && c.prix > 0);
 
     const rawImages: unknown[] = Array.isArray(body.images) ? body.images.slice(0, MAX_IMAGES) : [];
-    const images = rawImages.map(parseImage).filter((i): i is ImageBlock => i !== null);
+    let images = rawImages.map(parseImage).filter((i): i is ImageBlock => i !== null);
+    // Le nombre de photos sert jusqu'au bout (logs, result) ; les données
+    // base64, elles, sont libérées dès l'appel vision terminé.
+    const imagesCount = images.length;
     const comparables: string[] = (Array.isArray(body.comparables) ? body.comparables : [])
       .filter((c: unknown): c is string => typeof c === "string" && c.trim().length > 0)
       .slice(0, MAX_COMPARABLES)
@@ -807,6 +853,70 @@ serve(async (req: Request) => {
     const neutralize = (s: string) => s.replace(/</g, "‹").replace(/>/g, "›");
     const annonceBlock = `<annonce>\n${neutralize(text)}\n</annonce>`;
 
+    // ---------------- Cache d'analyse (stabilité du verdict) ----------------
+    // Même annonce = même verdict pendant 7 jours. L'empreinte porte sur le
+    // texte normalisé (casse, espaces, ponctuation décorative) et l'URL.
+    const normaliserTexte = (t: string) =>
+      t.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9€%.,:/-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    const inputHash = await sha256Hex(`${normaliserTexte(text)}|${sourceUrl ?? ""}`);
+    const sansCache = body.no_cache === true && isEval;
+    // Forçage du modèle : réservé à l'éval (validation du modèle de secours).
+    const forceModel = isEval && typeof body.force_model === "string" &&
+        [MODEL, FALLBACK_MODEL].includes(body.force_model)
+      ? body.force_model
+      : null;
+
+    if (!sansCache) {
+      const depuis = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+      const { data: dejaVue } = await admin
+        .from("analyses")
+        .select("id, result_json, created_at")
+        .eq("input_hash", inputHash)
+        .gte("created_at", depuis)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (dejaVue?.id) {
+        await admin.from("events").insert({
+          name: "score_cache_hit",
+          analysis_id: dejaVue.id,
+          ip_hash: isEval ? null : ipHash,
+          props_json: { age_heures: Math.round((Date.now() - new Date(dejaVue.created_at).getTime()) / 3600000) },
+        });
+        return jsonResponse({ id: dejaVue.id, result: dejaVue.result_json, cache: true });
+      }
+    }
+
+    // Annonce déjà analysée à cette URL mais modifiée depuis : on réanalyse et
+    // on rappellera l'ancien score à l'écran.
+    // deno-lint-ignore no-explicit-any
+    let analysePrecedente: any = null;
+    if (sourceUrl) {
+      const { data: avant } = await admin
+        .from("analyses")
+        .select("id, score, verdict, created_at, result_json")
+        .eq("source_url", sourceUrl)
+        .neq("input_hash", inputHash)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (avant?.id) {
+        const vh = avant.result_json?.vehicule ?? {};
+        analysePrecedente = {
+          id: avant.id,
+          score: avant.score,
+          verdict: avant.verdict,
+          date: avant.created_at,
+          prix_affiche: vh.prix_affiche ?? null,
+          kilometrage: vh.kilometrage ?? null,
+        };
+      }
+    }
+
     // Budget wall-clock : les edge functions sont tuées à 150 s. Plutôt que de
     // laisser l'acheteur sur un timeout silencieux quand l'API est lente, on
     // s'arrête proprement avec le message « service indisponible » + file d'attente.
@@ -819,9 +929,8 @@ serve(async (req: Request) => {
     const dateBlock = `<date_du_jour>${dateDuJour}</date_du_jour>`;
 
     // ================= APPEL 1 — IDENTIFICATION =================
-    const identCall = await callForcedTool(
+    const identCall = await callAvecSecours(
       {
-        model: MODEL,
         max_tokens: 1500,
         thinking: { type: "disabled" },
         system: [{ type: "text", text: IDENT_SYSTEM, cache_control: { type: "ephemeral" } }],
@@ -842,6 +951,7 @@ serve(async (req: Request) => {
       },
       "identifier_vehicule",
       Math.min(100_000, tempsRestant() - 25_000),
+      forceModel,
     );
     if ("error" in identCall) {
       await logPipelineError(admin, "identification", identCall);
@@ -916,13 +1026,15 @@ serve(async (req: Request) => {
         .from("analyses")
         .insert({
           input_text: text,
-          images_count: images.length,
+          images_count: imagesCount,
           verdict: "rouge",
           score: 0,
           result_json: result,
           marque: null, modele: null, motorisation: null, annee: null, famille_moteur: null,
           ip_hash: isEval ? null : ipHash,
           user_id: null,
+          input_hash: inputHash,
+          source_url: sourceUrl,
         })
         .select("id")
         .single();
@@ -935,7 +1047,7 @@ serve(async (req: Request) => {
         ip_hash: isEval ? null : ipHash,
         props_json: {
           duration_ms: Date.now() - startedAt,
-          model: MODEL,
+          model: [...modelesUtilises].join("+") || MODEL,
           verdict: "rouge",
           score: 0,
           non_vehicule: true,
@@ -949,9 +1061,8 @@ serve(async (req: Request) => {
     // ================= APPEL PHOTOS (en parallèle de la fiche) =================
     // Constats strictement visuels ; le km lu au compteur et les défauts du PV
     // de CT sont exploités par des règles SERVEUR déterministes plus bas.
-    const photosPromise = images.length === 0 ? null : callForcedTool(
+    const photosPromise = images.length === 0 ? null : callAvecSecours(
       {
-        model: MODEL,
         max_tokens: 1500,
         thinking: { type: "disabled" },
         system: [{ type: "text", text: PHOTO_SYSTEM, cache_control: { type: "ephemeral" } }],
@@ -971,6 +1082,8 @@ serve(async (req: Request) => {
         ],
       },
       "rendre_constats_photo",
+      70_000,
+      forceModel,
     );
 
     // ================= ÉTAPE 2 — FICHE FAMILLE MOTEUR =================
@@ -1007,7 +1120,7 @@ serve(async (req: Request) => {
         const atlasSeul = buildCatalogue(v.marque ?? null, null);
         const budgetFiche = atlasSeul.length === 0
           ? SHEET_BUDGET_MS
-          : (images.length > 0 ? 8_000 : 20_000);
+          : (imagesCount > 0 ? 8_000 : 20_000);
         const deadline = Date.now() + budgetFiche;
         while (Date.now() < deadline && !found) {
           await new Promise((r) => setTimeout(r, 4000));
@@ -1019,7 +1132,12 @@ serve(async (req: Request) => {
       }
     }
     const sheet = sheetResult.sheet;
-    let catalogue = buildCatalogue(v.marque ?? null, sheet);
+    // Sans famille moteur identifiée, aucune panne moteur ne peut être
+    // rattachée à CE véhicule : le catalogue reste vide et l'axe risques est
+    // « non évalué » (plutôt que d'attribuer au hasard des pannes de la marque).
+    let catalogue = moteur.code_famille
+      ? buildCatalogue(v.marque ?? null, sheet)
+      : [];
 
     // ---- Pannes propres à une boîte : jamais affichées sans certitude ----
     // Un code de boîte n'est pas devinable : une panne qui en nomme un n'est
@@ -1076,7 +1194,7 @@ serve(async (req: Request) => {
           .filter((c) =>
             ["compteur", "pneus", "carrosserie", "jantes", "interieur", "moteur", "document_ct", "autre"].includes(c.organe) &&
             ["ok", "attention", "rouge"].includes(c.signal) &&
-            Number.isInteger(c.photo_index) && c.photo_index >= 1 && c.photo_index <= images.length &&
+            Number.isInteger(c.photo_index) && c.photo_index >= 1 && c.photo_index <= imagesCount &&
             typeof c.constat === "string" && c.constat.trim().length > 0)
           .slice(0, 12)
           .map((c) => ({
@@ -1095,6 +1213,9 @@ serve(async (req: Request) => {
           .slice(0, 10)
           .map((d) => d.slice(0, 200));
       }
+      // Les images (plusieurs Mo en base64) ne servent plus : on les libère
+      // pour ne pas peser sur le reste de l'analyse (limite de ressources).
+      images = [];
     }
 
     // ---------------- Comparables prix : fourchette P25-P75 ----------------
@@ -1204,9 +1325,8 @@ serve(async (req: Request) => {
       return jsonResponse({ error: "service_unavailable", message: MESSAGE_INDISPONIBLE }, 503);
     }
 
-    const analyseCall = await callForcedTool(
+    const analyseCall = await callAvecSecours(
       {
-        model: MODEL,
         max_tokens: 4500,
         thinking: { type: "disabled" },
         system: [{ type: "text", text: ANALYSE_SYSTEM, cache_control: { type: "ephemeral" } }],
@@ -1216,6 +1336,7 @@ serve(async (req: Request) => {
       },
       "rendre_verdict",
       tempsRestant() - 12_000,
+      forceModel,
     );
     if ("error" in analyseCall) {
       await logPipelineError(admin, "analyse", analyseCall);
@@ -1242,6 +1363,8 @@ serve(async (req: Request) => {
       sources: Array<{ url: string; title: string | null }>;
       cout_min_eur: number | null; cout_max_eur: number | null; source_ref: string;
       rappel_code: string | null; rappel_date: string | null; rappel_vehicules: string | null;
+      rappel_annee_debut: number | null; rappel_annee_fin: number | null;
+      rappel_hors_periode: boolean;
     };
     const pannesJoined: PanneOut[] = [];
     const seenRefs = new Set<string>();
@@ -1275,6 +1398,14 @@ serve(async (req: Request) => {
         rappel_code: src.rappel_code,
         rappel_date: src.rappel_date,
         rappel_vehicules: src.rappel_vehicules,
+        rappel_annee_debut: src.rappel_annee_debut,
+        rappel_annee_fin: src.rappel_annee_fin,
+        // Le véhicule est-il HORS de la plage de production de la campagne ?
+        rappel_hors_periode: Boolean(
+          src.rappel_code && typeof v.annee_modele === "number" &&
+            ((src.rappel_annee_debut != null && v.annee_modele < src.rappel_annee_debut - 1) ||
+              (src.rappel_annee_fin != null && v.annee_modele > src.rappel_annee_fin + 1)),
+        ),
       });
     }
     // Les pannes sous rappel constructeur officiel sont classées en premier.
@@ -1308,58 +1439,12 @@ serve(async (req: Request) => {
 
     // Axes : clamp 0-20. Sans comparables, l'axe prix est « non évalué »
     // (note null, exclu de la somme) : score sur 80, rapporté sur 100.
-    const prixEvaluable = comparables.length > 0 || fourchette != null;
-    const risquesEvaluables = catalogue.length > 0;
-    const scoreDetail: Record<string, { note: number | null; commentaire: string }> = {};
-    let somme = 0;
-    let maxPossible = 0;
-    for (const axe of AXES) {
-      const raw = analyse.score_detail?.[axe] ?? { note: 10, commentaire: "" };
-      if (axe === "prix" && !prixEvaluable) {
-        scoreDetail[axe] = {
-          note: null,
-          commentaire: "Non évalué — collez 3 annonces comparables lors de l'analyse pour situer le prix.",
-        };
-        continue;
-      }
-      if (axe === "risques_mecaniques" && !risquesEvaluables) {
-        scoreDetail[axe] = {
-          note: null,
-          commentaire: "Non évalué — pas encore de données de fiabilité pour ce moteur.",
-        };
-        continue;
-      }
-      if (axe === "historique_entretien") {
-        const nSignaux = (analyse.entretien?.signaux_positifs ?? []).length;
-        const nNegatifs = (analyse.entretien?.contradictions ?? []).length +
-          (analyse.entretien?.operations_non_faites ?? []).length;
-        if (nSignaux === 0 && nNegatifs === 0) {
-          // L'annonce ne dit rien de l'entretien : jamais pénalisé → non évalué.
-          scoreDetail[axe] = {
-            note: null,
-            commentaire: "Non évalué — l'annonce ne dit rien de l'entretien : exigez le carnet et les factures avant d'acheter.",
-          };
-          continue;
-        }
-        if (nNegatifs === 0) {
-          // Signaux positifs sans contradiction : la note ne peut pas être basse.
-          const note = Math.max(12, Math.min(20, Math.round(Number(raw.note) || 0)));
-          scoreDetail[axe] = { note, commentaire: scrubInterne(String(raw.commentaire ?? "")).slice(0, 300) };
-          somme += note;
-          maxPossible += 20;
-          continue;
-        }
-      }
-      const note = Math.max(0, Math.min(20, Math.round(Number(raw.note) || 0)));
-      scoreDetail[axe] = { note, commentaire: scrubInterne(String(raw.commentaire ?? "")).slice(0, 300) };
-      somme += note;
-      maxPossible += 20;
-    }
-    let score = maxPossible > 0 ? Math.round((somme / maxPossible) * 100) : 0;
-    const bandVerdict = score >= 70 ? "vert" : score >= 40 ? "orange" : "rouge";
-    const severity: Record<string, number> = { rouge: 0, orange: 1, vert: 2 };
-    const modelVerdict = ["vert", "orange", "rouge"].includes(analyse.verdict) ? analyse.verdict : bandVerdict;
-    let verdict = severity[modelVerdict] < severity[bandVerdict] ? modelVerdict : bandVerdict;
+    // Les notes sont calculées par le serveur APRÈS l'audit de la critique
+    // (voir « Barème déterministe » plus bas) : le modèle n'attribue plus de
+    // note ni de verdict, ce qui rend le score reproductible.
+    let scoreDetail: Record<string, { note: number | null; commentaire: string }> = {};
+    let score = 0;
+    let verdict: "vert" | "orange" | "rouge" = "orange";
 
     // Nettoyage : jamais de référence interne du catalogue dans un texte utilisateur.
     const scrubRefs = (s: string) =>
@@ -1452,9 +1537,8 @@ serve(async (req: Request) => {
 
     const critiqueCall = Date.now() - startedAt > CRITIQUE_CUTOFF_MS
       ? { error: "time_budget" as const }
-      : await callForcedTool(
+      : await callAvecSecours(
       {
-        model: MODEL,
         max_tokens: 3000,
         thinking: { type: "disabled" },
         system: [{ type: "text", text: CRITIQUE_SYSTEM, cache_control: { type: "ephemeral" } }],
@@ -1463,6 +1547,8 @@ serve(async (req: Request) => {
         messages: [{ role: "user", content: critiqueUser }],
       },
       "rendre_critique",
+      Math.max(15_000, tempsRestant() - 6_000),
+      forceModel,
     );
 
     if ("error" in critiqueCall && critiqueCall.error !== "time_budget") {
@@ -1628,9 +1714,10 @@ serve(async (req: Request) => {
     // Une « incohérence » qui constate seulement qu'une donnée MANQUE n'oppose
     // aucun élément à un autre : c'est un point à demander au vendeur.
     {
+      const IMPOSSIBLE_RE = /impossible\s+(?:de|d')\s*(?:v[ée]rifier|confirmer|d[ée]terminer|savoir|[ée]tablir)|ne\s+permet\s+pas\s+de\s+(?:v[ée]rifier|confirmer|d[ée]terminer)/i;
       const MANQUE_RE =
         /\bn'?est\s+pas\s+(?:indiqu|pr[ée]cis|mentionn|renseign|fourni|document|communiqu)|\b(?:n'?indique|ne\s+pr[ée]cise|ne\s+mentionne|ne\s+donne|ne\s+fournit)\s+pas\b|\baucune?\s+(?:indication|pr[ée]cision|mention)\b/i;
-      incoherences = incoherences.filter((i) => !MANQUE_RE.test(i));
+      incoherences = incoherences.filter((i) => !MANQUE_RE.test(i) && !IMPOSSIBLE_RE.test(i));
     }
 
     // Garde-fou : une analyse publiée sans aucune raison principale n'est pas
@@ -1719,34 +1806,75 @@ serve(async (req: Request) => {
     }
     questions = questions.slice(0, 8);
 
-    // ---------------- Axe entretien : recalcul APRÈS audit de la critique ----------------
-    // Les éléments négatifs non établis par l'annonce ont été supprimés ci-dessus :
-    // la note est recalculée pour qu'une simple absence d'information ne pénalise
-    // jamais l'acheteur, puis le score global et le verdict suivent.
+    // ---------------- Barème déterministe : le serveur note, pas le modèle ----------------
+    // Les 5 axes sont calculés à partir des faits retenus APRÈS l'audit de la
+    // critique. Deux analyses de la même annonce donnent donc le même score.
     {
-      const nNeg = contradictionsEntretien.length + opsNonFaites.length;
-      const nPos = signauxEntretien.length;
-      const brut = Math.max(0, Math.min(20, Math.round(Number(analyse.score_detail?.historique_entretien?.note) || 0)));
-      const commentaireBrut = scrubInterne(String(analyse.score_detail?.historique_entretien?.commentaire ?? "")).slice(0, 300);
-      if (nNeg === 0 && nPos === 0) {
-        scoreDetail.historique_entretien = {
-          note: null,
-          commentaire: "Non évalué — l'annonce ne dit rien de l'entretien : exigez le carnet et les factures avant d'acheter.",
-        };
-      } else if (nNeg === 0) {
-        scoreDetail.historique_entretien = { note: Math.max(12, brut), commentaire: commentaireBrut };
-      } else {
-        scoreDetail.historique_entretien = { note: brut, commentaire: commentaireBrut };
-      }
-      somme = 0;
-      maxPossible = 0;
-      for (const axe of AXES) {
-        const n = scoreDetail[axe]?.note;
-        if (n != null) { somme += n; maxPossible += 20; }
-      }
-      score = maxPossible > 0 ? Math.round((somme / maxPossible) * 100) : 0;
-      const band2 = score >= 70 ? "vert" : score >= 40 ? "orange" : "rouge";
-      verdict = severity[modelVerdict] < severity[band2] ? modelVerdict : band2;
+      const opsCritiquesNonFaites = opsNonFaites.filter((op) => {
+        const t = op.toLowerCase();
+        // deno-lint-ignore no-explicit-any
+        return planEntretien.some((plan: any) =>
+          plan.critique && t.includes(String(plan.operation ?? "").toLowerCase().split(/[^a-zà-ÿ]+/).filter((w: string) => w.length > 4)[0] ?? "@@")
+        ) || /distribution|courroie|cha[îi]ne|vidange|embrayage|turbo/.test(t);
+      }).length;
+
+      // Base de notation DÉTERMINISTE : on n'utilise pas les pannes que le
+      // modèle a choisi de mettre en avant (cette sélection varie d'un appel à
+      // l'autre), mais l'exposition réelle du véhicule aux défauts documentés
+      // du moteur : une entrée du catalogue compte si son kilométrage typique
+      // est atteint, ou si elle porte un rappel applicable, ou si elle n'a pas
+      // de seuil publié. Le modèle garde la main sur la rédaction.
+      const seuilKm = (km_typique: string | null): number | null => {
+        if (!km_typique) return null;
+        const nombres = [...km_typique.matchAll(/(\d[\d\s]{2,8})/g)]
+          .map((m) => parseInt(m[1].replace(/\s/g, ""), 10))
+          .filter((n) => Number.isFinite(n) && n >= 1000);
+        return nombres.length ? Math.min(...nombres) : null;
+      };
+      const kmV = typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null;
+      const pannesPourNote = catalogue.filter((e) => {
+        const horsPeriode = Boolean(
+          e.rappel_code && typeof v.annee_modele === "number" &&
+            ((e.rappel_annee_debut != null && v.annee_modele < e.rappel_annee_debut - 1) ||
+              (e.rappel_annee_fin != null && v.annee_modele > e.rappel_annee_fin + 1)),
+        );
+        if (e.rappel_code && !horsPeriode) return true;
+        // Une maladie connue du moteur (sécurité ou majeure) est TOUJOURS
+        // retenue : elle caractérise le moteur, pas l'usure du véhicule.
+        // Le seuil kilométrique ne filtre que les défauts d'usure mineurs.
+        if (e.gravite === "securite" || e.gravite === "majeure") return true;
+        const seuil = seuilKm(e.km_typique);
+        if (seuil == null) return true;
+        return kmV == null ? true : kmV >= seuil * 0.8;
+      });
+
+      const faits: FaitsAxes = {
+        annee_courante: Number(new Intl.DateTimeFormat("fr-FR", { year: "numeric", timeZone: "Europe/Paris" }).format(new Date())),
+        statut_vendeur: statutVendeur,
+        annee: typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null,
+        kilometrage: typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null,
+        prix_affiche: typeof prixAffiche === "number" ? prixAffiche : null,
+        fourchette: fourchette ? { p25: fourchette.p25, mediane: fourchette.mediane, p75: fourchette.p75 } : null,
+        comparables_count: comparables.length + comparablesStructures.length,
+        entretien_renseigne: signauxEntretien.length + contradictionsEntretien.length + opsNonFaites.length > 0,
+        signaux_entretien: signauxEntretien.length,
+        contradictions_entretien: contradictionsEntretien.length,
+        operations_critiques_non_faites: opsCritiquesNonFaites,
+        catalogue_vide: catalogue.length === 0,
+        pannes: pannesPourNote.map((e) => ({
+          gravite: e.gravite,
+          rappel_officiel: Boolean(e.rappel_code) &&
+            !(typeof v.annee_modele === "number" &&
+              ((e.rappel_annee_debut != null && v.annee_modele < e.rappel_annee_debut - 1) ||
+                (e.rappel_annee_fin != null && v.annee_modele > e.rappel_annee_fin + 1))),
+          rappel_confirme_effectue: false, // l'annonce ne prouve jamais qu'un rappel a été fait
+        })),
+        incoherences: incoherences.length,
+      };
+      const calcul = calculerAxes(faits);
+      scoreDetail = calcul.axes;
+      score = calcul.score;
+      verdict = calcul.verdict;
     }
 
     // ---------------- Entretien : « dû » / « prouvé » / « à exiger » ----------------
@@ -1864,6 +1992,24 @@ serve(async (req: Request) => {
       raisons_principales: raisons,
       points_rassurants: pointsRassurants,
       entretien: entretienResult,
+      analyse_precedente: analysePrecedente
+        ? {
+          score: analysePrecedente.score,
+          verdict: analysePrecedente.verdict,
+          date: analysePrecedente.date,
+          prix_affiche: analysePrecedente.prix_affiche,
+          kilometrage: analysePrecedente.kilometrage,
+          changements: [
+            analysePrecedente.prix_affiche != null && prixAffiche != null && analysePrecedente.prix_affiche !== prixAffiche
+              ? `prix : ${analysePrecedente.prix_affiche.toLocaleString("fr-FR")} € → ${prixAffiche.toLocaleString("fr-FR")} €`
+              : null,
+            analysePrecedente.kilometrage != null && vehiculePublic.kilometrage != null &&
+              analysePrecedente.kilometrage !== vehiculePublic.kilometrage
+              ? `kilométrage : ${analysePrecedente.kilometrage.toLocaleString("fr-FR")} km → ${vehiculePublic.kilometrage.toLocaleString("fr-FR")} km`
+              : null,
+          ].filter(Boolean),
+        }
+        : null,
       cadre_juridique: {
         statut: statutVendeur,
         texte: (CADRE_JURIDIQUE[statutVendeur] ?? CADRE_JURIDIQUE.particulier) +
@@ -1875,12 +2021,19 @@ serve(async (req: Request) => {
       message_vendeur: messageVendeur,
       questions_vendeur: questionsMessage,
       checklist_sur_place: checklist,
-      pannes_connues: pannesJoined.map(({ id: _id, source_ref: _ref, ...rest }) => ({
-        ...rest,
-        rappel_officiel: rest.rappel_code
-          ? `rappel constructeur officiel : ${rest.rappel_code}${rest.rappel_date ? `, ${rest.rappel_date}` : ""}${rest.rappel_vehicules ? `, ${rest.rappel_vehicules}` : ""}`
-          : null,
-      })),
+      pannes_connues: pannesJoined.map(({ id: _id, source_ref: _ref, ...rest }) => {
+        const periode = rest.rappel_annee_debut || rest.rappel_annee_fin
+          ? ` (production ${rest.rappel_annee_debut ?? "?"}–${rest.rappel_annee_fin ?? "?"})`
+          : "";
+        return {
+          ...rest,
+          rappel_officiel: rest.rappel_code
+            ? `rappel constructeur officiel : ${rest.rappel_code}${rest.rappel_date ? `, ${rest.rappel_date}` : ""}${rest.rappel_vehicules ? `, ${rest.rappel_vehicules}` : ""}${periode}${
+              rest.rappel_hors_periode ? " — ce véhicule est hors de la plage de production visée, à faire confirmer par le VIN" : ""
+            }`
+            : null,
+        };
+      }),
       incoherences,
       constats_photo: constatsPhoto,
       source_url: sourceUrl,
@@ -1909,7 +2062,7 @@ serve(async (req: Request) => {
       .from("analyses")
       .insert({
         input_text: text,
-        images_count: images.length,
+        images_count: imagesCount,
         verdict,
         score,
         result_json: result,
@@ -1920,6 +2073,8 @@ serve(async (req: Request) => {
         famille_moteur: vehiculePublic.famille_moteur,
         ip_hash: isEval ? null : ipHash,
         user_id: null,
+        input_hash: inputHash,
+        source_url: sourceUrl,
       })
       .select("id")
       .single();
@@ -1975,15 +2130,16 @@ serve(async (req: Request) => {
       ip_hash: isEval ? null : ipHash,
       props_json: {
         duration_ms: Date.now() - startedAt,
-        model: MODEL,
+        model: [...modelesUtilises].join("+") || MODEL,
         verdict,
         score,
-        images_count: images.length,
+        images_count: imagesCount,
         fiche_cache: sheetResult.cacheStatus,
         fiche_searches: sheetResult.searches,
         claims_total: claims.length,
         claims_dropped: dropped.length,
-        photos_count: images.length,
+        modeles: [...modelesUtilises],
+        photos_count: imagesCount,
         constats_photo_count: constatsPhoto.length,
         calls: {
           ident: identCall.usage,
@@ -2017,7 +2173,17 @@ serve(async (req: Request) => {
       if (typeof EdgeRuntime !== "undefined") EdgeRuntime.waitUntil(relance);
     }
 
-    return jsonResponse({ id: inserted.id, result });
+    // Coût estimé de l'analyse, renvoyé à l'éval pour son compteur de budget.
+    let coutEur: number | undefined;
+    if (isEval) {
+      const tarif = (u: Usage | null) => !u ? 0
+        : u.input_tokens * 3e-6 + u.output_tokens * 15e-6 +
+          u.cache_read_input_tokens * 0.3e-6 + u.cache_creation_input_tokens * 3.75e-6;
+      const usd = tarif(identCall.usage) + tarif(photosUsage) + tarif(analyseCall.usage) +
+        ("error" in critiqueCall ? 0 : tarif(critiqueCall.usage));
+      coutEur = Math.round(usd * 0.92 * 10000) / 10000;
+    }
+    return jsonResponse({ id: inserted.id, result, ...(coutEur != null ? { cout_eur: coutEur } : {}) });
   } catch (error) {
     console.error("score error:", error);
     return jsonResponse({ error: "internal", message: "Erreur interne. Réessayez." }, 500);

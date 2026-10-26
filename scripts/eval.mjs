@@ -13,7 +13,7 @@
 // BLOQUANT avant tout deploy.
 //
 // Usage : npm run eval  (ou node scripts/eval.mjs [nom-de-cas])
-import { readFileSync, readdirSync, existsSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync, writeFileSync, rmSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -80,7 +80,8 @@ async function runCase(name) {
   const failures = []
   const t0 = Date.now()
 
-  let { status, json } = await post('score', { text: annonce, ...input })
+  const forcage = MODELE_SECOURS ? { force_model: 'claude-sonnet-4-6' } : {}
+  let { status, json } = await post('score', { text: annonce, no_cache: true, ...forcage, ...input })
 
   // Fiche moteur encore en génération ? Un retry après 50 s.
   if (
@@ -90,7 +91,7 @@ async function runCase(name) {
   ) {
     process.stdout.write('  (fiche en génération — retry dans 50 s)\n')
     await new Promise((r) => setTimeout(r, 50_000))
-    ;({ status, json } = await post('score', { text: annonce, ...input }))
+    ;({ status, json } = await post('score', { text: annonce, no_cache: true, ...forcage, ...input }))
   }
 
   const expectedStatus = expected.http_status ?? 200
@@ -251,20 +252,51 @@ async function runCase(name) {
     if (hay.includes(norm(needle))) failures.push(`must_not_include présent : "${needle}"`)
   }
 
+  ajouterCout(json.cout_eur)
   return { failures, ms: Date.now() - t0, verdict: r.verdict, score: r.score, id: json.id }
 }
 
 // ---------- main ----------
-const only = process.argv[2]
+const only = process.argv.slice(2).find((a) => !a.startsWith('--'))
 const cases = readdirSync(EVAL_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory())
   .map((d) => d.name)
   .filter((n) => !only || n === only)
   .sort()
 
+// ---------------------------------------------------------------------------
+// Compteur de coût : chaque analyse renvoie son coût réel (cout_eur).
+// Garde-fou : on s'arrête avant de dépasser PLAFOND_EUR dans une même session.
+// ---------------------------------------------------------------------------
+const SANS_STABILITE = process.argv.includes('--sans-stabilite')
+// --stabilite-seule : rejoue uniquement la phase de stabilité (3 cas fixes),
+// sans repayer la passe fonctionnelle.
+const STABILITE_SEULE = process.argv.includes('--stabilite-seule')
+const MODELE_SECOURS = process.argv.includes('--modele-secours')
+const COUT_FICHIER = join(EVAL_DIR, '..', '..', '.eval-cout.json')
+const PLAFOND_EUR = 5
+if (process.argv.includes('--reset-cout') && existsSync(COUT_FICHIER)) rmSync(COUT_FICHIER)
+let coutSession = existsSync(COUT_FICHIER)
+  ? (JSON.parse(readFileSync(COUT_FICHIER, 'utf8')).total_eur ?? 0)
+  : 0
+const coutDepart = coutSession
+let coutRun = 0
+const ajouterCout = (eur) => {
+  if (typeof eur !== 'number') return
+  coutRun += eur
+  coutSession += eur
+  writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(coutSession * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
+}
+const budgetDepasse = () => coutSession >= PLAFOND_EUR
+
 let failed = 0
-console.log(`Éval Inspexo — ${cases.length} cas contre ${URL_BASE}\n`)
-for (const name of cases) {
+console.log(`Éval Inspexo — ${cases.length} cas contre ${URL_BASE}${MODELE_SECOURS ? ' — MODÈLE DE SECOURS forcé' : ''}\n`)
+for (const name of STABILITE_SEULE ? [] : cases) {
+  if (budgetDepasse()) {
+    console.log(`\n⏸ Budget de tests atteint (${coutSession.toFixed(2)} € ≥ ${PLAFOND_EUR} €). Cas restants non joués.`)
+    console.log('   Relancer avec --reset-cout après validation.')
+    break
+  }
   process.stdout.write(`▶ ${name}\n`)
   try {
     const { failures, ms, verdict, score, id } = await runCase(name)
@@ -281,5 +313,60 @@ for (const name of cases) {
     console.log(`  FAIL — exception : ${e.message}\n`)
   }
 }
-console.log(failed === 0 ? `✓ ${cases.length}/${cases.length} cas passent` : `✗ ${failed}/${cases.length} cas échouent`)
-process.exit(failed === 0 ? 0 : 1)
+if (!STABILITE_SEULE) {
+  console.log(failed === 0 ? `✓ ${cases.length}/${cases.length} cas passent` : `✗ ${failed}/${cases.length} cas échouent`)
+}
+
+// ---------------------------------------------------------------------------
+// STABILITÉ : chaque cas analysable est rejoué 3 fois sans cache.
+// Exigence : écart de score ≤ 5 points ET même couleur de verdict.
+// `npm run eval -- --sans-stabilite` saute cette phase.
+// ---------------------------------------------------------------------------
+const RUNS = 3
+const ECART_MAX = 5
+let instables = 0
+
+if ((!SANS_STABILITE && failed === 0) || STABILITE_SEULE) {
+  // Trois cas fixes suffisent : un rouge chargé, un orange avec rappel, un vert.
+  const CAS_STABILITE = ['audi-s7-intermediaire', '308-puretech-complete', 'mercedes-2025-societe']
+  const analysables = cases.filter((n) => CAS_STABILITE.includes(n))
+  console.log(`\nStabilité — ${analysables.length} cas × ${RUNS} analyses (sans cache)\n`)
+  for (const name of analysables) {
+    const dir = join(EVAL_DIR, name)
+    const annonce = readFileSync(join(dir, 'annonce.txt'), 'utf8').trim()
+    const input = existsSync(join(dir, 'input.json'))
+      ? JSON.parse(readFileSync(join(dir, 'input.json'), 'utf8'))
+      : {}
+    const photosDir = join(dir, 'photos')
+    if (existsSync(photosDir)) {
+      input.images = readdirSync(photosDir)
+        .filter((f) => /\.(jpe?g|png)$/i.test(f)).sort()
+        .map((f) => `data:${/\.png$/i.test(f) ? 'image/png' : 'image/jpeg'};base64,${readFileSync(join(photosDir, f)).toString('base64')}`)
+    }
+    // En série : trois analyses simultanées (4 appels modèle chacune) saturent
+    // l'API et produisent des faux négatifs par timeout.
+    const runs = []
+    for (let i = 0; i < RUNS; i++) {
+      if (budgetDepasse()) break
+      const r = await post('score', { text: annonce, no_cache: true, ...input }).catch(() => null)
+      if (r?.json?.cout_eur) ajouterCout(r.json.cout_eur)
+      runs.push(r)
+    }
+    const scores = runs.filter((r) => r?.status === 200).map((r) => r.json.result.score)
+    const verdicts = [...new Set(runs.filter((r) => r?.status === 200).map((r) => r.json.result.verdict))]
+    if (scores.length < RUNS) {
+      instables++
+      console.log(`▶ ${name}\n  FAIL — ${RUNS - scores.length}/${RUNS} analyse(s) en erreur`)
+      continue
+    }
+    const ecart = Math.max(...scores) - Math.min(...scores)
+    const ok = ecart <= ECART_MAX && verdicts.length === 1
+    if (!ok) instables++
+    console.log(`▶ ${name}\n  ${ok ? 'PASS' : 'FAIL'} — scores ${scores.join(', ')} (écart ${ecart} ≤ ${ECART_MAX}), verdict${verdicts.length > 1 ? 's' : ''} ${verdicts.join('/')}`)
+  }
+  console.log(instables === 0 ? '\n✓ stabilité : tous les cas sont reproductibles' : `\n✗ stabilité : ${instables} cas instable(s)`)
+}
+console.log(`\n— Coût de ce run : ${coutRun.toFixed(3)} € · cumul session : ${coutSession.toFixed(2)} € / ${PLAFOND_EUR} €` +
+  (coutDepart > 0 ? ` (dont ${coutDepart.toFixed(2)} € avant ce run)` : ''))
+
+process.exit(failed === 0 && instables === 0 ? 0 : 1)

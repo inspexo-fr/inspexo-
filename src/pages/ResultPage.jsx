@@ -692,6 +692,24 @@ export default function ResultPage() {
             </div>
           </div>
 
+          {/* Annonce modifiée depuis la dernière analyse */}
+          {r.analyse_precedente && (
+            <div style={{
+              background: '#EFF6FF', border: '1.5px solid rgba(30,77,140,0.3)',
+              borderRadius: 12, padding: '12px 16px', marginBottom: 14,
+              fontFamily: FONT, fontSize: '0.875rem', color: '#1E4D8C', lineHeight: 1.6,
+            }}>
+              <strong>Annonce modifiée depuis la dernière analyse.</strong>{' '}
+              Score précédent {r.analyse_precedente.score}/100 ({VERDICT_STYLE[r.analyse_precedente.verdict]?.label ?? r.analyse_precedente.verdict})
+              {' '}le {new Date(r.analyse_precedente.date).toLocaleDateString('fr-FR')} → nouveau score {r.score}/100.
+              {(r.analyse_precedente.changements || []).length > 0 && (
+                <div style={{ marginTop: 4, color: '#374151' }}>
+                  Changements : {r.analyse_precedente.changements.join(' · ')}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Bandeau de rigueur : affirmations écartées par la critique */}
           <RigorBanner count={analysis.claimsDroppedCount} items={analysis.claimsDropped || []} />
 

@@ -16,7 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eval": "node scripts/eval.mjs",
+    "eval": "node tests/bareme.test.mjs && node scripts/eval.mjs",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

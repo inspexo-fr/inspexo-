@@ -17,3 +17,4 @@ build/
 supabase/.temp/
 .env
 deno.lock
+.eval-cout.json
