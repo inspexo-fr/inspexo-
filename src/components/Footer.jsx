@@ -48,8 +48,8 @@ export default function Footer() {
               </div>
               <a href="#how-it-works" className="footer-link">Comment ça marche</a>
               <a href="#services" className="footer-link">Nos services</a>
-              <a href="#experts" className="footer-link">Nos experts</a>
-              <a href="#devenir-expert" className="footer-link">Devenir expert</a>
+              <a href="/score" className="footer-link">Analyser une annonce</a>
+              <a href="/extension" className="footer-link">Extension Chrome</a>
               <a href="#faq" className="footer-link">FAQ</a>
             </div>
 
@@ -93,7 +93,7 @@ export default function Footer() {
               fontFamily: 'Plus Jakarta Sans, sans-serif',
               fontSize: '0.8125rem', color: 'rgba(255,255,255,0.25)',
             }}>
-              © 2025 Inspexo — Tous droits réservés.
+              © 2026 Inspexo — Tous droits réservés.
             </span>
             <span style={{
               fontFamily: 'Plus Jakarta Sans, sans-serif',

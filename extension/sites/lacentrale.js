@@ -8,6 +8,20 @@ globalThis.INSPEXO_SITES.push({
       /^\/(auto-occasion-annonce|occasion-voiture-annonce)/.test(loc.pathname)
   },
   extract (doc) {
+    // Photos pleine taille : pictures.lacentrale.fr/classifieds/<id>_STANDARD_<n>.jpg
+    // (on retire les paramètres de redimensionnement ; dédoublonnage par index).
+    const photosPleineTaille = () => {
+      const vus = new Map()
+      const re = /https:\/\/pictures\.lacentrale\.fr\/classifieds\/([A-Z0-9]+_STANDARD_(\d+))\.(?:jpg|jpeg|webp)/gi
+      const html = doc.documentElement ? doc.documentElement.innerHTML : ''
+      let m
+      while ((m = re.exec(html)) !== null && vus.size < 12) {
+        const idx = parseInt(m[2], 10)
+        if (!vus.has(idx)) vus.set(idx, `https://pictures.lacentrale.fr/classifieds/${m[1]}.jpg`)
+      }
+      return [...vus.entries()].sort((a, b) => a[0] - b[0]).map(([, u]) => u).slice(0, 6)
+    }
+
     // --- Voie 1 : JSON-LD ---
     try {
       const o = globalThis.inspexoJsonLdByType(doc, ['Car', 'Vehicle', 'Product'])
@@ -25,7 +39,7 @@ globalThis.INSPEXO_SITES.push({
           type_vendeur: vendeur === 'Organization' || vendeur === 'AutoDealer'
             ? 'professionnel'
             : vendeur === 'Person' ? 'particulier' : null,
-          photos: globalThis.inspexoImages(o.image ?? [], 6),
+          photos: (() => { const p = photosPleineTaille(); return p.length ? p : globalThis.inspexoImages(o.image ?? [], 6) })(),
           url: doc.location.href.split('?')[0],
         }
       }
@@ -50,7 +64,7 @@ globalThis.INSPEXO_SITES.push({
           boite: c.gearbox ?? null,
           description: null,
           type_vendeur: c.customerType === 'PRO' ? 'professionnel' : c.customerType ? 'particulier' : null,
-          photos: [],
+          photos: photosPleineTaille(),
           url: doc.location.href.split('?')[0],
         }
       }

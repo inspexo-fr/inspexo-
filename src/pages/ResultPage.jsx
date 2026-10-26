@@ -404,6 +404,8 @@ export default function ResultPage() {
           modele: analysis.modele,
           annee: analysis.annee,
           carburant: analysis.result?.vehicule?.carburant ?? null,
+          motorisation: analysis.result?.vehicule?.motorisation ?? null,
+          generation: analysis.result?.vehicule?.generation ?? null,
           analysis_id: analysis.id,
         })
         if (!cancelled) setRappels(data)
@@ -877,14 +879,19 @@ export default function ResultPage() {
                   ? new Date(ficheInfo.updated_at).toLocaleDateString('fr-FR')
                   : null
                 if (urlsFiche.size === 0) return null
+                const nAtlas = pannesAffichees.filter(x => x.source_statut === 'base_inspexo').length
+                const nLigne = pannesAffichees.filter(x => x.source_statut !== 'base_inspexo').length
+                const mix = [
+                  nAtlas > 0 ? `${nAtlas} panne${nAtlas > 1 ? 's' : ''} base Inspexo` : null,
+                  nLigne > 0 ? `${nLigne} panne${nLigne > 1 ? 's' : ''} sources en ligne` : null,
+                ].filter(Boolean).join(', ')
                 return (
                   <div data-testid="fiche-footer" style={{
                     marginTop: 14, paddingTop: 12, borderTop: '1px solid rgba(0,0,0,0.07)',
                     fontFamily: FONT, fontSize: '0.75rem', color: '#6B7280', lineHeight: 1.5,
                   }}>
                     Fiche moteur {r.fiche.famille} : {urlsFiche.size} source{urlsFiche.size > 1 ? 's' : ''} vérifiée{urlsFiche.size > 1 ? 's' : ''}
-                    {dateFiche ? ` le ${dateFiche}` : ''} — statut{' '}
-                    {ficheInfo.statut === 'validee' ? 'base Inspexo' : 'sources en ligne'}
+                    {dateFiche ? ` le ${dateFiche}` : ''}{mix ? ` — ${mix}` : ''}
                   </div>
                 )
               })()}

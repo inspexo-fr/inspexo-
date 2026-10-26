@@ -1,0 +1,26 @@
+{
+  "http_status": 200,
+  "verdict_min": "rouge",
+  "verdict_max": "vert",
+  "statut_vendeur": "pro",
+  "photos_bloc": false,
+  "incoherences_must_not_include": [
+    "kilom",
+    "km/an",
+    "36 606 km alors"
+  ],
+  "questions_must_not_include": [
+    "contrôle technique"
+  ],
+  "must_include": [
+    [
+      "transférable",
+      "garantie constructeur est-elle"
+    ]
+  ],
+  "must_not_include": [
+    "confiance basse",
+    "notre catalogue",
+    "génération de fiche"
+  ]
+}

@@ -176,6 +176,22 @@ async function runCase(name) {
     }
   }
 
+  // questions_must_not_include : interdit DANS les questions vendeur précisément
+  if (expected.questions_must_not_include?.length) {
+    const q = norm(JSON.stringify(r.questions_vendeur || []))
+    for (const needle of expected.questions_must_not_include) {
+      if (q.includes(norm(needle))) failures.push(`questions_must_not_include présent : "${needle}"`)
+    }
+  }
+
+  // rappels_principaux_must_not_include : interdit DANS les rappels principaux
+  if (expected.rappels_principaux_must_not_include?.length) {
+    const rp = norm(JSON.stringify(rappels?.rappels || []))
+    for (const needle of expected.rappels_principaux_must_not_include) {
+      if (rp.includes(norm(needle))) failures.push(`rappels_principaux_must_not_include présent : "${needle}"`)
+    }
+  }
+
   // incoherences_must_include : présence exigée DANS le champ incoherences
   if (expected.incoherences_must_include?.length) {
     const inc = norm(JSON.stringify(r.incoherences || []))

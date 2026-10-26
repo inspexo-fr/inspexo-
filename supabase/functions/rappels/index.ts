@@ -254,6 +254,16 @@ function extractYearRange(texte: string): { debut: number; fin: number } | null 
 const MOTIF_ELECTRIQUE_RE =
   /batterie\s+haute\s+tension|haute\s+tension|hybride|tfsi[\s-]?e\b|e[\s-]tron|phev|recharge|module.{0,20}batterie/i;
 
+// Marqueurs de motorisation dans les motifs de rappel, par carburant exclu.
+const MOTIFS_DIESEL_RE = /\b(dv5r?[a-z]*|dw10|dv6|blue\s?hdi|bluehdi|\bhdi\b|diesel|gazole|dci|tdi|crdi|multijet|adblue|scr\b|fap\b)\b/i;
+const MOTIFS_ESSENCE_RE = /\b(puretech|eb2[a-z]*|tce|vti|thp|tfsi|tsi|vtec|essence)\b/i;
+const MOTIFS_HYBRIDE_RE = /\b(e[\s-]?dct|hybride?|hev|phev|e[\s-]?tense|haute\s+tension)\b/i;
+
+// Mention explicite d'une génération dans le libellé du rappel (« 308 III »,
+// « (v3) », « phase 3 »…) : si la génération du véhicule n'est pas confirmée,
+// ces rappels partent dans le bloc replié « autres générations ».
+const GEN_HINT_RE = /\b(?:i{2,3}|iv|v(?=\b|3)|v[2-9]|phase\s*[2-9]|g[ée]n[ée]ration\s*[2-9])\b/i;
+
 /**
  * Tri post-cache des rappels :
  *  - exclusion des rappels de publication antérieure à (année-modèle − 1) ;
@@ -263,7 +273,7 @@ const MOTIF_ELECTRIQUE_RE =
  *    autre génération) vont dans un bloc secondaire replié.
  */
 // deno-lint-ignore no-explicit-any
-function splitRappels(rappels: any[], annee: number | null, carburant: string | null, modele: string): { principaux: any[]; autres: any[] } {
+function splitRappels(rappels: any[], annee: number | null, carburant: string | null, modele: string, motorisation: string | null, generation: string | null): { principaux: any[]; autres: any[] } {
   const cutoff = annee != null ? new Date(`${annee - 1}-01-01T00:00:00Z`).getTime() : null;
   const thermique = carburant != null &&
     !/hybride|electrique|électrique/i.test(carburant) &&
@@ -278,10 +288,25 @@ function splitRappels(rappels: any[], annee: number | null, carburant: string | 
       if (Number.isFinite(t) && t < cutoff) continue;
     }
     // motorisation absente du véhicule
-    if (thermique && MOTIF_ELECTRIQUE_RE.test(`${r?.motif ?? ""} ${r?.titre ?? ""}`)) continue;
+    const libelle = `${r?.motif ?? ""} ${r?.titre ?? ""}`;
+    if (thermique && MOTIF_ELECTRIQUE_RE.test(libelle)) continue;
+    const carbNorm = norm(`${carburant ?? ""} ${motorisation ?? ""}`);
+    const essence = /essence|puretech|tce|vti|thp|tsi|tfsi/.test(carbNorm) && !/diesel|hdi|dci|tdi/.test(carbNorm);
+    const diesel = /diesel|gazole|hdi|dci|tdi|crdi|bluehdi/.test(carbNorm);
+    const hybride = /hybride|hev|phev|e[\s-]?tense/.test(carbNorm);
+    if (essence && MOTIFS_DIESEL_RE.test(libelle)) continue;
+    if (diesel && MOTIFS_ESSENCE_RE.test(libelle)) continue;
+    if ((essence || diesel) && !hybride && MOTIFS_HYBRIDE_RE.test(libelle)) continue;
 
     const range = extractYearRange(r?.texte_production ?? "");
     const { texte_production: _tp, ...pub } = r;
+    const genHint = GEN_HINT_RE.test(libelle) || GEN_HINT_RE.test(String(r?.modeles ?? ""));
+    const genConfirmee = generation != null && generation.length > 0 &&
+      norm(libelle + " " + String(r?.modeles ?? "")).includes(norm(generation));
+    if (genHint && !genConfirmee) {
+      autres.push({ ...pub, periode_production: range ? `${range.debut}–${range.fin === 9999 ? "…" : range.fin}` : null });
+      continue;
+    }
     if (annee != null && range && annee >= range.debut - 1 && annee <= range.fin + 1) {
       principaux.push({ ...pub, periode_production: `${range.debut}–${range.fin === 9999 ? "…" : range.fin}` });
     } else if (annee != null) {
@@ -316,6 +341,8 @@ serve(async (req: Request) => {
         ? Math.round(body.annee)
         : null;
     const carburant = typeof body?.carburant === "string" ? body.carburant.trim() : null;
+    const motorisation = typeof body?.motorisation === "string" ? body.motorisation.trim() : null;
+    const generation = typeof body?.generation === "string" ? body.generation.trim() : null;
     const analysisId =
       typeof body?.analysis_id === "string" &&
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(body.analysis_id)
@@ -370,7 +397,7 @@ serve(async (req: Request) => {
 
     // Tri post-cache : années de publication, motorisation, générations.
     const split = Array.isArray(rappels)
-      ? splitRappels(rappels, annee, carburant, modele)
+      ? splitRappels(rappels, annee, carburant, modele, motorisation, generation)
       : null;
     const rappelsFiltres = split ? split.principaux : rappels;
 

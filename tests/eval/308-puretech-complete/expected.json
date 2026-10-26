@@ -5,7 +5,12 @@
   "famille_moteur": "EB2",
   "must_include": [
     "courroie",
-    "puretech"
+    "puretech",
+    [
+      "extension de garantie",
+      "prise en charge"
+    ],
+    "factures d'entretien"
   ],
   "must_not_include": [
     "EA888",
@@ -16,5 +21,10 @@
     "frein",
     "démarrage à froid"
   ],
-  "photos_bloc": false
+  "photos_bloc": false,
+  "rappels_principaux_must_not_include": [
+    "dv5r",
+    "bluehdi",
+    "e-dct"
+  ]
 }
