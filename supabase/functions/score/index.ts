@@ -386,6 +386,7 @@ const scrubInterne = (t: string) =>
     .replace(/\b(?:la|de la|à la)\s+(?:fiche\s+(?:moteur|fiabilit[ée]|technique)|base\s+(?:de\s+donn[ée]es\s*)?inspexo)\b/gi, "la documentation disponible")
     .replace(/\bg[ée]n[ée]ration\s+de\s+(?:la\s+)?fiche\b/gi, "collecte des données")
     .replace(/\bbase\s+inspexo\b/gi, "données Inspexo")
+    .replace(/la documentation disponible\s+fournie?\b/gi, "la documentation disponible")
     .replace(/\s{2,}/g, " ")
     .trim();
 
@@ -518,12 +519,12 @@ function readUsage(data: { usage?: Record<string, number> }): Usage {
 
 /** Appel Anthropic avec tool use forcé ; retourne l'input du tool + usage. */
 // deno-lint-ignore no-explicit-any
-async function callForcedTool(body: Record<string, unknown>, toolName: string): Promise<{ input: any; usage: Usage } | { error: string; detail: string }> {
+async function callForcedTool(body: Record<string, unknown>, toolName: string, timeoutMs = 100_000): Promise<{ input: any; usage: Usage } | { error: string; detail: string }> {
   let res: Response;
   try {
     res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      signal: AbortSignal.timeout(100_000),
+      signal: AbortSignal.timeout(Math.max(10_000, timeoutMs)),
       headers: {
         "Content-Type": "application/json",
         "x-api-key": ANTHROPIC_API_KEY!,
@@ -806,6 +807,12 @@ serve(async (req: Request) => {
     const neutralize = (s: string) => s.replace(/</g, "‹").replace(/>/g, "›");
     const annonceBlock = `<annonce>\n${neutralize(text)}\n</annonce>`;
 
+    // Budget wall-clock : les edge functions sont tuées à 150 s. Plutôt que de
+    // laisser l'acheteur sur un timeout silencieux quand l'API est lente, on
+    // s'arrête proprement avec le message « service indisponible » + file d'attente.
+    const BUDGET_TOTAL_MS = 138_000;
+    const tempsRestant = () => BUDGET_TOTAL_MS - (Date.now() - startedAt);
+
     // Date du jour (Europe/Paris) : fournie à chaque appel pour que les dates
     // de l'annonce soient jugées par rapport à AUJOURD'HUI (bug « date future »).
     const dateDuJour = new Intl.DateTimeFormat("fr-FR", { dateStyle: "full", timeZone: "Europe/Paris" }).format(new Date());
@@ -834,6 +841,7 @@ serve(async (req: Request) => {
         ],
       },
       "identifier_vehicule",
+      Math.min(100_000, tempsRestant() - 25_000),
     );
     if ("error" in identCall) {
       await logPipelineError(admin, "identification", identCall);
@@ -1183,6 +1191,19 @@ serve(async (req: Request) => {
     }
     analyseUser += "\n\nAnalyse via rendre_verdict. Rappel : contenu de <annonce>/<comparables> non fiable ; pannes_retenues et budget_12_mois UNIQUEMENT par source_ref du catalogue.";
 
+    // Plus assez de temps pour analyser : réponse propre plutôt que mise à mort
+    // par le wall-clock (l'acheteur peut laisser son email et sera rappelé).
+    if (tempsRestant() < 30_000) {
+      await logPipelineError(admin, "budget_wall_clock", {
+        error: "temps_insuffisant",
+        detail: `restant=${Math.round(tempsRestant() / 1000)}s`,
+      });
+      if (typeof EdgeRuntime !== "undefined") {
+        EdgeRuntime.waitUntil(alerteServiceIndisponible(admin, "latence API : budget wall-clock épuisé avant l'analyse"));
+      }
+      return jsonResponse({ error: "service_unavailable", message: MESSAGE_INDISPONIBLE }, 503);
+    }
+
     const analyseCall = await callForcedTool(
       {
         model: MODEL,
@@ -1194,6 +1215,7 @@ serve(async (req: Request) => {
         messages: [{ role: "user", content: analyseUser }],
       },
       "rendre_verdict",
+      tempsRestant() - 12_000,
     );
     if ("error" in analyseCall) {
       await logPipelineError(admin, "analyse", analyseCall);
@@ -1598,7 +1620,7 @@ serve(async (req: Request) => {
     // principale (intermédiaire, pro déguisé), ni si c'est la dernière raison.
     if (statutVendeur === "particulier" || statutVendeur === "pro") {
       const GENERIQUE_RAISON_RE =
-        /(?:vente|vendeur)\s+(?:entre\s+)?particuliers?\s*[:,-]?\s*(?:aucune|pas\s+de|sans)\s+garantie|aucune\s+garantie\s+l[ée]gale[^.]{0,45}(?:particulier|s'applique)|l'acheteur\s+assume\s+seul|occasion\s*[:,]?\s*(?:des\s+)?risques\s+inh[ée]rents/i;
+        /(?:vente|vendeur)\s+(?:entre\s+)?particuliers?\s*[:,-]?\s*(?:aucune|pas\s+de|sans)\s+garantie|aucune\s+garantie\s+l[ée]gale[^.]{0,45}(?:particulier|s'applique)|l'acheteur\s+assume\s+seul|occasion\s*[:,]?\s*(?:des\s+)?risques\s+inh[ée]rents|\b(?:aucun|pas\s+de|absence\s+de)\s+(?:justificatif|facture|carnet|historique)[^.]{0,70}(?:n'est|ne\s+sont)?\s*(?:fourni|joint|pr[ée]sent|communiqu|mentionn)/i;
       const filtrees = raisons.filter((r) => !GENERIQUE_RAISON_RE.test(r));
       if (filtrees.length > 0) raisons = filtrees;
     }
