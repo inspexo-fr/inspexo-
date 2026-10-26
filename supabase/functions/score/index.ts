@@ -813,6 +813,44 @@ serve(async (req: Request) => {
       ? body.source_url.slice(0, 500)
       : null;
 
+    // ---------------- Cache d'analyse (stabilité du verdict) ----------------
+    // Même annonce = même verdict pendant 7 jours. L'empreinte porte sur le
+    // texte normalisé (casse, espaces, ponctuation décorative) et l'URL.
+    const normaliserTexte = (t: string) =>
+      t.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9€%.,:/-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    const inputHash = await sha256Hex(`${normaliserTexte(text)}|${sourceUrl ?? ""}`);
+    const sansCache = body.no_cache === true && isEval;
+    // Forçage du modèle : réservé à l'éval (validation du modèle de secours).
+    const forceModel = isEval && typeof body.force_model === "string" &&
+        [MODEL, FALLBACK_MODEL].includes(body.force_model)
+      ? body.force_model
+      : null;
+
+    if (!sansCache) {
+      const depuis = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+      const { data: dejaVue } = await admin
+        .from("analyses")
+        .select("id, result_json, created_at")
+        .eq("input_hash", inputHash)
+        .gte("created_at", depuis)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (dejaVue?.id) {
+        await admin.from("events").insert({
+          name: "score_cache_hit",
+          analysis_id: dejaVue.id,
+          ip_hash: isEval ? null : ipHash,
+          props_json: { age_heures: Math.round((Date.now() - new Date(dejaVue.created_at).getTime()) / 3600000) },
+        });
+        return jsonResponse({ id: dejaVue.id, result: dejaVue.result_json, cache: true });
+      }
+    }
+
     // Anti-TOCTOU : la tentative est insérée AVANT le comptage, qui l'inclut.
     // Des requêtes parallèles se comptent donc mutuellement.
     await admin.from("events").insert({
@@ -852,44 +890,6 @@ serve(async (req: Request) => {
     // balise ni en forger une autre (<catalogue_pannes>, <identification>…).
     const neutralize = (s: string) => s.replace(/</g, "‹").replace(/>/g, "›");
     const annonceBlock = `<annonce>\n${neutralize(text)}\n</annonce>`;
-
-    // ---------------- Cache d'analyse (stabilité du verdict) ----------------
-    // Même annonce = même verdict pendant 7 jours. L'empreinte porte sur le
-    // texte normalisé (casse, espaces, ponctuation décorative) et l'URL.
-    const normaliserTexte = (t: string) =>
-      t.toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9€%.,:/-]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-    const inputHash = await sha256Hex(`${normaliserTexte(text)}|${sourceUrl ?? ""}`);
-    const sansCache = body.no_cache === true && isEval;
-    // Forçage du modèle : réservé à l'éval (validation du modèle de secours).
-    const forceModel = isEval && typeof body.force_model === "string" &&
-        [MODEL, FALLBACK_MODEL].includes(body.force_model)
-      ? body.force_model
-      : null;
-
-    if (!sansCache) {
-      const depuis = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
-      const { data: dejaVue } = await admin
-        .from("analyses")
-        .select("id, result_json, created_at")
-        .eq("input_hash", inputHash)
-        .gte("created_at", depuis)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (dejaVue?.id) {
-        await admin.from("events").insert({
-          name: "score_cache_hit",
-          analysis_id: dejaVue.id,
-          ip_hash: isEval ? null : ipHash,
-          props_json: { age_heures: Math.round((Date.now() - new Date(dejaVue.created_at).getTime()) / 3600000) },
-        });
-        return jsonResponse({ id: dejaVue.id, result: dejaVue.result_json, cache: true });
-      }
-    }
 
     // Annonce déjà analysée à cette URL mais modifiée depuis : on réanalyse et
     // on rappellera l'ancien score à l'écran.
