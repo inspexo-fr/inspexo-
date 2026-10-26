@@ -35,6 +35,7 @@ export default function ScorePage() {
   const [loading, setLoading]         = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
   const [error, setError]             = useState(null)
+  const [usage, setUsage]             = useState(null) // ville | mixte | route | null
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -75,6 +76,7 @@ export default function ScorePage() {
         text: text.trim(),
         images,
         comparables: comparables.map(c => c.trim()).filter(Boolean),
+        ...(usage ? { usage } : {}),
       }
       const { id, result } = await analyzeListing(payload)
       navigate(`/a/${id}`, { state: { result } })
@@ -345,6 +347,33 @@ export default function ScorePage() {
                   {error}
                 </div>
               )}
+
+              {/* Usage (facultatif) : affine la vigilance FAP/EGR sur les diesels */}
+              <div style={{ margin: '0 0 16px' }}>
+                <div style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem',
+                  fontWeight: 600, color: '#374151', marginBottom: 8,
+                }}>
+                  Votre usage (facultatif)
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {[['ville', 'Surtout ville'], ['mixte', 'Mixte'], ['route', 'Surtout route']].map(([val, label]) => (
+                    <button
+                      key={val} type="button"
+                      onClick={() => setUsage(usage === val ? null : val)}
+                      style={{
+                        fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem',
+                        fontWeight: 600, cursor: 'pointer', borderRadius: 100, padding: '8px 16px',
+                        border: usage === val ? '1.5px solid #FF4D00' : '1.5px solid rgba(0,0,0,0.12)',
+                        background: usage === val ? '#FFF0EA' : '#fff',
+                        color: usage === val ? '#C2410C' : '#374151',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <button type="submit" className="score-submit" disabled={!text.trim() || overLimit}>
                 🔍 Analyser gratuitement

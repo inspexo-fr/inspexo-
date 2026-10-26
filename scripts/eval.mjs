@@ -176,6 +176,20 @@ async function runCase(name) {
     }
   }
 
+  // raisons_must_not_include : interdit DANS les raisons principales précisément
+  if (expected.raisons_must_not_include?.length) {
+    const ra = norm(JSON.stringify(r.raisons_principales || []))
+    for (const needle of expected.raisons_must_not_include) {
+      if (ra.includes(norm(needle))) failures.push(`raisons_must_not_include présent : "${needle}"`)
+    }
+  }
+
+  // entretien_non_penalise : l'axe historique_entretien est null OU ≥ 12
+  if (expected.entretien_non_penalise) {
+    const note = r.score_detail?.historique_entretien?.note
+    if (note != null && note < 12) failures.push(`axe entretien pénalisé : ${note}/20`)
+  }
+
   // questions_must_not_include : interdit DANS les questions vendeur précisément
   if (expected.questions_must_not_include?.length) {
     const q = norm(JSON.stringify(r.questions_vendeur || []))

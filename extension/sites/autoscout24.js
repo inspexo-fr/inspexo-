@@ -6,6 +6,39 @@ globalThis.INSPEXO_SITES.push({
   match (loc) {
     return /(^|\.)autoscout24\.fr$/.test(loc.hostname) && /^\/offres\//.test(loc.pathname)
   },
+  matchSerp (loc) {
+    return /(^|\.)autoscout24\.fr$/.test(loc.hostname) && /^\/lst/.test(loc.pathname)
+  },
+  extractSerp (doc) {
+    try {
+      const raw = doc.getElementById('__NEXT_DATA__')
+      if (raw) {
+        const pp = JSON.parse(raw.textContent)?.props?.pageProps
+        const listings = pp?.listings || pp?.searchResults?.listings || []
+        const out = []
+        for (const l of listings) {
+          const v = l.vehicle || {}
+          const titre = [v.make, v.model, v.modelVersionInput].filter(Boolean).join(' ') ||
+            (l.title ? String(l.title) : '')
+          const prix = l.price?.priceFormatted ? parseInt(String(l.price.priceFormatted).replace(/\D/g, ''), 10)
+            : (l.prices?.public?.priceRaw ?? l.price?.raw ?? null)
+          if (!titre || !prix) continue
+          const kmRaw = l.mileage ?? v.mileageInKmRaw ?? l.tracking?.mileage
+          const km = kmRaw != null ? parseInt(String(kmRaw).replace(/\D/g, ''), 10) : null
+          const annee = l.firstRegistration ?? v.firstRegistrationDateRaw ?? v.firstRegistrationDate ?? null
+          out.push({
+            titre: titre.slice(0, 160),
+            annee: annee ? parseInt(String(annee).match(/(20[0-2]\d|19[89]\d)/)?.[1] ?? '', 10) || null : null,
+            km: Number.isFinite(km) ? km : null,
+            prix: Number(prix),
+          })
+          if (out.length >= 40) break
+        }
+        if (out.length) return out
+      }
+    } catch (_) { /* voie suivante */ }
+    return globalThis.inspexoSerpFromJsonLd(doc)
+  },
   extract (doc) {
     // --- Voie 1 : __NEXT_DATA__ (AS24 est en Next.js) ---
     try {

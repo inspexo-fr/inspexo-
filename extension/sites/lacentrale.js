@@ -7,6 +7,33 @@ globalThis.INSPEXO_SITES.push({
     return /(^|\.)lacentrale\.fr$/.test(loc.hostname) &&
       /^\/(auto-occasion-annonce|occasion-voiture-annonce)/.test(loc.pathname)
   },
+  matchSerp (loc) {
+    return /(^|\.)lacentrale\.fr$/.test(loc.hostname) && /^\/listing/.test(loc.pathname)
+  },
+  extractSerp (doc) {
+    const fromLd = globalThis.inspexoSerpFromJsonLd(doc)
+    if (fromLd.length) return fromLd
+    // Secours : cartes d'annonce du DOM (titre + prix + specs année/km)
+    try {
+      const out = []
+      for (const a of doc.querySelectorAll('a[href*="annonce"]')) {
+        const txt = (a.textContent || '').replace(/\s+/g, ' ')
+        const prixM = txt.match(/(\d[\d\s]{2,8})\s?€/)
+        const anneeM = txt.match(/\b(20[0-2]\d|19[89]\d)\b/)
+        const kmM = txt.match(/([\d\s]{4,9})\s?km/i)
+        if (!prixM) continue
+        const titre = txt.slice(0, 120).trim()
+        out.push({
+          titre,
+          annee: anneeM ? parseInt(anneeM[1], 10) : null,
+          km: kmM ? parseInt(kmM[1].replace(/\s/g, ''), 10) : null,
+          prix: parseInt(prixM[1].replace(/\s/g, ''), 10),
+        })
+        if (out.length >= 40) break
+      }
+      return out
+    } catch (_) { return [] }
+  },
   extract (doc) {
     // Photos pleine taille : pictures.lacentrale.fr/classifieds/<id>_STANDARD_<n>.jpg
     // (on retire les paramètres de redimensionnement ; dédoublonnage par index).

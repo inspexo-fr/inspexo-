@@ -547,8 +547,8 @@ export default function ResultPage() {
   const checklistAffichee = [
     ...(r.checklist_sur_place || []),
     ...extraPannes.map(p => ({
-      quoi: p.titre,
-      comment: 'Point issu de la fiche moteur (sources en ligne) — contrôlez ce symptôme sur place et à l\'essai.',
+      quoi: `Écoutez et observez : ${p.titre}`,
+      comment: 'Sur place : démarrage à froid puis essai routier — guettez ce symptôme ; demandez la facture si l\'organe a déjà été remplacé.',
       signal_rouge: String(p.symptome || '').slice(0, 180),
     })),
   ]
@@ -720,6 +720,84 @@ export default function ResultPage() {
                   {raison}
                 </div>
               ))}
+              {(r.points_rassurants || []).length > 0 && (
+                <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(0,0,0,0.07)' }}>
+                  <div style={{
+                    fontFamily: FONT, fontSize: '0.75rem', fontWeight: 700, color: '#16A34A',
+                    textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6,
+                  }}>
+                    Points rassurants
+                  </div>
+                  {r.points_rassurants.map((x, i) => (
+                    <div key={i} style={{
+                      display: 'flex', gap: 10, padding: '5px 0',
+                      fontFamily: FONT, fontSize: '0.875rem', color: '#166534', lineHeight: 1.5,
+                    }}>
+                      <span style={{
+                        width: 8, height: 8, borderRadius: '50%', background: '#16A34A',
+                        flexShrink: 0, marginTop: 7,
+                      }} />
+                      {x}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+          )}
+
+          {/* ========== 2bis. ENTRETIEN : CE QUI AURAIT DÛ ÊTRE FAIT ========== */}
+          {(r.entretien && ((r.entretien.du || []).length > 0 || (r.entretien.prouve || []).length > 0 || (r.entretien.a_exiger || []).length > 0)) && (
+            <Card>
+              <SectionTitle>Entretien : ce qui aurait dû être fait</SectionTitle>
+              {(r.entretien.du || []).length > 0 && (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontFamily: FONT, fontSize: '0.75rem', fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
+                    Doit déjà avoir été fait
+                  </div>
+                  {r.entretien.du.map((op, i) => (
+                    <div key={i} style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#0F1B2D', lineHeight: 1.6, padding: '3px 0' }}>
+                      – {op.operation}{op.echeance ? ` (dès ${op.echeance})` : ''}
+                      {op.critique && (
+                        <span style={{
+                          marginLeft: 8, fontSize: '0.6875rem', fontWeight: 700, color: '#C2410C',
+                          background: '#FFF0EA', borderRadius: 100, padding: '1px 8px',
+                        }}>
+                          critique
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {(r.entretien.prouve || []).length > 0 && (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontFamily: FONT, fontSize: '0.75rem', fontWeight: 700, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
+                    Prouvé ou annoncé dans l'annonce
+                  </div>
+                  {r.entretien.prouve.map((x, i) => (
+                    <div key={i} style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#166534', lineHeight: 1.6, padding: '3px 0' }}>
+                      – {x}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {(r.entretien.a_exiger || []).length > 0 && (
+                <div>
+                  <div style={{ fontFamily: FONT, fontSize: '0.75rem', fontWeight: 700, color: '#C2410C', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
+                    À exiger avant d'acheter
+                  </div>
+                  {r.entretien.a_exiger.map((op, i) => (
+                    <div key={i} style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#374151', lineHeight: 1.6, padding: '3px 0' }}>
+                      – <strong>{op.operation}</strong> : {op.demande}
+                      {(op.cout_min_eur != null || op.cout_max_eur != null) && (
+                        <span style={{ color: '#6B7280' }}>
+                          {' '}(coût indicatif si non fait : {op.cout_min_eur != null ? `${op.cout_min_eur.toLocaleString('fr-FR')} €` : ''}{op.cout_min_eur != null && op.cout_max_eur != null ? ' – ' : ''}{op.cout_max_eur != null ? `${op.cout_max_eur.toLocaleString('fr-FR')} €` : ''})
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
           )}
 
@@ -1096,6 +1174,26 @@ export default function ResultPage() {
                 </div>
               )}
             </div>
+            {r.prix?.fourchette && (
+              <div style={{
+                background: '#F0F2F5', borderRadius: 10, padding: '12px 14px', marginBottom: 10,
+              }}>
+                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 6 }}>
+                  {[['P25', r.prix.fourchette.p25], ['Médiane', r.prix.fourchette.mediane], ['P75', r.prix.fourchette.p75]].map(([lbl, val]) => (
+                    <div key={lbl}>
+                      <div style={{ fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase' }}>{lbl}</div>
+                      <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.125rem', color: '#1E4D8C' }}>
+                        {Number(val).toLocaleString('fr-FR')} €
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ fontFamily: FONT, fontSize: '0.75rem', color: '#6B7280', lineHeight: 1.5 }}>
+                  {r.prix.fourchette.libelle}
+                  <br />Provenance : {r.prix.fourchette.provenance}.
+                </div>
+              </div>
+            )}
             {r.prix?.commentaire ? (
               <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#6B7280', lineHeight: 1.65 }}>
                 {r.prix.commentaire}

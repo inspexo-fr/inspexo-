@@ -10,6 +10,12 @@ function currentSite () {
   }) || null
 }
 
+function currentSerpSite () {
+  return (globalThis.INSPEXO_SITES || []).find(s => {
+    try { return s.matchSerp && s.matchSerp(window.location) } catch (_) { return false }
+  }) || null
+}
+
 function buildButton () {
   const btn = document.createElement('button')
   btn.id = 'inspexo-analyser-btn'
@@ -67,11 +73,41 @@ async function onClick () {
   }
 }
 
+// Page de résultats : bouton « Ajouter ces annonces comme comparables ».
+// Seuls titre/année/km/prix des annonces affichées sont extraits, à la demande,
+// et joints à la PROCHAINE analyse. Rien d'autre n'est collecté.
+function buildSerpButton () {
+  const btn = document.createElement('button')
+  btn.id = 'inspexo-comparables-btn'
+  btn.type = 'button'
+  btn.innerHTML = '<span id="inspexo-btn-dot"></span><span>Ajouter ces annonces comme comparables</span>'
+  btn.addEventListener('click', async () => {
+    const site = currentSerpSite()
+    let comparables = []
+    try { comparables = site ? site.extractSerp(document) : [] } catch (_) { comparables = [] }
+    if (!comparables.length) {
+      btn.querySelector('span:last-child').textContent = 'Aucune annonce lisible sur cette page'
+      setTimeout(() => { btn.querySelector('span:last-child').textContent = 'Ajouter ces annonces comme comparables' }, 4000)
+      return
+    }
+    await chrome.runtime.sendMessage({ type: 'inspexo_comparables', comparables })
+    btn.querySelector('span:last-child').textContent =
+      `${comparables.length} annonce${comparables.length > 1 ? 's' : ''} enregistrée${comparables.length > 1 ? 's' : ''} pour la prochaine analyse`
+    setTimeout(() => { btn.querySelector('span:last-child').textContent = 'Ajouter ces annonces comme comparables' }, 5000)
+  })
+  return btn
+}
+
 function refresh () {
   const existing = document.getElementById('inspexo-analyser-btn')
   const onAdPage = !!currentSite()
   if (onAdPage && !existing && document.body) document.body.appendChild(buildButton())
   if (!onAdPage && existing) existing.remove()
+
+  const existingSerp = document.getElementById('inspexo-comparables-btn')
+  const onSerp = !onAdPage && !!currentSerpSite()
+  if (onSerp && !existingSerp && document.body) document.body.appendChild(buildSerpButton())
+  if (!onSerp && existingSerp) existingSerp.remove()
 }
 
 refresh()

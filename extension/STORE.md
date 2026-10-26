@@ -51,6 +51,7 @@ Politique de confidentialité : https://www.inspexo.io/extension/confidentialite
 | `activeTab` | Lire la page d'annonce active uniquement lorsque l'utilisateur clique sur le bouton « Analyser avec Inspexo ». |
 | `scripting` | Injecter le bouton d'analyse et le style associé sur les pages d'annonce des trois sites supportés. |
 | `host_permissions` (leboncoin.fr, lacentrale.fr, autoscout24.fr) | Afficher le bouton sur les pages d'annonce de ces trois sites et télécharger les photos de l'annonce (hébergées sur leurs sous-domaines, ex. img.leboncoin.fr) afin de les redimensionner localement avant analyse. L'extension est inerte sur tout autre site. |
+| `storage` | Mémoriser localement (24 h max) les comparables de prix que l'utilisateur choisit d'ajouter depuis une page de résultats (titre, année, km, prix), joints à sa prochaine analyse puis effacés. Aucune synchronisation, aucune donnée de navigation. |
 | Code distant | Aucun : tout le code est dans le paquet. |
 
 Note : les photos AutoScout24 sont servies depuis `pictures.autoscout24.net`

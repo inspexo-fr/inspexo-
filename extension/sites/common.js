@@ -5,6 +5,32 @@
 
 globalThis.INSPEXO_SITES = []
 
+/** Extraction générique des annonces d'une page de RÉSULTATS via JSON-LD
+ *  ItemList (utilisée en secours par les extracteurs SERP). */
+globalThis.inspexoSerpFromJsonLd = function (doc) {
+  const out = []
+  for (const o of globalThis.inspexoJsonLd(doc)) {
+    const items = o && o['@type'] === 'ItemList' ? (o.itemListElement || []) : []
+    for (const it of items) {
+      const prod = it && (it.item || it)
+      if (!prod || !prod.name) continue
+      const offer = Array.isArray(prod.offers) ? prod.offers[0] : prod.offers
+      const prix = offer && Number(offer.price)
+      if (!prix) continue
+      const kmRaw = prod.mileageFromOdometer
+      const km = kmRaw ? Number(typeof kmRaw === 'object' ? kmRaw.value : kmRaw) : null
+      const annee = prod.vehicleModelDate || prod.productionDate || prod.dateVehicleFirstRegistered
+      out.push({
+        titre: String(prod.name).slice(0, 160),
+        annee: annee ? parseInt(String(annee).slice(0, 4), 10) : null,
+        km: Number.isFinite(km) ? km : null,
+        prix,
+      })
+    }
+  }
+  return out.slice(0, 40)
+}
+
 /** Tous les objets JSON-LD de la page, aplatis (@graph inclus). */
 globalThis.inspexoJsonLd = function (doc) {
   const out = []

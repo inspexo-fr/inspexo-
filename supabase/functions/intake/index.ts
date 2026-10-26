@@ -95,6 +95,10 @@ serve(async (req: Request) => {
     const images: string[] = (Array.isArray(body.images) ? body.images : [])
       .filter((i: unknown): i is string => typeof i === "string" && i.length > 100 && i.length < 4_800_000)
       .slice(0, MAX_IMAGES);
+    const usage = ["ville", "mixte", "route"].includes(body.usage) ? body.usage : null;
+    const comparablesStructures = Array.isArray(body.comparables_structures)
+      ? body.comparables_structures.slice(0, 40)
+      : [];
 
     // Texte d'annonce composé depuis les champs structurés du site.
     const entete = [
@@ -129,7 +133,7 @@ serve(async (req: Request) => {
         Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
         "x-intake-ip-hash": ipHash,
       },
-      body: JSON.stringify({ text, images, source_url: sourceUrl }),
+      body: JSON.stringify({ text, images, source_url: sourceUrl, usage, comparables_structures: comparablesStructures }),
     });
     const out = await res.json().catch(() => ({ error: "bad_gateway" }));
     return json(out, res.status);

@@ -36,6 +36,14 @@ async function downloadAndResize (url) {
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  // Comparables relevés sur une page de résultats : stockés localement
+  // (24 h max), joints à la prochaine analyse puis effacés.
+  if (message && message.type === 'inspexo_comparables') {
+    chrome.storage.local.set({
+      inspexo_comparables: { items: (message.comparables || []).slice(0, 40), savedAt: Date.now() },
+    }).then(() => sendResponse({ ok: true }))
+    return true
+  }
   if (!message || message.type !== 'inspexo_analyser') return false
   ;(async () => {
     const d = message.data || {}
@@ -45,6 +53,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         photos.push(await downloadAndResize(url))
       } catch (_) { /* photo inaccessible : on continue sans elle */ }
     }
+    // Comparables enregistrés depuis une page de résultats (< 24 h) : joints
+    // à cette analyse puis effacés.
+    let comparables = []
+    try {
+      const stored = (await chrome.storage.local.get('inspexo_comparables')).inspexo_comparables
+      if (stored && Date.now() - stored.savedAt < 24 * 3600 * 1000) comparables = stored.items || []
+      await chrome.storage.local.remove('inspexo_comparables')
+    } catch (_) { /* stockage indisponible */ }
     const res = await fetch(INTAKE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -52,6 +68,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         titre: d.titre, prix: d.prix, annee: d.annee, kilometrage: d.kilometrage,
         carburant: d.carburant, boite: d.boite, description: d.description,
         type_vendeur: d.type_vendeur, url: d.url, images: photos,
+        comparables_structures: comparables,
       }),
       signal: AbortSignal.timeout(150000),
     })

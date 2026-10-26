@@ -1,0 +1,34 @@
+{
+  "http_status": 200,
+  "verdict_min": "rouge",
+  "verdict_max": "vert",
+  "statut_vendeur": "particulier",
+  "photos_bloc": false,
+  "entretien_non_penalise": true,
+  "incoherences_must_not_include": [
+    "futur",
+    "future",
+    "impossible",
+    "postérieure"
+  ],
+  "raisons_must_not_include": [
+    "vente entre particuliers sans garantie",
+    "pas de garantie l",
+    "absence de factures"
+  ],
+  "must_include": [
+    [
+      "vidange boîte",
+      "vidange de boîte"
+    ],
+    [
+      "contrôle technique",
+      "ct récent"
+    ]
+  ],
+  "must_not_include": [
+    "confiance basse",
+    "notre catalogue",
+    "génération de fiche"
+  ]
+}

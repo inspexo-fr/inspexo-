@@ -7,6 +7,36 @@ globalThis.INSPEXO_SITES.push({
   match (loc) {
     return /(^|\.)leboncoin\.fr$/.test(loc.hostname) && /^\/ad\//.test(loc.pathname)
   },
+  matchSerp (loc) {
+    return /(^|\.)leboncoin\.fr$/.test(loc.hostname) &&
+      (/\/(voitures|recherche)/.test(loc.pathname) || /offres/.test(loc.pathname)) &&
+      !/^\/ad\//.test(loc.pathname)
+  },
+  extractSerp (doc) {
+    // __NEXT_DATA__ → liste des annonces de la page de résultats
+    try {
+      const raw = doc.getElementById('__NEXT_DATA__')
+      if (raw) {
+        const pp = JSON.parse(raw.textContent)?.props?.pageProps
+        const ads = pp?.searchData?.ads || pp?.initialProps?.searchData?.ads || []
+        const out = []
+        for (const ad of ads) {
+          const attrs = Object.fromEntries((ad.attributes || []).map(a => [a.key, a.value_label ?? a.value]))
+          const prix = Array.isArray(ad.price) ? ad.price[0] : ad.price
+          if (!ad.subject || !prix) continue
+          const km = attrs.mileage ? parseInt(String(attrs.mileage).replace(/\D/g, ''), 10) : null
+          out.push({
+            titre: String(ad.subject).slice(0, 160),
+            annee: attrs.regdate ? parseInt(String(attrs.regdate).slice(0, 4), 10) : null,
+            km: Number.isFinite(km) ? km : null,
+            prix: Number(prix),
+          })
+        }
+        if (out.length) return out.slice(0, 40)
+      }
+    } catch (_) { /* voie suivante */ }
+    return globalThis.inspexoSerpFromJsonLd(doc)
+  },
   extract (doc) {
     // --- Voie 1 : __NEXT_DATA__ ---
     try {

@@ -5,7 +5,8 @@
   "description": "Verdict gratuit sur une annonce de voiture d'occasion : rappels constructeur, airbags Takata, pannes connues du moteur, questions au vendeur.",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "host_permissions": [
     "*://*.leboncoin.fr/*",

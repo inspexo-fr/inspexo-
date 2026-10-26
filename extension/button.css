@@ -1,5 +1,6 @@
 /* Bouton flottant Inspexo — charte : bleu nuit #0F1B2D, accent orange #FF4D00. */
-#inspexo-analyser-btn {
+#inspexo-analyser-btn,
+#inspexo-comparables-btn {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -20,11 +21,13 @@
   box-shadow: 0 8px 28px rgba(15, 27, 45, 0.45);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-#inspexo-analyser-btn:hover:not(:disabled) {
+#inspexo-analyser-btn:hover:not(:disabled),
+#inspexo-comparables-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 12px 34px rgba(15, 27, 45, 0.55);
 }
-#inspexo-analyser-btn:disabled {
+#inspexo-analyser-btn:disabled,
+#inspexo-comparables-btn:disabled {
   opacity: 0.75;
   cursor: wait;
 }
