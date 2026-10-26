@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { analyzeListing } from '../lib/scoreApi'
+import { analyzeListing, submitPendingAnalysis } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
 
 const MAX_TEXT = 6000
@@ -36,6 +36,9 @@ export default function ScorePage() {
   const [loadingStep, setLoadingStep] = useState(0)
   const [error, setError]             = useState(null)
   const [usage, setUsage]             = useState(null) // ville | mixte | route | null
+  const [indispo, setIndispo]         = useState(null) // message si service IA indisponible
+  const [waitEmail, setWaitEmail]     = useState('')
+  const [waitState, setWaitState]     = useState('idle') // idle | sending | done | error
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -81,8 +84,25 @@ export default function ScorePage() {
       const { id, result } = await analyzeListing(payload)
       navigate(`/a/${id}`, { state: { result } })
     } catch (err) {
-      setError(err.message)
+      // Service IA indisponible : on propose la file d'attente plutôt qu'un échec sec.
+      if (err.code === 'service_unavailable' || err.status === 503) {
+        setIndispo(err.message)
+      } else {
+        setError(err.message)
+      }
       setLoading(false)
+    }
+  }
+
+  const handleWaitSubmit = async (e) => {
+    e.preventDefault()
+    if (!waitEmail || waitState === 'sending') return
+    setWaitState('sending')
+    try {
+      await submitPendingAnalysis(waitEmail, text.trim(), usage)
+      setWaitState('done')
+    } catch (_) {
+      setWaitState('error')
     }
   }
 
@@ -335,6 +355,60 @@ export default function ScorePage() {
                   </div>
                 )}
               </div>
+
+              {/* Service IA indisponible : file d'attente + email */}
+              {indispo && (
+                <div style={{
+                  background: '#FFFBEB', border: '1.5px solid rgba(217,119,6,0.35)',
+                  borderRadius: 12, padding: '16px 18px', marginBottom: 16,
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                }}>
+                  <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#92400E', marginBottom: 6 }}>
+                    {indispo}
+                  </div>
+                  {waitState === 'done' ? (
+                    <div style={{ fontSize: '0.875rem', color: '#166534', fontWeight: 600 }}>
+                      C'est noté. Votre analyse sera lancée dès le rétablissement du service et le verdict
+                      vous sera envoyé à cette adresse.
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                        <input
+                          type="email" required placeholder="votre@email.com"
+                          value={waitEmail} onChange={e => setWaitEmail(e.target.value)}
+                          style={{
+                            flex: '1 1 200px', boxSizing: 'border-box', background: '#fff',
+                            border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 10,
+                            padding: '11px 14px', fontFamily: 'Plus Jakarta Sans, sans-serif',
+                            fontSize: '0.9375rem', color: '#0F1B2D', outline: 'none',
+                          }}
+                        />
+                        <button
+                          type="button" onClick={handleWaitSubmit} disabled={waitState === 'sending'}
+                          style={{
+                            background: '#0F1B2D', color: '#fff', border: 'none', borderRadius: 10,
+                            padding: '11px 20px', fontFamily: 'Plus Jakarta Sans, sans-serif',
+                            fontSize: '0.875rem', fontWeight: 700,
+                            cursor: waitState === 'sending' ? 'wait' : 'pointer',
+                          }}
+                        >
+                          {waitState === 'sending' ? 'Envoi…' : 'Me prévenir'}
+                        </button>
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#92400E', marginTop: 6, lineHeight: 1.5 }}>
+                        En laissant votre email, vous acceptez d'être recontacté par Inspexo à ce sujet.
+                        Lien de désinscription dans chaque email.
+                      </div>
+                      {waitState === 'error' && (
+                        <div style={{ fontSize: '0.8125rem', color: '#B91C1C', marginTop: 6 }}>
+                          Enregistrement impossible (adresse invalide ou limite atteinte). Réessayez plus tard.
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
 
               {/* Erreur */}
               {error && (

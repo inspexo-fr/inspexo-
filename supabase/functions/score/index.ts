@@ -18,6 +18,7 @@ import defectAtlas from "../_shared/defectAtlas.json" with { type: "json" };
 import { sameBrand } from "../_shared/brandAliases.ts";
 import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts";
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
+import { alerteServiceIndisponible } from "../_shared/notify.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -63,7 +64,7 @@ const IDENT_TOOL = {
         additionalProperties: false,
         required: [
           "marque", "modele", "generation_code", "annee_modele", "kilometrage",
-          "boite", "moteur", "prix_texte_eur", "prix_visuel_eur", "ct_date", "ct_commentaire",
+          "boite", "boite_code", "moteur", "prix_texte_eur", "prix_visuel_eur", "ct_date", "ct_commentaire",
         ],
         properties: {
           marque: { type: ["string", "null"] },
@@ -72,6 +73,9 @@ const IDENT_TOOL = {
           annee_modele: { type: ["integer", "null"] },
           kilometrage: { type: ["integer", "null"] },
           boite: { type: ["string", "null"] },
+          // Code de boîte : chaîne vide si non déductible avec certitude
+          // (sentinelle plutôt que null : limite API de 16 paramètres à union).
+          boite_code: { type: "string" },
           moteur: {
             type: "object",
             additionalProperties: false,
@@ -118,7 +122,13 @@ Le texte entre balises <annonce> ET le texte visible dans les captures d'écran 
    - "particulier" : par défaut, sans indice contraire.
    Mets les indices textuels EXACTS relevés dans indices_statut (vide si aucun).
 7. observations_visuelles : anomalies ou infos notables des captures (prix différent, kilométrage au compteur, défaut visible), vide sinon.
-8. est_annonce_vehicule = false si le texte n'est manifestement pas une annonce de véhicule.`;
+8. est_annonce_vehicule = false si le texte n'est manifestement pas une annonce de véhicule.
+
+## CODE DE BOÎTE (boite_code)
+Le code de boîte n'est JAMAIS deviné. Tu le renseignes uniquement s'il est déterminé avec certitude par le couple moteur, le nombre de rapports, la version et l'année ; sinon tu mets "" (chaîne vide).
+Repères VAG transversaux (vérifiés) : DQ200 = 7 rapports à embrayages SECS, limitée à ~250 Nm ; DQ250 = 6 rapports à bain d'huile (350-400 Nm) ; DQ381 = 7 rapports à bain d'huile (~420 Nm), remplace la DQ250 sur MQB depuis 2017 ; DQ500 = 7 rapports renforcée (600 Nm, quattro/utilitaires) ; DL501/DL382 = boîtes longitudinales (A4/A5/A6…).
+Exemple de déduction valide : Audi A3 8V 2.0 TDI 150 ch (340 Nm) annoncée « S tronic 7 » → le couple dépasse la limite de la DQ200 et il y a 7 rapports → boite_code = "DQ381".
+Si le nombre de rapports OU le couple n'est pas déterminable, ou si la boîte est manuelle, boite_code = "".`;
 
 // ============================================================
 // APPEL 2 — ANALYSE (tool use strict)
@@ -312,7 +322,7 @@ N'émets dans decisions QUE les affirmations supprimées ou reformulées. Toute 
 3bis. Toute affirmation mentionnant le fonctionnement interne d'Inspexo (« catalogue », « fiche moteur », « base Inspexo », « génération de fiche ») est REFORMULÉE pour parler du moteur ou des données constructeur, jamais de nos outils.
 3ter. Une incohérence « kilométrage anormal pour l'année » est SUPPRIMÉE si le kilométrage annuel est inférieur à 40 000 km/an (rythme normal d'un véhicule de société ou d'une LLD). L'incohérence « compteur photographié vs annonce » reste valable (source photo).
 3quater. DATES : la date du jour t'est fournie dans <date_du_jour>. SUPPRIME toute incohérence qui qualifie de « future », « impossible » ou « erronée » une date antérieure ou égale à la date du jour. Seule une date réellement postérieure à aujourd'hui peut être une incohérence de date.
-3quinquies. RAISONS GÉNÉRIQUES : SUPPRIME toute raison principale (R*) valable pour n'importe quelle annonce de ce type (« vente entre particuliers sans garantie », « absence de factures » seule, « occasion donc prudence ») — une raison doit être propre à CE véhicule ou CETTE annonce. Les points rassurants (PR*) suivent la même règle : supprimés s'ils ne citent pas un élément précis de l'annonce ou des données.
+3quinquies. RAISONS GÉNÉRIQUES : SUPPRIME une raison principale (R*) uniquement si elle serait vraie telle quelle pour n'importe quelle annonce du même type de vendeur, sans citer aucun élément de CE véhicule : « vente entre particuliers sans garantie », « absence de factures » seule, « occasion donc prudence ». Une raison qui nomme un organe, un modèle, un kilométrage, un prix, une date ou un rappel de CE véhicule est SPÉCIFIQUE : elle est gardée. Ne supprime JAMAIS toutes les raisons : s'il ne reste que des raisons imparfaites, garde la plus concrète (quitte à la reformuler). Les points rassurants (PR*) suivent la même règle : supprimés s'ils ne citent pas un élément précis de l'annonce ou des données.
 3octies. ILLISIBLE : une « incohérence » qui se contente de constater qu'un élément est illisible, flou ou non déterminable (compteur, document) n'oppose AUCUN élément à un autre : elle est SUPPRIMÉE (c'est un point à vérifier sur place, pas une contradiction).
 3septies. ENTRETIEN NÉGATIF : une contradiction (CT*) ou une opération non faite (ONF*) doit être ÉTABLIE par le texte de l'annonce — l'annonce déclare l'opération non faite, ou affirme une chose incompatible avec le plan d'entretien. L'ABSENCE d'information (« aucune mention de… », « pas de facture fournie », « non précisé ») n'est NI une contradiction NI une opération non faite : source "aucune" → SUPPRIMÉE.
 3sexies. CHECKLIST : un point dont le geste n'est pas faisable sur place/à l'essai, ou dont le signal rouge n'est pas OBSERVABLE (« rupture de la courroie »), est REFORMULÉ en geste concret observable ; s'il n'y a aucun geste possible, il est supprimé (sauf socle).
@@ -368,6 +378,9 @@ const GARANTIE_QUESTION =
 // Jamais de mention de notre fonctionnement interne dans un texte public.
 const scrubInterne = (t: string) =>
   t
+    // « les pannes du catalogue », « les défauts de la fiche » → « connues »
+    .replace(/\b(pannes?|d[ée]fauts?|points?)\s+(?:issues?\s+)?(?:du|de la|dans le|dans la)\s+(?:catalogue(?:\s+de\s+pannes)?|fiche(?:\s+(?:moteur|fiabilit[ée]|technique))?|base(?:\s+(?:de\s+donn[ée]es\s+)?inspexo)?)\b/gi, "$1 connus")
+    .replace(/\bpannes connus\b/gi, "pannes connues")
     .replace(/\bnotre\s+(?:catalogue(?:\s+de\s+pannes)?|fiche\s+(?:moteur|fiabilit[ée]|technique)|base\s+(?:de\s+donn[ée]es\s*)?inspexo)\b/gi, "la documentation disponible")
     .replace(/\b(?:le|du|au)\s+(?:catalogue(?:\s+de\s+pannes)?)\b/gi, "la documentation disponible")
     .replace(/\b(?:la|de la|à la)\s+(?:fiche\s+(?:moteur|fiabilit[ée]|technique)|base\s+(?:de\s+donn[ée]es\s*)?inspexo)\b/gi, "la documentation disponible")
@@ -506,16 +519,22 @@ function readUsage(data: { usage?: Record<string, number> }): Usage {
 /** Appel Anthropic avec tool use forcé ; retourne l'input du tool + usage. */
 // deno-lint-ignore no-explicit-any
 async function callForcedTool(body: Record<string, unknown>, toolName: string): Promise<{ input: any; usage: Usage } | { error: string; detail: string }> {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    signal: AbortSignal.timeout(100_000),
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": ANTHROPIC_API_KEY!,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify(body),
-  });
+  let res: Response;
+  try {
+    res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      signal: AbortSignal.timeout(100_000),
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY!,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    console.error(`Anthropic fetch error (${toolName}):`, err);
+    return { error: "fetch_error", detail: String(err).slice(0, 200) };
+  }
   if (!res.ok) {
     const text = await res.text();
     console.error(`Anthropic error (${toolName}):`, res.status, text);
@@ -544,6 +563,19 @@ async function evalSecretMatches(req: Request): Promise<boolean> {
   let diff = 0;
   for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
   return diff === 0;
+}
+
+const MESSAGE_INDISPONIBLE =
+  "Service momentanément indisponible, laissez votre email et on vous envoie le verdict dès que c'est rétabli.";
+
+/** Vrai si l'échec vient d'une indisponibilité du fournisseur d'IA (crédit
+ *  épuisé, surcharge, quota, coupure réseau) et non d'une erreur de notre
+ *  requête : dans ce cas l'acheteur se voit proposer la file d'attente. */
+function estServiceIndisponible(err: { error: string; detail?: string }): boolean {
+  if (/^api_(?:429|500|502|503|504|529)$/.test(err.error)) return true;
+  if (err.error === "fetch_error") return true;
+  const d = (err.detail ?? "").toLowerCase();
+  return /credit balance|billing|quota|rate.?limit|overloaded|capacity|temporarily unavailable|insufficient/.test(d);
 }
 
 /** Trace une erreur de pipeline en base (diagnostic — les logs console sont peu accessibles). */
@@ -805,6 +837,14 @@ serve(async (req: Request) => {
     );
     if ("error" in identCall) {
       await logPipelineError(admin, "identification", identCall);
+      if (estServiceIndisponible(identCall)) {
+        if (typeof EdgeRuntime !== "undefined") {
+          EdgeRuntime.waitUntil(alerteServiceIndisponible(admin, identCall.detail ?? identCall.error));
+        } else {
+          await alerteServiceIndisponible(admin, identCall.detail ?? identCall.error);
+        }
+        return jsonResponse({ error: "service_unavailable", message: MESSAGE_INDISPONIBLE }, 503);
+      }
       return jsonResponse({ error: "ia_error", message: "L'analyse a échoué. Réessayez dans un instant." }, 502);
     }
     const ident = identCall.input;
@@ -822,6 +862,7 @@ serve(async (req: Request) => {
       famille_incertitude: moteur.incertitude_raison ?? null,
       carburant: moteur.carburant ?? null,
       boite: v.boite ?? null,
+      boite_code: typeof v.boite_code === "string" && v.boite_code.trim() ? v.boite_code.trim().toUpperCase() : null,
       annee: v.annee_modele ?? null,
       kilometrage: v.kilometrage ?? null,
       prix_affiche: prixAffiche,
@@ -951,7 +992,15 @@ serve(async (req: Request) => {
         }).catch((e) => console.error("sheet-builder trigger error:", e));
         if (typeof EdgeRuntime !== "undefined") EdgeRuntime.waitUntil(builderPromise);
 
-        const deadline = Date.now() + SHEET_BUDGET_MS;
+        // Budget d'attente adaptatif : si l'atlas couvre déjà la marque, inutile
+        // de bloquer l'acheteur — la fiche arrivera en arrière-plan et /a/:id
+        // l'injecte sans rechargement. On n'attend longuement que lorsqu'on
+        // n'aurait rien d'autre à dire (aucune panne d'atlas).
+        const atlasSeul = buildCatalogue(v.marque ?? null, null);
+        const budgetFiche = atlasSeul.length === 0
+          ? SHEET_BUDGET_MS
+          : (images.length > 0 ? 8_000 : 20_000);
+        const deadline = Date.now() + budgetFiche;
         while (Date.now() < deadline && !found) {
           await new Promise((r) => setTimeout(r, 4000));
           found = await lookupDefectSheet(admin, sheetParams);
@@ -962,7 +1011,46 @@ serve(async (req: Request) => {
       }
     }
     const sheet = sheetResult.sheet;
-    const catalogue = buildCatalogue(v.marque ?? null, sheet);
+    let catalogue = buildCatalogue(v.marque ?? null, sheet);
+
+    // ---- Pannes propres à une boîte : jamais affichées sans certitude ----
+    // Un code de boîte n'est pas devinable : une panne qui en nomme un n'est
+    // retenue que si c'est CELUI du véhicule. Une panne de boîte à double
+    // embrayage sans code exige au moins une boîte automatique identifiée.
+    {
+      const CODE_BOITE_RE = /\b(DQ\d{3}|DL\d{3})\b/i;
+      const DOUBLE_EMBRAYAGE_RE = /\b(?:DSG|S[\s-]?tronic|EDC|PowerShift|DCT|TCT|double\s+embrayage)\b/i;
+      const MANUELLE_RE = /\b(?:BVM\d?|MS6|MA6|bo[iî]te\s+manuelle)\b/i;
+      const boiteCode = vehiculePublic.boite_code;
+      const boiteTexte = String(vehiculePublic.boite ?? "");
+      const estAuto = /auto|dsg|tronic|edc|bva|eat\d|pdk|tiptronic/i.test(boiteTexte) || boiteCode != null;
+      const estManuelle = /manuel|bvm/i.test(boiteTexte);
+      const ecartees: Array<Record<string, unknown>> = [];
+      catalogue = catalogue.filter((e) => {
+        const texte = `${e.titre} ${e.symptome} ${e.organe ?? ""}`;
+        const codeCite = texte.match(CODE_BOITE_RE)?.[1]?.toUpperCase();
+        if (codeCite) {
+          if (boiteCode && codeCite === boiteCode) return true;
+          ecartees.push({ ref: e.ref, titre: e.titre.slice(0, 120), code_cite: codeCite, boite_identifiee: boiteCode });
+          return false;
+        }
+        if (DOUBLE_EMBRAYAGE_RE.test(texte)) {
+          if (estAuto) return true;
+          ecartees.push({ ref: e.ref, titre: e.titre.slice(0, 120), code_cite: "double_embrayage", boite_identifiee: boiteCode });
+          return false;
+        }
+        if (MANUELLE_RE.test(texte) && estAuto && !estManuelle) {
+          ecartees.push({ ref: e.ref, titre: e.titre.slice(0, 120), code_cite: "manuelle", boite_identifiee: boiteCode });
+          return false;
+        }
+        return true;
+      });
+      if (ecartees.length > 0) {
+        await admin.from("events").insert(
+          ecartees.map((x) => ({ name: "panne_boite_ecartee", props_json: x })),
+        );
+      }
+    }
 
     // ---- Constats photo : validation serveur stricte ----
     let constatsPhoto: ConstatPhoto[] = [];
@@ -1109,6 +1197,14 @@ serve(async (req: Request) => {
     );
     if ("error" in analyseCall) {
       await logPipelineError(admin, "analyse", analyseCall);
+      if (estServiceIndisponible(analyseCall)) {
+        if (typeof EdgeRuntime !== "undefined") {
+          EdgeRuntime.waitUntil(alerteServiceIndisponible(admin, analyseCall.detail ?? analyseCall.error));
+        } else {
+          await alerteServiceIndisponible(admin, analyseCall.detail ?? analyseCall.error);
+        }
+        return jsonResponse({ error: "service_unavailable", message: MESSAGE_INDISPONIBLE }, 503);
+      }
       return jsonResponse({ error: "ia_error", message: "L'analyse a échoué. Réessayez dans un instant." }, 502);
     }
     const analyse = analyseCall.input;
@@ -1357,6 +1453,7 @@ serve(async (req: Request) => {
       /pneu|frein|carrosserie|peinture|essai\s+routier|obd|d[ée]marrage\s+[àa]\s+froid|contr[ôo]le\s+technique|\bct\b|carte\s+grise|document/i
         .test(texte);
 
+    const raisonsAvantCritique = [...raisons];
     let dropped: Array<{ id: string; texte: string; justification: string; source: string }> = [];
     let critiqueApplied = false;
     if (!("error" in critiqueCall)) {
@@ -1493,6 +1590,53 @@ serve(async (req: Request) => {
       questions = questions.filter((q) => !statutQRe.test(q));
       questions.splice(Math.min(4, questions.length), 0, INTERMEDIAIRE_QUESTION);
       questions = questions.slice(0, 8);
+    }
+
+    // Filtre déterministe des raisons génériques : une raison vraie pour toute
+    // annonce du même type de vendeur n'apprend rien à l'acheteur. On ne
+    // l'applique pas aux statuts où le cadre juridique EST l'information
+    // principale (intermédiaire, pro déguisé), ni si c'est la dernière raison.
+    if (statutVendeur === "particulier" || statutVendeur === "pro") {
+      const GENERIQUE_RAISON_RE =
+        /(?:vente|vendeur)\s+(?:entre\s+)?particuliers?\s*[:,-]?\s*(?:aucune|pas\s+de|sans)\s+garantie|aucune\s+garantie\s+l[ée]gale[^.]{0,45}(?:particulier|s'applique)|l'acheteur\s+assume\s+seul|occasion\s*[:,]?\s*(?:des\s+)?risques\s+inh[ée]rents/i;
+      const filtrees = raisons.filter((r) => !GENERIQUE_RAISON_RE.test(r));
+      if (filtrees.length > 0) raisons = filtrees;
+    }
+
+    // Une « incohérence » qui constate seulement qu'une donnée MANQUE n'oppose
+    // aucun élément à un autre : c'est un point à demander au vendeur.
+    {
+      const MANQUE_RE =
+        /\bn'?est\s+pas\s+(?:indiqu|pr[ée]cis|mentionn|renseign|fourni|document|communiqu)|\b(?:n'?indique|ne\s+pr[ée]cise|ne\s+mentionne|ne\s+donne|ne\s+fournit)\s+pas\b|\baucune?\s+(?:indication|pr[ée]cision|mention)\b/i;
+      incoherences = incoherences.filter((i) => !MANQUE_RE.test(i));
+    }
+
+    // Garde-fou : une analyse publiée sans aucune raison principale n'est pas
+    // exploitable. Si la critique les a toutes écartées comme « génériques »,
+    // on rattrape celles qui citent un élément concret (chiffre, modèle) ;
+    // à défaut on énonce le constat factuel qui explique ce vide.
+    if (raisons.length === 0) {
+      const modeleRe = vehiculePublic.modele
+        ? new RegExp(vehiculePublic.modele.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")
+        : null;
+      const specifiques = raisonsAvantCritique.filter((r) =>
+        /\d/.test(r) || (modeleRe ? modeleRe.test(r) : false)
+      );
+      if (specifiques.length > 0) {
+        raisons = specifiques.slice(0, 2);
+      } else if (!vehiculePublic.famille_moteur) {
+        raisons = [
+          "L'annonce ne permet pas d'identifier la motorisation exacte : les défauts connus de ce moteur ne peuvent pas être vérifiés avant de voir le véhicule et sa carte grise.",
+        ];
+      } else if (pannesJoined.length === 0) {
+        raisons = [
+          "Aucun défaut documenté n'a pu être rattaché à ce moteur avec une source fiable : l'examen sur place et l'essai routier restent indispensables.",
+        ];
+      } else {
+        raisons = [
+          `Le principal point de vigilance de cette annonce porte sur ${pannesJoined[0].titre.toLowerCase()}.`,
+        ];
+      }
     }
 
     // ---------------- Garantie constructeur & programmes (règles serveur) ----------------
@@ -1829,6 +1973,27 @@ serve(async (req: Request) => {
         ...(isEval ? { eval: true } : {}),
       },
     });
+
+    // Le service répond : on rejoue les demandes mises en attente pendant la
+    // dernière panne (non bloquant pour l'utilisateur courant).
+    if (!isEval) {
+      const relance = (async () => {
+        try {
+          const { count } = await admin
+            .from("pending_analyses")
+            .select("id", { count: "exact", head: true })
+            .eq("statut", "en_attente");
+          if ((count ?? 0) === 0) return;
+          await fetch(`${SUPABASE_URL}/functions/v1/retry-pending`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
+          });
+        } catch (e) {
+          console.error("relance pending:", e);
+        }
+      })();
+      if (typeof EdgeRuntime !== "undefined") EdgeRuntime.waitUntil(relance);
+    }
 
     return jsonResponse({ id: inserted.id, result });
   } catch (error) {

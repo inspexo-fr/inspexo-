@@ -33,6 +33,17 @@ async function callFunction(name, body) {
 /** Analyse d'annonce — { text, images?, comparables? } → { id, result } */
 export const analyzeListing = (payload) => callFunction('score', payload)
 
+/** Dépôt d'une demande en attente quand le service IA est indisponible. */
+export async function submitPendingAnalysis(email, text, usage) {
+  const { data, error } = await supabase.rpc('submit_pending_analysis', {
+    p_email: email,
+    p_text: text,
+    p_usage: usage ?? null,
+  })
+  if (error) throw error
+  return data // id de la demande
+}
+
 /** Rappels constructeur + Takata — { marque, modele, annee?, analysis_id? } */
 export const fetchRappels = (payload) => callFunction('rappels', payload)
 

@@ -227,6 +227,12 @@ async function runCase(name) {
     }
   }
 
+  // Invariante produit : une analyse de véhicule publie toujours au moins une
+  // raison principale (sinon la page de résultat n'explique rien).
+  if (r.type === 'vehicule' && (r.raisons_principales || []).length === 0) {
+    failures.push('aucune raison principale (invariante produit)')
+  }
+
   // photos_bloc : true = des constats photo doivent exister ; false = aucun
   if ('photos_bloc' in expected) {
     const n = Array.isArray(r.constats_photo) ? r.constats_photo.length : 0

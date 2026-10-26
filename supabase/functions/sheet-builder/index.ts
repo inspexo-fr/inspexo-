@@ -48,20 +48,12 @@ serve(async (req: Request) => {
       return new Response(JSON.stringify(out), { headers: { "Content-Type": "application/json" } });
     }
 
-    // Mode « regenerer » : supprime la fiche generee existante et relance une
-    // génération complète (seuil qualité inclus), hors cooldown. Les fiches
-    // validées (relecture humaine) ne sont jamais supprimées.
+    // Mode « regenerer » : relance une génération complète (seuil qualité inclus)
+    // hors cache et hors cooldown. L'ancienne fiche n'est JAMAIS supprimée au
+    // préalable : si la nouvelle génération échoue, la fiche existante reste en
+    // place (c'est getOrCreateDefectSheet qui remplace l'ancienne, et seulement
+    // après une génération réussie).
     const force = body?.mode === "regenerer";
-    if (force) {
-      const { normalizeBrand } = await import("../_shared/brandAliases.ts");
-      const normFam = (f: string) => (f || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-      await admin
-        .from("defect_sheets")
-        .delete()
-        .eq("marque_norm", normalizeBrand(marque))
-        .eq("famille_norm", normFam(famille))
-        .eq("statut", "generee");
-    }
 
     const result = await getOrCreateDefectSheet(admin, ANTHROPIC_API_KEY!, {
       force,

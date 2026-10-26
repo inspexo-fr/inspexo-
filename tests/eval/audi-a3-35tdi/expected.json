@@ -27,8 +27,11 @@
     ]
   ],
   "must_not_include": [
+    "DQ200",
+    "DQ250",
     "confiance basse",
-    "notre catalogue",
-    "génération de fiche"
+    "embrayages secs",
+    "génération de fiche",
+    "notre catalogue"
   ]
 }
