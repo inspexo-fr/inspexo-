@@ -9,7 +9,7 @@
 //   - sinon : génération via Claude + outil web search Anthropic (5 max)
 
 // deno-lint-ignore-file no-explicit-any
-import { normalizeBrand, rawBrandVariants } from "./brandAliases.ts";
+import { normalizeBrand, rawBrandVariants, expandBrand } from "./brandAliases.ts";
 import { programmeSourceOk, sanitizeProgrammes, type WarrantyProgram } from "./warrantyPrograms.ts";
 
 const MODEL = "claude-sonnet-5";
@@ -600,10 +600,12 @@ export async function lookupDefectSheet(
   // Sans cela, deux analyses de la MÊME annonce utiliseraient des fiches
   // différentes — donc des scores différents. On retient la fiche dont la
   // famille est compatible par préfixe, la plus spécifique d'abord.
+  // Toutes les écritures connues de la marque : « Mercedes » et « Mercedes-Benz »
+  // désignent le même constructeur et doivent partager la même fiche.
   const { data: toutes } = await admin
     .from("defect_sheets")
     .select("*")
-    .eq("marque_norm", marqueNorm)
+    .in("marque_norm", expandBrand(params.marque))
     .order("updated_at", { ascending: false })
     .limit(40);
 
@@ -623,17 +625,61 @@ export async function lookupDefectSheet(
   });
 
   const now = Date.now();
-  for (const row of rows ?? []) {
+  const valides = (rows ?? []).filter((row: { annee_debut: number | null; annee_fin: number | null; statut: string; updated_at: string }) => {
     if (
       params.annee != null &&
       ((row.annee_debut != null && params.annee < row.annee_debut - 1) ||
         (row.annee_fin != null && params.annee > row.annee_fin + 1))
-    ) continue;
-    if (row.statut === "validee" || now - new Date(row.updated_at).getTime() < SHEET_TTL_MS) {
-      return row as DefectSheet;
+    ) return false;
+    return row.statut === "validee" || now - new Date(row.updated_at).getTime() < SHEET_TTL_MS;
+  });
+  if (valides.length === 0) return null;
+
+  // Plusieurs fiches compatibles (variantes de marque ou de famille) décrivent
+  // le même moteur : on FUSIONNE leurs pannes plutôt que d'en choisir une au
+  // hasard, sinon l'analyse perd des informations présentes dans l'autre (un
+  // seuil kilométrique, un coût, un rappel). Déduplication par mots-clés ;
+  // à panne équivalente on conserve la version la plus renseignée.
+  const base = valides[0] as DefectSheet;
+  if (valides.length === 1) return base;
+
+  const motsCles = (t: string) =>
+    new Set(
+      t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .split(/[^a-z]+/).filter((w) => w.length >= 5),
+    );
+  const richesse = (p: SheetPanne) =>
+    (p.km_typique ? 2 : 0) + (p.cout_indicatif_eur_max != null ? 1 : 0) +
+    (p.rappel_code ? 2 : 0) + (p.url_source?.length ?? 0);
+
+  const fusionnees: SheetPanne[] = [];
+  const signatures: Array<Set<string>> = [];
+  for (const row of valides as DefectSheet[]) {
+    for (const panne of row.pannes ?? []) {
+      const sig = motsCles(`${panne.titre} ${panne.organe ?? ""}`);
+      const idx = signatures.findIndex((s2) => {
+        let communs = 0;
+        for (const m of sig) if (s2.has(m)) communs += 1;
+        return communs >= 2;
+      });
+      if (idx === -1) { fusionnees.push(panne); signatures.push(sig); continue; }
+      if (richesse(panne) > richesse(fusionnees[idx])) {
+        fusionnees[idx] = { ...fusionnees[idx], ...panne };
+        for (const m of sig) signatures[idx].add(m);
+      } else {
+        // On récupère tout de même les champs manquants de l'autre version.
+        fusionnees[idx] = {
+          ...panne,
+          ...fusionnees[idx],
+          km_typique: fusionnees[idx].km_typique ?? panne.km_typique,
+          cout_indicatif_eur_min: fusionnees[idx].cout_indicatif_eur_min ?? panne.cout_indicatif_eur_min,
+          cout_indicatif_eur_max: fusionnees[idx].cout_indicatif_eur_max ?? panne.cout_indicatif_eur_max,
+          rappel_code: fusionnees[idx].rappel_code ?? panne.rappel_code,
+        };
+      }
     }
   }
-  return null;
+  return { ...base, pannes: fusionnees };
 }
 
 /**

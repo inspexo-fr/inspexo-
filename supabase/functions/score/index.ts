@@ -1922,6 +1922,33 @@ serve(async (req: Request) => {
         return false;
       };
 
+      // Une panne d'usure dont la source situe l'apparition très au-delà du
+      // kilométrage actuel (moins de la moitié du seuil publié) est affichée
+      // mais ne pèse pas sur la note : punir un véhicule récent pour une usure
+      // attendue 120 000 km plus tard fausserait le verdict.
+      const seuilKmPanne = (km_typique: string | null): number | null => {
+        if (!km_typique) return null;
+        const nombres = [...km_typique.matchAll(/(\d[\d\s]{2,8})/g)]
+          .map((m2) => parseInt(m2[1].replace(/\s/g, ""), 10))
+          .filter((n) => Number.isFinite(n) && n >= 10000);
+        return nombres.length ? Math.min(...nombres) : null;
+      };
+      const kmActuel = typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null;
+      const pannesQuiPesent = pannesJoined.filter((p) => {
+        if (p.gravite === "securite") return true; // un danger pèse toujours
+        if (p.rappel_code && !p.rappel_hors_periode) return true;
+        const seuil = seuilKmPanne(p.km_typique);
+        if (seuil == null || kmActuel == null) return true;
+        return kmActuel >= seuil * 0.5;
+      });
+      const pannesEcartees = pannesJoined.length - pannesQuiPesent.length;
+      if (pannesEcartees > 0) {
+        await admin.from("events").insert({
+          name: "panne_hors_perimetre_km",
+          props_json: { km: kmActuel, ecartees: pannesEcartees },
+        });
+      }
+
       const faits: FaitsAxes = {
         annee_courante: Number(new Intl.DateTimeFormat("fr-FR", { year: "numeric", timeZone: "Europe/Paris" }).format(new Date())),
         statut_vendeur: statutVendeur,
@@ -1935,7 +1962,7 @@ serve(async (req: Request) => {
         contradictions_entretien: contradictionsEntretien.length,
         operations_critiques_non_faites: opsCritiquesNonFaites,
         catalogue_vide: catalogue.length === 0,
-        pannes: pannesJoined.map((p) => ({
+        pannes: pannesQuiPesent.map((p) => ({
           gravite: p.gravite,
           rappel_officiel: Boolean(p.rappel_code) && !p.rappel_hors_periode,
           rappel_confirme_effectue: false, // l'annonce ne prouve jamais qu'un rappel a été fait
