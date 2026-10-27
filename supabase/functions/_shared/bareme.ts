@@ -18,7 +18,16 @@ export type FaitsAxes = {
   operations_critiques_non_faites: number;
   // Risques
   catalogue_vide: boolean;
-  pannes: Array<{ gravite: string; rappel_officiel: boolean; rappel_confirme_effectue: boolean }>;
+  // `couverte_garantie` : la panne entre dans une garantie constructeur en
+  // cours ou un programme d'extension dont CE véhicule respecte les seuils.
+  pannes: Array<{
+    gravite: string;
+    rappel_officiel: boolean;
+    rappel_confirme_effectue: boolean;
+    couverte_garantie?: boolean;
+  }>;
+  // Ce que l'acheteur doit fournir pour activer cette couverture.
+  condition_garantie?: string | null;
   // Transverse
   incoherences: number;
 };
@@ -29,12 +38,20 @@ const borne = (n: number, min = 2, max = 20) => Math.max(min, Math.min(max, Math
 const fr = (n: number) => n.toLocaleString("fr-FR");
 
 /** Notes des 5 axes + score global, entièrement déterministes. */
-export function calculerAxes(f: FaitsAxes): {
+export type ResultatBareme = {
   axes: Record<string, Axe>;
   score: number;
   verdict: "vert" | "orange" | "rouge";
-} {
+  // Pourquoi le score a été plafonné (affiché sous le score, une ligne).
+  plafond_raison: string | null;
+  // Ce que deviendrait le verdict si la couverture de garantie était activée.
+  verdict_conditionnel: { score: number; verdict: string; condition: string } | null;
+};
+
+export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const axes: Record<string, Axe> = {};
+  // Pondération des axes : le risque mécanique est le cœur du service.
+  const POIDS: Record<string, number> = { risques_mecaniques: 2 };
 
   // ---------- PRIX ----------
   if (!f.fourchette || f.prix_affiche == null) {
@@ -133,11 +150,10 @@ export function calculerAxes(f: FaitsAxes): {
       else mineures += 1;
       if (p.rappel_officiel && !p.rappel_confirme_effectue) rappels += 1;
     }
+    // La note dépend de la gravité LA PLUS ÉLEVÉE, jamais du nombre de pannes :
+    // un moteur mieux documenté ne doit pas être pénalisé pour cette raison.
     let note = securite > 0 ? 5 : majeures > 0 ? 9 : mineures > 0 ? 13 : 16;
     if (rappels > 0) note -= 3;
-    const total = securite + majeures + mineures;
-    if (total >= 5) note -= 2;
-    else if (total >= 3) note -= 1;
     const bouts = [
       securite ? `${securite} point${securite > 1 ? "s" : ""} de sécurité` : null,
       majeures ? `${majeures} défaut${majeures > 1 ? "s" : ""} majeur${majeures > 1 ? "s" : ""}` : null,
@@ -173,7 +189,6 @@ export function calculerAxes(f: FaitsAxes): {
   // Effet secondaire recherché : dès qu'une panne de sécurité existe, cet axe
   // touche son plancher et le score cesse de dépendre du NOMBRE de pannes
   // retenues — ce qui rend le verdict reproductible.
-  const POIDS: Record<string, number> = { risques_mecaniques: 2 };
   let somme = 0, max = 0;
   for (const [cle, a] of Object.entries(axes)) {
     if (a.note == null) continue;
@@ -187,6 +202,10 @@ export function calculerAxes(f: FaitsAxes): {
   const nSecurite = f.pannes.filter((p) => p.gravite === "securite").length;
   const nRappels = f.pannes.filter((p) => p.rappel_officiel && !p.rappel_confirme_effectue).length;
   let plafond = 100;
+  let plafondRaison: string | null = null;
+  const poser = (valeur: number, raison: string) => {
+    if (valeur < plafond) { plafond = valeur; plafondRaison = raison; }
+  };
 
   // Une annonce qui n'apprend rien ne mérite pas un feu vert : sur un véhicule
   // déjà âgé ou kilométré, l'absence totale d'information sur l'entretien
@@ -194,17 +213,69 @@ export function calculerAxes(f: FaitsAxes): {
   // récent et peu roulé, où il y a objectivement peu à savoir).
   const ageV = f.annee != null ? f.annee_courante - f.annee : null;
   const vehiculeUse = (ageV != null && ageV >= 5) || (f.kilometrage != null && f.kilometrage >= 100000);
-  if (!f.entretien_renseigne && vehiculeUse) plafond = Math.min(plafond, 65);
+  if (!f.entretien_renseigne && vehiculeUse) {
+    poser(65, "Vert impossible sans preuve d'entretien : demandez le carnet et les factures.");
+  }
 
   // Trop peu d'axes évaluables : le score repose sur une base trop étroite.
   const axesNotes = Object.values(axes).filter((a) => a.note != null).length;
-  if (axesNotes <= 2) plafond = Math.min(plafond, 72);
+  if (axesNotes <= 2) poser(72, "Annonce trop peu détaillée pour évaluer plus de deux critères.");
 
-  if (nSecurite >= 1) plafond = Math.min(plafond, 58);
-  if (f.operations_critiques_non_faites >= 1) plafond = Math.min(plafond, 55);
-  if (nRappels >= 1) plafond = Math.min(plafond, 48);
+  if (nSecurite >= 1) poser(58, "Un défaut de sécurité documenté est retenu sur ce moteur.");
+  if (f.operations_critiques_non_faites >= 1) {
+    poser(55, "Une opération d'entretien critique est déclarée non faite.");
+  }
+  if (nRappels >= 1) poser(48, "Un rappel constructeur reste à faire confirmer sur ce véhicule.");
   score = Math.min(score, plafond);
-
   const verdict = score >= 70 ? "vert" : score >= 40 ? "orange" : "rouge";
-  return { axes, score, verdict };
+
+  // ---------- Verdict conditionnel (couverture de garantie) ----------
+  // Une panne couverte par une garantie en cours ou un programme d'extension
+  // ne disparaît pas, mais son poids baisse d'un cran DÈS LORS que l'acheteur
+  // fournit ce que le constructeur exige.
+  let verdictConditionnel: ResultatBareme["verdict_conditionnel"] = null;
+  const couvertes = f.pannes.filter((p) => p.couverte_garantie);
+  if (couvertes.length > 0 && f.condition_garantie && axes.risques_mecaniques.note != null) {
+    const restantes = f.pannes.filter((p) => !p.couverte_garantie);
+    const gravMax = (liste: typeof f.pannes) =>
+      liste.some((p) => p.gravite === "securite") ? "securite"
+        : liste.some((p) => p.gravite === "majeure") ? "majeure"
+        : liste.some((p) => p.gravite === "mineure") ? "mineure" : "aucune";
+    // Les pannes couvertes rétrogradent d'un cran, les autres sont inchangées.
+    const retrograde = (g: string) => g === "securite" ? "majeure" : g === "majeure" ? "mineure" : "mineure";
+    const gravites = [
+      gravMax(restantes),
+      ...couvertes.map((p) => retrograde(p.gravite)),
+    ];
+    const pire = gravites.includes("securite") ? "securite"
+      : gravites.includes("majeure") ? "majeure"
+      : gravites.includes("mineure") ? "mineure" : "aucune";
+    let noteCond = pire === "securite" ? 5 : pire === "majeure" ? 9 : pire === "mineure" ? 13 : 16;
+    // Un rappel pris en charge par le programme ne pèse plus.
+    const rappelsHorsCouverture = restantes.filter((p) => p.rappel_officiel && !p.rappel_confirme_effectue).length;
+    if (rappelsHorsCouverture > 0) noteCond -= 3;
+    noteCond = borne(noteCond);
+
+    let sommeC = 0, maxC = 0;
+    for (const [cle, a] of Object.entries(axes)) {
+      if (a.note == null) continue;
+      const poids = POIDS[cle] ?? 1;
+      sommeC += (cle === "risques_mecaniques" ? noteCond : a.note) * poids;
+      maxC += 20 * poids;
+    }
+    let scoreC = maxC > 0 ? Math.round((sommeC / maxC) * 100) : 0;
+    // Les plafonds liés à ce qui est couvert tombent ; les autres restent.
+    let plafondC = 100;
+    if (!f.entretien_renseigne && vehiculeUse) plafondC = Math.min(plafondC, 65);
+    if (axesNotes <= 2) plafondC = Math.min(plafondC, 72);
+    if (gravites.includes("securite")) plafondC = Math.min(plafondC, 58);
+    if (rappelsHorsCouverture >= 1) plafondC = Math.min(plafondC, 48);
+    scoreC = Math.min(scoreC, plafondC);
+    const verdictC = scoreC >= 70 ? "vert" : scoreC >= 40 ? "orange" : "rouge";
+    if (scoreC > score) {
+      verdictConditionnel = { score: scoreC, verdict: verdictC, condition: f.condition_garantie };
+    }
+  }
+
+  return { axes, score, verdict, plafond_raison: plafondRaison, verdict_conditionnel: verdictConditionnel };
 }

@@ -234,6 +234,17 @@ async function runCase(name) {
     failures.push('aucune raison principale (invariante produit)')
   }
 
+  // verdict_conditionnel : couleur attendue si la couverture de garantie joue
+  if (expected.verdict_conditionnel) {
+    const vc = r.verdict_conditionnel
+    if (!vc) failures.push('verdict_conditionnel absent')
+    else if (vc.verdict !== expected.verdict_conditionnel) {
+      failures.push(`verdict_conditionnel ${vc.verdict} ≠ ${expected.verdict_conditionnel}`)
+    } else if (vc.score <= r.score) {
+      failures.push(`verdict_conditionnel ${vc.score} ≤ score affiché ${r.score}`)
+    }
+  }
+
   // photos_bloc : true = des constats photo doivent exister ; false = aucun
   if ('photos_bloc' in expected) {
     const n = Array.isArray(r.constats_photo) ? r.constats_photo.length : 0

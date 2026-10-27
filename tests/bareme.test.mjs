@@ -12,7 +12,8 @@ const base = {
   contradictions_entretien: 0, operations_critiques_non_faites: 0,
   catalogue_vide: false, pannes: [], incoherences: 0,
 }
-const panne = (gravite, rappel = false) => ({ gravite, rappel_officiel: rappel, rappel_confirme_effectue: false })
+const panne = (gravite, rappel = false, couverte = false) =>
+  ({ gravite, rappel_officiel: rappel, rappel_confirme_effectue: false, couverte_garantie: couverte })
 
 let ko = 0
 const verifie = (titre, faits, attendu) => {
@@ -61,6 +62,39 @@ verifie('Prix très au-dessus du marché',
 verifie('Annonce très courte : Golf 7 de 2015, 123 000 km, rien sur l\'entretien',
   { annee: 2015, kilometrage: 123000, catalogue_vide: true },
   { verdict: 'orange', score_max: 69 })
+
+// Cas 308 : la courroie est couverte par l'extension PureTech si l'acheteur
+// fournit les 3 dernières factures → le verdict doit passer de rouge à orange.
+{
+  const faits = {
+    ...base, annee: 2020, kilometrage: 138000,
+    pannes: [panne('securite', true, true), panne('majeure'), panne('mineure')],
+    condition_garantie: 'les 3 dernières factures d\'entretien',
+  }
+  const r = calculerAxes(faits)
+  const c = r.verdict_conditionnel
+  const ok = r.verdict === 'rouge' && c && c.verdict === 'orange' && c.score > r.score
+  if (!ok) ko++
+  console.log(`${ok ? 'PASS' : 'FAIL'} — 308 couverte par l'extension : ${r.verdict} ${r.score} → conditionnel ` +
+    (c ? `${c.verdict} ${c.score} (${c.condition})` : 'ABSENT'))
+}
+
+// Le plafond « pas de preuve d'entretien » doit être explicité.
+{
+  const r = calculerAxes({ ...base, annee: 2015, kilometrage: 123000, catalogue_vide: true })
+  const ok = typeof r.plafond_raison === 'string' && /preuve d'entretien/i.test(r.plafond_raison)
+  if (!ok) ko++
+  console.log(`${ok ? 'PASS' : 'FAIL'} — raison du plafond : ${r.plafond_raison ?? 'ABSENTE'}`)
+}
+
+// Un moteur mieux documenté ne doit pas être pénalisé pour cette raison.
+{
+  const peu = calculerAxes({ ...base, pannes: [panne('majeure')] })
+  const beaucoup = calculerAxes({ ...base, pannes: [panne('majeure'), panne('majeure'), panne('majeure'), panne('mineure'), panne('mineure')] })
+  const ok = peu.score === beaucoup.score
+  if (!ok) ko++
+  console.log(`${ok ? 'PASS' : 'FAIL'} — 1 panne majeure (${peu.score}) = 5 pannes même gravité max (${beaucoup.score})`)
+}
 
 console.log('\nDÉTERMINISME')
 const faitsRef = { ...base, statut_vendeur: 'pro', annee: 2019, kilometrage: 95000,

@@ -672,6 +672,31 @@ export default function ResultPage() {
               </div>
             )}
 
+            {/* Verdict conditionnel : ce que changerait la couverture de garantie */}
+            {r.verdict_conditionnel && (
+              <div style={{
+                marginTop: 12, padding: '10px 14px', borderRadius: 10,
+                background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.25)',
+                fontFamily: FONT, fontSize: '0.8125rem', color: '#166534', lineHeight: 1.55,
+              }}>
+                Verdict si {r.verdict_conditionnel.condition} :{' '}
+                <strong>
+                  {VERDICT_STYLE[r.verdict_conditionnel.verdict]?.label ?? r.verdict_conditionnel.verdict}
+                  {' '}{r.verdict_conditionnel.score}/100
+                </strong>
+              </div>
+            )}
+
+            {/* Pourquoi le score est plafonné */}
+            {r.plafond_raison && (
+              <div style={{
+                marginTop: 8, fontFamily: FONT, fontSize: '0.75rem',
+                color: '#92400E', lineHeight: 1.5,
+              }}>
+                {r.plafond_raison}
+              </div>
+            )}
+
             <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
               <button onClick={handleShare} style={{
                 flex: '1 1 140px', background: '#0F1B2D', color: '#fff',

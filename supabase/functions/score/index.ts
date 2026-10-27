@@ -1445,6 +1445,9 @@ serve(async (req: Request) => {
     let scoreDetail: Record<string, { note: number | null; commentaire: string }> = {};
     let score = 0;
     let verdict: "vert" | "orange" | "rouge" = "orange";
+    let plafondRaison: string | null = null;
+    // deno-lint-ignore no-explicit-any
+    let verdictConditionnel: any = null;
 
     // Nettoyage : jamais de référence interne du catalogue dans un texte utilisateur.
     const scrubRefs = (s: string) =>
@@ -1818,35 +1821,35 @@ serve(async (req: Request) => {
         ) || /distribution|courroie|cha[îi]ne|vidange|embrayage|turbo/.test(t);
       }).length;
 
-      // Base de notation DÉTERMINISTE : on n'utilise pas les pannes que le
-      // modèle a choisi de mettre en avant (cette sélection varie d'un appel à
-      // l'autre), mais l'exposition réelle du véhicule aux défauts documentés
-      // du moteur : une entrée du catalogue compte si son kilométrage typique
-      // est atteint, ou si elle porte un rappel applicable, ou si elle n'a pas
-      // de seuil publié. Le modèle garde la main sur la rédaction.
-      const seuilKm = (km_typique: string | null): number | null => {
-        if (!km_typique) return null;
-        const nombres = [...km_typique.matchAll(/(\d[\d\s]{2,8})/g)]
-          .map((m) => parseInt(m[1].replace(/\s/g, ""), 10))
-          .filter((n) => Number.isFinite(n) && n >= 1000);
-        return nombres.length ? Math.min(...nombres) : null;
-      };
-      const kmV = typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null;
-      const pannesPourNote = catalogue.filter((e) => {
-        const horsPeriode = Boolean(
-          e.rappel_code && typeof v.annee_modele === "number" &&
-            ((e.rappel_annee_debut != null && v.annee_modele < e.rappel_annee_debut - 1) ||
-              (e.rappel_annee_fin != null && v.annee_modele > e.rappel_annee_fin + 1)),
+      // Base de notation : EXACTEMENT les pannes affichées à l'acheteur, dans
+      // le même ordre. La note dépend de leur gravité maximale, jamais de leur
+      // nombre — un moteur mieux documenté ne doit pas être pénalisé.
+      //
+      // Couverture : une panne entre dans un programme d'extension dont CE
+      // véhicule respecte les seuils (ou dans la garantie constructeur encore
+      // en cours) quand son organe figure dans l'objet du programme.
+      const motsUtiles = (t: string) =>
+        new Set(
+          t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .split(/[^a-z]+/).filter((w) => w.length >= 5),
         );
-        if (e.rappel_code && !horsPeriode) return true;
-        // Une maladie connue du moteur (sécurité ou majeure) est TOUJOURS
-        // retenue : elle caractérise le moteur, pas l'usure du véhicule.
-        // Le seuil kilométrique ne filtre que les défauts d'usure mineurs.
-        if (e.gravite === "securite" || e.gravite === "majeure") return true;
-        const seuil = seuilKm(e.km_typique);
-        if (seuil == null) return true;
-        return kmV == null ? true : kmV >= seuil * 0.8;
-      });
+      const motsProgramme = progEligible
+        ? motsUtiles(`${progEligible.titre} ${progEligible.conditions}`)
+        : new Set<string>();
+      const sousGarantieConstructeur = ageVehicule != null && ageVehicule < dureeGarantie;
+      const conditionGarantie = progEligible
+        ? (progEligible.entretien_exige ?? "les justificatifs d'entretien exigés par le constructeur")
+        : sousGarantieConstructeur
+        ? "la garantie constructeur est confirmée active et transférable"
+        : null;
+      const estCouverte = (titre: string, organe: string | null) => {
+        if (sousGarantieConstructeur) return true;
+        if (!progEligible) return false;
+        for (const mot of motsUtiles(`${titre} ${organe ?? ""}`)) {
+          if (motsProgramme.has(mot)) return true;
+        }
+        return false;
+      };
 
       const faits: FaitsAxes = {
         annee_courante: Number(new Intl.DateTimeFormat("fr-FR", { year: "numeric", timeZone: "Europe/Paris" }).format(new Date())),
@@ -1861,20 +1864,21 @@ serve(async (req: Request) => {
         contradictions_entretien: contradictionsEntretien.length,
         operations_critiques_non_faites: opsCritiquesNonFaites,
         catalogue_vide: catalogue.length === 0,
-        pannes: pannesPourNote.map((e) => ({
-          gravite: e.gravite,
-          rappel_officiel: Boolean(e.rappel_code) &&
-            !(typeof v.annee_modele === "number" &&
-              ((e.rappel_annee_debut != null && v.annee_modele < e.rappel_annee_debut - 1) ||
-                (e.rappel_annee_fin != null && v.annee_modele > e.rappel_annee_fin + 1))),
+        pannes: pannesJoined.map((p) => ({
+          gravite: p.gravite,
+          rappel_officiel: Boolean(p.rappel_code) && !p.rappel_hors_periode,
           rappel_confirme_effectue: false, // l'annonce ne prouve jamais qu'un rappel a été fait
+          couverte_garantie: estCouverte(p.titre, p.organe),
         })),
+        condition_garantie: conditionGarantie,
         incoherences: incoherences.length,
       };
       const calcul = calculerAxes(faits);
       scoreDetail = calcul.axes;
       score = calcul.score;
       verdict = calcul.verdict;
+      plafondRaison = calcul.plafond_raison;
+      verdictConditionnel = calcul.verdict_conditionnel;
     }
 
     // ---------------- Entretien : « dû » / « prouvé » / « à exiger » ----------------
@@ -1988,6 +1992,8 @@ serve(async (req: Request) => {
       indices_statut: (ident.indices_statut ?? []).slice(0, 6),
       verdict,
       score,
+      plafond_raison: plafondRaison,
+      verdict_conditionnel: verdictConditionnel,
       score_detail: scoreDetail,
       raisons_principales: raisons,
       points_rassurants: pointsRassurants,
