@@ -18,3 +18,6 @@ supabase/.temp/
 .env
 deno.lock
 .eval-cout.json
+
+# captures du rapport de sprint (artefacts locaux, jamais commitées)
+captures-sprint3/
