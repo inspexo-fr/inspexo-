@@ -682,6 +682,91 @@ export async function lookupDefectSheet(
   return { ...base, pannes: fusionnees };
 }
 
+/** Un montant n'est « sourcé » pour repair_costs que s'il figure LITTÉRALEMENT
+ *  sur la page (tolère les séparateurs de milliers : « 6 000 », « 6.000 »). */
+export function montantPresent(texte: string, montant: number): boolean {
+  const compact = texte.replace(/(\d)[\s  .,](?=\d{3}\b)/g, "$1");
+  return new RegExp(`(?<!\\d)${montant}(?!\\d)`).test(compact);
+}
+
+/** Alimente repair_costs (négociation chiffrée) avec les coûts déjà sourcés de
+ *  la fiche — pannes et plan d'entretien. Chaque fourchette est VÉRIFIÉE
+ *  littéralement sur une des pages citées avant insertion : un montant que la
+ *  source ne contient pas tel quel n'entre jamais dans la table (il reste
+ *  visible sur la fiche, avec ses sources, mais ne chiffre pas la négociation).
+ *  Statut « sourcé » ; une ligne déjà présente (dont « validé par devis »)
+ *  n'est JAMAIS écrasée. */
+// deno-lint-ignore no-explicit-any
+async function harvestRepairCosts(admin: any, row: {
+  marque: string;
+  marque_norm: string;
+  famille_moteur: string;
+  famille_norm: string;
+  pannes: SheetPanne[];
+  plan_entretien?: PlanEntretienOp[];
+}): Promise<void> {
+  const normOp = (t: string) =>
+    t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim().slice(0, 200);
+  const today = new Date().toISOString().slice(0, 10);
+  // deno-lint-ignore no-explicit-any
+  const rows = new Map<string, any>();
+  const ajouter = (operation: string, min: number | null, max: number | null, urls: string[], date: string) => {
+    if (min == null && max == null) return;
+    const operationNorm = normOp(operation);
+    if (!operationNorm || rows.has(operationNorm)) return;
+    rows.set(operationNorm, {
+      marque: row.marque,
+      marque_norm: row.marque_norm,
+      famille: row.famille_moteur,
+      famille_norm: row.famille_norm,
+      operation: operation.slice(0, 200),
+      operation_norm: operationNorm,
+      cout_min_eur: min != null ? Math.round(min) : null,
+      cout_max_eur: max != null ? Math.round(max) : null,
+      url_source: urls.slice(0, 4),
+      source_date: /^\d{4}-\d{2}-\d{2}/.test(date) ? date.slice(0, 10) : today,
+      statut: "source",
+    });
+  };
+  for (const p of row.pannes ?? []) {
+    ajouter(p.titre, p.cout_indicatif_eur_min, p.cout_indicatif_eur_max, p.url_source ?? [], p.date_consultee ?? today);
+  }
+  for (const op of row.plan_entretien ?? []) {
+    ajouter(op.operation, op.cout_min_eur, op.cout_max_eur, op.url_source ?? [], today);
+  }
+  if (rows.size === 0) return;
+
+  // Vérification littérale des montants sur les pages citées.
+  const cachePages = new Map<string, string | null>();
+  const verifiees: unknown[] = [];
+  const ecartees: string[] = [];
+  for (const ligne of rows.values()) {
+    let ok = false;
+    for (const url of (ligne.url_source as string[]).slice(0, 3)) {
+      if (!cachePages.has(url)) cachePages.set(url, await fetchPageText(url));
+      const texte = cachePages.get(url);
+      if (!texte) continue;
+      const minOk = ligne.cout_min_eur == null || montantPresent(texte, ligne.cout_min_eur as number);
+      const maxOk = ligne.cout_max_eur == null || montantPresent(texte, ligne.cout_max_eur as number);
+      if (minOk && maxOk) { ok = true; break; }
+    }
+    if (ok) verifiees.push(ligne);
+    else ecartees.push(String(ligne.operation));
+  }
+  if (ecartees.length > 0) {
+    await admin.from("events").insert({
+      name: "cout_non_verifie",
+      props_json: { marque: row.marque_norm, famille: row.famille_norm, operations: ecartees.slice(0, 10) },
+    });
+  }
+  if (verifiees.length === 0) return;
+  const { error } = await admin.from("repair_costs").upsert(verifiees, {
+    onConflict: "marque_norm,famille_norm,operation_norm",
+    ignoreDuplicates: true,
+  });
+  if (error) console.error("harvestRepairCosts:", error);
+}
+
 /**
  * Récupère (cache) ou génère (web search) la fiche d'une famille moteur.
  * `admin` = client Supabase service role.
@@ -859,6 +944,11 @@ export async function getOrCreateDefectSheet(
       .maybeSingle();
     inserted = existing;
   }
+
+  await harvestRepairCosts(admin, sheetRow as {
+    marque: string; marque_norm: string; famille_moteur: string; famille_norm: string;
+    pannes: SheetPanne[]; plan_entretien?: PlanEntretienOp[];
+  });
 
   await admin.from("events").insert({
     name: "defect_sheet_created",

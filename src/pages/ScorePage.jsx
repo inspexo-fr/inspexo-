@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
+import { IconeAppareilPhoto, IconeLoupe } from '../components/Icones'
 import Footer from '../components/Footer'
 import { analyzeListing, submitPendingAnalysis } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
@@ -80,9 +81,12 @@ export default function ScorePage() {
         images,
         comparables: comparables.map(c => c.trim()).filter(Boolean),
         ...(usage ? { usage } : {}),
+        // Verdict progressif : la page de résultat s'ouvre dès l'identification,
+        // le reste de l'analyse arrive en direct (polling côté /a/:id).
+        progressive: true,
       }
-      const { id, result } = await analyzeListing(payload)
-      navigate(`/a/${id}`, { state: { result } })
+      const { id, result, partial } = await analyzeListing(payload)
+      navigate(`/a/${id}`, { state: { result, partial: partial === true } })
     } catch (err) {
       // Service IA indisponible : on propose la file d'attente plutôt qu'un échec sec.
       if (err.code === 'service_unavailable' || err.status === 503) {
@@ -209,7 +213,8 @@ export default function ScorePage() {
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '0.8125rem', color: '#9CA3AF', marginBottom: 20,
               }}>
-                Analyse approfondie en 3 passes — comptez 1 à 2 minutes.
+                La page de résultat s'ouvre dès que le véhicule est identifié
+                (quelques secondes) — l'analyse complète s'y affiche en direct.
               </div>
               {LOADING_STEPS.map(({ label: step }, i) => (
                 <div key={i} style={{
@@ -267,7 +272,7 @@ export default function ScorePage() {
                     disabled={images.length >= MAX_IMAGES}
                     style={images.length >= MAX_IMAGES ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                   >
-                    📷 Ajouter des captures ({images.length}/{MAX_IMAGES})
+                    <IconeAppareilPhoto /> Ajouter des captures ({images.length}/{MAX_IMAGES})
                   </button>
                   <span style={{
                     fontFamily: 'Plus Jakarta Sans, sans-serif',
@@ -450,7 +455,7 @@ export default function ScorePage() {
               </div>
 
               <button type="submit" className="score-submit" disabled={!text.trim() || overLimit}>
-                🔍 Analyser gratuitement
+                <IconeLoupe size={18} /> Analyser gratuitement
                 <span style={{ fontSize: '1.1rem' }}>→</span>
               </button>
 

@@ -41,7 +41,7 @@ export default function CalBooking({ tier, onClose }) {
             padding: '4px 12px', borderRadius: 100,
             fontSize: '0.75rem', fontWeight: 600,
           }}>
-            {tier === 'visio' ? '📹 Visio Test Drive' : '🔧 Inspection Physique'}
+            {tier === 'visio' ? 'Visio Test Drive' : 'Inspection Physique'}
           </span>
           <span style={{
             color: '#fff', fontFamily: 'Syne, sans-serif',

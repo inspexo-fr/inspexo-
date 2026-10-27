@@ -32,6 +32,9 @@ export type FaitsAxes = {
   rappel_stop_drive?: boolean;
   juridique_grave?: boolean;
   fraude_suspectee?: boolean;
+  // Compteur photographié contredisant le kilométrage annoncé (> 2 %) :
+  // preuve matérielle de fraude — plafonne le score en rouge à lui seul.
+  compteur_contredit?: boolean;
   // Transverse
   incoherences: number;
 };
@@ -40,6 +43,30 @@ export type Axe = { note: number | null; commentaire: string };
 
 const borne = (n: number, min = 2, max = 20) => Math.max(min, Math.min(max, Math.round(n)));
 const fr = (n: number) => n.toLocaleString("fr-FR");
+
+// ---------- Horizon de détention (pannes d'usure lointaines) ----------
+// Une panne d'usure pèse sur la note si son kilométrage typique d'apparition
+// tombe avant km actuel + 60 000 km (détention moyenne d'un véhicule
+// d'occasion). Au-delà, elle reste affichée — l'acheteur doit la connaître —
+// avec la mention « au-delà d'une détention moyenne », mais ne compte pas.
+export const HORIZON_DETENTION_KM = 60_000;
+
+/** Premier seuil kilométrique publié dans un libellé « dès 160 000 km »,
+ *  « 100 000 - 150 000 km »… null si aucun chiffre exploitable. */
+export function seuilKmPanne(kmTypique: string | null): number | null {
+  if (!kmTypique) return null;
+  const nombres = [...kmTypique.matchAll(/(\d[\d\s]{2,8})/g)]
+    .map((m) => parseInt(m[1].replace(/\s/g, ""), 10))
+    .filter((n) => Number.isFinite(n) && n >= 10000);
+  return nombres.length ? Math.min(...nombres) : null;
+}
+
+/** La panne compte-t-elle dans la note ? Sans seuil publié ou sans kilométrage
+ *  connu, elle compte (on ne minore jamais un risque par manque de donnée). */
+export function panneDansHorizon(kmActuel: number | null, seuilKm: number | null): boolean {
+  if (seuilKm == null || kmActuel == null) return true;
+  return seuilKm <= kmActuel + HORIZON_DETENTION_KM;
+}
 
 /** Notes des 5 axes + score global, entièrement déterministes. */
 export type ResultatBareme = {
@@ -227,6 +254,9 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const axesNotes = Object.values(axes).filter((a) => a.note != null).length;
   if (axesNotes <= 2) poser(72, "Annonce trop peu détaillée pour évaluer plus de deux critères.");
 
+  if (f.compteur_contredit) {
+    poser(35, "Le compteur photographié contredit le kilométrage annoncé : vérifiez l'historique (HistoVec) avant toute discussion.");
+  }
   if (nSecurite >= 1) poser(58, "Un défaut de sécurité documenté est retenu sur ce moteur.");
   if (f.operations_critiques_non_faites >= 1) {
     poser(55, "Une opération d'entretien critique est déclarée non faite.");
@@ -245,7 +275,8 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const securiteNonCouverte = f.pannes.some((p) => p.gravite === "securite");
   const casseNonCouverte = f.pannes.some((p) => p.gravite === "casse");
   const rougeJustifie = securiteNonCouverte || casseNonCouverte ||
-    Boolean(f.rappel_stop_drive) || Boolean(f.juridique_grave) || Boolean(f.fraude_suspectee);
+    Boolean(f.rappel_stop_drive) || Boolean(f.juridique_grave) || Boolean(f.fraude_suspectee) ||
+    Boolean(f.compteur_contredit);
   if (!rougeJustifie && score < 40) score = 40;
 
   const verdict = score >= 70 ? "vert" : score >= 40 ? "orange" : "rouge";
@@ -285,6 +316,8 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     let scoreC = maxC > 0 ? Math.round((sommeC / maxC) * 100) : 0;
     // Les plafonds liés à ce qui est couvert tombent ; les autres restent.
     let plafondC = 100;
+    // Une fraude au compteur n'est jamais « couverte » par une garantie.
+    if (f.compteur_contredit) plafondC = Math.min(plafondC, 35);
     if (!f.entretien_renseigne && vehiculeUse) plafondC = Math.min(plafondC, 65);
     if (axesNotes <= 2) plafondC = Math.min(plafondC, 72);
     if (gravites.includes("securite")) plafondC = Math.min(plafondC, 58);

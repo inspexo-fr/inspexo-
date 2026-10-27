@@ -121,8 +121,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
           {/* Limite atteinte */}
           {limitReached && (
             <>
-              <div style={{ textAlign: 'center', marginBottom: 20, fontSize: '3rem' }}>🔒</div>
-              <h2 style={{
+                            <h2 style={{
                 fontFamily: 'Syne, sans-serif', fontWeight: 800,
                 fontSize: '1.375rem', color: '#fff',
                 textAlign: 'center', marginBottom: 10,
@@ -145,7 +144,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
-                🔓 Débloquer l'analyse complète — 9,90€
+                Débloquer l'analyse complète — 9,90€
               </button>
 
               <button
@@ -157,7 +156,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
-                👨‍🔧 Réserver un expert — à partir de 59€
+                Réserver un expert — à partir de 59€
               </button>
 
               <button
@@ -187,7 +186,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                   fontSize: '0.75rem', fontWeight: 700,
                   letterSpacing: '0.05em', textTransform: 'uppercase',
                 }}>
-                  ✨ GRATUIT — 10 échanges avec l'expert IA
+                  GRATUIT — 10 échanges avec l'expert IA
                 </span>
               </div>
 
@@ -314,7 +313,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                   marginTop: 4,
                 }}
               >
-                {loading ? 'Création...' : '🔍 Lancer l\'analyse gratuite'}
+                {loading ? 'Création...' : 'Lancer l\'analyse gratuite'}
               </button>
 
               <p style={{
@@ -322,7 +321,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                 textAlign: 'center', marginTop: 14, lineHeight: 1.5,
               }}>
                 10 échanges gratuits · Rapport partiel inclus · Sans engagement
-                <br />🔒 Tes données restent confidentielles et ne sont jamais partagées
+                <br />Tes données restent confidentielles et ne sont jamais partagées
               </p>
             </>
           )}

@@ -1,3 +1,4 @@
+import { IconeUtilisateur } from './Icones'
 import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
@@ -219,7 +220,7 @@ export default function Navbar() {
                   className="nav-user-btn"
                   onClick={() => setDropdownOpen(o => !o)}
                 >
-                  <span style={{ fontSize: '0.9rem' }}>👤</span>
+                  <IconeUtilisateur size={14} />
                   {truncateEmail(user.email)}
                   <span style={{
                     fontSize: '0.6rem', opacity: 0.5,
@@ -239,7 +240,7 @@ export default function Navbar() {
                     </div>
                     <div className="nav-dropdown-divider" />
                     <button className="nav-dropdown-item" onClick={openDashboard}>
-                      📋 Mes missions
+                      Mes missions
                     </button>
                     <div className="nav-dropdown-divider" />
                     <button className="nav-dropdown-item danger" onClick={handleSignOut}>
@@ -251,7 +252,7 @@ export default function Navbar() {
             ) : (
               /* ── Non connecté : texte blanc + icône ── */
               <button className="nav-signin-btn" onClick={() => setAuthModalOpen(true)}>
-                👤 Se connecter
+                Se connecter
               </button>
             )}
 
@@ -296,10 +297,10 @@ export default function Navbar() {
                 fontSize: '0.8125rem', color: 'rgba(255,255,255,0.35)',
                 padding: '10px 0 6px',
               }}>
-                👤 {user.email}
+                {user.email}
               </div>
               <button className="mobile-action-btn" onClick={openDashboard}>
-                📋 Mes missions
+                Mes missions
               </button>
               <button className="mobile-action-btn danger" onClick={handleSignOut}>
                 Déconnexion
@@ -308,7 +309,7 @@ export default function Navbar() {
           ) : (
             <>
               <button className="mobile-action-btn" onClick={() => { setAuthModalOpen(true); setMenuOpen(false) }}>
-                👤 Se connecter
+                Se connecter
               </button>
               <div style={{ marginTop: 12 }}>
                 <Link to="/score" className="nav-cta" style={{ display: 'block', textAlign: 'center' }}

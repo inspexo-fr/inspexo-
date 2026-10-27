@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
+import { IconeChat, IconeVideo, IconeOutil, IconeLoupe, IconeBouclier } from './Icones'
 import CheckoutModal from './CheckoutModal'
 import LeadEmailForm from './LeadEmailForm'
 
 const services = [
   {
     tier: 'ia',
-    emoji: '💬',
+    emoji: <IconeChat size={30} />,
     name: 'IA Spécialisée',
     price: '9,90€',
     badge: 'Éclairez votre décision',
@@ -24,10 +25,10 @@ const services = [
   },
   {
     tier: 'visio',
-    emoji: '📹',
+    emoji: <IconeVideo size={30} />,
     name: 'Visio Test Drive',
     price: '59€',
-    badge: '⭐ Recommandé',
+    badge: 'Recommandé',
     badgeStyle: 'featured',
     featured: true,
     description: 'Un expert qualifié vous guide en visio pendant votre visite chez le vendeur pour sécuriser votre achat.',
@@ -44,7 +45,7 @@ const services = [
   },
   {
     tier: 'inspection',
-    emoji: '🔧',
+    emoji: <IconeOutil size={30} />,
     name: 'Inspection Physique',
     price: '249€',
     badge: 'Rien au hasard',
@@ -307,7 +308,7 @@ export default function Services({ onFreeAnalysis }) {
               onMouseEnter={e => { e.currentTarget.style.background = '#FF4D00'; e.currentTarget.style.color = '#fff' }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#FF4D00' }}
             >
-              🔍 Analyser gratuitement
+              <IconeLoupe /> Analyser gratuitement
             </button>
             <div style={{
               marginTop: 10,
@@ -325,13 +326,13 @@ export default function Services({ onFreeAnalysis }) {
             borderRadius: 12, padding: '20px 28px',
             display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
           }}>
-            <span style={{ fontSize: '1.25rem' }}>🛡️</span>
+            <span style={{ display: 'inline-flex', color: '#0F1B2D' }}><IconeBouclier size={22} /></span>
             <div>
               <div style={{
                 fontFamily: 'Syne, sans-serif', fontWeight: 800,
                 fontSize: '0.9375rem', color: '#0F1B2D', marginBottom: 2,
               }}>
-                Paiement sécurisé 🔒
+                Paiement sécurisé
               </div>
               <div style={{
                 fontFamily: 'Plus Jakarta Sans, sans-serif',

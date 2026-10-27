@@ -250,7 +250,7 @@ export default function ExpertModal({ expert, onClose, onReserve }) {
                 onMouseEnter={e => { e.currentTarget.style.opacity = '0.88' }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
               >
-                📹 Réserver une Visio — 59€
+                Réserver une Visio — 59€
               </button>
               <button
                 onClick={() => onReserve('inspection')}
@@ -263,7 +263,7 @@ export default function ExpertModal({ expert, onClose, onReserve }) {
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(15,27,45,0.5)' }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(15,27,45,0.2)' }}
               >
-                🔧 Réserver une Inspection — 249€
+                Réserver une Inspection — 249€
               </button>
             </div>
           </div>

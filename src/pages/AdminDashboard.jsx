@@ -23,7 +23,7 @@ const STATUS_COLORS = {
   completed:       '#16A34A',
   cancelled:       '#DC2626',
 }
-const TIER_LABELS = { ia: 'IA 💬', visio: 'Visio 📹', inspection: 'Inspection 🔧' }
+const TIER_LABELS = { ia: 'IA ', visio: 'Visio ', inspection: 'Inspection ' }
 const APP_STATUS_LABELS = { pending: 'En attente', approved: 'Approuvée', rejected: 'Rejetée' }
 const APP_STATUS_COLORS = { pending: '#FF4D00', approved: '#16A34A', rejected: '#DC2626' }
 
@@ -108,7 +108,7 @@ function MissionsTab() {
             fontFamily: 'Plus Jakarta Sans, sans-serif', cursor: 'pointer',
           }}
         >
-          👤 Non assignées {unassignedCount > 0 && `(${unassignedCount})`}
+          Non assignées {unassignedCount > 0 && `(${unassignedCount})`}
         </button>
         {showUnassignedOnly && (
           <span style={{ fontSize: '0.8125rem', color: '#9CA3AF', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
@@ -118,7 +118,7 @@ function MissionsTab() {
       </div>
 
       {missions.length === 0 ? (
-        <EmptyState icon="📋" title="Aucune mission" sub="Les missions apparaîtront ici après le premier paiement." />
+        <EmptyState icon="" title="Aucune mission" sub="Les missions apparaîtront ici après le premier paiement." />
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={styles.table}>
@@ -152,7 +152,7 @@ function MissionsTab() {
                     {m.vehicle_url && (
                       <a href={m.vehicle_url} target="_blank" rel="noopener noreferrer"
                         style={{ fontSize: '0.75rem', color: '#FF4D00', textDecoration: 'none' }}>
-                        🔗 annonce
+                        annonce
                       </a>
                     )}
                   </td>
@@ -218,7 +218,7 @@ function MissionsTab() {
                         }).then(() => fetchMissions())
                       }}
                     >
-                      👤 Assigner
+                      Assigner
                     </button>
                   </td>
                 </tr>
@@ -281,7 +281,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
         onClick={e => e.stopPropagation()}
       >
         <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 6 }}>
-          🔗 Lien Stripe Connect généré
+          Lien Stripe Connect généré
         </div>
         <div style={{ fontSize: '0.875rem', color: '#6B7280', marginBottom: 24 }}>
           Compte : <code style={{ background: '#F0F2F5', padding: '2px 6px', borderRadius: 4, fontSize: '0.8125rem' }}>{accountId}</code>
@@ -310,7 +310,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
               fontSize: '0.9rem', cursor: 'pointer',
             }}
           >
-            {copied ? '✓ Copié !' : '📋 Copier le lien'}
+            {copied ? '✓ Copié !' : 'Copier le lien'}
           </button>
           <button
             onClick={handleSendEmail}
@@ -325,18 +325,18 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
               opacity: sending ? 0.7 : 1,
             }}
           >
-            {emailSent ? '✓ Email envoyé' : sending ? 'Envoi...' : '📧 Envoyer par email'}
+            {emailSent ? '✓ Email envoyé' : sending ? 'Envoi...' : 'Envoyer par email'}
           </button>
         </div>
 
         {!expertEmail && (
           <div style={{ fontSize: '0.8125rem', color: '#F59E0B', marginBottom: 12 }}>
-            ⚠️ Pas d'email associé — envoi impossible
+            Pas d'email associé — envoi impossible
           </div>
         )}
         {emailError && (
           <div style={{ fontSize: '0.8125rem', color: '#DC2626', marginBottom: 12 }}>
-            ⚠️ {emailError}
+            {emailError}
           </div>
         )}
 
@@ -432,7 +432,7 @@ function ApplicationsTab() {
       </div>
 
       {apps.length === 0 ? (
-        <EmptyState icon="🧑‍🔧" title="Aucune candidature" sub="Les candidatures experts apparaîtront ici." />
+        <EmptyState icon="" title="Aucune candidature" sub="Les candidatures experts apparaîtront ici." />
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={styles.table}>
@@ -534,7 +534,7 @@ function ApplicationsTab() {
                             opacity: generating === a.id ? 0.7 : 1,
                           }}
                         >
-                          {generating === a.id ? '⏳ Génération...' : '🔗 Stripe Connect'}
+                          {generating === a.id ? 'Génération...' : 'Stripe Connect'}
                         </button>
                       )}
                     </div>
@@ -582,7 +582,7 @@ function ApplicationsTab() {
                             padding: '5px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
                             fontFamily: 'Plus Jakarta Sans, sans-serif', textDecoration: 'none',
                           }}>
-                            📄 Voir le CV
+                            Voir le CV
                           </a>
                         )}
                       </div>
@@ -611,10 +611,10 @@ function StatsTab({ missions, applications }) {
   const completed = missions.filter(m => m.status === 'completed').length
 
   const cards = [
-    { label: 'Missions totales',       value: total,              icon: '📋', color: '#FF4D00' },
-    { label: 'CA plateforme',          value: `${ca.toFixed(0)}€`, icon: '💶', color: '#16A34A' },
-    { label: 'Missions terminées',     value: completed,          icon: '✅', color: '#3B82F6' },
-    { label: 'Candidatures en attente', value: pending,           icon: '🧑‍🔧', color: '#F59E0B' },
+    { label: 'Missions totales',       value: total,              color: '#FF4D00' },
+    { label: 'CA plateforme',          value: `${ca.toFixed(0)}€`, color: '#16A34A' },
+    { label: 'Missions terminées',     value: completed,          color: '#3B82F6' },
+    { label: 'Candidatures en attente', value: pending,           color: '#F59E0B' },
   ]
 
   return (
@@ -629,7 +629,6 @@ function StatsTab({ missions, applications }) {
             border: '1.5px solid rgba(0,0,0,0.07)',
             boxShadow: '0 2px 12px rgba(15,27,45,0.04)',
           }}>
-            <div style={{ fontSize: '1.75rem', marginBottom: 12 }}>{c.icon}</div>
             <div style={{
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
               fontSize: '2rem', color: c.color, lineHeight: 1, marginBottom: 8,
@@ -654,9 +653,9 @@ function StatsTab({ missions, applications }) {
           Missions par palier
         </div>
         {[
-          { tier: 'ia',         label: 'IA Spécialisée',     emoji: '💬', price: '9,90€' },
-          { tier: 'visio',      label: 'Visio Test Drive',    emoji: '📹', price: '59€' },
-          { tier: 'inspection', label: 'Inspection Physique', emoji: '🔧', price: '249€' },
+          { tier: 'ia',         label: 'IA Spécialisée',     emoji: '', price: '9,90€' },
+          { tier: 'visio',      label: 'Visio Test Drive',    emoji: '', price: '59€' },
+          { tier: 'inspection', label: 'Inspection Physique', emoji: '', price: '249€' },
         ].map(t => {
           const count = byTier[t.tier]
           const pct   = total > 0 ? Math.round((count / total) * 100) : 0
@@ -702,7 +701,7 @@ function ErrorBox({ msg }) {
       background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '20px 24px',
       fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', color: '#DC2626',
     }}>
-      ⚠️ {msg}
+      {msg}
     </div>
   )
 }
@@ -710,9 +709,151 @@ function ErrorBox({ msg }) {
 function EmptyState({ icon, title, sub }) {
   return (
     <div style={{ textAlign: 'center', padding: '64px 24px' }}>
-      <div style={{ fontSize: '3rem', marginBottom: 12 }}>{icon}</div>
       <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 8 }}>{title}</div>
       <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', color: '#6B7280' }}>{sub}</div>
+    </div>
+  )
+}
+
+// ─── Onglet Coûts de réparation (négociation chiffrée) ────────────────────────
+
+function fileEnDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
+
+function CoutsTab() {
+  const [couts, setCouts]     = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState(null)
+  const [q, setQ]             = useState('')
+  const [statut, setStatut]   = useState('')
+  const [enCours, setEnCours] = useState(null) // id en cours de validation
+  const [devisFichier, setDevisFichier] = useState(null)
+  const [minDevis, setMinDevis] = useState('')
+  const [maxDevis, setMaxDevis] = useState('')
+  const [message, setMessage]   = useState(null)
+
+  const fetchCouts = useCallback(async () => {
+    setLoading(true); setError(null)
+    const params = new URLSearchParams()
+    if (statut) params.set('statut', statut)
+    if (q) params.set('q', q)
+    const data = await adminFetch(`admin-repair-costs${params.toString() ? `?${params}` : ''}`)
+    if (data.error) { setError(data.error); setLoading(false); return }
+    setCouts(data.couts || [])
+    setLoading(false)
+  }, [statut, q])
+
+  useEffect(() => { fetchCouts() }, [fetchCouts])
+
+  const valider = async (id) => {
+    if (!devisFichier) { setMessage('La photo du devis est obligatoire pour valider.'); return }
+    setMessage(null)
+    const devis_image = await fileEnDataUrl(devisFichier)
+    const body = { id, statut: 'valide_devis', devis_image }
+    if (minDevis) body.cout_min_eur = Number(minDevis)
+    if (maxDevis) body.cout_max_eur = Number(maxDevis)
+    const data = await adminFetch('admin-repair-costs', { method: 'PATCH', body: JSON.stringify(body) })
+    if (data.error) { setMessage(data.error); return }
+    setEnCours(null); setDevisFichier(null); setMinDevis(''); setMaxDevis('')
+    fetchCouts()
+  }
+
+  if (loading) return <Spinner label="Chargement des coûts..." />
+  if (error)   return <ErrorBox msg={error} />
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>Coûts de réparation</div>
+          <div style={styles.pageSub}>
+            {couts.length} ligne{couts.length !== 1 ? 's' : ''} — base de la marge de négociation.
+            « Validé par devis » = fourchette confirmée par un devis réel (photo jointe obligatoire).
+          </div>
+        </div>
+        <button onClick={fetchCouts} style={styles.refreshBtn}>↻ Actualiser</button>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 18, flexWrap: 'wrap' }}>
+        <input
+          placeholder="Rechercher une opération…" value={q} onChange={e => setQ(e.target.value)}
+          style={{ flex: '1 1 220px', border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '9px 12px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', outline: 'none' }}
+        />
+        {[['', 'Tous'], ['source', 'Sourcés'], ['valide_devis', 'Validés devis']].map(([val, lbl]) => (
+          <button key={val} onClick={() => setStatut(val)} style={{
+            padding: '8px 14px', borderRadius: 8, cursor: 'pointer',
+            border: statut === val ? '1.5px solid #FF4D00' : '1.5px solid rgba(0,0,0,0.12)',
+            background: statut === val ? '#FFF4EE' : '#fff',
+            color: statut === val ? '#FF4D00' : '#6B7280',
+            fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
+          }}>
+            {lbl}
+          </button>
+        ))}
+      </div>
+
+      {message && <div style={{ marginBottom: 12, color: '#DC2626', fontSize: '0.875rem' }}>{message}</div>}
+
+      {couts.map(c => (
+        <div key={c.id} style={{
+          background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+          padding: '14px 16px', marginBottom: 10,
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ flex: '1 1 320px' }}>
+              <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{c.operation}</span>
+              <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
+                {[c.marque, c.famille].filter(Boolean).join(' · ') || 'Générique (toutes familles)'}
+                {c.source_date ? ` · relevé le ${formatDate(c.source_date)}` : ''}
+                {(Array.isArray(c.url_source) ? c.url_source : []).slice(0, 2).map((u, i) => (
+                  <a key={i} href={u} target="_blank" rel="noreferrer" style={{ color: '#1E4D8C', marginLeft: 8 }}>source {i + 1}</a>
+                ))}
+              </div>
+            </div>
+            <div style={{ fontWeight: 700, color: '#1E4D8C', whiteSpace: 'nowrap' }}>
+              {c.cout_min_eur != null ? `${c.cout_min_eur.toLocaleString('fr-FR')} €` : ''}
+              {c.cout_min_eur != null && c.cout_max_eur != null ? ' – ' : ''}
+              {c.cout_max_eur != null ? `${c.cout_max_eur.toLocaleString('fr-FR')} €` : ''}
+            </div>
+            <span style={{
+              fontSize: '0.6875rem', fontWeight: 700, borderRadius: 100, padding: '3px 10px',
+              background: c.statut === 'valide_devis' ? '#F0FDF4' : '#F0F2F5',
+              color: c.statut === 'valide_devis' ? '#16A34A' : '#6B7280',
+            }}>
+              {c.statut === 'valide_devis' ? 'Validé par devis' : 'Sourcé'}
+            </span>
+            {c.statut !== 'valide_devis' && (
+              <button onClick={() => { setEnCours(enCours === c.id ? null : c.id); setDevisFichier(null); setMessage(null) }} style={styles.refreshBtn}>
+                {enCours === c.id ? 'Annuler' : 'Valider par devis'}
+              </button>
+            )}
+          </div>
+          {enCours === c.id && (
+            <div style={{ marginTop: 12, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', background: '#F8F9FA', borderRadius: 10, padding: '12px 14px' }}>
+              <input type="file" accept="image/*,application/pdf" onChange={e => setDevisFichier(e.target.files?.[0] || null)} style={{ fontSize: '0.8125rem' }} />
+              <input type="number" placeholder={`min (${c.cout_min_eur ?? '—'})`} value={minDevis} onChange={e => setMinDevis(e.target.value)}
+                style={{ width: 110, border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '8px 10px', fontSize: '0.8125rem' }} />
+              <input type="number" placeholder={`max (${c.cout_max_eur ?? '—'})`} value={maxDevis} onChange={e => setMaxDevis(e.target.value)}
+                style={{ width: 110, border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '8px 10px', fontSize: '0.8125rem' }} />
+              <button onClick={() => valider(c.id)} style={{
+                background: '#16A34A', color: '#fff', border: 'none', borderRadius: 8,
+                padding: '9px 16px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer',
+              }}>
+                Confirmer (photo du devis jointe)
+              </button>
+            </div>
+          )}
+        </div>
+      ))}
+      {couts.length === 0 && (
+        <EmptyState icon="" title="Aucun coût" sub="Les coûts sourcés arrivent automatiquement avec chaque fiche moteur générée." />
+      )}
     </div>
   )
 }
@@ -759,8 +900,7 @@ export default function AdminDashboard() {
         fontFamily: 'Plus Jakarta Sans, sans-serif',
       }}>
         <div style={{ textAlign: 'center', maxWidth: 360 }}>
-          <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔒</div>
-          <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#fff', marginBottom: 10 }}>
+                    <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#fff', marginBottom: 10 }}>
             Accès refusé
           </div>
           <div style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.5)', marginBottom: 28, fontWeight: 300 }}>
@@ -779,9 +919,11 @@ export default function AdminDashboard() {
   }
 
   const navItems = [
-    { key: 'missions',     icon: '📋', label: 'Missions' },
-    { key: 'applications', icon: '🧑‍🔧', label: 'Candidatures' },
-    { key: 'stats',        icon: '📊', label: 'Statistiques' },
+    { key: 'missions',     label: 'Missions' },
+    { key: 'applications', label: 'Candidatures' },
+    { key: 'couts',        label: 'Coûts réparation' },
+    { key: 'stats',        label: 'Statistiques' },
+    { key: 'audit',        label: 'Audit justesse', href: '/admin/audit' },
   ]
 
   return (
@@ -829,7 +971,7 @@ export default function AdminDashboard() {
               <button
                 key={item.key}
                 className="admin-nav-item"
-                onClick={() => setTab(item.key)}
+                onClick={() => item.href ? (window.location.href = item.href) : setTab(item.key)}
                 style={{
                   width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                   padding: '11px 14px', borderRadius: 10, border: 'none', cursor: 'pointer',
@@ -840,7 +982,6 @@ export default function AdminDashboard() {
                   transition: 'background 0.15s, color 0.15s',
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>{item.icon}</span>
                 {item.label}
               </button>
             ))}
@@ -871,6 +1012,7 @@ export default function AdminDashboard() {
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
             {tab === 'missions'     && <MissionsTab />}
             {tab === 'applications' && <ApplicationsTab />}
+            {tab === 'couts'        && <CoutsTab />}
             {tab === 'stats'        && <StatsTab missions={missions} applications={applications} />}
           </div>
         </main>

@@ -269,7 +269,7 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
                 color: '#6B7280',
                 lineHeight: 1.5,
               }}>
-                🔒 Vos échanges via Inspexo garantissent un suivi de mission complet, un rapport détaillé et notre garantie satisfaction 30 jours.
+                Vos échanges via Inspexo garantissent un suivi de mission complet, un rapport détaillé et notre garantie satisfaction 30 jours.
               </div>
             </div>
 
@@ -287,8 +287,7 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '0.875rem', color: '#9CA3AF', lineHeight: 1.6,
               }}>
-                <div style={{ fontSize: '2rem', marginBottom: 10 }}>💬</div>
-                Démarrez la conversation avec {recipientName || 'votre interlocuteur'}.
+                                Démarrez la conversation avec {recipientName || 'votre interlocuteur'}.
               </div>
             ) : (
               messages.map((msg) => {

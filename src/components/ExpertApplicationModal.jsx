@@ -1,3 +1,4 @@
+import { IconeCoche } from './Icones'
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import useScrollLock from '../hooks/useScrollLock'
@@ -115,7 +116,7 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
     }])
 
     if (error) {
-      console.group('🔴 Supabase insert error — expert_applications')
+      console.group('Supabase insert error — expert_applications')
       console.error('code    :', error.code)
       console.error('message :', error.message)
       console.error('details :', error.details)
@@ -260,7 +261,7 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
 
             {status === 'success' ? (
               <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: 16 }}>✅</div>
+                <div style={{ marginBottom: 16, color: '#16A34A' }}><IconeCoche size={40} /></div>
                 <div style={{
                   fontFamily: 'Syne, sans-serif', fontWeight: 800,
                   fontSize: '1.375rem', color: '#0F1B2D', marginBottom: 10,
@@ -401,7 +402,7 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
                       color: '#9CA3AF', textTransform: 'uppercase',
                       letterSpacing: '0.08em', marginBottom: 8,
                     }}>
-                      🚗 Généralistes
+                      Généralistes
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                       {MARQUES_GENERALISTES.map(b => (
@@ -424,7 +425,7 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
                       color: '#9CA3AF', textTransform: 'uppercase',
                       letterSpacing: '0.08em', marginBottom: 8,
                     }}>
-                      💎 Premium & Sportives
+                      Premium & Sportives
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                       {MARQUES_PREMIUM.map(b => (
@@ -508,11 +509,11 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
                     />
                     {cvFile ? (
                       <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#16A34A', fontWeight: 600 }}>
-                        ✅ {cvFile.name}
+                        ✓ {cvFile.name}
                       </div>
                     ) : (
                       <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#6B7280' }}>
-                        📎 Cliquez pour uploader (PDF, JPG, PNG — max 5 Mo)
+                        Cliquez pour uploader (PDF, JPG, PNG — max 5 Mo)
                       </div>
                     )}
                   </div>
@@ -528,7 +529,7 @@ export default function ExpertApplicationModal({ isOpen, onClose }) {
                     fontSize: '0.875rem', color: '#DC2626',
                     display: 'flex', alignItems: 'flex-start', gap: 8,
                   }}>
-                    <span style={{ flexShrink: 0 }}>⚠️</span>
+                    
                     {errorMsg}
                   </div>
                 )}

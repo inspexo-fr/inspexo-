@@ -117,7 +117,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
       console.error('Chat error:', err)
       setMessages([...msgs, {
         role: 'assistant',
-        content: '❌ Erreur de connexion avec l\'IA. Réessaie dans quelques secondes.',
+        content: 'Erreur de connexion avec l\'IA. Réessaie dans quelques secondes.',
       }])
     } finally {
       setLoading(false)
@@ -161,7 +161,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
       if (response.ok) {
         const uploadMsg = {
           role: 'user',
-          content: `📎 J'ai uploadé un fichier : ${data.file_name} (${file.type === 'application/pdf' ? 'PDF' : 'Image'})`,
+          content: `J'ai uploadé un fichier : ${data.file_name} (${file.type === 'application/pdf' ? 'PDF' : 'Image'})`,
         }
         const newMessages = [...messages, uploadMsg]
         setMessages(newMessages)
@@ -257,7 +257,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                 padding: '3px 10px', borderRadius: 100,
                 fontSize: '0.6875rem', fontWeight: 600,
               }}>
-                ✅ Rapport généré
+                Rapport généré
               </span>
             )}
           </div>
@@ -314,8 +314,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
         }}>
           {messages.length === 0 && !loading && (
             <div style={{ textAlign: 'center', marginTop: 64, color: 'rgba(255,255,255,0.25)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>💬</div>
-              <div style={{ fontSize: '0.9375rem' }}>Démarrage de l'analyse...</div>
+                            <div style={{ fontSize: '0.9375rem' }}>Démarrage de l'analyse...</div>
             </div>
           )}
 
@@ -403,7 +402,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
-                🔓 Débloquer l'analyse complète — 9,90€
+                Débloquer l'analyse complète — 9,90€
               </button>
 
               <button
@@ -415,7 +414,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
-                👨‍🔧 Réserver un expert physique — à partir de 59€
+                Réserver un expert physique — à partir de 59€
               </button>
 
               <button
@@ -450,7 +449,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
             textAlign: 'center', flexShrink: 0,
           }}>
             <span style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.4)' }}>
-              ✅ Conversation clôturée — Rapport généré
+              Conversation clôturée — Rapport généré
             </span>
           </div>
         ) : !showConversion ? (
@@ -477,7 +476,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                   whiteSpace: 'nowrap', flexShrink: 0,
                 }}
               >
-                📋 Générer le rapport
+                Générer le rapport
               </button>
             )}
 
@@ -503,7 +502,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                 flexShrink: 0, transition: 'border-color 0.2s, color 0.2s',
               }}
             >
-              {uploadingFile ? '⏳' : '📎'}
+              {uploadingFile ? '…' : 'Joindre'}
             </button>
 
             <textarea
@@ -556,8 +555,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
             textAlign: 'center',
             fontFamily: 'Plus Jakarta Sans, sans-serif',
           }}>
-            <div style={{ fontSize: '2rem', marginBottom: 14 }}>⚠️</div>
-            <div style={{
+                        <div style={{
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
               fontSize: '1.25rem', color: '#fff', marginBottom: 10,
             }}>

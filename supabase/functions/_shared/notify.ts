@@ -62,6 +62,119 @@ export async function alerteServiceIndisponible(admin: any, detail: string): Pro
   }
 }
 
+// Pied commun des emails d'alerte du dossier d'achat : gestion + désinscription.
+const PIED_DOSSIER =
+  `<p style="color:#6B7280;font-size:12px">Vous recevez cet email parce que cette annonce est suivie dans votre
+   <a href="https://www.inspexo.io/dossier">dossier d'achat Inspexo</a>. Pour ne plus recevoir d'alertes,
+   désactivez-les depuis votre dossier ou répondez « STOP » à ce message.</p>`;
+
+/** Annonce suivie revenue à un autre prix / contenu : alerte aux acheteurs
+ *  dont le dossier contient une analyse de la même URL (1 par 24 h chacun). */
+// deno-lint-ignore no-explicit-any
+export async function alerteAnnonceModifiee(admin: any, p: {
+  sourceUrl: string;
+  analysisId: string;
+  verdict: string;
+  score: number;
+  label: string;
+  marque?: string | null;
+  modele?: string | null;
+  changements: string[];
+}): Promise<void> {
+  try {
+    const { data: anciennes } = await admin
+      .from("analyses")
+      .select("id, marque, modele")
+      .eq("source_url", p.sourceUrl)
+      .eq("is_eval", false)
+      .neq("id", p.analysisId)
+      .limit(20);
+    // Concordance : la nouvelle analyse doit décrire le MÊME véhicule que
+    // celle que l'acheteur suit (même marque/modèle identifiés) — un texte
+    // fabriqué sur la même URL mais pour un autre véhicule n'alerte personne.
+    const normalise = (s: unknown) =>
+      String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+    // deno-lint-ignore no-explicit-any
+    const ids = ((anciennes ?? []) as any[])
+      .filter((a) =>
+        normalise(a.marque) === normalise(p.marque) &&
+        normalise(a.modele) === normalise(p.modele)
+      )
+      .map((a) => a.id);
+    if (ids.length === 0) return;
+    const { data: suivis } = await admin
+      .from("dossier")
+      .select("user_id")
+      .in("analysis_id", ids)
+      .eq("alertes", true);
+    // deno-lint-ignore no-explicit-any
+    const users = [...new Set(((suivis ?? []) as any[]).map((s) => s.user_id))];
+    const libelle = p.verdict === "vert" ? "Feu vert" : p.verdict === "orange" ? "Prudence" : "Signaux rouges";
+    for (const uid of users.slice(0, 20)) {
+      const { count } = await admin
+        .from("events")
+        .select("id", { count: "exact", head: true })
+        .eq("name", "alerte_annonce_modifiee")
+        .contains("props_json", { user_id: uid, source_url: p.sourceUrl.slice(0, 300) })
+        .gte("created_at", new Date(Date.now() - 24 * 3600 * 1000).toISOString());
+      if ((count ?? 0) > 0) continue;
+      const { data: userData } = await admin.auth.admin.getUserById(uid);
+      const email: string | undefined = userData?.user?.email;
+      if (!email) continue;
+      const envoye = await sendMail(
+        email,
+        `Annonce modifiée — ${p.label}`,
+        `<p>Une annonce suivie dans votre dossier d'achat vient d'être réanalysée : elle a changé depuis votre analyse.</p>
+         ${p.changements.length ? `<p><strong>Changements :</strong> ${p.changements.map((c) => c.replace(/[<>]/g, "")).join(" · ")}</p>` : ""}
+         <p style="font-size:18px"><strong>${libelle} — ${p.score}/100</strong><br>${p.label.replace(/[<>]/g, "")}</p>
+         <p><a href="https://www.inspexo.io/a/${p.analysisId}">Voir le nouveau verdict</a></p>
+         ${PIED_DOSSIER}`,
+      );
+      await admin.from("events").insert({
+        name: "alerte_annonce_modifiee",
+        analysis_id: p.analysisId,
+        props_json: { user_id: uid, source_url: p.sourceUrl.slice(0, 300), envoye },
+      });
+    }
+  } catch (err) {
+    console.error("alerteAnnonceModifiee:", err);
+  }
+}
+
+/** Nouveau rappel constructeur publié sur un modèle suivi. */
+export async function emailNouveauRappel(
+  to: string,
+  analysisId: string,
+  vehicule: string,
+  titres: string[],
+): Promise<boolean> {
+  return await sendMail(
+    to,
+    `Nouveau rappel constructeur — ${vehicule}`,
+    `<p>Un rappel constructeur vient d'être publié dans la base officielle RappelConso pour un modèle suivi dans votre dossier d'achat :</p>
+     <ul>${titres.slice(0, 5).map((t) => `<li>${t.replace(/[<>]/g, "")}</li>`).join("")}</ul>
+     <p><a href="https://www.inspexo.io/a/${analysisId}">Revoir l'analyse et le bloc rappels</a> —
+     confirmez toujours avec le VIN auprès du constructeur.</p>
+     ${PIED_DOSSIER}`,
+  );
+}
+
+/** J+30 après « acheté » : demande de retour d'issue (pannes confirmées, prix payé). */
+export async function emailRetourIssue(
+  to: string,
+  vehicule: string,
+): Promise<boolean> {
+  return await sendMail(
+    to,
+    `Un mois après votre achat — comment se comporte votre ${vehicule} ?`,
+    `<p>Il y a un mois, vous avez marqué « acheté » sur une analyse Inspexo.</p>
+     <p>Deux minutes pour nous dire ce qu'il en est réellement (pannes confirmées ou non, prix payé) :
+     votre retour sert à mesurer — et publier — la justesse de nos analyses.</p>
+     <p><a href="https://www.inspexo.io/dossier">Laisser mon retour dans mon dossier d'achat</a></p>
+     ${PIED_DOSSIER}`,
+  );
+}
+
 /** Envoi du verdict à un acheteur dont la demande était en attente. */
 export async function envoyerVerdict(
   to: string,
