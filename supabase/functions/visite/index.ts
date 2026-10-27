@@ -209,6 +209,7 @@ serve(async (req: Request) => {
           ...result.recalcul.faits,
           incoherences: incoherences.length,
           fraude_suspectee: Boolean(result.recalcul.faits.fraude_suspectee) || compteurContredit,
+          compteur_contredit: Boolean(result.recalcul.faits.compteur_contredit) || compteurContredit,
         };
         const calcul = calculerAxes(faits);
         result.score_detail = calcul.axes;
@@ -252,6 +253,9 @@ serve(async (req: Request) => {
           defauts_annonce: Array.isArray(result.defauts_annonce) ? result.defauts_annonce : [],
           entretien_du_non_prouve: Array.isArray(result.recalcul?.entretien_du_non_prouve)
             ? result.recalcul.entretien_du_non_prouve
+            : [],
+          operations_non_faites: Array.isArray(result.recalcul?.operations_non_faites)
+            ? result.recalcul.operations_non_faites
             : [],
           plan_entretien: Array.isArray(result.recalcul?.plan_entretien) ? result.recalcul.plan_entretien : [],
           couts: candidats,

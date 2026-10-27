@@ -1050,7 +1050,9 @@ serve(async (req: Request) => {
     // mettant la ligne à jour étape par étape. Le score n'est publié qu'une
     // fois la critique terminée. L'éval, l'extension (intake) et les anciens
     // clients restent en mode synchrone, strictement inchangé.
-    const progressive = body.progressive === true && !isEval && !isInternal &&
+    // (l'éval reste synchrone — elle n'envoie jamais progressive:true — mais le
+    // header d'éval peut TESTER le mode progressif sans consommer le quota).
+    const progressive = body.progressive === true && !isInternal &&
       typeof EdgeRuntime !== "undefined";
     // deno-lint-ignore no-explicit-any
     let partialResult: any = null;
@@ -1571,8 +1573,11 @@ serve(async (req: Request) => {
     incoherences = incoherences.filter((i) => !ILLISIBLE_RE.test(i));
 
     // Règle serveur : compteur photographié vs kilométrage annoncé (écart > 2 %).
+    // Preuve matérielle de fraude : plafonne le score en rouge (barème).
     const kmAnnonce = typeof v.kilometrage === "number" && v.kilometrage > 0 ? v.kilometrage : null;
+    let compteurContredit = false;
     if (kmCompteur != null && kmAnnonce != null && Math.abs(kmCompteur - kmAnnonce) / kmAnnonce > 0.02) {
+      compteurContredit = true;
       const kmIncoherence =
         `Le compteur photographié (photo n°${constatsPhoto.find((c) => c.organe === "compteur")?.photo_index ?? "?"}) affiche ${kmCompteur.toLocaleString("fr-FR")} km alors que l'annonce indique ${kmAnnonce.toLocaleString("fr-FR")} km.`;
       const dejaLa = incoherences.some((i) => /compteur/i.test(i) && /km/i.test(i));
@@ -1994,9 +1999,10 @@ serve(async (req: Request) => {
           (statutVendeur === "intermediaire_pour_particulier" &&
             incoherences.some((i) => /garantie\s+l[ée]gale/i.test(i))),
         // Signes de fraude : compteur contredit, ou deux prix contradictoires.
-        fraude_suspectee: incoherences.some((i) =>
+        fraude_suspectee: compteurContredit || incoherences.some((i) =>
           /compteur\s+photographi|kilom[ée]trage[^.]{0,40}(?:contredit|incoh[ée]rent)|deux\s+prix|prix\s+de\s+vente[^.]{0,30}≠/i.test(i)
         ),
+        compteur_contredit: compteurContredit,
       };
       faitsBareme = faits;
       const calcul = calculerAxes(faits);
@@ -2127,6 +2133,7 @@ serve(async (req: Request) => {
           cout_max_eur: op.cout_max_eur ?? null,
           critique: Boolean(op.critique),
         })),
+        operations_non_faites: opsNonFaites,
         // deno-lint-ignore no-explicit-any
         plan_entretien: planEntretien.map((op: any) => ({
           operation: String(op.operation ?? ""),
@@ -2247,6 +2254,7 @@ serve(async (req: Request) => {
           faits: faitsBareme,
           ct_defauts: ctDefauts,
           entretien_du_non_prouve: negEntrees?.entretien_du_non_prouve ?? [],
+          operations_non_faites: opsNonFaites,
           plan_entretien: negEntrees?.plan_entretien ?? [],
         }
         : null,

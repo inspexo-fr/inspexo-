@@ -26,6 +26,7 @@ const base = {
   ct_defauts: [],
   defauts_annonce: [],
   entretien_du_non_prouve: [],
+  operations_non_faites: [],
   plan_entretien: [],
   couts: [],
 }
@@ -130,6 +131,41 @@ const coutFreins = {
     JSON.stringify(types))
   verifie('total = somme des deux postes', r.total_min_eur === 490 && r.total_max_eur === 880,
     `${r.total_min_eur}-${r.total_max_eur}`)
+}
+
+// ---------- Opération déclarée non faite par l'annonce ----------
+{
+  const coutCourroie = {
+    operation: 'Remplacement kit de courroie de distribution (pièces + main d\'œuvre)',
+    cout_min_eur: 600, cout_max_eur: 800,
+    urls: ['https://exemple.fr/courroie'], statut: 'source', famille_norm: '',
+  }
+  const r = calculerNegociation({
+    ...base,
+    operations_non_faites: ['Distribution jamais faite'],
+    couts: [coutCourroie],
+  })
+  verifie('« distribution jamais faite » → poste chiffré via la fourchette sourcée',
+    r.postes.length === 1 && r.postes[0].cout_min_eur === 600 && r.postes[0].type === 'entretien_non_prouve',
+    JSON.stringify(r.postes[0] ?? null))
+}
+
+// ---------- Déduplication inter-canaux ----------
+{
+  const coutCourroie = {
+    operation: 'Remplacement kit de courroie de distribution',
+    cout_min_eur: 600, cout_max_eur: 800,
+    urls: ['https://exemple.fr/courroie'], statut: 'source', famille_norm: '',
+  }
+  const r = calculerNegociation({
+    ...base,
+    defauts_annonce: [{ description: 'Distribution jamais faite', organe: 'distribution' }],
+    operations_non_faites: ['Distribution (courroie) jamais remplacée'],
+    couts: [coutCourroie],
+  })
+  verifie('même fait par deux canaux (défaut admis + op. non faite) → UN seul poste',
+    r.postes.length + r.arguments_sans_montant.length === 1,
+    `${r.postes.length} chiffrés + ${r.arguments_sans_montant.length} sans montant`)
 }
 
 // ---------- Compteur jamais en argument de remise ----------

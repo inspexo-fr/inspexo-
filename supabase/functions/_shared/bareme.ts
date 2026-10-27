@@ -32,6 +32,9 @@ export type FaitsAxes = {
   rappel_stop_drive?: boolean;
   juridique_grave?: boolean;
   fraude_suspectee?: boolean;
+  // Compteur photographié contredisant le kilométrage annoncé (> 2 %) :
+  // preuve matérielle de fraude — plafonne le score en rouge à lui seul.
+  compteur_contredit?: boolean;
   // Transverse
   incoherences: number;
 };
@@ -251,6 +254,9 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const axesNotes = Object.values(axes).filter((a) => a.note != null).length;
   if (axesNotes <= 2) poser(72, "Annonce trop peu détaillée pour évaluer plus de deux critères.");
 
+  if (f.compteur_contredit) {
+    poser(35, "Le compteur photographié contredit le kilométrage annoncé : vérifiez l'historique (HistoVec) avant toute discussion.");
+  }
   if (nSecurite >= 1) poser(58, "Un défaut de sécurité documenté est retenu sur ce moteur.");
   if (f.operations_critiques_non_faites >= 1) {
     poser(55, "Une opération d'entretien critique est déclarée non faite.");
@@ -269,7 +275,8 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const securiteNonCouverte = f.pannes.some((p) => p.gravite === "securite");
   const casseNonCouverte = f.pannes.some((p) => p.gravite === "casse");
   const rougeJustifie = securiteNonCouverte || casseNonCouverte ||
-    Boolean(f.rappel_stop_drive) || Boolean(f.juridique_grave) || Boolean(f.fraude_suspectee);
+    Boolean(f.rappel_stop_drive) || Boolean(f.juridique_grave) || Boolean(f.fraude_suspectee) ||
+    Boolean(f.compteur_contredit);
   if (!rougeJustifie && score < 40) score = 40;
 
   const verdict = score >= 70 ? "vert" : score >= 40 ? "orange" : "rouge";
@@ -309,6 +316,8 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     let scoreC = maxC > 0 ? Math.round((sommeC / maxC) * 100) : 0;
     // Les plafonds liés à ce qui est couvert tombent ; les autres restent.
     let plafondC = 100;
+    // Une fraude au compteur n'est jamais « couverte » par une garantie.
+    if (f.compteur_contredit) plafondC = Math.min(plafondC, 35);
     if (!f.entretien_renseigne && vehiculeUse) plafondC = Math.min(plafondC, 65);
     if (axesNotes <= 2) plafondC = Math.min(plafondC, 72);
     if (gravites.includes("securite")) plafondC = Math.min(plafondC, 58);

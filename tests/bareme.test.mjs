@@ -136,6 +136,20 @@ verifie('Annonce très courte : Golf 7 de 2015, 123 000 km, rien sur l\'entretie
   console.log(`${ok ? 'PASS' : 'FAIL'} — rappel stop drive : sans ${sans.verdict} ${sans.score} → avec ${avec.verdict} ${avec.score}`)
 }
 
+// Un compteur photographié qui contredit le kilométrage annoncé est une preuve
+// matérielle de fraude : rouge à lui seul, même sur un dossier par ailleurs sain.
+{
+  const sain = calculerAxes({ ...base, statut_vendeur: 'pro', annee: 2021, kilometrage: 60000,
+    entretien_renseigne: true, signaux_entretien: 3 })
+  const fraude = calculerAxes({ ...base, statut_vendeur: 'pro', annee: 2021, kilometrage: 60000,
+    entretien_renseigne: true, signaux_entretien: 3, incoherences: 1,
+    fraude_suspectee: true, compteur_contredit: true })
+  const ok = sain.verdict === 'vert' && fraude.verdict === 'rouge' && fraude.score <= 35 &&
+    /compteur/i.test(fraude.plafond_raison ?? '')
+  if (!ok) ko++
+  console.log(`${ok ? 'PASS' : 'FAIL'} — compteur contredit : ${sain.verdict} ${sain.score} → ${fraude.verdict} ${fraude.score} (${fraude.plafond_raison ?? 'sans raison'})`)
+}
+
 // Horizon de détention : une panne d'usure compte dans la note si son
 // kilométrage typique tombe avant km actuel + 60 000 km ; au-delà elle est
 // affichée avec la mention « au-delà d'une détention moyenne » et ne compte pas.

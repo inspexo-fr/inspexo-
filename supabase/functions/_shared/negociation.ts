@@ -135,6 +135,9 @@ type EntreeNegociation = {
     cout_max_eur: number | null;
     critique: boolean;
   }>;
+  // Opérations que l'annonce déclare EXPLICITEMENT non faites (« distribution
+  // jamais faite ») — déjà auditées par la critique.
+  operations_non_faites: string[];
   plan_entretien: Array<{
     operation: string;
     intervalle_km: number | null;
@@ -224,7 +227,8 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
     });
   }
 
-  // 4) Entretien « doit déjà avoir été fait » sans justificatif annoncé.
+  // 4) Entretien « doit déjà avoir été fait » sans justificatif annoncé,
+  //    et opérations que l'annonce déclare elle-même non faites.
   for (const op of e.entretien_du_non_prouve.slice(0, 5)) {
     bruts.push({
       type: "entretien_non_prouve",
@@ -234,10 +238,16 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
       cout_direct_max: op.cout_max_eur,
     });
   }
+  for (const op of e.operations_non_faites.slice(0, 4)) {
+    bruts.push({
+      type: "entretien_non_prouve",
+      poste: op.slice(0, 140),
+      argument: `L'annonce le déclare : ${op} — ce coût est donc devant vous.`,
+    });
+  }
 
   // 5) Opérations du plan d'entretien à échéance sous 12 mois / 15 000 km.
   //    (prochaine occurrence périodique ; les opérations déjà dues sont au 4).
-  const dejaListees = new Set(bruts.map((b) => [...tokens(b.poste)].sort().join("|")));
   if (e.kilometrage != null || e.age_ans != null) {
     for (const op of e.plan_entretien) {
       if (op.a_verifier_carnet) continue;
@@ -261,9 +271,6 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
         }
       }
       if (!proche) continue;
-      const cle = [...tokens(op.operation)].sort().join("|");
-      if (dejaListees.has(cle)) continue;
-      dejaListees.add(cle);
       bruts.push({
         type: "echeance_proche",
         poste: op.operation.slice(0, 140),
@@ -274,10 +281,27 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
     }
   }
 
+  // ---- Déduplication : un même fait (« distribution jamais faite ») peut
+  // arriver par plusieurs canaux (défaut admis, opération non faite, plan) —
+  // deux postes partageant au moins 2 mots significatifs sont fusionnés,
+  // le premier rencontré gagne (jamais compté deux fois dans le total).
+  const signatures: Array<Set<string>> = [];
+  const dedupliques = bruts.filter((b) => {
+    const sig = tokens(b.poste);
+    const doublon = signatures.some((s2) => {
+      let communs = 0;
+      for (const t of sig) if (s2.has(t)) communs += 1;
+      return communs >= 2;
+    });
+    if (doublon) return false;
+    signatures.push(sig);
+    return true;
+  });
+
   // ---- Chiffrage : coût direct (plan sourcé) sinon meilleur candidat ----
   const chiffres: PosteNegociation[] = [];
   const sansMontant: PosteNegociation[] = [];
-  for (const b of bruts) {
+  for (const b of dedupliques) {
     const { cout_direct_min, cout_direct_max, ...reste } = b;
     if (cout_direct_min != null || cout_direct_max != null) {
       chiffres.push({
