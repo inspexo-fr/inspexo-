@@ -1478,6 +1478,20 @@ serve(async (req: Request) => {
             rappel_hors_periode: p.rappel_code ? p.rappel_hors_periode : existante.rappel_hors_periode,
           };
           for (const m of sig) signatures[idx].add(m);
+        } else {
+          // Même règle dans l'autre sens : l'entrée conservée hérite du rappel
+          // officiel porté par l'entrée écartée (sinon l'affichage du rappel
+          // dépendrait de l'ordre de sortie du modèle — non déterministe).
+          gardees[idx] = {
+            ...existante,
+            rappel_code: existante.rappel_code ?? p.rappel_code,
+            rappel_date: existante.rappel_date ?? p.rappel_date,
+            rappel_vehicules: existante.rappel_vehicules ?? p.rappel_vehicules,
+            rappel_annee_debut: existante.rappel_annee_debut ?? p.rappel_annee_debut,
+            rappel_annee_fin: existante.rappel_annee_fin ?? p.rappel_annee_fin,
+            rappel_hors_periode: existante.rappel_code ? existante.rappel_hors_periode : p.rappel_hors_periode,
+          };
+          for (const m of sig) signatures[idx].add(m);
         }
       }
       if (gardees.length < pannesJoined.length) {
