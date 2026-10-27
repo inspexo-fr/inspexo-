@@ -30,8 +30,80 @@ async function callFunction(name, body) {
   return data
 }
 
-/** Analyse d'annonce — { text, images?, comparables? } → { id, result } */
+/** Analyse d'annonce — { text, images?, comparables? } → { id, result }.
+ *  Avec { progressive: true } : réponse dès l'identification ({ partial: true }),
+ *  la suite arrive sur /a/:id par polling (getAnalysisEtape). */
 export const analyzeListing = (payload) => callFunction('score', payload)
+
+/** Étape courante d'une analyse progressive — { etape, pret } (null si inconnue). */
+export async function getAnalysisEtape(id) {
+  const { data, error } = await supabase.rpc('get_analysis_etape', { p_id: id })
+  if (error) throw error
+  return data
+}
+
+/** Mode visite — photo(s) à analyser : { analysis_id, images } → { result, constats_nouveaux } */
+export const visitePhoto = (analysisId, images) =>
+  callFunction('visite', { analysis_id: analysisId, images })
+
+/** Mode visite — fin de visite : { reponses: [{quoi, etat}] } → { synthese, result } */
+export const visiteTerminer = (analysisId, reponses) =>
+  callFunction('visite', { analysis_id: analysisId, terminer: true, reponses })
+
+/* ---------- Dossier d'achat (compte léger, lien magique) ---------- */
+
+/** Envoie le lien magique de connexion (compte créé au premier clic). */
+export async function envoyerLienMagique(email, redirectPath = '/dossier') {
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: `${window.location.origin}${redirectPath}` },
+  })
+  if (error) throw error
+}
+
+export async function dossierAdd(analysisId) {
+  const { error } = await supabase.rpc('dossier_add', { p_analysis_id: analysisId })
+  if (error) throw error
+}
+
+export async function dossierList() {
+  const { data, error } = await supabase.rpc('dossier_list')
+  if (error) throw error
+  return Array.isArray(data) ? data : []
+}
+
+export async function dossierSetStatut(analysisId, statut) {
+  const { error } = await supabase.rpc('dossier_set_statut', { p_analysis_id: analysisId, p_statut: statut })
+  if (error) throw error
+}
+
+export async function dossierSetAlertes(analysisId, actives) {
+  const { error } = await supabase.rpc('dossier_set_alertes', { p_analysis_id: analysisId, p_actives: actives })
+  if (error) throw error
+}
+
+export async function dossierRemove(analysisId) {
+  const { error } = await supabase.rpc('dossier_remove', { p_analysis_id: analysisId })
+  if (error) throw error
+}
+
+/** Retour d'issue J+30 : prix payé, pannes confirmées, commentaire. */
+export async function submitOutcome(analysisId, { prixPaye = null, pannesConfirmees = null, commentaire = null } = {}) {
+  const { error } = await supabase.rpc('submit_outcome', {
+    p_analysis_id: analysisId,
+    p_prix_paye: prixPaye,
+    p_pannes_confirmees: pannesConfirmees,
+    p_commentaire: commentaire,
+  })
+  if (error) throw error
+}
+
+/** Statistiques publiques de justesse (/fiabilite) — rien avant 50 analyses. */
+export async function getFiabilite() {
+  const { data, error } = await supabase.rpc('get_fiabilite')
+  if (error) throw error
+  return data
+}
 
 /** Dépôt d'une demande en attente quand le service IA est indisponible. */
 export async function submitPendingAnalysis(email, text, usage) {

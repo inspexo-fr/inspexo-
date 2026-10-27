@@ -3,7 +3,11 @@ import { useParams, useLocation, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { getPublicAnalysis, fetchRappels, getDefectSheet, submitLead, trackEvent } from '../lib/scoreApi'
+import { supabase } from '../lib/supabaseClient'
+import {
+  getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
+  submitLead, trackEvent, dossierAdd, envoyerLienMagique,
+} from '../lib/scoreApi'
 
 const VERDICT_STYLE = {
   vert:   { color: '#16A34A', bg: '#F0FDF4', border: 'rgba(22,163,74,0.3)',  label: 'Feu vert' },
@@ -314,6 +318,284 @@ function Card({ children, style }) {
   )
 }
 
+/* ---------- Verdict progressif : indicateur d'étapes ---------- */
+const ETAPES_PIPELINE = [
+  { cle: 'identification', label: 'Véhicule identifié' },
+  { cle: 'photos_fiche', label: 'Photos et fiche moteur' },
+  { cle: 'analyse', label: 'Analyse de l\'annonce' },
+  { cle: 'verification', label: 'Vérification de chaque affirmation' },
+]
+
+function EtapesProgress({ etape }) {
+  const idx = Math.max(1, ETAPES_PIPELINE.findIndex(e => e.cle === etape))
+  return (
+    <div style={{ marginTop: 14 }}>
+      {ETAPES_PIPELINE.map((e, i) => (
+        <div key={e.cle} style={{
+          display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0',
+          fontFamily: FONT, fontSize: '0.875rem',
+          color: i < idx ? '#16A34A' : i === idx ? '#0F1B2D' : '#C3C9D2',
+          fontWeight: i === idx ? 600 : 400,
+        }}>
+          <span style={{ width: 18, textAlign: 'center' }}>
+            {i < idx ? '✓' : i === idx ? (
+              <span style={{
+                display: 'inline-block', width: 11, height: 11,
+                border: '2px solid #FF4D00', borderTopColor: 'transparent',
+                borderRadius: '50%', animation: 'spin 0.8s linear infinite',
+              }} />
+            ) : '·'}
+          </span>
+          {e.label}
+        </div>
+      ))}
+      <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+      <div style={{ fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', marginTop: 8, lineHeight: 1.5 }}>
+        Le score final s'affiche une fois chaque affirmation vérifiée — en attendant,
+        les rappels, le bloc Takata et le cadre juridique ci-dessous sont déjà exploitables.
+      </div>
+    </div>
+  )
+}
+
+/* ---------- Marge de négociation ---------- */
+function euros(min, max) {
+  const fr = (n) => Number(n).toLocaleString('fr-FR')
+  if (min != null && max != null && min !== max) return `${fr(min)} – ${fr(max)} €`
+  const seul = min ?? max
+  return seul != null ? `${fr(seul)} €` : ''
+}
+
+function NegotiationCard({ negociation, analysisId }) {
+  if (!negociation) return null
+  const postes = negociation.postes || []
+  const sansMontant = negociation.arguments_sans_montant || []
+  if (postes.length === 0 && sansMontant.length === 0) return null
+  const visibles = postes.slice(0, 2)
+  const masques = postes.length - visibles.length
+  const aDetail = masques > 0 || sansMontant.length > 0 || negociation.argumentaire
+
+  return (
+    <Card style={{ borderColor: 'rgba(30,77,140,0.35)' }}>
+      <SectionTitle>Marge de négociation</SectionTitle>
+      {negociation.total_min_eur != null && (
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase' }}>
+            Arguments chiffrés relevés ({negociation.nb_postes_chiffres} postes)
+          </div>
+          <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.625rem', color: '#1E4D8C' }}>
+            {euros(negociation.total_min_eur, negociation.total_max_eur)}
+          </div>
+        </div>
+      )}
+      {visibles.map((p, i) => (
+        <div key={i} style={{
+          display: 'flex', justifyContent: 'space-between', gap: 12, padding: '9px 0',
+          borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+          fontFamily: FONT, fontSize: '0.875rem', color: '#374151', lineHeight: 1.5,
+        }}>
+          <span>{p.argument}</span>
+          <span style={{ fontWeight: 700, whiteSpace: 'nowrap', color: '#1E4D8C' }}>{euros(p.cout_min_eur, p.cout_max_eur)}</span>
+        </div>
+      ))}
+      {postes.length === 0 && sansMontant.slice(0, 2).map((p, i) => (
+        <div key={i} style={{
+          padding: '9px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+          fontFamily: FONT, fontSize: '0.875rem', color: '#374151', lineHeight: 1.5,
+        }}>
+          {p.argument} <span style={{ color: '#9CA3AF' }}>(à faire chiffrer par un garage)</span>
+        </div>
+      ))}
+
+      {aDetail && (
+        <div style={{ position: 'relative', marginTop: 12, borderRadius: 12, overflow: 'hidden' }}>
+          <div aria-hidden="true" style={{
+            filter: 'blur(6px)', userSelect: 'none', pointerEvents: 'none',
+            padding: '14px 16px', background: '#F8F9FA', minHeight: 120,
+          }}>
+            {postes.slice(2).map((p, i) => (
+              <div key={i} style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#374151', padding: '6px 0' }}>
+                {p.argument} — {euros(p.cout_min_eur, p.cout_max_eur)}
+              </div>
+            ))}
+            {sansMontant.map((p, i) => (
+              <div key={`s${i}`} style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#374151', padding: '6px 0' }}>
+                {p.argument}
+              </div>
+            ))}
+            <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#374151', padding: '6px 0', whiteSpace: 'pre-wrap' }}>
+              {negociation.argumentaire}
+            </div>
+          </div>
+          <div style={{
+            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: 8,
+            background: 'rgba(255,255,255,0.55)', padding: '14px 16px', textAlign: 'center',
+          }}>
+            <div style={{ fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, color: '#0F1B2D' }}>
+              Détail des {postes.length + sansMontant.length} arguments, sources et
+              argumentaire prêt à dire au vendeur : réservés au Pass achat (29 €)
+            </div>
+            <PassCTA analysisId={analysisId} />
+          </div>
+        </div>
+      )}
+
+      <div style={{ marginTop: 12, fontFamily: FONT, fontSize: '0.75rem', color: '#92400E', lineHeight: 1.5 }}>
+        {negociation.mention}
+      </div>
+    </Card>
+  )
+}
+
+/** CTA Pass achat : la précommande n'est pas en ligne → capteur « Être prévenu ». */
+function PassCTA({ analysisId }) {
+  const [open, setOpen] = useState(false)
+  if (!open) {
+    return (
+      <button onClick={() => setOpen(true)} style={{
+        background: '#FF4D00', color: '#fff', border: 'none', borderRadius: 10,
+        padding: '11px 20px', fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer',
+      }}>
+        Être prévenu du lancement
+      </button>
+    )
+  }
+  return (
+    <div style={{ width: '100%', maxWidth: 420, background: '#fff', borderRadius: 12, padding: '12px 14px', border: '1.5px solid rgba(0,0,0,0.08)', textAlign: 'left' }}>
+      <EmailCapture
+        title="Le Pass achat arrive — être prévenu du lancement ?"
+        buttonLabel="Être prévenu"
+        source="pass_waitlist"
+        analysisId={analysisId}
+      />
+    </div>
+  )
+}
+
+/* ---------- Suivre dans mon dossier ---------- */
+function DossierButton({ analysisId }) {
+  const [etat, setEtat] = useState('idle') // idle | email | sending | lien_envoye | ajout | fait | erreur
+  const [email, setEmail] = useState('')
+
+  const ajouter = async () => {
+    setEtat('ajout')
+    try {
+      await dossierAdd(analysisId)
+      setEtat('fait')
+    } catch (_) {
+      setEtat('erreur')
+    }
+  }
+
+  useEffect(() => {
+    // Retour de lien magique avec ?dossier=1 : ajout automatique.
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('dossier') !== '1') return
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        ajouter()
+        window.history.replaceState({}, '', window.location.pathname)
+      }
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const clic = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session?.user) return ajouter()
+    setEtat('email')
+  }
+
+  const envoyerLien = async (e) => {
+    e.preventDefault()
+    if (!email || etat === 'sending') return
+    setEtat('sending')
+    try {
+      await envoyerLienMagique(email, `/a/${analysisId}?dossier=1`)
+      setEtat('lien_envoye')
+    } catch (_) {
+      setEtat('erreur')
+    }
+  }
+
+  if (etat === 'fait') {
+    return (
+      <div style={{ fontFamily: FONT, fontSize: '0.875rem', fontWeight: 600, color: '#16A34A' }}>
+        Ajouté à votre dossier — <Link to="/dossier" style={{ color: '#1E4D8C' }}>voir mon dossier d'achat</Link>
+      </div>
+    )
+  }
+  if (etat === 'lien_envoye') {
+    return (
+      <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#16A34A', fontWeight: 600, lineHeight: 1.5 }}>
+        Lien de connexion envoyé — ouvrez l'email sur cet appareil, l'analyse sera ajoutée à votre dossier.
+      </div>
+    )
+  }
+  if (etat === 'email' || etat === 'sending') {
+    return (
+      <form onSubmit={envoyerLien} style={{ width: '100%' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <input
+            type="email" required placeholder="votre@email.com" value={email}
+            onChange={e => setEmail(e.target.value)}
+            style={{
+              flex: '1 1 180px', boxSizing: 'border-box', border: '1.5px solid rgba(0,0,0,0.12)',
+              borderRadius: 8, padding: '11px 14px', fontSize: 16, fontFamily: FONT, outline: 'none',
+            }}
+          />
+          <button type="submit" disabled={etat === 'sending'} style={{
+            background: '#0F1B2D', color: '#fff', border: 'none', borderRadius: 8,
+            padding: '11px 16px', fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700,
+            cursor: 'pointer', opacity: etat === 'sending' ? 0.6 : 1,
+          }}>
+            {etat === 'sending' ? '…' : 'Recevoir le lien'}
+          </button>
+        </div>
+        <div style={{ marginTop: 6, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5 }}>
+          Connexion par lien magique, sans mot de passe. {CONSENT_TEXT}
+        </div>
+      </form>
+    )
+  }
+  return (
+    <button onClick={clic} style={{
+      flex: '1 1 140px', background: 'transparent', color: '#0F1B2D',
+      border: '1.5px solid rgba(15,27,45,0.25)', borderRadius: 10, padding: '12px 16px',
+      fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer',
+    }}>
+      {etat === 'erreur' ? 'Réessayer l\'ajout au dossier' : etat === 'ajout' ? '…' : 'Suivre dans mon dossier'}
+    </button>
+  )
+}
+
+/* ---------- Synthèse du mode visite ---------- */
+const DECISION_STYLE = {
+  acheter: { label: 'Acheter', color: '#16A34A', bg: '#F0FDF4' },
+  negocier: { label: 'Négocier', color: '#D97706', bg: '#FFFBEB' },
+  ne_pas_acheter: { label: 'Ne pas acheter', color: '#DC2626', bg: '#FEF2F2' },
+}
+
+function SyntheseVisite({ synthese }) {
+  if (!synthese) return null
+  const s = DECISION_STYLE[synthese.decision] || DECISION_STYLE.negocier
+  return (
+    <div style={{
+      background: s.bg, border: `1.5px solid ${s.color}44`, borderRadius: 14,
+      padding: '16px 18px', marginBottom: 14,
+    }}>
+      <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '0.9375rem', color: s.color, marginBottom: 6 }}>
+        Synthèse de votre visite : {s.label}
+      </div>
+      {(synthese.points || []).map((p, i) => (
+        <div key={i} style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#374151', lineHeight: 1.6 }}>
+          – {p}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function VerdictFeedback({ analysisId }) {
   const [sent, setSent] = useState(false)
   if (sent) {
@@ -353,6 +635,7 @@ export default function ResultPage() {
   const [ficheLive, setFicheLive] = useState(null)
   const [ficheInfo, setFicheInfo] = useState(null)
   const [shareDone, setShareDone] = useState(false)
+  const [etapeLive, setEtapeLive] = useState(null) // étape du verdict progressif
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -393,6 +676,42 @@ export default function ResultPage() {
     load()
     return () => { cancelled = true }
   }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Verdict progressif : la ligne est encore « en_cours » → polling 2 s de
+  // l'étape, puis rechargement complet dès que la critique est terminée.
+  useEffect(() => {
+    const r = analysis?.result
+    if (!r || r.statut_analyse !== 'en_cours') return
+    let cancelled = false
+    let tries = 0
+    const interval = setInterval(async () => {
+      tries += 1
+      if (tries > 120) { clearInterval(interval); if (!cancelled) setEtapeLive('timeout'); return } // ~4 min
+      try {
+        const e = await getAnalysisEtape(id)
+        if (cancelled || !e) return
+        if (e.pret) {
+          clearInterval(interval)
+          const row = await getPublicAnalysis(id)
+          if (!cancelled && row) {
+            setAnalysis({
+              id: row.id,
+              result: adaptResult(row.result_json),
+              marque: row.marque,
+              modele: row.modele,
+              annee: row.annee,
+              claimsDroppedCount: row.claims_dropped_count ?? null,
+              claimsDropped: Array.isArray(row.claims_dropped) ? row.claims_dropped : [],
+            })
+            setEtapeLive(null)
+          }
+        } else if (e.etape) {
+          setEtapeLive(e.etape)
+        }
+      } catch (_) { /* on retentera au tick suivant */ }
+    }, 2000)
+    return () => { cancelled = true; clearInterval(interval) }
+  }, [analysis?.result?.statut_analyse, id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!analysis) return
@@ -518,7 +837,13 @@ export default function ResultPage() {
 
   /* ---------- Rendu principal ---------- */
   const r = analysis.result
-  const vs = VERDICT_STYLE[r.verdict] || VERDICT_STYLE.orange
+  const enErreur = r.etape === 'erreur'
+  const enCours = r.statut_analyse === 'en_cours' && !enErreur
+  const vs = enCours
+    ? { color: '#1E4D8C', bg: '#fff', border: 'rgba(0,0,0,0.08)', label: 'Analyse en cours' }
+    : enErreur
+    ? { color: '#DC2626', bg: '#fff', border: 'rgba(220,38,38,0.25)', label: 'Analyse interrompue' }
+    : (VERDICT_STYLE[r.verdict] || VERDICT_STYLE.orange)
   const vh = r.vehicule || {}
   const vehiculeLabel = [analysis.marque, analysis.modele].filter(Boolean).join(' ') || 'Véhicule non identifié'
   const ogTitle = `Verdict Inspexo : ${r.verdict} — ${vehiculeLabel}`
@@ -605,10 +930,12 @@ export default function ResultPage() {
                   fontSize: 'clamp(1.5rem, 5.5vw, 2rem)', color: vs.color,
                   margin: 0, lineHeight: 1.1, display: 'flex', alignItems: 'center', gap: 10,
                 }}>
-                  <span style={{
-                    width: 16, height: 16, borderRadius: '50%',
-                    background: vs.color, display: 'inline-block', flexShrink: 0,
-                  }} />
+                  {!enCours && (
+                    <span style={{
+                      width: 16, height: 16, borderRadius: '50%',
+                      background: vs.color, display: 'inline-block', flexShrink: 0,
+                    }} />
+                  )}
                   {vs.label}
                 </h1>
                 <div style={{ fontFamily: FONT, fontSize: '0.9375rem', fontWeight: 600, color: '#0F1B2D', marginTop: 8 }}>
@@ -624,14 +951,44 @@ export default function ResultPage() {
                 )}
               </div>
               <div style={{ textAlign: 'center', flexShrink: 0 }}>
-                <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '2.5rem', color: vs.color, lineHeight: 1 }}>
-                  {r.score}
-                </div>
-                <div style={{ fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600 }}>
-                  / 100
-                </div>
+                {enCours ? (
+                  <div style={{
+                    width: 28, height: 28, border: '3px solid #FF4D00',
+                    borderTopColor: 'transparent', borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite', marginTop: 6,
+                  }} />
+                ) : enErreur ? null : (
+                  <>
+                    <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '2.5rem', color: vs.color, lineHeight: 1 }}>
+                      {r.score}
+                    </div>
+                    <div style={{ fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', fontWeight: 600 }}>
+                      / 100
+                    </div>
+                  </>
+                )}
               </div>
             </div>
+
+            {/* Verdict progressif : étapes restantes */}
+            {enCours && (
+              etapeLive === 'timeout' ? (
+                <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#92400E', lineHeight: 1.6, marginTop: 12 }}>
+                  L'analyse prend plus de temps que prévu. Elle continue en arrière-plan :
+                  rechargez cette page dans une minute.
+                </div>
+              ) : (
+                <EtapesProgress etape={etapeLive || r.etape || 'photos_fiche'} />
+              )
+            )}
+
+            {/* Analyse interrompue (erreur en arrière-plan) */}
+            {enErreur && (
+              <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#B91C1C', lineHeight: 1.6, marginTop: 12 }}>
+                {r.erreur || 'L\'analyse n\'a pas pu aboutir.'}{' '}
+                <Link to="/score" style={{ color: '#1E4D8C', fontWeight: 600 }}>Relancer une analyse</Link>
+              </div>
+            )}
 
             {/* 5 axes dépliables */}
             {axes.length > 0 && (
@@ -718,6 +1075,36 @@ export default function ResultPage() {
             </div>
           </div>
 
+          {/* Synthèse d'une visite déjà faite */}
+          {!enCours && <SyntheseVisite synthese={r.visite?.synthese} />}
+
+          {/* Mode visite + suivi dossier */}
+          {!enCours && !enErreur && r.type === 'vehicule' && (
+            <div style={{
+              background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)',
+              borderRadius: 16, padding: '16px 18px', marginBottom: 14,
+            }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+                <Link
+                  to={`/a/${id}/visite`}
+                  onClick={() => trackEvent('visite_started', id)}
+                  style={{
+                    flex: '1 1 200px', textAlign: 'center', background: '#FF4D00', color: '#fff',
+                    borderRadius: 10, padding: '13px 16px', textDecoration: 'none',
+                    fontFamily: FONT, fontSize: '0.9375rem', fontWeight: 700,
+                  }}
+                >
+                  Je suis devant la voiture →
+                </Link>
+                <DossierButton analysisId={id} />
+              </div>
+              <div style={{ marginTop: 8, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5 }}>
+                Mode visite guidé (checklist pas à pas, photos analysées sur place) — fonction du
+                Pass achat, en démo libre pendant le lancement. Les photos ne sont jamais conservées.
+              </div>
+            </div>
+          )}
+
           {/* Annonce modifiée depuis la dernière analyse */}
           {r.analyse_precedente && (
             <div style={{
@@ -788,6 +1175,9 @@ export default function ResultPage() {
               )}
             </Card>
           )}
+
+          {/* ========== 2ter. MARGE DE NÉGOCIATION ========== */}
+          {!enCours && <NegotiationCard negociation={r.negociation} analysisId={id} />}
 
           {/* ========== 2bis. ENTRETIEN : CE QUI AURAIT DÛ ÊTRE FAIT ========== */}
           {(r.entretien && ((r.entretien.du || []).length > 0 || (r.entretien.prouve || []).length > 0 || (r.entretien.a_exiger || []).length > 0)) && (
@@ -956,7 +1346,21 @@ export default function ResultPage() {
                       }}>
                         {g.label}
                       </span>
+                      {p.usure_lointaine && (
+                        <span style={{
+                          background: '#F0F2F5', color: '#6B7280', borderRadius: 100, padding: '2px 10px',
+                          fontSize: '0.6875rem', fontWeight: 600, fontFamily: FONT,
+                        }}>
+                          au-delà d'une détention moyenne
+                        </span>
+                      )}
                     </div>
+                    {p.usure_lointaine && (
+                      <div style={{ fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', lineHeight: 1.5, marginBottom: 6 }}>
+                        Usure documentée bien au-delà du kilométrage actuel (plus de 60 000 km de
+                        marge) : affichée pour information, sans effet sur la note.
+                      </div>
+                    )}
                     {p.rappel_officiel && (
                       <div style={{
                         display: 'inline-block', fontFamily: FONT, fontSize: '0.75rem',
@@ -1194,7 +1598,7 @@ export default function ResultPage() {
           )}
 
           {/* ========== 10. PRIX ========== */}
-          <Card>
+          {!enCours && <Card>
             <SectionTitle>Prix</SectionTitle>
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginBottom: 10 }}>
               {vh.prix_affiche != null && (
@@ -1248,7 +1652,7 @@ export default function ResultPage() {
                 Sans comparables, aucune estimation n'est avancée.
               </div>
             )}
-          </Card>
+          </Card>}
 
           {/* ========== 11. BUDGET 12 MOIS (si présent) ========== */}
           {(r.budget_12_mois || []).length > 0 && (
@@ -1275,27 +1679,33 @@ export default function ResultPage() {
           )}
 
           {/* ========== 12. FEEDBACK ========== */}
-          <Card>
-            <VerdictFeedback analysisId={id} />
-          </Card>
+          {!enCours && (
+            <Card>
+              <VerdictFeedback analysisId={id} />
+            </Card>
+          )}
 
           {/* ========== 13. EMAILS ========== */}
-          <Card>
-            <EmailCapture
-              title="Recevoir ce rapport par email"
-              buttonLabel="Recevoir"
-              source="rapport"
-              analysisId={id}
-            />
-          </Card>
-          <Card style={{ background: '#FFF0EA', borderColor: 'rgba(255,77,0,0.25)' }}>
-            <EmailCapture
-              title="Le Pass achat arrive : accompagnement complet jusqu'à la signature. Être prévenu du lancement ?"
-              buttonLabel="Être prévenu"
-              source="pass_waitlist"
-              analysisId={id}
-            />
-          </Card>
+          {!enCours && (
+            <>
+              <Card>
+                <EmailCapture
+                  title="Recevoir ce rapport par email"
+                  buttonLabel="Recevoir"
+                  source="rapport"
+                  analysisId={id}
+                />
+              </Card>
+              <Card style={{ background: '#FFF0EA', borderColor: 'rgba(255,77,0,0.25)' }}>
+                <EmailCapture
+                  title="Le Pass achat arrive : accompagnement complet jusqu'à la signature. Être prévenu du lancement ?"
+                  buttonLabel="Être prévenu"
+                  source="pass_waitlist"
+                  analysisId={id}
+                />
+              </Card>
+            </>
+          )}
 
           {/* ========== Avertissement (complet, non tronqué) ========== */}
           <div style={{

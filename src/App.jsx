@@ -30,6 +30,10 @@ import ScorePage from './pages/ScorePage'
 import ExtensionPage from './pages/ExtensionPage'
 import ExtensionPrivacy from './pages/ExtensionPrivacy'
 import ResultPage from './pages/ResultPage'
+import VisitePage from './pages/VisitePage'
+import DossierPage from './pages/DossierPage'
+import FiabilitePage from './pages/FiabilitePage'
+import AdminAudit from './pages/AdminAudit'
 
 function Site() {
   const [user, setUser] = useState(null)
@@ -168,6 +172,10 @@ export default function App() {
         <Route path="/" element={<Site />} />
         <Route path="/score" element={<ScorePage />} />
         <Route path="/a/:id" element={<ResultPage />} />
+        <Route path="/a/:id/visite" element={<VisitePage />} />
+        <Route path="/dossier" element={<DossierPage />} />
+        <Route path="/fiabilite" element={<FiabilitePage />} />
+        <Route path="/admin/audit" element={<AdminAudit />} />
         <Route path="/extension" element={<ExtensionPage />} />
         <Route path="/extension/confidentialite" element={<ExtensionPrivacy />} />
         <Route path="/dashboard" element={<ClientDashboard />} />

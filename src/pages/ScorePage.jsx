@@ -80,9 +80,12 @@ export default function ScorePage() {
         images,
         comparables: comparables.map(c => c.trim()).filter(Boolean),
         ...(usage ? { usage } : {}),
+        // Verdict progressif : la page de résultat s'ouvre dès l'identification,
+        // le reste de l'analyse arrive en direct (polling côté /a/:id).
+        progressive: true,
       }
-      const { id, result } = await analyzeListing(payload)
-      navigate(`/a/${id}`, { state: { result } })
+      const { id, result, partial } = await analyzeListing(payload)
+      navigate(`/a/${id}`, { state: { result, partial: partial === true } })
     } catch (err) {
       // Service IA indisponible : on propose la file d'attente plutôt qu'un échec sec.
       if (err.code === 'service_unavailable' || err.status === 503) {
@@ -209,7 +212,8 @@ export default function ScorePage() {
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '0.8125rem', color: '#9CA3AF', marginBottom: 20,
               }}>
-                Analyse approfondie en 3 passes — comptez 1 à 2 minutes.
+                La page de résultat s'ouvre dès que le véhicule est identifié
+                (quelques secondes) — l'analyse complète s'y affiche en direct.
               </div>
               {LOADING_STEPS.map(({ label: step }, i) => (
                 <div key={i} style={{
