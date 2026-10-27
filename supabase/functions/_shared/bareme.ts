@@ -41,6 +41,30 @@ export type Axe = { note: number | null; commentaire: string };
 const borne = (n: number, min = 2, max = 20) => Math.max(min, Math.min(max, Math.round(n)));
 const fr = (n: number) => n.toLocaleString("fr-FR");
 
+// ---------- Horizon de détention (pannes d'usure lointaines) ----------
+// Une panne d'usure pèse sur la note si son kilométrage typique d'apparition
+// tombe avant km actuel + 60 000 km (détention moyenne d'un véhicule
+// d'occasion). Au-delà, elle reste affichée — l'acheteur doit la connaître —
+// avec la mention « au-delà d'une détention moyenne », mais ne compte pas.
+export const HORIZON_DETENTION_KM = 60_000;
+
+/** Premier seuil kilométrique publié dans un libellé « dès 160 000 km »,
+ *  « 100 000 - 150 000 km »… null si aucun chiffre exploitable. */
+export function seuilKmPanne(kmTypique: string | null): number | null {
+  if (!kmTypique) return null;
+  const nombres = [...kmTypique.matchAll(/(\d[\d\s]{2,8})/g)]
+    .map((m) => parseInt(m[1].replace(/\s/g, ""), 10))
+    .filter((n) => Number.isFinite(n) && n >= 10000);
+  return nombres.length ? Math.min(...nombres) : null;
+}
+
+/** La panne compte-t-elle dans la note ? Sans seuil publié ou sans kilométrage
+ *  connu, elle compte (on ne minore jamais un risque par manque de donnée). */
+export function panneDansHorizon(kmActuel: number | null, seuilKm: number | null): boolean {
+  if (seuilKm == null || kmActuel == null) return true;
+  return seuilKm <= kmActuel + HORIZON_DETENTION_KM;
+}
+
 /** Notes des 5 axes + score global, entièrement déterministes. */
 export type ResultatBareme = {
   axes: Record<string, Axe>;

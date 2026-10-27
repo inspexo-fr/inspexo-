@@ -1,4 +1,10 @@
 {
+  "crons": [
+    {
+      "path": "/api/alertes",
+      "schedule": "0 7 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/a/:id",

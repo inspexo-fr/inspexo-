@@ -1,7 +1,7 @@
 // Test hors ligne du barème déterministe (aucun appel API).
 // Vérifie la calibration sur des profils réels et, surtout, le DÉTERMINISME.
 // Usage : node tests/bareme.test.mjs
-import { calculerAxes } from '../supabase/functions/_shared/bareme.ts'
+import { calculerAxes, seuilKmPanne, panneDansHorizon } from '../supabase/functions/_shared/bareme.ts'
 
 const base = {
   annee_courante: 2026,
@@ -134,6 +134,24 @@ verifie('Annonce très courte : Golf 7 de 2015, 123 000 km, rien sur l\'entretie
   const ok = sans.score === 40 && avec.score < 40 && avec.verdict === 'rouge'
   if (!ok) ko++
   console.log(`${ok ? 'PASS' : 'FAIL'} — rappel stop drive : sans ${sans.verdict} ${sans.score} → avec ${avec.verdict} ${avec.score}`)
+}
+
+// Horizon de détention : une panne d'usure compte dans la note si son
+// kilométrage typique tombe avant km actuel + 60 000 km ; au-delà elle est
+// affichée avec la mention « au-delà d'une détention moyenne » et ne compte pas.
+{
+  const cas = [
+    ['40 000 km, usure à 100 000 km → compte', 40000, 'dès 100 000 km', true],
+    ['36 606 km, usure à 160 000 km → ne compte pas', 36606, 'dès environ 160 000 km', false],
+    ['150 000 km, usure à 160 000 km → compte', 150000, 'dès environ 160 000 km', true],
+    ['seuil non publié → compte toujours', 40000, null, true],
+    ['kilométrage inconnu → compte toujours', null, '120 000 - 180 000 km', true],
+  ]
+  for (const [titre, km, kmTypique, attendu] of cas) {
+    const ok = panneDansHorizon(km, seuilKmPanne(kmTypique)) === attendu
+    if (!ok) ko++
+    console.log(`${ok ? 'PASS' : 'FAIL'} — horizon : ${titre}`)
+  }
 }
 
 console.log('\nDÉTERMINISME')
