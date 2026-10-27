@@ -28,6 +28,10 @@ export type FaitsAxes = {
   }>;
   // Ce que l'acheteur doit fournir pour activer cette couverture.
   condition_garantie?: string | null;
+  // Faits qui autorisent, à eux seuls, un feu rouge.
+  rappel_stop_drive?: boolean;
+  juridique_grave?: boolean;
+  fraude_suspectee?: boolean;
   // Transverse
   incoherences: number;
 };
@@ -143,19 +147,21 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     // qu'un moteur documenté expose 2 ou 4 défauts majeurs change peu le risque
     // réel pour l'acheteur, alors que le décompte, lui, varie d'une analyse à
     // l'autre. Le volume n'ajoute qu'un malus faible et plafonné.
-    let securite = 0, majeures = 0, mineures = 0, rappels = 0;
+    let securite = 0, casses = 0, majeures = 0, mineures = 0, rappels = 0;
     for (const p of f.pannes) {
       if (p.gravite === "securite") securite += 1;
+      else if (p.gravite === "casse") casses += 1;
       else if (p.gravite === "majeure") majeures += 1;
       else mineures += 1;
       if (p.rappel_officiel && !p.rappel_confirme_effectue) rappels += 1;
     }
     // La note dépend de la gravité LA PLUS ÉLEVÉE, jamais du nombre de pannes :
     // un moteur mieux documenté ne doit pas être pénalisé pour cette raison.
-    let note = securite > 0 ? 5 : majeures > 0 ? 9 : mineures > 0 ? 13 : 16;
+    let note = securite > 0 ? 4 : casses > 0 ? 5 : majeures > 0 ? 9 : mineures > 0 ? 13 : 16;
     if (rappels > 0) note -= 3;
     const bouts = [
       securite ? `${securite} point${securite > 1 ? "s" : ""} de sécurité` : null,
+      casses ? `${casses} risque${casses > 1 ? "s" : ""} de casse moteur ou boîte` : null,
       majeures ? `${majeures} défaut${majeures > 1 ? "s" : ""} majeur${majeures > 1 ? "s" : ""}` : null,
       mineures ? `${mineures} défaut${mineures > 1 ? "s" : ""} mineur${mineures > 1 ? "s" : ""}` : null,
       rappels ? `${rappels} rappel${rappels > 1 ? "s" : ""} constructeur à faire confirmer` : null,
@@ -163,7 +169,7 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     axes.risques_mecaniques = {
       note: borne(note),
       commentaire: bouts.length
-        ? `${bouts.join(", ")} retenu${bouts.length > 1 || securite + majeures + mineures > 1 ? "s" : ""} sur ce moteur.`
+        ? `${bouts.join(", ")} retenu${bouts.length > 1 || securite + casses + majeures + mineures > 1 ? "s" : ""} sur ce moteur.`
         : "Aucun défaut documenté retenu sur ce moteur à ce kilométrage.",
     };
   }
@@ -227,6 +233,21 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   }
   if (nRappels >= 1) poser(48, "Un rappel constructeur reste à faire confirmer sur ce véhicule.");
   score = Math.min(score, plafond);
+
+  // ---------- Le rouge est réservé aux faits graves ----------
+  // Un feu rouge dit « ne l'achetez pas en l'état ». Il exige donc un danger
+  // pour les occupants, un risque de casse moteur/boîte non couvert, un rappel
+  // « stop drive » non traité, un problème juridique grave ou des signes de
+  // fraude. Une panne seulement « majeure » plafonne à « prudence ».
+  // Attention : une couverture de garantie n'est ACQUISE qu'une fois les
+  // justificatifs fournis. Tant qu'ils manquent, la panne pèse de tout son
+  // poids dans le verdict affiché ; elle n'est allégée que dans le conditionnel.
+  const securiteNonCouverte = f.pannes.some((p) => p.gravite === "securite");
+  const casseNonCouverte = f.pannes.some((p) => p.gravite === "casse");
+  const rougeJustifie = securiteNonCouverte || casseNonCouverte ||
+    Boolean(f.rappel_stop_drive) || Boolean(f.juridique_grave) || Boolean(f.fraude_suspectee);
+  if (!rougeJustifie && score < 40) score = 40;
+
   const verdict = score >= 70 ? "vert" : score >= 40 ? "orange" : "rouge";
 
   // ---------- Verdict conditionnel (couverture de garantie) ----------
@@ -237,20 +258,18 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const couvertes = f.pannes.filter((p) => p.couverte_garantie);
   if (couvertes.length > 0 && f.condition_garantie && axes.risques_mecaniques.note != null) {
     const restantes = f.pannes.filter((p) => !p.couverte_garantie);
+    const ORDRE = ["securite", "casse", "majeure", "mineure"];
     const gravMax = (liste: typeof f.pannes) =>
-      liste.some((p) => p.gravite === "securite") ? "securite"
-        : liste.some((p) => p.gravite === "majeure") ? "majeure"
-        : liste.some((p) => p.gravite === "mineure") ? "mineure" : "aucune";
+      ORDRE.find((g) => liste.some((p) => p.gravite === g)) ?? "aucune";
     // Les pannes couvertes rétrogradent d'un cran, les autres sont inchangées.
-    const retrograde = (g: string) => g === "securite" ? "majeure" : g === "majeure" ? "mineure" : "mineure";
+    const retrograde = (g: string) =>
+      g === "securite" ? "casse" : g === "casse" ? "majeure" : "mineure";
     const gravites = [
       gravMax(restantes),
       ...couvertes.map((p) => retrograde(p.gravite)),
     ];
-    const pire = gravites.includes("securite") ? "securite"
-      : gravites.includes("majeure") ? "majeure"
-      : gravites.includes("mineure") ? "mineure" : "aucune";
-    let noteCond = pire === "securite" ? 5 : pire === "majeure" ? 9 : pire === "mineure" ? 13 : 16;
+    const pire = ORDRE.find((g) => gravites.includes(g)) ?? "aucune";
+    let noteCond = pire === "securite" ? 4 : pire === "casse" ? 5 : pire === "majeure" ? 9 : pire === "mineure" ? 13 : 16;
     // Un rappel pris en charge par le programme ne pèse plus.
     const rappelsHorsCouverture = restantes.filter((p) => p.rappel_officiel && !p.rappel_confirme_effectue).length;
     if (rappelsHorsCouverture > 0) noteCond -= 3;
@@ -271,6 +290,9 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     if (gravites.includes("securite")) plafondC = Math.min(plafondC, 58);
     if (rappelsHorsCouverture >= 1) plafondC = Math.min(plafondC, 48);
     scoreC = Math.min(scoreC, plafondC);
+    const rougeJustifieC = gravites.includes("securite") || gravites.includes("casse") ||
+      Boolean(f.rappel_stop_drive) || Boolean(f.juridique_grave) || Boolean(f.fraude_suspectee);
+    if (!rougeJustifieC && scoreC < 40) scoreC = 40;
     const verdictC = scoreC >= 70 ? "vert" : scoreC >= 40 ? "orange" : "rouge";
     if (scoreC > score) {
       verdictConditionnel = { score: scoreC, verdict: verdictC, condition: f.condition_garantie };

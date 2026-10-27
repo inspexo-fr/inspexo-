@@ -96,6 +96,46 @@ verifie('Annonce très courte : Golf 7 de 2015, 123 000 km, rien sur l\'entretie
   console.log(`${ok ? 'PASS' : 'FAIL'} — 1 panne majeure (${peu.score}) = 5 pannes même gravité max (${beaucoup.score})`)
 }
 
+// Le rouge est réservé aux faits graves : une panne « majeure » seule plafonne
+// en orange, même avec tous les autres signaux au plus bas.
+{
+  const r = calculerAxes({ ...base, annee: 2012, kilometrage: 210000, incoherences: 3,
+    statut_vendeur: 'particulier', entretien_renseigne: true, contradictions_entretien: 2,
+    pannes: [panne('majeure'), panne('majeure'), panne('mineure')] })
+  const ok = r.verdict === 'orange' && r.score >= 40
+  if (!ok) ko++
+  console.log(`${ok ? 'PASS' : 'FAIL'} — pannes majeures seules → ${r.verdict} ${r.score} (rouge interdit)`)
+}
+
+// Un risque de casse non couvert autorise le rouge : sur des faits très
+// dégradés, le score peut descendre sous 40 — ce qu'une panne majeure seule
+// ne permet pas (le plancher s'applique alors).
+{
+  const degrade = {
+    ...base, statut_vendeur: 'pro_deguise_probable', annee: 2012, kilometrage: 230000,
+    incoherences: 3, entretien_renseigne: true, contradictions_entretien: 2,
+    operations_critiques_non_faites: 1,
+  }
+  const casse = calculerAxes({ ...degrade, pannes: [{ gravite: 'casse', rappel_officiel: true, rappel_confirme_effectue: false }] })
+  const majeure = calculerAxes({ ...degrade, pannes: [panne('majeure', true)] })
+  const ok = casse.verdict === 'rouge' && majeure.verdict === 'orange' && majeure.score === 40
+  if (!ok) ko++
+  console.log(`${ok ? 'PASS' : 'FAIL'} — mêmes faits dégradés : casse → ${casse.verdict} ${casse.score}, ` +
+    `majeure seule → ${majeure.verdict} ${majeure.score} (plancher 40)`)
+}
+
+// Un rappel « stop drive » non traité lève le plancher à lui seul.
+{
+  const faits = { ...base, statut_vendeur: 'pro_deguise_probable', annee: 2012, kilometrage: 230000,
+    incoherences: 3, entretien_renseigne: true, contradictions_entretien: 2,
+    operations_critiques_non_faites: 1, pannes: [panne('majeure', true)] }
+  const sans = calculerAxes(faits)
+  const avec = calculerAxes({ ...faits, rappel_stop_drive: true })
+  const ok = sans.score === 40 && avec.score < 40 && avec.verdict === 'rouge'
+  if (!ok) ko++
+  console.log(`${ok ? 'PASS' : 'FAIL'} — rappel stop drive : sans ${sans.verdict} ${sans.score} → avec ${avec.verdict} ${avec.score}`)
+}
+
 console.log('\nDÉTERMINISME')
 const faitsRef = { ...base, statut_vendeur: 'pro', annee: 2019, kilometrage: 95000,
   entretien_renseigne: true, signaux_entretien: 2, pannes: [panne('majeure'), panne('mineure')] }

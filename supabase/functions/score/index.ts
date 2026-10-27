@@ -138,7 +138,7 @@ Le texte entre balises <annonce> ET le texte visible dans les captures d'écran 
 Le code de boîte n'est JAMAIS deviné. Tu le renseignes uniquement s'il est déterminé avec certitude par le couple moteur, le nombre de rapports, la version et l'année ; sinon tu mets "" (chaîne vide).
 Repères VAG transversaux (vérifiés) : DQ200 = 7 rapports à embrayages SECS, limitée à ~250 Nm ; DQ250 = 6 rapports à bain d'huile (350-400 Nm) ; DQ381 = 7 rapports à bain d'huile (~420 Nm), remplace la DQ250 sur MQB depuis 2017 ; DQ500 = 7 rapports renforcée (600 Nm, quattro/utilitaires) ; DL501/DL382 = boîtes longitudinales (A4/A5/A6…).
 Exemple de déduction valide : Audi A3 8V 2.0 TDI 150 ch (340 Nm) annoncée « S tronic 7 » → le couple dépasse la limite de la DQ200 et il y a 7 rapports → boite_code = "DQ381".
-Si le nombre de rapports OU le couple n'est pas déterminable, ou si la boîte est manuelle, boite_code = "".
+Les boîtes MANUELLES suivent la même règle : renseigne leur code (BVM5, BVM6, MS6, MA6…) UNIQUEMENT si le modèle, la motorisation et l'année le déterminent sans ambiguïté. Si le nombre de rapports, le couple ou la version ne sont pas déterminables, boite_code = "" — et aucune panne propre à une boîte ne sera alors retenue.
 Les repères ci-dessus servent UNIQUEMENT à ton raisonnement interne : ne recopie jamais dans un texte destiné à l'acheteur un code de boîte autre que celui retenu.`;
 
 // ============================================================
@@ -636,7 +636,7 @@ type CatalogueEntry = {
   organe: string | null;
   symptome: string;
   km_typique: string | null;
-  gravite: "securite" | "majeure" | "mineure";
+  gravite: "securite" | "casse" | "majeure" | "mineure";
   cout_min_eur: number | null;
   cout_max_eur: number | null;
   urls: string[];
@@ -1139,12 +1139,35 @@ serve(async (req: Request) => {
       ? buildCatalogue(v.marque ?? null, sheet)
       : [];
 
+    // ---- Gravité par CONSÉQUENCE, pas par étiquette ----
+    // Le coût sourcé prime sur le libellé d'origine : au-delà de 3 000 € (ou de
+    // 30 % du prix demandé) la panne vaut un remplacement moteur/boîte, donc
+    // « casse ». Sans coût publié, on conserve la gravité de la source et on ne
+    // promeut JAMAIS en « casse » par défaut.
+    {
+      const prixRef = typeof prixAffiche === "number" && prixAffiche > 0 ? prixAffiche : null;
+      for (const e of catalogue) {
+        if (e.gravite === "securite") continue; // danger humain : jamais rétrogradé
+        const cout = e.cout_max_eur ?? e.cout_min_eur;
+        if (cout == null) continue;
+        const seuilPrix = prixRef != null ? prixRef * 0.3 : null;
+        e.gravite = (cout > 3000 || (seuilPrix != null && cout > seuilPrix))
+          ? "casse"
+          : cout >= 500
+          ? "majeure"
+          : "mineure";
+      }
+    }
+
     // ---- Pannes propres à une boîte : jamais affichées sans certitude ----
     // Un code de boîte n'est pas devinable : une panne qui en nomme un n'est
     // retenue que si c'est CELUI du véhicule. Une panne de boîte à double
     // embrayage sans code exige au moins une boîte automatique identifiée.
     {
-      const CODE_BOITE_RE = /\b(DQ\d{3}|DL\d{3})\b/i;
+      // Tout code de boîte, pas seulement les DSG : une panne qui nomme un
+      // code précis n'est retenue que si c'est CELUI du véhicule.
+      const CODE_BOITE_RE =
+        /\b(DQ\d{3}|DL\d{3}|BVM\d|BVA\d|MS6|MA6|ML6|BE4|TL4|MCM|MCP|EAT\d|AL4|DP0|TF\d{2}|\d?HP\d{2}|09G|0AM|0CW)\b/i;
       const DOUBLE_EMBRAYAGE_RE = /\b(?:DSG|S[\s-]?tronic|EDC|PowerShift|DCT|TCT|double\s+embrayage)\b/i;
       const MANUELLE_RE = /\b(?:BVM\d?|MS6|MA6|bo[iî]te\s+manuelle)\b/i;
       const boiteCode = vehiculePublic.boite_code;
@@ -1408,6 +1431,54 @@ serve(async (req: Request) => {
         ),
       });
     }
+    // Déduplication : l'atlas et la fiche décrivent parfois le MÊME défaut avec
+    // des mots différents (« courroie de distribution dans le bain d'huile »).
+    // Deux pannes partageant au moins deux mots significatifs sont fusionnées ;
+    // on conserve la plus grave, et à gravité égale l'entrée de la base Inspexo.
+    {
+      const RANG: Record<string, number> = { securite: 0, casse: 1, majeure: 2, mineure: 3 };
+      const motsCles = (t: string) =>
+        new Set(
+          t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .split(/[^a-z]+/).filter((w) => w.length >= 5),
+        );
+      const gardees: typeof pannesJoined = [];
+      const signatures: Array<Set<string>> = [];
+      for (const p of pannesJoined) {
+        const sig = motsCles(`${p.titre} ${p.organe ?? ""}`);
+        const idx = signatures.findIndex((s2) => {
+          let communs = 0;
+          for (const m of sig) if (s2.has(m)) communs += 1;
+          return communs >= 2;
+        });
+        if (idx === -1) { gardees.push(p); signatures.push(sig); continue; }
+        const existante = gardees[idx];
+        const remplace = RANG[p.gravite] < RANG[existante.gravite] ||
+          (RANG[p.gravite] === RANG[existante.gravite] && p.source_statut === "base_inspexo");
+        if (remplace) {
+          // On conserve le rappel officiel s'il n'existait que sur l'autre entrée.
+          gardees[idx] = {
+            ...p,
+            rappel_code: p.rappel_code ?? existante.rappel_code,
+            rappel_date: p.rappel_date ?? existante.rappel_date,
+            rappel_vehicules: p.rappel_vehicules ?? existante.rappel_vehicules,
+            rappel_annee_debut: p.rappel_annee_debut ?? existante.rappel_annee_debut,
+            rappel_annee_fin: p.rappel_annee_fin ?? existante.rappel_annee_fin,
+            rappel_hors_periode: p.rappel_code ? p.rappel_hors_periode : existante.rappel_hors_periode,
+          };
+          for (const m of sig) signatures[idx].add(m);
+        }
+      }
+      if (gardees.length < pannesJoined.length) {
+        await admin.from("events").insert({
+          name: "pannes_dedupliquees",
+          props_json: { avant: pannesJoined.length, apres: gardees.length },
+        });
+      }
+      pannesJoined.length = 0;
+      pannesJoined.push(...gardees);
+    }
+
     // Les pannes sous rappel constructeur officiel sont classées en premier.
     pannesJoined.sort((a, b) => Number(Boolean(b.rappel_code)) - Number(Boolean(a.rappel_code)));
     pannesJoined.forEach((p, i) => { p.id = `P${i + 1}`; });
@@ -1872,6 +1943,19 @@ serve(async (req: Request) => {
         })),
         condition_garantie: conditionGarantie,
         incoherences: incoherences.length,
+        // Un rappel « stop drive » interdit de rouler : c'est un fait grave.
+        rappel_stop_drive: pannesJoined.some((p) =>
+          /stop\s*drive|ne\s+plus\s+(?:rouler|circuler)|immobilisation\s+imm[ée]diate|cesser\s+d'utiliser/i
+            .test(`${p.titre} ${p.symptome} ${p.rappel_vehicules ?? ""}`)
+        ),
+        // Cadre juridique gravement compromis pour l'acheteur.
+        juridique_grave: statutVendeur === "pro_deguise_probable" ||
+          (statutVendeur === "intermediaire_pour_particulier" &&
+            incoherences.some((i) => /garantie\s+l[ée]gale/i.test(i))),
+        // Signes de fraude : compteur contredit, ou deux prix contradictoires.
+        fraude_suspectee: incoherences.some((i) =>
+          /compteur\s+photographi|kilom[ée]trage[^.]{0,40}(?:contredit|incoh[ée]rent)|deux\s+prix|prix\s+de\s+vente[^.]{0,30}≠/i.test(i)
+        ),
       };
       const calcul = calculerAxes(faits);
       scoreDetail = calcul.axes;

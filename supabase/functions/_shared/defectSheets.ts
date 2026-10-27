@@ -27,7 +27,7 @@ export type SheetPanne = {
   organe: string | null;
   symptomes: string;
   km_typique: string | null;
-  gravite: "securite" | "majeure" | "mineure";
+  gravite: "securite" | "casse" | "majeure" | "mineure";
   cout_indicatif_eur_min: number | null;
   cout_indicatif_eur_max: number | null;
   url_source: string[];
@@ -236,7 +236,7 @@ const FICHE_TOOL = {
             organe: { type: ["string", "null"] },
             symptomes: { type: "string" },
             km_typique: { type: ["string", "null"] },
-            gravite: { type: "string", enum: ["securite", "majeure", "mineure"] },
+            gravite: { type: "string", enum: ["securite", "casse", "majeure", "mineure"] },
             cout_indicatif_eur_min: { type: ["number", "null"] },
             cout_indicatif_eur_max: { type: ["number", "null"] },
             sources: {
@@ -318,6 +318,7 @@ function sheetSystemPrompt(marque: string, famille: string, label: string | null
 - SEUIL DE QUALITÉ : la fiche doit s'appuyer sur AU MOINS 4 sources distinctes, dont AU MOINS 2 spécifiques à la famille ${famille} (la page nomme ce moteur dans son titre ou son contenu → nomme_moteur: true). Une source générique (palmarès « moteurs les moins fiables », classement, article généraliste) ne peut JAMAIS porter seule une panne : chaque panne doit avoir au moins une source spécifique au moteur.
 - rappel_code : recopie le code de campagne UNIQUEMENT s'il figure littéralement dans une des pages consultées (ex : « KGH », « 21H7 ») ; sinon laisse null et décris le rappel sans code. Un code approchant ou reconstitué de mémoire est INTERDIT.
 - rappel_annee_debut / rappel_annee_fin : années de production couvertes par la campagne telles que publiées (0 si la source ne les donne pas). Elles servent à n'appliquer le rappel qu'aux véhicules réellement concernés.
+- gravite, classée par CONSÉQUENCE et non par étiquette : "securite" = danger pour les occupants, et uniquement si une source le dit ; "casse" = remplacement du moteur ou de la boîte, ou réparation sourcée au-delà de 3 000 € ; "majeure" = réparation sourcée entre 500 et 3 000 € ; "mineure" = moins de 500 € ou simple désagrément. Sans coût publié, garde la gravité qu'indique la source — ne choisis JAMAIS "casse" par défaut.
 - gravite_citee_par_source : true UNIQUEMENT si une source qualifie explicitement le risque de danger/sécurité (casse moteur en roulant, incendie, perte de freinage/direction). Sans cela, une panne ne peut pas être "securite".
 - plan_entretien : les intervalles d'entretien PUBLIÉS (constructeur ou presse auto reconnue) pour ce moteur et sa boîte : distribution (km ET années), vidange moteur, vidange de boîte automatique/DSG, liquide de frein, bougies/filtres si pertinent. Chaque intervalle chiffré DOIT avoir son url_source ; si tu connais l'opération mais pas d'intervalle sourcé, mets intervalle_km et intervalle_annees à 0 (l'affichage dira « à vérifier dans le carnet ») ; 0 = inconnu pour les coûts aussi, "" = non lié à une panne pour lie_a_panne. lie_a_panne = titre de la panne de la fiche directement liée à cette opération (ex : vidange ↔ courroie immergée dans l'huile), sinon null. JAMAIS de chiffre inventé.
 - programmes_garantie : UNIQUEMENT les extensions de garantie / prises en charge constructeur trouvées pour CETTE famille, avec leurs conditions chiffrées (âge max, km max, entretien exigé), leur date d'entrée en vigueur et leur url_source. Sources acceptées : communication officielle du constructeur ou presse auto reconnue (Caradisiac, L'argus, Autoplus…). AUCUN programme sans une telle source ; liste vide sinon.
@@ -455,7 +456,7 @@ export function sanitizePannes(
       km_typique: p.km_typique ? String(p.km_typique).slice(0, 100) : null,
       gravite: p.gravite === "securite"
         ? (p.gravite_citee_par_source === true ? "securite" : "majeure")
-        : ["majeure", "mineure"].includes(p.gravite) ? p.gravite : "mineure",
+        : ["casse", "majeure", "mineure"].includes(p.gravite) ? p.gravite : "mineure",
       cout_indicatif_eur_min: typeof p.cout_indicatif_eur_min === "number" ? p.cout_indicatif_eur_min : null,
       cout_indicatif_eur_max: typeof p.cout_indicatif_eur_max === "number" ? p.cout_indicatif_eur_max : null,
       url_source: urls.slice(0, 4),

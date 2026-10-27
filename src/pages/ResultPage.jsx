@@ -13,6 +13,7 @@ const VERDICT_STYLE = {
 
 const GRAVITE_STYLE = {
   securite: { label: 'Sécurité', color: '#DC2626', bg: '#FEF2F2' },
+  casse:    { label: 'Casse moteur/boîte', color: '#B91C1C', bg: '#FEF2F2' },
   majeure:  { label: 'Majeure',  color: '#D97706', bg: '#FFFBEB' },
   mineure:  { label: 'Mineure',  color: '#6B7280', bg: '#F0F2F5' },
 }
