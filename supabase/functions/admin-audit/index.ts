@@ -7,8 +7,7 @@
 //      agrégats via la RPC get_fiabilite (rien avant 50 analyses auditées).
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const ADMIN_EMAILS = ["contact@inspexo.io"];
+import { verifierAdmin } from "../_shared/adminAuth.ts";
 
 const CLAIM_TYPES = [
   "panne", "rappel", "incoherence", "juridique", "photo", "prix", "cout", "raison", "entretien", "checklist",
@@ -23,22 +22,12 @@ serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Missing token" }), { status: 401, headers: cors });
+    // Rôle admin vérifié en base (table admins) — sprint 3.1.
+    const acces = await verifierAdmin(req);
+    if (!acces.ok) {
+      return new Response(JSON.stringify({ error: acces.error }), { status: acces.status, headers: cors });
     }
-    const anonClient = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } },
-    );
-    const { data: { user }, error: authError } = await anonClient.auth.getUser();
-    if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: cors });
-    }
-    if (!ADMIN_EMAILS.includes(user.email ?? "")) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: cors });
-    }
+    const user = acces.user;
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,

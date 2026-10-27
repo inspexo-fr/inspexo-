@@ -109,7 +109,7 @@ serve(async (req: Request) => {
       const email: string | undefined = userData?.user?.email;
       if (email) {
         const vehicule = [a.marque, a.modele, a.annee].filter(Boolean).join(" ");
-        const envoye = await emailNouveauRappel(email, d.analysis_id, vehicule, etat.titres.slice(0, 5));
+        const envoye = await emailNouveauRappel(email, d.analysis_id, vehicule, etat.titres.slice(0, 5), d.user_id);
         await admin.from("events").insert({
           name: "alerte_rappel_envoyee",
           analysis_id: d.analysis_id,
@@ -145,7 +145,7 @@ serve(async (req: Request) => {
       const email: string | undefined = userData?.user?.email;
       if (email) {
         const vehicule = [d.analyses?.marque, d.analyses?.modele].filter(Boolean).join(" ") || "véhicule";
-        const envoye = await emailRetourIssue(email, vehicule);
+        const envoye = await emailRetourIssue(email, vehicule, d.user_id);
         await admin.from("events").insert({
           name: "outcome_email_envoye",
           analysis_id: d.analysis_id,

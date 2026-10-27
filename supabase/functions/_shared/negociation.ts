@@ -42,6 +42,23 @@ export type Negociation = {
   mention: string;
 };
 
+// Le texte du vendeur n'est JAMAIS recopié tel quel dans un argument affiché :
+// extrait court (≤ 15 mots par défaut), sans lien, email ni numéro de
+// téléphone/SIRET (toute suite d'au moins 9 chiffres — jamais un kilométrage
+// ou un prix, qui en comptent 6 au plus).
+export function nettoyerCitationVendeur(t: string, maxMots = 15): string {
+  let s = t
+    .replace(/(https?:\/\/|www\.)\S+/gi, "")
+    .replace(/[\w.+-]+@[\w-]+\.[\w.]{2,}/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  s = s.replace(/[+\d][\d\s.\-()]{6,}\d/g, (m) => ((m.match(/\d/g) ?? []).length >= 9 ? "" : m))
+    .replace(/\s{2,}/g, " ").trim();
+  const mots = s.split(/\s+/).filter(Boolean);
+  if (mots.length > maxMots) s = mots.slice(0, maxMots).join(" ") + "…";
+  return s;
+}
+
 export const MENTION_NEGOCIATION =
   "Coûts indicatifs à faire chiffrer par un garage. À utiliser comme arguments, pas comme une remise garantie.";
 
@@ -221,12 +238,13 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
     });
   }
 
-  // 3) Défauts que l'annonce admet elle-même.
+  // 3) Défauts que l'annonce admet elle-même (déjà reformulés/écourtés côté
+  //    serveur : jamais le texte du vendeur tel quel, affiché entre guillemets).
   for (const d of e.defauts_annonce.slice(0, 6)) {
     bruts.push({
       type: "defaut_annonce",
       poste: d.description.slice(0, 140),
-      argument: `L'annonce le reconnaît : ${d.description}`,
+      argument: `L'annonce le reconnaît : « ${d.description} »`,
     });
   }
 
@@ -246,7 +264,7 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
     bruts.push({
       type: "entretien_non_prouve",
       poste: op.slice(0, 140),
-      argument: `L'annonce le déclare : ${op} — ce coût est donc devant vous.`,
+      argument: `L'annonce le déclare (« ${op} ») — ce coût est donc devant vous.`,
     });
   }
 

@@ -59,11 +59,20 @@ export const visiteTerminer = (analysisId, reponses, nonVerifies = [], constatsP
 
 /* ---------- Dossier d'achat (compte léger, lien magique) ---------- */
 
-/** Envoie le lien magique de connexion (compte créé au premier clic). */
-export async function envoyerLienMagique(email, redirectPath = '/dossier') {
+// Origine FIXE des redirections de lien magique (sprint 3.1) : jamais dérivée
+// de window.location.origin — l'allow-list Supabase reste stricte, sans
+// wildcard de preview.
+const ORIGINE_LIENS = 'https://www.inspexo.io'
+
+/** Envoie le lien magique de connexion (compte créé au premier clic).
+ *  captchaToken : jeton Turnstile, exigé par GoTrue quand le captcha est actif. */
+export async function envoyerLienMagique(email, redirectPath = '/dossier', captchaToken = null) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: `${window.location.origin}${redirectPath}` },
+    options: {
+      emailRedirectTo: `${ORIGINE_LIENS}${redirectPath}`,
+      ...(captchaToken ? { captchaToken } : {}),
+    },
   })
   if (error) throw error
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import { IconeAppareilPhoto, IconeLoupe } from '../components/Icones'
+import Turnstile from '../components/Turnstile'
 import Footer from '../components/Footer'
 import { analyzeListing, submitPendingAnalysis } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
@@ -40,6 +41,8 @@ export default function ScorePage() {
   const [indispo, setIndispo]         = useState(null) // message si service IA indisponible
   const [waitEmail, setWaitEmail]     = useState('')
   const [waitState, setWaitState]     = useState('idle') // idle | sending | done | error
+  const [captchaRequis, setCaptchaRequis] = useState(false) // au-delà de 2 analyses/jour
+  const [captchaToken, setCaptchaToken]   = useState(null)
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -81,6 +84,7 @@ export default function ScorePage() {
         images,
         comparables: comparables.map(c => c.trim()).filter(Boolean),
         ...(usage ? { usage } : {}),
+        ...(captchaToken ? { captcha_token: captchaToken } : {}),
         // Verdict progressif : la page de résultat s'ouvre dès l'identification,
         // le reste de l'analyse arrive en direct (polling côté /a/:id).
         progressive: true,
@@ -91,6 +95,10 @@ export default function ScorePage() {
       // Service IA indisponible : on propose la file d'attente plutôt qu'un échec sec.
       if (err.code === 'service_unavailable' || err.status === 503) {
         setIndispo(err.message)
+      } else if (err.code === 'captcha_required') {
+        // Au-delà de 2 analyses/jour : vérification anti-robots puis relance.
+        setCaptchaRequis(true)
+        setError(err.message)
       } else {
         setError(err.message)
       }
@@ -454,6 +462,11 @@ export default function ScorePage() {
                 </div>
               </div>
 
+              {captchaRequis && (
+                <div style={{ marginBottom: 12 }}>
+                  <Turnstile onToken={setCaptchaToken} action="score" />
+                </div>
+              )}
               <button type="submit" className="score-submit" disabled={!text.trim() || overLimit}>
                 <IconeLoupe size={18} /> Analyser gratuitement
                 <span style={{ fontSize: '1.1rem' }}>→</span>

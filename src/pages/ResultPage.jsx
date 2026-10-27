@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { supabase } from '../lib/supabaseClient'
+import Turnstile from '../components/Turnstile'
 import {
   getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
   submitLead, trackEvent, dossierAdd, envoyerLienMagique,
@@ -492,6 +493,7 @@ function PassCTA({ analysisId }) {
 function DossierButton({ analysisId }) {
   const [etat, setEtat] = useState('idle') // idle | email | sending | lien_envoye | ajout | fait | erreur
   const [email, setEmail] = useState('')
+  const [captcha, setCaptcha] = useState(null)
 
   const ajouter = async () => {
     setEtat('ajout')
@@ -540,7 +542,7 @@ function DossierButton({ analysisId }) {
           analysisId, exp: Date.now() + 15 * 60 * 1000,
         }))
       } catch (_) { /* stockage indisponible : l'ajout restera manuel */ }
-      await envoyerLienMagique(email, `/a/${analysisId}?dossier=1`)
+      await envoyerLienMagique(email, `/a/${analysisId}?dossier=1`, captcha)
       setEtat('lien_envoye')
     } catch (_) {
       setEtat('erreur')
@@ -581,6 +583,7 @@ function DossierButton({ analysisId }) {
             {etat === 'sending' ? '…' : 'Recevoir le lien'}
           </button>
         </div>
+        <Turnstile onToken={setCaptcha} action="lien-magique" />
         <div style={{ marginTop: 6, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5 }}>
           Connexion par lien magique, sans mot de passe. {CONSENT_TEXT}
         </div>

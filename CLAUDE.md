@@ -266,6 +266,15 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - **Durcissements d'audit (ne pas défaire)** : empreinte du cache = texte + URL + **nb photos + nb comparables + usage** ; l'auto-ajout au dossier (`?dossier=1`) exige une intention locale posée < 15 min avant le lien magique ; l'alerte « annonce modifiée » n'est déclenchée que par le canal extension (isInternal) avec concordance marque/modèle ; `dossier_add`/`submit_outcome` n'insèrent un event que sur création réelle (ip_hash + user_id) ; les fourchettes `repair_costs` issues des fiches sont VÉRIFIÉES littéralement sur la page citée avant insertion (`montantPresent`), sinon écartées ; un rappel dont la plage de production exclut le véhicule (borne stricte côté début : immatriculation < début de production) est retiré de la note, des raisons et de la synthèse.
 - Zéro emoji sur le site : icônes SVG sobres dans `src/components/Icones.jsx`.
 
+## Sprint 3.1 — Durcissement avant presse (oct. 2026)
+
+- **Anti-abus Turnstile** (câblé, DORMANT sans clés — activation : `scripts/activer-turnstile.mjs` après création du widget Cloudflare) : widget `src/components/Turnstile.jsx` (ne rend rien sans `REACT_APP_TURNSTILE_SITE_KEY`), gate serveur dans `score` au-delà de **2 analyses/24 h/IP** (erreur `captcha_required`, l'UI affiche le widget et relance ; extension/intake exemptée, plafond 5 inchangé), captcha GoTrue sur le lien magique (`options.captchaToken` passé par tous les formulaires). `emailRedirectTo` FIXÉ à `https://www.inspexo.io` (jamais `window.location.origin`) ; allow-list sans wildcard : www/apex/localhost uniquement.
+- **Désinscription en un clic** : liens SIGNÉS HMAC (`UNSUB_SECRET`, secret supabase + .env.local) vers la fonction `desinscription` (déployée `--no-verify-jwt` : le lien email est l'auth) — GET = page de confirmation (jamais d'effet de bord sur GET, les scanners préchargent), POST = RFC 8058 one-click → `dossier.alertes=false` pour tout l'utilisateur. En-têtes `List-Unsubscribe` + `List-Unsubscribe-Post` sur les 3 emails d'alerte ; `envoyerVerdict` porte un `List-Unsubscribe` mailto.
+- **Texte vendeur jamais recopié tel quel** : `nettoyerCitationVendeur` (export de `_shared/negociation.ts`, testé hors ligne) — sans lien/email, sans suite de ≥ 9 chiffres (téléphones, SIRET — km et prix conservés), ≤ 15 mots + ellipse ; appliqué aux `defauts_annonce` (affichés « entre guillemets ») et aux `operations_non_faites` ; le prompt exige une reformulation neutre.
+- **Admin par rôle en base** : table `admins` (seed contact@inspexo.io) + helper `_shared/adminAuth.ts` (`verifierAdmin`) utilisé par les 5 fonctions admin-* — plus AUCUN `ADMIN_EMAILS` côté serveur. Policies storage du bucket `devis` VERSIONNÉES en migration (lecture réservée aux admins, écriture service role uniquement).
+- `submit_outcome` exige le statut **« acheté »** du dossier ; plafond de 60 events `score_cache_hit`/IP/24 h.
+- **Backlog sécurité** : `docs/backlog-securite.md` (mineurs restants classés + actions à clés : Turnstile, SMTP Resend).
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

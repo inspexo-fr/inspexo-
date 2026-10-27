@@ -20,7 +20,7 @@ import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts"
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
-import { calculerNegociation, coutsApplicables, type CoutCandidat } from "../_shared/negociation.ts";
+import { calculerNegociation, coutsApplicables, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
 
@@ -57,7 +57,31 @@ const MAX_IMAGES = 6;
 const MAX_COMPARABLES = 5;
 const MAX_COMPARABLE_LEN = 4000;
 const RATE_LIMIT = 5;
+// Anti-abus (sprint 3.1) : au-delà de ce nombre d'analyses/24 h par IP, un
+// jeton Cloudflare Turnstile est exigé. Dormant tant que TURNSTILE_SECRET
+// n'est pas posé (activation : scripts/activer-turnstile.mjs).
+const CAPTCHA_APRES = 2;
+const TURNSTILE_SECRET = Deno.env.get("TURNSTILE_SECRET") ?? null;
 const HISTOVEC_URL = "https://histovec.interieur.gouv.fr";
+
+async function verifierTurnstile(token: string | null, ip: string): Promise<boolean> {
+  if (!TURNSTILE_SECRET) return true; // pas encore activé
+  if (!token) return false;
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      signal: AbortSignal.timeout(8000),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret: TURNSTILE_SECRET, response: token, remoteip: ip }),
+    });
+    const d = await res.json().catch(() => null);
+    return d?.success === true;
+  } catch (err) {
+    console.error("turnstile verify:", err);
+    return false;
+  }
+}
+
 
 // ============================================================
 // APPEL 1 — IDENTIFICATION (tool use strict)
@@ -274,7 +298,7 @@ N'affirme JAMAIS que CE véhicule « entre dans le périmètre » d'un rappel : 
 OBLIGATOIRE : si statut_vendeur = intermediaire_pour_particulier ou pro_deguise_probable, ce point est la raison 1 ou 2 (perte de la garantie légale de conformité = impact financier majeur).
 
 ## DÉFAUTS ADMIS PAR L'ANNONCE
-defauts_annonce : UNIQUEMENT les défauts, dommages ou travaux à prévoir que l'ANNONCE reconnaît ELLE-MÊME (« rayures sur l'aile », « impact pare-brise », « embrayage à prévoir », « pneus à changer », défaillances listées au contrôle technique…). description reprend les mots de l'annonce ; organe = la pièce concernée si identifiable, sinon null. JAMAIS une déduction, JAMAIS une panne du catalogue : seulement ce que le vendeur écrit. Liste vide sinon. Ces défauts servent d'arguments de négociation chiffrés côté serveur.
+defauts_annonce : UNIQUEMENT les défauts, dommages ou travaux à prévoir que l'ANNONCE reconnaît ELLE-MÊME (rayures, impact pare-brise, embrayage à prévoir, pneus à changer, défaillances listées au contrôle technique…). description = REFORMULATION NEUTRE et technique du défaut, en 15 mots maximum (ex : « rayure profonde sur l'aile arrière », « embrayage annoncé en fin de vie ») — JAMAIS la phrase du vendeur recopiée telle quelle, JAMAIS de lien, de numéro de téléphone ou de prix. organe = la pièce concernée si identifiable, sinon null. JAMAIS une déduction, JAMAIS une panne du catalogue : seulement ce que le vendeur écrit. Liste vide sinon. Ces défauts servent d'arguments de négociation chiffrés côté serveur.
 
 ## INCOHÉRENCES — uniquement si constatées, liste vide sinon
 DÉFINITION STRICTE : une incohérence est une CONTRADICTION entre deux éléments, chacun explicitement nommé dans la phrase (annonce vs annonce, annonce vs fiche moteur/identification, annonce vs droit français). Un point où l'annonce dit VRAI n'est JAMAIS une incohérence — ne transforme pas une information exacte en « à vérifier ».
@@ -821,12 +845,27 @@ serve(async (req: Request) => {
       );
       const dejaVue = finie ?? enCours;
       if (dejaVue?.id) {
-        await admin.from("events").insert({
-          name: "score_cache_hit",
-          analysis_id: dejaVue.id,
-          ip_hash: isEval ? null : ipHash,
-          props_json: { age_heures: Math.round((Date.now() - new Date(dejaVue.created_at).getTime()) / 3600000) },
-        });
+        // Plafond (sprint 3.1) : le chemin cache ne permet pas de gonfler la
+        // table events sans limite — au-delà de 60 hits/24 h par IP, on sert
+        // le cache sans logger.
+        let loggerHit = true;
+        if (!isEval) {
+          const { count: nHits } = await admin
+            .from("events")
+            .select("id", { count: "exact", head: true })
+            .eq("name", "score_cache_hit")
+            .eq("ip_hash", ipHash)
+            .gte("created_at", new Date(Date.now() - 24 * 3600 * 1000).toISOString());
+          loggerHit = (nHits ?? 0) < 60;
+        }
+        if (loggerHit) {
+          await admin.from("events").insert({
+            name: "score_cache_hit",
+            analysis_id: dejaVue.id,
+            ip_hash: isEval ? null : ipHash,
+            props_json: { age_heures: Math.round((Date.now() - new Date(dejaVue.created_at).getTime()) / 3600000) },
+          });
+        }
         return jsonResponse({
           id: dejaVue.id,
           result: dejaVue.result_json,
@@ -868,6 +907,20 @@ serve(async (req: Request) => {
           },
           429,
         );
+      }
+      // Au-delà de 2 analyses/24 h : jeton Turnstile exigé (sauf extension —
+      // isInternal — qui ne peut pas afficher de widget et reste plafonnée à 5).
+      if (!isInternal && (count ?? 0) > CAPTCHA_APRES) {
+        const jeton = typeof body.captcha_token === "string" ? body.captcha_token.slice(0, 2048) : null;
+        if (!(await verifierTurnstile(jeton, clientIp(req)))) {
+          return jsonResponse(
+            {
+              error: "captcha_required",
+              message: "Vérification anti-robots requise au-delà de 2 analyses par jour : cochez la case puis relancez l'analyse.",
+            },
+            403,
+          );
+        }
       }
     }
 
@@ -1570,7 +1623,9 @@ serve(async (req: Request) => {
     let defautsAnnonce: Array<{ description: string; organe: string | null }> =
       ((analyse.defauts_annonce ?? []) as any[])
         .map((d) => ({
-          description: scrubRefs(String(d?.description ?? "")).slice(0, 220),
+          // Garde serveur (en plus du prompt) : extrait ≤ 15 mots, sans lien
+          // ni numéro — le texte du vendeur n'est jamais recopié tel quel.
+          description: nettoyerCitationVendeur(scrubRefs(String(d?.description ?? ""))).slice(0, 220),
           organe: d?.organe ? String(d.organe).slice(0, 60) : null,
         }))
         .filter((d) => d.description.length > 0)
@@ -1584,7 +1639,8 @@ serve(async (req: Request) => {
     let contradictionsEntretien: string[] = ((analyse.entretien?.contradictions ?? []) as unknown[])
       .map((x) => scrubRefs(String(x))).filter((x) => !ABSENCE_RE.test(x)).slice(0, 5);
     let opsNonFaites: string[] = ((analyse.entretien?.operations_non_faites ?? []) as unknown[])
-      .map((x) => scrubRefs(String(x))).filter((x) => !ABSENCE_RE.test(x)).slice(0, 5);
+      .map((x) => nettoyerCitationVendeur(scrubRefs(String(x)), 25))
+      .filter((x) => x.length > 0 && !ABSENCE_RE.test(x)).slice(0, 5);
     // Règle serveur : un kilométrage annuel < 40 000 km n'est JAMAIS une
     // incohérence (véhicules de société, LLD) — on retire les faux positifs
     // « kilométrage anormal pour l'année » (l'incohérence compteur photographié

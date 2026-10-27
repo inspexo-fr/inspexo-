@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import Turnstile from '../components/Turnstile'
 
 const ADMIN_EMAILS = ['contact@inspexo.io']
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL
@@ -65,6 +66,7 @@ export default function AdminAudit() {
   const [user, setUser] = useState(undefined)
   const [email, setEmail] = useState('')
   const [lienEtat, setLienEtat] = useState('idle')
+  const [captcha, setCaptcha] = useState(null)
   const [stats, setStats] = useState(null)
   const [tirage, setTirage] = useState(null) // { analysis, deja_auditee }
   const [verdicts, setVerdicts] = useState({}) // index -> juste|faux|discutable
@@ -140,7 +142,10 @@ export default function AdminAudit() {
               try {
                 const { error } = await supabase.auth.signInWithOtp({
                   email,
-                  options: { emailRedirectTo: `${window.location.origin}/admin/audit` },
+                  options: {
+                    emailRedirectTo: 'https://www.inspexo.io/admin/audit',
+                    ...(captcha ? { captchaToken: captcha } : {}),
+                  },
                 })
                 setLienEtat(error ? 'erreur' : 'done')
               } catch (_) { setLienEtat('erreur') }
@@ -150,6 +155,7 @@ export default function AdminAudit() {
                 onChange={e => setEmail(e.target.value)}
                 style={{ width: '100%', boxSizing: 'border-box', borderRadius: 10, border: 'none', padding: '12px 14px', fontFamily: FONT, fontSize: '0.9375rem', marginBottom: 10 }}
               />
+              <Turnstile onToken={setCaptcha} action="lien-magique" />
               <button type="submit" disabled={lienEtat === 'sending'} style={{
                 width: '100%', background: '#FF4D00', color: '#fff', border: 'none', borderRadius: 10,
                 padding: '12px', fontFamily: FONT, fontWeight: 700, fontSize: '0.9375rem', cursor: 'pointer',
