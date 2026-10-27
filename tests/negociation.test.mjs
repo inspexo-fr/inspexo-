@@ -11,6 +11,7 @@ import {
   MENTION_NEGOCIATION,
 } from '../supabase/functions/_shared/negociation.ts'
 import { montantPresent } from '../supabase/functions/_shared/defectSheets.ts'
+import { nettoyerCitationVendeur } from '../supabase/functions/_shared/negociation.ts'
 
 let ko = 0
 const verifie = (titre, ok, detail = '') => {
@@ -190,6 +191,21 @@ const coutFreins = {
   verifie('montant avec point (« 6.000 ») reconnu', montantPresent(page, 6000) === true)
   verifie('800 absent (1800 ne compte pas : frontière de chiffres)', montantPresent(page, 800) === false)
   verifie('montant jamais cité → rejeté', montantPresent(page, 4200) === false)
+}
+
+// ---------- Texte vendeur jamais recopié tel quel (sprint 3.1) ----------
+{
+  const sale = nettoyerCitationVendeur(
+    'Embrayage à prévoir, super affaire voir https://arnaque.example/paiement ou appelez le 06 12 34 56 78 vite')
+  verifie('liens et numéros de téléphone retirés des défauts admis',
+    !/https?|arnaque|06 12/.test(sale) && sale.includes('Embrayage'), sale)
+  const km = nettoyerCitationVendeur('courroie jamais remplacée à 84 500 km, prix 9 400 €')
+  verifie('kilométrages et prix (≤ 6 chiffres) conservés',
+    km.includes('84 500 km') && km.includes('9 400 €'), km)
+  const long = nettoyerCitationVendeur(
+    'un deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize dix-sept')
+  verifie('extrait plafonné à 15 mots avec ellipse',
+    long.endsWith('…') && long.split(/\s+/).length === 15, long)
 }
 
 // ---------- Déterminisme ----------

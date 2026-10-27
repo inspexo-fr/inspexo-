@@ -1,7 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { verifierAdmin } from '../_shared/adminAuth.ts'
 
-const ADMIN_EMAILS = ['contact@inspexo.io']
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -13,19 +13,10 @@ serve(async (req) => {
 
   try {
     // Vérifie le JWT de l'appelant
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) return new Response(JSON.stringify({ error: 'Missing token' }), { status: 401, headers: cors })
-
-    const anonClient = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      { global: { headers: { Authorization: authHeader } } }
-    )
-    const { data: { user }, error: authError } = await anonClient.auth.getUser()
-    if (authError || !user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: cors })
-    if (!ADMIN_EMAILS.includes(user.email ?? '')) {
-      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: cors })
-    }
+    // Rôle admin vérifié en base (table admins) — sprint 3.1.
+    const acces = await verifierAdmin(req)
+    if (!acces.ok) return new Response(JSON.stringify({ error: acces.error }), { status: acces.status, headers: cors })
+    const user = acces.user
 
     // Client service_role pour bypasser le RLS
     const admin = createClient(

@@ -7,8 +7,7 @@
 // POST  : création manuelle d'une ligne (opération, fourchette, source OU devis).
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const ADMIN_EMAILS = ["contact@inspexo.io"];
+import { verifierAdmin } from "../_shared/adminAuth.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -43,16 +42,10 @@ serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) return json({ error: "Missing token" }, 401);
-    const anonClient = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } },
-    );
-    const { data: { user }, error: authError } = await anonClient.auth.getUser();
-    if (authError || !user) return json({ error: "Unauthorized" }, 401);
-    if (!ADMIN_EMAILS.includes(user.email ?? "")) return json({ error: "Forbidden" }, 403);
+    // Rôle admin vérifié en base (table admins) — sprint 3.1.
+    const acces = await verifierAdmin(req);
+    if (!acces.ok) return json({ error: acces.error }, acces.status);
+    const user = acces.user;
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,

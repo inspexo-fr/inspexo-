@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import Turnstile from '../components/Turnstile'
 import { supabase } from '../lib/supabaseClient'
 import {
   dossierList, dossierSetStatut, dossierSetAlertes, dossierRemove,
@@ -104,6 +105,7 @@ export default function DossierPage() {
   const [items, setItems] = useState(null)
   const [email, setEmail] = useState('')
   const [lienEtat, setLienEtat] = useState('idle')
+  const [captcha, setCaptcha] = useState(null)
   const [erreur, setErreur] = useState(null)
 
   useEffect(() => {
@@ -125,7 +127,7 @@ export default function DossierPage() {
     if (!email || lienEtat === 'sending') return
     setLienEtat('sending')
     try {
-      await envoyerLienMagique(email, '/dossier')
+      await envoyerLienMagique(email, '/dossier', captcha)
       setLienEtat('done')
     } catch (_) {
       setLienEtat('erreur')
@@ -194,6 +196,7 @@ export default function DossierPage() {
                       {lienEtat === 'sending' ? 'Envoi…' : 'Recevoir le lien'}
                     </button>
                   </div>
+                  <Turnstile onToken={setCaptcha} action="lien-magique" />
                   <div style={{ marginTop: 8, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5 }}>
                     {CONSENT}
                   </div>

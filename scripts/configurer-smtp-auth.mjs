@@ -59,6 +59,8 @@ const otp = await fetch(`${env.REACT_APP_SUPABASE_URL}/auth/v1/otp`, {
   body: JSON.stringify({
     email: EMAIL_TEST,
     create_user: true,
+    // Si le captcha Turnstile est actif sur GoTrue, ce test API échouera
+    // (jeton impossible hors navigateur) : tester alors depuis /dossier.
     options: { email_redirect_to: 'https://www.inspexo.io/dossier' },
   }),
 })
