@@ -69,10 +69,12 @@ serve(async (req: Request) => {
         );
       }
 
-      // mode=random : analyse véhicule terminée, non auditée en priorité.
+      // mode=random : analyse véhicule RÉELLE (jamais d'éval/test) terminée,
+      // non auditée en priorité.
       const { count } = await admin
         .from("analyses")
-        .select("id", { count: "exact", head: true });
+        .select("id", { count: "exact", head: true })
+        .eq("is_eval", false);
       if (!count) {
         return new Response(JSON.stringify({ analysis: null }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
@@ -86,6 +88,7 @@ serve(async (req: Request) => {
         const { data: rows } = await admin
           .from("analyses")
           .select("id, created_at, marque, modele, annee, verdict, score, input_text, result_json")
+          .eq("is_eval", false)
           .order("created_at", { ascending: false })
           .range(offset, offset);
         const cand = rows?.[0];

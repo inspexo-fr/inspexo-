@@ -84,6 +84,7 @@ export async function alerteAnnonceModifiee(admin: any, p: {
       .from("analyses")
       .select("id")
       .eq("source_url", p.sourceUrl)
+      .eq("is_eval", false)
       .neq("id", p.analysisId)
       .limit(20);
     // deno-lint-ignore no-explicit-any

@@ -1,3 +1,4 @@
+import { IconeLoupe, IconeCadenas, IconeEclair, IconeRepere } from './Icones'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -110,7 +111,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="hero-ctas" style={{ display: 'flex', gap: 14, marginBottom: 16, flexWrap: 'wrap' }}>
               <Link to="/score" className="hero-btn-primary">
-                🔍 Analyser une annonce
+                <IconeLoupe /> Analyser une annonce
                 <span style={{ fontSize: '1.1rem' }}>→</span>
               </Link>
               <a href="#services" className="hero-btn-outline">
@@ -126,7 +127,7 @@ export default function Hero() {
               color: 'rgba(255,255,255,0.35)',
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
-              ✅ 100% gratuit · Verdict en moins de 20 secondes · Sans inscription
+              100% gratuit · Verdict en moins de 20 secondes · Sans inscription
             </div>
 
             {/* Trust badges */}
@@ -134,9 +135,9 @@ export default function Hero() {
               display: 'flex', gap: 24, flexWrap: 'wrap',
             }}>
               {[
-                { icon: '🔒', label: 'Paiement sécurisé' },
-                { icon: '⚡', label: 'Dès 9,90€' },
-                { icon: '📍', label: 'Toulouse & Haute-Garonne' },
+                { icon: <IconeCadenas size={14} />, label: 'Paiement sécurisé' },
+                { icon: <IconeEclair size={14} />, label: 'Dès 9,90€' },
+                { icon: <IconeRepere size={14} />, label: 'Toulouse & Haute-Garonne' },
               ].map((b, i) => (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'center', gap: 7,

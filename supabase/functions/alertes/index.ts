@@ -42,8 +42,9 @@ serve(async (req: Request) => {
     // ================= 1. Rappels sur les modèles suivis =================
     const { data: suivis } = await admin
       .from("dossier")
-      .select("id, user_id, analysis_id, rappels_vus, analyses(marque, modele, annee, result_json)")
+      .select("id, user_id, analysis_id, rappels_vus, analyses!inner(marque, modele, annee, result_json, is_eval)")
       .eq("alertes", true)
+      .eq("analyses.is_eval", false)
       .in("statut", ["a_voir", "visite"])
       .limit(300);
 
@@ -122,8 +123,9 @@ serve(async (req: Request) => {
     // ================= 2. J+30 après « acheté » =================
     const { data: achetes } = await admin
       .from("dossier")
-      .select("id, user_id, analysis_id, analyses(marque, modele)")
+      .select("id, user_id, analysis_id, analyses!inner(marque, modele, is_eval)")
       .eq("statut", "achete")
+      .eq("analyses.is_eval", false)
       .eq("outcome_email_envoye", false)
       .lte("statut_depuis", new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString())
       .limit(MAX_EMAILS_PAR_RUN);

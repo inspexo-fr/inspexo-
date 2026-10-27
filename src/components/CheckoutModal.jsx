@@ -1,3 +1,4 @@
+import { IconeCoche } from './Icones'
 import React, { useState, useEffect, useCallback } from 'react'
 import useScrollLock from '../hooks/useScrollLock'
 import { loadStripe } from '@stripe/stripe-js'
@@ -9,13 +10,13 @@ import CalBooking from './CalBooking'
 
 // Initialisation Stripe — une seule fois, hors du composant
 const stripeKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
-if (!stripeKey) console.error('❌ REACT_APP_STRIPE_PUBLISHABLE_KEY manquante — redémarrez npm start après avoir vérifié .env.local')
+if (!stripeKey) console.error('REACT_APP_STRIPE_PUBLISHABLE_KEY manquante — redémarrez npm start après avoir vérifié .env.local')
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null
 
 const TIER_META = {
-  ia:         { label: 'IA Spécialisée',     price: '9,90€',  priceTotal: 9.90,  pricePlatform: 9.90,  priceExpert: 0,   emoji: '💬' },
-  visio:      { label: 'Visio Test Drive',    price: '59€',    priceTotal: 59,    pricePlatform: 19,    priceExpert: 40,  emoji: '📹' },
-  inspection: { label: 'Inspection Physique', price: '249€',   priceTotal: 249,   pricePlatform: 79,    priceExpert: 170, emoji: '🔧' },
+  ia:         { label: 'IA Spécialisée',     price: '9,90€',  priceTotal: 9.90,  pricePlatform: 9.90,  priceExpert: 0,   emoji: '' },
+  visio:      { label: 'Visio Test Drive',    price: '59€',    priceTotal: 59,    pricePlatform: 19,    priceExpert: 40,  emoji: '' },
+  inspection: { label: 'Inspection Physique', price: '249€',   priceTotal: 249,   pricePlatform: 79,    priceExpert: 170, emoji: '' },
 }
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -143,7 +144,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
       vehicle_url:   vehicle.url.trim() || null,
     }
 
-    console.group('🟡 create-checkout call')
+    console.group('create-checkout call')
     console.log('session.user:', session.user?.email)
     console.log('access_token (10 chars):', session.access_token?.slice(0, 10) + '...')
     console.log('body:', body)
@@ -166,14 +167,14 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
       })
       data = await res.json()
       if (!res.ok) httpError = `HTTP ${res.status}`
-      console.log('🟢 create-checkout response:', data)
+      console.log('create-checkout response:', data)
     } catch (err) {
       httpError = err.message
-      console.error('🔴 create-checkout fetch error:', err)
+      console.error('create-checkout fetch error:', err)
     }
 
     if (httpError || !data?.clientSecret) {
-      console.group('🔴 create-checkout error')
+      console.group('create-checkout error')
       console.error('httpError:', httpError)
       console.error('data:', data)
       console.groupEnd()
@@ -210,7 +211,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
   const handlePaymentSuccess = async (paymentIntent) => {
     const { data: { user } } = await supabase.auth.getUser()
 
-    console.group('🟡 handlePaymentSuccess')
+    console.group('handlePaymentSuccess')
     console.log('paymentIntent.id:', paymentIntent.id)
     console.log('user:', user?.id, user?.email)
 
@@ -230,7 +231,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
         ...(expertId ? { expert_id: expertId } : {}),
       }
 
-      console.log('📋 insert row:', missionRow)
+      console.log('insert row:', missionRow)
 
       const { data: insertData, error: insertError } = await supabase
         .from('missions')
@@ -241,7 +242,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
       console.log('insert result → error:', insertError)
 
       if (insertError) {
-        console.group('🔴 missions insert error')
+        console.group('missions insert error')
         console.error('code:', insertError.code)
         console.error('message:', insertError.message)
         console.error('details:', insertError.details)
@@ -249,13 +250,13 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
         console.groupEnd()
         // Paiement réussi → on continue vers le succès même si l'insert échoue
       } else {
-        console.log('✅ mission insérée:', insertData)
+        console.log('mission insérée:', insertData)
         if (tier === 'ia' && insertData?.[0]) {
           setCreatedMission(insertData[0])
         }
       }
     } else {
-      console.warn('⚠️ handlePaymentSuccess : pas de user connecté, insert ignoré')
+      console.warn('handlePaymentSuccess : pas de user connecté, insert ignoré')
     }
 
     console.groupEnd()
@@ -433,7 +434,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
             {/* SUCCESS — paliers visio / inspection */}
             {step === 'success' && (
               <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                <div style={{ fontSize: '3.5rem', marginBottom: 16 }}>🎉</div>
+                <div style={{ marginBottom: 16, color: '#16A34A' }}><IconeCoche size={44} /></div>
                 <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10 }}>
                   Paiement confirmé !
                 </div>
@@ -452,7 +453,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
             {/* CAL_READY — paliers visio / inspection */}
             {step === 'cal_ready' && (
               <div style={{ textAlign: 'center', padding: '32px 16px' }}>
-                <div style={{ fontSize: '3.5rem', marginBottom: 16 }}>✅</div>
+                <div style={{ marginBottom: 16, color: '#16A34A' }}><IconeCoche size={44} /></div>
                 <div style={{
                   fontFamily: 'Syne, sans-serif', fontWeight: 800,
                   fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10,
@@ -478,7 +479,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                     marginBottom: 20, display: 'inline-block',
                   }}
                 >
-                  📅 Réserver mon créneau
+                  Réserver mon créneau
                 </button>
 
                 <div style={{
@@ -504,7 +505,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
             {/* IA_READY — palier IA uniquement */}
             {step === 'ia_ready' && (
               <div style={{ textAlign: 'center', padding: '36px 16px' }}>
-                <div style={{ fontSize: '3.5rem', marginBottom: 20 }}>✅</div>
+                <div style={{ marginBottom: 20, color: '#16A34A' }}><IconeCoche size={44} /></div>
                 <div style={{
                   fontFamily: 'Syne, sans-serif', fontWeight: 800,
                   fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10,
@@ -536,7 +537,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                     marginBottom: 20,
                   }}
                 >
-                  💬 Démarrer l'analyse IA
+                  Démarrer l'analyse IA
                 </button>
 
                 <div style={{
@@ -601,7 +602,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
 
                   {errorMsg && (
                     <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
-                      <span>⚠️</span> {errorMsg}
+                      {errorMsg}
                     </div>
                   )}
 
@@ -646,7 +647,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                   fontSize: '0.8125rem', color: '#15803D',
                   display: 'flex', alignItems: 'center', gap: 8,
                 }}>
-                  Paiement sécurisé 🔒 · Données bancaires jamais stockées
+                  Paiement sécurisé · Données bancaires jamais stockées
                   {(tier === 'visio' || tier === 'inspection') && ' · Garantie satisfaction 30 jours'}
                 </div>
 
@@ -661,12 +662,12 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
 
                 {errorMsg && (
                   <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginTop: 16, fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
-                    <span>⚠️</span> {errorMsg}
+                    {errorMsg}
                   </div>
                 )}
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 20, flexWrap: 'wrap' }}>
-                  {['🔒 SSL sécurisé', '💳 Powered by Stripe', '🛡️ Paiement protégé'].map((b, i) => (
+                  {['SSL sécurisé', 'Powered by Stripe', 'Paiement protégé'].map((b, i) => (
                     <span key={i} style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.75rem', color: '#9CA3AF' }}>{b}</span>
                   ))}
                 </div>

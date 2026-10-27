@@ -10,6 +10,7 @@ import {
   coutsApplicables,
   MENTION_NEGOCIATION,
 } from '../supabase/functions/_shared/negociation.ts'
+import { montantPresent } from '../supabase/functions/_shared/defectSheets.ts'
 
 let ko = 0
 const verifie = (titre, ok, detail = '') => {
@@ -180,6 +181,15 @@ const coutFreins = {
   verifie('constat compteur exclu des postes (signal de fuite, pas de remise)',
     r.postes.length + r.arguments_sans_montant.length === 1 &&
     r.arguments_sans_montant[0]?.poste.includes('portière'))
+}
+
+// ---------- Vérification littérale des montants (harvest repair_costs) ----------
+{
+  const page = "Le remplacement coûte entre 1 500 et 2 500 € ; certains devis montent à 6.000 euros, jamais 1800."
+  verifie('montant avec espace fine (« 1 500 ») reconnu', montantPresent(page, 1500) === true)
+  verifie('montant avec point (« 6.000 ») reconnu', montantPresent(page, 6000) === true)
+  verifie('800 absent (1800 ne compte pas : frontière de chiffres)', montantPresent(page, 800) === false)
+  verifie('montant jamais cité → rejeté', montantPresent(page, 4200) === false)
 }
 
 // ---------- Déterminisme ----------

@@ -682,9 +682,20 @@ export async function lookupDefectSheet(
   return { ...base, pannes: fusionnees };
 }
 
+/** Un montant n'est « sourcé » pour repair_costs que s'il figure LITTÉRALEMENT
+ *  sur la page (tolère les séparateurs de milliers : « 6 000 », « 6.000 »). */
+export function montantPresent(texte: string, montant: number): boolean {
+  const compact = texte.replace(/(\d)[\s  .,](?=\d{3}\b)/g, "$1");
+  return new RegExp(`(?<!\\d)${montant}(?!\\d)`).test(compact);
+}
+
 /** Alimente repair_costs (négociation chiffrée) avec les coûts déjà sourcés de
- *  la fiche — pannes et plan d'entretien. Statut « sourcé » ; une ligne déjà
- *  présente (dont « validé par devis ») n'est JAMAIS écrasée. */
+ *  la fiche — pannes et plan d'entretien. Chaque fourchette est VÉRIFIÉE
+ *  littéralement sur une des pages citées avant insertion : un montant que la
+ *  source ne contient pas tel quel n'entre jamais dans la table (il reste
+ *  visible sur la fiche, avec ses sources, mais ne chiffre pas la négociation).
+ *  Statut « sourcé » ; une ligne déjà présente (dont « validé par devis »)
+ *  n'est JAMAIS écrasée. */
 // deno-lint-ignore no-explicit-any
 async function harvestRepairCosts(admin: any, row: {
   marque: string;
@@ -724,7 +735,32 @@ async function harvestRepairCosts(admin: any, row: {
     ajouter(op.operation, op.cout_min_eur, op.cout_max_eur, op.url_source ?? [], today);
   }
   if (rows.size === 0) return;
-  const { error } = await admin.from("repair_costs").upsert([...rows.values()], {
+
+  // Vérification littérale des montants sur les pages citées.
+  const cachePages = new Map<string, string | null>();
+  const verifiees: unknown[] = [];
+  const ecartees: string[] = [];
+  for (const ligne of rows.values()) {
+    let ok = false;
+    for (const url of (ligne.url_source as string[]).slice(0, 3)) {
+      if (!cachePages.has(url)) cachePages.set(url, await fetchPageText(url));
+      const texte = cachePages.get(url);
+      if (!texte) continue;
+      const minOk = ligne.cout_min_eur == null || montantPresent(texte, ligne.cout_min_eur as number);
+      const maxOk = ligne.cout_max_eur == null || montantPresent(texte, ligne.cout_max_eur as number);
+      if (minOk && maxOk) { ok = true; break; }
+    }
+    if (ok) verifiees.push(ligne);
+    else ecartees.push(String(ligne.operation));
+  }
+  if (ecartees.length > 0) {
+    await admin.from("events").insert({
+      name: "cout_non_verifie",
+      props_json: { marque: row.marque_norm, famille: row.famille_norm, operations: ecartees.slice(0, 10) },
+    });
+  }
+  if (verifiees.length === 0) return;
+  const { error } = await admin.from("repair_costs").upsert(verifiees, {
     onConflict: "marque_norm,famille_norm,operation_norm",
     ignoreDuplicates: true,
   });

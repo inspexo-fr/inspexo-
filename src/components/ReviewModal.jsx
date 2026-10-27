@@ -1,3 +1,4 @@
+import { IconeCoche } from './Icones'
 import React, { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import useScrollLock from '../hooks/useScrollLock'
@@ -89,7 +90,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
     return (
       <div style={overlayStyle} onClick={onClose}>
         <div style={modalStyle} onClick={e => e.stopPropagation()}>
-          <div style={{ fontSize: '3rem', marginBottom: 16 }}>🎉</div>
+          <div style={{ marginBottom: 16, color: '#16A34A' }}><IconeCoche size={40} /></div>
           <div style={titleStyle}>Merci pour ton avis !</div>
           <p style={{ ...subStyle, marginBottom: 28 }}>
             Ton retour aide la communauté Inspexo à trouver les meilleurs experts.

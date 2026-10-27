@@ -73,7 +73,7 @@ export default function Experts() {
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
               fontSize: '1.125rem', color: '#fff', marginBottom: 8,
             }}>
-              🔔 Être prévenu de l'ouverture des inspections
+              Être prévenu de l'ouverture des inspections
             </div>
             <div style={{
               fontFamily: 'Plus Jakarta Sans, sans-serif',

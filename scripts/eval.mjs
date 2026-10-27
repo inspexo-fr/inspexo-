@@ -234,6 +234,22 @@ async function runCase(name) {
     failures.push('aucune raison principale (invariante produit)')
   }
 
+  // Invariante produit (cohérence) : un point rassurant « entretien global »
+  // (« entretien à jour », « carnet complet »…) ne peut pas coexister avec une
+  // opération déclarée non faite ou une contradiction d'entretien.
+  {
+    const negatifs = [
+      ...(r.entretien?.operations_non_faites || []),
+      ...(r.entretien?.contradictions || []),
+    ]
+    const GLOBAL_ENTRETIEN_RE =
+      /entretien[^.]{0,40}(a jour|complet|suivi|rigoureux|regulier)|carnet[^.]{0,30}complet|historique[^.]{0,30}(complet|suivi)|revisions?[^.]{0,25}(faites?|a jour|effectu)/
+    const prIncoherent = (r.points_rassurants || []).map(norm).find((p) => GLOBAL_ENTRETIEN_RE.test(p))
+    if (negatifs.length > 0 && prIncoherent) {
+      failures.push(`point rassurant incohérent avec une opération non faite : "${prIncoherent.slice(0, 80)}"`)
+    }
+  }
+
   // verdict_conditionnel : couleur attendue si la couverture de garantie joue
   if (expected.verdict_conditionnel) {
     const vc = r.verdict_conditionnel

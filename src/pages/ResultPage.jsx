@@ -389,13 +389,27 @@ function NegotiationCard({ negociation, analysisId }) {
         </div>
       )}
       {visibles.map((p, i) => (
-        <div key={i} style={{
-          display: 'flex', justifyContent: 'space-between', gap: 12, padding: '9px 0',
-          borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
-          fontFamily: FONT, fontSize: '0.875rem', color: '#374151', lineHeight: 1.5,
-        }}>
-          <span>{p.argument}</span>
-          <span style={{ fontWeight: 700, whiteSpace: 'nowrap', color: '#1E4D8C' }}>{euros(p.cout_min_eur, p.cout_max_eur)}</span>
+        <div key={i} style={{ padding: '9px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', gap: 12,
+            fontFamily: FONT, fontSize: '0.875rem', color: '#374151', lineHeight: 1.5,
+          }}>
+            <span>{p.argument}</span>
+            <span style={{ fontWeight: 700, whiteSpace: 'nowrap', color: '#1E4D8C' }}>{euros(p.cout_min_eur, p.cout_max_eur)}</span>
+          </div>
+          <div style={{ marginTop: 3, fontFamily: FONT, fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5 }}>
+            {p.source_statut === 'valide_devis' ? 'Fourchette confirmée par un devis vérifié'
+              : p.source_statut === 'fiche' ? 'Coût publié pour ce moteur'
+              : 'Fourchette publiée'}
+            {(p.urls || []).slice(0, 2).map((u, j) => (
+              <span key={j}>
+                {' · '}
+                <a href={u} target="_blank" rel="noopener noreferrer" style={{ color: '#1E4D8C' }}>
+                  {sourceLinkLabel(u)}
+                </a>
+              </span>
+            ))}
+          </div>
         </div>
       ))}
       {postes.length === 0 && sansMontant.slice(0, 2).map((p, i) => (
@@ -585,8 +599,13 @@ function SyntheseVisite({ synthese }) {
       background: s.bg, border: `1.5px solid ${s.color}44`, borderRadius: 14,
       padding: '16px 18px', marginBottom: 14,
     }}>
+      {synthese.incomplete && (
+        <div style={{ fontFamily: FONT, fontSize: '0.8125rem', fontWeight: 700, color: '#92400E', marginBottom: 6 }}>
+          Visite incomplète : {synthese.non_verifies} point{synthese.non_verifies > 1 ? 's' : ''} non vérifié{synthese.non_verifies > 1 ? 's' : ''}.
+        </div>
+      )}
       <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '0.9375rem', color: s.color, marginBottom: 6 }}>
-        Synthèse de votre visite : {s.label}
+        Synthèse de votre visite : {synthese.sur_points_verifies ? 'sur les points vérifiés, ' : ''}{s.label}
       </div>
       {(synthese.points || []).map((p, i) => (
         <div key={i} style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#374151', lineHeight: 1.6 }}>

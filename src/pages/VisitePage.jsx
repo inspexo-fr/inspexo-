@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getPublicAnalysis, visitePhoto, visiteTerminer } from '../lib/scoreApi'
+import { IconeAppareilPhoto } from '../components/Icones'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
 
 const FONT = 'Plus Jakarta Sans, sans-serif'
@@ -119,7 +120,10 @@ export default function VisitePage() {
       const reponsesListe = items
         .map((it, i) => ({ quoi: it.quoi, etat: reponses[i] }))
         .filter(r => r.etat)
-      const { synthese: s, result } = await visiteTerminer(id, reponsesListe)
+      // Points restés sans réponse : sous 70 % de couverture, la synthèse se
+      // déclare incomplète et ne peut pas conclure « Acheter ».
+      const nonVerifies = items.filter((_, i) => !reponses[i]).map(it => it.quoi)
+      const { synthese: s, result } = await visiteTerminer(id, reponsesListe, nonVerifies)
       setSynthese(s)
       if (result?.verdict) setVerdictLive({ verdict: result.verdict, score: result.score })
     } catch (_) {
@@ -208,6 +212,23 @@ export default function VisitePage() {
             const nego = analysis.result?.negociation
             return (
               <div>
+                {synthese.incomplete && (
+                  <div style={{
+                    background: '#FFFBEB', border: '1.5px solid rgba(217,119,6,0.4)',
+                    borderRadius: 12, padding: '12px 16px', marginBottom: 12,
+                    fontFamily: FONT, fontSize: '0.875rem', color: '#92400E', fontWeight: 700,
+                  }}>
+                    Visite incomplète : {synthese.non_verifies} point{synthese.non_verifies > 1 ? 's' : ''} non vérifié{synthese.non_verifies > 1 ? 's' : ''}.
+                    {(synthese.points_critiques_non_verifies || []).length > 0 && (
+                      <div style={{ fontWeight: 400, marginTop: 6 }}>
+                        Points critiques à vérifier avant de décider :
+                        {synthese.points_critiques_non_verifies.map((q, i) => (
+                          <div key={i}>– {q}</div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div style={{
                   background: d.bg, border: `2px solid ${d.color}`, borderRadius: 18,
                   padding: '26px 20px', textAlign: 'center', marginBottom: 16,
@@ -216,6 +237,11 @@ export default function VisitePage() {
                     Synthèse de visite — {vehiculeLabel}
                   </div>
                   <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.75rem', color: d.color }}>
+                    {synthese.sur_points_verifies ? (
+                      <span style={{ display: 'block', fontFamily: FONT, fontSize: '0.8125rem', fontWeight: 600, color: '#6B7280', marginBottom: 2 }}>
+                        Sur les points vérifiés :
+                      </span>
+                    ) : null}
                     {d.label}
                   </div>
                   {verdictLive && (
@@ -362,8 +388,8 @@ export default function VisitePage() {
                   {photoEtat === 'analyse'
                     ? 'Analyse de la photo en cours…'
                     : it.photo
-                    ? '📷 Photographier (analysé sur-le-champ — recommandé ici)'
-                    : '📷 Ajouter une photo (facultatif)'}
+                    ? <><IconeAppareilPhoto /> Photographier (analysé sur-le-champ — recommandé ici)</>
+                    : <><IconeAppareilPhoto /> Ajouter une photo (facultatif)</>}
                 </button>
                 {photoEtat === 'erreur' && (
                   <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#B91C1C', marginBottom: 10 }}>

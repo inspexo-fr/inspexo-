@@ -1,3 +1,4 @@
+import { IconeLoupe } from './Icones'
 import React, { useState } from 'react'
 
 
@@ -184,7 +185,7 @@ export default function FAQ({ onFreeAnalysis }) {
                     flexShrink: 0,
                   }}
                 >
-                  🔍 Analyser gratuitement
+                  <IconeLoupe /> Analyser gratuitement
                 </button>
               </div>
             </div>

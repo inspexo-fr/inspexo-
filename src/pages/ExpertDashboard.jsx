@@ -32,8 +32,8 @@ function formatDate(iso) {
 }
 
 const TIER_LABELS = {
-  visio:      { label: 'Visio Test Drive',    emoji: '📹' },
-  inspection: { label: 'Inspection Physique', emoji: '🔧' },
+  visio:      { label: 'Visio Test Drive',    emoji: '' },
+  inspection: { label: 'Inspection Physique', emoji: '' },
 }
 
 export default function ExpertDashboard() {
@@ -135,8 +135,7 @@ export default function ExpertDashboard() {
           maxWidth: 440, width: '100%', textAlign: 'center',
           fontFamily: 'Plus Jakarta Sans, sans-serif',
         }}>
-          <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔒</div>
-          <div style={{
+                    <div style={{
             fontFamily: 'Syne, sans-serif', fontWeight: 800,
             fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 12,
           }}>
@@ -293,14 +292,13 @@ export default function ExpertDashboard() {
             fontFamily: 'Plus Jakarta Sans, sans-serif',
             fontSize: '0.9375rem', color: '#DC2626',
           }}>
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {!loading && !error && missions.length === 0 && (
           <div style={{ textAlign: 'center', padding: '64px 24px' }}>
-            <div style={{ fontSize: '3rem', marginBottom: 16 }}>📋</div>
-            <div style={{
+                        <div style={{
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
               fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10,
             }}>
@@ -367,7 +365,7 @@ export default function ExpertDashboard() {
 }
 
 function MissionCard({ mission, clientEmail, onChat }) {
-  const tier = TIER_LABELS[mission.tier] || { label: mission.tier || '—', emoji: '📋' }
+  const tier = TIER_LABELS[mission.tier] || { label: mission.tier || '—', emoji: '' }
   const vehicle = [mission.vehicle_brand, mission.vehicle_model, mission.vehicle_year].filter(Boolean).join(' ')
 
   return (
@@ -433,7 +431,7 @@ function MissionCard({ mission, clientEmail, onChat }) {
         fontSize: '0.8125rem', fontWeight: 700,
         fontFamily: 'Plus Jakarta Sans, sans-serif',
       }}>
-        💬 Ouvrir le chat
+        Ouvrir le chat
       </div>
     </div>
   )

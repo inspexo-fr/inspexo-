@@ -1,3 +1,4 @@
+import { IconeLoupe } from './Icones'
 import React, { useState, useEffect } from 'react'
 
 export default function StickyCTA({ onClick, isVisible }) {
@@ -42,7 +43,7 @@ export default function StickyCTA({ onClick, isVisible }) {
             fontSize: '0.9375rem', cursor: 'pointer',
           }}
         >
-          🔍 Analyser mon véhicule gratuitement
+          <IconeLoupe size={16} /> Analyser mon véhicule gratuitement
         </button>
       </div>
     </>

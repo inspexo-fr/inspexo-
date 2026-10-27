@@ -134,6 +134,7 @@ type EntreeNegociation = {
     cout_min_eur: number | null;
     cout_max_eur: number | null;
     critique: boolean;
+    urls?: string[];
   }>;
   // Opérations que l'annonce déclare EXPLICITEMENT non faites (« distribution
   // jamais faite ») — déjà auditées par la critique.
@@ -145,6 +146,7 @@ type EntreeNegociation = {
     cout_min_eur: number | null;
     cout_max_eur: number | null;
     a_verifier_carnet: boolean;
+    urls?: string[];
   }>;
   couts: CoutCandidat[]; // lignes repair_costs déjà filtrées famille-compatibles + génériques
 };
@@ -195,6 +197,7 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
   const bruts: Array<Omit<PosteNegociation, "cout_min_eur" | "cout_max_eur" | "source_statut" | "urls"> & {
     cout_direct_min?: number | null;
     cout_direct_max?: number | null;
+    cout_direct_urls?: string[];
   }> = [];
 
   // 1) Défauts constatés sur les photos (jamais le compteur : un écart de
@@ -236,6 +239,7 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
       argument: `${op.operation} : due au kilométrage, aucun justificatif annoncé — sans facture, ce coût est à prévoir.`,
       cout_direct_min: op.cout_min_eur,
       cout_direct_max: op.cout_max_eur,
+      cout_direct_urls: op.urls ?? [],
     });
   }
   for (const op of e.operations_non_faites.slice(0, 4)) {
@@ -277,6 +281,7 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
         argument: `${op.operation} : à l'échéance ${echeance} — ce coût arrive dans la première année.`,
         cout_direct_min: op.cout_min_eur,
         cout_direct_max: op.cout_max_eur,
+        cout_direct_urls: op.urls ?? [],
       });
     }
   }
@@ -302,14 +307,14 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
   const chiffres: PosteNegociation[] = [];
   const sansMontant: PosteNegociation[] = [];
   for (const b of dedupliques) {
-    const { cout_direct_min, cout_direct_max, ...reste } = b;
+    const { cout_direct_min, cout_direct_max, cout_direct_urls, ...reste } = b;
     if (cout_direct_min != null || cout_direct_max != null) {
       chiffres.push({
         ...reste,
         cout_min_eur: cout_direct_min ?? null,
         cout_max_eur: cout_direct_max ?? null,
         source_statut: "fiche",
-        urls: [],
+        urls: (cout_direct_urls ?? []).slice(0, 2),
       });
       continue;
     }

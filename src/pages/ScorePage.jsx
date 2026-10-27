@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
+import { IconeAppareilPhoto, IconeLoupe } from '../components/Icones'
 import Footer from '../components/Footer'
 import { analyzeListing, submitPendingAnalysis } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
@@ -271,7 +272,7 @@ export default function ScorePage() {
                     disabled={images.length >= MAX_IMAGES}
                     style={images.length >= MAX_IMAGES ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
                   >
-                    📷 Ajouter des captures ({images.length}/{MAX_IMAGES})
+                    <IconeAppareilPhoto /> Ajouter des captures ({images.length}/{MAX_IMAGES})
                   </button>
                   <span style={{
                     fontFamily: 'Plus Jakarta Sans, sans-serif',
@@ -454,7 +455,7 @@ export default function ScorePage() {
               </div>
 
               <button type="submit" className="score-submit" disabled={!text.trim() || overLimit}>
-                🔍 Analyser gratuitement
+                <IconeLoupe size={18} /> Analyser gratuitement
                 <span style={{ fontSize: '1.1rem' }}>→</span>
               </button>
 

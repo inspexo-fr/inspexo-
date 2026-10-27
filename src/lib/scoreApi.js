@@ -46,9 +46,10 @@ export async function getAnalysisEtape(id) {
 export const visitePhoto = (analysisId, images) =>
   callFunction('visite', { analysis_id: analysisId, images })
 
-/** Mode visite — fin de visite : { reponses: [{quoi, etat}] } → { synthese, result } */
-export const visiteTerminer = (analysisId, reponses) =>
-  callFunction('visite', { analysis_id: analysisId, terminer: true, reponses })
+/** Mode visite — fin de visite : réponses données + points restés non vérifiés
+ *  (la synthèse signale une visite incomplète sous 70 % de couverture). */
+export const visiteTerminer = (analysisId, reponses, nonVerifies = []) =>
+  callFunction('visite', { analysis_id: analysisId, terminer: true, reponses, non_verifies: nonVerifies })
 
 /* ---------- Dossier d'achat (compte léger, lien magique) ---------- */
 

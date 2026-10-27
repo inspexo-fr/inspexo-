@@ -23,7 +23,7 @@ const STATUS_COLORS = {
   completed:       '#16A34A',
   cancelled:       '#DC2626',
 }
-const TIER_LABELS = { ia: 'IA 💬', visio: 'Visio 📹', inspection: 'Inspection 🔧' }
+const TIER_LABELS = { ia: 'IA ', visio: 'Visio ', inspection: 'Inspection ' }
 const APP_STATUS_LABELS = { pending: 'En attente', approved: 'Approuvée', rejected: 'Rejetée' }
 const APP_STATUS_COLORS = { pending: '#FF4D00', approved: '#16A34A', rejected: '#DC2626' }
 
@@ -108,7 +108,7 @@ function MissionsTab() {
             fontFamily: 'Plus Jakarta Sans, sans-serif', cursor: 'pointer',
           }}
         >
-          👤 Non assignées {unassignedCount > 0 && `(${unassignedCount})`}
+          Non assignées {unassignedCount > 0 && `(${unassignedCount})`}
         </button>
         {showUnassignedOnly && (
           <span style={{ fontSize: '0.8125rem', color: '#9CA3AF', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
@@ -118,7 +118,7 @@ function MissionsTab() {
       </div>
 
       {missions.length === 0 ? (
-        <EmptyState icon="📋" title="Aucune mission" sub="Les missions apparaîtront ici après le premier paiement." />
+        <EmptyState icon="" title="Aucune mission" sub="Les missions apparaîtront ici après le premier paiement." />
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={styles.table}>
@@ -152,7 +152,7 @@ function MissionsTab() {
                     {m.vehicle_url && (
                       <a href={m.vehicle_url} target="_blank" rel="noopener noreferrer"
                         style={{ fontSize: '0.75rem', color: '#FF4D00', textDecoration: 'none' }}>
-                        🔗 annonce
+                        annonce
                       </a>
                     )}
                   </td>
@@ -218,7 +218,7 @@ function MissionsTab() {
                         }).then(() => fetchMissions())
                       }}
                     >
-                      👤 Assigner
+                      Assigner
                     </button>
                   </td>
                 </tr>
@@ -281,7 +281,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
         onClick={e => e.stopPropagation()}
       >
         <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 6 }}>
-          🔗 Lien Stripe Connect généré
+          Lien Stripe Connect généré
         </div>
         <div style={{ fontSize: '0.875rem', color: '#6B7280', marginBottom: 24 }}>
           Compte : <code style={{ background: '#F0F2F5', padding: '2px 6px', borderRadius: 4, fontSize: '0.8125rem' }}>{accountId}</code>
@@ -310,7 +310,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
               fontSize: '0.9rem', cursor: 'pointer',
             }}
           >
-            {copied ? '✓ Copié !' : '📋 Copier le lien'}
+            {copied ? '✓ Copié !' : 'Copier le lien'}
           </button>
           <button
             onClick={handleSendEmail}
@@ -325,18 +325,18 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
               opacity: sending ? 0.7 : 1,
             }}
           >
-            {emailSent ? '✓ Email envoyé' : sending ? 'Envoi...' : '📧 Envoyer par email'}
+            {emailSent ? '✓ Email envoyé' : sending ? 'Envoi...' : 'Envoyer par email'}
           </button>
         </div>
 
         {!expertEmail && (
           <div style={{ fontSize: '0.8125rem', color: '#F59E0B', marginBottom: 12 }}>
-            ⚠️ Pas d'email associé — envoi impossible
+            Pas d'email associé — envoi impossible
           </div>
         )}
         {emailError && (
           <div style={{ fontSize: '0.8125rem', color: '#DC2626', marginBottom: 12 }}>
-            ⚠️ {emailError}
+            {emailError}
           </div>
         )}
 
@@ -432,7 +432,7 @@ function ApplicationsTab() {
       </div>
 
       {apps.length === 0 ? (
-        <EmptyState icon="🧑‍🔧" title="Aucune candidature" sub="Les candidatures experts apparaîtront ici." />
+        <EmptyState icon="" title="Aucune candidature" sub="Les candidatures experts apparaîtront ici." />
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={styles.table}>
@@ -534,7 +534,7 @@ function ApplicationsTab() {
                             opacity: generating === a.id ? 0.7 : 1,
                           }}
                         >
-                          {generating === a.id ? '⏳ Génération...' : '🔗 Stripe Connect'}
+                          {generating === a.id ? 'Génération...' : 'Stripe Connect'}
                         </button>
                       )}
                     </div>
@@ -582,7 +582,7 @@ function ApplicationsTab() {
                             padding: '5px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
                             fontFamily: 'Plus Jakarta Sans, sans-serif', textDecoration: 'none',
                           }}>
-                            📄 Voir le CV
+                            Voir le CV
                           </a>
                         )}
                       </div>
@@ -611,10 +611,10 @@ function StatsTab({ missions, applications }) {
   const completed = missions.filter(m => m.status === 'completed').length
 
   const cards = [
-    { label: 'Missions totales',       value: total,              icon: '📋', color: '#FF4D00' },
-    { label: 'CA plateforme',          value: `${ca.toFixed(0)}€`, icon: '💶', color: '#16A34A' },
-    { label: 'Missions terminées',     value: completed,          icon: '✅', color: '#3B82F6' },
-    { label: 'Candidatures en attente', value: pending,           icon: '🧑‍🔧', color: '#F59E0B' },
+    { label: 'Missions totales',       value: total,              color: '#FF4D00' },
+    { label: 'CA plateforme',          value: `${ca.toFixed(0)}€`, color: '#16A34A' },
+    { label: 'Missions terminées',     value: completed,          color: '#3B82F6' },
+    { label: 'Candidatures en attente', value: pending,           color: '#F59E0B' },
   ]
 
   return (
@@ -629,7 +629,6 @@ function StatsTab({ missions, applications }) {
             border: '1.5px solid rgba(0,0,0,0.07)',
             boxShadow: '0 2px 12px rgba(15,27,45,0.04)',
           }}>
-            <div style={{ fontSize: '1.75rem', marginBottom: 12 }}>{c.icon}</div>
             <div style={{
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
               fontSize: '2rem', color: c.color, lineHeight: 1, marginBottom: 8,
@@ -654,9 +653,9 @@ function StatsTab({ missions, applications }) {
           Missions par palier
         </div>
         {[
-          { tier: 'ia',         label: 'IA Spécialisée',     emoji: '💬', price: '9,90€' },
-          { tier: 'visio',      label: 'Visio Test Drive',    emoji: '📹', price: '59€' },
-          { tier: 'inspection', label: 'Inspection Physique', emoji: '🔧', price: '249€' },
+          { tier: 'ia',         label: 'IA Spécialisée',     emoji: '', price: '9,90€' },
+          { tier: 'visio',      label: 'Visio Test Drive',    emoji: '', price: '59€' },
+          { tier: 'inspection', label: 'Inspection Physique', emoji: '', price: '249€' },
         ].map(t => {
           const count = byTier[t.tier]
           const pct   = total > 0 ? Math.round((count / total) * 100) : 0
@@ -702,7 +701,7 @@ function ErrorBox({ msg }) {
       background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '20px 24px',
       fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', color: '#DC2626',
     }}>
-      ⚠️ {msg}
+      {msg}
     </div>
   )
 }
@@ -710,7 +709,6 @@ function ErrorBox({ msg }) {
 function EmptyState({ icon, title, sub }) {
   return (
     <div style={{ textAlign: 'center', padding: '64px 24px' }}>
-      <div style={{ fontSize: '3rem', marginBottom: 12 }}>{icon}</div>
       <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 8 }}>{title}</div>
       <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', color: '#6B7280' }}>{sub}</div>
     </div>
@@ -854,7 +852,7 @@ function CoutsTab() {
         </div>
       ))}
       {couts.length === 0 && (
-        <EmptyState icon="🧾" title="Aucun coût" sub="Les coûts sourcés arrivent automatiquement avec chaque fiche moteur générée." />
+        <EmptyState icon="" title="Aucun coût" sub="Les coûts sourcés arrivent automatiquement avec chaque fiche moteur générée." />
       )}
     </div>
   )
@@ -902,8 +900,7 @@ export default function AdminDashboard() {
         fontFamily: 'Plus Jakarta Sans, sans-serif',
       }}>
         <div style={{ textAlign: 'center', maxWidth: 360 }}>
-          <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔒</div>
-          <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#fff', marginBottom: 10 }}>
+                    <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#fff', marginBottom: 10 }}>
             Accès refusé
           </div>
           <div style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.5)', marginBottom: 28, fontWeight: 300 }}>
@@ -922,11 +919,11 @@ export default function AdminDashboard() {
   }
 
   const navItems = [
-    { key: 'missions',     icon: '📋', label: 'Missions' },
-    { key: 'applications', icon: '🧑‍🔧', label: 'Candidatures' },
-    { key: 'couts',        icon: '🧾', label: 'Coûts réparation' },
-    { key: 'stats',        icon: '📊', label: 'Statistiques' },
-    { key: 'audit',        icon: '🔍', label: 'Audit justesse', href: '/admin/audit' },
+    { key: 'missions',     label: 'Missions' },
+    { key: 'applications', label: 'Candidatures' },
+    { key: 'couts',        label: 'Coûts réparation' },
+    { key: 'stats',        label: 'Statistiques' },
+    { key: 'audit',        label: 'Audit justesse', href: '/admin/audit' },
   ]
 
   return (
@@ -985,7 +982,6 @@ export default function AdminDashboard() {
                   transition: 'background 0.15s, color 0.15s',
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>{item.icon}</span>
                 {item.label}
               </button>
             ))}

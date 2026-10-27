@@ -1015,6 +1015,7 @@ serve(async (req: Request) => {
           result_json: result,
           marque: null, modele: null, motorisation: null, annee: null, famille_moteur: null,
           ip_hash: isEval ? null : ipHash,
+          is_eval: isEval,
           user_id: null,
           input_hash: inputHash,
           source_url: sourceUrl,
@@ -1290,6 +1291,14 @@ serve(async (req: Request) => {
     }
 
     // ================= APPEL 2 — ANALYSE =================
+    // Un rappel dont la plage de production exclut CE véhicule est signalé au
+    // modèle : il ne doit alors figurer ni dans les raisons ni dans la note.
+    const rappelHorsPlage = (e: CatalogueEntry): boolean =>
+      Boolean(
+        e.rappel_code && typeof v.annee_modele === "number" &&
+          ((e.rappel_annee_debut != null && v.annee_modele < e.rappel_annee_debut) ||
+            (e.rappel_annee_fin != null && v.annee_modele > e.rappel_annee_fin + 1)),
+      );
     const catalogueForPrompt = catalogue.map((e) => ({
       ref: e.ref,
       titre: e.titre,
@@ -1302,7 +1311,11 @@ serve(async (req: Request) => {
       source: e.source_statut === "base_inspexo" ? "base Inspexo" : "sources en ligne",
       contexte: e.contexte,
       rappel_officiel: e.rappel_code
-        ? `${e.rappel_code}${e.rappel_date ? `, ${e.rappel_date}` : ""}${e.rappel_vehicules ? `, ${e.rappel_vehicules}` : ""}`
+        ? `${e.rappel_code}${e.rappel_date ? `, ${e.rappel_date}` : ""}${e.rappel_vehicules ? `, ${e.rappel_vehicules}` : ""}${
+          rappelHorsPlage(e)
+            ? ` — ATTENTION : production ${e.rappel_annee_debut ?? "?"}–${e.rappel_annee_fin ?? "?"}, CE véhicule (${v.annee_modele}) est HORS de la plage visée : ne cite PAS ce rappel dans les raisons principales, la panne reste valable sans lui`
+            : ""
+        }`
         : null,
     }));
 
@@ -1418,9 +1431,13 @@ serve(async (req: Request) => {
         rappel_annee_debut: src.rappel_annee_debut,
         rappel_annee_fin: src.rappel_annee_fin,
         // Le véhicule est-il HORS de la plage de production de la campagne ?
+        // Côté début : STRICT — un véhicule immatriculé AVANT le début de la
+        // plage a forcément été produit avant elle (la production précède
+        // l'immatriculation, jamais l'inverse). Côté fin : tolérance d'un an
+        // (un millésime N peut sortir d'usine fin N-1).
         rappel_hors_periode: Boolean(
           src.rappel_code && typeof v.annee_modele === "number" &&
-            ((src.rappel_annee_debut != null && v.annee_modele < src.rappel_annee_debut - 1) ||
+            ((src.rappel_annee_debut != null && v.annee_modele < src.rappel_annee_debut) ||
               (src.rappel_annee_fin != null && v.annee_modele > src.rappel_annee_fin + 1)),
         ),
       });
@@ -2132,6 +2149,7 @@ serve(async (req: Request) => {
           cout_min_eur: op.cout_min_eur ?? null,
           cout_max_eur: op.cout_max_eur ?? null,
           critique: Boolean(op.critique),
+          urls: Array.isArray(op.url_source) ? op.url_source.slice(0, 2) : [],
         })),
         operations_non_faites: opsNonFaites,
         // deno-lint-ignore no-explicit-any
@@ -2142,12 +2160,70 @@ serve(async (req: Request) => {
           cout_min_eur: op.cout_min_eur ?? null,
           cout_max_eur: op.cout_max_eur ?? null,
           a_verifier_carnet: Boolean(op.a_verifier_carnet),
+          urls: Array.isArray(op.url_source) ? op.url_source.slice(0, 2) : [],
         })),
         couts: candidats,
       };
       negociation = calculerNegociation(negEntrees);
     } catch (e) {
       console.error("negociation:", e);
+    }
+
+    // ---------------- Cohérence des points rassurants (règle serveur) ----------------
+    // Un point rassurant ne peut pas contredire un poste de négociation, une
+    // opération « doit déjà avoir été fait » non prouvée ou une raison
+    // principale. Cas type : « entretien déclaré à jour » ne peut pas coexister
+    // avec « distribution jamais faite » (déclarée par l'annonce) ou une
+    // échéance d'entretien critique dépassée sans justificatif.
+    {
+      const GLOBAL_ENTRETIEN_RE =
+        /entretien[^.]{0,40}(?:[àa] jour|complet|suivi|rigoureux|r[ée]gulier)|carnet[^.]{0,30}complet|historique[^.]{0,30}(?:complet|suivi)|r[ée]visions?[^.]{0,25}(?:faites?|[àa] jour|effectu)|suivi[^.]{0,25}(?:complet|r[ée]gulier|constructeur)/i;
+      const entretienContredit = opsNonFaites.length > 0 ||
+        contradictionsEntretien.length > 0 ||
+        // deno-lint-ignore no-explicit-any
+        entretienDuNonProuve.some((op: any) => Boolean(op.critique));
+      const textesOpposes: string[] = [
+        ...opsNonFaites,
+        ...contradictionsEntretien,
+        ...defautsAnnonce.map((d) => d.description),
+        // deno-lint-ignore no-explicit-any
+        ...((negociation?.postes ?? []).map((p: any) => String(p.poste ?? ""))),
+        // deno-lint-ignore no-explicit-any
+        ...((negociation?.arguments_sans_montant ?? []).map((p: any) => String(p.poste ?? ""))),
+        ...raisons,
+      ];
+      // Mots de cadrage présents dans presque toutes les phrases : jamais un
+      // recoupement à eux seuls (« selon l'annonce », « déclaré », …).
+      const MOTS_CADRE = new Set([
+        "selon", "annonce", "annoncee", "annonces", "declare", "declaree",
+        "indique", "indiquee", "vendeur", "vehicule", "point", "points",
+      ]);
+      const motsSignificatifs = (t: string) => opTokens(t).filter((m) => !MOTS_CADRE.has(m));
+      const retires: string[] = [];
+      pointsRassurants = pointsRassurants.filter((pr) => {
+        if (entretienContredit && GLOBAL_ENTRETIEN_RE.test(pr)) {
+          retires.push(pr);
+          return false;
+        }
+        const mots = new Set(motsSignificatifs(pr));
+        const conflit = textesOpposes.some((t) => {
+          let communs = 0;
+          for (const m of motsSignificatifs(t)) if (mots.has(m)) communs += 1;
+          return communs >= 2;
+        });
+        if (conflit) retires.push(pr);
+        return !conflit;
+      });
+      if (retires.length > 0) {
+        retires.forEach((pr, i) => {
+          dropped.push({
+            id: `PRC${i + 1}`,
+            texte: pr,
+            justification: "contredit une opération non faite, un poste de négociation ou une raison principale",
+            source: "serveur",
+          });
+        });
+      }
     }
 
     // ---------------- Usage ville + diesel : vigilance FAP/EGR (socle valise) ----------------
@@ -2315,6 +2391,7 @@ serve(async (req: Request) => {
           annee: vehiculePublic.annee,
           famille_moteur: vehiculePublic.famille_moteur,
           ip_hash: isEval ? null : ipHash,
+          is_eval: isEval,
           user_id: null,
           input_hash: inputHash,
           source_url: sourceUrl,
@@ -2352,7 +2429,7 @@ serve(async (req: Request) => {
           prix: prixNum, source: isInternal ? "intake" : "score", analysis_id: analysisDbId,
         });
       }
-      if (vehiculePublic.marque && vehiculePublic.modele) {
+      if (vehiculePublic.marque && vehiculePublic.modele && !isEval) {
         const modeleLower = vehiculePublic.modele.toLowerCase();
         for (const c of comparablesStructures) {
           if (!c.titre.toLowerCase().includes(modeleLower)) continue; // autre modèle dans la recherche
@@ -2518,6 +2595,7 @@ serve(async (req: Request) => {
           annee: vehiculePublic.annee,
           famille_moteur: vehiculePublic.famille_moteur,
           ip_hash: isEval ? null : ipHash,
+          is_eval: isEval,
           user_id: null,
           input_hash: inputHash,
           source_url: sourceUrl,

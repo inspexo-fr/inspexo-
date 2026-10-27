@@ -1,21 +1,22 @@
 import React from 'react'
+import { IconeLoupe, IconeOutil, IconeDocument } from './Icones'
 
 const steps = [
   {
     num: '01',
-    icon: '🔍',
+    icon: <IconeLoupe size={26} />,
     title: 'Choisissez votre niveau',
     desc: 'Analyse IA, visio avec un expert, ou inspection physique. Sélectionnez selon votre budget et votre niveau de risque.',
   },
   {
     num: '02',
-    icon: '👨‍🔧',
+    icon: <IconeOutil size={26} />,
     title: 'Réservez votre expert',
     desc: 'Parcourez les experts qualifiés filtrés par marque. Chaque profil affiche ses spécialités et sa disponibilité.',
   },
   {
     num: '03',
-    icon: '📋',
+    icon: <IconeDocument size={26} />,
     title: 'Recevez votre rapport',
     desc: 'Compte-rendu détaillé, points de vigilance identifiés, et recommandation claire : acheter, négocier ou passer.',
   },
@@ -125,7 +126,7 @@ export default function HowItWorks({ onFreeAnalysis }) {
               onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'none' }}
             >
-              🔍 Commencer mon analyse gratuite
+              <IconeLoupe /> Commencer mon analyse gratuite
             </button>
             <div style={{
               marginTop: 12,

@@ -7,15 +7,15 @@ import ReviewModal from '../components/ReviewModal'
 import MissionChat from '../components/MissionChat'
 
 const TIER_LABELS = {
-  ia_free:          { label: 'Analyse IA gratuite',    emoji: '💬' },
-  ia:               { label: 'Analyse IA complète',    emoji: '💬' },
-  visio:            { label: 'Visio Test Drive',        emoji: '📹' },
-  inspection:       { label: 'Inspection Physique',     emoji: '🔧' },
-  inspection_nego:  { label: 'Inspection + Négociation', emoji: '🔧' },
+  ia_free:          { label: 'Analyse IA gratuite',    emoji: '' },
+  ia:               { label: 'Analyse IA complète',    emoji: '' },
+  visio:            { label: 'Visio Test Drive',        emoji: '' },
+  inspection:       { label: 'Inspection Physique',     emoji: '' },
+  inspection_nego:  { label: 'Inspection + Négociation', emoji: '' },
 }
 
 function getTierMeta(tier) {
-  return TIER_LABELS[tier] || { label: tier || '—', emoji: '📋' }
+  return TIER_LABELS[tier] || { label: tier || '—', emoji: '' }
 }
 
 const STATUS_CONFIG = {
@@ -280,15 +280,14 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                 fontFamily: 'Plus Jakarta Sans, sans-serif',
                 fontSize: '0.9375rem', color: '#DC2626',
               }}>
-                ⚠️ {error}
+                {error}
               </div>
             )}
 
             {/* Empty state */}
             {!loading && !error && missions.length === 0 && (
               <div style={{ textAlign: 'center', padding: '64px 24px' }}>
-                <div style={{ fontSize: '3rem', marginBottom: 16 }}>🔍</div>
-                <div style={{
+                                <div style={{
                   fontFamily: 'Syne, sans-serif', fontWeight: 800,
                   fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10,
                 }}>
@@ -396,7 +395,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               display: 'inline-flex', alignItems: 'center', gap: 4,
                             }}
                           >
-                            🔗 Voir l'annonce
+                            Voir l'annonce
                           </a>
                         </div>
                       )}
@@ -417,7 +416,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               cursor: 'pointer', transition: 'opacity 0.2s',
                             }}
                           >
-                            📅 Réserver mon créneau
+                            Réserver mon créneau
                           </button>
                         </div>
                       )}
@@ -438,7 +437,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               cursor: 'pointer', transition: 'opacity 0.2s',
                             }}
                           >
-                            💬 Chat avec l'expert
+                            Chat avec l'expert
                           </button>
                         </div>
                       )}
@@ -461,7 +460,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               cursor: 'pointer', transition: 'opacity 0.2s',
                             }}
                           >
-                            {mission.status === 'completed' ? '📋 Voir le rapport' : '💬 Ouvrir le chat IA'}
+                            {mission.status === 'completed' ? 'Voir le rapport' : 'Ouvrir le chat IA'}
                           </button>
                         </div>
                       )}
@@ -474,7 +473,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                           rel="noopener noreferrer"
                           className="report-btn"
                         >
-                          📄 Voir le rapport
+                          Voir le rapport
                         </a>
                       )}
 
@@ -487,7 +486,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                             fontSize: '0.8125rem', color: '#9CA3AF',
                             display: 'inline-flex', alignItems: 'center', gap: 5,
                           }}>
-                            ✅ Avis envoyé
+                            ✓ Avis envoyé
                           </div>
                         ) : (
                           <div style={{ marginTop: 10 }}>
@@ -504,7 +503,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                                 cursor: 'pointer', transition: 'opacity 0.2s',
                               }}
                             >
-                              ⭐ Laisser un avis
+                              Laisser un avis
                             </button>
                           </div>
                         )
@@ -547,8 +546,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
             maxWidth: 420, width: '100%', textAlign: 'center',
             fontFamily: 'Plus Jakarta Sans, sans-serif',
           }}>
-            <div style={{ fontSize: '2rem', marginBottom: 12 }}>🗑️</div>
-            <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10 }}>
+                        <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10 }}>
               Supprimer mon compte
             </div>
             <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: 1.65, marginBottom: 24 }}>

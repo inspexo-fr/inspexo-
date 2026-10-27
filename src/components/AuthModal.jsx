@@ -1,3 +1,4 @@
+import { IconeEnveloppe } from './Icones'
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import useScrollLock from '../hooks/useScrollLock'
@@ -172,7 +173,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                   fontFamily: 'Syne, sans-serif', fontWeight: 800,
                   fontSize: '1.375rem', color: '#fff', marginBottom: 4,
                 }}>
-                  {tab === 'login' ? 'Bon retour 👋' : 'Créer un compte'}
+                  {tab === 'login' ? 'Bon retour' : 'Créer un compte'}
                 </div>
                 <div style={{
                   fontFamily: 'Plus Jakarta Sans, sans-serif',
@@ -239,7 +240,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
             {/* Check email state (après signup) */}
             {status === 'check_email' ? (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>📧</div>
+                <div style={{ marginBottom: 12, color: '#0F1B2D' }}><IconeEnveloppe size={38} /></div>
                 <div style={{
                   fontFamily: 'Syne, sans-serif', fontWeight: 800,
                   fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 8,
@@ -315,7 +316,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                     fontSize: '0.875rem', color: '#DC2626',
                     display: 'flex', gap: 8, alignItems: 'flex-start',
                   }}>
-                    <span>⚠️</span> {errorMsg}
+                    {errorMsg}
                   </div>
                 )}
 

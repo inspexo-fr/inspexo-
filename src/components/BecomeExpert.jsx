@@ -1,3 +1,4 @@
+import { IconeVideo, IconeOutil } from './Icones'
 import React, { useState } from 'react'
 import ExpertApplicationModal from './ExpertApplicationModal'
 
@@ -95,8 +96,8 @@ export default function BecomeExpert() {
                 </div>
                 <div className="revenue-grid">
                   {[
-                    { label: 'Visio Test Drive', amount: '40€', detail: 'par mission / ~45 min', icon: '📹' },
-                    { label: 'Inspection Physique', amount: '170€', detail: 'par mission + déplacement remboursé', icon: '🔧' },
+                    { label: 'Visio Test Drive', amount: '40€', detail: 'par mission / ~45 min', icon: <IconeVideo size={22} /> },
+                    { label: 'Inspection Physique', amount: '170€', detail: 'par mission + déplacement remboursé', icon: <IconeOutil size={22} /> },
                   ].map((r, i) => (
                     <div key={i} className="revenue-card">
                       <div style={{ fontSize: '1.5rem', marginBottom: 10 }}>{r.icon}</div>

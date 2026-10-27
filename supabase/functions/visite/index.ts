@@ -295,15 +295,21 @@ serve(async (req: Request) => {
 
     // ================= FIN DE VISITE — SYNTHÈSE =================
     if (body.terminer === true) {
+      const lireQuoi = (raw: unknown): string => String(raw ?? "").slice(0, 160);
       // deno-lint-ignore no-explicit-any
       const reponses: Array<{ quoi: string; etat: string }> = (Array.isArray(body.reponses) ? body.reponses : [])
         .slice(0, 25)
         // deno-lint-ignore no-explicit-any
         .map((r: any) => ({
-          quoi: String(r?.quoi ?? "").slice(0, 160),
+          quoi: lireQuoi(r?.quoi),
           etat: ["oui", "non", "doute"].includes(r?.etat) ? r.etat : "doute",
         }))
         .filter((r: { quoi: string }) => r.quoi.length > 0);
+      // Points de la checklist restés sans réponse (envoyés par le client).
+      const nonVerifies: string[] = (Array.isArray(body.non_verifies) ? body.non_verifies : [])
+        .slice(0, 25)
+        .map(lireQuoi)
+        .filter((q: string) => q.length > 0);
 
       const nons = reponses.filter((r) => r.etat === "non");
       const doutes = reponses.filter((r) => r.etat === "doute");
@@ -311,13 +317,28 @@ serve(async (req: Request) => {
       const fraude = (Array.isArray(result.incoherences) ? result.incoherences : [])
         .some((i: string) => /compteur\s+photographi/i.test(i) || /compteur.*visite/i.test(i));
 
+      // Visite incomplète : moins de 70 % des points renseignés. La synthèse
+      // le dit en tête, liste les points CRITIQUES non vérifiés, et ne peut
+      // pas conclure « acheter » ; « négocier » et « ne pas acheter » restent
+      // possibles mais valent « sur les points vérifiés » seulement.
+      const totalPoints = reponses.length + nonVerifies.length;
+      const incomplete = totalPoints > 0 && reponses.length / totalPoints < 0.7;
+      const critiquesNonVerifies = nonVerifies.filter((q) => CRITIQUE_RE.test(q)).slice(0, 5);
+
       let decision: "acheter" | "negocier" | "ne_pas_acheter";
       if (result.verdict === "rouge" || nonCritique || fraude) decision = "ne_pas_acheter";
       else if (result.verdict === "orange" || nons.length > 0 || doutes.length > 0) decision = "negocier";
       else decision = "acheter";
+      if (incomplete && decision === "acheter") decision = "negocier";
 
       // Les points qui ont fait basculer, dans l'ordre d'importance.
       const points: string[] = [
+        ...(incomplete
+          ? [
+            `Visite incomplète : ${nonVerifies.length} point${nonVerifies.length > 1 ? "s" : ""} non vérifié${nonVerifies.length > 1 ? "s" : ""}.`,
+            ...critiquesNonVerifies.map((q) => `Non vérifié : ${q}`),
+          ]
+          : []),
         ...(fraude ? ["Le compteur photographié contredit le kilométrage annoncé."] : []),
         ...nons.map((r) => `« Non » relevé : ${r.quoi}`),
         ...doutes.map((r) => `Doute : ${r.quoi}`),
@@ -327,12 +348,22 @@ serve(async (req: Request) => {
         ...(result.verdict === "rouge" && Array.isArray(result.raisons_principales) && result.raisons_principales[0]
           ? [result.raisons_principales[0]]
           : []),
-      ].slice(0, 6);
+      ].slice(0, 9);
       if (points.length === 0 && decision === "acheter") {
         points.push("Aucun point bloquant relevé pendant la visite — faites les vérifications administratives (HistoVec, carte grise) avant de signer.");
       }
 
-      const synthese = { decision, points, genere_le: new Date().toISOString() };
+      const synthese = {
+        decision,
+        points,
+        incomplete,
+        non_verifies: nonVerifies.length,
+        points_critiques_non_verifies: critiquesNonVerifies,
+        // Avec une visite incomplète, la conclusion ne vaut que sur ce qui a
+        // été vérifié : l'UI préfixe la décision de « Sur les points vérifiés ».
+        sur_points_verifies: incomplete,
+        genere_le: new Date().toISOString(),
+      };
       visite.synthese = synthese;
       visite.reponses = reponses;
       result.visite = visite;
@@ -346,7 +377,14 @@ serve(async (req: Request) => {
         name: "visite_terminee",
         analysis_id: analysisId,
         ip_hash: ipHash,
-        props_json: { decision, nb_non: nons.length, nb_doute: doutes.length, nb_reponses: reponses.length },
+        props_json: {
+          decision,
+          nb_non: nons.length,
+          nb_doute: doutes.length,
+          nb_reponses: reponses.length,
+          nb_non_verifies: nonVerifies.length,
+          incomplete,
+        },
       });
       return jsonResponse({ synthese, result });
     }
