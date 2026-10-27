@@ -504,14 +504,22 @@ function DossierButton({ analysisId }) {
   }
 
   useEffect(() => {
-    // Retour de lien magique avec ?dossier=1 : ajout automatique.
+    // Retour de lien magique avec ?dossier=1 : l'ajout n'a lieu QUE si une
+    // intention a été posée par l'utilisateur sur cet appareil (clic sur
+    // « Suivre dans mon dossier » < 15 min) — le paramètre d'URL seul ne
+    // prouve rien : une page /a/:id circule, un lien forgé ne doit pas
+    // modifier le dossier d'un visiteur connecté (audit sécurité sprint 3).
     const params = new URLSearchParams(window.location.search)
     if (params.get('dossier') !== '1') return
+    window.history.replaceState({}, '', window.location.pathname)
+    let intention = null
+    try {
+      intention = JSON.parse(localStorage.getItem('inspexo_dossier_intent') || 'null')
+    } catch (_) { /* intention illisible = absente */ }
+    if (!intention || intention.analysisId !== analysisId || intention.exp < Date.now()) return
+    try { localStorage.removeItem('inspexo_dossier_intent') } catch (_) { /* best effort */ }
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        ajouter()
-        window.history.replaceState({}, '', window.location.pathname)
-      }
+      if (session?.user) ajouter()
     })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -526,6 +534,12 @@ function DossierButton({ analysisId }) {
     if (!email || etat === 'sending') return
     setEtat('sending')
     try {
+      // Intention d'ajout posée AVANT l'envoi du lien (consommée au retour).
+      try {
+        localStorage.setItem('inspexo_dossier_intent', JSON.stringify({
+          analysisId, exp: Date.now() + 15 * 60 * 1000,
+        }))
+      } catch (_) { /* stockage indisponible : l'ajout restera manuel */ }
       await envoyerLienMagique(email, `/a/${analysisId}?dossier=1`)
       setEtat('lien_envoye')
     } catch (_) {
@@ -1062,6 +1076,18 @@ export default function ResultPage() {
                   {VERDICT_STYLE[r.verdict_conditionnel.verdict]?.label ?? r.verdict_conditionnel.verdict}
                   {' '}{r.verdict_conditionnel.score}/100
                 </strong>
+              </div>
+            )}
+
+            {/* Verdict recalculé après une visite (le verdict initial reste tracé) */}
+            {!enCours && r.verdict_initial && r.verdict_initial.score !== r.score && (
+              <div style={{
+                marginTop: 10, fontFamily: FONT, fontSize: '0.75rem',
+                color: '#6B7280', lineHeight: 1.5,
+              }}>
+                Verdict recalculé après une visite sur place — verdict initial de l'analyse :{' '}
+                {VERDICT_STYLE[r.verdict_initial.verdict]?.label ?? r.verdict_initial.verdict}{' '}
+                {r.verdict_initial.score}/100 le {new Date(r.verdict_initial.date).toLocaleDateString('fr-FR')}.
               </div>
             )}
 

@@ -42,14 +42,20 @@ export async function getAnalysisEtape(id) {
   return data
 }
 
-/** Mode visite — photo(s) à analyser : { analysis_id, images } → { result, constats_nouveaux } */
-export const visitePhoto = (analysisId, images) =>
-  callFunction('visite', { analysis_id: analysisId, images })
+/** Mode visite — photo(s) à analyser. Le mode est ÉPHÉMÈRE par défaut (le
+ *  verdict recalculé vit dans la session, rien n'est écrit dans l'analyse
+ *  publique) : le client renvoie donc ses constats précédents à chaque appel.
+ *  → { result, constats_nouveaux, persiste } */
+export const visitePhoto = (analysisId, images, constatsPrecedents = []) =>
+  callFunction('visite', { analysis_id: analysisId, images, constats_precedents: constatsPrecedents })
 
 /** Mode visite — fin de visite : réponses données + points restés non vérifiés
  *  (la synthèse signale une visite incomplète sous 70 % de couverture). */
-export const visiteTerminer = (analysisId, reponses, nonVerifies = []) =>
-  callFunction('visite', { analysis_id: analysisId, terminer: true, reponses, non_verifies: nonVerifies })
+export const visiteTerminer = (analysisId, reponses, nonVerifies = [], constatsPrecedents = []) =>
+  callFunction('visite', {
+    analysis_id: analysisId, terminer: true, reponses,
+    non_verifies: nonVerifies, constats_precedents: constatsPrecedents,
+  })
 
 /* ---------- Dossier d'achat (compte léger, lien magique) ---------- */
 

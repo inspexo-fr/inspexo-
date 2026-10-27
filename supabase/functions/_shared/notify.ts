@@ -77,18 +77,30 @@ export async function alerteAnnonceModifiee(admin: any, p: {
   verdict: string;
   score: number;
   label: string;
+  marque?: string | null;
+  modele?: string | null;
   changements: string[];
 }): Promise<void> {
   try {
     const { data: anciennes } = await admin
       .from("analyses")
-      .select("id")
+      .select("id, marque, modele")
       .eq("source_url", p.sourceUrl)
       .eq("is_eval", false)
       .neq("id", p.analysisId)
       .limit(20);
+    // Concordance : la nouvelle analyse doit décrire le MÊME véhicule que
+    // celle que l'acheteur suit (même marque/modèle identifiés) — un texte
+    // fabriqué sur la même URL mais pour un autre véhicule n'alerte personne.
+    const normalise = (s: unknown) =>
+      String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
     // deno-lint-ignore no-explicit-any
-    const ids = ((anciennes ?? []) as any[]).map((a) => a.id);
+    const ids = ((anciennes ?? []) as any[])
+      .filter((a) =>
+        normalise(a.marque) === normalise(p.marque) &&
+        normalise(a.modele) === normalise(p.modele)
+      )
+      .map((a) => a.id);
     if (ids.length === 0) return;
     const { data: suivis } = await admin
       .from("dossier")

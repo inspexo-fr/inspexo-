@@ -58,7 +58,9 @@ export default function VisitePage() {
   const [reponses, setReponses] = useState({}) // idx -> 'oui'|'non'|'doute'
   const [photoEtat, setPhotoEtat] = useState('idle') // idle | analyse | erreur
   const [constatsItem, setConstatsItem] = useState({}) // idx -> [constats]
+  const [constatsVisite, setConstatsVisite] = useState([]) // session cumulée (mode éphémère)
   const [verdictLive, setVerdictLive] = useState(null) // {verdict, score} après recalcul
+  const [persiste, setPersiste] = useState(null) // true si l'analyse est suivie dans le dossier
   const [synthese, setSynthese] = useState(null)
   const [finEnCours, setFinEnCours] = useState(false)
 
@@ -101,11 +103,13 @@ export default function VisitePage() {
     try {
       const dataUrl = await resizeImageToDataUrl(file)
       const itemAuMomentDeLaPhoto = idx
-      const { result, constats_nouveaux } = await visitePhoto(id, [dataUrl])
+      const { result, constats_nouveaux, persiste: p } = await visitePhoto(id, [dataUrl], constatsVisite)
       setConstatsItem(prev => ({
         ...prev,
         [itemAuMomentDeLaPhoto]: [...(prev[itemAuMomentDeLaPhoto] || []), ...(constats_nouveaux || [])],
       }))
+      setConstatsVisite(prev => [...prev, ...(constats_nouveaux || [])].slice(0, 24))
+      setPersiste(p === true)
       if (result?.verdict) setVerdictLive({ verdict: result.verdict, score: result.score })
       setPhotoEtat('idle')
     } catch (_) {
@@ -123,8 +127,9 @@ export default function VisitePage() {
       // Points restés sans réponse : sous 70 % de couverture, la synthèse se
       // déclare incomplète et ne peut pas conclure « Acheter ».
       const nonVerifies = items.filter((_, i) => !reponses[i]).map(it => it.quoi)
-      const { synthese: s, result } = await visiteTerminer(id, reponsesListe, nonVerifies)
+      const { synthese: s, result, persiste: p } = await visiteTerminer(id, reponsesListe, nonVerifies, constatsVisite)
       setSynthese(s)
+      setPersiste(p === true)
       if (result?.verdict) setVerdictLive({ verdict: result.verdict, score: result.score })
     } catch (_) {
       setSynthese({ decision: 'negocier', points: ['Synthèse indisponible — appuyez-vous sur le verdict de l\'analyse.'] })
@@ -269,6 +274,16 @@ export default function VisitePage() {
                       {Number(nego.total_min_eur).toLocaleString('fr-FR')} – {Number(nego.total_max_eur).toLocaleString('fr-FR')} €
                     </div>
                     <div style={{ fontSize: '0.75rem', color: '#92400E', marginTop: 6, lineHeight: 1.5 }}>{nego.mention}</div>
+                  </div>
+                )}
+                {persiste === false && (
+                  <div style={{
+                    fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', lineHeight: 1.6,
+                    marginBottom: 12, textAlign: 'center',
+                  }}>
+                    Mode démo : cette visite reste sur cet écran et ne modifie pas la page
+                    publique de l'analyse. Pour la conserver, suivez d'abord l'analyse dans
+                    votre dossier d'achat (connexion par lien magique).
                   </div>
                 )}
                 <button

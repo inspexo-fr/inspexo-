@@ -1,11 +1,20 @@
 // SPRINT 3 — Mode visite : « Je suis devant la voiture ».
 // Depuis /a/:id/visite, l'acheteur déroule la checklist (oui / non / doute) et
 // peut photographier compteur, pneus, PV de CT, carnet… Chaque photo passe par
-// l'appel vision existant ; les constats validés sont RÉINJECTÉS dans le
-// verdict (barème déterministe, mêmes règles que l'analyse) et dans la marge
-// de négociation. Les photos ne sont JAMAIS stockées.
-// Fin de visite : synthèse déterministe « acheter / négocier / ne pas acheter »
-// avec les points qui ont fait basculer.
+// l'appel vision ; les constats validés sont RÉINJECTÉS dans le verdict
+// (barème déterministe) et dans la marge de négociation. Photos JAMAIS stockées.
+//
+// DEUX RÉGIMES (audit sécurité sprint 3 — une analyse est publique et
+// partageable, un inconnu muni du lien ne doit pas pouvoir altérer le verdict
+// vu par tous) :
+//  - ÉPHÉMÈRE (par défaut, anonyme) : le verdict recalculé et la synthèse sont
+//    RENVOYÉS à l'appelant mais JAMAIS écrits dans l'analyse. Le client
+//    renvoie ses constats précédents à chaque appel pour cumuler sa session.
+//  - PERSISTANT : uniquement si l'appelant est connecté ET suit cette analyse
+//    dans son dossier — le résultat est alors écrit, avec verdict_initial figé
+//    à la première mutation (traçabilité, restauration possible).
+// Dans les deux régimes, les réponses de fin de visite sont validées contre la
+// checklist de L'ANALYSE (jamais de texte libre dans une synthèse stockée).
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { calculerAxes, type FaitsAxes } from "../_shared/bareme.ts";
@@ -20,6 +29,7 @@ const corsHeaders = {
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 const IP_HASH_SALT = Deno.env.get("IP_HASH_SALT");
 if (!IP_HASH_SALT) throw new Error("IP_HASH_SALT manquant — configurez le secret.");
 
@@ -28,6 +38,13 @@ const FALLBACK_MODEL = "claude-sonnet-4-6";
 const MAX_IMAGES_PAR_APPEL = 2;
 const MAX_PHOTOS_PAR_ANALYSE = 12; // appels vision cumulés sur une même analyse
 const MAX_PHOTOS_PAR_IP = 15; // par 24 h
+
+// Étapes photo ajoutées par l'interface quand la checklist ne les couvre pas :
+// mêmes libellés que src/pages/VisitePage.jsx (whitelist de la synthèse).
+const ETAPES_PHOTO_TITRES = [
+  "Compteur kilométrique",
+  "PV de contrôle technique et carnet d'entretien",
+];
 
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -63,6 +80,30 @@ function parseImage(raw: unknown): ImageBlock | null {
   if (data.length < 100 || data.length > 4_500_000) return null;
   if (!/^[A-Za-z0-9+/=]+$/.test(data)) return null;
   return { type: "image", source: { type: "base64", media_type: mediaType, data } };
+}
+
+/** Constats de la session du visiteur, renvoyés par le client : revalidés
+ *  champ par champ (jamais de texte libre réinjecté tel quel). */
+// deno-lint-ignore no-explicit-any
+function validerConstatsSession(raw: any): ConstatPhoto[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .slice(0, 24)
+    // deno-lint-ignore no-explicit-any
+    .filter((c: any) =>
+      ["compteur", "pneus", "carrosserie", "jantes", "interieur", "moteur", "document_ct", "autre"].includes(c?.organe) &&
+      ["ok", "attention", "rouge"].includes(c?.signal) &&
+      typeof c?.constat === "string" && c.constat.trim().length > 0
+    )
+    // deno-lint-ignore no-explicit-any
+    .map((c: any) => ({
+      organe: c.organe,
+      constat: String(c.constat).slice(0, 220),
+      signal: c.signal,
+      photo_index: Number.isInteger(c.photo_index) ? c.photo_index : 1,
+      confiance: ["haute", "moyenne", "basse"].includes(c.confiance) ? c.confiance : "moyenne",
+      visite: true,
+    }));
 }
 
 /** Appel vision forcé, avec bascule simple sur le modèle de secours. */
@@ -140,58 +181,48 @@ serve(async (req: Request) => {
       .eq("id", analysisId)
       .maybeSingle();
     if (!row) return jsonResponse({ error: "not_found", message: "Analyse introuvable." }, 404);
-    const result = row.result_json ?? {};
+    // Copie de travail : en régime éphémère, RIEN n'est écrit dans l'analyse.
+    const result = JSON.parse(JSON.stringify(row.result_json ?? {}));
     if (result.type !== "vehicule" || result.statut_analyse === "en_cours") {
       return jsonResponse({ error: "invalid_state", message: "Analyse non exploitable en mode visite." }, 409);
     }
+
+    // ---- Régime : persistant uniquement pour un utilisateur connecté qui
+    // suit cette analyse dans son dossier ; éphémère sinon. ----
+    let persiste = false;
+    const jwt = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+    if (jwt && jwt !== SUPABASE_ANON_KEY) {
+      try {
+        const { data: u } = await admin.auth.getUser(jwt);
+        const userId = u?.user?.id ?? null;
+        if (userId) {
+          const { count } = await admin
+            .from("dossier")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", userId)
+            .eq("analysis_id", analysisId);
+          persiste = (count ?? 0) > 0;
+        }
+      } catch (_) { /* jeton invalide → éphémère */ }
+    }
+
+    // Session du visiteur (régime éphémère) : constats déjà obtenus, revalidés.
+    const constatsSession = validerConstatsSession(body.constats_precedents);
+
     // deno-lint-ignore no-explicit-any
     const visite: any = result.visite ?? { photos_analysees: 0 };
 
-    // ================= PHOTOS DE VISITE =================
-    const rawImages: unknown[] = Array.isArray(body.images) ? body.images.slice(0, MAX_IMAGES_PAR_APPEL) : [];
-    let images = rawImages.map(parseImage).filter((i): i is ImageBlock => i !== null);
-
-    if (images.length > 0) {
-      // Rate limit : par IP (24 h) et par analyse, comptés via events.
-      const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
-      const { count: parIp } = await admin
-        .from("events")
-        .select("id", { count: "exact", head: true })
-        .eq("name", "visite_photo")
-        .eq("ip_hash", ipHash)
-        .gte("created_at", since);
-      if ((parIp ?? 0) >= MAX_PHOTOS_PAR_IP) {
-        return jsonResponse({ error: "rate_limited", message: "Limite de photos de visite atteinte pour aujourd'hui." }, 429);
-      }
-      if ((visite.photos_analysees ?? 0) >= MAX_PHOTOS_PAR_ANALYSE) {
-        return jsonResponse({ error: "rate_limited", message: "Limite de photos atteinte pour cette analyse." }, 429);
-      }
-
-      const imagesCount = images.length;
-      const brut = await appelVision(images);
-      images = []; // libération immédiate : jamais stockées
-      if (!brut) {
-        return jsonResponse({ error: "ia_error", message: "La photo n'a pas pu être analysée. Réessayez." }, 502);
-      }
-      const { constats, km_compteur, ct_defauts } = validerConstatsPhoto(brut, imagesCount);
-      const nouveaux: ConstatPhoto[] = constats.map((c) => ({ ...c, visite: true }));
-
-      // Fusion dans le résultat existant.
-      const constatsTous: ConstatPhoto[] = [
-        ...(Array.isArray(result.constats_photo) ? result.constats_photo : []),
-        ...nouveaux,
-      ].slice(0, 24);
+    // ---- Recalcul commun : fusionne les constats et rejoue le barème + la marge ----
+    const recalculer = async (constatsTous: ConstatPhoto[], kmCompteur: number | null, ctSupp: string[]) => {
       let incoherences: string[] = Array.isArray(result.incoherences) ? [...result.incoherences] : [];
-
-      // Règle serveur : compteur photographié vs kilométrage annoncé (> 2 %).
       const kmAnnonce = typeof result.vehicule?.kilometrage === "number" && result.vehicule.kilometrage > 0
         ? result.vehicule.kilometrage
         : null;
       let compteurContredit = false;
-      if (km_compteur != null && kmAnnonce != null && Math.abs(km_compteur - kmAnnonce) / kmAnnonce > 0.02) {
+      if (kmCompteur != null && kmAnnonce != null && Math.abs(kmCompteur - kmAnnonce) / kmAnnonce > 0.02) {
         compteurContredit = true;
         const texte =
-          `Le compteur photographié pendant la visite affiche ${km_compteur.toLocaleString("fr-FR")} km alors que l'annonce indique ${kmAnnonce.toLocaleString("fr-FR")} km.`;
+          `Le compteur photographié pendant la visite affiche ${kmCompteur.toLocaleString("fr-FR")} km alors que l'annonce indique ${kmAnnonce.toLocaleString("fr-FR")} km.`;
         if (!incoherences.some((i) => /compteur/i.test(i) && /visite/i.test(i))) {
           incoherences = [texte, ...incoherences].slice(0, 10);
         }
@@ -199,11 +230,10 @@ serve(async (req: Request) => {
       const ctDefautsTous: string[] = [
         ...new Set([
           ...(Array.isArray(result.recalcul?.ct_defauts) ? result.recalcul.ct_defauts : []),
-          ...ct_defauts,
+          ...ctSupp,
         ]),
       ].slice(0, 10);
 
-      // ---- Recalcul du verdict : mêmes règles que l'analyse ----
       if (result.recalcul?.faits) {
         const faits: FaitsAxes = {
           ...result.recalcul.faits,
@@ -221,7 +251,6 @@ serve(async (req: Request) => {
         result.recalcul.ct_defauts = ctDefautsTous;
       }
 
-      // ---- Recalcul de la marge de négociation ----
       try {
         const { data: coutRows } = await admin
           .from("repair_costs")
@@ -266,35 +295,106 @@ serve(async (req: Request) => {
 
       result.constats_photo = constatsTous;
       result.incoherences = incoherences;
-      visite.photos_analysees = (visite.photos_analysees ?? 0) + imagesCount;
-      visite.maj = new Date().toISOString();
-      result.visite = visite;
+      return { compteurContredit };
+    };
 
-      const { error: updError } = await admin
-        .from("analyses")
-        .update({ verdict: result.verdict, score: result.score, result_json: result })
-        .eq("id", analysisId);
-      if (updError) {
-        console.error("visite update:", updError);
-        return jsonResponse({ error: "db_error", message: "Erreur d'enregistrement. Réessayez." }, 500);
-      }
+    // ================= PHOTOS DE VISITE =================
+    const rawImages: unknown[] = Array.isArray(body.images) ? body.images.slice(0, MAX_IMAGES_PAR_APPEL) : [];
+    let images = rawImages.map(parseImage).filter((i): i is ImageBlock => i !== null);
+
+    if (images.length > 0) {
+      // Rate limit anti-TOCTOU : la tentative est insérée AVANT le comptage,
+      // qui l'inclut — des appels parallèles se comptent mutuellement.
+      const imagesCount = images.length;
       await admin.from("events").insert({
         name: "visite_photo",
         analysis_id: analysisId,
         ip_hash: ipHash,
+        props_json: { images_count: imagesCount, persiste },
+      });
+      const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+      const [{ count: parIp }, { count: parAnalyse }] = await Promise.all([
+        admin.from("events").select("id", { count: "exact", head: true })
+          .eq("name", "visite_photo").eq("ip_hash", ipHash).gte("created_at", since),
+        admin.from("events").select("id", { count: "exact", head: true })
+          .eq("name", "visite_photo").eq("analysis_id", analysisId).gte("created_at", since),
+      ]);
+      if ((parIp ?? 0) > MAX_PHOTOS_PAR_IP) {
+        return jsonResponse({ error: "rate_limited", message: "Limite de photos de visite atteinte pour aujourd'hui." }, 429);
+      }
+      if ((parAnalyse ?? 0) > MAX_PHOTOS_PAR_ANALYSE) {
+        return jsonResponse({ error: "rate_limited", message: "Limite de photos atteinte pour cette analyse." }, 429);
+      }
+
+      const brut = await appelVision(images);
+      images = []; // libération immédiate : jamais stockées
+      if (!brut) {
+        return jsonResponse({ error: "ia_error", message: "La photo n'a pas pu être analysée. Réessayez." }, 502);
+      }
+      const { constats, km_compteur, ct_defauts } = validerConstatsPhoto(brut, imagesCount);
+      const nouveaux: ConstatPhoto[] = constats.map((c) => ({ ...c, visite: true }));
+
+      const constatsTous: ConstatPhoto[] = [
+        ...(Array.isArray(result.constats_photo) ? result.constats_photo : []),
+        ...constatsSession.filter((c) =>
+          !(Array.isArray(result.constats_photo) ? result.constats_photo : [])
+            // deno-lint-ignore no-explicit-any
+            .some((x: any) => x.constat === c.constat)
+        ),
+        ...nouveaux,
+      ].slice(0, 24);
+
+      const { compteurContredit } = await recalculer(constatsTous, km_compteur, ct_defauts);
+
+      visite.photos_analysees = (visite.photos_analysees ?? 0) + imagesCount;
+      visite.maj = new Date().toISOString();
+      result.visite = visite;
+
+      if (persiste) {
+        // Première mutation persistée : le verdict d'origine est figé (trace).
+        if (!result.verdict_initial && (row.verdict !== result.verdict || row.score !== result.score)) {
+          result.verdict_initial = { verdict: row.verdict, score: row.score, date: new Date().toISOString() };
+        }
+        const { error: updError } = await admin
+          .from("analyses")
+          .update({ verdict: result.verdict, score: result.score, result_json: result })
+          .eq("id", analysisId);
+        if (updError) {
+          console.error("visite update:", updError);
+          return jsonResponse({ error: "db_error", message: "Erreur d'enregistrement. Réessayez." }, 500);
+        }
+      }
+      await admin.from("events").insert({
+        name: "visite_photo_resultat",
+        analysis_id: analysisId,
+        ip_hash: ipHash,
         props_json: {
-          images_count: imagesCount,
           constats: nouveaux.length,
           km_compteur,
           ct_defauts: ct_defauts.length,
           compteur_contredit: compteurContredit,
+          persiste,
+          verdict_avant: row.verdict,
+          score_avant: row.score,
+          verdict_apres: result.verdict,
+          score_apres: result.score,
         },
       });
-      return jsonResponse({ result, constats_nouveaux: nouveaux });
+      return jsonResponse({ result, constats_nouveaux: nouveaux, persiste });
     }
 
     // ================= FIN DE VISITE — SYNTHÈSE =================
     if (body.terminer === true) {
+      // Whitelist : UNIQUEMENT les points de la checklist de CETTE analyse
+      // (+ les 2 étapes photo de l'interface). Jamais de texte libre dans une
+      // synthèse (elle peut être stockée et affichée publiquement).
+      const autorises = new Set<string>([
+        ...ETAPES_PHOTO_TITRES,
+        // deno-lint-ignore no-explicit-any
+        ...((result.checklist_sur_place ?? []) as any[])
+          .map((c) => String(c?.quoi ?? "").slice(0, 160))
+          .filter(Boolean),
+      ]);
       const lireQuoi = (raw: unknown): string => String(raw ?? "").slice(0, 160);
       // deno-lint-ignore no-explicit-any
       const reponses: Array<{ quoi: string; etat: string }> = (Array.isArray(body.reponses) ? body.reponses : [])
@@ -304,23 +404,29 @@ serve(async (req: Request) => {
           quoi: lireQuoi(r?.quoi),
           etat: ["oui", "non", "doute"].includes(r?.etat) ? r.etat : "doute",
         }))
-        .filter((r: { quoi: string }) => r.quoi.length > 0);
-      // Points de la checklist restés sans réponse (envoyés par le client).
+        .filter((r: { quoi: string }) => autorises.has(r.quoi));
       const nonVerifies: string[] = (Array.isArray(body.non_verifies) ? body.non_verifies : [])
         .slice(0, 25)
         .map(lireQuoi)
-        .filter((q: string) => q.length > 0);
+        .filter((q: string) => autorises.has(q));
+
+      // Régime éphémère : les constats de la session comptent dans le verdict.
+      if (!persiste && constatsSession.length > 0) {
+        const constatsTous: ConstatPhoto[] = [
+          ...(Array.isArray(result.constats_photo) ? result.constats_photo : []),
+          ...constatsSession,
+        ].slice(0, 24);
+        const kmSession = null; // le km lu n'est pas rejoué : l'incohérence de session est déjà dans les constats
+        await recalculer(constatsTous, kmSession, []);
+      }
 
       const nons = reponses.filter((r) => r.etat === "non");
       const doutes = reponses.filter((r) => r.etat === "doute");
       const nonCritique = nons.some((r) => CRITIQUE_RE.test(r.quoi));
       const fraude = (Array.isArray(result.incoherences) ? result.incoherences : [])
-        .some((i: string) => /compteur\s+photographi/i.test(i) || /compteur.*visite/i.test(i));
+        .some((i: string) => /compteur\s+photographi/i.test(i) || /compteur.*visite/i.test(i)) ||
+        constatsSession.some((c) => c.organe === "compteur" && c.signal === "rouge");
 
-      // Visite incomplète : moins de 70 % des points renseignés. La synthèse
-      // le dit en tête, liste les points CRITIQUES non vérifiés, et ne peut
-      // pas conclure « acheter » ; « négocier » et « ne pas acheter » restent
-      // possibles mais valent « sur les points vérifiés » seulement.
       const totalPoints = reponses.length + nonVerifies.length;
       const incomplete = totalPoints > 0 && reponses.length / totalPoints < 0.7;
       const critiquesNonVerifies = nonVerifies.filter((q) => CRITIQUE_RE.test(q)).slice(0, 5);
@@ -331,7 +437,6 @@ serve(async (req: Request) => {
       else decision = "acheter";
       if (incomplete && decision === "acheter") decision = "negocier";
 
-      // Les points qui ont fait basculer, dans l'ordre d'importance.
       const points: string[] = [
         ...(incomplete
           ? [
@@ -359,20 +464,20 @@ serve(async (req: Request) => {
         incomplete,
         non_verifies: nonVerifies.length,
         points_critiques_non_verifies: critiquesNonVerifies,
-        // Avec une visite incomplète, la conclusion ne vaut que sur ce qui a
-        // été vérifié : l'UI préfixe la décision de « Sur les points vérifiés ».
         sur_points_verifies: incomplete,
         genere_le: new Date().toISOString(),
       };
-      visite.synthese = synthese;
-      visite.reponses = reponses;
-      result.visite = visite;
 
-      const { error: updError } = await admin
-        .from("analyses")
-        .update({ result_json: result })
-        .eq("id", analysisId);
-      if (updError) console.error("visite synthese update:", updError);
+      if (persiste) {
+        visite.synthese = synthese;
+        visite.reponses = reponses;
+        result.visite = visite;
+        const { error: updError } = await admin
+          .from("analyses")
+          .update({ result_json: result })
+          .eq("id", analysisId);
+        if (updError) console.error("visite synthese update:", updError);
+      }
       await admin.from("events").insert({
         name: "visite_terminee",
         analysis_id: analysisId,
@@ -384,9 +489,10 @@ serve(async (req: Request) => {
           nb_reponses: reponses.length,
           nb_non_verifies: nonVerifies.length,
           incomplete,
+          persiste,
         },
       });
-      return jsonResponse({ synthese, result });
+      return jsonResponse({ synthese, result, persiste });
     }
 
     return jsonResponse({ error: "invalid_input", message: "images[] ou terminer:true requis." }, 400);

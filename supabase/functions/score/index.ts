@@ -785,7 +785,12 @@ serve(async (req: Request) => {
         .replace(/[^a-z0-9€%.,:/-]+/g, " ")
         .replace(/\s+/g, " ")
         .trim();
-    const inputHash = await sha256Hex(`${normaliserTexte(text)}|${sourceUrl ?? ""}`);
+    // L'empreinte couvre AUSSI les photos, comparables et usage : une analyse
+    // « texte seul » mise en cache ne doit jamais être resservie à un acheteur
+    // qui joint des photos (compteur, PV de CT) — audit sécurité sprint 3.
+    const inputHash = await sha256Hex(
+      `${normaliserTexte(text)}|${sourceUrl ?? ""}|img:${imagesCount}|cmp:${comparables.length + comparablesStructures.length}|usage:${usage ?? ""}`,
+    );
     const sansCache = body.no_cache === true && isEval;
     // Forçage du modèle : réservé à l'éval (validation du modèle de secours).
     const forceModel = isEval && typeof body.force_model === "string" &&
@@ -2514,13 +2519,19 @@ serve(async (req: Request) => {
 
     // Annonce suivie dans un dossier, revenue à un autre prix : on prévient
     // les acheteurs concernés (jamais bloquant pour l'utilisateur courant).
-    if (!isEval && analysePrecedente && sourceUrl && analysisDbId) {
+    // UNIQUEMENT sur le canal où l'URL fait foi (extension → intake, la page
+    // était réellement ouverte) : un appel direct avec une source_url copiée
+    // d'une page publique ne doit pas déclencher d'emails vers les dossiers
+    // d'autrui (audit sécurité sprint 3).
+    if (!isEval && isInternal && analysePrecedente && sourceUrl && analysisDbId) {
       const tacheAlerte = alerteAnnonceModifiee(admin, {
         sourceUrl,
         analysisId: analysisDbId,
         verdict,
         score,
         label: modeleLabel,
+        marque: vehiculePublic.marque,
+        modele: vehiculePublic.modele,
         // deno-lint-ignore no-explicit-any
         changements: ((result.analyse_precedente as any)?.changements ?? []) as string[],
       });
