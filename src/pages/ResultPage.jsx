@@ -433,8 +433,9 @@ function NegotiationCard({ negociation, analysisId }) {
             background: 'rgba(255,255,255,0.55)', padding: '14px 16px', textAlign: 'center',
           }}>
             <div style={{ fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, color: '#0F1B2D' }}>
-              Détail des {postes.length + sansMontant.length} arguments, sources et
-              argumentaire prêt à dire au vendeur : réservés au Pass achat (29 €)
+              {masques + sansMontant.length > 0
+                ? `${masques + sansMontant.length} argument${masques + sansMontant.length > 1 ? 's' : ''} de plus, les sources et l'argumentaire prêt à dire au vendeur : réservés au Pass achat (29 €)`
+                : 'Les sources et l\'argumentaire prêt à dire au vendeur : réservés au Pass achat (29 €)'}
             </div>
             <PassCTA analysisId={analysisId} />
           </div>
@@ -1124,7 +1125,9 @@ export default function ResultPage() {
           )}
 
           {/* Bandeau de rigueur : affirmations écartées par la critique */}
-          <RigorBanner count={analysis.claimsDroppedCount} items={analysis.claimsDropped || []} />
+          {!enCours && !enErreur && (
+            <RigorBanner count={analysis.claimsDroppedCount} items={analysis.claimsDropped || []} />
+          )}
 
           {/* Bandeau analyse limitée */}
           {r.analyse_limitee?.actif && (
