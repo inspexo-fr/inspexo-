@@ -345,6 +345,7 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 |---------|-------|--------|
 | 1-3 | Frontend React en composants + design system + déploiement | ✅ |
 | S1 | Pivot IA : score d'annonce gratuit + rappels/Takata + waitlists | ✅ Livré (oct. 2026) |
+| S5 | Nouvelle direction artistique (document, tampon, filets) | ✅ Mergé (oct. 2026) |
 | S2 | Pass achat 29 € (produit principal) | ⬜ |
 | 4 | Supabase — tables users, experts, missions, paiements | ⬜ |
 | 5 | Stripe + Stripe Connect | ⬜ |
