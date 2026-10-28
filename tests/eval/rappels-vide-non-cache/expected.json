@@ -1,0 +1,8 @@
+{
+  "type": "rappels_cache",
+  "_commentaire": "Incident du 28/10/2026 : une fenêtre de réindexation de RappelConso a été mise en cache 24 h, et l'acheteur lisait « aucun rappel » alors que la vérification n'avait pas eu lieu. Ce cas vérifie contre la fonction DÉPLOYÉE qu'une réponse vide n'est jamais cachée, qu'une source injoignable est annoncée comme telle, et qu'un résultat non vide reste bien caché 24 h.",
+  "modele_sans_rappel": { "marque": "Peugeot", "modele": "ZZ9999 Inexistant", "annee": 2020 },
+  "marque_non_interrogeable": { "marque": "Peu\"geot", "modele": "308", "annee": 2020 },
+  "modele_avec_rappels": { "marque": "Peugeot", "modele": "308", "annee": 2016 },
+  "message_indisponible": "Vérification RappelConso indisponible, réessayez plus tard."
+}

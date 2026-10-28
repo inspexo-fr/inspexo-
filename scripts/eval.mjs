@@ -58,10 +58,67 @@ async function post(path, body, timeoutMs = 170_000) {
   return { status: res.status, json }
 }
 
+/**
+ * Cas « rappels_cache » : ne consomme aucun token (il n'appelle que la
+ * fonction `rappels`). Vérifie contre la fonction DÉPLOYÉE qu'une réponse
+ * vide de RappelConso n'est jamais mise en cache, qu'une source injoignable
+ * est annoncée comme telle, et qu'un résultat non vide reste caché 24 h.
+ * Le signal observable côté client est le drapeau `cache` de la réponse :
+ * si un vide avait été mis en cache, le second appel le servirait.
+ */
+async function runCaseRappelsCache(expected) {
+  const t0 = Date.now()
+  const failures = []
+
+  // 1. Modèle réel sans aucun rappel : constat exact, mais JAMAIS mis en cache.
+  const vide1 = await post('rappels', expected.modele_sans_rappel, 40_000)
+  const vide2 = await post('rappels', expected.modele_sans_rappel, 40_000)
+  for (const [i, r] of [vide1, vide2].entries()) {
+    if (r.status !== 200) failures.push(`appel ${i + 1} (modèle sans rappel) : HTTP ${r.status}`)
+    if (r.json?.cache === true) {
+      failures.push(`appel ${i + 1} : une réponse VIDE a été servie depuis le cache (incident 28/10)`)
+    }
+    if (!Array.isArray(r.json?.rappels) || r.json.rappels.length !== 0) {
+      failures.push(`appel ${i + 1} : rappels attendus vides, reçu ${JSON.stringify(r.json?.rappels)?.slice(0, 80)}`)
+    }
+    if (r.json?.indisponible === true) {
+      failures.push(`appel ${i + 1} : marque interrogeable, l'état « indisponible » n'a pas lieu d'être`)
+    }
+  }
+
+  // 2. Source injoignable : on le DIT, on n'affiche pas « aucun rappel ».
+  const ko = await post('rappels', expected.marque_non_interrogeable, 40_000)
+  if (ko.json?.indisponible !== true) {
+    failures.push('source injoignable : drapeau indisponible absent')
+  }
+  if (ko.json?.rappels !== null) {
+    failures.push(`source injoignable : rappels doit être null (reçu ${JSON.stringify(ko.json?.rappels)?.slice(0, 60)})`)
+  }
+  if (ko.json?.message_indisponible !== expected.message_indisponible) {
+    failures.push(`message d'indisponibilité inattendu : « ${ko.json?.message_indisponible} »`)
+  }
+  if (ko.json?.takata == null) {
+    failures.push('source injoignable : le check Takata doit rester rendu')
+  }
+
+  // 3. Contrôle positif : un résultat non vide est bien caché 24 h.
+  const plein1 = await post('rappels', expected.modele_avec_rappels, 40_000)
+  const plein2 = await post('rappels', expected.modele_avec_rappels, 40_000)
+  const total = (r) => (r.json?.rappels?.length ?? 0) + (r.json?.autres_rappels?.length ?? 0)
+  if (total(plein1) === 0) {
+    failures.push('contrôle positif : aucun rappel trouvé pour un modèle qui en a (source en panne ?)')
+  } else if (plein2.json?.cache !== true) {
+    failures.push('contrôle positif : un résultat non vide devrait être servi depuis le cache au 2e appel')
+  }
+
+  return { failures, ms: Date.now() - t0, verdict: null, score: null, id: null }
+}
+
 async function runCase(name) {
   const dir = join(EVAL_DIR, name)
-  const annonce = readFileSync(join(dir, 'annonce.txt'), 'utf8').trim()
   const expected = JSON.parse(readFileSync(join(dir, 'expected.json'), 'utf8'))
+  if (expected.type === 'rappels_cache') return runCaseRappelsCache(expected)
+  const annonce = readFileSync(join(dir, 'annonce.txt'), 'utf8').trim()
   const input = existsSync(join(dir, 'input.json'))
     ? JSON.parse(readFileSync(join(dir, 'input.json'), 'utf8'))
     : {}

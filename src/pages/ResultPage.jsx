@@ -17,6 +17,9 @@ import {
 
 const VERDICT_LABELS = { vert: 'Feu vert', orange: 'Prudence', rouge: 'Signaux rouges' }
 
+// Repli si le serveur ne renvoie pas son message (ancienne version déployée).
+const MESSAGE_RAPPELS_INDISPONIBLE = 'Vérification RappelConso indisponible, réessayez plus tard.'
+
 const GRAVITE_LABELS = {
   securite: { label: 'Sécurité', classe: 'rouge' },
   casse: { label: 'Casse moteur/boîte', classe: 'rouge' },
@@ -853,10 +856,20 @@ export default function ResultPage() {
                   <span className="val na c-graphite">VÉRIFICATION…</span>
                 </div>
               ) : rappels === null || rappels.rappels === null ? (
-                <div className="ctrl">
-                  <span>Rappels RappelConso</span>
-                  <span className="val na c-graphite">{analysis.marque && analysis.modele ? 'BASE INDISPONIBLE' : 'VÉHICULE NON IDENTIFIÉ'}</span>
-                </div>
+                <>
+                  <div className="ctrl">
+                    <span>Rappels RappelConso</span>
+                    <span className="val na c-graphite">NON VÉRIFIÉ</span>
+                  </div>
+                  {/* Jamais « aucun rappel » quand la vérification n'a pas pu
+                      avoir lieu : le silence de la source n'est pas une
+                      absence de rappel (incident du 28/10/2026). */}
+                  <p className="c-ambre" style={{ fontSize: 14, lineHeight: 1.6, padding: '10px 0 0' }}>
+                    {analysis.marque && analysis.modele
+                      ? (rappels?.message_indisponible || MESSAGE_RAPPELS_INDISPONIBLE)
+                      : 'Véhicule non identifié dans l\'annonce : les rappels n\'ont pas pu être vérifiés.'}
+                  </p>
+                </>
               ) : (
                 <div className="ctrl">
                   <span>Rappels RappelConso<Ref nums={refRappelConso} /></span>

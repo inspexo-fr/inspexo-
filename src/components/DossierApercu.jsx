@@ -213,12 +213,17 @@ export default function DossierApercu() {
               </span>
             </div>
           )}
-          {rappels.rappels !== null && (
+          {rappels.rappels !== null ? (
             <div className="ctrl">
               <span>Rappels RappelConso<Ref nums={refRappelConso} /></span>
               <span className={`val ${(rappels.rappels || []).length > 0 ? 'bad' : ''}`}>
                 {(rappels.rappels || []).length === 0 ? 'AUCUN' : `${rappels.rappels.length} RAPPEL${rappels.rappels.length > 1 ? 'S' : ''}`}
               </span>
+            </div>
+          ) : (
+            <div className="ctrl">
+              <span>Rappels RappelConso</span>
+              <span className="val na c-graphite">NON VÉRIFIÉ</span>
             </div>
           )}
           {campagnes.map((p, i) => (
