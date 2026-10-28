@@ -31,6 +31,8 @@ import ExtensionPage from './pages/ExtensionPage'
 import ExtensionPrivacy from './pages/ExtensionPrivacy'
 import ResultPage from './pages/ResultPage'
 import VisitePage from './pages/VisitePage'
+import PartagePage from './pages/PartagePage'
+import { Capacitor } from '@capacitor/core'
 import DossierPage from './pages/DossierPage'
 import FiabilitePage from './pages/FiabilitePage'
 import AdminAudit from './pages/AdminAudit'
@@ -166,6 +168,25 @@ function Site() {
 }
 
 export default function App() {
+  // Appli mobile : une annonce partagée depuis Leboncoin / La Centrale arrive
+  // par le lien profond inspexo://partage?url=… → page d'orchestration /partage.
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return undefined
+    let poignee = null
+    import('@capacitor/app').then(({ App: CapApp }) => {
+      poignee = CapApp.addListener('appUrlOpen', ({ url }) => {
+        try {
+          const u = new URL(url)
+          if (u.protocol === 'inspexo:' && (u.host === 'partage' || u.pathname.includes('partage'))) {
+            const cible = u.searchParams.get('url')
+            if (cible) window.location.href = `/partage?u=${encodeURIComponent(cible)}`
+          }
+        } catch (_) { /* lien profond illisible : ignoré */ }
+      })
+    })
+    return () => { Promise.resolve(poignee).then((h) => h?.remove?.()).catch(() => {}) }
+  }, [])
+
   return (
     <BrowserRouter>
       <Routes>
@@ -173,6 +194,7 @@ export default function App() {
         <Route path="/score" element={<ScorePage />} />
         <Route path="/a/:id" element={<ResultPage />} />
         <Route path="/a/:id/visite" element={<VisitePage />} />
+        <Route path="/partage" element={<PartagePage />} />
         <Route path="/dossier" element={<DossierPage />} />
         <Route path="/fiabilite" element={<FiabilitePage />} />
         <Route path="/admin/audit" element={<AdminAudit />} />

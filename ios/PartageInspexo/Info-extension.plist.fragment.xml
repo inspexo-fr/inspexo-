@@ -1,0 +1,22 @@
+<!-- Clés NSExtension du target « PartageInspexo » (Share Extension).
+     À coller dans l'Info.plist généré par Xcode pour le target, en REMPLAÇANT
+     son dictionnaire NSExtension : l'extension apparaît alors dans le menu
+     Partager pour tout partage contenant une URL web ou du texte (une seule
+     URL à la fois). -->
+<key>NSExtension</key>
+<dict>
+	<key>NSExtensionPointIdentifier</key>
+	<string>com.apple.share-services</string>
+	<key>NSExtensionPrincipalClass</key>
+	<string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
+	<key>NSExtensionAttributes</key>
+	<dict>
+		<key>NSExtensionActivationRule</key>
+		<dict>
+			<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+			<integer>1</integer>
+			<key>NSExtensionActivationSupportsText</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>

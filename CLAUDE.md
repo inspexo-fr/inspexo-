@@ -284,6 +284,14 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - **Coût mesuré : 0,116 €** par analyse vidéo (extraction 0,021 + analyse 0,095), objectif < 0,20 €.
 - Éval : `npm run eval:video` (tests/eval-video/, harnais Playwright qui rejoue le VRAI front — extraction navigateur comprise — avec bypass injecté au niveau réseau ; les .mov HEVC passent par WebKit). Cas `synthetique-308` régénérable (`generer-enregistrement.mjs`) ; les 2 cas réels d'Utku se déposent dans `tests/eval-video/<cas>/enregistrement.<mov|mp4>` + `expected.json` (vidéos gitignorées).
 
+## Sprint 4B — Appli mobile « Partager → Inspexo » (oct. 2026, test de faisabilité — RIEN N'EST PUBLIÉ)
+
+- **Capacitor 8** (SPM, pas de CocoaPods) embarque le site React existant tel quel : `capacitor.config.ts` (appId `io.inspexo.app`), plateformes `ios/` et `android/`, tout le code natif-only derrière `Capacitor.isNativePlatform()` — le site web n'est pas affecté. Après toute modif front : `npm run build && npx cap sync`.
+- **Flux** : menu Partager de l'appli Leboncoin/La Centrale → lien profond `inspexo://partage?url=…` (iOS : Share Extension `ios/PartageInspexo/` à créer comme target Xcode, fichiers prêts ; Android : intent ACTION_SEND converti dans `MainActivity.java`) → listener `appUrlOpen` (App.jsx) → `/partage` (PartagePage) → WebView VISIBLE `@capgo/inappbrowser@8.6.14` (⚠️ les versions 9-13 ciblent Capacitor 5) → injection de `src/lib/extracteurInjectable.gen.js` (extracteurs de l'extension Chrome concaténés par `scripts/generer-extracteur-mobile.mjs`, testés 3/3 sur fixtures) → photos via CapacitorHttp (1 600 px, EXIF supprimé) → `api/intake` → `/a/:id`.
+- **Règles absolues** : la lecture de l'annonce se fait SUR le téléphone — aucune requête de nos serveurs vers Leboncoin ; une vérification anti-robot est MONTRÉE à l'utilisateur dans la WebView pour qu'il la passe lui-même, jamais contournée.
+- **Comparables en AGRÉGATS uniquement (4B-6)** : table `comparables_agregats` = histogrammes par segment (marque/modèle/techno/cylindrée/année/tranche km 20k/mois/tranche prix 250 €, effectif) fusionnables par somme ; RPC `agreger_comparables` (service role) ; `_shared/comparables.ts` (`fourchetteDepuisAgregats`, seuil 15, les prix bruts de la requête courante restent en mémoire). La table `comparables_prix` (lignes brutes) a été vidée et n'est plus alimentée — aucune donnée d'annonce republiée. Tests : `tests/comparables.test.mjs` (chaîné dans `npm run eval`).
+- **Install iPhone & protocole de test** : `docs/mobile-faisabilite.md` (Xcode requis — absent de la machine de dev, le target Share Extension se crée à la main en 5 étapes guidées ; provisioning gratuit 7 jours).
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)
