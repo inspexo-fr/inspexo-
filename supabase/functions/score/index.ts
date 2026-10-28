@@ -21,6 +21,14 @@ import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from ".
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
 import { calculerNegociation, coutsApplicables, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
+import {
+  compterCritiquesNonFaites,
+  dejaCouvert,
+  detecterEntretienDeclare,
+  libelleDeclaration,
+  type FaitEntretien,
+} from "../_shared/entretienDeclare.ts";
+import { dedupliquerCatalogue } from "../_shared/dedupPannes.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
 
@@ -380,7 +388,7 @@ N'émets dans decisions QUE les affirmations supprimées ou reformulées. Toute 
 9. Contrôle technique : il n'est exigible à la vente que si le véhicule a PLUS de 4 ans. Pour un véhicule de moins de 4 ans, aucune question ni remarque sur l'absence de CT.
 10. INTERDIT de mentionner le fonctionnement interne d'Inspexo dans un texte destiné à l'acheteur (les mots « catalogue », « fiche moteur », « base Inspexo », « génération de fiche » ne doivent apparaître dans AUCUNE raison, question, incohérence ou commentaire) : parle du moteur et des données constructeur, pas de nos outils.
 11. DATES : la date du jour t'est fournie dans <date_du_jour>. Compare toute date de l'annonce (CT, vidange, révision) à cette date : une date ANTÉRIEURE ou égale à aujourd'hui n'est JAMAIS « dans le futur » ni impossible.
-12. ENTRETIEN (champ entretien) : signaux_positifs = ce que l'annonce PROUVE ou ANNONCE (vidange faite, CT récent sans défaut, carnet, factures, distribution remplacée…), cités textuellement. contradictions = l'annonce contredit le plan d'entretien fourni (<plan_entretien>) — ex : « distribution d'origine » au-delà de l'intervalle. operations_non_faites = opérations que l'annonce dit EXPLICITEMENT non faites. L'ABSENCE d'information n'est ni une contradiction ni une opération non faite : elle ne pénalise JAMAIS la note de l'axe historique_entretien. INTERDIT dans contradictions et operations_non_faites : toute formulation d'absence (« aucune mention de… », « pas de facture fournie », « non précisé », « absence de carnet », « aucune information sur… »). operations_non_faites ne contient QUE ce que l'annonce déclare explicitement non fait (« distribution jamais changée », « embrayage d'origine à 200 000 km »). Ce qui manque est demandé automatiquement ailleurs : ne le liste pas ici. Axe : baisse uniquement sur contradiction ou opération critique explicitement non faite ; annonce muette sur l'entretien → note basse interdite.
+12. ENTRETIEN (champ entretien) : signaux_positifs = ce que l'annonce PROUVE ou ANNONCE (vidange faite, CT récent sans défaut, carnet, factures, distribution remplacée…), cités textuellement. contradictions = l'annonce contredit le plan d'entretien fourni (<plan_entretien>) — ex : « distribution d'origine » au-delà de l'intervalle. operations_non_faites = opérations que l'annonce dit EXPLICITEMENT non faites. L'ABSENCE d'information n'est ni une contradiction ni une opération non faite : elle ne pénalise JAMAIS la note de l'axe historique_entretien. INTERDIT dans contradictions et operations_non_faites : toute formulation d'absence (« aucune mention de… », « pas de facture fournie », « non précisé », « absence de carnet », « aucune information sur… »). operations_non_faites ne contient QUE ce que l'annonce déclare explicitement non fait (« distribution jamais changée », « embrayage d'origine à 200 000 km »). Ce qui manque est demandé automatiquement ailleurs : ne le liste pas ici. OBLIGATOIRE : toute opération que l'annonce déclare explicitement non faite, d'origine, ou à prévoir / à faire / à changer / à refaire (« distribution jamais faite », « distribution d'origine », « courroie à changer », « embrayage à prévoir », « pneus à changer », « CT à refaire », « vidange à faire ») DOIT figurer dans operations_non_faites, telle quelle, même si l'annonce dit par ailleurs que l'entretien est à jour — ces deux affirmations coexistent souvent et la seconde n'annule pas la première. Axe : baisse uniquement sur contradiction ou opération critique explicitement non faite ; annonce muette sur l'entretien → note basse interdite.
 13. RAISONS : chaque raison principale doit être PROPRE à ce véhicule ou cette annonce (panne de CE moteur, incohérence de CETTE annonce, rappel de CE modèle, prix de CETTE annonce). INTERDIT : les généralités valables pour toute annonce (« vente entre particuliers sans garantie », « absence de factures » seule, « véhicule d'occasion donc risques »).
 14. points_rassurants (0 à 3) : UNIQUEMENT des éléments positifs vérifiables dans l'annonce ou les données (kilométrage annuel normal, CT récent sans défaut, entretien prouvé, vendeur professionnel avec garantie légale, rappel déjà effectué). Jamais d'éloge gratuit : chaque point cite son élément source.
 15. CHECKLIST : chaque point est un GESTE faisable sur place ou à l'essai, commençant par un verbe d'action (Regardez, Écoutez, Demandez, Branchez, Essayez, Vérifiez, Ouvrez…). signal_rouge = ce qui s'OBSERVE pendant ce geste (bruit, fumée, trace, refus, document manquant) — jamais un événement non observable comme « rupture de la courroie ».
@@ -1210,6 +1218,46 @@ serve(async (req: Request) => {
       ? buildCatalogue(v.marque ?? null, sheet)
       : [];
 
+    // ---- Un défaut, une seule entrée (dédup du catalogue, en AMONT) ----
+    // L'atlas et la fiche décrivent souvent le même défaut avec d'autres mots
+    // et d'autres gravités (« Courroie de distribution dans le bain d'huile »
+    // en majeure côté atlas, « Courroie en bain d'huile qui se désagrège » en
+    // sécurité côté fiche). Tant que les deux étaient proposées au modèle, le
+    // verdict dépendait de celle qu'il citait : mesuré sur la 308, 48 ou 55
+    // selon le tirage. Règles et tests : _shared/dedupPannes.ts.
+    {
+      const { gardees, fusions } = dedupliquerCatalogue<CatalogueEntry>(
+        catalogue,
+        (garde, autre) => ({
+          ...garde,
+          symptome: garde.symptome || autre.symptome,
+          organe: garde.organe ?? autre.organe,
+          km_typique: garde.km_typique ?? autre.km_typique,
+          cout_min_eur: garde.cout_min_eur ?? autre.cout_min_eur,
+          cout_max_eur: garde.cout_max_eur ?? autre.cout_max_eur,
+          urls: [...new Set([...(garde.urls ?? []), ...(autre.urls ?? [])])],
+          sources: [...(garde.sources ?? []), ...(autre.sources ?? [])],
+          contexte: garde.contexte ?? autre.contexte,
+          rappel_code: garde.rappel_code ?? autre.rappel_code,
+          rappel_date: garde.rappel_date ?? autre.rappel_date,
+          rappel_vehicules: garde.rappel_vehicules ?? autre.rappel_vehicules,
+          rappel_annee_debut: garde.rappel_annee_debut ?? autre.rappel_annee_debut,
+          rappel_annee_fin: garde.rappel_annee_fin ?? autre.rappel_annee_fin,
+          // Une entrée relue à la main reste « base Inspexo ».
+          source_statut: garde.source_statut === "base_inspexo" || autre.source_statut === "base_inspexo"
+            ? "base_inspexo"
+            : garde.source_statut,
+        }),
+      );
+      if (fusions > 0) {
+        catalogue = gardees;
+        await admin.from("events").insert({
+          name: "catalogue_dedupliquee",
+          props_json: { fusions, restant: catalogue.length, famille: moteur.code_famille },
+        });
+      }
+    }
+
     // ---- Gravité par CONSÉQUENCE, pas par étiquette ----
     // Le coût sourcé prime sur le libellé d'origine : au-delà de 3 000 € (ou de
     // 30 % du prix demandé) la panne vaut un remplacement moteur/boîte, donc
@@ -1999,6 +2047,56 @@ serve(async (req: Request) => {
     // critique. Deux analyses de la même annonce donnent donc le même score.
     // Pannes d'usure hors de l'horizon de détention (affichées, hors note).
     const pannesHorsHorizon = new Set<string>();
+    // ---------------- Filet déterministe sur l'entretien déclaré ------------
+    // Relecture du texte de l'annonce avec des motifs FIXES (_shared/
+    // entretienDeclare.ts). Ce que le vendeur écrit noir sur blanc — « Distribution
+    // jamais faite », « pneus à changer », « vidange faite le 12/03 » — devient
+    // un fait établi : il arrive APRÈS l'audit de la critique, donc ni le modèle
+    // (qui peut l'omettre) ni la critique (qui pourrait le supprimer) ne peuvent
+    // le faire disparaître. Source : l'annonce, avec l'extrait cité.
+    const faitsEntretien: FaitEntretien[] = detecterEntretienDeclare(text);
+    const declaresNegatifs = faitsEntretien.filter((f) => f.statut !== "fait");
+    const declaresPositifs = faitsEntretien.filter((f) => f.statut === "fait");
+    {
+      // Les formulations du modèle qui disent déjà la même chose ne sont pas
+      // doublées : on ne répète pas une opération déjà nommée.
+      const dejaDit = [...opsNonFaites, ...contradictionsEntretien];
+      for (const f of declaresNegatifs) {
+        if (dejaCouvert(f, dejaDit)) continue;
+        opsNonFaites.push(`${libelleDeclaration(f)} : « ${f.extrait} »`);
+      }
+      const dejaPositif = [...signauxEntretien];
+      for (const f of declaresPositifs) {
+        if (dejaCouvert(f, dejaPositif)) continue;
+        signauxEntretien.push(`${libelleDeclaration(f)} : « ${f.extrait} »`);
+      }
+      // Une opération déclarée faite ET datée est un vrai point rassurant :
+      // on l'ajoute si le modèle ne l'a pas déjà dit. Le filtre de cohérence
+      // en aval la retirera d'office si l'annonce se contredit par ailleurs.
+      const DATEE_RE = /\d{2,3}\s?\d{3}\s*km|\b\d{1,2}\/\d{1,2}\/\d{2,4}\b|\b(?:19|20)\d{2}\b|\bneufs?\b|\bneuves?\b/i;
+      for (const f of declaresPositifs) {
+        if (pointsRassurants.length >= 3) break;
+        if (!DATEE_RE.test(f.extrait)) continue;
+        if (dejaCouvert(f, pointsRassurants)) continue;
+        pointsRassurants.push(`${f.operation} : « ${f.extrait} » (déclaré dans l'annonce, facture à exiger).`);
+      }
+      opsNonFaites = opsNonFaites.slice(0, 8);
+      signauxEntretien = signauxEntretien.slice(0, 10);
+      if (faitsEntretien.length > 0) {
+        await admin.from("events").insert({
+          name: "entretien_declare_detecte",
+          props_json: {
+            total: faitsEntretien.length,
+            non_fait: faitsEntretien.filter((f) => f.statut === "non_fait").length,
+            a_prevoir: faitsEntretien.filter((f) => f.statut === "a_prevoir").length,
+            fait: declaresPositifs.length,
+            critiques: compterCritiquesNonFaites(faitsEntretien),
+            operations: faitsEntretien.map((f) => `${f.operation}:${f.statut}`),
+          },
+        });
+      }
+    }
+
     // Faits du barème conservés dans le résultat : le mode visite recalcule le
     // verdict avec les mêmes règles quand de nouveaux constats photo arrivent.
     let faitsBareme: FaitsAxes | null = null;
@@ -2010,6 +2108,9 @@ serve(async (req: Request) => {
           plan.critique && t.includes(String(plan.operation ?? "").toLowerCase().split(/[^a-zà-ÿ]+/).filter((w: string) => w.length > 4)[0] ?? "@@")
         ) || /distribution|courroie|cha[îi]ne|vidange|embrayage|turbo/.test(t);
       }).length;
+      // Le filet est un plancher : une opération critique écrite dans l'annonce
+      // compte, que le modèle l'ait vue ou non.
+      const opsCritiques = Math.max(opsCritiquesNonFaites, compterCritiquesNonFaites(faitsEntretien));
 
       // Base de notation : EXACTEMENT les pannes affichées à l'acheteur, dans
       // le même ordre. La note dépend de leur gravité maximale, jamais de leur
@@ -2071,7 +2172,7 @@ serve(async (req: Request) => {
         entretien_renseigne: signauxEntretien.length + contradictionsEntretien.length + opsNonFaites.length > 0,
         signaux_entretien: signauxEntretien.length,
         contradictions_entretien: contradictionsEntretien.length,
-        operations_critiques_non_faites: opsCritiquesNonFaites,
+        operations_critiques_non_faites: opsCritiques,
         catalogue_vide: catalogue.length === 0,
         pannes: pannesQuiPesent.map((p) => ({
           gravite: p.gravite,
@@ -2172,8 +2273,26 @@ serve(async (req: Request) => {
         critique: Boolean(op.critique),
       })),
     ].slice(0, 8);
+    // « Doit déjà avoir été fait » = échéances du plan sourcé + ce que le
+    // vendeur déclare lui-même non fait ou à prévoir (filet déterministe).
+    // Les déclarations passent en tête : elles sont établies par l'annonce.
+    const duDeclare = declaresNegatifs.map((f) => ({
+      operation: libelleDeclaration(f),
+      echeance: null,
+      critique: f.critique,
+      declare: f.statut,
+      extrait: f.extrait,
+    }));
     const entretienResult = {
-      du: entretienDu.slice(0, 8),
+      du: [
+        ...duDeclare,
+        ...entretienDu.filter((op: { operation: string }) =>
+          !duDeclare.some((d) => dejaCouvert(
+            { operation: d.operation.split(" — ")[0], statut: "non_fait", extrait: "", critique: d.critique },
+            [op.operation],
+          ))
+        ),
+      ].slice(0, 8),
       prouve: signauxEntretien,
       a_exiger: entretienAExiger,
       contradictions: contradictionsEntretien,

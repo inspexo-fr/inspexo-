@@ -938,8 +938,16 @@ export default function ResultPage() {
                   <div style={{ marginBottom: 12 }}>
                     <p className="mono c-graphite" style={{ fontSize: 11, letterSpacing: '.06em', textTransform: 'uppercase', padding: '8px 0 4px' }}>Doit déjà avoir été fait</p>
                     {r.entretien.du.map((op, i) => (
-                      <div key={i} className="ctrl">
-                        <span>{op.operation}{op.echeance ? ` (dès ${op.echeance})` : ''}</span>
+                      <div key={i} className="ctrl" style={{ alignItems: 'baseline' }}>
+                        <span>
+                          {op.operation}{op.echeance ? ` (dès ${op.echeance})` : ''}
+                          {/* Déclaration du vendeur relevée mot pour mot dans l'annonce. */}
+                          {op.extrait && (
+                            <span className="mono c-graphite" style={{ display: 'block', fontSize: 11, marginTop: 2 }}>
+                              « {op.extrait} »
+                            </span>
+                          )}
+                        </span>
                         {op.critique && <span className="val bad">CRITIQUE</span>}
                       </div>
                     ))}
