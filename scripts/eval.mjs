@@ -357,6 +357,14 @@ const SANS_STABILITE = process.argv.includes('--sans-stabilite')
 // sans repayer la passe fonctionnelle.
 const STABILITE_SEULE = process.argv.includes('--stabilite-seule')
 const MODELE_SECOURS = process.argv.includes('--modele-secours')
+// --repetitions N : rejoue le cas demandé N fois (campagne de stabilité).
+// Les appels directs en curl échappent au compteur de coût : toute campagne
+// doit passer par ici (règle posée le 28/10/2026).
+const REPETITIONS = (() => {
+  const i = process.argv.indexOf('--repetitions')
+  const n = i >= 0 ? parseInt(process.argv[i + 1], 10) : 1
+  return Number.isFinite(n) && n >= 1 && n <= 10 ? n : 1
+})()
 const COUT_FICHIER = join(EVAL_DIR, '..', '..', '.eval-cout.json')
 const PLAFOND_EUR = 5
 if (process.argv.includes('--reset-cout') && existsSync(COUT_FICHIER)) rmSync(COUT_FICHIER)
@@ -381,21 +389,42 @@ for (const name of STABILITE_SEULE ? [] : cases) {
     console.log('   Relancer avec --reset-cout après validation.')
     break
   }
-  process.stdout.write(`▶ ${name}\n`)
-  try {
-    const { failures, ms, verdict, score, id } = await runCase(name)
-    if (failures.length === 0) {
-      console.log(`  PASS (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})${id ? ` — /a/${id}` : ''}\n`)
-    } else {
-      failed++
-      console.log(`  FAIL (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})`)
-      for (const f of failures) console.log(`    ✗ ${f}`)
-      console.log('')
+  process.stdout.write(`▶ ${name}${REPETITIONS > 1 ? ` (${REPETITIONS} passages)` : ''}\n`)
+  const passages = []
+  for (let rep = 0; rep < REPETITIONS; rep++) {
+    if (rep > 0 && budgetDepasse()) {
+      console.log(`    ⏸ budget atteint après ${rep} passage(s)`)
+      break
     }
-  } catch (e) {
-    failed++
-    console.log(`  FAIL — exception : ${e.message}\n`)
+    try {
+      const { failures, ms, verdict, score, id } = await runCase(name)
+      passages.push({ verdict, score })
+      if (failures.length === 0) {
+        console.log(`  PASS (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})${id ? ` — /a/${id}` : ''}`)
+      } else {
+        failed++
+        console.log(`  FAIL (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})`)
+        for (const f of failures) console.log(`    ✗ ${f}`)
+      }
+    } catch (e) {
+      failed++
+      console.log(`  FAIL — exception : ${e.message}`)
+    }
   }
+  // Verdict de stabilité sur la campagne.
+  if (REPETITIONS > 1) {
+    const scores = passages.map((p) => p.score).filter((s) => typeof s === 'number')
+    const couleurs = [...new Set(passages.map((p) => p.verdict).filter(Boolean))]
+    if (scores.length > 1) {
+      const ecart = Math.max(...scores) - Math.min(...scores)
+      const stable = ecart <= 5 && couleurs.length === 1
+      if (!stable) failed++
+      console.log(
+        `  ${stable ? 'STABLE' : 'INSTABLE'} — scores ${scores.join(' / ')} · écart ${ecart} pt${ecart > 1 ? 's' : ''} · ${couleurs.join(', ')}`,
+      )
+    }
+  }
+  console.log('')
 }
 if (!STABILITE_SEULE) {
   console.log(failed === 0 ? `✓ ${cases.length}/${cases.length} cas passent` : `✗ ${failed}/${cases.length} cas échouent`)
