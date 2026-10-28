@@ -2,9 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-
-const FONT = "'Plus Jakarta Sans', sans-serif"
-const FONT_TITRE = "'Syne', sans-serif"
+import Rows from '../components/Rows'
 
 const sections = [
   {
@@ -42,25 +40,24 @@ export default function ExtensionPrivacy() {
         <link rel="canonical" href="https://www.inspexo.io/extension/confidentialite" />
       </Helmet>
       <Navbar />
-      <main style={{ background: '#F8F9FA', minHeight: '100vh' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto', padding: '110px 20px 64px' }}>
-          <h1 style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: 'clamp(1.6rem, 4.5vw, 2.2rem)', color: '#0F1B2D', margin: '0 0 8px', lineHeight: 1.2 }}>
-            Confidentialité de l'extension Chrome
-          </h1>
-          <p style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#9CA3AF', margin: '0 0 28px' }}>
-            Dernière mise à jour : 26 octobre 2026 — s'applique à l'extension « Inspexo — Analyser une annonce auto ».
-          </p>
-          {sections.map((s, i) => (
-            <div key={i} style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 14, padding: '20px 22px', marginBottom: 12 }}>
-              <h2 style={{ fontFamily: FONT, fontWeight: 700, fontSize: '1rem', color: '#0F1B2D', margin: '0 0 8px' }}>{s.titre}</h2>
-              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: '0.9063rem', color: '#374151', lineHeight: 1.65, margin: 0 }}>{s.texte}</p>
-            </div>
-          ))}
-          <p style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280', lineHeight: 1.6 }}>
-            Éditeur : Inspexo — contact@inspexo.io. Voir aussi la{' '}
-            <a href="/politique-de-confidentialite" style={{ color: '#1E4D8C' }}>politique de confidentialité générale du site</a>.
-          </p>
-        </div>
+      <main>
+        <section className="sec" style={{ borderTop: 'none' }}>
+          <div className="wrap-doc">
+            <h1 className="legal-h1">Confidentialité de l'extension Chrome</h1>
+            <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, margin: '0 0 28px' }}>
+              Dernière mise à jour : 26 octobre 2026 — s'applique à l'extension « Inspexo — Analyser une annonce auto ».
+            </p>
+            <Rows items={sections.map((s, i) => ({
+              dt: String(i + 1).padStart(2, '0'),
+              titre: s.titre,
+              texte: s.texte,
+            }))} />
+            <p className="legal-p" style={{ marginTop: 24 }}>
+              Éditeur : Inspexo — contact@inspexo.io. Voir aussi la{' '}
+              <a href="/politique-de-confidentialite" className="legal-a">politique de confidentialité générale du site</a>.
+            </p>
+          </div>
+        </section>
       </main>
       <Footer />
     </>

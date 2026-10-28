@@ -77,12 +77,12 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
   }
 
   const titleStyle = {
-    fontFamily: 'Syne, sans-serif', fontWeight: 800,
+    fontFamily: 'var(--sans)', fontWeight: 800,
     fontSize: '1.375rem', color: '#0F1B2D', marginBottom: 8,
   }
 
   const subStyle = {
-    fontFamily: 'Plus Jakarta Sans, sans-serif',
+    fontFamily: 'var(--sans)',
     color: '#6B7280', fontSize: '0.875rem', marginBottom: 28,
   }
 
@@ -101,7 +101,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
               background: '#FF4D00', color: '#fff',
               border: 'none', borderRadius: 10,
               padding: '12px 32px',
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer',
             }}
           >
@@ -141,7 +141,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
             ))}
           </div>
           <p style={{
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontFamily: 'var(--sans)',
             color: '#9CA3AF', fontSize: '0.8125rem', marginTop: 8,
           }}>
             {rating === 0 ? 'Clique pour noter'
@@ -159,7 +159,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
             width: '100%', boxSizing: 'border-box',
             border: '1px solid #E5E7EB', borderRadius: 12,
             padding: '13px 16px', resize: 'none', outline: 'none',
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontFamily: 'var(--sans)',
             fontSize: '0.9375rem', lineHeight: 1.55,
             minHeight: 96, marginBottom: 28, color: '#0F1B2D',
           }}
@@ -174,7 +174,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
             style={{
               background: 'none', border: '1px solid #E5E7EB',
               borderRadius: 10, padding: '11px 24px',
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.875rem', cursor: 'pointer', color: '#6B7280',
             }}
           >
@@ -188,7 +188,7 @@ export default function ReviewModal({ mission, onClose, onSubmitted }) {
               color: rating === 0 ? '#9CA3AF' : '#fff',
               border: 'none', borderRadius: 10,
               padding: '11px 32px',
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontWeight: 600, fontSize: '0.875rem',
               cursor: rating === 0 ? 'not-allowed' : 'pointer',
               transition: 'background 0.15s',

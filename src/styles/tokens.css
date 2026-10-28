@@ -1,0 +1,36 @@
+/* Tokens de la DA sprint 5 — copiés du :root de docs/design/maquette-v1.html.
+   Référence absolue : la maquette. Ne pas ajuster une valeur sans la reporter
+   dans la maquette. */
+:root{
+  --paper:#F3F0E9; --paper-2:#ECE8DE; --field:#FBFAF6;
+  --ink:#0F1B2D; --ink-2:#3E4553; --graphite:#5B6270;
+  --rule:#CFC9BC; --rule-strong:#0F1B2D;
+  --signal:#FF4D00; --on-signal:#0F1B2D;
+  --vert:#1E6B3A; --ambre:#8F4D00; --rouge:#B3122E;
+  --nav-bg:#0F1B2D; --nav-fg:#F3F0E9; --nav-line:#2E3D55;
+  --band-bg:#0F1B2D; --band-fg:#F3F0E9; --band-muted:#B8BFCB; --band-rule:#2E3D55;
+  --sans:'Schibsted Grotesk',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --mono:'Martian Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1B2D; --paper-2:#152238; --field:#132035;
+    --ink:#F3F0E9; --ink-2:#D5D9E0; --graphite:#9AA3B2;
+    --rule:#2A3850; --rule-strong:#F3F0E9;
+    --signal:#FF5A14; --on-signal:#0F1B2D;
+    --vert:#5CC281; --ambre:#F0A84A; --rouge:#FF6B7F;
+    --nav-bg:#0A1322; --nav-fg:#F3F0E9; --nav-line:#22304A;
+    --band-bg:#F3F0E9; --band-fg:#0F1B2D; --band-muted:#5B6270; --band-rule:#CFC9BC;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1B2D; --paper-2:#152238; --field:#132035;
+  --ink:#F3F0E9; --ink-2:#D5D9E0; --graphite:#9AA3B2;
+  --rule:#2A3850; --rule-strong:#F3F0E9;
+  --signal:#FF5A14; --on-signal:#0F1B2D;
+  --vert:#5CC281; --ambre:#F0A84A; --rouge:#FF6B7F;
+  --nav-bg:#0A1322; --nav-fg:#F3F0E9; --nav-line:#22304A;
+  --band-bg:#F3F0E9; --band-fg:#0F1B2D; --band-muted:#5B6270; --band-rule:#CFC9BC;
+  color-scheme:dark;
+}

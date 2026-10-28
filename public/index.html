@@ -3,13 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="google-site-verification" content="z74CwbcogZxp8xrVosPIk1_tlfRB5JgS4xDynyeZcVw" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0F1B2D" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Martian+Mono:wght@400;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Martian+Mono:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Martian+Mono:wght@400;600&display=swap" /></noscript>
     <style>
       html, body {
         margin: 0; padding: 0;
-        width: 100%; overflow-x: hidden;
-        background-color: #0F1B2D;
+        width: 100%; overflow-x: clip;
+        background-color: #F3F0E9;
+      }
+      @media (prefers-color-scheme: dark) {
+        html, body { background-color: #0F1B2D; }
       }
       body.modal-open { overflow: hidden; }
     </style>
@@ -20,8 +28,8 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
 
     <!-- SEO primaire -->
-    <title>Inspexo — Analysez gratuitement une annonce de voiture d'occasion</title>
-    <meta name="description" content="Collez une annonce Leboncoin ou La Centrale : verdict en 1 minute, rappels constructeur, airbags Takata, pannes connues du moteur, questions à poser au vendeur. Gratuit, 100 % côté acheteur." />
+    <title>Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste.</title>
+    <meta name="description" content="Collez une annonce Leboncoin, La Centrale ou AutoScout24. En une minute : rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur, questions à lui poser. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
     <meta name="keywords" content="annonce voiture occasion, vérifier annonce leboncoin, rappel airbag takata, pannes connues moteur, acheter voiture occasion sans se faire avoir" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.inspexo.io/" />
@@ -29,16 +37,16 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.inspexo.io" />
-    <meta property="og:title" content="Inspexo — Le verdict gratuit sur une annonce de voiture d'occasion" />
-    <meta property="og:description" content="Collez une annonce Leboncoin ou La Centrale : verdict en 1 minute, rappels constructeur, airbags Takata, pannes connues du moteur, questions à poser au vendeur. Gratuit, 100 % côté acheteur." />
+    <meta property="og:title" content="Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste." />
+    <meta property="og:description" content="Rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
     <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="Inspexo" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Inspexo — Le verdict gratuit sur une annonce de voiture d'occasion" />
-    <meta name="twitter:description" content="Collez une annonce Leboncoin ou La Centrale : verdict en 1 minute, rappels constructeur, airbags Takata, pannes connues du moteur, questions à poser au vendeur. Gratuit, 100 % côté acheteur." />
+    <meta name="twitter:title" content="Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste." />
+    <meta name="twitter:description" content="Rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
     <meta name="twitter:image" content="https://www.inspexo.io/og-image.png" />
 
     <!-- Schema.org LocalBusiness -->

@@ -6,6 +6,16 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import takataModels from "../_shared/takata_models.json" with { type: "json" };
 import { normalizeBrand, rawBrandVariants, sameBrand } from "../_shared/brandAliases.ts";
+import {
+  cacheServable,
+  classerReponse,
+  doitMettreEnCache,
+  doitRetenter,
+  echec,
+  MAX_ESSAIS,
+  MESSAGE_INDISPONIBLE,
+  type ResultatRappels,
+} from "../_shared/rappelsCache.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -175,17 +185,17 @@ type RappelConsoRecord = {
   lien_vers_la_fiche_rappel: string | null;
 };
 
-async function fetchRappelConso(marque: string, modele: string) {
+async function fetchRappelConso(marque: string, modele: string): Promise<ResultatRappels> {
   // Anti-injection ODSQL : une valeur n'entre dans la clause where que si elle
   // ne contient ni guillemet ni backslash ni astérisque (seuls caractères
   // capables de sortir de la chaîne ou d'élargir le like). Les accents des
   // variantes connues ("citroën") sont préservés.
   const isSafe = (v: string) => v.length > 0 && v.length <= 40 && !/["\\*]/.test(v);
   const variants = rawBrandVariants(marque).filter(isSafe);
-  if (variants.length === 0) return [];
+  if (variants.length === 0) return echec("marque_non_interrogeable");
   const inList = variants.map((v) => `"${v}"`).join(",");
   const primary = normalizeBrand(marque);
-  if (!isSafe(primary)) return [];
+  if (!isSafe(primary)) return echec("marque_non_interrogeable");
   const where =
     `categorie_produit="${CATEGORIE_AUTO}" and ` +
     `(marque_produit in (${inList}) or marque_produit like "${primary}*")`;
@@ -198,14 +208,36 @@ async function fetchRappelConso(marque: string, modele: string) {
     limit: "100",
   });
 
-  const res = await fetch(`${RAPPELCONSO_BASE}?${params}`, {
-    headers: { Accept: "application/json" },
-  });
-  if (!res.ok) {
-    throw new Error(`RappelConso HTTP ${res.status}: ${await res.text()}`);
+  // Un zéro enregistrement pour TOUTE la marque est la signature d'une
+  // fenêtre de réindexation du dataset : on retente une fois avant de
+  // conclure quoi que ce soit (incident du 28/10/2026).
+  let records: RappelConsoRecord[] = [];
+  let essais = 0;
+  while (essais < MAX_ESSAIS) {
+    let res: Response;
+    try {
+      res = await fetch(`${RAPPELCONSO_BASE}?${params}`, {
+        headers: { Accept: "application/json" },
+      });
+    } catch (e) {
+      console.error("RappelConso reseau:", e);
+      return echec("reseau");
+    }
+    if (!res.ok) {
+      console.error(`RappelConso HTTP ${res.status}: ${await res.text()}`);
+      return echec("http");
+    }
+    let data: { results?: RappelConsoRecord[] };
+    try {
+      data = await res.json();
+    } catch (e) {
+      console.error("RappelConso JSON illisible:", e);
+      return echec("reseau");
+    }
+    records = data.results ?? [];
+    essais += 1;
+    if (!doitRetenter(records.length, essais)) break;
   }
-  const data = await res.json();
-  const records: RappelConsoRecord[] = data.results ?? [];
 
   // Filtre modèle côté serveur (champ texte libre, plages de VIN, etc.)
   const cands = modelCandidates(modele);
@@ -226,7 +258,7 @@ async function fetchRappelConso(marque: string, modele: string) {
     });
     if (matches.length >= MAX_CACHE_MATCHES) break;
   }
-  return matches;
+  return classerReponse(records.length, matches);
 }
 
 /**
@@ -364,9 +396,13 @@ serve(async (req: Request) => {
     const takata = checkTakata(marque, modele, annee);
 
     // ---------------- Cache 24 h ----------------
+    // Le cache ne porte QUE des résultats non vides (cf. _shared/rappelsCache.ts) :
+    // une réponse vide ou en erreur n'est jamais écrite, et une entrée vide
+    // laissée par une version antérieure n'est jamais servie.
     let rappels: unknown[] | null = null;
     let fetchedAt: string | null = null;
     let fromCache = false;
+    let indisponible = false;
 
     const { data: cached } = await admin
       .from("rappels_cache")
@@ -374,24 +410,48 @@ serve(async (req: Request) => {
       .eq("cache_key", cacheKey)
       .maybeSingle();
 
-    if (cached && Date.now() - new Date(cached.fetched_at).getTime() < CACHE_TTL_MS) {
-      rappels = cached.payload?.rappels ?? [];
-      fetchedAt = cached.fetched_at;
+    if (cacheServable(cached, Date.now(), CACHE_TTL_MS)) {
+      rappels = cached!.payload!.rappels as unknown[];
+      fetchedAt = cached!.fetched_at as string;
       fromCache = true;
     } else {
+      let resultat: ResultatRappels;
       try {
-        rappels = await fetchRappelConso(marque, modele);
-        fetchedAt = new Date().toISOString();
-        await admin.from("rappels_cache").upsert({
-          cache_key: cacheKey,
-          fetched_at: fetchedAt,
-          payload: { rappels },
-        });
+        resultat = await fetchRappelConso(marque, modele);
       } catch (e) {
         console.error("RappelConso fetch error:", e);
-        // Source indisponible : on renvoie quand même le check Takata.
+        resultat = echec("reseau");
+      }
+      if (resultat.etat === "ok") {
+        rappels = resultat.matches;
+        fetchedAt = new Date().toISOString();
+        if (doitMettreEnCache(resultat)) {
+          await admin.from("rappels_cache").upsert({
+            cache_key: cacheKey,
+            fetched_at: fetchedAt,
+            payload: { rappels },
+          });
+        } else {
+          // Aucun rappel pour ce modèle : constat exact mais jamais mis en
+          // cache — un vide ne doit pas pouvoir figer une panne amont.
+          await admin.from("rappels_cache").delete().eq("cache_key", cacheKey);
+        }
+      } else {
+        // Source indisponible : on renvoie quand même le check Takata, et on
+        // le dit explicitement au lieu d'afficher « aucun rappel ».
+        console.error("RappelConso indisponible:", resultat.raison);
         rappels = null;
         fetchedAt = null;
+        indisponible = true;
+        await admin.from("events").insert({
+          name: "rappels_indisponible",
+          analysis_id: analysisId,
+          props_json: {
+            raison: resultat.raison,
+            marque: normalizeBrand(marque),
+            modele: norm(modele),
+          },
+        });
       }
     }
 
@@ -428,6 +488,8 @@ serve(async (req: Request) => {
       },
       fetched_at: fetchedAt,
       cache: fromCache,
+      indisponible,
+      message_indisponible: indisponible ? MESSAGE_INDISPONIBLE : null,
     });
   } catch (error) {
     console.error("rappels error:", error);

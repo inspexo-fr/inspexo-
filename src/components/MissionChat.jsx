@@ -181,11 +181,11 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
           padding: 10px 14px;
         }
         .msg-text {
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
         }
         .msg-time {
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           font-size: 11px; opacity: 0.6; margin-top: 4px; text-align: right;
         }
         .chat-input-row {
@@ -198,7 +198,7 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
         .chat-input {
           flex: 1; resize: none; border: 1.5px solid rgba(0,0,0,0.1);
           border-radius: 12px; padding: 10px 14px;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           font-size: 16px; line-height: 1.45; outline: none;
           max-height: 120px; overflow-y: auto;
           transition: border-color 0.2s;
@@ -224,13 +224,13 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.0625rem', color: '#fff', marginBottom: 4,
                 }}>
                   {recipientName ? `Chat avec ${recipientName}` : 'Chat mission'}
                 </div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)',
                 }}>
                   {vehicleLabel}
@@ -264,7 +264,7 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
                 padding: '8px 14px',
                 maxWidth: '90%',
                 textAlign: 'center',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontFamily: 'var(--sans)',
                 fontSize: '12px',
                 color: '#6B7280',
                 lineHeight: 1.5,
@@ -276,7 +276,7 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
             {loading ? (
               <div style={{
                 textAlign: 'center', color: '#9CA3AF',
-                fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem',
+                fontFamily: 'var(--sans)', fontSize: '0.875rem',
                 padding: '32px 0',
               }}>
                 Chargement...
@@ -284,7 +284,7 @@ export default function MissionChat({ mission, currentUser, senderRole, recipien
             ) : messages.length === 0 ? (
               <div style={{
                 textAlign: 'center', padding: '40px 16px',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontFamily: 'var(--sans)',
                 fontSize: '0.875rem', color: '#9CA3AF', lineHeight: 1.6,
               }}>
                                 Démarrez la conversation avec {recipientName || 'votre interlocuteur'}.

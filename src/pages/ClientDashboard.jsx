@@ -35,7 +35,7 @@ function StatusBadge({ status }) {
       background: cfg.bg, color: cfg.color,
       padding: '4px 12px', borderRadius: 100,
       fontSize: '0.75rem', fontWeight: 600,
-      fontFamily: 'Plus Jakarta Sans, sans-serif',
+      fontFamily: 'var(--sans)',
     }}>
       <span style={{
         width: 6, height: 6, borderRadius: '50%',
@@ -130,7 +130,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
           background: #0F1B2D; color: #fff;
           padding: 8px 18px; border-radius: 8px;
           font-size: 0.8125rem; font-weight: 700;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           text-decoration: none; border: none; cursor: pointer;
           transition: opacity 0.2s;
         }
@@ -181,7 +181,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.8125rem', fontWeight: 600,
                   color: 'rgba(255,255,255,0.4)',
                   textTransform: 'uppercase', letterSpacing: '0.1em',
@@ -190,13 +190,13 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                   Espace client
                 </div>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.75rem', color: '#fff', marginBottom: 6,
                 }}>
                   Mes missions
                 </div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.875rem', fontWeight: 300,
                   color: 'rgba(255,255,255,0.45)',
                 }}>
@@ -231,13 +231,13 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                 ].map((s, i) => (
                   <div key={i}>
                     <div style={{
-                      fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                      fontFamily: 'var(--sans)', fontWeight: 800,
                       fontSize: '1.5rem', color: '#fff', lineHeight: 1,
                     }}>
                       {s.value}
                     </div>
                     <div style={{
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontFamily: 'var(--sans)',
                       fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)',
                       marginTop: 4,
                     }}>
@@ -264,7 +264,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                   margin: '0 auto 16px',
                 }} />
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.9375rem', color: '#6B7280',
                 }}>
                   Chargement de vos missions...
@@ -277,7 +277,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
               <div style={{
                 background: '#FEF2F2', border: '1px solid #FECACA',
                 borderRadius: 12, padding: '20px 24px',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontFamily: 'var(--sans)',
                 fontSize: '0.9375rem', color: '#DC2626',
               }}>
                 {error}
@@ -288,13 +288,13 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
             {!loading && !error && missions.length === 0 && (
               <div style={{ textAlign: 'center', padding: '64px 24px' }}>
                                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10,
                 }}>
                   Aucune mission pour l'instant
                 </div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.9375rem', fontWeight: 300,
                   color: '#6B7280', lineHeight: 1.65, marginBottom: 28,
                 }}>
@@ -306,7 +306,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                     background: '#FF4D00', color: '#fff',
                     padding: '12px 28px', borderRadius: 10,
                     fontSize: '0.9375rem', fontWeight: 700,
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontFamily: 'var(--sans)',
                     border: 'none', cursor: 'pointer',
                   }}
                 >
@@ -332,13 +332,13 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                           <span style={{ fontSize: '1.5rem' }}>{tier.emoji}</span>
                           <div>
                             <div style={{
-                              fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                              fontFamily: 'var(--sans)', fontWeight: 800,
                               fontSize: '1rem', color: '#0F1B2D',
                             }}>
                               {tier.label}
                             </div>
                             <div style={{
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              fontFamily: 'var(--sans)',
                               fontSize: '0.8125rem', color: '#9CA3AF',
                               fontWeight: 300,
                             }}>
@@ -363,7 +363,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                         ].map((item, i) => (
                           <div key={i}>
                             <div style={{
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              fontFamily: 'var(--sans)',
                               fontSize: '0.6875rem', fontWeight: 600,
                               color: '#9CA3AF', textTransform: 'uppercase',
                               letterSpacing: '0.08em', marginBottom: 3,
@@ -371,7 +371,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               {item.label}
                             </div>
                             <div style={{
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              fontFamily: 'var(--sans)',
                               fontSize: '0.9375rem', fontWeight: 600,
                               color: '#0F1B2D',
                             }}>
@@ -389,7 +389,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              fontFamily: 'var(--sans)',
                               fontSize: '0.8125rem', fontWeight: 500,
                               color: '#FF4D00', textDecoration: 'none',
                               display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -412,7 +412,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               border: '1px solid rgba(255,77,0,0.25)',
                               padding: '8px 18px', borderRadius: 8,
                               fontSize: '0.8125rem', fontWeight: 700,
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              fontFamily: 'var(--sans)',
                               cursor: 'pointer', transition: 'opacity 0.2s',
                             }}
                           >
@@ -433,7 +433,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               border: '1px solid rgba(59,130,246,0.25)',
                               padding: '8px 18px', borderRadius: 8,
                               fontSize: '0.8125rem', fontWeight: 700,
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              fontFamily: 'var(--sans)',
                               cursor: 'pointer', transition: 'opacity 0.2s',
                             }}
                           >
@@ -456,7 +456,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                               border: `1px solid ${mission.status === 'completed' ? '#BBF7D0' : 'rgba(255,77,0,0.25)'}`,
                               padding: '8px 18px', borderRadius: 8,
                               fontSize: '0.8125rem', fontWeight: 700,
-                              fontFamily: 'Plus Jakarta Sans, sans-serif',
+                              fontFamily: 'var(--sans)',
                               cursor: 'pointer', transition: 'opacity 0.2s',
                             }}
                           >
@@ -482,7 +482,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                         mission.review_submitted ? (
                           <div style={{
                             marginTop: 10,
-                            fontFamily: 'Plus Jakarta Sans, sans-serif',
+                            fontFamily: 'var(--sans)',
                             fontSize: '0.8125rem', color: '#9CA3AF',
                             display: 'inline-flex', alignItems: 'center', gap: 5,
                           }}>
@@ -499,7 +499,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                                 border: '1px solid rgba(251,191,36,0.3)',
                                 padding: '8px 18px', borderRadius: 8,
                                 fontSize: '0.8125rem', fontWeight: 700,
-                                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                                fontFamily: 'var(--sans)',
                                 cursor: 'pointer', transition: 'opacity 0.2s',
                               }}
                             >
@@ -522,7 +522,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
               style={{
                 background: 'none', border: 'none',
                 color: '#9CA3AF', cursor: 'pointer',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontFamily: 'var(--sans)',
                 fontSize: '0.8125rem', fontWeight: 500,
                 textDecoration: 'underline', padding: 0,
               }}
@@ -544,9 +544,9 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
           <div style={{
             background: '#fff', borderRadius: 20, padding: '36px 32px',
             maxWidth: 420, width: '100%', textAlign: 'center',
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontFamily: 'var(--sans)',
           }}>
-                        <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10 }}>
+                        <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10 }}>
               Supprimer mon compte
             </div>
             <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: 1.65, marginBottom: 24 }}>
@@ -564,7 +564,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                   background: '#F3F4F6', color: '#0F1B2D',
                   border: 'none', borderRadius: 10,
                   padding: '10px 24px', cursor: 'pointer',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.875rem', fontWeight: 600,
                 }}
               >
@@ -576,7 +576,7 @@ export default function ClientDashboard({ isOpen, onClose, user }) {
                   background: '#DC2626', color: '#fff',
                   border: 'none', borderRadius: 10,
                   padding: '10px 24px', cursor: 'pointer',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.875rem', fontWeight: 700,
                   textDecoration: 'none', display: 'inline-block',
                 }}

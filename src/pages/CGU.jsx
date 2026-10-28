@@ -1,5 +1,7 @@
 import React from 'react'
 import { Helmet } from 'react-helmet-async'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 export default function CGU() {
   return (
@@ -10,28 +12,13 @@ export default function CGU() {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.inspexo.io/cgu" />
       </Helmet>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');
-        .legal-h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.125rem; color: #0F1B2D; margin: 36px 0 12px; }
-        .legal-h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9375rem; color: #0F1B2D; margin: 20px 0 8px; }
-        .legal-p  { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9375rem; color: #333; line-height: 1.75; margin: 0 0 12px; }
-        .legal-a  { color: #FF4D00; text-decoration: none; }
-        .legal-a:hover { text-decoration: underline; }
-        .legal-sep { border: none; border-top: 1px solid rgba(0,0,0,0.07); margin: 32px 0; }
-        @media (max-width: 640px) {
-          .legal-container { padding: 40px 16px 60px !important; }
-          .legal-p { font-size: 0.875rem !important; }
-        }
-      `}</style>
+      <Navbar />
+      <div className="legal-container">
+        <div className="wrap-doc">
 
-      <div className="legal-container" style={{ background: '#fff', minHeight: '100vh', padding: '60px 24px 80px', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <a href="/" className="legal-retour">← Retour à l'accueil</a>
 
-          <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#FF4D00', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: '0.875rem', textDecoration: 'none', marginBottom: 40 }}>
-            ← Retour à l'accueil
-          </a>
-
-          <h1 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', color: '#0F1B2D', marginBottom: 8 }}>
+          <h1 className="legal-h1">
             Conditions Générales d'Utilisation et de Vente
           </h1>
           <p className="legal-p" style={{ color: '#9CA3AF', marginBottom: 40 }}>Dernière mise à jour : mars 2026</p>
@@ -276,6 +263,7 @@ export default function CGU() {
 
         </div>
       </div>
+      <Footer />
     </>
   )
 }

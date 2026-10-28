@@ -105,13 +105,13 @@ function MissionsTab() {
             background: showUnassignedOnly ? '#FFF4EE' : '#fff',
             color: showUnassignedOnly ? '#FF4D00' : '#6B7280',
             fontSize: '0.8125rem', fontWeight: 600,
-            fontFamily: 'Plus Jakarta Sans, sans-serif', cursor: 'pointer',
+            fontFamily: 'var(--sans)', cursor: 'pointer',
           }}
         >
           Non assignées {unassignedCount > 0 && `(${unassignedCount})`}
         </button>
         {showUnassignedOnly && (
-          <span style={{ fontSize: '0.8125rem', color: '#9CA3AF', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+          <span style={{ fontSize: '0.8125rem', color: '#9CA3AF', fontFamily: 'var(--sans)' }}>
             {displayedMissions.length} mission{displayedMissions.length !== 1 ? 's' : ''} sans expert
           </span>
         )}
@@ -191,7 +191,7 @@ function MissionsTab() {
                         fontSize: '0.75rem', fontWeight: 600,
                         color: '#16A34A', background: '#F0FDF4',
                         padding: '3px 10px', borderRadius: 100,
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                        fontFamily: 'var(--sans)',
                       }}>
                         ✓ Assigné
                       </span>
@@ -200,7 +200,7 @@ function MissionsTab() {
                         fontSize: '0.75rem', fontWeight: 600,
                         color: '#FF4D00', background: '#FFF4EE',
                         padding: '3px 10px', borderRadius: 100,
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                        fontFamily: 'var(--sans)',
                         whiteSpace: 'nowrap',
                       }}>
                         Non assigné
@@ -276,11 +276,11 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
           maxWidth: 520, width: '100%',
           maxHeight: '90vh', overflowX: 'hidden', overflowY: 'auto',
           overscrollBehavior: 'contain',
-          fontFamily: 'Plus Jakarta Sans, sans-serif',
+          fontFamily: 'var(--sans)',
         }}
         onClick={e => e.stopPropagation()}
       >
-        <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 6 }}>
+        <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 6 }}>
           Lien Stripe Connect généré
         </div>
         <div style={{ fontSize: '0.875rem', color: '#6B7280', marginBottom: 24 }}>
@@ -306,7 +306,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
               background: copied ? '#F0FDF4' : '#0F1B2D',
               color: copied ? '#16A34A' : '#fff',
               border: copied ? '1px solid #BBF7D0' : 'none',
-              fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700,
+              fontFamily: 'var(--sans)', fontWeight: 700,
               fontSize: '0.9rem', cursor: 'pointer',
             }}
           >
@@ -320,7 +320,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
               background: emailSent ? '#F0FDF4' : '#FF4D00',
               color: emailSent ? '#16A34A' : '#fff',
               border: emailSent ? '1px solid #BBF7D0' : 'none',
-              fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700,
+              fontFamily: 'var(--sans)', fontWeight: 700,
               fontSize: '0.9rem', cursor: sending || emailSent || !expertEmail ? 'not-allowed' : 'pointer',
               opacity: sending ? 0.7 : 1,
             }}
@@ -345,7 +345,7 @@ function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
           style={{
             width: '100%', padding: '10px', borderRadius: 10, border: 'none',
             background: 'transparent', color: 'rgba(0,0,0,0.3)',
-            fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', cursor: 'pointer',
+            fontFamily: 'var(--sans)', fontSize: '0.875rem', cursor: 'pointer',
           }}
         >
           Fermer
@@ -474,7 +474,7 @@ function ApplicationsTab() {
                     <span style={{
                       display: 'inline-block', padding: '3px 9px', borderRadius: 100,
                       fontSize: '0.75rem', fontWeight: 600,
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontFamily: 'var(--sans)',
                       background: expBadge.bg, color: expBadge.color,
                     }}>
                       {expBadge.label}
@@ -493,7 +493,7 @@ function ApplicationsTab() {
                       color: APP_STATUS_COLORS[a.status] || '#6B7280',
                       padding: '4px 10px', borderRadius: 100,
                       fontSize: '0.75rem', fontWeight: 600,
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontFamily: 'var(--sans)',
                     }}>
                       <span style={{
                         width: 5, height: 5, borderRadius: '50%',
@@ -551,18 +551,18 @@ function ApplicationsTab() {
                           { label: 'Disponibilité', value: a.availability },
                         ].map((item, idx) => (
                           <div key={idx}>
-                            <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{item.label}</div>
-                            <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#0F1B2D', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{item.value || '—'}</div>
+                            <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2, fontFamily: 'var(--sans)' }}>{item.label}</div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#0F1B2D', fontFamily: 'var(--sans)' }}>{item.value || '—'}</div>
                           </div>
                         ))}
                       </div>
                       {a.technical_answer && (
                         <div style={{ marginBottom: 12 }}>
-                          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Réponse technique</div>
+                          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6, fontFamily: 'var(--sans)' }}>Réponse technique</div>
                           <div style={{
                             background: '#fff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10,
                             padding: '14px 16px', fontSize: '0.875rem', color: '#374151',
-                            lineHeight: 1.65, fontFamily: 'Plus Jakarta Sans, sans-serif',
+                            lineHeight: 1.65, fontFamily: 'var(--sans)',
                             borderLeft: '3px solid #FF4D00',
                           }}>
                             {a.technical_answer}
@@ -571,7 +571,7 @@ function ApplicationsTab() {
                       )}
                       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
                         {a.motivation && (
-                          <div style={{ fontSize: '0.8125rem', color: '#6B7280', fontStyle: 'italic', fontFamily: 'Plus Jakarta Sans, sans-serif', flex: 1, minWidth: 200 }}>
+                          <div style={{ fontSize: '0.8125rem', color: '#6B7280', fontStyle: 'italic', fontFamily: 'var(--sans)', flex: 1, minWidth: 200 }}>
                             « {a.motivation} »
                           </div>
                         )}
@@ -580,7 +580,7 @@ function ApplicationsTab() {
                             display: 'inline-flex', alignItems: 'center', gap: 5,
                             background: '#EFF6FF', color: '#3B82F6', border: '1px solid rgba(59,130,246,0.25)',
                             padding: '5px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
-                            fontFamily: 'Plus Jakarta Sans, sans-serif', textDecoration: 'none',
+                            fontFamily: 'var(--sans)', textDecoration: 'none',
                           }}>
                             Voir le CV
                           </a>
@@ -630,13 +630,13 @@ function StatsTab({ missions, applications }) {
             boxShadow: '0 2px 12px rgba(15,27,45,0.04)',
           }}>
             <div style={{
-              fontFamily: 'Syne, sans-serif', fontWeight: 800,
+              fontFamily: 'var(--sans)', fontWeight: 800,
               fontSize: '2rem', color: c.color, lineHeight: 1, marginBottom: 8,
             }}>
               {c.value}
             </div>
             <div style={{
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.8125rem', color: '#6B7280', fontWeight: 500,
             }}>
               {c.label}
@@ -649,7 +649,7 @@ function StatsTab({ missions, applications }) {
         background: '#fff', borderRadius: 16, padding: '24px 28px',
         border: '1.5px solid rgba(0,0,0,0.07)',
       }}>
-        <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1rem', color: '#0F1B2D', marginBottom: 20 }}>
+        <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1rem', color: '#0F1B2D', marginBottom: 20 }}>
           Missions par palier
         </div>
         {[
@@ -662,10 +662,10 @@ function StatsTab({ missions, applications }) {
           return (
             <div key={t.tier} style={{ marginBottom: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>
+                <span style={{ fontFamily: 'var(--sans)', fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>
                   {t.emoji} {t.label} <span style={{ color: '#9CA3AF', fontWeight: 400 }}>· {t.price}</span>
                 </span>
-                <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#6B7280' }}>
+                <span style={{ fontFamily: 'var(--sans)', fontSize: '0.875rem', color: '#6B7280' }}>
                   {count} ({pct}%)
                 </span>
               </div>
@@ -690,7 +690,7 @@ function Spinner({ label }) {
         borderTopColor: '#FF4D00', borderRadius: '50%',
         animation: 'admin-spin 0.7s linear infinite', margin: '0 auto 16px',
       }} />
-      <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', color: '#6B7280' }}>{label}</div>
+      <div style={{ fontFamily: 'var(--sans)', fontSize: '0.9375rem', color: '#6B7280' }}>{label}</div>
     </div>
   )
 }
@@ -699,7 +699,7 @@ function ErrorBox({ msg }) {
   return (
     <div style={{
       background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '20px 24px',
-      fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', color: '#DC2626',
+      fontFamily: 'var(--sans)', fontSize: '0.9375rem', color: '#DC2626',
     }}>
       {msg}
     </div>
@@ -709,8 +709,8 @@ function ErrorBox({ msg }) {
 function EmptyState({ icon, title, sub }) {
   return (
     <div style={{ textAlign: 'center', padding: '64px 24px' }}>
-      <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 8 }}>{title}</div>
-      <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', color: '#6B7280' }}>{sub}</div>
+      <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 8 }}>{title}</div>
+      <div style={{ fontFamily: 'var(--sans)', fontSize: '0.9375rem', color: '#6B7280' }}>{sub}</div>
     </div>
   )
 }
@@ -783,7 +783,7 @@ function CoutsTab() {
       <div style={{ display: 'flex', gap: 8, marginBottom: 18, flexWrap: 'wrap' }}>
         <input
           placeholder="Rechercher une opération…" value={q} onChange={e => setQ(e.target.value)}
-          style={{ flex: '1 1 220px', border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '9px 12px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', outline: 'none' }}
+          style={{ flex: '1 1 220px', border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '9px 12px', fontFamily: 'var(--sans)', fontSize: '0.875rem', outline: 'none' }}
         />
         {[['', 'Tous'], ['source', 'Sourcés'], ['valide_devis', 'Validés devis']].map(([val, lbl]) => (
           <button key={val} onClick={() => setStatut(val)} style={{
@@ -791,7 +791,7 @@ function CoutsTab() {
             border: statut === val ? '1.5px solid #FF4D00' : '1.5px solid rgba(0,0,0,0.12)',
             background: statut === val ? '#FFF4EE' : '#fff',
             color: statut === val ? '#FF4D00' : '#6B7280',
-            fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem', fontWeight: 600,
+            fontFamily: 'var(--sans)', fontSize: '0.8125rem', fontWeight: 600,
           }}>
             {lbl}
           </button>
@@ -843,7 +843,7 @@ function CoutsTab() {
                 style={{ width: 110, border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '8px 10px', fontSize: '0.8125rem' }} />
               <button onClick={() => valider(c.id)} style={{
                 background: '#16A34A', color: '#fff', border: 'none', borderRadius: 8,
-                padding: '9px 16px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer',
+                padding: '9px 16px', fontFamily: 'var(--sans)', fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer',
               }}>
                 Confirmer (photo du devis jointe)
               </button>
@@ -897,10 +897,10 @@ export default function AdminDashboard() {
       <div style={{
         minHeight: '100vh', background: '#0F1B2D',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: 'Plus Jakarta Sans, sans-serif',
+        fontFamily: 'var(--sans)',
       }}>
         <div style={{ textAlign: 'center', maxWidth: 360 }}>
-                    <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#fff', marginBottom: 10 }}>
+                    <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.5rem', color: '#fff', marginBottom: 10 }}>
             Accès refusé
           </div>
           <div style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.5)', marginBottom: 28, fontWeight: 300 }}>
@@ -935,7 +935,7 @@ export default function AdminDashboard() {
         .admin-table tr:hover td { background: #F0F4FF !important; }
       `}</style>
 
-      <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'var(--sans)' }}>
 
         {/* ── Sidebar ── */}
         <aside style={{
@@ -948,7 +948,7 @@ export default function AdminDashboard() {
           <div style={{ padding: '28px 24px 20px', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
             <a href="/" style={{ textDecoration: 'none' }}>
               <span style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem',
+                fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.125rem',
                 color: '#fff', letterSpacing: '3px', textTransform: 'uppercase',
               }}>
                 INSP<span style={{ color: '#FF4D00' }}>E</span>XO
@@ -975,7 +975,7 @@ export default function AdminDashboard() {
                 style={{
                   width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                   padding: '11px 14px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem', fontWeight: 600,
+                  fontFamily: 'var(--sans)', fontSize: '0.9375rem', fontWeight: 600,
                   textAlign: 'left', marginBottom: 2,
                   background: tab === item.key ? 'rgba(255,77,0,0.15)' : 'transparent',
                   color:      tab === item.key ? '#FF4D00' : 'rgba(255,255,255,0.55)',
@@ -999,7 +999,7 @@ export default function AdminDashboard() {
                 marginTop: 12, width: '100%', padding: '8px 0',
                 background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
                 borderRadius: 8, color: '#EF4444', fontSize: '0.8125rem', fontWeight: 600,
-                cursor: 'pointer', fontFamily: 'Plus Jakarta Sans, sans-serif',
+                cursor: 'pointer', fontFamily: 'var(--sans)',
               }}
             >
               Déconnexion
@@ -1025,24 +1025,24 @@ export default function AdminDashboard() {
 
 const styles = {
   pageTitle: {
-    fontFamily: 'Syne, sans-serif', fontWeight: 800,
+    fontFamily: 'var(--sans)', fontWeight: 800,
     fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 4,
   },
   pageSub: {
-    fontFamily: 'Plus Jakarta Sans, sans-serif',
+    fontFamily: 'var(--sans)',
     fontSize: '0.9375rem', color: '#6B7280', fontWeight: 400,
   },
   refreshBtn: {
     background: '#fff', border: '1.5px solid rgba(0,0,0,0.1)',
     borderRadius: 8, padding: '8px 16px', cursor: 'pointer',
-    fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', fontWeight: 600,
+    fontFamily: 'var(--sans)', fontSize: '0.875rem', fontWeight: 600,
     color: '#374151', transition: 'background 0.15s',
   },
   table: {
     width: '100%', borderCollapse: 'collapse',
     background: '#fff', borderRadius: 16, overflow: 'hidden',
     border: '1.5px solid rgba(0,0,0,0.07)',
-    fontFamily: 'Plus Jakarta Sans, sans-serif',
+    fontFamily: 'var(--sans)',
     boxShadow: '0 2px 12px rgba(15,27,45,0.04)',
   },
   thead: {
@@ -1068,7 +1068,7 @@ const styles = {
     padding: '6px 10px', borderRadius: 8,
     border: '1.5px solid rgba(0,0,0,0.1)',
     fontSize: '0.8125rem', fontWeight: 600,
-    fontFamily: 'Plus Jakarta Sans, sans-serif',
+    fontFamily: 'var(--sans)',
     background: '#fff', cursor: 'pointer', outline: 'none',
   },
   actionBtn: {
@@ -1076,7 +1076,7 @@ const styles = {
     border: '1px solid rgba(0,0,0,0.1)',
     background: '#F8F9FA', color: '#374151',
     fontSize: '0.8125rem', fontWeight: 600,
-    fontFamily: 'Plus Jakarta Sans, sans-serif',
+    fontFamily: 'var(--sans)',
     cursor: 'pointer', whiteSpace: 'nowrap',
   },
   brandPill: {

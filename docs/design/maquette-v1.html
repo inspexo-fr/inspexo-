@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Inspexo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Martian+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a document, not a dashboard. One reading column on phone; on desktop a 12-column grid where the left side carries the argument and the right side carries the proof (the form, the real dossier). Hairlines structure everything; one orange element per screen. */
+:root{
+  --paper:#F3F0E9; --paper-2:#ECE8DE; --field:#FBFAF6;
+  --ink:#0F1B2D; --ink-2:#3E4553; --graphite:#5B6270;
+  --rule:#CFC9BC; --rule-strong:#0F1B2D;
+  --signal:#FF4D00; --on-signal:#0F1B2D;
+  --vert:#1E6B3A; --ambre:#8F4D00; --rouge:#B3122E;
+  --nav-bg:#0F1B2D; --nav-fg:#F3F0E9; --nav-line:#2E3D55;
+  --band-bg:#0F1B2D; --band-fg:#F3F0E9; --band-muted:#B8BFCB; --band-rule:#2E3D55;
+  --sans:'Schibsted Grotesk',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --mono:'Martian Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1B2D; --paper-2:#152238; --field:#132035;
+    --ink:#F3F0E9; --ink-2:#D5D9E0; --graphite:#9AA3B2;
+    --rule:#2A3850; --rule-strong:#F3F0E9;
+    --signal:#FF5A14; --on-signal:#0F1B2D;
+    --vert:#5CC281; --ambre:#F0A84A; --rouge:#FF6B7F;
+    --nav-bg:#0A1322; --nav-fg:#F3F0E9; --nav-line:#22304A;
+    --band-bg:#F3F0E9; --band-fg:#0F1B2D; --band-muted:#5B6270; --band-rule:#CFC9BC;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1B2D; --paper-2:#152238; --field:#132035;
+  --ink:#F3F0E9; --ink-2:#D5D9E0; --graphite:#9AA3B2;
+  --rule:#2A3850; --rule-strong:#F3F0E9;
+  --signal:#FF5A14; --on-signal:#0F1B2D;
+  --vert:#5CC281; --ambre:#F0A84A; --rouge:#FF6B7F;
+  --nav-bg:#0A1322; --nav-fg:#F3F0E9; --nav-line:#22304A;
+  --band-bg:#F3F0E9; --band-fg:#0F1B2D; --band-muted:#5B6270; --band-rule:#CFC9BC;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5;font-feature-settings:"ss01" 0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--nav-bg)}
+a{color:inherit}
+a:focus-visible,button:focus-visible,summary:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+img{max-width:100%}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-0.02em;line-height:1.05;font-weight:800}
+p{margin:0}
+
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+@media (min-width:900px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
+
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--graphite)}
+.lead{font-size:clamp(17px,1.4vw,20px);line-height:1.5;color:var(--ink-2);max-width:34em}
+.num{font-variant-numeric:tabular-nums}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--nav-bg);color:var(--nav-fg);border-bottom:1px solid var(--nav-line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--nav-fg);font-weight:800;font-size:21px;letter-spacing:-0.035em;line-height:1}
+.brand svg{width:30px;height:30px;flex:none}
+.brand .seal-bg{fill:var(--nav-fg)}
+.brand .seal-fg{fill:var(--nav-bg)}
+.brand .seal-line{stroke:var(--nav-bg)}
+.navlinks{display:none;gap:28px;font-size:15px}
+.navlinks a{text-decoration:none;color:var(--nav-fg);opacity:.9}
+.navlinks a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.nav-cta{display:inline-flex;align-items:center;height:40px;padding:0 16px;background:var(--signal);color:var(--on-signal);text-decoration:none;font-weight:800;font-size:14px;white-space:nowrap}
+.menu{position:relative}
+.menu summary{list-style:none;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.09em;height:40px;display:inline-flex;align-items:center;padding:0 12px;border:1px solid var(--nav-line);color:var(--nav-fg)}
+.menu summary::-webkit-details-marker{display:none}
+.menu[open] summary{background:var(--nav-line)}
+.menu nav{position:absolute;right:0;top:48px;min-width:220px;background:var(--nav-bg);border:1px solid var(--nav-line);display:flex;flex-direction:column}
+.menu nav a{padding:14px 16px;text-decoration:none;color:var(--nav-fg);border-bottom:1px solid var(--nav-line);font-size:15px}
+.menu nav a:last-child{border-bottom:0}
+@media (min-width:900px){.navlinks{display:flex}.menu{display:none}}
+
+/* Sections */
+.sec{padding-block:clamp(48px,7vw,96px)}
+.sec + .sec{border-top:1px solid var(--rule-strong)}
+.sec-head{display:grid;gap:14px;margin-bottom:clamp(28px,4vw,48px)}
+.sec-head h2{font-size:clamp(30px,3.6vw,46px)}
+.sec-head p{max-width:40em;color:var(--ink-2)}
+@media (min-width:900px){.sec-head{grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;gap:40px}}
+
+/* Hero */
+.hero{padding-block:clamp(40px,6vw,88px) clamp(48px,6vw,88px)}
+.hero-grid{display:grid;gap:36px}
+@media (min-width:900px){.hero-grid{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:start}}
+.hero h1{font-size:clamp(40px,6.2vw,78px);letter-spacing:-0.035em;line-height:.98;margin-top:18px}
+.hero .lead{margin-top:22px}
+.hero-facts{margin-top:30px;border-top:1px solid var(--rule-strong);display:grid}
+.hero-facts div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.hero-facts div span:first-child{color:var(--graphite)}
+@media (min-width:600px){.hero-facts{grid-template-columns:1fr 1fr;column-gap:32px}}
+
+/* Form card ("Nouvelle analyse") */
+.formcard{border:1px solid var(--rule-strong);background:var(--paper)}
+.formcard-head{display:flex;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--rule-strong);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--graphite)}
+.formcard form{padding:20px 18px 18px;display:flex;flex-direction:column;gap:18px}
+.formcard label.lbl,.formcard legend{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--graphite);padding:0}
+textarea{width:100%;min-height:170px;margin-top:8px;border:1px solid var(--rule-strong);background:var(--field);color:var(--ink);padding:14px;font:inherit;font-size:15px;line-height:1.5;resize:vertical}
+textarea::placeholder{color:var(--graphite)}
+.photo{margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:50px;padding:0 14px;border:1px dashed var(--rule-strong);cursor:pointer;font-size:15px;font-weight:700}
+.photo span.mono{font-size:11px;color:var(--graphite);font-weight:400}
+.photo input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+fieldset{margin:0;padding:0;border:0;min-width:0}
+.seg{margin-top:8px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule-strong)}
+.seg label{position:relative;display:flex;align-items:center;justify-content:center;height:46px;font-size:14px;cursor:pointer;border-right:1px solid var(--rule-strong)}
+.seg label:last-child{border-right:0}
+.seg input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.seg input:checked + span{font-weight:700}
+.seg label:has(input:checked){background:var(--ink);color:var(--paper)}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:56px;padding:0 22px;background:var(--signal);color:var(--on-signal);border:0;font:inherit;font-size:17px;font-weight:800;cursor:pointer;text-decoration:none;width:100%}
+.btn:hover{filter:brightness(1.05)}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;height:50px;padding:0 18px;background:transparent;color:var(--ink);border:1px solid var(--rule-strong);font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;text-decoration:none;width:100%}
+.btn-ghost:hover{background:var(--paper-2)}
+.formnote{font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--graphite);text-align:center}
+.formstatus{display:none;padding:12px 14px;border:1px solid var(--rule-strong);font-size:14px;line-height:1.5;background:var(--paper-2)}
+.formstatus.on{display:block}
+
+/* Photo strip (contact sheet) */
+.strip{padding-block:0 clamp(40px,6vw,72px)}
+.frames{display:grid;gap:14px}
+@media (min-width:760px){.frames{grid-template-columns:7fr 5fr 5fr;gap:18px}}
+.frame{margin:0;display:flex;flex-direction:column;gap:10px}
+.ph{position:relative;aspect-ratio:4/3;max-width:100%;border:1px solid var(--rule-strong);background:var(--paper-2) repeating-linear-gradient(135deg,transparent 0 9px,var(--rule) 9px 10px);display:flex;align-items:flex-end;padding:12px}
+.frame:first-child .ph{aspect-ratio:3/2}
+@media (min-width:760px){.frame:first-child .ph{aspect-ratio:auto;height:100%}}
+.ph span{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--graphite);background:var(--paper);padding:4px 7px;border:1px solid var(--rule)}
+.frame figcaption{display:flex;gap:10px;font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--graphite)}
+.frame figcaption b{font-weight:600;color:var(--ink)}
+
+/* Phone mockup */
+.steps-grid{display:grid;gap:36px}
+@media (min-width:1000px){.steps-grid{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:start}}
+.phone{width:min(100%,330px);margin:0 auto;border:1.5px solid var(--rule-strong);background:var(--paper);box-shadow:16px 16px 0 var(--paper-2)}
+.phone-bar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:var(--nav-bg);color:var(--nav-fg);font-family:var(--mono);font-size:10px;letter-spacing:.08em}
+.phone-sub{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--rule-strong);font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--graphite)}
+.phone-sub b{color:var(--ambre);font-weight:600}
+.phone-body{padding:16px 14px 18px}
+.pbar{height:3px;background:var(--rule)}
+.pbar i{display:block;height:3px;width:38%;background:var(--signal)}
+.phone h4{margin:16px 0 0;font-size:22px;letter-spacing:-0.02em;line-height:1.1;font-weight:800}
+.phone .how{margin-top:8px;font-size:14px;line-height:1.5;color:var(--ink-2)}
+.phone .red{margin-top:10px;font-size:13px;line-height:1.45;color:var(--rouge)}
+.phone .shoot{margin-top:14px;height:44px;border:1px dashed var(--rule-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;letter-spacing:.08em}
+.phone .tri{margin-top:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule-strong)}
+.phone .tri span{height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border-right:1px solid var(--rule-strong)}
+.phone .tri span:last-child{border-right:0}
+.phone .tri .y{color:var(--vert)}.phone .tri .d{color:var(--ambre)}.phone .tri .n{color:var(--rouge)}
+.phone .live{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10px;line-height:1.6;color:var(--graphite)}
+.phone .live b{color:var(--ink);font-weight:600}
+.phone-cap{margin:14px auto 0;max-width:330px;font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--graphite)}
+
+/* Definition rows (Ce qu'on vérifie) */
+.rows{border-top:1px solid var(--rule-strong)}
+.row{display:grid;gap:6px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.row dt{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--graphite)}
+.row dd{margin:0}
+.row dd b{display:block;font-size:19px;font-weight:700;letter-spacing:-0.01em;margin-bottom:4px}
+.row dd p{color:var(--ink-2);max-width:40em}
+@media (min-width:760px){.row{grid-template-columns:200px minmax(0,1fr);gap:32px;padding:22px 0}.row dt{padding-top:6px}}
+
+/* Dossier */
+.dossier-grid{display:grid;gap:36px}
+@media (min-width:1000px){.dossier-grid{grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:64px;align-items:start}}
+.doc{border:1px solid var(--rule-strong);background:var(--paper)}
+.doc-head{display:flex;justify-content:space-between;gap:12px;padding:12px 20px;border-bottom:1px solid var(--rule-strong);font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--graphite);text-transform:uppercase}
+.doc-body{padding:22px 20px 24px}
+.doc h3{font-size:30px;letter-spacing:-0.025em}
+.doc .sub{color:var(--graphite);font-size:15px;margin-top:6px}
+.specs{margin:18px 0 0;display:grid;grid-template-columns:1fr 1fr;column-gap:16px;border-top:1px solid var(--rule-strong)}
+.specs div{padding:10px 0;border-bottom:1px solid var(--rule)}
+.specs dt{font-family:var(--mono);font-size:11px;color:var(--graphite);letter-spacing:.06em;text-transform:uppercase}
+.specs dd{margin:4px 0 0;font-family:var(--mono);font-size:15px;font-weight:600}
+.specs .wide{grid-column:span 2}
+.specs .wide dd{font-family:var(--sans);font-weight:700}
+.stamp{display:inline-flex;flex-direction:column;align-items:flex-start;gap:3px;margin-top:26px;padding:12px 18px 10px;border:5px double var(--rouge);color:var(--rouge);transform:rotate(-2.5deg);transform-origin:left center;animation:stamp .5s cubic-bezier(.2,.9,.3,1) both}
+.stamp .lab{font-size:13px;font-weight:800;letter-spacing:.18em}
+.stamp .score{font-family:var(--mono);font-size:52px;font-weight:600;line-height:1}
+.stamp .score small{font-size:18px}
+@keyframes stamp{from{transform:rotate(-2.5deg) scale(1.08)}to{transform:rotate(-2.5deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.stamp{animation:none}}
+.verdict-line{margin-top:20px;font-size:17px;font-weight:500;line-height:1.45}
+.crit{margin-top:26px;border-top:1px solid var(--rule-strong)}
+.crit div{display:flex;align-items:baseline;gap:8px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.crit .leader{flex:1;border-bottom:1px dotted var(--graphite);transform:translateY(-4px)}
+.crit .val{font-family:var(--mono);font-size:14px;font-weight:600}
+.crit .val.na{font-weight:400;color:var(--graphite);font-size:13px}
+.crit .val.bad{color:var(--rouge)}
+.doc-sec{margin-top:28px}
+.doc-sec .eyebrow{margin-bottom:6px}
+.motif{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--rule)}
+.motif:last-child{border-bottom:1px solid var(--rule)}
+.motif .n{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--rouge);padding-top:2px}
+.motif p{font-size:15px;line-height:1.5}
+.ref{font-family:var(--mono);font-size:10px;vertical-align:super;color:var(--graphite);margin-left:2px}
+.ctrl{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--rule);font-size:15px}
+.ctrl:last-child{border-bottom:1px solid var(--rule)}
+.ctrl .val{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.04em;white-space:nowrap}
+.ok{color:var(--vert)}.bad{color:var(--rouge)}
+.msg{border:1px dashed var(--rule-strong);padding:14px 16px;font-size:14px;line-height:1.6;white-space:pre-line;background:var(--paper-2)}
+.copy{margin-top:10px}
+.sources{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--ink-2)}
+.sources a{color:var(--ink)}
+.doc-foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--rule-strong);font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--graphite)}
+
+.notes{display:grid;gap:22px}
+.note{padding-top:14px;border-top:1px solid var(--rule-strong)}
+.note .eyebrow{margin-bottom:8px}
+.note p{color:var(--ink-2);font-size:16px}
+.note strong{color:var(--ink)}
+@media (min-width:1000px){.notes{position:sticky;top:84px}}
+
+/* Steps (a real sequence) */
+.steps{display:grid;gap:0;border-top:1px solid var(--rule-strong)}
+.step{display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.step .n{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--graphite);padding-top:5px}
+.step h3{font-size:22px;letter-spacing:-0.015em}
+.step p{margin-top:8px;color:var(--ink-2);max-width:36em}
+.step .tag{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--rule-strong)}
+@media (min-width:700px){.steps{grid-template-columns:repeat(2,minmax(0,1fr));border-top:0}.step{grid-template-columns:1fr;grid-template-rows:auto 1fr;padding:22px 24px 26px 0;border-top:1px solid var(--rule-strong);border-bottom:0}.step:nth-child(odd){border-right:1px solid var(--rule)}.step:nth-child(even){padding-left:24px;padding-right:0}.step .n{padding-bottom:16px}}
+
+/* Band */
+.band{background:var(--band-bg);color:var(--band-fg)}
+.band .wrap{padding-block:clamp(56px,7vw,100px)}
+.band .eyebrow{color:var(--band-muted)}
+.band h2{font-size:clamp(34px,4.6vw,64px);letter-spacing:-0.03em;max-width:14em;margin-top:16px}
+.band .lead{color:var(--band-fg);opacity:.9;margin-top:22px}
+.proofs{margin-top:40px;display:grid;gap:0;border-top:1px solid var(--band-rule)}
+.proof{padding:20px 0;border-bottom:1px solid var(--band-rule)}
+.proof .k{font-family:var(--mono);font-size:28px;font-weight:600;letter-spacing:-0.02em}
+.proof .k small{font-size:13px;letter-spacing:.06em;margin-left:6px}
+.proof p{margin-top:8px;opacity:.85;max-width:30em}
+@media (min-width:760px){.proofs{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:40px}}
+.band a{color:var(--band-fg)}
+
+/* Pass */
+.plans{display:grid;gap:24px}
+@media (min-width:900px){.plans{grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:start}}
+.plan{border:1px solid var(--rule-strong)}
+.plan-head{padding:16px 20px;border-bottom:1px solid var(--rule-strong);display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.plan-head .name{font-size:22px;font-weight:800;letter-spacing:-0.015em}
+.plan-head .price{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.04em;text-align:right}
+.plan ul{margin:0;padding:6px 20px 12px;list-style:none}
+.plan li{padding:12px 0;border-bottom:1px solid var(--rule);font-size:15px;display:flex;gap:12px}
+.plan li:last-child{border-bottom:0}
+.plan li .m{font-family:var(--mono);font-size:12px;color:var(--graphite);padding-top:3px;min-width:16px}
+.plan-foot{padding:16px 20px 20px;border-top:1px solid var(--rule-strong)}
+.plan.pass{border-width:2px}
+.plan.pass .plan-head{background:var(--ink);color:var(--paper)}
+.plan.pass .plan-head .price{color:var(--paper)}
+.pass-note{margin-top:14px;font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--graphite)}
+
+/* Channels */
+.channels{display:grid;gap:24px}
+@media (min-width:900px){.channels{grid-template-columns:repeat(3,minmax(0,1fr));gap:40px}}
+.channel{padding-top:16px;border-top:1px solid var(--rule-strong)}
+.channel h3{font-size:22px;letter-spacing:-0.015em}
+.channel p{margin-top:8px;color:var(--ink-2)}
+.channel ol{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column}
+.channel ol li{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--rule);font-size:15px}
+.channel ol li span{font-family:var(--mono);font-size:12px;color:var(--graphite);padding-top:2px}
+.channel .state{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--graphite)}
+
+/* FAQ */
+.faq{border-top:1px solid var(--rule-strong)}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 0;font-size:19px;font-weight:700;letter-spacing:-0.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .pm{font-family:var(--mono);font-size:18px;color:var(--graphite);transition:transform .2s}
+.faq details[open] summary .pm{transform:rotate(45deg)}
+.faq .a{padding:0 0 20px;color:var(--ink-2);max-width:44em}
+@media (min-width:900px){.faq-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:40px}}
+
+/* Footer */
+footer{background:var(--nav-bg);color:var(--nav-fg)}
+footer .wrap{padding-block:40px 48px;display:grid;gap:28px}
+footer .cols{display:grid;gap:22px}
+@media (min-width:760px){footer .cols{grid-template-columns:2fr 1fr 1fr}}
+footer .col p{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--band-muted);margin-bottom:10px}
+footer .col a{display:block;text-decoration:none;color:var(--nav-fg);font-size:15px;padding:5px 0}
+footer .col a:hover{text-decoration:underline;text-underline-offset:4px}
+footer .legal{border-top:1px solid var(--nav-line);padding-top:18px;font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--band-muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Inspexo, accueil"><svg viewBox="0 0 30 30" aria-hidden="true"><rect class="seal-bg" x="0" y="0" width="30" height="30"/><rect class="seal-line" x="3.5" y="3.5" width="23" height="23" fill="none" stroke-width="1"/><path class="seal-fg" d="M8.2 9h2.6v12H8.2zM13.2 9h2.9l2.3 3.9L20.7 9h2.9l-3.8 5.9 4 6.1h-2.9l-2.5-4.1-2.5 4.1h-2.9l4-6.1z"/></svg><span>Inspexo</span></a>
+    <nav class="navlinks" aria-label="Principal">
+      <a href="#analyser">Analyser une annonce</a>
+      <a href="#dossier">Un dossier réel</a>
+      <a href="#pass">Pass achat</a>
+      <a href="#canaux">Extension et appli</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a class="nav-cta" href="#analyser">Analyser</a>
+      <details class="menu">
+        <summary aria-label="Ouvrir le menu">MENU</summary>
+        <nav aria-label="Principal, mobile">
+          <a href="#analyser">Analyser une annonce</a>
+          <a href="#dossier">Un dossier réel</a>
+          <a href="#pass">Pass achat</a>
+          <a href="#canaux">Extension et appli</a>
+          <a href="#faq">Questions</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero" id="analyser">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Voitures d'occasion · 100 % côté acheteur</p>
+      <h1>L'annonce dit ce que le vendeur veut. On lit le reste.</h1>
+      <p class="lead">Collez une annonce Leboncoin, La Centrale ou AutoScout24. En une minute : rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur, questions à lui poser. Chaque affirmation renvoie à sa source.</p>
+      <div class="hero-facts">
+        <div><span>Prix</span><span>Gratuit, sans inscription</span></div>
+        <div><span>Durée</span><span>Environ 1 minute</span></div>
+        <div><span>Sources</span><span>Affichées, une par une</span></div>
+        <div><span>Lien avec les vendeurs</span><span>Aucun</span></div>
+      </div>
+    </div>
+
+    <div class="formcard" aria-labelledby="form-title">
+      <div class="formcard-head"><span id="form-title">Nouvelle analyse</span><span>Gratuit</span></div>
+      <form id="analyse-form" novalidate>
+        <div>
+          <label class="lbl" for="annonce">Texte de l'annonce</label>
+          <textarea id="annonce" name="annonce" placeholder="Collez ici tout le texte : titre, prix, kilométrage, description, équipements."></textarea>
+        </div>
+        <div>
+          <span class="lbl" id="photos-lbl">Photos de l'annonce · facultatif</span>
+          <label class="photo" for="photos" aria-labelledby="photos-lbl">
+            <span>Ajouter jusqu'à 6 photos</span>
+            <span class="mono">JAMAIS CONSERVÉES</span>
+            <input id="photos" type="file" accept="image/*" multiple>
+          </label>
+        </div>
+        <fieldset>
+          <legend>Votre usage · facultatif</legend>
+          <div class="seg">
+            <label><input type="radio" name="usage" value="ville" id="usage-ville"><span>Surtout ville</span></label>
+            <label><input type="radio" name="usage" value="mixte" id="usage-mixte" checked><span>Mixte</span></label>
+            <label><input type="radio" name="usage" value="route" id="usage-route"><span>Surtout route</span></label>
+          </div>
+        </fieldset>
+        <button class="btn" type="submit">Lancer l'analyse</button>
+        <p class="formnote">Ne remplace pas l'examen du véhicule par un professionnel.</p>
+        <div class="formstatus" id="form-status" role="status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<!-- PHOTOS -->
+<section class="strip" aria-label="Photographies">
+  <div class="wrap">
+    <div class="frames">
+      <figure class="frame"><div class="ph"><span>Photo à venir · shooting atelier</span></div><figcaption><span>01</span><span><b>Le carnet d'entretien, pas la brochure.</b> Tampons, factures, dates : ce qu'on vous apprend à lire avant de payer.</span></figcaption></figure>
+      <figure class="frame"><div class="ph"><span>Photo à venir</span></div><figcaption><span>02</span><span><b>Le compteur, contact mis.</b> Le kilométrage lu est comparé à celui de l'annonce.</span></figcaption></figure>
+      <figure class="frame"><div class="ph"><span>Photo à venir</span></div><figcaption><span>03</span><span><b>Le PV de contrôle technique.</b> Chaque défaut relevé, relié aux pannes connues du moteur.</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- CE QU'ON VÉRIFIE -->
+<section class="sec" id="verifie">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Ce qu'on vérifie, et où on va le chercher.</h2>
+      <p>Pas d'avis général sur le modèle. Des points précis, chacun rattaché à une base officielle, à un document constructeur ou au texte même de l'annonce.</p>
+    </div>
+    <dl class="rows">
+      <div class="row"><dt>Rappels constructeur</dt><dd><b>Les campagnes qui concernent ce véhicule, avec leur code.</b><p>RappelConso, la base de l'État, plus les campagnes constructeur documentées (NHTSA, Transports Canada) quand la France n'a pas de fiche. Un rappel d'une autre génération ou d'une autre motorisation n'apparaît pas.</p></dd></div>
+      <div class="row"><dt>Airbags Takata</dt><dd><b>Le modèle est-il sur la liste officielle du ministère ?</b><p>Vérifié à chaque analyse, affiché même quand la réponse est non. Environ 1,3 million de véhicules sous consigne de ne plus rouler circulent encore, selon le ministère des Transports.</p></dd></div>
+      <div class="row"><dt>Pannes du moteur</dt><dd><b>Les défaillances connues de cette famille moteur, pas d'une autre.</b><p>Une fiche par moteur, construite à partir de sources nommées. Les programmes de prise en charge aussi : sur un 1.2 PureTech, l'extension Stellantis à 10 ans ou 175 000 km et les trois dernières factures qu'elle exige.</p></dd></div>
+      <div class="row"><dt>Le vendeur</dt><dd><b>Particulier, professionnel ou intermédiaire : ce que ça change pour vos garanties.</b><p>Une agence qui vend « pour un particulier » peut légalement écarter la garantie de conformité. Pas si elle est propriétaire du véhicule. On vous dit quoi demander.</p></dd></div>
+      <div class="row"><dt>L'annonce elle-même</dt><dd><b>Ce qu'elle dit, ce qu'elle cache, ce qu'elle contredit.</b><p>Double prix, frais de mise en main obligatoires, distribution « d'origine » à 160 000 km, boîte annoncée qui n'existe pas sur ce moteur.</p></dd></div>
+      <div class="row"><dt>Les photos</dt><dd><b>Compteur, pneus, carrosserie, PV de contrôle technique.</b><p>Le kilométrage lu au compteur est comparé à celui de l'annonce. Les photos sont analysées puis oubliées : rien n'est conservé.</p></dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- DOSSIER RÉEL -->
+<section class="sec" id="dossier">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Un dossier réel, tel que vous le recevez.</h2>
+      <p>Annonce publiée à Toulouse en octobre 2026. Les faits ont été vérifiés à la main avant publication ; les références renvoient aux documents d'origine.</p>
+    </div>
+    <div class="dossier-grid">
+      <article class="doc" aria-label="Dossier Inspexo, Audi S7 Sportback">
+        <div class="doc-head"><span>Dossier n° IX-2026-04812</span><span>28.10.2026 · 14:32</span></div>
+        <div class="doc-body">
+          <p class="eyebrow">Véhicule analysé</p>
+          <h3 style="margin-top:10px">Audi S7 Sportback</h3>
+          <p class="sub">4.0 V8 TFSI 450 ch · quattro · S tronic 7</p>
+          <dl class="specs">
+            <div><dt>Année</dt><dd class="num">2015</dd></div>
+            <div><dt>Kilométrage</dt><dd class="num">159 000 km</dd></div>
+            <div><dt>Prix affiché</dt><dd class="num">31 990 €</dd></div>
+            <div><dt>Prix réel</dt><dd class="num">33 885 €</dd></div>
+            <div class="wide"><dt>Vendeur</dt><dd>Agence, pour le compte d'un particulier</dd></div>
+          </dl>
+
+          <p class="eyebrow" style="margin-top:26px">Verdict</p>
+          <div class="stamp" role="img" aria-label="Signaux rouges, 38 sur 100">
+            <span class="lab">SIGNAUX ROUGES</span>
+            <span class="score">38<small>/100</small></span>
+          </div>
+          <p class="verdict-line">Trois points bloquants tant qu'ils ne sont pas levés par écrit.</p>
+
+          <div class="crit" aria-label="Notation par critère">
+            <div><span>Prix</span><span class="leader"></span><span class="val na">non évalué</span></div>
+            <div><span>Vendeur et cadre juridique</span><span class="leader"></span><span class="val bad num">06/20</span></div>
+            <div><span>Kilométrage et âge</span><span class="leader"></span><span class="val num">13/20</span></div>
+            <div><span>Risques mécaniques</span><span class="leader"></span><span class="val bad num">02/20</span></div>
+            <div><span>Historique et entretien</span><span class="leader"></span><span class="val num">15/20</span></div>
+          </div>
+
+          <div class="doc-sec">
+            <p class="eyebrow">Motifs principaux</p>
+            <div class="motif"><span class="n">01</span><p><strong>Rappel constructeur 21H7 non confirmé.</strong> La crépine d'alimentation en huile des turbos peut s'obstruer. Exiger la facture de l'intervention.<span class="ref">[1] [2]</span></p></div>
+            <div class="motif"><span class="n">02</span><p><strong>Garantie légale écartée par l'agence.</strong> Valable seulement si elle vend en mandataire du propriétaire. Demander le mandat de vente.<span class="ref">[3]</span></p></div>
+            <div class="motif"><span class="n">03</span><p><strong>1 895 € au-dessus du prix affiché.</strong> 33 885 € avec les frais de mise en main obligatoires, contre 31 990 € en titre.<span class="ref">[4]</span></p></div>
+          </div>
+
+          <div class="doc-sec">
+            <p class="eyebrow">Contrôles officiels</p>
+            <div class="ctrl"><span>Airbags Takata<span class="ref">[5]</span></span><span class="val ok">NON CONCERNÉ</span></div>
+            <div class="ctrl"><span>Rappels RappelConso<span class="ref">[6]</span></span><span class="val">AUCUN</span></div>
+            <div class="ctrl"><span>Campagne Audi 21H7<span class="ref">[1]</span></span><span class="val bad">À CONFIRMER</span></div>
+          </div>
+
+          <div class="doc-sec">
+            <p class="eyebrow">Message au vendeur</p>
+            <div class="msg" id="msg-vendeur">Bonjour, votre Audi S7 m'intéresse. Avant de me déplacer :
+1. Le rappel 21H7 (crépine d'huile des turbos) a-t-il été fait ? Avez-vous la facture ?
+2. Êtes-vous mandataire du propriétaire ou propriétaire du véhicule ? Pouvez-vous me montrer le mandat ?
+3. Que couvrent exactement les 395 € de frais de mise en main ?
+4. Pouvez-vous m'envoyer le numéro VIN et la carte grise, pour consulter HistoVec ?
+Merci.</div>
+            <button class="btn-ghost copy" type="button" id="copy-btn">Copier le message</button>
+          </div>
+
+          <div class="doc-sec">
+            <p class="eyebrow">Sources</p>
+            <ol class="sources">
+              <li>[1] NHTSA, campagne 22V-178 (Audi 21H7), mars 2022. <a href="https://static.nhtsa.gov" target="_blank" rel="noopener">static.nhtsa.gov</a></li>
+              <li>[2] Transports Canada, avis de rappel n° 2022133. <a href="https://recalls-rappels.canada.ca" target="_blank" rel="noopener">recalls-rappels.canada.ca</a></li>
+              <li>[3] Code de la consommation, art. L217-3 et suivants.</li>
+              <li>[4] Texte de l'annonce, rubrique « Prix de vente ».</li>
+              <li>[5] Ministère de la Transition écologique, liste Takata du 18.10.2026.</li>
+              <li>[6] RappelConso, data.economie.gouv.fr, vérifié le 28.10.2026.</li>
+            </ol>
+          </div>
+          <div class="doc-foot">3 affirmations écartées faute de source. Analyse automatique : ne remplace pas l'examen du véhicule par un professionnel.</div>
+        </div>
+      </article>
+
+      <aside class="notes" aria-label="Comment lire ce dossier">
+        <div class="note"><p class="eyebrow">Le tampon</p><p><strong>Trois couleurs, pas de nuances molles.</strong> Vert : rien de bloquant dans l'annonce. Orange : à vérifier avant d'avancer. Rouge : un danger, une casse probable, un rappel non traité ou un vendeur qui écarte vos droits.</p></div>
+        <div class="note"><p class="eyebrow">Les critères</p><p><strong>Un score que vous pouvez recalculer.</strong> Cinq critères notés sur 20 par des règles fixes. Quand une information manque, le critère est « non évalué » et sort du total : le silence d'une annonce ne fait jamais baisser la note.</p></div>
+        <div class="note"><p class="eyebrow">Les motifs</p><p><strong>Propres à cette voiture.</strong> Jamais de phrase valable pour toutes les annonces. Chaque motif dit quoi demander au vendeur, et chaque chiffre renvoie à une note de bas de page.</p></div>
+        <div class="note"><p class="eyebrow">Ce qui n'y est pas</p><p><strong>Les affirmations écartées sont comptées.</strong> Une seconde lecture relit chaque phrase contre l'annonce et les sources. Ce qui ne tient pas est retiré, et vous voyez combien.</p></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="sec" id="methode">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>De l'annonce à la poignée de main.</h2>
+      <p>Quatre temps. Les deux premiers sont gratuits. Les deux suivants arrivent avec le Pass achat.</p>
+    </div>
+    <div class="steps-grid">
+    <div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div><h3>Collez l'annonce</h3><p>Le texte, et si vous voulez les photos. Depuis l'ordinateur, le bouton de l'extension le fait pour vous.</p><span class="tag">Gratuit</span></div></div>
+      <div class="step"><span class="n">2</span><div><h3>Lisez le dossier</h3><p>Verdict, motifs, contrôles officiels, message au vendeur prêt à envoyer. Une minute après.</p><span class="tag">Gratuit</span></div></div>
+      <div class="step"><span class="n">3</span><div><h3>Visitez, guidé</h3><p>Devant la voiture, point par point : démarrage à froid, compteur, pneus, PV de contrôle technique. Vos photos mettent le verdict à jour.</p><span class="tag">Pass achat</span></div></div>
+      <div class="step"><span class="n">4</span><div><h3>Négociez, chiffré</h3><p>Chaque défaut constaté et chaque entretien en retard devient un montant sourcé, avec l'argumentaire à dire au vendeur.</p><span class="tag">Pass achat</span></div></div>
+    </div>
+    </div>
+    <div>
+      <div class="phone" role="img" aria-label="Écran du mode visite : point Compteur kilométrique, réponses Oui, Doute, Non">
+        <div class="phone-bar"><span>← DOSSIER</span><span>VISITE · 1/15</span></div>
+        <div class="phone-sub"><span>Audi S7 Sportback 2015</span><b>PRUDENCE · 44/100</b></div>
+        <div class="phone-body">
+          <div class="pbar"><i></i></div>
+          <h4>Compteur kilométrique</h4>
+          <p class="how">Contact mis, photographiez le compteur. Le kilométrage lu est comparé à celui de l'annonce.</p>
+          <p class="red">Signal rouge : kilométrage différent de celui annoncé.</p>
+          <div class="shoot">PHOTOGRAPHIER · ANALYSÉ SUR PLACE</div>
+          <div class="tri"><span class="y">Oui</span><span class="d">Doute</span><span class="n">Non</span></div>
+          <p class="live"><b>Verdict mis à jour après chaque réponse.</b> À la fin : acheter, négocier ou ne pas acheter, avec les points qui ont pesé.</p>
+        </div>
+      </div>
+      <p class="phone-cap">Le mode visite, devant la voiture. Quinze points dans l'ordre d'une vraie inspection, démarrage à froid en premier.</p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- RÈGLE -->
+<section class="band" id="regle">
+  <div class="wrap">
+    <p class="eyebrow">Notre règle</p>
+    <h2>Ce qui n'est pas prouvé n'apparaît pas.</h2>
+    <p class="lead">Un outil qui invente une panne vous fait rater une bonne voiture. Un outil qui en oublie une vous en fait acheter une mauvaise. On préfère écrire moins, et que tout tienne.</p>
+    <div class="proofs">
+      <div class="proof"><div class="k">1 <small>SOURCE PAR AFFIRMATION</small></div><p>Panne, rappel, coût, point de droit : chaque ligne renvoie à un document que vous pouvez ouvrir.</p></div>
+      <div class="proof"><div class="k">2 <small>LECTURES</small></div><p>Une première écrit le dossier. Une seconde le relit contre l'annonce et les sources, et retire ce qui ne tient pas. Le compte des retraits est affiché.</p></div>
+      <div class="proof"><div class="k">0 <small>CHIFFRE INVENTÉ</small></div><p>Pas de « juste prix » sans assez d'annonces comparables. Pas de coût de réparation sans source. On écrit « non évalué » plutôt qu'un nombre.</p></div>
+    </div>
+    <p style="margin-top:28px"><a href="#faq">Notre taux d'erreur sera publié dès 50 dossiers relus à la main.</a></p>
+  </div>
+</section>
+
+<!-- PASS -->
+<section class="sec" id="pass">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Le Pass achat : jusqu'à la signature.</h2>
+      <p>Le vendeur ne nous paie jamais. Quand l'achat devient sérieux, c'est vous qui décidez de payer, une fois, pour trente jours.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-head"><span class="name">Analyse</span><span class="price">GRATUIT</span></div>
+        <ul>
+          <li><span class="m">—</span>Verdict, score par critère, motifs</li>
+          <li><span class="m">—</span>Rappels constructeur et airbags Takata</li>
+          <li><span class="m">—</span>Pannes connues du moteur, sourcées</li>
+          <li><span class="m">—</span>Statut du vendeur et vos garanties</li>
+          <li><span class="m">—</span>Message au vendeur et liste de contrôle</li>
+          <li><span class="m">—</span>Jusqu'à 5 analyses par jour</li>
+        </ul>
+        <div class="plan-foot"><a class="btn-ghost" href="#analyser">Analyser une annonce</a></div>
+      </div>
+      <div class="plan pass">
+        <div class="plan-head"><span class="name">Pass achat</span><span class="price">29 € · 30 JOURS<br>ANNONCES ILLIMITÉES</span></div>
+        <ul>
+          <li><span class="m">+</span>Tout ce que contient l'analyse gratuite, sans limite</li>
+          <li><span class="m">+</span>Visite guidée devant la voiture, point par point, photos analysées sur place</li>
+          <li><span class="m">+</span>Marge de négociation détaillée, chaque montant sourcé, argumentaire prêt à dire</li>
+          <li><span class="m">+</span>Lecture de votre PV de contrôle technique, défaut par défaut</li>
+          <li><span class="m">+</span>Décodage du numéro de châssis : moteur exact, équipements réels</li>
+          <li><span class="m">+</span>Dossier d'achat : vos pistes, alertes rappel et prix, suivi jusqu'à l'achat</li>
+          <li><span class="m">+</span>Kit signature : contrat de cession, documents à exiger, démarches</li>
+        </ul>
+        <div class="plan-foot">
+          <a class="btn" href="#faq">Être prévenu du lancement</a>
+          <p class="pass-note">Sortie prévue en décembre 2026. Remboursé sans condition pendant 14 jours. Aucune reconduction automatique.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CANAUX -->
+<section class="sec" id="canaux">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Là où vous cherchez déjà.</h2>
+      <p>L'analyse vient à vous. Rien à copier sur ordinateur, un geste sur téléphone.</p>
+    </div>
+    <div class="channels">
+      <div class="channel">
+        <h3>Sur le site</h3>
+        <p>Collez le texte de l'annonce, ajoutez les photos si vous voulez. Marche partout, sans rien installer.</p>
+        <ol><li><span>1</span>Copiez l'annonce</li><li><span>2</span>Collez-la ci-dessus</li><li><span>3</span>Lisez le dossier</li></ol>
+        <span class="state">Disponible</span>
+      </div>
+      <div class="channel">
+        <h3>Extension Chrome</h3>
+        <p>Un bouton « Analyser avec Inspexo » sur chaque annonce Leboncoin, La Centrale et AutoScout24. Texte et photos partent tout seuls.</p>
+        <ol><li><span>1</span>Installez l'extension</li><li><span>2</span>Ouvrez une annonce</li><li><span>3</span>Appuyez sur le bouton</li></ol>
+        <span class="state">Bientôt sur le Chrome Web Store</span>
+      </div>
+      <div class="channel">
+        <h3>Appli iPhone et Android</h3>
+        <p>Depuis l'appli Leboncoin, touchez Partager puis Inspexo. L'annonce est lue sur votre téléphone, jamais par nos serveurs.</p>
+        <ol><li><span>1</span>Ouvrez l'annonce dans Leboncoin</li><li><span>2</span>Partager, puis Inspexo</li><li><span>3</span>Le dossier s'ouvre</li></ol>
+        <span class="state">En préparation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap faq-grid">
+    <div class="sec-head" style="margin-bottom:24px"><h2>Questions franches.</h2></div>
+    <div class="faq">
+      <details><summary>C'est vraiment gratuit ? Où est le piège ?<span class="pm" aria-hidden="true">+</span></summary><div class="a">L'analyse d'annonce est gratuite, cinq par jour, sans compte. Elle nous coûte quelques centimes et nous sert à être connus. Le Pass achat, payant, finance le reste. Nous ne vendons aucune donnée et nous n'avons aucun accord avec des vendeurs, des garages ou des assureurs qui influencerait un verdict.</div></details>
+      <details><summary>D'où viennent les pannes que vous citez ?<span class="pm" aria-hidden="true">+</span></summary><div class="a">D'une fiche par famille moteur, construite à partir de sources nommées : documents de rappel, presse automobile spécialisée, forums techniques de la marque. Une source qui parle d'un autre moteur est rejetée. Les fiches les plus consultées sont relues par un mécanicien avant d'être marquées « base Inspexo ».</div></details>
+      <details><summary>Pourquoi le prix est-il parfois « non évalué » ?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Parce que nous refusons d'afficher un « juste prix » sorti de nulle part. Une fourchette n'apparaît qu'avec au moins quinze annonces comparables récentes, et elle est présentée comme des prix demandés, pas des prix de vente. Avec l'extension, les annonces que vous consultez servent de comparables.</div></details>
+      <details><summary>Vous remplacez un expert sur place ?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Non. Nous lisons l'annonce et les documents, et nous vous guidons pendant la visite. Nous ne montons pas sous la voiture. Pour un véhicule cher ou un doute sérieux, un contrôle sur pont reste la bonne décision ; nous préparons un réseau de garages et d'experts indépendants, sur liste d'attente.</div></details>
+      <details><summary>Que faites-vous de mes photos et de l'annonce ?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Les photos sont analysées puis supprimées immédiatement, elles ne sont jamais stockées. Le texte de l'annonce est conservé avec le dossier pour que vous puissiez le rouvrir et le partager. Les prix et kilométrages alimentent des statistiques agrégées par modèle, jamais republiées annonce par annonce.</div></details>
+      <details><summary>Et le taux d'erreur ?<span class="pm" aria-hidden="true">+</span></summary><div class="a">Des dossiers sont tirés au hasard et relus phrase par phrase par un humain. Chaque affirmation est marquée juste, fausse ou discutable. Les taux seront publiés dès cinquante dossiers relus, par type d'affirmation, et mis à jour automatiquement ensuite.</div></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div class="col">
+        <a class="brand" href="#top" style="margin-bottom:12px"><svg viewBox="0 0 30 30" aria-hidden="true"><rect class="seal-bg" x="0" y="0" width="30" height="30"/><rect class="seal-line" x="3.5" y="3.5" width="23" height="23" fill="none" stroke-width="1"/><path class="seal-fg" d="M8.2 9h2.6v12H8.2zM13.2 9h2.9l2.3 3.9L20.7 9h2.9l-3.8 5.9 4 6.1h-2.9l-2.5-4.1-2.5 4.1h-2.9l4-6.1z"/></svg><span>Inspexo</span></a>
+        <p style="text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:15px;color:var(--band-muted)">L'analyse d'annonce côté acheteur. Toulouse, pour toute la France.</p>
+      </div>
+      <div class="col">
+        <p>Produit</p>
+        <a href="#analyser">Analyser une annonce</a>
+        <a href="#pass">Pass achat</a>
+        <a href="#canaux">Extension Chrome</a>
+        <a href="#canaux">Appli mobile</a>
+        <a href="#faq">Fiabilité</a>
+      </div>
+      <div class="col">
+        <p>Société</p>
+        <a href="#faq">Experts et garages : liste d'attente</a>
+        <a href="#top">Mentions légales</a>
+        <a href="#top">Conditions d'utilisation</a>
+        <a href="#top">Confidentialité</a>
+        <a href="#top">Contact</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>DUPLEX SAS · Toulouse · 2026</span>
+      <span>Analyse automatique. Ne remplace pas l'examen du véhicule par un professionnel.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var form=document.getElementById('analyse-form');
+  var status=document.getElementById('form-status');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var t=document.getElementById('annonce').value.trim();
+    status.className='formstatus on';
+    status.textContent=t.length<40
+      ? 'Collez le texte complet de l’annonce (titre, prix, kilométrage, description) pour lancer l’analyse.'
+      : 'Maquette : sur le site en ligne, l’analyse démarre ici et le dossier s’affiche en une minute.';
+  });
+  var btn=document.getElementById('copy-btn');
+  btn.addEventListener('click',function(){
+    var txt=document.getElementById('msg-vendeur').textContent;
+    function done(ok){btn.textContent=ok?'Message copié':'Sélectionnez le texte et copiez-le';setTimeout(function(){btn.textContent='Copier le message'},2200)}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){done(true)},function(){select();done(false)});
+    }else{select();done(false)}
+    function select(){try{var r=document.createRange();r.selectNodeContents(document.getElementById('msg-vendeur'));var s=window.getSelection();s.removeAllRanges();s.addRange(r)}catch(err){}}
+  });
+  var menu=document.querySelector('.menu');
+  if(menu){menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu.removeAttribute('open')})})}
+})();
+</script>
+
+</body>
+</html>
