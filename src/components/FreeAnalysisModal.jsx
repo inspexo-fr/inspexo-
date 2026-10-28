@@ -107,7 +107,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
             maxHeight: '90vh', overflowX: 'hidden', overflowY: 'auto',
             overscrollBehavior: 'contain',
             border: '1px solid rgba(255,255,255,0.1)',
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontFamily: 'var(--sans)',
           }}
           onClick={e => e.stopPropagation()}
         >
@@ -122,7 +122,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
           {limitReached && (
             <>
                             <h2 style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                fontFamily: 'var(--sans)', fontWeight: 800,
                 fontSize: '1.375rem', color: '#fff',
                 textAlign: 'center', marginBottom: 10,
               }}>
@@ -140,7 +140,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                 style={{
                   width: '100%', background: '#FF4D00', color: '#fff',
                   border: 'none', borderRadius: 12, padding: '15px',
-                  fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
+                  fontFamily: 'var(--sans)', fontWeight: 700, fontSize: '1rem',
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
@@ -152,7 +152,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                 style={{
                   width: '100%', background: 'transparent', color: '#FF4D00',
                   border: '1px solid rgba(255,77,0,0.4)', borderRadius: 12, padding: '13px',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: '0.9rem',
+                  fontFamily: 'var(--sans)', fontWeight: 600, fontSize: '0.9rem',
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
@@ -164,7 +164,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                 style={{
                   width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.3)',
                   border: 'none', padding: '10px', cursor: 'pointer',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem',
+                  fontFamily: 'var(--sans)', fontSize: '0.8125rem',
                 }}
               >
                 Fermer
@@ -201,7 +201,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
               </div>
 
               <h2 style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                fontFamily: 'var(--sans)', fontWeight: 800,
                 fontSize: '1.5rem', color: '#fff',
                 textAlign: 'center', marginBottom: 8,
               }}>
@@ -309,7 +309,7 @@ export default function FreeAnalysisModal({ user, onClose, onMissionCreated, onU
                   background: loading ? 'rgba(255,77,0,0.5)' : '#FF4D00',
                   color: '#fff', border: 'none', borderRadius: 12,
                   padding: '16px', cursor: loading ? 'not-allowed' : 'pointer',
-                  fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
+                  fontFamily: 'var(--sans)', fontWeight: 700, fontSize: '1rem',
                   marginTop: 4,
                 }}
               >

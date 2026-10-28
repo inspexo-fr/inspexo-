@@ -83,7 +83,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
         .auth-input {
           width: 100%; padding: 11px 14px; border-radius: 10px;
           border: 1.5px solid rgba(0,0,0,0.1);
-          font-size: 0.9375rem; font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 0.9375rem; font-family: var(--sans);
           color: #0F1B2D; outline: none; box-sizing: border-box; background: #fff;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
@@ -92,7 +92,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
         .auth-tab {
           flex: 1; padding: 10px; border: none; cursor: pointer;
           font-size: 0.875rem; font-weight: 600;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           transition: all 0.2s; border-radius: 8px; background: transparent;
         }
         .auth-tab.active { background: #fff; color: #0F1B2D; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
@@ -101,7 +101,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
           width: 100%; background: #FF4D00; color: #fff;
           padding: 14px 24px; border-radius: 12px;
           font-size: 1rem; font-weight: 700;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           border: none; cursor: pointer; transition: opacity 0.2s;
           display: flex; align-items: center; justify-content: center; gap: 8px;
         }
@@ -119,14 +119,14 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
           background: #fff; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 12px;
           padding: 13px 20px; cursor: pointer;
           font-size: 0.9375rem; font-weight: 600;
-          font-family: 'Plus Jakarta Sans', sans-serif; color: #0F1B2D;
+          font-family: var(--sans); color: #0F1B2D;
           transition: background 0.2s, border-color 0.2s;
         }
         .auth-google-btn:hover { background: #F8F9FA; border-color: rgba(0,0,0,0.2); }
         .auth-separator {
           display: flex; align-items: center; gap: 12px;
           margin: 20px 0;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           font-size: 0.8125rem; color: #9CA3AF; font-weight: 500;
         }
         .auth-separator::before, .auth-separator::after {
@@ -170,13 +170,13 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
             }}>
               <div>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.375rem', color: '#fff', marginBottom: 4,
                 }}>
                   {tab === 'login' ? 'Bon retour' : 'Créer un compte'}
                 </div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.875rem', fontWeight: 300,
                   color: 'rgba(255,255,255,0.5)',
                 }}>
@@ -242,13 +242,13 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
                 <div style={{ marginBottom: 12, color: '#0F1B2D' }}><IconeEnveloppe size={38} /></div>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 8,
                 }}>
                   Confirmez votre email
                 </div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.9375rem', fontWeight: 300,
                   color: '#6B7280', lineHeight: 1.65, marginBottom: 24,
                 }}>
@@ -260,7 +260,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                     background: '#0F1B2D', color: '#fff',
                     padding: '11px 28px', borderRadius: 10,
                     fontSize: '0.9375rem', fontWeight: 700,
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontFamily: 'var(--sans)',
                     border: 'none', cursor: 'pointer',
                   }}
                 >
@@ -273,7 +273,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                   <label style={{
                     display: 'block', fontSize: '0.875rem', fontWeight: 600,
                     color: '#0F1B2D', marginBottom: 6,
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontFamily: 'var(--sans)',
                   }}>
                     Email
                   </label>
@@ -289,7 +289,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                   <label style={{
                     display: 'block', fontSize: '0.875rem', fontWeight: 600,
                     color: '#0F1B2D', marginBottom: 6,
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontFamily: 'var(--sans)',
                   }}>
                     Mot de passe
                     {tab === 'signup' && (
@@ -312,7 +312,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                   <div style={{
                     background: '#FEF2F2', border: '1px solid #FECACA',
                     borderRadius: 10, padding: '11px 14px', marginBottom: 16,
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontFamily: 'var(--sans)',
                     fontSize: '0.875rem', color: '#DC2626',
                     display: 'flex', gap: 8, alignItems: 'flex-start',
                   }}>
@@ -334,7 +334,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }) {
                       onClick={() => { setTab('signup'); setErrorMsg(''); setStatus('idle') }}
                       style={{
                         background: 'none', border: 'none', cursor: 'pointer',
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                        fontFamily: 'var(--sans)',
                         fontSize: '0.875rem', color: '#6B7280',
                       }}
                     >

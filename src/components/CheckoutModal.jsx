@@ -71,7 +71,7 @@ function PaymentForm({ onSuccess, onError, priceLabel, tier }) {
       {(tier === 'visio' || tier === 'inspection') && (
         <div style={{
           textAlign: 'center', marginTop: 10,
-          fontFamily: 'Plus Jakarta Sans, sans-serif',
+          fontFamily: 'var(--sans)',
           fontSize: '0.8125rem', color: '#9CA3AF',
         }}>
           Annulation gratuite jusqu'à {tier === 'inspection' ? '48h' : '24h'} avant le rendez-vous
@@ -277,7 +277,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
       variables: {
         colorPrimary: '#FF4D00', colorBackground: '#ffffff',
         colorText: '#0F1B2D', colorDanger: '#DC2626',
-        fontFamily: 'Plus Jakarta Sans, sans-serif',
+        fontFamily: 'var(--sans)',
         borderRadius: '10px', spacingUnit: '4px',
       },
     },
@@ -289,7 +289,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
         .checkout-input {
           width: 100%; padding: 11px 14px; border-radius: 10px;
           border: 1.5px solid rgba(0,0,0,0.1);
-          font-size: 0.9375rem; font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 0.9375rem; font-family: var(--sans);
           color: #0F1B2D; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
           box-sizing: border-box; background: #fff; appearance: none;
         }
@@ -298,14 +298,14 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
         .checkout-label {
           display: block; font-size: 0.875rem; font-weight: 600;
           color: #0F1B2D; margin-bottom: 6px;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
         }
         .checkout-label span { color: #FF4D00; }
         .checkout-field { margin-bottom: 14px; }
         .checkout-submit {
           width: 100%; color: #fff; padding: 15px 24px;
           border-radius: 12px; font-size: 1rem; font-weight: 700;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           border: none; cursor: pointer; transition: opacity 0.2s, transform 0.2s;
         }
         .checkout-submit:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
@@ -328,7 +328,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
           width: 28px; height: 28px; border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
           font-size: 0.75rem; font-weight: 700;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--sans);
           transition: background 0.2s, color 0.2s;
         }
         @keyframes ia-pulse {
@@ -374,12 +374,12 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 background: '#F0F2F5', borderRadius: 100, padding: '5px 14px',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontFamily: 'var(--sans)',
                 fontSize: '0.8125rem', fontWeight: 600, color: '#0F1B2D',
               }}>
                 <span>{meta.emoji}</span>
                 {meta.label}
-                <span style={{ color: '#FF4D00', fontFamily: 'Syne, sans-serif', fontWeight: 800, marginLeft: 4 }}>
+                <span style={{ color: '#FF4D00', fontFamily: 'var(--sans)', fontWeight: 800, marginLeft: 4 }}>
                   {meta.price}
                 </span>
               </div>
@@ -412,7 +412,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                           {isDone ? '✓' : i + 1}
                         </div>
                         <span style={{
-                          fontFamily: 'Plus Jakarta Sans, sans-serif',
+                          fontFamily: 'var(--sans)',
                           fontSize: '0.8125rem',
                           fontWeight: isActive ? 600 : 400,
                           color: isActive ? '#0F1B2D' : '#9CA3AF',
@@ -435,16 +435,16 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
             {step === 'success' && (
               <div style={{ textAlign: 'center', padding: '32px 0' }}>
                 <div style={{ marginBottom: 16, color: '#16A34A' }}><IconeCoche size={44} /></div>
-                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10 }}>
+                <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10 }}>
                   Paiement confirmé !
                 </div>
-                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '1rem', fontWeight: 300, color: '#6B7280', lineHeight: 1.65, maxWidth: 340, margin: '0 auto 24px' }}>
+                <div style={{ fontFamily: 'var(--sans)', fontSize: '1rem', fontWeight: 300, color: '#6B7280', lineHeight: 1.65, maxWidth: 340, margin: '0 auto 24px' }}>
                   Nous vous recontactons sous 2h pour organiser votre {meta.label.toLowerCase()} avec votre expert.
                 </div>
-                <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: '14px 20px', fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#15803D', marginBottom: 28 }}>
+                <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: '14px 20px', fontFamily: 'var(--sans)', fontSize: '0.875rem', color: '#15803D', marginBottom: 28 }}>
                   Votre mission a été créée. Retrouvez-la dans <strong>Mes missions</strong>.
                 </div>
-                <button onClick={onClose} style={{ background: '#0F1B2D', color: '#fff', padding: '12px 32px', borderRadius: 10, fontSize: '0.9375rem', fontWeight: 700, fontFamily: 'Plus Jakarta Sans, sans-serif', border: 'none', cursor: 'pointer' }}>
+                <button onClick={onClose} style={{ background: '#0F1B2D', color: '#fff', padding: '12px 32px', borderRadius: 10, fontSize: '0.9375rem', fontWeight: 700, fontFamily: 'var(--sans)', border: 'none', cursor: 'pointer' }}>
                   Fermer
                 </button>
               </div>
@@ -455,13 +455,13 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
               <div style={{ textAlign: 'center', padding: '32px 16px' }}>
                 <div style={{ marginBottom: 16, color: '#16A34A' }}><IconeCoche size={44} /></div>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10,
                 }}>
                   Paiement confirmé !
                 </div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.9375rem',
+                  fontFamily: 'var(--sans)', fontSize: '0.9375rem',
                   fontWeight: 300, color: '#6B7280', lineHeight: 1.65,
                   maxWidth: 340, margin: '0 auto 28px',
                 }}>
@@ -475,7 +475,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                     background: '#FF4D00', color: '#fff',
                     border: 'none', borderRadius: 12,
                     padding: '16px 36px', cursor: 'pointer',
-                    fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
+                    fontFamily: 'var(--sans)', fontWeight: 700, fontSize: '1rem',
                     marginBottom: 20, display: 'inline-block',
                   }}
                 >
@@ -483,7 +483,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                 </button>
 
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.8125rem', color: '#9CA3AF',
                 }}>
                   Tu peux aussi réserver plus tard depuis{' '}
@@ -492,7 +492,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer',
                       color: '#FF4D00', fontWeight: 600,
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontFamily: 'var(--sans)',
                       fontSize: '0.8125rem', padding: 0,
                     }}
                   >
@@ -507,13 +507,13 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
               <div style={{ textAlign: 'center', padding: '36px 16px' }}>
                 <div style={{ marginBottom: 20, color: '#16A34A' }}><IconeCoche size={44} /></div>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 10,
                 }}>
                   Paiement confirmé !
                 </div>
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.9375rem', fontWeight: 300,
                   color: '#6B7280', lineHeight: 1.65,
                   maxWidth: 340, margin: '0 auto 28px',
@@ -531,7 +531,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                     background: '#FF4D00', color: '#fff',
                     padding: '16px 36px', borderRadius: 12,
                     fontSize: '1rem', fontWeight: 700,
-                    fontFamily: 'Syne, sans-serif',
+                    fontFamily: 'var(--sans)',
                     border: 'none', cursor: 'pointer',
                     transition: 'opacity 0.2s, transform 0.2s',
                     marginBottom: 20,
@@ -541,7 +541,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                 </button>
 
                 <div style={{
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.8125rem', color: '#9CA3AF',
                 }}>
                   Tu peux aussi retrouver cette conversation dans{' '}
@@ -550,7 +550,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer',
                       color: '#FF4D00', fontWeight: 600,
-                      fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      fontFamily: 'var(--sans)',
                       fontSize: '0.8125rem', padding: 0,
                     }}
                   >
@@ -563,10 +563,10 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
             {/* STEP 1 : VEHICLE */}
             {step === 'vehicle' && (
               <>
-                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4 }}>
+                <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4 }}>
                   Votre véhicule
                 </div>
-                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', fontWeight: 300, color: '#6B7280', marginBottom: 24 }}>
+                <div style={{ fontFamily: 'var(--sans)', fontSize: '0.875rem', fontWeight: 300, color: '#6B7280', marginBottom: 24 }}>
                   Ces informations permettent à votre expert de préparer l'intervention.
                 </div>
 
@@ -601,7 +601,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                   </div>
 
                   {errorMsg && (
-                    <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
+                    <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontFamily: 'var(--sans)', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
                       {errorMsg}
                     </div>
                   )}
@@ -619,22 +619,22 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
             {/* STEP 2 : PAYMENT */}
             {step === 'payment' && clientSecret && (
               <>
-                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4 }}>
+                <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 4 }}>
                   Paiement sécurisé
                 </div>
-                <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', fontWeight: 300, color: '#6B7280', marginBottom: 24 }}>
+                <div style={{ fontFamily: 'var(--sans)', fontSize: '0.875rem', fontWeight: 300, color: '#6B7280', marginBottom: 24 }}>
                   Votre carte est débitée uniquement après confirmation de l'expert.
                 </div>
 
                 {/* Récap */}
-                <div style={{ background: '#F8F9FA', borderRadius: 12, padding: '14px 18px', marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                <div style={{ background: '#F8F9FA', borderRadius: 12, padding: '14px 18px', marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'var(--sans)' }}>
                   <div>
                     <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>{meta.emoji} {meta.label}</div>
                     <div style={{ fontSize: '0.8125rem', color: '#6B7280', fontWeight: 300, marginTop: 2 }}>
                       {vehicle.brand} {vehicle.model} {vehicle.year}
                     </div>
                   </div>
-                  <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D' }}>
+                  <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D' }}>
                     {meta.price}
                   </div>
                 </div>
@@ -643,7 +643,7 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                 <div style={{
                   background: '#F0FDF4', border: '1px solid #BBF7D0',
                   borderRadius: 10, padding: '11px 16px', marginBottom: 20,
-                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontFamily: 'var(--sans)',
                   fontSize: '0.8125rem', color: '#15803D',
                   display: 'flex', alignItems: 'center', gap: 8,
                 }}>
@@ -661,14 +661,14 @@ export default function CheckoutModal({ isOpen, onClose, tier, prefillVehicle, e
                 </Elements>
 
                 {errorMsg && (
-                  <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginTop: 16, fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
+                  <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginTop: 16, fontFamily: 'var(--sans)', fontSize: '0.875rem', color: '#DC2626', display: 'flex', gap: 8 }}>
                     {errorMsg}
                   </div>
                 )}
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 20, flexWrap: 'wrap' }}>
                   {['SSL sécurisé', 'Powered by Stripe', 'Paiement protégé'].map((b, i) => (
-                    <span key={i} style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.75rem', color: '#9CA3AF' }}>{b}</span>
+                    <span key={i} style={{ fontFamily: 'var(--sans)', fontSize: '0.75rem', color: '#9CA3AF' }}>{b}</span>
                   ))}
                 </div>
               </>

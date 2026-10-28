@@ -136,8 +136,10 @@ export async function submitPendingAnalysis(email, text, usage) {
 export const fetchRappels = (payload) => callFunction('rappels', payload)
 
 /** Lecture publique d'une analyse par id (RPC, pas de listing possible). */
-export async function getPublicAnalysis(id) {
-  const { data, error } = await supabase.rpc('get_public_analysis', { p_id: id })
+export async function getPublicAnalysis(id, track = true) {
+  // track=false : lectures internes (aperçu de l'accueil) — n'incrémente ni
+  // share_views ni l'event result_viewed.
+  const { data, error } = await supabase.rpc('get_public_analysis', { p_id: id, p_track: track })
   if (error) throw error
   return data // null si introuvable
 }

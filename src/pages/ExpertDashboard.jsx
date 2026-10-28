@@ -18,7 +18,7 @@ function StatusBadge({ status }) {
       background: cfg.bg, color: cfg.color,
       padding: '4px 12px', borderRadius: 100,
       fontSize: '0.75rem', fontWeight: 600,
-      fontFamily: 'Plus Jakarta Sans, sans-serif',
+      fontFamily: 'var(--sans)',
     }}>
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: cfg.dot, flexShrink: 0 }} />
       {cfg.label}
@@ -133,10 +133,10 @@ export default function ExpertDashboard() {
         <div style={{
           background: '#fff', borderRadius: 20, padding: '48px 40px',
           maxWidth: 440, width: '100%', textAlign: 'center',
-          fontFamily: 'Plus Jakarta Sans, sans-serif',
+          fontFamily: 'var(--sans)',
         }}>
                     <div style={{
-            fontFamily: 'Syne, sans-serif', fontWeight: 800,
+            fontFamily: 'var(--sans)', fontWeight: 800,
             fontSize: '1.5rem', color: '#0F1B2D', marginBottom: 12,
           }}>
             Accès réservé aux experts
@@ -158,7 +158,7 @@ export default function ExpertDashboard() {
               background: '#FF4D00', color: '#fff',
               border: 'none', borderRadius: 10,
               padding: '12px 28px', cursor: 'pointer',
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.9375rem', fontWeight: 700,
             }}
           >
@@ -176,7 +176,6 @@ export default function ExpertDashboard() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #F8F9FA; }
         .expert-card {
@@ -204,7 +203,7 @@ export default function ExpertDashboard() {
           <a href="/" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             color: 'rgba(255,255,255,0.45)',
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontFamily: 'var(--sans)',
             fontSize: '0.8125rem', textDecoration: 'none',
             marginBottom: 20,
           }}>
@@ -214,7 +213,7 @@ export default function ExpertDashboard() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
             <div>
               <div style={{
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontFamily: 'var(--sans)',
                 fontSize: '0.8125rem', fontWeight: 600,
                 color: 'rgba(255,255,255,0.4)',
                 textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8,
@@ -222,13 +221,13 @@ export default function ExpertDashboard() {
                 Espace Expert
               </div>
               <div style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                fontFamily: 'var(--sans)', fontWeight: 800,
                 fontSize: '1.75rem', color: '#fff', marginBottom: 4,
               }}>
                 {expert.full_name || expert.email}
               </div>
               <div style={{
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontFamily: 'var(--sans)',
                 fontSize: '0.875rem', fontWeight: 300,
                 color: 'rgba(255,255,255,0.45)',
               }}>
@@ -245,13 +244,13 @@ export default function ExpertDashboard() {
               ].map((s, i) => (
                 <div key={i} style={{ textAlign: 'center' }}>
                   <div style={{
-                    fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                    fontFamily: 'var(--sans)', fontWeight: 800,
                     fontSize: '1.5rem', color: '#fff', lineHeight: 1,
                   }}>
                     {s.value}
                   </div>
                   <div style={{
-                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontFamily: 'var(--sans)',
                     fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginTop: 4,
                   }}>
                     {s.label}
@@ -277,7 +276,7 @@ export default function ExpertDashboard() {
               margin: '0 auto 16px',
             }} />
             <div style={{
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.9375rem', color: '#6B7280',
             }}>
               Chargement de vos missions...
@@ -289,7 +288,7 @@ export default function ExpertDashboard() {
           <div style={{
             background: '#FEF2F2', border: '1px solid #FECACA',
             borderRadius: 12, padding: '20px 24px',
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontFamily: 'var(--sans)',
             fontSize: '0.9375rem', color: '#DC2626',
           }}>
             {error}
@@ -299,13 +298,13 @@ export default function ExpertDashboard() {
         {!loading && !error && missions.length === 0 && (
           <div style={{ textAlign: 'center', padding: '64px 24px' }}>
                         <div style={{
-              fontFamily: 'Syne, sans-serif', fontWeight: 800,
+              fontFamily: 'var(--sans)', fontWeight: 800,
               fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 10,
             }}>
               Aucune mission pour l'instant
             </div>
             <div style={{
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.9375rem', fontWeight: 300,
               color: '#6B7280', lineHeight: 1.65,
             }}>
@@ -320,7 +319,7 @@ export default function ExpertDashboard() {
             {active.length > 0 && (
               <div style={{ marginBottom: 40 }}>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 16,
                 }}>
                   Missions en cours ({active.length})
@@ -335,7 +334,7 @@ export default function ExpertDashboard() {
             {completed.length > 0 && (
               <div>
                 <div style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'var(--sans)', fontWeight: 800,
                   fontSize: '1.125rem', color: '#0F1B2D', marginBottom: 16,
                 }}>
                   Missions terminées ({completed.length})
@@ -378,13 +377,13 @@ function MissionCard({ mission, clientEmail, onChat }) {
           <span style={{ fontSize: '1.5rem' }}>{tier.emoji}</span>
           <div>
             <div style={{
-              fontFamily: 'Syne, sans-serif', fontWeight: 800,
+              fontFamily: 'var(--sans)', fontWeight: 800,
               fontSize: '1rem', color: '#0F1B2D',
             }}>
               {vehicle || tier.label}
             </div>
             <div style={{
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.8125rem', color: '#9CA3AF', fontWeight: 300,
             }}>
               {tier.label} · {formatDate(mission.created_at)}
@@ -406,7 +405,7 @@ function MissionCard({ mission, clientEmail, onChat }) {
         ].map((item, i) => (
           <div key={i}>
             <div style={{
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.6875rem', fontWeight: 600,
               color: '#9CA3AF', textTransform: 'uppercase',
               letterSpacing: '0.08em', marginBottom: 2,
@@ -414,7 +413,7 @@ function MissionCard({ mission, clientEmail, onChat }) {
               {item.label}
             </div>
             <div style={{
-              fontFamily: 'Plus Jakarta Sans, sans-serif',
+              fontFamily: 'var(--sans)',
               fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D',
             }}>
               {item.value}
@@ -429,7 +428,7 @@ function MissionCard({ mission, clientEmail, onChat }) {
         border: '1px solid rgba(255,77,0,0.2)',
         padding: '7px 14px', borderRadius: 8,
         fontSize: '0.8125rem', fontWeight: 700,
-        fontFamily: 'Plus Jakarta Sans, sans-serif',
+        fontFamily: 'var(--sans)',
       }}>
         Ouvrir le chat
       </div>

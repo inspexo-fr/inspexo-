@@ -226,7 +226,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
         background: '#080E18',
         display: 'flex', flexDirection: 'column',
         animation: 'chat-fade-in 0.2s ease',
-        fontFamily: 'Plus Jakarta Sans, sans-serif',
+        fontFamily: 'var(--sans)',
       }}>
 
         {/* ── Header ── */}
@@ -245,7 +245,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
               IA Expert
             </span>
             <span style={{
-              fontFamily: 'Syne, sans-serif', fontWeight: 800,
+              fontFamily: 'var(--sans)', fontWeight: 800,
               fontSize: '0.9375rem', color: '#fff',
             }}>
               {vehicleLabel || 'Analyse véhicule'}
@@ -381,7 +381,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
               marginTop: 8,
             }}>
               <h3 style={{
-                color: '#fff', fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                color: '#fff', fontFamily: 'var(--sans)', fontWeight: 800,
                 fontSize: '1.125rem', textAlign: 'center', marginBottom: 8,
               }}>
                 Analyse gratuite terminée
@@ -398,7 +398,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                 style={{
                   width: '100%', background: '#FF4D00', color: '#fff',
                   border: 'none', borderRadius: 12, padding: '14px',
-                  fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: '1rem',
+                  fontFamily: 'var(--sans)', fontWeight: 700, fontSize: '1rem',
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
@@ -410,7 +410,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                 style={{
                   width: '100%', background: 'transparent', color: '#FF4D00',
                   border: '1px solid #FF4D00', borderRadius: 12, padding: '12px',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, fontSize: '0.875rem',
+                  fontFamily: 'var(--sans)', fontWeight: 600, fontSize: '0.875rem',
                   cursor: 'pointer', marginBottom: 10,
                 }}
               >
@@ -422,7 +422,7 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
                 style={{
                   width: '100%', background: 'transparent', color: 'rgba(255,255,255,0.35)',
                   border: 'none', padding: '10px',
-                  fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8125rem',
+                  fontFamily: 'var(--sans)', fontSize: '0.8125rem',
                   cursor: 'pointer',
                 }}
               >
@@ -553,10 +553,10 @@ export default function ChatIA({ mission, onClose, onMissionUpdate, onUnlockFull
             border: '1px solid rgba(255,255,255,0.12)',
             padding: '36px 32px', maxWidth: 440, width: '100%',
             textAlign: 'center',
-            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontFamily: 'var(--sans)',
           }}>
                         <div style={{
-              fontFamily: 'Syne, sans-serif', fontWeight: 800,
+              fontFamily: 'var(--sans)', fontWeight: 800,
               fontSize: '1.25rem', color: '#fff', marginBottom: 10,
             }}>
               Générer le rapport final ?

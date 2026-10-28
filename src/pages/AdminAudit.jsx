@@ -6,8 +6,8 @@ const ADMIN_EMAILS = ['contact@inspexo.io']
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL
 const ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY
 
-const FONT = 'Plus Jakarta Sans, sans-serif'
-const FONT_TITRE = 'Syne, sans-serif'
+const FONT = 'var(--sans)'
+const FONT_TITRE = 'var(--sans)'
 
 async function adminFetch(path, options = {}) {
   const { data: { session } } = await supabase.auth.getSession()

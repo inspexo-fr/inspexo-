@@ -2,22 +2,18 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getPublicAnalysis, visitePhoto, visiteTerminer } from '../lib/scoreApi'
-import { IconeAppareilPhoto } from '../components/Icones'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
 
-const FONT = 'Plus Jakarta Sans, sans-serif'
-const FONT_TITRE = 'Syne, sans-serif'
+// Mode visite — plein écran mobile, un point par écran. Habillage calqué sur
+// la maquette téléphone de la section « De l'annonce à la poignée de main »
+// (docs/design/maquette-v1.html) : barre mono, fil de progression, réponses
+// Oui / Doute / Non en tricolonne, photo en cadre tireté.
 
-const VERDICT_STYLE = {
-  vert:   { color: '#16A34A', label: 'Feu vert' },
-  orange: { color: '#D97706', label: 'Prudence' },
-  rouge:  { color: '#DC2626', label: 'Signaux rouges' },
-}
-
-const DECISION_STYLE = {
-  acheter:        { label: 'Acheter', color: '#16A34A', bg: '#F0FDF4' },
-  negocier:       { label: 'Négocier', color: '#D97706', bg: '#FFFBEB' },
-  ne_pas_acheter: { label: 'Ne pas acheter', color: '#DC2626', bg: '#FEF2F2' },
+const VERDICT_LABELS = { vert: 'FEU VERT', orange: 'PRUDENCE', rouge: 'SIGNAUX ROUGES' }
+const DECISION_LABELS = {
+  acheter: { label: 'Acheter', classe: 'vert' },
+  negocier: { label: 'Négocier', classe: 'ambre' },
+  ne_pas_acheter: { label: 'Ne pas acheter', classe: 'rouge' },
 }
 
 // Les points où une photo est particulièrement utile (analyse vision).
@@ -140,90 +136,92 @@ export default function VisitePage() {
   const vehiculeLabel = analysis
     ? [analysis.marque, analysis.modele, analysis.annee].filter(Boolean).join(' ')
     : ''
-  const vLive = verdictLive ? (VERDICT_STYLE[verdictLive.verdict] || VERDICT_STYLE.orange) : null
 
-  const boutonReponse = (etat, label, couleur) => (
-    <button
-      key={etat}
-      onClick={() => repondre(etat)}
-      style={{
-        flex: 1, minWidth: 90, background: '#fff', border: `2px solid ${couleur}`,
-        color: couleur, borderRadius: 14, padding: '16px 10px',
-        fontFamily: FONT, fontSize: '1rem', fontWeight: 800, cursor: 'pointer',
-      }}
-    >
-      {label}
-    </button>
+  const boutonsReponse = (
+    <div className="tri" style={{ marginTop: 14, display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', border: '1px solid var(--rule-strong)' }}>
+      {[['oui', 'Oui', 'c-vert'], ['doute', 'Doute', 'c-ambre'], ['non', 'Non', 'c-rouge']].map(([etat, label, classe], i) => (
+        <button
+          key={etat}
+          type="button"
+          onClick={() => repondre(etat)}
+          className={classe}
+          style={{
+            height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 16, fontWeight: 700, background: 'transparent', cursor: 'pointer',
+            border: 'none', borderRight: i < 2 ? '1px solid var(--rule-strong)' : 'none',
+            fontFamily: 'var(--sans)',
+          }}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
   )
 
   /* ---------- Habillage plein écran mobile ---------- */
   return (
-    <main style={{ background: '#F8F9FA', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--paper)' }}>
       <Helmet>
         <title>Mode visite — Inspexo</title>
         <meta name="robots" content="noindex" />
       </Helmet>
 
-      {/* Barre haute */}
-      <div style={{
-        position: 'sticky', top: 0, zIndex: 10, background: '#0F1B2D',
-        padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
-      }}>
-        <Link to={`/a/${id}`} style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontFamily: FONT, fontSize: '0.875rem', fontWeight: 600 }}>
-          ← Verdict
+      {/* Barre haute (comme la maquette téléphone) */}
+      <div
+        className="mono"
+        style={{
+          position: 'sticky', top: 0, zIndex: 10, background: 'var(--nav-bg)', color: 'var(--nav-fg)',
+          minHeight: 48, padding: '0 14px', display: 'flex', alignItems: 'center',
+          justifyContent: 'space-between', gap: 10, fontSize: 11, letterSpacing: '.08em',
+        }}
+      >
+        <Link to={`/a/${id}`} style={{ color: 'var(--nav-fg)', textDecoration: 'none', padding: '14px 0' }}>
+          ← DOSSIER
         </Link>
-        <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, color: '#fff', fontSize: '0.9375rem', letterSpacing: '1px' }}>
-          MODE VISITE
-        </div>
-        <div style={{ fontFamily: FONT, color: 'rgba(255,255,255,0.7)', fontSize: '0.8125rem', minWidth: 48, textAlign: 'right' }}>
-          {idx >= 0 && idx < items.length ? `${idx + 1}/${items.length}` : ''}
-        </div>
+        <span>
+          VISITE{idx >= 0 && idx < items.length ? ` · ${idx + 1}/${items.length}` : ''}
+        </span>
       </div>
 
-      {/* Verdict vivant */}
-      {vLive && idx >= 0 && (
-        <div style={{
-          background: '#fff', borderBottom: '1px solid rgba(0,0,0,0.07)', padding: '8px 16px',
-          fontFamily: FONT, fontSize: '0.8125rem', color: '#6B7280',
-          display: 'flex', justifyContent: 'space-between', gap: 8,
-        }}>
+      {/* Ligne véhicule + verdict vivant */}
+      {verdictLive && idx >= 0 && (
+        <div
+          className="mono"
+          style={{
+            display: 'flex', justifyContent: 'space-between', gap: 8, padding: '10px 14px',
+            borderBottom: '1px solid var(--rule-strong)', fontSize: 10, letterSpacing: '.04em',
+            color: 'var(--graphite)',
+          }}
+        >
           <span>{vehiculeLabel}</span>
-          <span style={{ color: vLive.color, fontWeight: 700 }}>
-            {vLive.label} · {verdictLive.score}/100
-          </span>
+          <b className={verdictLive.verdict === 'vert' ? 'c-vert' : verdictLive.verdict === 'rouge' ? 'c-rouge' : 'c-ambre'} style={{ fontWeight: 600 }}>
+            {VERDICT_LABELS[verdictLive.verdict] || verdictLive.verdict} · {verdictLive.score}/100
+          </b>
         </div>
       )}
 
-      <div style={{ flex: 1, maxWidth: 560, width: '100%', margin: '0 auto', padding: '20px 16px 40px', boxSizing: 'border-box' }}>
+      <div style={{ flex: 1, maxWidth: 560, width: '100%', margin: '0 auto', padding: '20px 16px 40px' }}>
         {erreur ? (
-          <div style={{ fontFamily: FONT, color: '#B91C1C', padding: '40px 0', textAlign: 'center' }}>
+          <div className="c-rouge" style={{ padding: '40px 0', textAlign: 'center' }}>
             {erreur}
             <div style={{ marginTop: 16 }}>
-              <Link to={`/a/${id}`} style={{ color: '#1E4D8C', fontWeight: 600 }}>Retour au verdict</Link>
+              <Link to={`/a/${id}`}>Retour au dossier</Link>
             </div>
           </div>
         ) : !analysis ? (
-          <div style={{ textAlign: 'center', padding: '60px 0' }}>
-            <span style={{
-              display: 'inline-block', width: 26, height: 26, border: '3px solid #FF4D00',
-              borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite',
-            }} />
-            <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
-          </div>
+          <p className="eyebrow" style={{ textAlign: 'center', padding: '60px 0' }} aria-busy="true">
+            Lecture du dossier…
+          </p>
         ) : synthese ? (
           /* ---------- Synthèse finale ---------- */
           (() => {
-            const d = DECISION_STYLE[synthese.decision] || DECISION_STYLE.negocier
+            const d = DECISION_LABELS[synthese.decision] || DECISION_LABELS.negocier
             const nego = analysis.result?.negociation
             return (
               <div>
                 {synthese.incomplete && (
-                  <div style={{
-                    background: '#FFFBEB', border: '1.5px solid rgba(217,119,6,0.4)',
-                    borderRadius: 12, padding: '12px 16px', marginBottom: 12,
-                    fontFamily: FONT, fontSize: '0.875rem', color: '#92400E', fontWeight: 700,
-                  }}>
-                    Visite incomplète : {synthese.non_verifies} point{synthese.non_verifies > 1 ? 's' : ''} non vérifié{synthese.non_verifies > 1 ? 's' : ''}.
+                  <div className="alert alert-ambre">
+                    <strong>Visite incomplète : {synthese.non_verifies} point{synthese.non_verifies > 1 ? 's' : ''} non vérifié{synthese.non_verifies > 1 ? 's' : ''}.</strong>
                     {(synthese.points_critiques_non_verifies || []).length > 0 && (
                       <div style={{ fontWeight: 400, marginTop: 6 }}>
                         Points critiques à vérifier avant de décider :
@@ -234,66 +232,51 @@ export default function VisitePage() {
                     )}
                   </div>
                 )}
-                <div style={{
-                  background: d.bg, border: `2px solid ${d.color}`, borderRadius: 18,
-                  padding: '26px 20px', textAlign: 'center', marginBottom: 16,
-                }}>
-                  <div style={{ fontFamily: FONT, fontSize: '0.75rem', fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-                    Synthèse de visite — {vehiculeLabel}
-                  </div>
-                  <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.75rem', color: d.color }}>
-                    {synthese.sur_points_verifies ? (
-                      <span style={{ display: 'block', fontFamily: FONT, fontSize: '0.8125rem', fontWeight: 600, color: '#6B7280', marginBottom: 2 }}>
-                        Sur les points vérifiés :
-                      </span>
-                    ) : null}
-                    {d.label}
+                <div style={{ border: '1px solid var(--rule-strong)', padding: '24px 18px', marginBottom: 16 }}>
+                  <p className="eyebrow">Synthèse de visite — {vehiculeLabel}</p>
+                  {synthese.sur_points_verifies && (
+                    <p className="mono c-graphite" style={{ fontSize: 11, marginTop: 10 }}>Sur les points vérifiés :</p>
+                  )}
+                  <div
+                    className={`stamp ${d.classe}`}
+                    role="img"
+                    aria-label={`Décision : ${d.label}`}
+                    style={{ marginTop: 14 }}
+                  >
+                    <span className="lab">{d.label.toUpperCase()}</span>
                   </div>
                   {verdictLive && (
-                    <div style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#374151', marginTop: 6 }}>
-                      Verdict actualisé : {(VERDICT_STYLE[verdictLive.verdict] || {}).label} · {verdictLive.score}/100
-                    </div>
+                    <p style={{ fontSize: 14, marginTop: 14 }} className="c-ink2">
+                      Verdict actualisé : {VERDICT_LABELS[verdictLive.verdict]} · {verdictLive.score}/100
+                    </p>
                   )}
                 </div>
-                <div style={{ background: '#fff', borderRadius: 14, border: '1.5px solid rgba(0,0,0,0.07)', padding: '16px 18px', marginBottom: 14 }}>
-                  <div style={{ fontFamily: FONT, fontSize: '0.75rem', fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
-                    Les points qui ont pesé
-                  </div>
+                <div style={{ borderTop: '1px solid var(--rule-strong)', paddingTop: 12, marginBottom: 14 }}>
+                  <p className="eyebrow">Les points qui ont pesé</p>
                   {(synthese.points || []).map((p, i) => (
-                    <div key={i} style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#0F1B2D', lineHeight: 1.6, padding: '4px 0' }}>
+                    <div key={i} style={{ fontSize: 14, lineHeight: 1.6, padding: '6px 0', borderBottom: '1px solid var(--rule)' }}>
                       – {p}
                     </div>
                   ))}
                 </div>
                 {synthese.decision === 'negocier' && nego?.total_min_eur != null && (
-                  <div style={{ background: '#fff', borderRadius: 14, border: '1.5px solid rgba(30,77,140,0.3)', padding: '16px 18px', marginBottom: 14, fontFamily: FONT }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Marge de négociation chiffrée
-                    </div>
-                    <div style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.5rem', color: '#1E4D8C' }}>
+                  <div style={{ borderTop: '1px solid var(--rule-strong)', paddingTop: 12, marginBottom: 14 }}>
+                    <p className="eyebrow">Marge de négociation chiffrée</p>
+                    <p className="mono num" style={{ fontSize: 24, fontWeight: 600, marginTop: 6 }}>
                       {Number(nego.total_min_eur).toLocaleString('fr-FR')} – {Number(nego.total_max_eur).toLocaleString('fr-FR')} €
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#92400E', marginTop: 6, lineHeight: 1.5 }}>{nego.mention}</div>
+                    </p>
+                    <p className="mono c-graphite" style={{ fontSize: 11, marginTop: 6, lineHeight: 1.6 }}>{nego.mention}</p>
                   </div>
                 )}
                 {persiste === false && (
-                  <div style={{
-                    fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', lineHeight: 1.6,
-                    marginBottom: 12, textAlign: 'center',
-                  }}>
+                  <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginBottom: 12, textAlign: 'center' }}>
                     Mode démo : cette visite reste sur cet écran et ne modifie pas la page
                     publique de l'analyse. Pour la conserver, suivez d'abord l'analyse dans
                     votre dossier d'achat (connexion par lien magique).
-                  </div>
+                  </p>
                 )}
-                <button
-                  onClick={() => navigate(`/a/${id}`)}
-                  style={{
-                    width: '100%', background: '#0F1B2D', color: '#fff', border: 'none',
-                    borderRadius: 12, padding: '15px', fontFamily: FONT, fontSize: '0.9375rem', fontWeight: 700, cursor: 'pointer',
-                  }}
-                >
-                  Revoir le verdict complet
+                <button type="button" className="btn-ghost" onClick={() => navigate(`/a/${id}`)}>
+                  Revoir le dossier complet
                 </button>
               </div>
             )
@@ -301,62 +284,43 @@ export default function VisitePage() {
         ) : idx === -1 ? (
           /* ---------- Intro ---------- */
           <div>
-            <div style={{
-              background: '#FFF0EA', border: '1.5px solid rgba(255,77,0,0.3)', borderRadius: 12,
-              padding: '10px 14px', marginBottom: 18, fontFamily: FONT, fontSize: '0.75rem', color: '#C2410C', fontWeight: 600,
-            }}>
-              Fonction du Pass achat — en démo libre pendant le lancement.
-            </div>
-            <h1 style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.5rem', color: '#0F1B2D', margin: '0 0 10px' }}>
-              Vous êtes devant la voiture ?
-            </h1>
-            <p style={{ fontFamily: FONT, fontSize: '0.9375rem', color: '#374151', lineHeight: 1.65, marginBottom: 10 }}>
+            <p className="tag ambre" style={{ marginBottom: 18 }}>
+              Fonction du Pass achat — en démo libre pendant le lancement
+            </p>
+            <h1 style={{ fontSize: 26 }}>Vous êtes devant la voiture ?</h1>
+            <p style={{ fontSize: 15, lineHeight: 1.6, margin: '10px 0' }} className="c-ink2">
               {vehiculeLabel} — {items.length} points à vérifier, un par un. Répondez
               « Oui / Non / Doute » ; photographiez le compteur, les pneus, le PV de contrôle
               technique ou le carnet quand c'est proposé : chaque photo est analysée sur-le-champ
               et le verdict se met à jour.
             </p>
-            <p style={{ fontFamily: FONT, fontSize: '0.75rem', color: '#9CA3AF', lineHeight: 1.6, marginBottom: 22 }}>
+            <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginBottom: 22 }}>
               Les photos sont analysées puis oubliées : jamais stockées. À la fin : synthèse
               « acheter / négocier / ne pas acheter » avec les points qui ont pesé.
             </p>
-            <button
-              onClick={() => setIdx(0)}
-              style={{
-                width: '100%', background: '#FF4D00', color: '#fff', border: 'none',
-                borderRadius: 12, padding: '17px', fontFamily: FONT, fontSize: '1.0625rem', fontWeight: 700, cursor: 'pointer',
-              }}
-            >
-              Commencer la visite →
+            <button type="button" className="btn" onClick={() => setIdx(0)}>
+              Commencer la visite
             </button>
           </div>
         ) : idx >= items.length ? (
           /* ---------- Écran avant synthèse ---------- */
           <div style={{ textAlign: 'center', paddingTop: 20 }}>
-            <h2 style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.375rem', color: '#0F1B2D' }}>
-              Visite terminée
-            </h2>
-            <p style={{ fontFamily: FONT, fontSize: '0.9375rem', color: '#374151', lineHeight: 1.6 }}>
+            <h2 style={{ fontSize: 24 }}>Visite terminée</h2>
+            <p style={{ fontSize: 15, lineHeight: 1.6, marginTop: 10 }} className="c-ink2">
               {Object.values(reponses).filter(x => x === 'non').length} « non » ·{' '}
               {Object.values(reponses).filter(x => x === 'doute').length} doute(s) sur{' '}
               {Object.keys(reponses).length} points vérifiés.
             </p>
-            <button
-              onClick={terminer}
-              disabled={finEnCours}
-              style={{
-                width: '100%', background: '#FF4D00', color: '#fff', border: 'none', marginTop: 16,
-                borderRadius: 12, padding: '17px', fontFamily: FONT, fontSize: '1.0625rem', fontWeight: 700,
-                cursor: 'pointer', opacity: finEnCours ? 0.6 : 1,
-              }}
-            >
+            <button type="button" className="btn" style={{ marginTop: 16 }} onClick={terminer} disabled={finEnCours}>
               {finEnCours ? 'Synthèse en cours…' : 'Obtenir la synthèse'}
             </button>
             <button
+              type="button"
               onClick={() => setIdx(0)}
+              className="mono c-graphite"
               style={{
-                marginTop: 12, background: 'none', border: 'none', color: '#6B7280',
-                fontFamily: FONT, fontSize: '0.875rem', cursor: 'pointer', textDecoration: 'underline',
+                marginTop: 14, background: 'none', border: 'none', fontSize: 12,
+                cursor: 'pointer', textDecoration: 'underline', minHeight: 44,
               }}
             >
               Revoir les points
@@ -369,19 +333,12 @@ export default function VisitePage() {
             const constats = constatsItem[idx] || []
             return (
               <div>
-                <div style={{ height: 6, background: '#F0F2F5', borderRadius: 100, marginBottom: 20 }}>
-                  <div style={{
-                    height: 6, borderRadius: 100, background: '#FF4D00',
-                    width: `${Math.round((idx / items.length) * 100)}%`, transition: 'width 0.25s',
-                  }} />
+                <div className="pbar" role="progressbar" aria-valuemin={0} aria-valuemax={items.length} aria-valuenow={idx} aria-label="Avancement de la visite">
+                  <i style={{ width: `${Math.round((idx / items.length) * 100)}%` }} />
                 </div>
-                <h2 style={{ fontFamily: FONT_TITRE, fontWeight: 800, fontSize: '1.3125rem', color: '#0F1B2D', margin: '0 0 10px', lineHeight: 1.25 }}>
-                  {it.quoi}
-                </h2>
-                <p style={{ fontFamily: FONT, fontSize: '0.9375rem', color: '#374151', lineHeight: 1.65, marginBottom: 8 }}>
-                  {it.comment}
-                </p>
-                <p style={{ fontFamily: FONT, fontSize: '0.875rem', color: '#B91C1C', lineHeight: 1.6, marginBottom: 18 }}>
+                <h2 style={{ fontSize: 24, margin: '18px 0 0', lineHeight: 1.1 }}>{it.quoi}</h2>
+                <p style={{ marginTop: 8, fontSize: 14, lineHeight: 1.5 }} className="c-ink2">{it.comment}</p>
+                <p className="c-rouge" style={{ marginTop: 10, fontSize: 13, lineHeight: 1.45 }}>
                   Signal rouge : {it.signal_rouge}
                 </p>
 
@@ -391,50 +348,51 @@ export default function VisitePage() {
                   onChange={e => { prendrePhoto(e.target.files); e.target.value = '' }}
                 />
                 <button
+                  type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={photoEtat === 'analyse'}
+                  className={`mono ${it.photo ? '' : 'c-graphite'}`}
                   style={{
-                    width: '100%', background: it.photo ? '#FFF0EA' : '#fff',
-                    border: `1.5px solid ${it.photo ? 'rgba(255,77,0,0.4)' : 'rgba(0,0,0,0.12)'}`,
-                    color: it.photo ? '#C2410C' : '#374151', borderRadius: 12, padding: '13px',
-                    fontFamily: FONT, fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer', marginBottom: 10,
+                    marginTop: 14, width: '100%', minHeight: 48,
+                    border: `1px dashed ${it.photo ? 'var(--signal)' : 'var(--rule-strong)'}`,
+                    color: it.photo ? 'var(--signal)' : undefined,
+                    background: 'transparent', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', fontSize: 10, letterSpacing: '.08em',
+                    cursor: 'pointer', textTransform: 'uppercase',
                   }}
                 >
                   {photoEtat === 'analyse'
-                    ? 'Analyse de la photo en cours…'
+                    ? 'ANALYSE DE LA PHOTO EN COURS…'
                     : it.photo
-                    ? <><IconeAppareilPhoto /> Photographier (analysé sur-le-champ — recommandé ici)</>
-                    : <><IconeAppareilPhoto /> Ajouter une photo (facultatif)</>}
+                    ? 'PHOTOGRAPHIER · ANALYSÉ SUR PLACE'
+                    : 'AJOUTER UNE PHOTO · FACULTATIF'}
                 </button>
                 {photoEtat === 'erreur' && (
-                  <div style={{ fontFamily: FONT, fontSize: '0.8125rem', color: '#B91C1C', marginBottom: 10 }}>
+                  <p className="c-rouge" style={{ fontSize: 13, marginTop: 8 }}>
                     Photo non analysée (limite atteinte ou réseau) — continuez la visite.
-                  </div>
+                  </p>
                 )}
                 {constats.map((c, i) => (
-                  <div key={i} style={{
-                    display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 8,
-                    fontFamily: FONT, fontSize: '0.8125rem', color: '#0F1B2D', lineHeight: 1.5,
-                    background: '#fff', borderRadius: 10, padding: '9px 12px', border: '1px solid rgba(0,0,0,0.07)',
-                  }}>
-                    <span style={{
-                      width: 9, height: 9, borderRadius: '50%', flexShrink: 0, marginTop: 5,
-                      background: c.signal === 'rouge' ? '#DC2626' : c.signal === 'attention' ? '#D97706' : '#16A34A',
-                    }} />
-                    {c.constat}
+                  <div
+                    key={i}
+                    className="ctrl"
+                    style={{ alignItems: 'baseline', fontSize: 14 }}
+                  >
+                    <span>{c.constat}</span>
+                    <span className={`val ${c.signal === 'rouge' ? 'bad' : c.signal === 'attention' ? 'mid' : 'ok'}`}>
+                      {c.signal === 'rouge' ? 'ROUGE' : c.signal === 'attention' ? 'ATTENTION' : 'OK'}
+                    </span>
                   </div>
                 ))}
 
-                <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
-                  {boutonReponse('oui', 'Oui, OK', '#16A34A')}
-                  {boutonReponse('doute', 'Doute', '#D97706')}
-                  {boutonReponse('non', 'Non', '#DC2626')}
-                </div>
+                {boutonsReponse}
                 <button
+                  type="button"
                   onClick={() => setIdx(i => Math.min(items.length, i + 1))}
+                  className="mono c-graphite"
                   style={{
-                    marginTop: 14, width: '100%', background: 'none', border: 'none', color: '#9CA3AF',
-                    fontFamily: FONT, fontSize: '0.8125rem', cursor: 'pointer', textDecoration: 'underline',
+                    marginTop: 10, width: '100%', background: 'none', border: 'none',
+                    fontSize: 12, cursor: 'pointer', textDecoration: 'underline', minHeight: 44,
                   }}
                 >
                   Passer ce point

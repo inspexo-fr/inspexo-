@@ -27,7 +27,7 @@ export default function CalBooking({ tier, onClose }) {
       position: 'fixed', inset: 0, zIndex: 10000,
       background: 'rgba(15,27,45,0.97)',
       display: 'flex', flexDirection: 'column',
-      fontFamily: 'Plus Jakarta Sans, sans-serif',
+      fontFamily: 'var(--sans)',
     }}>
       {/* Header */}
       <div style={{
@@ -44,7 +44,7 @@ export default function CalBooking({ tier, onClose }) {
             {tier === 'visio' ? 'Visio Test Drive' : 'Inspection Physique'}
           </span>
           <span style={{
-            color: '#fff', fontFamily: 'Syne, sans-serif',
+            color: '#fff', fontFamily: 'var(--sans)',
             fontWeight: 800, fontSize: '1rem',
           }}>
             Réserver un créneau
