@@ -17,6 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eval": "node tests/bareme.test.mjs && node tests/negociation.test.mjs && node scripts/eval.mjs",
+    "eval:video": "node tests/eval-video/run.mjs",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

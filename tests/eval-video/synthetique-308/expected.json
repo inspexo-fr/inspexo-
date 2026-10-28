@@ -1,0 +1,16 @@
+{
+  "texte_must_include": [
+    "PureTech",
+    [
+      "84 500",
+      "84500"
+    ],
+    [
+      "9 400",
+      "9400"
+    ],
+    "Distribution jamais faite"
+  ],
+  "images_vehicule_min": 1,
+  "cout_max_eur": 0.2
+}

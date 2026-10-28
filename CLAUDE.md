@@ -275,6 +275,15 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - `submit_outcome` exige le statut **« acheté »** du dossier ; plafond de 60 events `score_cache_hit`/IP/24 h.
 - **Backlog sécurité** : `docs/backlog-securite.md` (mineurs restants classés + actions à clés : Turnstile, SMTP Resend).
 
+## Sprint 3.2 — Mode enregistrement d'écran (oct. 2026, priorité mobile n°1)
+
+- `/score` : bouton principal « Filmez l'annonce (10 s) » + tutoriel 3 étapes (lancer l'enregistrement d'écran, défiler l'annonce de haut en bas, envoyer la vidéo). Les captures d'écran et le collage de texte restent le second choix.
+- **La vidéo ne quitte JAMAIS le téléphone** : `src/lib/videoUtils.js` la lit côté navigateur (élément video + canvas), prélève une image toutes les 0,5 s (pas élargi au-delà de 20 s), déduplique par différence d'empreinte 24×48 (seuil 7/255, images unies ignorées) et garde 10-12 images max à 1 600 px. iPhone MOV/HEVC = décodé par Safari ; si le navigateur ne décode pas (`code: 'decode'`), l'UI bascule sur le mode captures avec un message clair.
+- Fonction edge `extraction` : transcription FIDÈLE du texte de l'annonce (dédupliquée — les captures se recouvrent, interface/pubs exclues, rien d'inventé, anti-injection) + repérage des captures montrant une PHOTO du véhicule (sans doublon). Rate limit 6/24 h/IP (anti-TOCTOU) + Turnstile au-delà de 2 (dormant), bypass d'éval, event `extraction_done` (tokens uniquement — ni texte ni images stockés).
+- Le texte extrait est AFFICHÉ et MODIFIABLE (textarea pré-remplie, bandeau « Vérifiez le texte extrait ») ; seules les captures-photos du véhicule repartent dans l'analyse (≤ 6) — maîtrise du coût.
+- **Coût mesuré : 0,116 €** par analyse vidéo (extraction 0,021 + analyse 0,095), objectif < 0,20 €.
+- Éval : `npm run eval:video` (tests/eval-video/, harnais Playwright qui rejoue le VRAI front — extraction navigateur comprise — avec bypass injecté au niveau réseau ; les .mov HEVC passent par WebKit). Cas `synthetique-308` régénérable (`generer-enregistrement.mjs`) ; les 2 cas réels d'Utku se déposent dans `tests/eval-video/<cas>/enregistrement.<mov|mp4>` + `expected.json` (vidéos gitignorées).
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

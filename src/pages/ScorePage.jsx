@@ -5,8 +5,10 @@ import Navbar from '../components/Navbar'
 import { IconeAppareilPhoto, IconeLoupe } from '../components/Icones'
 import Turnstile from '../components/Turnstile'
 import Footer from '../components/Footer'
-import { analyzeListing, submitPendingAnalysis } from '../lib/scoreApi'
+import { analyzeListing, submitPendingAnalysis, extraireTexteCaptures } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
+import { extraireImagesVideo } from '../lib/videoUtils'
+import { IconeVideo } from '../components/Icones'
 
 const MAX_TEXT = 6000
 const MAX_IMAGES = 6
@@ -23,6 +25,7 @@ const LOADING_STEPS = [
 export default function ScorePage() {
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
+  const videoInputRef = useRef(null)
 
   const [text, setText]               = useState(() => {
     // Fallback de l'extension Chrome : /score?texte=<annonce encodée>
@@ -43,6 +46,12 @@ export default function ScorePage() {
   const [waitState, setWaitState]     = useState('idle') // idle | sending | done | error
   const [captchaRequis, setCaptchaRequis] = useState(false) // au-delà de 2 analyses/jour
   const [captchaToken, setCaptchaToken]   = useState(null)
+  // Mode enregistrement d'écran : la vidéo est lue SUR l'appareil (jamais envoyée),
+  // les images extraites partent dans le pipeline captures.
+  const [modeVideo, setModeVideo]         = useState('idle') // idle | tuto | lecture | ocr | captcha | relecture
+  const [videoProgress, setVideoProgress] = useState(null)   // { fait, total, gardees }
+  const [videoErreur, setVideoErreur]     = useState(null)   // message de repli vers les captures
+  const [framesExtraites, setFramesExtraites] = useState(null) // reprise après captcha sans relire la vidéo
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -71,6 +80,54 @@ export default function ScorePage() {
         setError('Une image n\'a pas pu être lue. Formats acceptés : JPG, PNG, WebP.')
       }
     }
+  }
+
+  const lancerOcr = async (frames, jeton) => {
+    setModeVideo('ocr')
+    setVideoErreur(null)
+    try {
+      const res = await extraireTexteCaptures(frames, jeton || captchaToken)
+      const indices = new Set(res.images_vehicule || [])
+      // Seules les captures montrant le VÉHICULE repartent dans l'analyse
+      // (le texte, lui, est extrait ci-dessous) — maîtrise du coût.
+      setImages(frames.filter((_, i) => indices.has(i + 1)).slice(0, MAX_IMAGES))
+      setText((res.texte || '').slice(0, MAX_TEXT))
+      setModeVideo('relecture')
+      if (res.est_annonce_vehicule === false) {
+        setVideoErreur('Ces captures ne ressemblent pas à une annonce de véhicule — vérifiez le texte extrait avant d\'analyser.')
+      }
+    } catch (err) {
+      if (err.code === 'captcha_required') {
+        setCaptchaRequis(true)
+        setModeVideo('captcha')
+        setVideoErreur(err.message)
+      } else {
+        setModeVideo('idle')
+        setVideoErreur(err.message || 'La lecture des captures a échoué — réessayez ou collez le texte de l\'annonce.')
+      }
+    }
+  }
+
+  const handleVideo = async (fileList) => {
+    const file = fileList?.[0]
+    if (!file) return
+    setError(null)
+    setVideoErreur(null)
+    setVideoProgress(null)
+    setModeVideo('lecture')
+    let frames
+    try {
+      frames = await extraireImagesVideo(file, (fait, total, gardees) =>
+        setVideoProgress({ fait, total, gardees }))
+    } catch (err) {
+      setModeVideo('idle')
+      setVideoErreur(err.code === 'decode'
+        ? 'Votre navigateur ne sait pas lire cette vidéo (format non décodable sur cet appareil). Second choix : prenez des captures d\'écran de l\'annonce et ajoutez-les ci-dessous — le résultat est identique.'
+        : (err.message || 'Vidéo illisible — essayez plutôt les captures d\'écran.'))
+      return
+    }
+    setFramesExtraites(frames)
+    await lancerOcr(frames)
   }
 
   const handleSubmit = async (e) => {
@@ -199,7 +256,7 @@ export default function ScorePage() {
             fontSize: '0.9375rem', fontWeight: 300, color: '#6B7280',
             lineHeight: 1.65, marginBottom: 28,
           }}>
-            Collez le texte de l'annonce. En 1 à 2 minutes : verdict
+            Filmez l'annonce (10 s) ou collez son texte. En 1 à 2 minutes : verdict
             vert / orange / rouge noté sur 5 axes, pannes connues sourcées, rappels
             constructeur (dont airbags Takata), message prêt à envoyer au vendeur
             et checklist d'inspection. Gratuit, sans inscription.
@@ -251,6 +308,128 @@ export default function ScorePage() {
           ) : (
             /* ---------------- Formulaire ---------------- */
             <form onSubmit={handleSubmit}>
+              {/* ===== Mode enregistrement d'écran (priorité mobile) ===== */}
+              <div style={{
+                background: '#fff', border: '1.5px solid rgba(255,77,0,0.35)',
+                borderRadius: 14, padding: '16px', marginBottom: 18,
+              }}>
+                <input
+                  ref={videoInputRef} type="file" accept="video/*" hidden
+                  onChange={e => { handleVideo(e.target.files); e.target.value = '' }}
+                />
+                {(modeVideo === 'idle' || modeVideo === 'tuto') && (
+                  <>
+                    <button
+                      type="button" className="score-submit"
+                      style={{ padding: '15px 20px' }}
+                      onClick={() => setModeVideo(modeVideo === 'tuto' ? 'idle' : 'tuto')}
+                    >
+                      <IconeVideo size={18} /> Filmez l'annonce (10 s)
+                    </button>
+                    {modeVideo === 'tuto' && (
+                      <div style={{ marginTop: 14, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                        {[
+                          ['1', 'Lancez l\'enregistrement d\'écran de votre téléphone (Centre de contrôle sur iPhone, raccourcis sur Android).'],
+                          ['2', 'Ouvrez l\'annonce et faites-la défiler lentement de haut en bas — 10 secondes suffisent.'],
+                          ['3', 'Arrêtez l\'enregistrement et envoyez la vidéo ici.'],
+                        ].map(([n, t]) => (
+                          <div key={n} style={{ display: 'flex', gap: 10, padding: '6px 0', fontSize: '0.875rem', color: '#374151', lineHeight: 1.55 }}>
+                            <span style={{
+                              flexShrink: 0, width: 22, height: 22, borderRadius: '50%',
+                              background: '#FFF0EA', color: '#C2410C', fontWeight: 700,
+                              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem',
+                            }}>{n}</span>
+                            {t}
+                          </div>
+                        ))}
+                        <button
+                          type="button" className="score-submit"
+                          style={{ marginTop: 10, background: '#0F1B2D' }}
+                          onClick={() => videoInputRef.current?.click()}
+                        >
+                          J'ai ma vidéo — l'envoyer
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+                {modeVideo === 'lecture' && (
+                  <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#0F1B2D' }}>
+                    <span style={{
+                      display: 'inline-block', width: 12, height: 12, marginRight: 8,
+                      border: '2px solid #FF4D00', borderTopColor: 'transparent',
+                      borderRadius: '50%', animation: 'spin 0.8s linear infinite',
+                    }} />
+                    Extraction des images sur votre appareil…
+                    {videoProgress ? ` ${videoProgress.fait}/${videoProgress.total} analysées · ${videoProgress.gardees} retenues` : ''}
+                    <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 6 }}>
+                      La vidéo est lue localement : elle ne quitte jamais votre téléphone.
+                    </div>
+                    <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+                  </div>
+                )}
+                {modeVideo === 'ocr' && (
+                  <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#0F1B2D' }}>
+                    <span style={{
+                      display: 'inline-block', width: 12, height: 12, marginRight: 8,
+                      border: '2px solid #FF4D00', borderTopColor: 'transparent',
+                      borderRadius: '50%', animation: 'spin 0.8s linear infinite',
+                    }} />
+                    Lecture du texte de l'annonce sur les captures…
+                    <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+                  </div>
+                )}
+                {modeVideo === 'captcha' && (
+                  <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#0F1B2D' }}>
+                    <Turnstile onToken={setCaptchaToken} action="extraction" />
+                    <button
+                      type="button" className="score-secondary-btn" style={{ marginTop: 8 }}
+                      disabled={!framesExtraites}
+                      onClick={() => lancerOcr(framesExtraites, captchaToken)}
+                    >
+                      Renvoyer la vidéo
+                    </button>
+                  </div>
+                )}
+                {modeVideo === 'relecture' && (
+                  <div style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.875rem', color: '#166534', lineHeight: 1.55 }}>
+                    <strong>Texte extrait de la vidéo.</strong> Vérifiez-le ci-dessous — corrigez
+                    si besoin — puis lancez l'analyse.
+                    {images.length > 0 ? ` ${images.length} photo${images.length > 1 ? 's' : ''} du véhicule jointe${images.length > 1 ? 's' : ''}.` : ''}
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => { setModeVideo('idle'); setFramesExtraites(null) }}
+                        style={{
+                          background: 'none', border: 'none', padding: 0, marginTop: 6,
+                          color: '#1E4D8C', fontSize: '0.8125rem', cursor: 'pointer',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif', textDecoration: 'underline',
+                        }}
+                      >
+                        Recommencer avec une autre vidéo
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {videoErreur && (
+                  <div style={{
+                    marginTop: 10, fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: '0.8125rem', color: '#92400E', lineHeight: 1.55,
+                  }}>
+                    {videoErreur}
+                  </div>
+                )}
+                {(modeVideo === 'idle' || modeVideo === 'tuto') && (
+                  <div style={{
+                    marginTop: 10, fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: '0.6875rem', color: '#9CA3AF', lineHeight: 1.5,
+                  }}>
+                    La vidéo est lue sur votre téléphone, jamais envoyée ni stockée.
+                    Second choix : collez le texte ou ajoutez des captures d'écran ci-dessous.
+                  </div>
+                )}
+              </div>
+
               <textarea
                 className="score-textarea"
                 placeholder={'Collez le texte de l\'annonce ici — titre, description, prix, kilométrage, année…\n\n(Nous ne récupérons pas les liens : copiez le texte de l\'annonce, pas son URL.)'}

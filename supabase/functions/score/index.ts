@@ -23,6 +23,7 @@ import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "..
 import { calculerNegociation, coutsApplicables, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
+import { verifierTurnstile } from "../_shared/turnstile.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -61,26 +62,7 @@ const RATE_LIMIT = 5;
 // jeton Cloudflare Turnstile est exigé. Dormant tant que TURNSTILE_SECRET
 // n'est pas posé (activation : scripts/activer-turnstile.mjs).
 const CAPTCHA_APRES = 2;
-const TURNSTILE_SECRET = Deno.env.get("TURNSTILE_SECRET") ?? null;
 const HISTOVEC_URL = "https://histovec.interieur.gouv.fr";
-
-async function verifierTurnstile(token: string | null, ip: string): Promise<boolean> {
-  if (!TURNSTILE_SECRET) return true; // pas encore activé
-  if (!token) return false;
-  try {
-    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      signal: AbortSignal.timeout(8000),
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ secret: TURNSTILE_SECRET, response: token, remoteip: ip }),
-    });
-    const d = await res.json().catch(() => null);
-    return d?.success === true;
-  } catch (err) {
-    console.error("turnstile verify:", err);
-    return false;
-  }
-}
 
 
 // ============================================================

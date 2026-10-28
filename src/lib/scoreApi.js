@@ -132,6 +132,12 @@ export async function submitPendingAnalysis(email, text, usage) {
   return data // id de la demande
 }
 
+/** Mode enregistrement d'écran — lit le texte de l'annonce sur les captures
+ *  extraites de la vidéo (côté navigateur) et repère les photos du véhicule.
+ *  → { est_annonce_vehicule, texte, images_vehicule: [n° 1-based] } */
+export const extraireTexteCaptures = (images, captchaToken = null) =>
+  callFunction('extraction', { images, ...(captchaToken ? { captcha_token: captchaToken } : {}) })
+
 /** Rappels constructeur + Takata — { marque, modele, annee?, analysis_id? } */
 export const fetchRappels = (payload) => callFunction('rappels', payload)
 

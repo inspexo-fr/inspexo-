@@ -21,3 +21,6 @@ deno.lock
 
 # captures du rapport de sprint (artefacts locaux, jamais commitées)
 captures-sprint3/
+
+# vidéos d'éval (binaires locaux, fournis à la main)
+tests/eval-video/*/enregistrement.*

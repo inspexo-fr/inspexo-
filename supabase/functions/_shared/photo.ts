@@ -1,5 +1,26 @@
-// Appel vision partagé (score + mode visite) : constats strictement visuels.
+// Appel vision partagé (score + mode visite + extraction) : constats visuels.
 // Les photos ne sont JAMAIS stockées : envoyées au modèle puis oubliées.
+
+export type ImageBlock = {
+  type: "image";
+  source: { type: "base64"; media_type: string; data: string };
+};
+
+/** dataURL/base64 → bloc image Anthropic (null si invalide ou hors bornes). */
+export function parseImage(raw: unknown): ImageBlock | null {
+  if (typeof raw !== "string" || raw.length === 0) return null;
+  let mediaType = "image/jpeg";
+  let data = raw;
+  const m = raw.match(/^data:(image\/(?:jpeg|png|webp|gif));base64,(.+)$/s);
+  if (m) {
+    mediaType = m[1];
+    data = m[2];
+  }
+  data = data.replace(/\s/g, "");
+  if (data.length < 100 || data.length > 4_500_000) return null;
+  if (!/^[A-Za-z0-9+/=]+$/.test(data)) return null;
+  return { type: "image", source: { type: "base64", media_type: mediaType, data } };
+}
 
 export const PHOTO_TOOL = {
   name: "rendre_constats_photo",
