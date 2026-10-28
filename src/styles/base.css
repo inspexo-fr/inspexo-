@@ -146,6 +146,12 @@ fieldset{margin:0;padding:0;border:0;min-width:0}
 .phone .live b{color:var(--ink);font-weight:600}
 .phone-cap{margin:14px auto 0;max-width:330px;font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--graphite)}
 
+/* Mode visite : la consigne reste en haut, les gestes (photo, réponse,
+   passer) sont ancrés dans la zone du pouce, safe-area comprise. */
+.visite-corps{display:flex;flex-direction:column;flex:1;min-height:0}
+.visite-haut{flex:0 1 auto}
+.visite-actions{margin-top:auto;padding-top:18px;padding-bottom:max(8px,env(safe-area-inset-bottom,0px))}
+
 /* Lignes à filets (Ce qu'on vérifie) */
 .rows{border-top:1px solid var(--rule-strong)}
 .row{display:grid;gap:6px;padding:18px 0;border-bottom:1px solid var(--rule)}
@@ -160,6 +166,10 @@ fieldset{margin:0;padding:0;border:0;min-width:0}
 @media (min-width:1000px){.dossier-grid{grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:64px;align-items:start}}
 .doc{border:1px solid var(--rule-strong);background:var(--paper)}
 .doc-head{display:flex;justify-content:space-between;gap:12px;padding:12px 20px;border-bottom:1px solid var(--rule-strong);font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--graphite);text-transform:uppercase}
+/* Le numéro de dossier ne se coupe jamais ; sous 480 px la date passe à la
+   ligne plutôt que de serrer le numéro. */
+.doc-head span:first-child{white-space:nowrap}
+@media (max-width:480px){.doc-head{flex-direction:column;align-items:flex-start;gap:3px}}
 .doc-body{padding:22px 20px 24px}
 .doc h3{font-size:30px;letter-spacing:-0.025em}
 .doc .sub{color:var(--graphite);font-size:15px;margin-top:6px}

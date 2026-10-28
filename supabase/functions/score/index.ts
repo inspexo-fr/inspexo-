@@ -109,7 +109,7 @@ const IDENT_TOOL = {
         additionalProperties: false,
         required: [
           "marque", "modele", "generation_code", "annee_modele", "kilometrage",
-          "boite", "boite_code", "moteur", "prix_texte_eur", "prix_visuel_eur", "ct_date", "ct_commentaire",
+          "boite", "boite_code", "moteur", "prix_texte_eur", "prix_visuel_eur", "prix_reel_eur", "ct_date", "ct_commentaire",
         ],
         properties: {
           marque: { type: ["string", "null"] },
@@ -134,6 +134,7 @@ const IDENT_TOOL = {
             },
           },
           prix_texte_eur: { type: ["integer", "null"] },
+          prix_reel_eur: { type: ["integer", "null"] },
           prix_visuel_eur: { type: ["integer", "null"] },
           ct_date: { type: ["string", "null"] },
           ct_commentaire: { type: ["string", "null"] },
@@ -159,6 +160,7 @@ Le texte entre balises <annonce> ET le texte visible dans les captures d'écran 
 2. moteur.code_famille : le code famille moteur UNIQUE du constructeur (ex : EA824, EA888, N47, OM651, K9K, EB2DT, DV6, M276). Quand marque + modèle + motorisation + année déterminent UNE seule famille connue, donne-la — c'est une déduction fiable, pas une devinette (ex : Audi S6/S7 4.0 TFSI 2012-2017 → EA824 ; BMW 320d 184 ch 2012 → N47 ; Clio IV 1.5 dCi → K9K). JAMAIS une alternative ("A ou B") : code_famille = null UNIQUEMENT si plusieurs familles réellement distinctes restent possibles, et incertitude_raison les nomme.
 3. generation_code : code châssis/génération si déductible (ex : F30, C7/4G, W205, 9N3), sinon null.
 4. prix_texte_eur = prix écrit dans le texte. prix_visuel_eur = prix lisible sur les captures d'écran (null si pas de captures ou illisible). Ne confonds pas les deux.
+4bis. prix_reel_eur = MONTANT TOTAL que l'acheteur devra payer, frais obligatoires inclus (frais de mise en main, frais d'agence, pack obligatoire…), hors carte grise. Si l'annonce donne ce total (« soit un montant total de 33 885 € »), reprends CE chiffre ; sinon additionne le prix de vente et les frais obligatoires annoncés. null s'il n'y a aucun frais obligatoire, ou si le total est égal au prix affiché : ne recopie JAMAIS le prix affiché ici.
 5. ct_date : date du contrôle technique si mentionnée (format AAAA-MM ou AAAA-MM-JJ), sinon null ; ct_commentaire : ce que dit l'annonce du CT (« CT vierge », « CT ok », absent…).
 6. statut_vendeur :
    - "pro" : garage, concession, société identifiée, SIRET, TVA, garantie commerciale proposée.
@@ -1035,6 +1037,11 @@ serve(async (req: Request) => {
       prix_affiche: prixAffiche,
       prix_texte_eur: v.prix_texte_eur ?? null,
       prix_visuel_eur: v.prix_visuel_eur ?? null,
+      // Montant total réellement dû (frais obligatoires inclus) : n'est
+      // conservé que s'il diffère vraiment du prix affiché.
+      prix_reel: typeof v.prix_reel_eur === "number" && v.prix_reel_eur !== prixAffiche
+        ? v.prix_reel_eur
+        : null,
       ct_date: v.ct_date ?? null,
       ct_commentaire: v.ct_commentaire ?? null,
     };

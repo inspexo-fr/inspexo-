@@ -737,6 +737,11 @@ export default function ResultPage() {
               {analysis.annee != null && <div><dt>Année</dt><dd className="num">{analysis.annee}</dd></div>}
               {vh.kilometrage != null && <div><dt>Kilométrage</dt><dd className="num">{Number(vh.kilometrage).toLocaleString('fr-FR')} km</dd></div>}
               {vh.prix_affiche != null && <div><dt>Prix affiché</dt><dd className="num">{euros1(vh.prix_affiche)}</dd></div>}
+              {/* Montant total réellement dû (frais obligatoires inclus) : affiché
+                  uniquement s'il diffère du prix affiché — pas de case vide. */}
+              {vh.prix_reel != null && vh.prix_reel !== vh.prix_affiche && (
+                <div><dt>Prix réel</dt><dd className="num c-ambre">{euros1(vh.prix_reel)}</dd></div>
+              )}
               {r.prix?.mediane_comparables != null && (
                 <div><dt>Médiane comparables</dt><dd className="num">{euros1(r.prix.mediane_comparables)}</dd></div>
               )}
@@ -1245,6 +1250,9 @@ export default function ResultPage() {
                 ) : vh.prix_affiche != null || r.prix?.mediane_comparables != null ? (
                   <dl className="specs">
                     {vh.prix_affiche != null && <div><dt>Prix affiché</dt><dd className="num">{euros1(vh.prix_affiche)}</dd></div>}
+                    {vh.prix_reel != null && vh.prix_reel !== vh.prix_affiche && (
+                      <div><dt>Prix réel</dt><dd className="num c-ambre">{euros1(vh.prix_reel)}</dd></div>
+                    )}
                     {r.prix?.mediane_comparables != null && <div><dt>Médiane comparables</dt><dd className="num">{euros1(r.prix.mediane_comparables)}</dd></div>}
                   </dl>
                 ) : null}

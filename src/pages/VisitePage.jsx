@@ -200,7 +200,7 @@ export default function VisitePage() {
         </div>
       )}
 
-      <div style={{ flex: 1, maxWidth: 560, width: '100%', margin: '0 auto', padding: '20px 16px 40px' }}>
+      <div style={{ flex: 1, maxWidth: 560, width: '100%', margin: '0 auto', padding: '20px 16px 24px', display: 'flex', flexDirection: 'column' }}>
         {erreur ? (
           <div className="c-rouge" style={{ padding: '40px 0', textAlign: 'center' }}>
             {erreur}
@@ -332,7 +332,8 @@ export default function VisitePage() {
             const it = items[idx]
             const constats = constatsItem[idx] || []
             return (
-              <div>
+              <div className="visite-corps">
+                <div className="visite-haut">
                 <div className="pbar" role="progressbar" aria-valuemin={0} aria-valuemax={items.length} aria-valuenow={idx} aria-label="Avancement de la visite">
                   <i style={{ width: `${Math.round((idx / items.length) * 100)}%` }} />
                 </div>
@@ -341,8 +342,18 @@ export default function VisitePage() {
                 <p className="c-rouge" style={{ marginTop: 10, fontSize: 13, lineHeight: 1.45 }}>
                   Signal rouge : {it.signal_rouge}
                 </p>
+                {constats.map((c, i) => (
+                  <div key={i} className="ctrl" style={{ alignItems: 'baseline', fontSize: 14 }}>
+                    <span>{c.constat}</span>
+                    <span className={`val ${c.signal === 'rouge' ? 'bad' : c.signal === 'attention' ? 'mid' : 'ok'}`}>
+                      {c.signal === 'rouge' ? 'ROUGE' : c.signal === 'attention' ? 'ATTENTION' : 'OK'}
+                    </span>
+                  </div>
+                ))}
+                </div>
 
-                {/* Photo facultative */}
+                {/* Gestes : photo, réponse, passer — ancrés dans la zone du pouce */}
+                <div className="visite-actions">
                 <input
                   ref={fileInputRef} type="file" accept="image/*" capture="environment" hidden
                   onChange={e => { prendrePhoto(e.target.files); e.target.value = '' }}
@@ -372,19 +383,6 @@ export default function VisitePage() {
                     Photo non analysée (limite atteinte ou réseau) — continuez la visite.
                   </p>
                 )}
-                {constats.map((c, i) => (
-                  <div
-                    key={i}
-                    className="ctrl"
-                    style={{ alignItems: 'baseline', fontSize: 14 }}
-                  >
-                    <span>{c.constat}</span>
-                    <span className={`val ${c.signal === 'rouge' ? 'bad' : c.signal === 'attention' ? 'mid' : 'ok'}`}>
-                      {c.signal === 'rouge' ? 'ROUGE' : c.signal === 'attention' ? 'ATTENTION' : 'OK'}
-                    </span>
-                  </div>
-                ))}
-
                 {boutonsReponse}
                 <button
                   type="button"
@@ -397,6 +395,7 @@ export default function VisitePage() {
                 >
                   Passer ce point
                 </button>
+                </div>
               </div>
             )
           })()
