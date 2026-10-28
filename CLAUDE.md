@@ -275,6 +275,16 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - `submit_outcome` exige le statut **« acheté »** du dossier ; plafond de 60 events `score_cache_hit`/IP/24 h.
 - **Backlog sécurité** : `docs/backlog-securite.md` (mineurs restants classés + actions à clés : Turnstile, SMTP Resend).
 
+## Sprint 5 — Nouvelle direction artistique (oct. 2026)
+
+- **Référence absolue : `docs/design/maquette-v1.html`** (commitée). Reproduire, ne pas interpréter. Style « document administratif » : papier (#F3F0E9), filets fins, coins droits (0-2 px), aucune ombre, aucun fond pastel, aucun dégradé, zéro emoji ; les couleurs de verdict s'écrivent en TEXTE/FILET/TAMPON, jamais en fond ; **orange = une seule action par écran**.
+- **Tokens** : `src/styles/tokens.css` (copie du :root de la maquette, clair + sombre via prefers-color-scheme et [data-theme]) ; classes portées dans `src/styles/base.css`. Polices **Schibsted Grotesk + Martian Mono** (preconnect + display=swap, chargement non bloquant media=print/onload) — Syne et Plus Jakarta Sans SUPPRIMÉES partout (les composants landing legacy ont été supprimés du repo).
+- **Composants de brique** (un fichier chacun) : `Seal` (cachet IX — SEUL endroit à changer pour le futur logo), `Stamp` (tampon 3 couleurs : FEU VERT / PRUDENCE / SIGNAUX ROUGES), `Rows`, `Doc` (+ `formatRef`/`formatDateDossier`), `Leaders` (pointillés, « non évalué »), `Footnotes` (+ `Ref`, `creerRegistreSources`), `PhotoSlot` (hachuré tant que le fichier n'existe pas dans `public/photos/` : carnet.jpg, compteur.jpg, controle-technique.jpg), `AnalyseForm` (LE formulaire de /score, partagé avec le hero de l'accueil), `EmailCapture`, `DossierApercu` (vraie analyse S7 lue en base, id épinglé, p_track=false).
+- **Numéro de dossier** : colonne `analyses.ref_num` (séquence + backfill, migration 20261028170000) exposée par `get_public_analysis` ; affiché « Dossier n° IX-AAAA-NNNNN » (année de création + ref_num sur 5 chiffres, composé côté client).
+- **/a/:id = un dossier** : en-tête n° + date/heure, fiche véhicule en grille, tampon, critères à pointillés dépliables (commentaire d'axe), motifs numérotés avec appels de notes [n] (rattachement par mots significatifs aux sources des pannes — pas de recouvrement = pas d'appel), contrôles officiels, entretien, message vendeur, checklist, pannes, négociation (détail flouté Pass inchangé), photos, **sources numérotées en fin de dossier** (registre construit au rendu, dédup par URL), ligne « N affirmations écartées » en pied. Aucune logique touchée.
+- **Qualité vérifiée** : contrastes AA calculés sur toutes les paires de tokens (2 thèmes), Lighthouse mobile accueil et /a/:id = **perf 100 / a11y 100** (maximum-scale retiré, champs 16 px contre le zoom iOS), zéro scroll horizontal à 390 px (13 pages × 2 thèmes), prefers-reduced-motion global, cibles ≥ 44 px, éval S7/308/Mercedes PASS avec verdicts identiques (rouge 38 / orange 55 / vert 71).
+- ⚠️ Vu pendant le sprint : une fenêtre vide de l'API RappelConso a été mise en cache 24 h (audi|s7 → 0 rappel) — purgée à la main. À durcir un jour : ne pas mettre en cache un résultat vide quand l'upstream vient d'en renvoyer (backlog).
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

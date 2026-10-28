@@ -61,3 +61,4 @@ ou de mutation visible par autrui — ce sont des durcissements.
   fois activé) et les limites GoTrue.
 - Cache 7 jours partagé entre visiteurs : voulu (stabilité du verdict) ;
   l'empreinte intègre désormais photos/comparables/usage.
+- **Robustesse (mineur)** : `rappels` met en cache 24 h un résultat VIDE même quand l'API RappelConso traverse une fenêtre de réindexation (constaté le 28/10 : audi|s7 → 0 fiche pendant que l'API directe en renvoyait 64). Piste : ne cacher un payload vide que s'il est confirmé par un second essai, ou TTL court (1 h) pour les payloads vides.
