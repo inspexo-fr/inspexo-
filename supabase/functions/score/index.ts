@@ -23,6 +23,7 @@ import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "..
 import { calculerNegociation, coutsApplicables, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
+import { fourchetteDepuisAgregats, moisRecents, normaliserNom, segmentDe, technoDe } from "../_shared/comparables.ts";
 import { verifierTurnstile } from "../_shared/turnstile.ts";
 
 const corsHeaders = {
@@ -1276,56 +1277,61 @@ serve(async (req: Request) => {
     }
 
     // ---------------- Comparables prix : fourchette P25-P75 ----------------
-    // Priorité aux comparables de l'extension (recherche de l'utilisateur),
-    // sinon base interne ; fourchette UNIQUEMENT à partir de 15 comparables
-    // (même modèle/motorisation, ±2 ans, ±30 % km, < 3 mois pour la base).
+    // Priorité aux comparables de l'extension (recherche de l'utilisateur, EN
+    // MÉMOIRE pour cette analyse) ; sinon AGRÉGATS internes — la base ne
+    // conserve AUCUNE ligne d'annonce, seulement des histogrammes de prix par
+    // segment, fusionnés ici (±2 ans, ±30 % km, < 3 mois). Fourchette
+    // UNIQUEMENT à partir de 15 comparables.
     type Fourchette = { p25: number; mediane: number; p75: number; n: number; provenance: string; libelle: string };
     let fourchette: Fourchette | null = null;
     {
       const anneeF = typeof v.annee_modele === "number" ? v.annee_modele : null;
       const kmF = typeof v.kilometrage === "number" ? v.kilometrage : null;
       const modeleF = (vehiculePublic.modele ?? "").toLowerCase().trim();
-      const motorF = (vehiculePublic.motorisation ?? "").toLowerCase();
-      const technoMatch = motorF.match(/puretech|bluehdi|\bhdi\b|\btdi\b|\btsi\b|\btfsi\b|\btce\b|\bdci\b|\bcrdi\b|\bvti\b|\bthp\b|hybride|[ée]lectrique/);
-      const cylMatch = motorF.match(/\d\.\d/);
-      const matchComp = (c: { titre?: string | null; motorisation?: string | null; annee: number | null; km: number | null }): boolean => {
-        const t = `${c.titre ?? ""} ${c.motorisation ?? ""}`.toLowerCase();
+      const { techno: technoF, cyl: cylF } = technoDe(vehiculePublic.motorisation ?? "");
+      const matchComp = (c: { titre?: string | null; annee: number | null; km: number | null }): boolean => {
+        const t = (c.titre ?? "").toLowerCase();
         if (modeleF && !t.includes(modeleF)) return false;
-        if (technoMatch && !t.includes(technoMatch[0].trim())) return false;
-        if (cylMatch && t.match(/\d\.\d/) && !t.includes(cylMatch[0])) return false;
+        if (technoF && !t.includes(technoF)) return false;
+        if (cylF && /\d\.\d/.test(t) && !t.includes(cylF)) return false;
         if (anneeF != null && c.annee != null && Math.abs(c.annee - anneeF) > 2) return false;
         if (kmF != null && c.km != null && Math.abs(c.km - kmF) > kmF * 0.3) return false;
         return true;
       };
       const quantile = (sorted: number[], q: number) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(q * (sorted.length - 1))))];
       const dateJJMM = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" }).format(new Date());
-      const buildF = (prix: number[], provenance: string): Fourchette => {
-        const sorted = [...prix].sort((a, b) => a - b);
-        const n = sorted.length;
-        return {
-          p25: quantile(sorted, 0.25), mediane: quantile(sorted, 0.5), p75: quantile(sorted, 0.75), n,
-          provenance,
-          libelle: `Prix demandés sur ${n} annonces comparables relevées le ${dateJJMM} — les prix de vente réels sont souvent inférieurs.`,
-        };
-      };
-      const extMatch = comparablesStructures.filter((c) => matchComp({ titre: c.titre, motorisation: null, annee: c.annee, km: c.km }));
+      const extMatch = comparablesStructures.filter((c) => matchComp({ titre: c.titre, annee: c.annee, km: c.km }));
       if (extMatch.length >= 15) {
-        fourchette = buildF(extMatch.map((c) => c.prix), "comparables ajoutés depuis votre recherche (extension)");
+        const sorted = extMatch.map((c) => c.prix).sort((a, b) => a - b);
+        fourchette = {
+          p25: quantile(sorted, 0.25), mediane: quantile(sorted, 0.5), p75: quantile(sorted, 0.75),
+          n: sorted.length,
+          provenance: "comparables ajoutés depuis votre recherche (extension)",
+          libelle: `Prix demandés sur ${sorted.length} annonces comparables relevées le ${dateJJMM} — les prix de vente réels sont souvent inférieurs.`,
+        };
       } else if (vehiculePublic.marque && vehiculePublic.modele) {
-        const { data: baseRows } = await admin
-          .from("comparables_prix")
-          .select("titre:modele, motorisation, annee, km, prix")
-          .ilike("marque", vehiculePublic.marque)
-          .ilike("modele", vehiculePublic.modele)
-          .gte("created_at", new Date(Date.now() - 90 * 24 * 3600 * 1000).toISOString())
-          .limit(400);
-        // deno-lint-ignore no-explicit-any
-        const baseMatch = ((baseRows ?? []) as any[]).filter((c) => matchComp(c));
-        const combine = [...extMatch.map((c) => c.prix), ...baseMatch.map((c: { prix: number }) => c.prix)];
-        if (extMatch.length > 0 && combine.length >= 15) {
-          fourchette = buildF(combine, "comparables de votre recherche (extension) + base interne Inspexo");
-        } else if (baseMatch.length >= 15) {
-          fourchette = buildF(baseMatch.map((c: { prix: number }) => c.prix), "base interne Inspexo (annonces analysées)");
+        const { data: aggRows } = await admin
+          .from("comparables_agregats")
+          .select("techno, cyl, annee, km_tranche, mois, prix_tranche, effectif")
+          .eq("marque_norm", normaliserNom(vehiculePublic.marque))
+          .eq("modele_norm", normaliserNom(vehiculePublic.modele))
+          .in("mois", moisRecents(new Date()))
+          .limit(3000);
+        const agg = fourchetteDepuisAgregats(
+          // deno-lint-ignore no-explicit-any
+          ((aggRows ?? []) as any[]),
+          { techno: technoF, cyl: cylF, annee: anneeF, km: kmF },
+          15,
+          extMatch.map((c) => c.prix),
+        );
+        if (agg) {
+          fourchette = {
+            ...agg,
+            provenance: extMatch.length > 0
+              ? "comparables de votre recherche (extension) + agrégats internes Inspexo"
+              : "agrégats internes Inspexo (annonces analysées — aucune donnée brute conservée)",
+            libelle: `Prix demandés sur ${agg.n} annonces comparables relevées sur les 3 derniers mois — les prix de vente réels sont souvent inférieurs.`,
+          };
         }
       }
     }
@@ -2472,34 +2478,55 @@ serve(async (req: Request) => {
       );
     }
 
-    // ---------------- Base de comparables prix (aucune donnée personnelle) ----------------
+    // ---------------- Agrégats de comparables prix ----------------
+    // AUCUNE ligne d'annonce n'est stockée : le prix de ce véhicule et les
+    // comparables de l'extension sont fondus immédiatement dans l'histogramme
+    // du segment (marque, modèle, techno, cylindrée, année, tranche de km,
+    // mois, tranche de prix) — ni titre, ni URL, ni lien vers l'analyse.
     try {
-      const prixNum = typeof prixAffiche === "number" && prixAffiche > 100 && prixAffiche < 1_000_000
-        ? Math.round(prixAffiche) : null;
-      // deno-lint-ignore no-explicit-any
-      const rows: any[] = [];
-      if (vehiculePublic.marque && vehiculePublic.modele && prixNum && !isEval) {
-        rows.push({
-          marque: vehiculePublic.marque, modele: vehiculePublic.modele,
-          generation: vehiculePublic.generation, motorisation: vehiculePublic.motorisation,
-          titre: null, annee: vehiculePublic.annee, km: vehiculePublic.kilometrage,
-          prix: prixNum, source: isInternal ? "intake" : "score", analysis_id: analysisDbId,
-        });
-      }
-      if (vehiculePublic.marque && vehiculePublic.modele && !isEval) {
+      if (!isEval && vehiculePublic.marque && vehiculePublic.modele) {
+        const prixNum = typeof prixAffiche === "number" && prixAffiche > 100 && prixAffiche < 1_000_000
+          ? Math.round(prixAffiche) : null;
+        const segments = [];
+        if (prixNum) {
+          segments.push(segmentDe({
+            marque: vehiculePublic.marque,
+            modele: vehiculePublic.modele,
+            libelle_motorisation: vehiculePublic.motorisation,
+            annee: vehiculePublic.annee,
+            km: vehiculePublic.kilometrage,
+            prix: prixNum,
+          }));
+        }
         const modeleLower = vehiculePublic.modele.toLowerCase();
         for (const c of comparablesStructures) {
           if (!c.titre.toLowerCase().includes(modeleLower)) continue; // autre modèle dans la recherche
-          rows.push({
-            marque: vehiculePublic.marque, modele: vehiculePublic.modele,
-            generation: null, motorisation: null, titre: c.titre,
-            annee: c.annee, km: c.km, prix: c.prix, source: "extension", analysis_id: analysisDbId,
+          segments.push(segmentDe({
+            marque: vehiculePublic.marque,
+            modele: vehiculePublic.modele,
+            libelle_motorisation: c.titre,
+            annee: c.annee,
+            km: c.km,
+            prix: c.prix,
+          }));
+        }
+        const parCle = new Map<string, { seg: NonNullable<ReturnType<typeof segmentDe>>; n: number }>();
+        for (const seg of segments) {
+          if (!seg) continue;
+          const cle = JSON.stringify([seg.marque_norm, seg.modele_norm, seg.techno, seg.cyl, seg.annee, seg.km_tranche, seg.mois, seg.prix_tranche]);
+          const existant = parCle.get(cle);
+          if (existant) existant.n += 1;
+          else parCle.set(cle, { seg, n: 1 });
+        }
+        if (parCle.size > 0) {
+          const { error: aggError } = await admin.rpc("agreger_comparables", {
+            p_lignes: [...parCle.values()].map(({ seg, n }) => ({ ...seg, n })),
           });
+          if (aggError) console.error("agreger_comparables:", aggError);
         }
       }
-      if (rows.length > 0) await admin.from("comparables_prix").insert(rows);
     } catch (e) {
-      console.error("comparables_prix insert:", e);
+      console.error("agregats comparables:", e);
     }
 
     await admin.from("events").insert({
