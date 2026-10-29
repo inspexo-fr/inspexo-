@@ -21,6 +21,8 @@ export default function Footer() {
             <Link to="/pass">Pass achat</Link>
             <Link to="/extension">Extension Chrome</Link>
             <Link to="/extension">Appli mobile</Link>
+            <Link to="/moteur">Pannes par moteur</Link>
+            <Link to="/airbags-takata">Airbags Takata</Link>
             <Link to="/fiabilite">Fiabilité</Link>
           </div>
           <div className="col">

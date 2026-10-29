@@ -22,7 +22,7 @@ export default function MentionsLegales() {
           <h1 className="legal-h1">
             Mentions légales
           </h1>
-          <p className="legal-p" style={{ color: '#9CA3AF', marginBottom: 40 }}>Dernière mise à jour : mars 2026</p>
+          <p className="legal-p" style={{ color: 'var(--graphite)', marginBottom: 40 }}>Dernière mise à jour : mars 2026</p>
 
           <h2 className="legal-h2">1. Éditeur du site</h2>
           <p className="legal-p">Le site inspexo.io est édité par :</p>

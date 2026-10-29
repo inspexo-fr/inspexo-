@@ -16,8 +16,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eval": "node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node scripts/eval.mjs",
-    "eject": "react-scripts eject"
+    "eval": "node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node tests/gravite-remede.test.mjs && node scripts/eval.mjs",
+    "eject": "react-scripts eject",
+    "prebuild": "node scripts/photos-disponibles.mjs",
+    "postbuild": "node scripts/prerendu.mjs"
   },
   "eslintConfig": {
     "extends": [
@@ -37,6 +39,8 @@
     ]
   },
   "devDependencies": {
-    "playwright": "^1.64.1"
+    "@sparticuz/chromium": "^153.0.0",
+    "playwright": "^1.64.1",
+    "playwright-core": "^1.64.1"
   }
 }

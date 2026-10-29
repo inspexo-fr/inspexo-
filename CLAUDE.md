@@ -291,6 +291,30 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - **Un défaut, une seule entrée** : `_shared/dedupPannes.ts` fusionne les doublons du catalogue **en amont**, avant de le présenter au modèle (l'atlas et la fiche décrivaient le même défaut avec deux gravités : le verdict de la 308 valait 48 ou 55 selon celle que le modèle citait). Règle : même défaut = ≥ 2 mots **spécifiques** communs — les mots génériques (`fuite`, `huile`, `défaillance`, `durite`…) ne prouvent rien, sans quoi « fuite de carburant » et « fuite de liquide de refroidissement » fusionnaient à tort sur l'EA824. La plus grave gagne et hérite des champs les plus précis (coût, seuil km, rappel, sources). Tests : `tests/dedup-pannes.test.mjs`, event `catalogue_dedupliquee`.
 - **Stabilité mesurée après ces deux filets** (5 passages sans cache sur la vraie 308) : orange **48/48/48/48/45**, écart max **3 points**, conditionnel jamais vert, distribution retenue **5/5**. ⚠️ Le score de référence de ce cas passe de 55 à ~48 : la dédup amont fait gagner la gravité `securite` de la fiche sur le `majeure` de l'atlas pour la courroie en bain d'huile — c'est la règle « la plus grave gagne », appliquée désormais dès le catalogue.
 
+## Sprint 6 — Couverture moteur et pages publiques (oct. 2026)
+
+### Couverture
+- `src/data/famillesMoteur.js` : **48 familles** sur 14 marques, chacune avec l'URL qui atteste SON code (`source_code`) et le classement justifié par `SOURCES_PARC`. Un bloc LACUNES documente ce qui est volontairement absent (DV4, codes internes Opel/Fiat, codes de boîte) — on ne déclare pas une famille dont le code n'est pas attesté.
+- `scripts/couverture-moteurs.mjs` lance la génération (`--etat`, `--famille`, `--plafond`, `--regenerer`, `--reset-cout`), compte le coût dans `.couverture-cout.json` et **s'arrête au plafond**.
+- **Gravité jugée sur le REMÈDE** (`_shared/graviteRemede.ts`, testé hors ligne) : une panne dont le remède est un ORGANE (chaîne, courroie, tendeur, crépine, turbo…) ne peut pas être « casse » sans coût sourcé > 3 000 € ; le remède qui EST le moteur ou la boîte (segmentation, pistons, vilebrequin, réfection) la justifie. Le garde-fou ne PROMEUT jamais une gravité, et `gravite_arbitree: true` protège un arbitrage humain (turbos EA824). Migration `20261029180000` pour les fiches déjà en base.
+
+### Pages publiques SEO
+- `/moteur/<slug>` (42 publiées), `/moteur` (index), `/airbags-takata` (liste officielle par marque + champ « mon modèle est-il concerné ? », date de liste et lien ministère). Seuil de publication : **≥ 3 pannes toutes sourcées** (RPC `get_moteur_public`, `list_moteurs_publies`) — pas de page sans preuves.
+- **Pré-rendu statique** (`scripts/prerendu.mjs`, lancé par `postbuild`) : Playwright visite chaque route publique et écrit `build/<route>/index.html` ; 52 pages + l'accueil au sitemap (53 URL), robots.txt dressé à partir des pages RÉELLEMENT produites. `vercel.json` porte `buildCommand: npx playwright install chromium && npm run build` — le conteneur de build de Vercel n'a pas de navigateur.
+- ⚠️ **`build/index.html` n'est JAMAIS écrit par le pré-rendu** : il reste la sortie CRA intacte et sert de repli universel. C'est ce qui rend le dispositif sans danger — une route non pré-rendue est simplement rendue par React, jamais une 404. Corollaire assumé : **l'accueil n'est pas pré-rendu** (mesuré, il y perdait : FCP 3,2 s contre 1,4 s, pour un contenu que Google rend déjà).
+- **Le pré-rendu ne se tait jamais** : playwright absent, navigateur qui ne démarre pas, une route en échec ou moins de 10 pages produites ⇒ **code de sortie 1, build en échec**. Un déploiement qui s'arrête se voit ; une page vide servie à Google se découvre des semaines plus tard. `scripts/verifier-prerendu.mjs <url>` contrôle un déploiement **sans exécuter de JavaScript** (éprouvé dans les deux sens : une coquille vide fait 117 caractères). Chaîne et replis : `docs/prerendu.md`.
+- Le repli SPA **n'avale plus les requêtes de fichiers** (`(?!.*\.[a-zA-Z0-9]{1,6}$)`) : un fichier absent répond 404 au lieu de 8 Ko de HTML en 200.
+- ⚠️ Les identifiants moteur portent la **puissance** : `/moteur/peugeot-1-2-puretech-130`, pas `/moteur/peugeot-1-2-puretech` (qui renvoie à l'index).
+
+### Performance (Lighthouse mobile ≥ 96 partout)
+- **Pas d'hydratation possible** : le HTML pré-rendu est la sérialisation d'un DOM rendu côté client, sans les marqueurs du rendu serveur — `hydrateRoot` échoue sur TOUTES les pages (erreurs React #418/#425, vérifié). On garde `createRoot` ; le pré-rendu sert ce pour quoi il est fait, donner un contenu lisible sans JavaScript.
+- **Découpage par route** (`React.lazy`) : fragment principal 189 → 67 Ko compressés. Le pré-rendu injecte un `<link rel="preload" as="script">` vers les fragments que la route charge vraiment, pour ne pas ajouter d'aller-retour.
+- **Police variable** : `schibsted-grotesk-var-*.woff2` (graisses 400–900 en un fichier) remplace 4 statiques de 46,8 Ko — **rendu identique au pixel près** (vérifié, écart max 0 sur 400/500/700/800). Polices livrées : 308 → 192 Ko.
+- **Données figées dans le HTML** (`src/lib/prerendu.js`) là où elles SONT le contenu (fiches moteur, index) : premier rendu sans requête en base. Pas sur l'accueil (18,6 Ko de HTML pour aucun gain : le dossier d'exemple est sous la ligne de flottaison). Sur `/moteur`, c'est ce qui ramène le décalage de mise en page de **0,509 à 0**.
+- `scripts/photos-disponibles.mjs` (script `prebuild`) dresse la liste de `public/photos/` : un emplacement sans fichier reste hachuré sans jamais lancer de requête.
+- Mesures finales (mobile) : accueil 97, fiches moteur 97, `/airbags-takata` 97, `/moteur` 97, `/score` 97, `/pass` 96, `/fiabilite` 96, pages légales 98-99 — **a11y 100 partout**, SEO 100.
+- Reste connu : l'audit « tailles de police lisibles » signale l'échelle mono 11 px de la maquette sur `/fiabilite`. C'est la DA, elle n'est pas modifiée.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

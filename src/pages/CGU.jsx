@@ -21,7 +21,7 @@ export default function CGU() {
           <h1 className="legal-h1">
             Conditions Générales d'Utilisation et de Vente
           </h1>
-          <p className="legal-p" style={{ color: '#9CA3AF', marginBottom: 40 }}>Dernière mise à jour : mars 2026</p>
+          <p className="legal-p" style={{ color: 'var(--graphite)', marginBottom: 40 }}>Dernière mise à jour : mars 2026</p>
 
           <p className="legal-p">
             Les présentes Conditions Générales d'Utilisation et de Vente (ci-après "CGU/CGV") régissent l'utilisation du site inspexo.io (ci-après "le Site") et des services proposés par DUPLEX SAS (ci-après "Inspexo").
