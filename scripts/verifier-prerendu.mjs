@@ -51,14 +51,36 @@ function texteVisible(html) {
     .trim()
 }
 
+/**
+ * Une préversion Vercel est protégée par défaut : la requête anonyme part en
+ * 302 vers le SSO. Le confondre avec une page vide serait un faux diagnostic —
+ * on le reconnaît et on le dit.
+ */
+function deploiementProtege(html, urlFinale) {
+  // Le signe le plus sûr est d'avoir été renvoyé hors du domaine interrogé :
+  // Vercel redirige vers vercel.com/login, et le SSO n'est qu'un paramètre de
+  // cette URL — le chercher dans le chemin ne suffit pas.
+  let horsDomaine = false
+  try {
+    horsDomaine = new URL(urlFinale).host !== new URL(BASE).host
+  } catch (_) { /* URL finale inexploitable : on s'en remet au corps */ }
+  return (
+    horsDomaine ||
+    html.includes('Protected by Vercel Authentication') ||
+    html.includes('Authentication Required')
+  )
+}
+
 let ko = 0
+let protegees = 0
 console.log(`Contrôle du HTML servi par ${BASE} (sans JavaScript)\n`)
 
 for (const p of PAGES) {
   let html = ''
   let statut = 0
+  let r = null
   try {
-    const r = await fetch(`${BASE}${p.url}`, {
+    r = await fetch(`${BASE}${p.url}`, {
       headers: { 'User-Agent': 'Inspexo-verif-prerendu/1.0' },
       redirect: 'follow',
     })
@@ -67,6 +89,15 @@ for (const p of PAGES) {
   } catch (e) {
     console.log(`✗ ${p.url}\n    requête impossible : ${e.message}`)
     ko++
+    continue
+  }
+
+  if (deploiementProtege(html, r?.url ?? '')) {
+    console.log(`! ${p.url}`)
+    console.log('    déploiement protégé par l\'authentification Vercel : ce contrôle')
+    console.log('    anonyme ne peut rien conclure. Sur une préversion, utiliser :')
+    console.log(`      npx vercel curl ${BASE}${p.url}`)
+    protegees++
     continue
   }
 
@@ -85,6 +116,11 @@ for (const p of PAGES) {
 }
 
 console.log()
+if (protegees > 0) {
+  console.log(`! ${protegees} page(s) derrière l'authentification Vercel : contrôle anonyme`)
+  console.log('  impossible. Ce n\'est PAS un défaut de pré-rendu — rien n\'est conclu.')
+  process.exit(2)
+}
 if (ko === 0) {
   console.log('✓ Les pages publiques sont servies avec leur contenu, sans JavaScript.')
   process.exit(0)
