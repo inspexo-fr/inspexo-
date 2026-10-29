@@ -18,7 +18,7 @@
       "destination": "/api/og?id=:id"
     },
     {
-      "source": "/((?!api/)(?!.*\\.[a-zA-Z0-9]{1,6}$).*)",
+      "source": "/((?!api/|.*\\.[a-zA-Z0-9]+$).*)",
       "destination": "/index.html"
     }
   ]
