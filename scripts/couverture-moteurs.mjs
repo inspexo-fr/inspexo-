@@ -50,7 +50,7 @@ const ajouterCout = (eur) => {
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(cumul * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
 }
 
-async function appel(path, body, timeoutMs = 170_000) {
+async function appel(path, body, timeoutMs = 200_000) {
   const res = await fetch(`${URL_BASE}/functions/v1/${path}`, {
     method: 'POST',
     signal: AbortSignal.timeout(timeoutMs),

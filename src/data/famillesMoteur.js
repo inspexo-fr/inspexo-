@@ -77,6 +77,11 @@ const S = {
   VOLVO_VEA: 'https://en.wikipedia.org/wiki/Volvo_Engine_Architecture',
   AUDI_NHTSA: 'https://static.nhtsa.gov/odi/rcl/2022/RCAK-22V178-9203.pdf',
   LARGUS_DIESELS: 'https://www.largus.fr/actualite-automobile/diesels-psarenault-la-liste-des-pannes-recurrentes-depuis-2010-9554392.html',
+  DV6: 'https://autocopilot.fr/motorisations/1-6-hdi',
+  DV5: 'https://autoscore.pro/engine/psa-1.5-bluehdi-dv5',
+  DV5_FIABILITE: 'https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-diesel/s-2526-fiabilite-15-bluehdi.php',
+  DV5_PRISE_EN_CHARGE: 'https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/',
+  DIESELS_FIABILITE: 'https://www.fiches-auto.fr/articles-auto/enquete-fiabilite/s-1192-diesels-les-moins-fiables.php',
 }
 
 const brut = [
@@ -121,6 +126,15 @@ const brut = [
   // 208 et C3 sont 3e et 2e du classement VO 2023 ; le 1.2 PureTech est leur
   // motorisation essence dominante, et son défaut de courroie humide en fait
   // le moteur le plus scruté du marché.
+  { marque: 'Peugeot', nom_commercial: '1.6 HDi', famille: 'DV6',
+    modeles: ['Peugeot 207/208', 'Peugeot 308 I/II', 'Peugeot 3008 I', 'Citroën C3/C4', 'Citroën Berlingo', 'Ford Fiesta/Focus'],
+    millesimes: '2004-2018', source_code: S.DV6, source_pannes: S.DIESELS_FIABILITE,
+    note: 'Codes attestés : DV6ATED4 et DV6BTED (90 ch), DV6TED4 et DV6CTED (110 ch), DV6C/DV6D/DV6E pour les BlueHDi Euro 6 à partir de 2014.' },
+  { marque: 'Peugeot', nom_commercial: '1.5 BlueHDi', famille: 'DV5',
+    modeles: ['Peugeot 208 II', 'Peugeot 308 II/III', 'Peugeot 3008 II', 'Citroën C3/C4', 'Citroën C5 Aircross', 'Opel Astra/Grandland'],
+    millesimes: '2017-2022', source_code: S.DV5, source_pannes: S.DV5_FIABILITE,
+    source_programme: S.DV5_PRISE_EN_CHARGE,
+    note: 'Chaîne reliant les arbres à cames sous-dimensionnée (7 mm) sur les productions d\'octobre 2017 à janvier 2023 ; prise en charge Stellantis à 100 % en deçà de 5 ans ou 150 000 km.' },
   { marque: 'Peugeot', nom_commercial: '1.2 PureTech 110', famille: 'EB2DT',
     modeles: ['Peugeot 208 I/II', 'Peugeot 2008', 'Peugeot 308 II', 'Citroën C3 III', 'Opel Corsa F'],
     millesimes: '2014-2022', source_code: S.PURETECH },
@@ -274,15 +288,10 @@ export function familleParCode(marque, code) {
 // LACUNES ASSUMÉES — familles très répandues dont le CODE n'est pas attesté
 // par une page consultable, donc volontairement absentes de la table :
 //
-// • Famille DV (1.4/1.6 HDi, 1.5 BlueHDi) — DV4, DV6, DV6C, DV6D, DV5R.
-//   C'est la lacune la plus coûteuse : ces diesels équipent la C3, la 208, la
-//   308, le 2008, le Partner… Les pages Wikipedia « Moteur DV » et
-//   « PSA DV engine » renvoient 404 ; l'article de L'Argus sur les pannes
-//   récurrentes des diesels PSA annonce couvrir DV6, DV6C, DV6D et DV5R, mais
-//   le détail est en page 2, inaccessible à la récupération automatique.
-//   Tant qu'une source n'associe pas explicitement un code à une cylindrée,
-//   l'inclure ferait pointer les analyses de ces voitures vers la mauvaise
-//   fiche. À combler en priorité.
+// • DV4 (1.4 HDi) : aucune source consultée n'associe ce code à la cylindrée
+//   de 1,4 l. Les articles de fiabilité décrivent bien le 1.4 HDi mais sans
+//   jamais nommer son code interne. Famille écartée tant que ce lien n'est
+//   pas établi. (DV6 et DV5 sont désormais couverts : voir plus haut.)
 // • EA211 (1.0/1.2/1.4/1.5 TSI) et EA888 (1.8/2.0 TSI) : la liste Wikipedia
 //   des moteurs du groupe VW ne couvre que les diesels.
 // • Codes Opel propres (B14XFT, B16DTH…), codes internes Fiat/Alfa.
