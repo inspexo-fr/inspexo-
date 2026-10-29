@@ -58,7 +58,7 @@ p{margin:0}
 .sec{padding-block:clamp(48px,7vw,96px)}
 .sec + .sec{border-top:1px solid var(--rule-strong)}
 .sec-head{display:grid;gap:14px;margin-bottom:clamp(28px,4vw,48px)}
-.sec-head h2{font-size:clamp(30px,3.6vw,46px)}
+.sec-head h1,.sec-head h2{font-size:clamp(30px,3.6vw,46px)}
 .sec-head p{max-width:40em;color:var(--ink-2)}
 @media (min-width:900px){.sec-head{grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;gap:40px}}
 
@@ -289,7 +289,7 @@ fieldset{margin:0;padding:0;border:0;min-width:0}
 .channels{display:grid;gap:24px}
 @media (min-width:900px){.channels{grid-template-columns:repeat(3,minmax(0,1fr));gap:40px}}
 .channel{padding-top:16px;border-top:1px solid var(--rule-strong)}
-.channel h3{font-size:22px;letter-spacing:-0.015em}
+.channel h2,.channel h3{font-size:22px;letter-spacing:-0.015em}
 .channel p{margin-top:8px;color:var(--ink-2)}
 .channel ol{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column}
 .channel ol li{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--rule);font-size:15px}

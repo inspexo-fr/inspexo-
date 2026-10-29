@@ -22,5 +22,9 @@ deno.lock
 # captures du rapport de sprint (artefacts locaux, jamais commitées)
 captures-sprint3/
 captures-sprint5/
+captures-sprint6/
+
+# enregistrements d'écran des évals vidéo (régénérables, jamais commités)
+tests/eval-video/*/enregistrement.*
 .couverture-cout.json
 .couverture-resultats.json

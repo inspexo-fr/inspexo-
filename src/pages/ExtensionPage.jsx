@@ -39,7 +39,7 @@ export default function ExtensionPage() {
 
             <div className="channels">
               <div className="channel">
-                <h3>Extension Chrome</h3>
+                <h2>Extension Chrome</h2>
                 <p>Un clic sur la page de l'annonce : texte et photos partent tout seuls.</p>
                 <ol>
                   {etapesExtension.map((e, i) => (
@@ -55,7 +55,7 @@ export default function ExtensionPage() {
                 )}
               </div>
               <div className="channel">
-                <h3>Appli iPhone et Android</h3>
+                <h2>Appli iPhone et Android</h2>
                 <p>Depuis l'appli Leboncoin, touchez Partager puis Inspexo.</p>
                 <ol>
                   {etapesAppli.map((e, i) => (
@@ -65,7 +65,7 @@ export default function ExtensionPage() {
                 <span className="state">En préparation</span>
               </div>
               <div className="channel">
-                <h3>Sur le site</h3>
+                <h2>Sur le site</h2>
                 <p>Collez le texte de l'annonce, ajoutez les photos si vous voulez. Marche partout, sans rien installer.</p>
                 <ol>
                   <li><span>1</span>Copiez l'annonce</li>

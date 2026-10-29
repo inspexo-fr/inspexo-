@@ -22,7 +22,7 @@ export default function PolitiqueConfidentialite() {
           <h1 className="legal-h1">
             Politique de confidentialité
           </h1>
-          <p className="legal-p" style={{ color: '#9CA3AF', marginBottom: 12 }}>Dernière mise à jour : mars 2026</p>
+          <p className="legal-p" style={{ color: 'var(--graphite)', marginBottom: 12 }}>Dernière mise à jour : mars 2026</p>
           <p className="legal-p" style={{ marginBottom: 40 }}>
             DUPLEX SAS ("Inspexo", "nous", "notre") s'engage à protéger la vie privée des utilisateurs de son site inspexo.io ("le Site") et de ses services.
           </p>

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { listMoteursPublies } from '../lib/scoreApi'
 import { FAMILLES_MOTEUR } from '../data/famillesMoteur'
+import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
 
 // /moteur — index des familles dont la fiche atteint le seuil de publication.
 // La liste vient de la base (list_moteurs_publies), jamais d'une liste en dur :
@@ -13,13 +14,21 @@ import { FAMILLES_MOTEUR } from '../data/famillesMoteur'
 const cle = (m, f) => `${String(m).toLowerCase()}|${String(f).toUpperCase().replace(/[^A-Z0-9]/g, '')}`
 
 export default function MoteursIndexPage() {
-  const [publiees, setPubliees] = useState(undefined)
+  // La liste est figée dans le HTML pré-rendu : sans cela React effaçait les
+  // 42 familles affichées et attendait sa propre requête pour les remettre,
+  // soit un décalage de mise en page de 0,509 à la charge de l'utilisateur.
+  const [publiees, setPubliees] = useState(() => lirePrerendu('moteurs:index'))
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    if (lirePrerendu('moteurs:index') !== undefined) return
     let cancelled = false
     listMoteursPublies()
-      .then((d) => { if (!cancelled) setPubliees(d) })
+      .then((d) => {
+        if (cancelled) return
+        setPubliees(d)
+        declarerPrerendu('moteurs:index', d)
+      })
       .catch(() => { if (!cancelled) setPubliees([]) })
     return () => { cancelled = true }
   }, [])

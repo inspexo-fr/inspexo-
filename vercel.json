@@ -18,8 +18,8 @@
       "destination": "/api/og?id=:id"
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "source": "/((?!api/)(?!.*\\.[a-zA-Z0-9]{1,6}$).*)",
+      "destination": "/coquille.html"
     }
   ]
 }

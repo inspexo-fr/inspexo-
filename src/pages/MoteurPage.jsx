@@ -7,6 +7,7 @@ import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import { libelleSource } from '../components/DossierApercu'
 import { getMoteurPublic } from '../lib/scoreApi'
 import { FAMILLES_MOTEUR, familleParSlug } from '../data/famillesMoteur'
+import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
 
 // /moteur/<slug> — page publique d'une famille moteur.
 // RIEN n'est écrit ici qui ne vienne de la fiche : pannes, plan d'entretien,
@@ -40,14 +41,21 @@ function intervalle(op) {
 export default function MoteurPage() {
   const { slug } = useParams()
   const famille = familleParSlug(slug)
-  const [fiche, setFiche] = useState(undefined) // undefined = chargement, null = absente
+  // undefined = chargement, null = absente. Une page pré-rendue porte déjà sa
+  // fiche dans le HTML : on part de là pour que React hydrate.
+  const [fiche, setFiche] = useState(() => lirePrerendu(`moteur:${slug}`))
 
   useEffect(() => {
     window.scrollTo(0, 0)
     if (!famille) { setFiche(null); return }
+    if (lirePrerendu(`moteur:${famille.slug}`) !== undefined) return
     let cancelled = false
     getMoteurPublic(famille.marque, famille.famille)
-      .then((d) => { if (!cancelled) setFiche(d || null) })
+      .then((d) => {
+        if (cancelled) return
+        setFiche(d || null)
+        declarerPrerendu(`moteur:${famille.slug}`, d || null)
+      })
       .catch(() => { if (!cancelled) setFiche(null) })
     return () => { cancelled = true }
   }, [famille?.slug]) // eslint-disable-line react-hooks/exhaustive-deps

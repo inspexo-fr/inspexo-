@@ -19,7 +19,7 @@ export default function PassPage() {
         <section className="sec" style={{ borderTop: 'none' }}>
           <div className="wrap">
             <div className="sec-head">
-              <h2>Le Pass achat : jusqu'à la signature.</h2>
+              <h1>Le Pass achat : jusqu'à la signature.</h1>
               <p>Le vendeur ne nous paie jamais. Quand l'achat devient sérieux, c'est vous qui décidez de payer, une fois, pour trente jours.</p>
             </div>
             <PlansPass />

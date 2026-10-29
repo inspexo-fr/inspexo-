@@ -5,6 +5,7 @@ import Stamp from './Stamp'
 import Leaders from './Leaders'
 import Footnotes, { Ref, creerRegistreSources } from './Footnotes'
 import { getPublicAnalysis, fetchRappels } from '../lib/scoreApi'
+import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
 
 // « Un dossier réel » : la VRAIE analyse Audi S7 lue depuis la base (jamais un
 // texte en dur). Lecture non trackée (p_track=false) : l'aperçu de l'accueil
@@ -69,19 +70,23 @@ function refsPourRaison(raison, pannes, registre) {
 }
 
 export default function DossierApercu() {
-  const [row, setRow] = useState(undefined) // undefined = chargement, null = indisponible
-  const [rappels, setRappels] = useState(undefined)
+  // L'accueil est pré-rendu : le dossier d'exemple et ses rappels sont figés
+  // dans le HTML pour que le premier rendu client soit identique (hydratation).
+  const fige = lirePrerendu('accueil:dossier')
+  const [row, setRow] = useState(fige ? fige.row : undefined) // undefined = chargement, null = indisponible
+  const [rappels, setRappels] = useState(fige ? fige.rappels : undefined)
 
   useEffect(() => {
+    if (fige) return
     let cancelled = false
     getPublicAnalysis(DOSSIER_EXEMPLE_ID, false)
       .then(r => { if (!cancelled) setRow(r || null) })
       .catch(() => { if (!cancelled) setRow(null) })
     return () => { cancelled = true }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!row) return
+    if (!row || fige) return
     let cancelled = false
     fetchRappels({
       marque: row.marque,
@@ -92,10 +97,14 @@ export default function DossierApercu() {
       generation: row.result_json?.vehicule?.generation ?? null,
       analysis_id: row.id,
     })
-      .then(d => { if (!cancelled) setRappels(d) })
+      .then(d => {
+        if (cancelled) return
+        setRappels(d)
+        declarerPrerendu('accueil:dossier', { row, rappels: d })
+      })
       .catch(() => { if (!cancelled) setRappels(null) })
     return () => { cancelled = true }
-  }, [row])
+  }, [row]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (row === undefined) {
     return (
