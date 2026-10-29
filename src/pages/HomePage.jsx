@@ -20,6 +20,11 @@ export default function HomePage() {
         <title>Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste.</title>
         <meta name="description" content="Collez une annonce Leboncoin, La Centrale ou AutoScout24. En une minute : rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur, questions à lui poser. Chaque affirmation renvoie à sa source." />
         <link rel="canonical" href="https://www.inspexo.io/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.inspexo.io/" />
+        <meta property="og:title" content="Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste." />
+        <meta property="og:description" content="Rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
+        <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
       </Helmet>
 
       <Navbar />

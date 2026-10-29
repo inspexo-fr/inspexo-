@@ -22,3 +22,5 @@ deno.lock
 # captures du rapport de sprint (artefacts locaux, jamais commitées)
 captures-sprint3/
 captures-sprint5/
+.couverture-cout.json
+.couverture-resultats.json

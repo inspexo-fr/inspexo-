@@ -1,0 +1,1248 @@
+{
+ "_source": "https://www.ecologie.gouv.fr/rappel-airbag-takata",
+ "_updated": "2026-10-18",
+ "_note": "Liste officielle du ministère de la Transition écologique des modèles équipés d'airbags Takata au nitrate d'ammonium concernés par une campagne de rappel en cours ou planifiée. Périodes de production en années, bornes incluses. debut/fin null = toutes années concernées ou borne inconnue. Cette liste évolue : re-générer depuis la source.",
+ "marques": {
+  "Alpina": [
+   {
+    "nom": "B3 (E46)",
+    "debut": 1997,
+    "fin": 2006
+   },
+   {
+    "nom": "B10 / D10 (E39)",
+    "debut": 1999,
+    "fin": 2003
+   },
+   {
+    "nom": "B3 / D3 (E90/E91/E92/E93)",
+    "debut": 2004,
+    "fin": 2015
+   },
+   {
+    "nom": "B3 / D3 (F30/F31)",
+    "debut": 2011,
+    "fin": 2019
+   },
+   {
+    "nom": "B4 / D4 (F32/F33)",
+    "debut": 2012,
+    "fin": 2019
+   },
+   {
+    "nom": "B5 / D5 (F10/F11)",
+    "debut": 2009,
+    "fin": 2017
+   },
+   {
+    "nom": "B6 (F06/F12/F13)",
+    "debut": 2010,
+    "fin": 2018
+   },
+   {
+    "nom": "XD3 (F25)",
+    "debut": 2013,
+    "fin": 2017
+   }
+  ],
+  "Audi": [
+   {
+    "nom": "A3",
+    "debut": 2006,
+    "fin": 2013
+   },
+   {
+    "nom": "A4",
+    "debut": 2005,
+    "fin": 2008
+   },
+   {
+    "nom": "A4 CABRIO",
+    "debut": 2007,
+    "fin": 2009
+   },
+   {
+    "nom": "A5",
+    "debut": 2010,
+    "fin": 2011
+   },
+   {
+    "nom": "A5 CABRIO",
+    "debut": 2010,
+    "fin": 2011
+   },
+   {
+    "nom": "A6",
+    "debut": 2005,
+    "fin": 2011
+   },
+   {
+    "nom": "Q5",
+    "debut": 2009,
+    "fin": 2012
+   },
+   {
+    "nom": "R8",
+    "debut": 2016,
+    "fin": 2017
+   },
+   {
+    "nom": "TT",
+    "debut": 2015,
+    "fin": 2017
+   }
+  ],
+  "BMW": [
+   {
+    "nom": "Série 1 (E81/E82/E87/E88)",
+    "debut": 2004,
+    "fin": 2015
+   },
+   {
+    "nom": "Série 1  (F20/F21)",
+    "debut": 2011,
+    "fin": 2017
+   },
+   {
+    "nom": "Série 2 (F22/F23)",
+    "debut": 2012,
+    "fin": 2017
+   },
+   {
+    "nom": "Série 2 Active Tourer (F45 et F46)",
+    "debut": 2012,
+    "fin": 2017
+   },
+   {
+    "nom": "M2 (F87)",
+    "debut": 2012,
+    "fin": 2017
+   },
+   {
+    "nom": "Série 3 (E46)",
+    "debut": 1997,
+    "fin": 2006
+   },
+   {
+    "nom": "Série 3 (E90/E91/E92/E93)",
+    "debut": 2004,
+    "fin": 2015
+   },
+   {
+    "nom": "Série 3 (F30/F31/F34)",
+    "debut": 2011,
+    "fin": 2018
+   },
+   {
+    "nom": "M3 (F80)",
+    "debut": 2012,
+    "fin": 2017
+   },
+   {
+    "nom": "Série 4  (F32/F33/F36)",
+    "debut": 2012,
+    "fin": 2017
+   },
+   {
+    "nom": "M4 (F82/F83)",
+    "debut": 2012,
+    "fin": 2017
+   },
+   {
+    "nom": "Série 5 (E39)",
+    "debut": 2000,
+    "fin": 2003
+   },
+   {
+    "nom": "Série 5 (F07/F10/F11)",
+    "debut": 2009,
+    "fin": 2017
+   },
+   {
+    "nom": "Série 6 (F12/F13/F06)",
+    "debut": 2010,
+    "fin": 2017
+   },
+   {
+    "nom": "X1 (E84)",
+    "debut": 2004,
+    "fin": 2015
+   },
+   {
+    "nom": "X1 (F48)",
+    "debut": 2015,
+    "fin": 2016
+   },
+   {
+    "nom": "X3 (E83)",
+    "debut": 2003,
+    "fin": 2010
+   },
+   {
+    "nom": "X3 (F25)",
+    "debut": 2010,
+    "fin": 2017
+   },
+   {
+    "nom": "X4 (F26)",
+    "debut": 2014,
+    "fin": 2017
+   },
+   {
+    "nom": "X5 (E53)",
+    "debut": 2000,
+    "fin": 2003
+   },
+   {
+    "nom": "X5 (E70)",
+    "debut": 2006,
+    "fin": 2013
+   },
+   {
+    "nom": "X5 (F15)",
+    "debut": 2013,
+    "fin": 2017
+   },
+   {
+    "nom": "X5 M (F85)",
+    "debut": 2014,
+    "fin": 2017
+   },
+   {
+    "nom": "X6 (E71/E72)",
+    "debut": 2007,
+    "fin": 2014
+   },
+   {
+    "nom": "X6 (F16)",
+    "debut": 2014,
+    "fin": 2017
+   },
+   {
+    "nom": "X6 M (F86)",
+    "debut": 2014,
+    "fin": 2017
+   }
+  ],
+  "Cadillac": [
+   {
+    "nom": "BLS",
+    "debut": 2006,
+    "fin": 2008
+   },
+   {
+    "nom": "Escalade",
+    "debut": 2007,
+    "fin": 2014
+   }
+  ],
+  "Chevrolet": [
+   {
+    "nom": "Aveo T300",
+    "debut": 2011,
+    "fin": 2016
+   },
+   {
+    "nom": "Orlando",
+    "debut": 2011,
+    "fin": 2016
+   },
+   {
+    "nom": "Cruze",
+    "debut": 2008,
+    "fin": 2017
+   },
+   {
+    "nom": "Trax",
+    "debut": 2012,
+    "fin": 2015
+   },
+   {
+    "nom": "Avalanche, Silverado, Suburban, Tahoe",
+    "debut": 2007,
+    "fin": 2013
+   }
+  ],
+  "Chrysler": [
+   {
+    "nom": "300",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "Aspen",
+    "debut": 2007,
+    "fin": 2009
+   },
+   {
+    "nom": "Crossfire",
+    "debut": 2007,
+    "fin": 2008
+   }
+  ],
+  "Citroën": [
+   {
+    "nom": "C3 II",
+    "debut": 2008,
+    "fin": 2017
+   },
+   {
+    "nom": "C4 II",
+    "debut": 2010,
+    "fin": 2018
+   },
+   {
+    "nom": "C Zéro",
+    "debut": 2010,
+    "fin": 2017
+   }
+  ],
+  "Daihatsu": [
+   {
+    "nom": "Charade (NSP90)",
+    "debut": null,
+    "fin": null
+   }
+  ],
+  "Dodge": [
+   {
+    "nom": "CHALLENGER",
+    "debut": 2008,
+    "fin": 2014
+   },
+   {
+    "nom": "CHARGER",
+    "debut": 2006,
+    "fin": 2015
+   },
+   {
+    "nom": "DAKOTA",
+    "debut": 2005,
+    "fin": 2011
+   },
+   {
+    "nom": "DURANGO",
+    "debut": 2004,
+    "fin": 2009
+   },
+   {
+    "nom": "MAGNUM",
+    "debut": 2005,
+    "fin": 2008
+   },
+   {
+    "nom": "RAM 1500",
+    "debut": 2005,
+    "fin": 2008
+   },
+   {
+    "nom": "RAM 1500/2500",
+    "debut": 2006,
+    "fin": 2009
+   },
+   {
+    "nom": "RAM 1500/2500/3500",
+    "debut": 2003,
+    "fin": 2004
+   },
+   {
+    "nom": "RAM 2500/3500",
+    "debut": 2005,
+    "fin": 2005
+   },
+   {
+    "nom": "RAM 3500",
+    "debut": 2006,
+    "fin": 2009
+   },
+   {
+    "nom": "RAM 3500 CAB",
+    "debut": 2007,
+    "fin": 2010
+   },
+   {
+    "nom": "RAM 4500/5500",
+    "debut": 2008,
+    "fin": 2010
+   },
+   {
+    "nom": "SPRINTER",
+    "debut": 2007,
+    "fin": 2009
+   }
+  ],
+  "DS": [
+   {
+    "nom": "DS 3 I",
+    "debut": 2008,
+    "fin": 2019
+   },
+   {
+    "nom": "DS 4 I",
+    "debut": 2010,
+    "fin": 2018
+   },
+   {
+    "nom": "DS 5",
+    "debut": 2010,
+    "fin": 2018
+   }
+  ],
+  "Ferrari": [
+   {
+    "nom": "California",
+    "debut": 2008,
+    "fin": 2014
+   },
+   {
+    "nom": "California T",
+    "debut": 2014,
+    "fin": 2018
+   },
+   {
+    "nom": "458 Italia",
+    "debut": 2009,
+    "fin": 2015
+   },
+   {
+    "nom": "458 Spider",
+    "debut": 2011,
+    "fin": 2015
+   },
+   {
+    "nom": "458 Speciale",
+    "debut": 2014,
+    "fin": 2016
+   },
+   {
+    "nom": "458 Speciale A",
+    "debut": 2015,
+    "fin": 2016
+   },
+   {
+    "nom": "488 GTB",
+    "debut": 2015,
+    "fin": 2018
+   },
+   {
+    "nom": "488 Spider",
+    "debut": 2015,
+    "fin": 2018
+   },
+   {
+    "nom": "FF",
+    "debut": 2011,
+    "fin": 2016
+   },
+   {
+    "nom": "F12 Berlinetta",
+    "debut": 2012,
+    "fin": 2017
+   },
+   {
+    "nom": "F12 tdf",
+    "debut": 2016,
+    "fin": 2018
+   },
+   {
+    "nom": "GTC4 Lusso",
+    "debut": 2016,
+    "fin": 2018
+   },
+   {
+    "nom": "GTC4 Lusso T",
+    "debut": 2018,
+    "fin": 2018
+   },
+   {
+    "nom": "812 Superfast",
+    "debut": 2018,
+    "fin": 2018
+   }
+  ],
+  "Ford": [
+   {
+    "nom": "Everest",
+    "debut": 2004,
+    "fin": 2014
+   },
+   {
+    "nom": "Ranger",
+    "debut": 2004,
+    "fin": 2011
+   },
+   {
+    "nom": "Mondeo/  S - Max   / Galaxy",
+    "debut": 2006,
+    "fin": 2017
+   },
+   {
+    "nom": "Mustang",
+    "debut": 2004,
+    "fin": 2014
+   },
+   {
+    "nom": "GT",
+    "debut": 2004,
+    "fin": 2006
+   },
+   {
+    "nom": "P 150 Ranger",
+    "debut": 2004,
+    "fin": 2006
+   },
+   {
+    "nom": "P 150 Ranger (Prod US)",
+    "debut": 2007,
+    "fin": 2011
+   },
+   {
+    "nom": "Fusion (Prod US)",
+    "debut": 2006,
+    "fin": 2012
+   },
+   {
+    "nom": "Milan",
+    "debut": 2006,
+    "fin": 2011
+   },
+   {
+    "nom": "MKZ / Zephyr",
+    "debut": 2006,
+    "fin": 2012
+   },
+   {
+    "nom": "Edge /  MKX",
+    "debut": 2007,
+    "fin": 2010
+   }
+  ],
+  "GMC": [
+   {
+    "nom": "Sierra 1500 LD*",
+    "debut": 2007,
+    "fin": 2013
+   },
+   {
+    "nom": "Sierra 2500/3500 HD*",
+    "debut": 2007,
+    "fin": 2014
+   },
+   {
+    "nom": "Yukon",
+    "debut": 2007,
+    "fin": 2014
+   },
+   {
+    "nom": "Yukon XL",
+    "debut": 2007,
+    "fin": 2014
+   }
+  ],
+  "Honda": [
+   {
+    "nom": "Accord VI, VII et VIII",
+    "debut": 1998,
+    "fin": 2014
+   },
+   {
+    "nom": "Civic VI, VII, VIII et IX",
+    "debut": 1996,
+    "fin": 2011
+   },
+   {
+    "nom": "CR-V I, II, III et IV",
+    "debut": 1997,
+    "fin": 2012
+   },
+   {
+    "nom": "FR-V",
+    "debut": 2005,
+    "fin": 2009
+   },
+   {
+    "nom": "Insight II",
+    "debut": 2010,
+    "fin": 2013
+   },
+   {
+    "nom": "Jazz I, II et III",
+    "debut": 2002,
+    "fin": 2015
+   },
+   {
+    "nom": "Legend",
+    "debut": 1999,
+    "fin": 2008
+   },
+   {
+    "nom": "Stream",
+    "debut": 2001,
+    "fin": 2005
+   },
+   {
+    "nom": "Shuttle",
+    "debut": 1998,
+    "fin": 1999
+   },
+   {
+    "nom": "Logo",
+    "debut": 1999,
+    "fin": 1999
+   },
+   {
+    "nom": "Goldwing GL1800",
+    "debut": 2007,
+    "fin": 2016
+   }
+  ],
+  "Jaguar": [
+   {
+    "nom": "XF (X250, X260)",
+    "debut": 2007,
+    "fin": 2017
+   },
+   {
+    "nom": "XE",
+    "debut": 2016,
+    "fin": 2016
+   },
+   {
+    "nom": "F-PACE",
+    "debut": 2017,
+    "fin": 2017
+   }
+  ],
+  "Jeep": [
+   {
+    "nom": "Wrangler",
+    "debut": 2007,
+    "fin": 2016
+   }
+  ],
+  "Lancia": [
+   {
+    "nom": "Thema",
+    "debut": 2012,
+    "fin": 2014
+   }
+  ],
+  "Land Rover": [
+   {
+    "nom": "Discovery Sport",
+    "debut": 2015,
+    "fin": 2017
+   },
+   {
+    "nom": "Range Rover LM",
+    "debut": 2006,
+    "fin": 2012
+   },
+   {
+    "nom": "Range Rover Sport",
+    "debut": 2011,
+    "fin": 2017
+   },
+   {
+    "nom": "Range Rover Evoque",
+    "debut": 2011,
+    "fin": 2017
+   }
+  ],
+  "Lexus": [
+   {
+    "nom": "IS",
+    "debut": 2005,
+    "fin": 2018
+   },
+   {
+    "nom": "SC430",
+    "debut": 2001,
+    "fin": 2009
+   }
+  ],
+  "Mazda": [
+   {
+    "nom": "2",
+    "debut": 2007,
+    "fin": 2014
+   },
+   {
+    "nom": "6",
+    "debut": 2002,
+    "fin": 2010
+   },
+   {
+    "nom": "B Series / BT 50",
+    "debut": 1999,
+    "fin": 2014
+   },
+   {
+    "nom": "CX-7",
+    "debut": 2006,
+    "fin": 2012
+   },
+   {
+    "nom": "CX-9",
+    "debut": 2007,
+    "fin": 2012
+   },
+   {
+    "nom": "RX-8",
+    "debut": 2003,
+    "fin": 2010
+   },
+   {
+    "nom": "Xedos 9",
+    "debut": 1996,
+    "fin": 1999
+   }
+  ],
+  "Mercedes": [
+   {
+    "nom": "Classe A II (type 169)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "Classe C II et III (types 203 et 204)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "Classe E IV (types 207 et 212)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "Classe M II (type 164)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "Classe R (type 251)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "GL I (type 164)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "SLK II (type 171)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "SLS (type 197)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "GLK (type 204)",
+    "debut": 2004,
+    "fin": 2016
+   },
+   {
+    "nom": "G (type 461)",
+    "debut": 2014,
+    "fin": 2018
+   },
+   {
+    "nom": "Vito / V (type 639)",
+    "debut": 2005,
+    "fin": 2018
+   },
+   {
+    "nom": "Sprinter (type 906)",
+    "debut": 2005,
+    "fin": 2018
+   }
+  ],
+  "Mitsubishi": [
+   {
+    "nom": "Pajero (V80-V90)",
+    "debut": 2006,
+    "fin": 2017
+   },
+   {
+    "nom": "L200 (KA0T-KB0T)",
+    "debut": 2006,
+    "fin": 2016
+   },
+   {
+    "nom": "iMiev (HA3W-HA4W)",
+    "debut": 2010,
+    "fin": 2017
+   },
+   {
+    "nom": "Lancer (CS0A-CS0W-CT9A)",
+    "debut": null,
+    "fin": null
+   },
+   {
+    "nom": "Lancer SW (CB0W - CD0W)",
+    "debut": 1996,
+    "fin": 2000
+   },
+   {
+    "nom": "Lancer (CJ0A)",
+    "debut": 1996,
+    "fin": 2000
+   },
+   {
+    "nom": "Colt (CK0A)",
+    "debut": 1996,
+    "fin": 2000
+   },
+   {
+    "nom": "Pajero Pinin (H66W)",
+    "debut": 1996,
+    "fin": 2000
+   },
+   {
+    "nom": "Space Runner (N60W - N73W)",
+    "debut": 1996,
+    "fin": 2000
+   },
+   {
+    "nom": "L400 Space Gear (PA0V-PA0W-PB0V-PC0W-PD0V-PD0W)",
+    "debut": 1996,
+    "fin": 2000
+   },
+   {
+    "nom": "Pajero (V20C-V20W-V40W-V55W)",
+    "debut": 1996,
+    "fin": 2000
+   }
+  ],
+  "Nissan": [
+   {
+    "nom": "Almera (N16)",
+    "debut": 2001,
+    "fin": 2008
+   },
+   {
+    "nom": "Almera Tino (V10)",
+    "debut": 2001,
+    "fin": 2005
+   },
+   {
+    "nom": "Maxima QX (A33)",
+    "debut": 2000,
+    "fin": 2003
+   },
+   {
+    "nom": "Note (E11)",
+    "debut": 2005,
+    "fin": 2013
+   },
+   {
+    "nom": "Pathfinder (R50)",
+    "debut": 2001,
+    "fin": 2004
+   },
+   {
+    "nom": "Patrol V (Y61)",
+    "debut": 2001,
+    "fin": 2008
+   },
+   {
+    "nom": "Pick-Up Navara (D22)",
+    "debut": 2001,
+    "fin": 2003
+   },
+   {
+    "nom": "Terrano (R20)",
+    "debut": 2003,
+    "fin": 2006
+   },
+   {
+    "nom": "Teana (J31)",
+    "debut": 2004,
+    "fin": 2007
+   },
+   {
+    "nom": "Tiida (C11)",
+    "debut": 2007,
+    "fin": 2014
+   },
+   {
+    "nom": "X-Trail I T30",
+    "debut": 2001,
+    "fin": 2008
+   }
+  ],
+  "Opel": [
+   {
+    "nom": "Astra RHT 04",
+    "debut": 2005,
+    "fin": 2014
+   },
+   {
+    "nom": "Astra 04 H",
+    "debut": 2005,
+    "fin": 2014
+   },
+   {
+    "nom": "Cascada 13/A",
+    "debut": 2012,
+    "fin": 2018
+   },
+   {
+    "nom": "Meriva 07B",
+    "debut": 2009,
+    "fin": 2017
+   },
+   {
+    "nom": "Mokka 12A",
+    "debut": 2011,
+    "fin": 2018
+   },
+   {
+    "nom": "Vectra (regular or station wagon) / C",
+    "debut": 2003,
+    "fin": 2008
+   },
+   {
+    "nom": "Zafira 10/C",
+    "debut": 2011,
+    "fin": 2016
+   },
+   {
+    "nom": "Astra 10 (regular or station wagon) / J",
+    "debut": 2009,
+    "fin": 2018
+   },
+   {
+    "nom": "Astra GTC 10",
+    "debut": 2009,
+    "fin": 2018
+   },
+   {
+    "nom": "Signum 02/A",
+    "debut": 2005,
+    "fin": 2008
+   }
+  ],
+  "Peugeot": [
+   {
+    "nom": "I-ON",
+    "debut": 2010,
+    "fin": 2017
+   }
+  ],
+  "Saab": [
+   {
+    "nom": "9-2X",
+    "debut": 2005,
+    "fin": null
+   },
+   {
+    "nom": "9-3",
+    "debut": 2005,
+    "fin": null
+   },
+   {
+    "nom": "9-5",
+    "debut": 2005,
+    "fin": null
+   }
+  ],
+  "Seat": [
+   {
+    "nom": "ALHAMBRA",
+    "debut": 2011,
+    "fin": 2017
+   },
+   {
+    "nom": "ALTEA",
+    "debut": 2010,
+    "fin": 2015
+   },
+   {
+    "nom": "ALTEA FREETRACK",
+    "debut": 2013,
+    "fin": 2015
+   },
+   {
+    "nom": "ATECA",
+    "debut": 2017,
+    "fin": 2017
+   },
+   {
+    "nom": "EXEO",
+    "debut": 2009,
+    "fin": 2013
+   },
+   {
+    "nom": "IBIZA",
+    "debut": 2016,
+    "fin": 2017
+   },
+   {
+    "nom": "LEON 37x",
+    "debut": 2013,
+    "fin": 2017
+   },
+   {
+    "nom": "LEON PQ",
+    "debut": 2010,
+    "fin": 2014
+   },
+   {
+    "nom": "TOLEDO",
+    "debut": 2013,
+    "fin": 2017
+   }
+  ],
+  "Skoda": [
+   {
+    "nom": "CITIGO (NF)",
+    "debut": 2013,
+    "fin": 2018
+   },
+   {
+    "nom": "FABIA II (54)",
+    "debut": 2013,
+    "fin": 2015
+   },
+   {
+    "nom": "FABIA III (NJ)",
+    "debut": 2015,
+    "fin": 2018
+   },
+   {
+    "nom": "KODIAQ EU (NS)",
+    "debut": 2017,
+    "fin": 2018
+   },
+   {
+    "nom": "OCTAVIA III (5e)",
+    "debut": 2013,
+    "fin": 2018
+   },
+   {
+    "nom": "RAPID EU (NH)",
+    "debut": 2013,
+    "fin": 2018
+   },
+   {
+    "nom": "ROOMSTER (5J)",
+    "debut": 2013,
+    "fin": 2015
+   },
+   {
+    "nom": "SUPERB II (3T)",
+    "debut": 2014,
+    "fin": 2015
+   },
+   {
+    "nom": "SUPERB III (3V)",
+    "debut": 2015,
+    "fin": 2018
+   },
+   {
+    "nom": "YETI (5L)",
+    "debut": 2014,
+    "fin": 2017
+   }
+  ],
+  "Subaru": [
+   {
+    "nom": "Forester",
+    "debut": 2009,
+    "fin": 2022
+   },
+   {
+    "nom": "Legacy",
+    "debut": 2004,
+    "fin": 2014
+   },
+   {
+    "nom": "Outback",
+    "debut": 2004,
+    "fin": 2014
+   },
+   {
+    "nom": "Impreza/WRX/STI",
+    "debut": 2004,
+    "fin": 2014
+   },
+   {
+    "nom": "Tribeca",
+    "debut": 2006,
+    "fin": 2014
+   },
+   {
+    "nom": "Baja",
+    "debut": 2003,
+    "fin": 2006
+   }
+  ],
+  "Suzuki": [
+   {
+    "nom": "Grand Vitara",
+    "debut": 1998,
+    "fin": 2000
+   }
+  ],
+  "Tesla": [
+   {
+    "nom": "Model S",
+    "debut": 2014,
+    "fin": 2016
+   }
+  ],
+  "Toyota": [
+   {
+    "nom": "Auris",
+    "debut": 2006,
+    "fin": 2012
+   },
+   {
+    "nom": "Avensis",
+    "debut": 2002,
+    "fin": 2008
+   },
+   {
+    "nom": "Avensis Verso",
+    "debut": 2002,
+    "fin": 2003
+   },
+   {
+    "nom": "Corolla",
+    "debut": 2001,
+    "fin": 2010
+   },
+   {
+    "nom": "Hilux",
+    "debut": 2005,
+    "fin": 2015
+   },
+   {
+    "nom": "Picnic",
+    "debut": 2003,
+    "fin": 2005
+   },
+   {
+    "nom": "RAV4",
+    "debut": 2003,
+    "fin": 2005
+   },
+   {
+    "nom": "Yaris",
+    "debut": 2001,
+    "fin": 2017
+   }
+  ],
+  "Volkswagen": [
+   {
+    "nom": "BEETLE",
+    "debut": 2012,
+    "fin": 2018
+   },
+   {
+    "nom": "CALIFORNIA T5",
+    "debut": 2008,
+    "fin": 2015
+   },
+   {
+    "nom": "CRAFTER",
+    "debut": 2006,
+    "fin": 2017
+   },
+   {
+    "nom": "EOS (B6)",
+    "debut": 2010,
+    "fin": 2011
+   },
+   {
+    "nom": "EOSGP",
+    "debut": 2011,
+    "fin": 2015
+   },
+   {
+    "nom": "e-UP",
+    "debut": 2014,
+    "fin": 2016
+   },
+   {
+    "nom": "FOX",
+    "debut": 2007,
+    "fin": 2011
+   },
+   {
+    "nom": "GOLF (A6)",
+    "debut": 2009,
+    "fin": 2013
+   },
+   {
+    "nom": "GOLFCABRIO (A6)",
+    "debut": 2012,
+    "fin": 2016
+   },
+   {
+    "nom": "GOLFPLUS (A5)",
+    "debut": 2009,
+    "fin": 2014
+   },
+   {
+    "nom": "MULTIVAN T5",
+    "debut": 2008,
+    "fin": 2015
+   },
+   {
+    "nom": "PASSAT",
+    "debut": 2011,
+    "fin": 2015
+   },
+   {
+    "nom": "PASSATCC (B6)",
+    "debut": 2009,
+    "fin": 2017
+   },
+   {
+    "nom": "PASSATSEDAN (B6)",
+    "debut": 2006,
+    "fin": 2010
+   },
+   {
+    "nom": "PASSATWAGON (B6)",
+    "debut": 2006,
+    "fin": 2010
+   },
+   {
+    "nom": "POLO (A05)",
+    "debut": 2010,
+    "fin": 2014
+   },
+   {
+    "nom": "POLO (A04)",
+    "debut": 2007,
+    "fin": 2010
+   },
+   {
+    "nom": "SHARAN",
+    "debut": 2011,
+    "fin": 2015
+   },
+   {
+    "nom": "TIGUAN",
+    "debut": 2015,
+    "fin": 2016
+   },
+   {
+    "nom": "TRANSPOTER T5",
+    "debut": 2008,
+    "fin": 2015
+   },
+   {
+    "nom": "UP",
+    "debut": 2012,
+    "fin": 2016
+   }
+  ]
+ }
+}

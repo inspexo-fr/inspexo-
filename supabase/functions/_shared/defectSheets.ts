@@ -130,18 +130,23 @@ async function fetchPageText(url: string): Promise<string | null> {
  *  des pages citées par la panne. Sinon le rappel reste affiché, sans code. */
 export async function verifierCodesRappel(pannes: SheetPanne[]): Promise<{ pannes: SheetPanne[]; retires: string[] }> {
   const retires: string[] = [];
-  const cache = new Map<string, string | null>();
   const out: SheetPanne[] = [];
+  // Les pages citées sont récupérées EN PARALLÈLE : séquentiellement, une
+  // fiche à six pannes dépassait à elle seule le budget de 150 s de la
+  // fonction (constaté en campagne de couverture). La règle de vérification
+  // ne change pas : un code n'est conservé que s'il figure littéralement
+  // dans une des pages citées.
+  const urls = [...new Set(pannes.filter((p) => p.rappel_code).flatMap((p) => p.url_source.slice(0, 4)))];
+  const textes = await Promise.all(urls.map((u) => fetchPageText(u).catch(() => null)));
+  const cache = new Map<string, string | null>(urls.map((u, i) => [u, textes[i]]));
   for (const p of pannes) {
     if (!p.rappel_code) { out.push(p); continue; }
     const code = p.rappel_code.trim();
     const motif = new RegExp(code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-    let trouve = false;
-    for (const url of p.url_source.slice(0, 4)) {
-      if (!cache.has(url)) cache.set(url, await fetchPageText(url));
+    const trouve = p.url_source.slice(0, 4).some((url) => {
       const texte = cache.get(url);
-      if (texte && motif.test(texte)) { trouve = true; break; }
-    }
+      return Boolean(texte) && motif.test(texte as string);
+    });
     if (trouve) out.push(p);
     else {
       retires.push(`${code} (${p.titre.slice(0, 60)})`);

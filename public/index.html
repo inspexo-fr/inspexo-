@@ -5,12 +5,27 @@
     <meta name="google-site-verification" content="z74CwbcogZxp8xrVosPIk1_tlfRB5JgS4xDynyeZcVw" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0F1B2D" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Martian+Mono:wght@400;600&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Martian+Mono:wght@400;600&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Martian+Mono:wght@400;600&display=swap" /></noscript>
+    <!-- Polices auto-hébergées : aucun appel à un tiers avant d'afficher un
+         titre, et rien ne concurrence le CSS critique. -->
+
     <style>
+      /* @font-face inline : une feuille séparée ajouterait une requête
+         bloquante avant même de connaître les polices à charger. */
+@font-face{font-family:'Martian Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/martian-mono-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Martian Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/martian-mono-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Martian Mono';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/martian-mono-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Martian Mono';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/martian-mono-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Schibsted Grotesk';font-style:italic;font-weight:400;font-display:swap;src:url('/fonts/schibsted-grotesk-400-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Schibsted Grotesk';font-style:italic;font-weight:400;font-display:swap;src:url('/fonts/schibsted-grotesk-400-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/schibsted-grotesk-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/schibsted-grotesk-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/schibsted-grotesk-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/schibsted-grotesk-500-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/schibsted-grotesk-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/schibsted-grotesk-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/schibsted-grotesk-800-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/schibsted-grotesk-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+
       html, body {
         margin: 0; padding: 0;
         width: 100%; overflow-x: clip;
@@ -27,27 +42,15 @@
     <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
 
-    <!-- SEO primaire -->
+    <!-- SEO : titre, description, canonical et Open Graph sont posés PAR PAGE
+         via react-helmet-async, et figés dans le HTML par le pré-rendu
+         (scripts/prerendu.mjs). Ne pas les dupliquer ici : un canonical
+         statique vers l'accueil annulerait l'indexation des pages moteur. -->
     <title>Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste.</title>
-    <meta name="description" content="Collez une annonce Leboncoin, La Centrale ou AutoScout24. En une minute : rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur, questions à lui poser. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
-    <meta name="keywords" content="annonce voiture occasion, vérifier annonce leboncoin, rappel airbag takata, pannes connues moteur, acheter voiture occasion sans se faire avoir" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://www.inspexo.io/" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.inspexo.io" />
-    <meta property="og:title" content="Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste." />
-    <meta property="og:description" content="Rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
-    <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="Inspexo" />
-
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste." />
-    <meta name="twitter:description" content="Rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
-    <meta name="twitter:image" content="https://www.inspexo.io/og-image.png" />
 
     <!-- Schema.org LocalBusiness -->
     <script type="application/ld+json">

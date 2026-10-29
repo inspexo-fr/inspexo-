@@ -144,6 +144,20 @@ export async function getPublicAnalysis(id, track = true) {
   return data // null si introuvable
 }
 
+/** Fiche complète d'une famille moteur pour sa page publique /moteur/<slug>. */
+export async function getMoteurPublic(marque, famille) {
+  const { data, error } = await supabase.rpc('get_moteur_public', { p_marque: marque, p_famille: famille })
+  if (error) throw error
+  return data
+}
+
+/** Familles dont la fiche atteint le seuil de publication (sitemap, liens). */
+export async function listMoteursPublies() {
+  const { data, error } = await supabase.rpc('list_moteurs_publies')
+  if (error) throw error
+  return Array.isArray(data) ? data : []
+}
+
 /** Fiche famille moteur publiée (pannes sourcées) — null si pas encore prête. */
 export async function getDefectSheet(marque, famille) {
   const { data, error } = await supabase.rpc('get_defect_sheet', {

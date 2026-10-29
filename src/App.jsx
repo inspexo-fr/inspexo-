@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import PassPage from './pages/PassPage'
+import MoteurPage from './pages/MoteurPage'
+import MoteursIndexPage from './pages/MoteursIndexPage'
+import TakataPage from './pages/TakataPage'
 import AdminDashboard from './pages/AdminDashboard'
 import MentionsLegales from './pages/MentionsLegales'
 import PolitiqueConfidentialite from './pages/PolitiqueConfidentialite'
@@ -25,6 +28,9 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/score" element={<ScorePage />} />
         <Route path="/pass" element={<PassPage />} />
+        <Route path="/moteur" element={<MoteursIndexPage />} />
+        <Route path="/moteur/:slug" element={<MoteurPage />} />
+        <Route path="/airbags-takata" element={<TakataPage />} />
         <Route path="/a/:id" element={<ResultPage />} />
         <Route path="/a/:id/visite" element={<VisitePage />} />
         <Route path="/dossier" element={<DossierPage />} />

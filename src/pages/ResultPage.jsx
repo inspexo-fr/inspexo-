@@ -10,6 +10,7 @@ import Stamp from '../components/Stamp'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
 import { libelleSource } from '../components/DossierApercu'
+import { familleParCode } from '../data/famillesMoteur'
 import {
   getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
   trackEvent, dossierAdd, envoyerLienMagique,
@@ -1093,6 +1094,19 @@ export default function ResultPage() {
                     </div>
                   )
                 })}
+                {/* Lien interne vers la page publique de cette famille moteur :
+                    la page explique le moteur, le dossier juge l'annonce. */}
+                {(() => {
+                  const fam = familleParCode(r.vehicule?.marque, r.fiche?.famille ?? r.vehicule?.famille_moteur)
+                  if (!fam) return null
+                  return (
+                    <p style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6 }}>
+                      <Link to={`/moteur/${fam.slug}`}>
+                        Toutes les pannes connues du {fam.nom_commercial}, avec leurs sources
+                      </Link>
+                    </p>
+                  )
+                })()}
                 {ficheInfo && r.fiche?.famille && (() => {
                   const urlsFiche = new Set()
                   for (const p of (ficheInfo.pannes || [])) {

@@ -63,11 +63,20 @@ serve(async (req: Request) => {
       annee: typeof body?.annee === "number" ? body.annee : null,
     });
 
+    // Coût de la génération : la campagne de couverture (sprint 6) tient son
+    // budget à partir de ce chiffre, comme l'éval le fait pour les analyses.
+    const u = result.usage;
+    const usd = !u ? 0
+      : u.input_tokens * 3e-6 + u.output_tokens * 15e-6 +
+        (u.cache_read_input_tokens ?? 0) * 0.3e-6 +
+        (u.cache_creation_input_tokens ?? 0) * 3.75e-6;
     return new Response(
       JSON.stringify({
         status: result.cacheStatus,
         pannes: result.sheet?.pannes?.length ?? 0,
+        plan_entretien: result.sheet?.plan_entretien?.length ?? 0,
         searches: result.searches,
+        cout_eur: Math.round(usd * 0.92 * 10000) / 10000,
       }),
       { headers: { "Content-Type": "application/json" } },
     );
