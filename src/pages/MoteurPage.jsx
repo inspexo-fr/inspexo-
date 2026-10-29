@@ -116,7 +116,10 @@ export default function MoteurPage() {
     return (p.url_source ?? []).slice(0, 4).map((u) => registre.register(u, libelleSource(u, titres.get(u)), u))
   })
   const refsPlan = plan.map((op) => (op.url_source ?? []).slice(0, 2).map((u) => registre.register(u, libelleSource(u), u)))
-  const refsProg = programmes.map((pr) => (pr.url_source ? [pr.url_source] : []).map((u) => registre.register(u, libelleSource(u), u)))
+  const refsProg = programmes.map((pr) => {
+    const urls = Array.isArray(pr.url_source) ? pr.url_source : pr.url_source ? [pr.url_source] : []
+    return urls.slice(0, 2).map((u) => registre.register(u, libelleSource(u), u))
+  })
 
   const questions = [
     ...pannes.slice(0, 4).map((p) => `${p.titre} : l'organe a-t-il déjà été remplacé ? Pouvez-vous m'envoyer la facture (date, kilométrage, pièces) ?`),
@@ -269,18 +272,19 @@ export default function MoteurPage() {
             <div className="wrap">
               <div className="sec-head">
                 <h2>Prise en charge constructeur.</h2>
-                <p>Extension de garantie ou geste commercial publiés par la marque pour cette famille moteur. Les conditions exactes sont celles de la source : faites-les confirmer avant d'acheter.</p>
+                <p>Extension de garantie ou geste commercial publiés par la marque pour cette famille moteur. Une prise en charge n'est jamais acquise d'avance : le constructeur la refuse couramment quand l'entretien n'a pas été fait dans son réseau ou dans les délais. Faites-la confirmer par écrit, avec le numéro de série, avant d'acheter.</p>
               </div>
               <dl className="rows">
                 {programmes.map((pr, i) => (
                   <div className="row" key={i}>
-                    <dt>{pr.type ?? 'Programme'}</dt>
+                    <dt>{pr.date_vigueur ?? 'Programme'}</dt>
                     <dd>
-                      <b>{pr.intitule ?? pr.titre ?? 'Programme constructeur'}<Ref nums={refsProg[i]} /></b>
+                      <b>{pr.titre ?? pr.intitule ?? 'Programme constructeur'}<Ref nums={refsProg[i]} /></b>
                       {pr.conditions && <p>{pr.conditions}</p>}
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
-                        {pr.plafond_km && <span className="tag">{Number(pr.plafond_km).toLocaleString('fr-FR')} km</span>}
-                        {pr.plafond_annees && <span className="tag">{pr.plafond_annees} ans</span>}
+                        {pr.age_max_ans != null && <span className="tag">jusqu'à {pr.age_max_ans} ans</span>}
+                        {pr.km_max != null && <span className="tag">jusqu'à {Number(pr.km_max).toLocaleString('fr-FR')} km</span>}
+                        {pr.entretien_exige && <span className="tag ambre">entretien exigé : {pr.entretien_exige}</span>}
                       </div>
                     </dd>
                   </div>

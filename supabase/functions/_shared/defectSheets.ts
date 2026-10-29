@@ -10,6 +10,7 @@
 
 // deno-lint-ignore-file no-explicit-any
 import { normalizeBrand, rawBrandVariants, expandBrand } from "./brandAliases.ts";
+import { appliquerGraviteRemede } from "./graviteRemede.ts";
 import { programmeSourceOk, sanitizeProgrammes, type WarrantyProgram } from "./warrantyPrograms.ts";
 
 const MODEL = "claude-sonnet-5";
@@ -886,7 +887,18 @@ export async function getOrCreateDefectSheet(
   }
 
   // Codes de campagne : conservés seulement s'ils figurent dans une source citée.
-  const { pannes: pannesVerifiees, retires: codesRetires } = await verifierCodesRappel(pannes);
+  // Gravité jugée sur le REMÈDE : une panne de chaîne, de courroie ou de
+  // tendeur n'est pas une « casse » parce que l'ignorer finit par détruire
+  // le moteur — cette conséquence se dit dans les symptômes. Le prompt porte
+  // la règle, ce garde-fou la rend certaine (_shared/graviteRemede.ts).
+  const { pannes: pannesGravite, retrogradees } = appliquerGraviteRemede(pannes);
+  if (retrogradees.length > 0) {
+    await admin.from("events").insert({
+      name: "gravite_retrogradee",
+      props_json: { famille: familleNorm, pannes: retrogradees.slice(0, 6) },
+    });
+  }
+  const { pannes: pannesVerifiees, retires: codesRetires } = await verifierCodesRappel(pannesGravite);
   if (codesRetires.length > 0) {
     await admin.from("events").insert({
       name: "rappel_code_retire",
