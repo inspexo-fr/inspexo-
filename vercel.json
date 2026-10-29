@@ -19,7 +19,8 @@
     },
     {
       "source": "/((?!api/)(?!.*\\.[a-zA-Z0-9]{1,6}$).*)",
-      "destination": "/coquille.html"
+      "destination": "/index.html"
     }
-  ]
+  ],
+  "buildCommand": "npx playwright install chromium && npm run build"
 }

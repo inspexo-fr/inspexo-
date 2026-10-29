@@ -18,7 +18,8 @@
     "test": "react-scripts test",
     "eval": "node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node tests/gravite-remede.test.mjs && node scripts/eval.mjs",
     "eject": "react-scripts eject",
-    "prebuild": "node scripts/photos-disponibles.mjs"
+    "prebuild": "node scripts/photos-disponibles.mjs",
+    "postbuild": "node scripts/prerendu.mjs"
   },
   "eslintConfig": {
     "extends": [

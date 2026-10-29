@@ -15,7 +15,6 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createServer } from 'node:http'
 import { extname } from 'node:path'
-import { chromium } from 'playwright'
 import { FAMILLES_MOTEUR } from '../src/data/famillesMoteur.js'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -28,26 +27,23 @@ if (!existsSync(join(BUILD, 'index.html'))) {
   process.exit(1)
 }
 
-// build/index.html finit par porter l'ACCUEIL pré-rendu. Il ne peut donc plus
-// servir de coquille de repli : une route dynamique (/a/:id, /dossier) servie
-// par ce fichier afficherait l'accueil le temps que React se reconstruise.
-// On met donc de côté la coquille vierge du build, que Vercel sert en repli
-// (voir vercel.json) et que ce script réutilise pour rendre chaque route —
-// ce qui rend les passages successifs idempotents.
-const COQUILLE = join(BUILD, 'coquille.html')
-const indexBrut = readFileSync(join(BUILD, 'index.html'), 'utf8')
-if (!indexBrut.includes('data-prerendu')) {
-  writeFileSync(COQUILLE, indexBrut)
-} else if (!existsSync(COQUILLE)) {
-  console.error('build/index.html est déjà pré-rendu et build/coquille.html manque : relancez `npm run build`.')
-  process.exit(1)
-}
+// build/index.html n'est JAMAIS écrit par ce script : il reste la sortie CRA
+// intacte, qui sert de repli à toutes les routes (vercel.json). C'est ce qui
+// rend le pré-rendu sans danger — s'il ne tourne pas, ou s'il échoue, chaque
+// page est simplement rendue par React comme avant, jamais une erreur 404.
+// Corollaire : l'accueil n'est pas pré-rendu. Mesuré, il y perdait de toute
+// façon (FCP 3,2 s contre 1,8 s) pour un contenu que Google rend déjà.
 
-const env = Object.fromEntries(
-  readFileSync(join(ROOT, '.env.local'), 'utf8')
-    .split('\n').filter((l) => l.includes('=') && !l.trimStart().startsWith('#'))
-    .map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()]),
-)
+// En local les identifiants sont dans .env.local ; sur Vercel ce sont les
+// variables du projet (les mêmes que CRA utilise pour le build).
+const fichierEnv = join(ROOT, '.env.local')
+const env = existsSync(fichierEnv)
+  ? Object.fromEntries(
+      readFileSync(fichierEnv, 'utf8')
+        .split('\n').filter((l) => l.includes('=') && !l.trimStart().startsWith('#'))
+        .map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()]),
+    )
+  : process.env
 
 /** Familles réellement publiables, d'après la base (jamais une liste en dur). */
 async function famillesPubliees() {
@@ -72,14 +68,28 @@ function servir() {
     const serveur = createServer((req, res) => {
       const chemin = decodeURIComponent(new URL(req.url, 'http://x').pathname)
       let fichier = join(BUILD, chemin)
-      // Toute route sans extension est servie par la coquille VIERGE : on veut
-      // rendre la page depuis React, jamais resservir un pré-rendu antérieur.
-      if (!existsSync(fichier) || !extname(fichier) || chemin === '/index.html') fichier = COQUILLE
+      // Toute route sans extension est servie par la coquille : on veut rendre
+      // la page depuis React, jamais resservir un pré-rendu antérieur.
+      if (!existsSync(fichier) || !extname(fichier)) fichier = join(BUILD, 'index.html')
       res.writeHead(200, { 'Content-Type': TYPES[extname(fichier)] || 'application/octet-stream' })
       res.end(readFileSync(fichier))
     })
     serveur.listen(PORT, () => resolve(serveur))
   })
+}
+
+// Le pré-rendu est la raison d'être des pages publiques : sans lui, Google
+// reçoit une page vide. Il ne doit donc JAMAIS être sauté en silence — un
+// build qui s'arrête se voit, une page sans contenu se découvre des semaines
+// plus tard dans la Search Console.
+let chromium
+try {
+  ({ chromium } = await import('playwright'))
+} catch (e) {
+  console.error(`\n✗ PRÉ-RENDU IMPOSSIBLE — playwright indisponible (${e.message.split('\n')[0]}).`)
+  console.error('  Sans lui, /moteur/* et /airbags-takata arrivent VIDES pour les moteurs')
+  console.error('  de recherche. Le build s\'arrête plutôt que de livrer ça.\n')
+  process.exit(1)
 }
 
 const moteurs = await famillesPubliees()
@@ -88,7 +98,6 @@ console.log(`Pré-rendu — ${moteurs.length} page(s) moteur publiable(s)\n`)
 // Les routes privées (dossier, visite, admin, résultat) ne sont PAS pré-rendues :
 // elles portent des données personnelles ou changent à chaque visite.
 const ROUTES = [
-  { url: '/', attendre: '.hero h1', priorite: '1.0' },
   { url: '/score', attendre: '.formcard', priorite: '0.9' },
   { url: '/pass', attendre: '.plans', priorite: '0.8' },
   { url: '/airbags-takata', attendre: '.faq details', priorite: '0.9' },
@@ -103,7 +112,17 @@ const ROUTES = [
 ]
 
 const serveur = await servir()
-const nav = await chromium.launch()
+let nav
+try {
+  nav = await chromium.launch()
+} catch (e) {
+  serveur.close()
+  console.error(`\n✗ PRÉ-RENDU IMPOSSIBLE — le navigateur ne démarre pas (${e.message.split('\n')[0]}).`)
+  console.error('  Sur Vercel, le conteneur de build n\'a pas de Chromium : la commande')
+  console.error('  de build doit faire `npx playwright install chromium` au préalable.')
+  console.error('  Si l\'image ne le supporte pas, voir docs/prerendu.md (solutions de repli).\n')
+  process.exit(1)
+}
 const ctx = await nav.newContext({ viewport: { width: 1280, height: 900 } })
 const page = await ctx.newPage()
 const faits = []
@@ -159,7 +178,7 @@ for (const route of ROUTES) {
         `<script>window.__PRERENDU__=JSON.parse(${litteral})</script></head>`,
       )
     }
-    const dossier = route.url === '/' ? BUILD : join(BUILD, route.url)
+    const dossier = join(BUILD, route.url)
     mkdirSync(dossier, { recursive: true })
     writeFileSync(join(dossier, 'index.html'), html)
     const texte = await page.evaluate(() => document.body.innerText.length)
@@ -176,9 +195,10 @@ serveur.close()
 
 // ---- sitemap.xml : uniquement les pages réellement produites ----
 const aujourdhui = new Date().toISOString().slice(0, 10)
+const urls = [{ url: '/', priorite: '1.0' }, ...faits]
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${faits.map((r) => `  <url>
+${urls.map((r) => `  <url>
     <loc>${SITE}${r.url === '/' ? '/' : r.url}</loc>
     <lastmod>${aujourdhui}</lastmod>
     <priority>${r.priorite}</priority>
@@ -195,12 +215,23 @@ Disallow: /dossier
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /expert
-# Coquille de repli des routes dynamiques : sans contenu, jamais liée.
-Disallow: /coquille.html
 
 Sitemap: ${SITE}/sitemap.xml
 `)
 
 console.log(`\n— ${faits.length} page(s) pré-rendue(s), ${echecs} échec(s)`)
-console.log(`— sitemap.xml : ${faits.length} URL · robots.txt écrit`)
-if (echecs > 0) process.exit(1)
+console.log(`— sitemap.xml : ${urls.length} URL · robots.txt écrit`)
+if (echecs > 0) {
+  console.error(`\n✗ ${echecs} route(s) non pré-rendue(s) : elles arriveraient vides pour`)
+  console.error('  les moteurs de recherche. Le build s\'arrête.\n')
+  process.exit(1)
+}
+
+// Garde-fou de dernier recours : un pré-rendu qui « réussit » en ne produisant
+// presque rien est le scénario le plus dangereux, parce qu'il ne se voit pas.
+const ATTENDU_MINIMUM = 10
+if (faits.length < ATTENDU_MINIMUM) {
+  console.error(`\n✗ ${faits.length} page(s) pré-rendue(s) seulement, moins que le minimum`)
+  console.error(`  attendu (${ATTENDU_MINIMUM}). Quelque chose a échoué sans le dire.\n`)
+  process.exit(1)
+}
