@@ -300,9 +300,11 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 
 ### Pages publiques SEO
 - `/moteur/<slug>` (42 publiées), `/moteur` (index), `/airbags-takata` (liste officielle par marque + champ « mon modèle est-il concerné ? », date de liste et lien ministère). Seuil de publication : **≥ 3 pannes toutes sourcées** (RPC `get_moteur_public`, `list_moteurs_publies`) — pas de page sans preuves.
-- **Pré-rendu statique** (`scripts/prerendu.mjs`, après `npm run build`) : Playwright visite chaque route publique et écrit `build/<route>/index.html` ; 53 pages, sitemap.xml et robots.txt dressés à partir des pages RÉELLEMENT produites.
-- ⚠️ `build/index.html` porte l'accueil pré-rendu et ne peut donc plus servir de repli : la coquille vierge est mise de côté en **`build/coquille.html`**, et `vercel.json` y renvoie. Sans cela, `/a/:id` et `/dossier` affichaient l'accueil avant de se reconstruire.
+- **Pré-rendu statique** (`scripts/prerendu.mjs`, lancé par `postbuild`) : Playwright visite chaque route publique et écrit `build/<route>/index.html` ; 52 pages + l'accueil au sitemap (53 URL), robots.txt dressé à partir des pages RÉELLEMENT produites. `vercel.json` porte `buildCommand: npx playwright install chromium && npm run build` — le conteneur de build de Vercel n'a pas de navigateur.
+- ⚠️ **`build/index.html` n'est JAMAIS écrit par le pré-rendu** : il reste la sortie CRA intacte et sert de repli universel. C'est ce qui rend le dispositif sans danger — une route non pré-rendue est simplement rendue par React, jamais une 404. Corollaire assumé : **l'accueil n'est pas pré-rendu** (mesuré, il y perdait : FCP 3,2 s contre 1,4 s, pour un contenu que Google rend déjà).
+- **Le pré-rendu ne se tait jamais** : playwright absent, navigateur qui ne démarre pas, une route en échec ou moins de 10 pages produites ⇒ **code de sortie 1, build en échec**. Un déploiement qui s'arrête se voit ; une page vide servie à Google se découvre des semaines plus tard. `scripts/verifier-prerendu.mjs <url>` contrôle un déploiement **sans exécuter de JavaScript** (éprouvé dans les deux sens : une coquille vide fait 117 caractères). Chaîne et replis : `docs/prerendu.md`.
 - Le repli SPA **n'avale plus les requêtes de fichiers** (`(?!.*\.[a-zA-Z0-9]{1,6}$)`) : un fichier absent répond 404 au lieu de 8 Ko de HTML en 200.
+- ⚠️ Les identifiants moteur portent la **puissance** : `/moteur/peugeot-1-2-puretech-130`, pas `/moteur/peugeot-1-2-puretech` (qui renvoie à l'index).
 
 ### Performance (Lighthouse mobile ≥ 96 partout)
 - **Pas d'hydratation possible** : le HTML pré-rendu est la sérialisation d'un DOM rendu côté client, sans les marqueurs du rendu serveur — `hydrateRoot` échoue sur TOUTES les pages (erreurs React #418/#425, vérifié). On garde `createRoot` ; le pré-rendu sert ce pour quoi il est fait, donner un contenu lisible sans JavaScript.
@@ -310,7 +312,7 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - **Police variable** : `schibsted-grotesk-var-*.woff2` (graisses 400–900 en un fichier) remplace 4 statiques de 46,8 Ko — **rendu identique au pixel près** (vérifié, écart max 0 sur 400/500/700/800). Polices livrées : 308 → 192 Ko.
 - **Données figées dans le HTML** (`src/lib/prerendu.js`) là où elles SONT le contenu (fiches moteur, index) : premier rendu sans requête en base. Pas sur l'accueil (18,6 Ko de HTML pour aucun gain : le dossier d'exemple est sous la ligne de flottaison). Sur `/moteur`, c'est ce qui ramène le décalage de mise en page de **0,509 à 0**.
 - `scripts/photos-disponibles.mjs` (script `prebuild`) dresse la liste de `public/photos/` : un emplacement sans fichier reste hachuré sans jamais lancer de requête.
-- Mesures finales (mobile) : accueil 96, fiche moteur 97, `/airbags-takata` 99, `/moteur` 97, `/score` 96, `/pass` 96, pages légales 98-99 — **a11y 100 partout**, SEO 100.
+- Mesures finales (mobile) : accueil 97, fiches moteur 97, `/airbags-takata` 97, `/moteur` 97, `/score` 97, `/pass` 96, `/fiabilite` 96, pages légales 98-99 — **a11y 100 partout**, SEO 100.
 - Reste connu : l'audit « tailles de police lisibles » signale l'échelle mono 11 px de la maquette sur `/fiabilite`. C'est la DA, elle n'est pas modifiée.
 
 ## Marques Couvertes
