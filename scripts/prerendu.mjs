@@ -82,14 +82,59 @@ function servir() {
 // reçoit une page vide. Il ne doit donc JAMAIS être sauté en silence — un
 // build qui s'arrête se voit, une page sans contenu se découvre des semaines
 // plus tard dans la Search Console.
-let chromium
-try {
-  ({ chromium } = await import('playwright'))
-} catch (e) {
-  console.error(`\n✗ PRÉ-RENDU IMPOSSIBLE — playwright indisponible (${e.message.split('\n')[0]}).`)
-  console.error('  Sans lui, /moteur/* et /airbags-takata arrivent VIDES pour les moteurs')
-  console.error('  de recherche. Le build s\'arrête plutôt que de livrer ça.\n')
-  process.exit(1)
+
+// Drapeaux indispensables en conteneur : pas de bac à sable utilisable, et
+// /dev/shm y est trop petit pour Chromium.
+const DRAPEAUX_CONTENEUR = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+
+/**
+ * Drapeaux de @sparticuz/chromium que Playwright ne supporte PAS.
+ * `--single-process` est taillé pour une fonction Lambda qui rend une page et
+ * s'arrête ; Playwright a besoin de plusieurs processus et le navigateur meurt
+ * au démarrage s'il est posé (« Target page, context or browser has been
+ * closed »). `--headless` est posé par Playwright lui-même, et le doublon
+ * — qui plus est avec des guillemets dans la valeur — le fait échouer.
+ * `--disable-web-security` n'a aucune raison d'être ici : on rend nos pages.
+ */
+const DRAPEAUX_INCOMPATIBLES = /^--(single-process|no-zygote|headless|disable-web-security)/
+
+/**
+ * Démarre un navigateur, en essayant d'abord Playwright tel quel (poste de
+ * travail), puis un Chromium empaqueté pour conteneur serverless.
+ *
+ * Pourquoi ce second essai : l'image de build de Vercel est une Amazon Linux.
+ * `npx playwright install chromium` y télécharge bien un binaire, mais c'est
+ * une build Ubuntu de repli (« your OS is not officially supported ») à
+ * laquelle il manque les bibliothèques système — elle meurt au démarrage
+ * (« Target page, context or browser has been closed », constaté le 29/10).
+ * `@sparticuz/chromium` embarque les siennes et ne dépend pas de l'image.
+ */
+async function lancerNavigateur() {
+  const essais = []
+  try {
+    const { chromium } = await import('playwright')
+    return await chromium.launch({ args: DRAPEAUX_CONTENEUR })
+  } catch (e) {
+    essais.push(`playwright : ${e.message.split('\n')[0]}`)
+  }
+  try {
+    const { chromium } = await import('playwright-core')
+    const empaquete = (await import('@sparticuz/chromium')).default
+    const executablePath = await empaquete.executablePath()
+    console.log(`  (navigateur empaqueté : ${executablePath})`)
+    const args = [
+      ...new Set([
+        ...empaquete.args.filter((a) => !DRAPEAUX_INCOMPATIBLES.test(a)),
+        ...DRAPEAUX_CONTENEUR,
+      ]),
+    ]
+    return await chromium.launch({ executablePath, args })
+  } catch (e) {
+    essais.push(`@sparticuz/chromium : ${e.message.split('\n')[0]}`)
+  }
+  const erreur = new Error(essais.join(' | '))
+  erreur.essais = essais
+  throw erreur
 }
 
 const moteurs = await famillesPubliees()
@@ -114,13 +159,14 @@ const ROUTES = [
 const serveur = await servir()
 let nav
 try {
-  nav = await chromium.launch()
+  nav = await lancerNavigateur()
 } catch (e) {
   serveur.close()
-  console.error(`\n✗ PRÉ-RENDU IMPOSSIBLE — le navigateur ne démarre pas (${e.message.split('\n')[0]}).`)
-  console.error('  Sur Vercel, le conteneur de build n\'a pas de Chromium : la commande')
-  console.error('  de build doit faire `npx playwright install chromium` au préalable.')
-  console.error('  Si l\'image ne le supporte pas, voir docs/prerendu.md (solutions de repli).\n')
+  console.error('\n✗ PRÉ-RENDU IMPOSSIBLE — aucun navigateur n\'a démarré.')
+  for (const essai of e.essais ?? [e.message]) console.error(`  · ${essai}`)
+  console.error('\n  Sans pré-rendu, /moteur/* et /airbags-takata arrivent VIDES pour les')
+  console.error('  moteurs de recherche. Le build s\'arrête plutôt que de livrer ça.')
+  console.error('  Replis documentés : docs/prerendu.md\n')
   process.exit(1)
 }
 const ctx = await nav.newContext({ viewport: { width: 1280, height: 900 } })

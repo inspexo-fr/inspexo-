@@ -37,11 +37,24 @@ C'est voulu : un déploiement qui s'arrête se voit, une page vide non.
 
 ## La chaîne en place
 
-`vercel.json` :
+Le script essaie DEUX navigateurs, dans cet ordre :
 
-```json
-"buildCommand": "npx playwright install chromium && npm run build"
-```
+1. **Playwright tel quel** — c'est le chemin du poste de travail.
+2. **`@sparticuz/chromium` + `playwright-core`** — Chromium empaqueté avec ses
+   bibliothèques, pour les conteneurs qui n'ont rien.
+
+C'est le second qui sert sur Vercel. Mesuré le 29/10/2026 : l'image de build
+est une Amazon Linux, `npx playwright install chromium` y télécharge 191 Mio
+d'une build Ubuntu de repli (« BEWARE: your OS is not officially supported »)
+à laquelle il manque les bibliothèques système — elle meurt au démarrage avec
+« Target page, context or browser has been closed ». `@sparticuz/chromium`
+embarque les siennes et ne dépend pas de l'image ; il n'y a donc plus de
+`buildCommand` particulier.
+
+⚠️ Quatre de ses drapeaux sont filtrés, sans quoi Playwright ne démarre pas :
+`--single-process` et `--no-zygote` (taillés pour une Lambda qui rend une page
+et s'arrête), `--headless='shell'` (Playwright pose le sien) et
+`--disable-web-security` (inutile ici).
 
 `package.json` :
 
@@ -67,33 +80,11 @@ Le script récupère quatre pages et vérifie que leur HTML contient bien le tit
 des fragments qui ne peuvent venir que de la base, et assez de texte lisible.
 Une coquille vide fait 117 caractères : l'écart est sans ambiguïté.
 
-## Si Vercel ne peut pas installer Chromium
+## Si le pré-rendu casse un jour
 
-`npx playwright install chromium` télécharge un Chromium qui dépend de quelques
-bibliothèques système. Si l'image de build ne les fournit pas, deux replis, par
-ordre de préférence.
+### Si même le Chromium empaqueté ne démarre plus
 
-### 1. Chromium empaqueté pour le serverless
-
-```bash
-npm i -D @sparticuz/chromium playwright-core
-```
-
-Dans `scripts/prerendu.mjs`, remplacer le lancement par :
-
-```js
-const { chromium } = await import('playwright-core')
-const sparticuz = (await import('@sparticuz/chromium')).default
-nav = await chromium.launch({
-  executablePath: await sparticuz.executablePath(),
-  args: sparticuz.args,
-})
-```
-
-`@sparticuz/chromium` embarque ses bibliothèques : il ne dépend pas de l'image.
-Retirer alors `npx playwright install chromium` de `buildCommand`.
-
-### 2. Pré-rendre en local et committer le résultat
+Repli de dernier recours : pré-rendre en local et committer le résultat.
 
 Repli de dernier recours, parce qu'il fige le contenu : une fiche moteur
 modifiée en base n'apparaîtra qu'au prochain pré-rendu manuel.
