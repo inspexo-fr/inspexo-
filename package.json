@@ -16,10 +16,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eval": "node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node tests/gravite-remede.test.mjs && node scripts/eval.mjs",
+    "eval": "node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node tests/gravite-remede.test.mjs && node tests/lecture-ct.test.mjs && node tests/vin.test.mjs && node scripts/eval.mjs",
     "eject": "react-scripts eject",
     "prebuild": "node scripts/photos-disponibles.mjs",
-    "postbuild": "node scripts/prerendu.mjs"
+    "postbuild": "node scripts/prerendu.mjs",
+    "eval:ct": "node tests/eval-ct/run.mjs"
   },
   "eslintConfig": {
     "extends": [

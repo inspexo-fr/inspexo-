@@ -226,6 +226,45 @@ export async function emailRetourIssue(
   );
 }
 
+/** Confirmation d'achat du Pass (sprint 7) — email transactionnel. */
+export async function emailPassActif(
+  to: string,
+  fin: Date,
+  mode: "precommande" | "vente",
+): Promise<boolean> {
+  const finFr = fin.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  return await sendMail(
+    to,
+    "Votre Pass achat Inspexo est actif",
+    `<p>Merci — votre Pass achat${mode === "precommande" ? " (précommande)" : ""} est actif
+     jusqu'au <strong>${finFr}</strong> : analyses illimitées, visite guidée complète,
+     négociation détaillée, lecture du PV de contrôle technique et kit signature.</p>
+     <p>Pour en profiter, connectez-vous avec <strong>cette adresse email</strong> (lien
+     magique, sans mot de passe) :</p>
+     <p><a href="https://www.inspexo.io/dossier">Ouvrir mon dossier d'achat</a></p>
+     <p style="color:#6B7280;font-size:12px">Reçu et conditions disponibles dans l'email Stripe séparé.
+     Droit de rétractation : voir les <a href="https://www.inspexo.io/cgv-pass">CGV du Pass</a>.
+     Aucune reconduction automatique : le Pass s'arrête seul au bout de 30 jours.<br>
+     Vous recevez cet email parce que vous venez d'acheter un Pass. Pour toute question, répondez à ce message.</p>`,
+    { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
+  );
+}
+
+/** Confirmation de remboursement du Pass (sprint 7). */
+export async function emailPassRembourse(to: string, montantCents: number): Promise<boolean> {
+  const montant = (montantCents / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2 });
+  return await sendMail(
+    to,
+    "Votre Pass achat Inspexo a été remboursé",
+    `<p>Votre Pass achat a été remboursé (${montant} €). Le remboursement apparaît sous
+     5 à 10 jours ouvrés sur le moyen de paiement utilisé, selon votre banque.</p>
+     <p>L'accès aux fonctions du Pass est désactivé. Les analyses gratuites restent, elles,
+     toujours disponibles.</p>
+     <p style="color:#6B7280;font-size:12px">Pour toute question, répondez à ce message.</p>`,
+    { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
+  );
+}
+
 /** Envoi du verdict à un acheteur dont la demande était en attente. */
 export async function envoyerVerdict(
   to: string,

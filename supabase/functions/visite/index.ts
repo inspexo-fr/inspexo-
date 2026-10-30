@@ -18,8 +18,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { calculerAxes, type FaitsAxes } from "../_shared/bareme.ts";
-import { calculerNegociation, coutsApplicables, type CoutCandidat } from "../_shared/negociation.ts";
+import { calculerNegociation, coutsApplicables, negociationPublique, type CoutCandidat } from "../_shared/negociation.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
+import { passDepuisReq } from "../_shared/passAuth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,15 +30,19 @@ const corsHeaders = {
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 const IP_HASH_SALT = Deno.env.get("IP_HASH_SALT");
 if (!IP_HASH_SALT) throw new Error("IP_HASH_SALT manquant — configurez le secret.");
 
 const MODEL = "claude-sonnet-5";
 const FALLBACK_MODEL = "claude-sonnet-4-6";
 const MAX_IMAGES_PAR_APPEL = 2;
-const MAX_PHOTOS_PAR_ANALYSE = 12; // appels vision cumulés sur une même analyse
-const MAX_PHOTOS_PAR_IP = 15; // par 24 h
+// SPRINT 7 — la visite complète est une fonction du Pass ; sans Pass, le mode
+// reste une DÉMO : la checklist et la synthèse sont libres, mais l'analyse
+// photo s'arrête à 2 photos par analyse (découverte), côté serveur.
+const MAX_PHOTOS_PAR_ANALYSE = 12; // Pass : appels vision cumulés sur une même analyse
+const MAX_PHOTOS_DEMO = 2; // sans Pass, par analyse et par IP
+const MAX_PHOTOS_PAR_IP = 15; // par 24 h (sans Pass)
+const MAX_PHOTOS_PAR_IP_PASS = 45; // par 24 h (Pass : plusieurs visites le même jour)
 
 // Étapes photo ajoutées par l'interface quand la checklist ne les couvre pas :
 // mêmes libellés que src/pages/VisitePage.jsx (whitelist de la synthèse).
@@ -188,23 +193,26 @@ serve(async (req: Request) => {
     }
 
     // ---- Régime : persistant uniquement pour un utilisateur connecté qui
-    // suit cette analyse dans son dossier ; éphémère sinon. ----
+    // suit cette analyse dans son dossier ; éphémère sinon. Le Pass (sprint 7)
+    // est décidé sur le même JWT — il débloque la visite complète et la
+    // négociation détaillée, il ne change RIEN au régime de persistance. ----
     let persiste = false;
-    const jwt = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
-    if (jwt && jwt !== SUPABASE_ANON_KEY) {
-      try {
-        const { data: u } = await admin.auth.getUser(jwt);
-        const userId = u?.user?.id ?? null;
-        if (userId) {
-          const { count } = await admin
-            .from("dossier")
-            .select("id", { count: "exact", head: true })
-            .eq("user_id", userId)
-            .eq("analysis_id", analysisId);
-          persiste = (count ?? 0) > 0;
-        }
-      } catch (_) { /* jeton invalide → éphémère */ }
+    const { userId, passActif } = await passDepuisReq(admin, req);
+    if (userId) {
+      const { count } = await admin
+        .from("dossier")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("analysis_id", analysisId);
+      persiste = (count ?? 0) > 0;
     }
+    // Une réponse sans Pass ne porte jamais le détail de négociation (même
+    // masque que get_public_analysis) ; la ligne persistée reste complète.
+    // deno-lint-ignore no-explicit-any
+    const masquerNegociation = (r: any) => {
+      if (passActif || !r || typeof r !== "object" || !r.negociation) return r;
+      return { ...r, negociation: negociationPublique(r.negociation) };
+    };
 
     // Session du visiteur (régime éphémère) : constats déjà obtenus, revalidés.
     const constatsSession = validerConstatsSession(body.constats_precedents);
@@ -313,17 +321,29 @@ serve(async (req: Request) => {
         props_json: { images_count: imagesCount, persiste },
       });
       const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
-      const [{ count: parIp }, { count: parAnalyse }] = await Promise.all([
+      const [{ count: parIp }, { count: parAnalyse }, { count: demoIpAnalyse }] = await Promise.all([
         admin.from("events").select("id", { count: "exact", head: true })
           .eq("name", "visite_photo").eq("ip_hash", ipHash).gte("created_at", since),
         admin.from("events").select("id", { count: "exact", head: true })
           .eq("name", "visite_photo").eq("analysis_id", analysisId).gte("created_at", since),
+        // Démo sans Pass : compte par IP + analyse, pour qu'un visiteur ne
+        // consomme pas la démo d'un autre sur une analyse publique partagée.
+        admin.from("events").select("id", { count: "exact", head: true })
+          .eq("name", "visite_photo").eq("analysis_id", analysisId)
+          .eq("ip_hash", ipHash).gte("created_at", since),
       ]);
-      if ((parIp ?? 0) > MAX_PHOTOS_PAR_IP) {
+      if ((parIp ?? 0) > (passActif ? MAX_PHOTOS_PAR_IP_PASS : MAX_PHOTOS_PAR_IP)) {
         return jsonResponse({ error: "rate_limited", message: "Limite de photos de visite atteinte pour aujourd'hui." }, 429);
       }
       if ((parAnalyse ?? 0) > MAX_PHOTOS_PAR_ANALYSE) {
         return jsonResponse({ error: "rate_limited", message: "Limite de photos atteinte pour cette analyse." }, 429);
+      }
+      if (!passActif && (demoIpAnalyse ?? 0) > MAX_PHOTOS_DEMO) {
+        return jsonResponse({
+          error: "pass_requis",
+          message:
+            "La démo du mode visite s'arrête à 2 photos analysées. Le Pass achat débloque la visite complète (photos illimitées pendant la visite, verdict mis à jour).",
+        }, 403);
       }
 
       const brut = await appelVision(images);
@@ -380,7 +400,7 @@ serve(async (req: Request) => {
           score_apres: result.score,
         },
       });
-      return jsonResponse({ result, constats_nouveaux: nouveaux, persiste });
+      return jsonResponse({ result: masquerNegociation(result), constats_nouveaux: nouveaux, persiste });
     }
 
     // ================= FIN DE VISITE — SYNTHÈSE =================
@@ -492,7 +512,7 @@ serve(async (req: Request) => {
           persiste,
         },
       });
-      return jsonResponse({ synthese, result, persiste });
+      return jsonResponse({ synthese, result: masquerNegociation(result), persiste });
     }
 
     return jsonResponse({ error: "invalid_input", message: "images[] ou terminer:true requis." }, 400);

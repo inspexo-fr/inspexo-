@@ -3,14 +3,27 @@ import { supabase } from './supabaseClient'
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
 const anonKey     = process.env.REACT_APP_SUPABASE_ANON_KEY
 
+/** Jeton d'appel des fonctions : celui de la session quand l'utilisateur est
+ *  connecté (le serveur y lit le Pass achat et le dossier), l'anon key sinon.
+ *  Le déblocage reste décidé CÔTÉ SERVEUR — le jeton ne fait qu'identifier. */
+async function tokenAppel() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token || anonKey
+  } catch (_) {
+    return anonKey
+  }
+}
+
 async function callFunction(name, body) {
+  const token = await tokenAppel()
   let res
   try {
     res = await fetch(`${supabaseUrl}/functions/v1/${name}`, {
       method: 'POST',
       headers: {
         'Content-Type':  'application/json',
-        'Authorization': `Bearer ${anonKey}`,
+        'Authorization': `Bearer ${token}`,
         'apikey':        anonKey,
       },
       body: JSON.stringify(body),
@@ -167,6 +180,48 @@ export async function getDefectSheet(marque, famille) {
   if (error) throw error
   return data
 }
+
+/* ---------- Pass achat (sprint 7) ---------- */
+
+/** Configuration publique du Pass — { actif, mode, prix_cents, mediateur }. */
+export async function getPassConfig() {
+  const res = await fetch(`${supabaseUrl}/functions/v1/pass-checkout`, {
+    headers: { 'Authorization': `Bearer ${anonKey}`, 'apikey': anonKey },
+  })
+  if (!res.ok) throw new Error(`Erreur ${res.status}`)
+  return res.json()
+}
+
+/** Crée la session Stripe Checkout → { url }. CGV acceptées obligatoires. */
+export const creerPassCheckout = (email, { renonceRetractation = false, analysisId = null } = {}) =>
+  callFunction('pass-checkout', {
+    email,
+    accepte_cgv: true,
+    renonce_retractation: renonceRetractation,
+    analysis_id: analysisId,
+  })
+
+/** Pass actif de l'utilisateur connecté — { mode, debut, fin } ou null.
+ *  Rattache au passage les Pass achetés avec cet email avant le 1er login. */
+export async function getMonPass() {
+  const { data, error } = await supabase.rpc('get_mon_pass')
+  if (error) throw error
+  return data
+}
+
+/** Pré-remplissage du kit signature (Pass requis, vérifié serveur). */
+export async function getKitSignature(analysisId) {
+  const { data, error } = await supabase.rpc('get_kit_signature', { p_analysis_id: analysisId })
+  if (error) throw error
+  return data
+}
+
+/** Lecture du PV de contrôle technique (Pass requis, vérifié serveur).
+ *  Photos envoyées au modèle puis oubliées — jamais stockées. */
+export const lectureCt = (analysisId, images, constatsPrecedents = []) =>
+  callFunction('lecture-ct', {
+    analysis_id: analysisId, images, constats_precedents: constatsPrecedents,
+  })
 
 /** Lead email — source ∈ pass_waitlist | expert_waitlist | rapport */
 export async function submitLead(email, source, analysisId = null) {

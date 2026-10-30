@@ -42,6 +42,41 @@ export type Negociation = {
   mention: string;
 };
 
+// SPRINT 7 — version PUBLIQUE (sans Pass) du bloc négociation, miroir exact
+// de la fonction SQL public._negociation_publique (get_public_analysis).
+// Gratuit = fourchette totale + 2 postes principaux ; le reste est RETENU
+// côté serveur (le floutage client du sprint 3 envoyait tout au navigateur).
+export type NegociationPublique = {
+  total_min_eur: number | null;
+  total_max_eur: number | null;
+  nb_postes_chiffres: number;
+  postes: PosteNegociation[];
+  arguments_sans_montant: PosteNegociation[];
+  argumentaire: null;
+  mention: string;
+  masque: true;
+  nb_postes_masques: number;
+  nb_arguments_masques: number;
+};
+
+export function negociationPublique(n: Negociation | null): Negociation | NegociationPublique | null {
+  if (!n || typeof n !== "object") return n;
+  const postes = Array.isArray(n.postes) ? n.postes : [];
+  const sansMontant = Array.isArray(n.arguments_sans_montant) ? n.arguments_sans_montant : [];
+  return {
+    total_min_eur: n.total_min_eur ?? null,
+    total_max_eur: n.total_max_eur ?? null,
+    nb_postes_chiffres: n.nb_postes_chiffres ?? postes.length,
+    postes: postes.slice(0, 2),
+    arguments_sans_montant: [],
+    argumentaire: null,
+    mention: n.mention,
+    masque: true,
+    nb_postes_masques: Math.max(postes.length - 2, 0),
+    nb_arguments_masques: sansMontant.length,
+  };
+}
+
 // Le texte du vendeur n'est JAMAIS recopié tel quel dans un argument affiché :
 // extrait court (≤ 15 mots par défaut), sans lien, email ni numéro de
 // téléphone/SIRET (toute suite d'au moins 9 chiffres — jamais un kilométrage
@@ -68,7 +103,7 @@ const MAX_SANS_MONTANT = 6;
 // détention (moins de 15 000 km ou 12 mois).
 const ECHEANCE_KM = 15_000;
 
-const norm = (t: string) =>
+export const norm = (t: string) =>
   t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
 const STOP = new Set([
@@ -78,7 +113,7 @@ const STOP = new Set([
   "remplacement", "changement", "kit", "usure", "etat", "legere", "visible",
 ]);
 
-const tokens = (t: string) =>
+export const tokens = (t: string) =>
   new Set(norm(t).split(/[^a-z0-9]+/).filter((w) => w.length >= 4 && !STOP.has(w)));
 
 // Organes canoniques : permet d'apparier « plaquettes usées » ↔ « plaquettes
@@ -102,7 +137,7 @@ const ORGANES: Record<string, string[]> = {
   jante: ["jante", "jantes"],
 };
 
-function organesDe(texte: string): Set<string> {
+export function organesDe(texte: string): Set<string> {
   const t = ` ${norm(texte)} `;
   const found = new Set<string>();
   for (const [organe, mots] of Object.entries(ORGANES)) {

@@ -1,0 +1,15 @@
+{
+  "commentaire": "PV synthétique DÉFAVORABLE (188 452 km) joint à une annonce qui prétend 120 000 km : la lecture doit relever km/date/codes/catégories/contre-visite, chiffrer au moins un défaut depuis repair_costs, ne JAMAIS restituer plaque/VIN/titulaire, et faire basculer le verdict en rouge ≤ 35 (compteur contredit par un document officiel).",
+  "lisible": true,
+  "km_releve": 188452,
+  "date_ct": "2026-06-12",
+  "contre_visite": true,
+  "defauts_min": 3,
+  "codes_attendus": ["1.1.3.a.1", "5.2.3.d.2"],
+  "majeures_min": 2,
+  "chiffres_min": 1,
+  "pii_interdits": ["ZZ-999-ZZ", "ZZ999ZZ", "VF3ZZZTESTZ999999", "JEAN FICTIF", "rue de l'Exemple"],
+  "compteur_contredit": true,
+  "verdict_apres": "rouge",
+  "score_max_apres": 35
+}

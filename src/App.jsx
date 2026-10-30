@@ -16,6 +16,8 @@ const MoteurPage = lazy(() => import('./pages/MoteurPage'))
 const TakataPage = lazy(() => import('./pages/TakataPage'))
 const ResultPage = lazy(() => import('./pages/ResultPage'))
 const VisitePage = lazy(() => import('./pages/VisitePage'))
+const KitSignaturePage = lazy(() => import('./pages/KitSignaturePage'))
+const CGVPass = lazy(() => import('./pages/CGVPass'))
 const DossierPage = lazy(() => import('./pages/DossierPage'))
 const FiabilitePage = lazy(() => import('./pages/FiabilitePage'))
 const AdminAudit = lazy(() => import('./pages/AdminAudit'))
@@ -47,6 +49,7 @@ export default function App() {
           <Route path="/airbags-takata" element={<TakataPage />} />
           <Route path="/a/:id" element={<ResultPage />} />
           <Route path="/a/:id/visite" element={<VisitePage />} />
+          <Route path="/a/:id/signature" element={<KitSignaturePage />} />
           <Route path="/dossier" element={<DossierPage />} />
           <Route path="/fiabilite" element={<FiabilitePage />} />
           <Route path="/admin/audit" element={<AdminAudit />} />
@@ -58,6 +61,7 @@ export default function App() {
           <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
           <Route path="/cgu" element={<CGU />} />
+          <Route path="/cgv-pass" element={<CGVPass />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

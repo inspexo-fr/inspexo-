@@ -30,6 +30,7 @@ export default function Footer() {
             <a href="/#faq">Experts et garages : liste d'attente</a>
             <Link to="/mentions-legales">Mentions légales</Link>
             <Link to="/cgu">Conditions d'utilisation</Link>
+            <Link to="/cgv-pass">CGV du Pass achat</Link>
             <Link to="/politique-de-confidentialite">Confidentialité</Link>
             <a href="mailto:contact@inspexo.io">Contact</a>
           </div>

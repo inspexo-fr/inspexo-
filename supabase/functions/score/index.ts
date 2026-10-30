@@ -20,7 +20,8 @@ import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts"
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
-import { calculerNegociation, coutsApplicables, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
+import { calculerNegociation, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
+import { passDepuisReq } from "../_shared/passAuth.ts";
 import {
   compterCritiquesNonFaites,
   dejaCouvert,
@@ -806,6 +807,21 @@ serve(async (req: Request) => {
       req.headers.get("Authorization") === `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`;
     const isEval = await evalSecretMatches(req);
     const ipHash = isInternal ? forwardedIpHash! : await sha256Hex(IP_HASH_SALT + clientIp(req));
+    // Pass achat (sprint 7) : un utilisateur connecté avec Pass actif n'est
+    // soumis ni à la limite de 5 analyses/24 h ni au captcha, et reçoit la
+    // négociation détaillée. Décidé ICI, côté serveur, à partir du JWT.
+    const { passActif } = isInternal
+      ? { passActif: false }
+      : await passDepuisReq(admin, req);
+    // La réponse HTTP d'un appelant sans Pass ne porte jamais le détail de
+    // négociation (le floutage client du sprint 3 envoyait tout au
+    // navigateur) ; la ligne `analyses` reste complète, get_public_analysis
+    // applique le même masque.
+    // deno-lint-ignore no-explicit-any
+    const masquerNegociation = (r: any) => {
+      if (passActif || isEval || !r || typeof r !== "object" || !r.negociation) return r;
+      return { ...r, negociation: negociationPublique(r.negociation) };
+    };
     const sourceUrl = typeof body.source_url === "string" && /^https:\/\/\S{1,500}$/.test(body.source_url)
       ? body.source_url.slice(0, 500)
       : null;
@@ -878,7 +894,7 @@ serve(async (req: Request) => {
         }
         return jsonResponse({
           id: dejaVue.id,
-          result: dejaVue.result_json,
+          result: masquerNegociation(dejaVue.result_json),
           cache: true,
           ...(!finie ? { partial: true } : {}),
         });
@@ -896,10 +912,11 @@ serve(async (req: Request) => {
         text_length: text.length,
         ...(isInternal ? { via: "intake" } : {}),
         ...(isEval ? { eval: true } : {}),
+        ...(passActif ? { pass: true } : {}),
       },
     });
 
-    if (!isEval) {
+    if (!isEval && !passActif) {
       const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
       const { count, error: countError } = await admin
         .from("events")
@@ -2675,6 +2692,7 @@ serve(async (req: Request) => {
           critique: "error" in critiqueCall ? null : critiqueCall.usage,
         },
         ...(isEval ? { eval: true } : {}),
+        ...(passActif ? { pass: true } : {}),
       },
     });
 
@@ -2845,7 +2863,7 @@ serve(async (req: Request) => {
 
     const fin = await finaliser(null);
     if (!fin.ok) return jsonResponse(fin.body, fin.status);
-    return jsonResponse({ id: fin.id, result: fin.result, ...(fin.coutEur != null ? { cout_eur: fin.coutEur } : {}) });
+    return jsonResponse({ id: fin.id, result: masquerNegociation(fin.result), ...(fin.coutEur != null ? { cout_eur: fin.coutEur } : {}) });
   } catch (error) {
     console.error("score error:", error);
     return jsonResponse({ error: "internal", message: "Erreur interne. Réessayez." }, 500);

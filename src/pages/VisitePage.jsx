@@ -108,8 +108,10 @@ export default function VisitePage() {
       setPersiste(p === true)
       if (result?.verdict) setVerdictLive({ verdict: result.verdict, score: result.score })
       setPhotoEtat('idle')
-    } catch (_) {
-      setPhotoEtat('erreur')
+    } catch (e) {
+      // Fin de la démo (2 photos analysées sans Pass) : le serveur répond
+      // pass_requis — on le dit clairement, la visite continue sans photo.
+      setPhotoEtat(e?.code === 'pass_requis' ? 'pass_requis' : 'erreur')
     }
   }
 
@@ -381,6 +383,13 @@ export default function VisitePage() {
                 {photoEtat === 'erreur' && (
                   <p className="c-rouge" style={{ fontSize: 13, marginTop: 8 }}>
                     Photo non analysée (limite atteinte ou réseau) — continuez la visite.
+                  </p>
+                )}
+                {photoEtat === 'pass_requis' && (
+                  <p style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>
+                    Fin de la démo : 2 photos analysées.{' '}
+                    <Link to="/pass">Le Pass achat débloque la visite complète</Link> —
+                    la checklist, elle, continue librement.
                   </p>
                 )}
                 {boutonsReponse}

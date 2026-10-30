@@ -9,6 +9,8 @@ import Doc, { formatRef, formatDateDossier } from '../components/Doc'
 import Stamp from '../components/Stamp'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
+import LectureCtBloc from '../components/LectureCtBloc'
+import VinBloc from '../components/VinBloc'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
 import {
@@ -1132,14 +1134,20 @@ export default function ResultPage() {
               </div>
             )}
 
-            {/* Marge de négociation */}
-            {!enCours && r.negociation && ((r.negociation.postes || []).length > 0 || (r.negociation.arguments_sans_montant || []).length > 0) && (() => {
+            {/* Marge de négociation — le détail au-delà de 2 postes est RETENU
+                côté serveur sans Pass (negociation.masque) : le flou couvre un
+                gabarit factice, jamais la vraie donnée. Avec Pass, tout vient. */}
+            {!enCours && r.negociation && ((r.negociation.postes || []).length > 0 || (r.negociation.arguments_sans_montant || []).length > 0 || (r.negociation.nb_postes_masques || 0) > 0 || (r.negociation.nb_arguments_masques || 0) > 0) && (() => {
               const negociation = r.negociation
+              const masque = negociation.masque === true
               const postes = negociation.postes || []
               const sansMontant = negociation.arguments_sans_montant || []
-              const visibles = postes.slice(0, 2)
-              const masques = postes.length - visibles.length
-              const aDetail = masques > 0 || sansMontant.length > 0 || negociation.argumentaire
+              const visibles = masque ? postes : postes.slice(0, 2)
+              const masques = masque ? (negociation.nb_postes_masques || 0) : postes.length - visibles.length
+              const nbSansMontantMasques = masque ? (negociation.nb_arguments_masques || 0) : 0
+              const aDetail = masque
+                ? masques + nbSansMontantMasques > 0 || negociation.total_min_eur != null
+                : masques > 0 || sansMontant.length > 0 || negociation.argumentaire
               return (
                 <div className="doc-sec">
                   <p className="eyebrow">Marge de négociation</p>
@@ -1170,24 +1178,22 @@ export default function ResultPage() {
                       </div>
                     )
                   })}
-                  {postes.length === 0 && sansMontant.slice(0, 2).map((p, i) => (
+                  {postes.length === 0 && sansMontant.map((p, i) => (
                     <div className="ctrl" key={i}>
                       <span>{p.argument} <span className="c-graphite">(à faire chiffrer par un garage)</span></span>
                     </div>
                   ))}
-                  {aDetail && (
+                  {masque && aDetail && (
                     <div style={{ position: 'relative', marginTop: 12, overflow: 'hidden', border: '1px solid var(--rule)' }}>
+                      {/* Gabarit factice : le serveur n'a PAS envoyé le détail. */}
                       <div aria-hidden="true" style={{ filter: 'blur(6px)', userSelect: 'none', pointerEvents: 'none', padding: '14px 16px', minHeight: 120 }}>
-                        {postes.slice(2).map((p, i) => (
+                        {Array.from({ length: Math.min(masques + nbSansMontantMasques, 4) }).map((_, i) => (
                           <div key={i} className="c-ink2" style={{ fontSize: 14, padding: '6px 0' }}>
-                            {p.argument} — {euros(p.cout_min_eur, p.cout_max_eur)}
+                            Poste de négociation n°{i + 3} — ◼◼◼ à ◼◼◼ € (source vérifiée)
                           </div>
                         ))}
-                        {sansMontant.map((p, i) => (
-                          <div key={`s${i}`} className="c-ink2" style={{ fontSize: 14, padding: '6px 0' }}>{p.argument}</div>
-                        ))}
-                        <div className="c-ink2" style={{ fontSize: 14, padding: '6px 0', whiteSpace: 'pre-wrap' }}>
-                          {negociation.argumentaire}
+                        <div className="c-ink2" style={{ fontSize: 14, padding: '6px 0' }}>
+                          « Monsieur, le contrôle technique et l'entretien relevés représentent ◼◼◼ € de remise en état… »
                         </div>
                       </div>
                       <div style={{
@@ -1195,13 +1201,45 @@ export default function ResultPage() {
                         alignItems: 'center', justifyContent: 'center', gap: 10, padding: '14px 16px', textAlign: 'center',
                       }}>
                         <div style={{ fontSize: 14, fontWeight: 700, background: 'var(--paper)', border: '1px solid var(--rule-strong)', padding: '8px 12px' }}>
-                          {masques + sansMontant.length > 0
-                            ? `${masques + sansMontant.length} argument${masques + sansMontant.length > 1 ? 's' : ''} de plus, les sources et l'argumentaire prêt à dire au vendeur : réservés au Pass achat (29 €)`
+                          {masques + nbSansMontantMasques > 0
+                            ? `${masques + nbSansMontantMasques} argument${masques + nbSansMontantMasques > 1 ? 's' : ''} de plus, les sources et l'argumentaire prêt à dire au vendeur : réservés au Pass achat (29 €)`
                             : 'Les sources et l\'argumentaire prêt à dire au vendeur : réservés au Pass achat (29 €)'}
                         </div>
                         <PassCTA analysisId={id} />
                       </div>
                     </div>
+                  )}
+                  {!masque && (
+                    <>
+                      {postes.slice(2).map((p, i) => {
+                        const numsPoste = (p.urls || []).slice(0, 2).map(u => registre.register(u, libelleSource(u), u))
+                        return (
+                          <div className="ctrl" key={`m${i}`} style={{ alignItems: 'baseline' }}>
+                            <span>
+                              {p.argument}
+                              <Ref nums={numsPoste} />
+                              <span className="mono c-graphite" style={{ display: 'block', fontSize: 11, marginTop: 2 }}>
+                                {p.source_statut === 'valide_devis' ? 'Fourchette confirmée par un devis vérifié'
+                                  : p.source_statut === 'fiche' ? 'Coût publié pour ce moteur'
+                                  : 'Fourchette publiée'}
+                              </span>
+                            </span>
+                            <span className="val num">{euros(p.cout_min_eur, p.cout_max_eur)}</span>
+                          </div>
+                        )
+                      })}
+                      {postes.length > 0 && sansMontant.map((p, i) => (
+                        <div className="ctrl" key={`sm${i}`}>
+                          <span>{p.argument} <span className="c-graphite">(à faire chiffrer par un garage)</span></span>
+                        </div>
+                      ))}
+                      {negociation.argumentaire && (
+                        <div style={{ marginTop: 12, border: '1px solid var(--rule-strong)', padding: '14px 16px' }}>
+                          <p className="eyebrow" style={{ marginBottom: 8 }}>Argumentaire prêt à dire au vendeur</p>
+                          <p style={{ fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{negociation.argumentaire}</p>
+                        </div>
+                      )}
+                    </>
                   )}
                   <p className="mono c-graphite" style={{ marginTop: 12, fontSize: 11, lineHeight: 1.6 }}>
                     {negociation.mention}
@@ -1243,6 +1281,18 @@ export default function ResultPage() {
                 </p>
               </div>
             )}
+
+            {/* PV de contrôle technique (sprint 7 — fonction du Pass, démo annoncée) */}
+            {!enCours && r.type === 'vehicule' && (
+              <LectureCtBloc
+                analysisId={id}
+                result={r}
+                onMaj={(maj) => setAnalysis(prev => prev ? { ...prev, result: adaptResult(maj) } : prev)}
+              />
+            )}
+
+            {/* Numéro de châssis (sprint 7 — décodage normatif gratuit, local) */}
+            {!enCours && r.type === 'vehicule' && <VinBloc vehicule={vh} />}
 
             {/* Prix */}
             {!enCours && (
@@ -1342,7 +1392,12 @@ export default function ResultPage() {
               </div>
               <p className="mono c-graphite" style={{ marginTop: 8, fontSize: 11, lineHeight: 1.6 }}>
                 Mode visite guidé (liste de contrôle pas à pas, photos analysées sur place) — fonction du
-                Pass achat, en démo libre pendant le lancement. Les photos ne sont jamais conservées.
+                Pass achat, démo libre : 2 photos analysées. Les photos ne sont jamais conservées.
+              </p>
+              <p style={{ marginTop: 10, fontSize: 14 }}>
+                <Link to={`/a/${id}/signature`}>
+                  Kit signature : documents à exiger, contrat de cession pré-rempli, démarches ANTS →
+                </Link>
               </p>
             </div>
           )}

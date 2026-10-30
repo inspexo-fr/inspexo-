@@ -28,3 +28,11 @@ captures-sprint6/
 tests/eval-video/*/enregistrement.*
 .couverture-cout.json
 .couverture-resultats.json
+
+# captures du rapport de sprint 7
+captures-sprint7/
+
+# PV de contrôle technique RÉELS (plaque, VIN, titulaire : jamais commités).
+# Seul le PV SYNTHÉTIQUE (données fictives, généré par generer-pv.mjs) l'est.
+tests/eval-ct/*/photos/
+!tests/eval-ct/pv-synthetique/photos/

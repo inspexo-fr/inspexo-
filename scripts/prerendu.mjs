@@ -150,6 +150,7 @@ const ROUTES = [
   { url: '/extension', attendre: '.channels', priorite: '0.6' },
   { url: '/fiabilite', attendre: 'h1', priorite: '0.6' },
   { url: '/cgu', attendre: '.legal-h1', priorite: '0.3' },
+  { url: '/cgv-pass', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/mentions-legales', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/politique-de-confidentialite', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/extension/confidentialite', attendre: '.rows', priorite: '0.3' },

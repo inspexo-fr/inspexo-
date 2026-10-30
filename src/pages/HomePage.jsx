@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
@@ -7,7 +7,7 @@ import AnalyseForm from '../components/AnalyseForm'
 import PhotoSlot from '../components/PhotoSlot'
 import Rows from '../components/Rows'
 import DossierApercu from '../components/DossierApercu'
-import EmailCapture from '../components/EmailCapture'
+import PassCheckout from '../components/PassCheckout'
 
 // Accueil — reproduction de docs/design/maquette-v1.html (référence absolue).
 // Structure et textes mot pour mot ; le formulaire du hero est le VRAI
@@ -223,9 +223,9 @@ export default function HomePage() {
 }
 
 // Les deux plans du Pass achat — CTA gratuit vers le formulaire, CTA Pass =
-// capteur « Être prévenu » (pass_waitlist), seule action orange de l'écran.
+// paiement Stripe quand la vente est ouverte côté serveur (sprint 7), sinon
+// capteur « Être prévenu » (pass_waitlist). Seule action orange de l'écran.
 export function PlansPass({ analysisId = null }) {
-  const [capture, setCapture] = useState(false)
   return (
     <div className="plans">
       <div className="plan">
@@ -255,17 +255,7 @@ export function PlansPass({ analysisId = null }) {
           <li><span className="m">+</span>Kit signature : contrat de cession, documents à exiger, démarches</li>
         </ul>
         <div className="plan-foot">
-          {capture ? (
-            <EmailCapture
-              title="Le Pass achat arrive — être prévenu du lancement ?"
-              buttonLabel="Être prévenu"
-              source="pass_waitlist"
-              analysisId={analysisId}
-            />
-          ) : (
-            <button type="button" className="btn" onClick={() => setCapture(true)}>Être prévenu du lancement</button>
-          )}
-          <p className="pass-note">Sortie prévue en décembre 2026. Remboursé sans condition pendant 14 jours. Aucune reconduction automatique.</p>
+          <PassCheckout analysisId={analysisId} />
         </div>
       </div>
     </div>
