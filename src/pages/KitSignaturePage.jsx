@@ -176,23 +176,11 @@ export default function KitSignaturePage() {
 
             {kit === undefined ? (
               <p className="eyebrow" aria-busy="true" style={{ padding: '30px 0' }}>Chargement…</p>
-            ) : kit === null ? (
-              <>
-                {!user ? (
-                  <div style={{ border: '1px solid var(--rule-strong)', padding: '22px 18px', marginTop: 22 }}>
-                    <p style={{ fontSize: 15, lineHeight: 1.7 }}>
-                      Le kit signature est réservé au Pass achat et exige d'être connecté.
-                      Connectez-vous par lien magique depuis votre <Link to="/dossier">dossier d'achat</Link>,
-                      puis revenez sur cette page.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="alert alert-rouge" style={{ marginTop: 22 }}>
-                    Analyse introuvable. Repassez par la page du dossier (<Link to={`/a/${id}`}>/a/…</Link>).
-                  </div>
-                )}
-              </>
-            ) : kit.pass === false ? (
+            ) : kit === null && user ? (
+              <div className="alert alert-rouge" style={{ marginTop: 22 }}>
+                Analyse introuvable. Repassez par la page du dossier (<Link to={`/a/${id}`}>/a/…</Link>).
+              </div>
+            ) : kit === null || kit.pass === false ? (
               <div style={{ border: '1px solid var(--rule-strong)', padding: '22px 18px', marginTop: 22 }}>
                 <p style={{ fontSize: 15, lineHeight: 1.7 }}>
                   Checklist des documents à exiger (chaque obligation avec sa source officielle),

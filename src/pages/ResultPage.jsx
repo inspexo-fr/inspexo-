@@ -1145,8 +1145,10 @@ export default function ResultPage() {
               const visibles = masque ? postes : postes.slice(0, 2)
               const masques = masque ? (negociation.nb_postes_masques || 0) : postes.length - visibles.length
               const nbSansMontantMasques = masque ? (negociation.nb_arguments_masques || 0) : 0
+              // En masqué, l'argumentaire (retenu serveur) existe dès qu'il y a
+              // au moins un poste ou un argument : le teaser Pass s'affiche.
               const aDetail = masque
-                ? masques + nbSansMontantMasques > 0 || negociation.total_min_eur != null
+                ? masques + nbSansMontantMasques + postes.length > 0
                 : masques > 0 || sansMontant.length > 0 || negociation.argumentaire
               return (
                 <div className="doc-sec">
