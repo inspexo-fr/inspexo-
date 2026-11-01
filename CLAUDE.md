@@ -347,6 +347,32 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 ### Mise en service (ordre OBLIGATOIRE)
 1. dump prod puis `db push` (migration sprint7) ; 2. déployer `pass-webhook` **--no-verify-jwt**, puis `pass-checkout`, `lecture-ct`, `admin-passes`, `ops`, `score`, `visite` ; 3. `node scripts/configurer-stripe-pass.mjs` avec sk_test + `node scripts/tester-pass-stripe.mjs` ; 4. éval ciblée S7/308/Mercedes + `npm run eval:ct` ; 5. pour VENDRE : médiateur désigné → relancer configurer-stripe-pass avec sk_live + MEDIATEUR_NOM, paiement réel remboursé via l'admin.
 
+## Sprint 8 — Inspection à la demande (nov. 2026)
+
+### Inventaire de l'ancien parcours experts (fait avant de construire)
+- **En base, VIDE mais présent** : `experts` (0), `missions` (2 lignes de test), `expert_applications` (0), `profiles` (2), `reviews` (0), `messages` (0), `chat_files` (1), `price_data` (0). ⚠️ **Aucune migration ne crée ces tables** — elles datent du dashboard (sessions 1-3), et ce sont les **seules du projet avec des policies RLS anon/authenticated directes**. Laissées intactes : le sprint 8 construit à côté.
+- **En code** : routes `/dashboard` et `/expert` toujours montées mais **sans aucun lien public** ; onglets admin Missions/Candidatures ; `CheckoutModal` et `FreeAnalysisModal` orphelins ; `ChatIA`, `CalBooking`, `MissionChat`, `ReviewModal`, `AuthModal` encore importés par les 2 dashboards. Cal.com = aucune intégration active (mentions résiduelles seulement).
+- **Supprimé au sprint 5** : les 13 composants de la landing legacy (Hero, Services, Experts, BecomeExpert, ExpertModal, ExpertApplicationModal, FAQ, HowItWorks, StatsBar, StickyCTA, WhyInspexo, LeadEmailForm, FooterNotes) — tout le parcours de candidature expert public avait donc disparu, mais la table, les fonctions admin et l'espace `/expert` étaient restés.
+- ⚠️ **TROUVAILLE DE SÉCURITÉ (corrigée, déployée)** : `create-connect-account` et `create-transfer` étaient déployées `verify_jwt:false` **sans aucune authentification dans le code** — confirmé en prod, la première répondait sans le moindre jeton. Un POST anonyme avec un `expert_id` rendait un **lien d'onboarding Stripe** (donc la possibilité d'y mettre son propre RIB) ; un POST avec un `mission_id` déclenchait un **virement réel**. Inexploitables table vide, elles le devenaient dès la création d'inspecteurs → **neutralisées en 410 avant toute autre chose**. ⚠️ **`ai-chat` et `upload-chat-file` sont dans le même état** (sans auth, `ai-chat` consomme du crédit Anthropic) : signalés, hors périmètre du sprint 8 — à traiter.
+
+### Produit
+- Bloc « Faire inspecter cette voiture » sur `/a/:id` : **179 € TTC**, créneau **sous 48 h**, zone **Toulouse et Haute-Garonne (dép. 31)** au lancement. Hors zone ou service fermé : **liste d'attente email** (`expert_waitlist`), jamais de commande.
+- **VERROU D'OUVERTURE (serveur)** : le service n'est `ouvert` que si **MEDIATEUR_NOM** est posé ET **au moins un inspecteur `valide` avec `stripe_paiements_actifs`** couvre le département. Vérifié côté serveur à chaque appel — l'interface ne peut pas passer outre.
+- Espace inspecteur `/inspecteur` : missions de ses départements, accepter/refuser, inspection guidée par la **checklist de l'analyse**, **photos CONSERVÉES** pour le rapport, rapport déposé dans le dossier de l'acheteur (`RapportInspection` sur `/a/:id`, URL signées 300 s).
+- Onboarding `/inspecteur/inscription` en 4 étapes : SIRET, attestation RC pro (bucket privé), charte d'indépendance signée, Stripe Connect. Validation par l'admin (onglet « Inspecteurs »).
+
+### Architecture
+- **Tables** (migration `20261101120000`) : `inspecteurs`, `inspections`, `inspection_refus`, `inspection_photos` — RLS active, **zéro policy**, accès par RPC SECURITY DEFINER uniquement. Buckets privés `rapports` et `inspecteurs`.
+- ⚠️ **EXCEPTION ASSUMÉE au principe « photos jamais stockées »** : les photos prises par l'INSPECTEUR pendant une inspection payée sont conservées — **elles SONT le rapport acheté**. Bucket privé, lisibles des seules parties (acheteur, inspecteur, admin), **consentement horodaté exigé côté serveur** avant tout dépôt (`inspection_consentement_photos`). Les photos de l'ACHETEUR (score, mode visite, PV de CT) restent, elles, jamais stockées.
+- **Coordonnées du vendeur révélées APRÈS acceptation seulement** : `inspecteur_missions` les rend `null` tant que `inspecteur_id <> moi` (vérifié par test).
+- **Acceptation atomique** : `inspection_accepter` filtre sur le statut dans l'UPDATE — deux acceptations simultanées, une seule passe, la seconde reçoit `deja_prise`.
+- **Argent (charge et transfert séparés)** : `inspection-checkout` pose `transfer_group = inspection_<id>` sur la charge ; `inspection-rapport` crée le Transfer avec **le même transfer_group** + `source_transaction` = la charge (fonds disponibles immédiatement) + `idempotencyKey`. ⚠️ Le legacy posait **deux transfer_group différents** : charge et transfert n'étaient reliés par rien — ne pas reproduire. **Aucun point d'entrée client ne déplace d'argent** : le versement part du serveur à la remise du rapport.
+- **Module pur** `_shared/inspection.ts` (+ copie client `src/data/charte.js`) : prix et parts en centimes (60 % = 107,40 €), SIRET Luhn **avec l'exception La Poste** (SIREN 356000000 : somme des 14 chiffres multiple de 5), zone, créneau [+2 h, +48 h], charte versionnée. `tests/inspection.test.mjs` (48 contrôles) : **invariant monétaire sur 50 000 montants** (les deux parts font toujours le total), et **charte identique client/serveur mot pour mot** — l'inspecteur signe le texte qu'il voit.
+- Webhook **distinct** de celui du Pass (`INSPECTION_WEBHOOK_SECRET`, `inspection-webhook` en `--no-verify-jwt`) : un incident sur un produit ne coupe pas l'autre.
+
+### Mise en service (ordre)
+1. `node scripts/configurer-stripe-inspection.mjs` (crée l'endpoint webhook, pose le secret) ; 2. `node scripts/tester-inspection-stripe.mjs` **en clé sk_test** (parcours complet : commande → paiement → webhook → masquage des coordonnées → acceptation → rapport → versement → idempotence ; **refuse de tourner sur une clé live**) ; 3. recruter et valider un inspecteur (admin) ; 4. poser `MEDIATEUR_NOM` → le service s'ouvre de lui-même.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

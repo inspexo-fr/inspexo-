@@ -28,6 +28,14 @@ export const ZONE_LIBELLE = 'Toulouse et Haute-Garonne'
 export const PRIX_INSPECTION_CENTS = 17900
 export const PART_INSPECTEUR_CENTS = 10740
 
+/** Montant en centimes → euros à la française. Les centimes s'affichent
+ *  seulement s'il y en a : « 179 € » mais « 107,40 € » (et jamais « 107,4 € »). */
+export function euros(cents) {
+  const n = Number(cents) / 100
+  const decimales = Number.isInteger(n) ? 0 : 2
+  return `${n.toLocaleString('fr-FR', { minimumFractionDigits: decimales, maximumFractionDigits: decimales })} €`
+}
+
 /** Validation du SIRET côté client (confort de saisie) — le serveur refait
  *  le contrôle, c'est lui qui fait foi. Même règle, exception La Poste incluse. */
 export function siretValide(brut) {

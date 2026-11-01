@@ -3,14 +3,13 @@ import { Link } from 'react-router-dom'
 import EmailCapture from './EmailCapture'
 import { supabase } from '../lib/supabaseClient'
 import { commanderInspection, getInspectionConfig, mesInspections } from '../lib/inspectionApi'
+import { euros } from '../data/charte'
 
 // SPRINT 8 — Bloc « Faire inspecter cette voiture » de /a/:id.
 // Le service n'apparaît que si le SERVEUR dit qu'il est ouvert : médiateur
 // désigné, clé de paiement en place, et au moins un inspecteur validé dont
 // le compte Connect accepte les versements. Hors zone couverte : liste
 // d'attente par email, jamais de commande.
-
-const euros = (cents) => `${(cents / 100).toLocaleString('fr-FR')} €`
 
 /** Créneaux proposés : demain et après-demain, matin ou après-midi — dans la
  *  fenêtre de 48 h que le produit garantit. */

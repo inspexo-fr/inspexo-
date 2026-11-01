@@ -10,7 +10,7 @@ import {
   accepterMission, consentirPhotos, inspecteurMissions, monProfilInspecteur,
   refuserMission, rendreRapport,
 } from '../lib/inspectionApi'
-import { CONSENTEMENT_PHOTOS, PART_INSPECTEUR_CENTS } from '../data/charte'
+import { CONSENTEMENT_PHOTOS, euros, PART_INSPECTEUR_CENTS } from '../data/charte'
 
 // SPRINT 8 — Espace inspecteur : missions reçues, acceptation ou refus,
 // inspection guidée sur la voiture (la checklist de l'analyse, point par
@@ -20,7 +20,6 @@ import { CONSENTEMENT_PHOTOS, PART_INSPECTEUR_CENTS } from '../data/charte'
 // acceptation : avant, cet écran ne peut pas les afficher, même s'il le
 // voulait.
 
-const euros = (c) => `${(c / 100).toLocaleString('fr-FR')} €`
 const dateFr = (iso) => iso
   ? new Date(iso).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
   : 'à confirmer'
