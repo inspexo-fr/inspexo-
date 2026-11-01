@@ -7,7 +7,7 @@ import Turnstile from '../components/Turnstile'
 import { supabase } from '../lib/supabaseClient'
 import {
   dossierList, dossierSetStatut, dossierSetAlertes, dossierRemove,
-  submitOutcome, envoyerLienMagique,
+  submitOutcome, envoyerLienMagique, getMonPass,
 } from '../lib/scoreApi'
 
 const VERDICT_LABELS = { vert: 'FEU VERT', orange: 'PRUDENCE', rouge: 'SIGNAUX ROUGES' }
@@ -88,6 +88,7 @@ function FormulaireRetour({ item, onDone }) {
 export default function DossierPage() {
   const [user, setUser] = useState(undefined) // undefined = chargement
   const [items, setItems] = useState(null)
+  const [pass, setPass] = useState(null) // Pass achat actif { mode, debut, fin } ou null
   const [email, setEmail] = useState('')
   const [lienEtat, setLienEtat] = useState('idle')
   const [captcha, setCaptcha] = useState(null)
@@ -106,6 +107,13 @@ export default function DossierPage() {
   }, [])
 
   useEffect(() => { if (user) charger() }, [user, charger])
+
+  // Pass achat : l'appel rattache aussi un Pass acheté avec cet email avant
+  // la première connexion (l'email Stripe crée ou précède le compte).
+  useEffect(() => {
+    if (user) getMonPass().then(setPass).catch(() => setPass(null))
+    else setPass(null)
+  }, [user])
 
   const envoyerLien = async (e) => {
     e.preventDefault()
@@ -202,6 +210,22 @@ export default function DossierPage() {
                     SE DÉCONNECTER
                   </button>
                 </div>
+
+                {pass && (
+                  <div className="mono" style={{
+                    border: '1px solid var(--rule-strong)', padding: '10px 14px', marginBottom: 14,
+                    fontSize: 11, letterSpacing: '.04em', display: 'flex', justifyContent: 'space-between',
+                    gap: 10, flexWrap: 'wrap',
+                  }}>
+                    <span className="c-vert" style={{ fontWeight: 700 }}>
+                      PASS ACHAT ACTIF{pass.mode === 'precommande' ? ' (PRÉCOMMANDE)' : ''}
+                    </span>
+                    <span className="c-graphite">
+                      jusqu'au {new Date(pass.fin).toLocaleDateString('fr-FR')} · analyses illimitées,
+                      visite complète, négociation détaillée, PV de CT, kit signature
+                    </span>
+                  </div>
+                )}
 
                 {erreur && <div className="alert alert-rouge">{erreur}</div>}
 

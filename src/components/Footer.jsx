@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Seal from './Seal'
+import { IDENTITE_LIGNE } from '../data/identite'
 
 // Pied de page de la maquette sprint 5 — identique sur toutes les pages.
 export default function Footer() {
@@ -30,12 +31,13 @@ export default function Footer() {
             <a href="/#faq">Experts et garages : liste d'attente</a>
             <Link to="/mentions-legales">Mentions légales</Link>
             <Link to="/cgu">Conditions d'utilisation</Link>
+            <Link to="/cgv-pass">CGV du Pass achat</Link>
             <Link to="/politique-de-confidentialite">Confidentialité</Link>
             <a href="mailto:contact@inspexo.io">Contact</a>
           </div>
         </div>
         <div className="legal">
-          <span>DUPLEX SAS · Toulouse · 2026</span>
+          <span>{IDENTITE_LIGNE} · 2026</span>
           <span>Analyse automatique. Ne remplace pas l'examen du véhicule par un professionnel.</span>
         </div>
       </div>

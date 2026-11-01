@@ -21,6 +21,25 @@ serve(async (req: Request) => {
   if (!(await secretOk(req))) {
     return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
   }
+  // ?stripe=1 : régime de la clé Stripe posée (test ou live), rien d'autre.
+  // Lecture seule — garde-fou du script tester-pass-stripe.mjs, qui REFUSE
+  // de payer si la clé n'est pas une clé de test.
+  if (new URL(req.url).searchParams.get("stripe") === "1") {
+    const sk = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!sk) {
+      return new Response(JSON.stringify({ stripe: null }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const bal = await fetch("https://api.stripe.com/v1/balance", {
+      headers: { Authorization: `Bearer ${sk}` },
+    });
+    const data = await bal.json().catch(() => null);
+    return new Response(
+      JSON.stringify({ stripe: bal.ok ? { livemode: data?.livemode === true } : { erreur: bal.status } }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }
   const res = await fetch("https://api.anthropic.com/v1/models?limit=100", {
     headers: { "x-api-key": ANTHROPIC_API_KEY!, "anthropic-version": "2023-06-01" },
   });

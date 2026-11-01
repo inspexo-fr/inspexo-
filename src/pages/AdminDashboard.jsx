@@ -858,6 +858,130 @@ function CoutsTab() {
   )
 }
 
+// ─── Onglet Pass achat (sprint 7) ─────────────────────────────────────────────
+
+function PassesTab() {
+  const [passes, setPasses]   = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState(null)
+  const [enCours, setEnCours] = useState(null) // id du remboursement en cours
+  const [message, setMessage] = useState(null)
+
+  const fetchPasses = useCallback(async () => {
+    setLoading(true); setError(null)
+    const data = await adminFetch('admin-passes', { method: 'GET' })
+    if (data.error) { setError(data.error); setLoading(false); return }
+    setPasses(data.passes || [])
+    setLoading(false)
+  }, [])
+
+  useEffect(() => { fetchPasses() }, [fetchPasses])
+
+  const rembourser = async (p) => {
+    const montant = (p.montant_cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 })
+    // Remboursement Stripe intégral + email au client : irréversible.
+    if (!window.confirm(`Rembourser intégralement ${montant} € à ${p.email} ? (Stripe + email de confirmation)`)) return
+    setEnCours(p.id); setMessage(null)
+    const data = await adminFetch('admin-passes', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'rembourser', id: p.id }),
+    })
+    setEnCours(null)
+    if (data.error) { setMessage(`Remboursement impossible : ${data.error}`); return }
+    setMessage(`Remboursé (${data.refund_status}) — email envoyé à ${p.email}.`)
+    fetchPasses()
+  }
+
+  const exporterCsv = () => {
+    const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`
+    const lignes = [
+      ['email', 'mode', 'statut', 'actif', 'montant_eur', 'retractation_renoncee', 'cgv_version', 'debut', 'fin', 'achete_le', 'stripe_session', 'stripe_payment_intent'].join(';'),
+      ...passes.map(p => [
+        p.email, p.mode, p.statut, p.actif ? 'oui' : 'non',
+        (p.montant_cents / 100).toFixed(2).replace('.', ','),
+        p.retractation_renoncee ? 'oui' : 'non', p.cgv_version ?? '',
+        p.debut, p.fin, p.created_at, p.stripe_session, p.stripe_payment_intent ?? '',
+      ].map(esc).join(';')),
+    ]
+    // BOM pour qu'Excel ouvre le CSV en UTF-8 (accents des emails).
+    const blob = new Blob(['\uFEFF' + lignes.join('\n')], { type: 'text/csv;charset=utf-8' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `inspexo-passes-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
+  if (loading) return <Spinner label="Chargement des Pass..." />
+  if (error)   return <ErrorBox msg={error} />
+
+  const actifs = passes.filter(p => p.actif).length
+  const ca = passes.filter(p => p.statut !== 'rembourse').reduce((s, p) => s + p.montant_cents, 0) / 100
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>Pass achat</div>
+          <div style={styles.pageSub}>
+            {passes.length} Pass vendus — {actifs} actif{actifs !== 1 ? 's' : ''} — {ca.toLocaleString('fr-FR')} € encaissés (hors remboursés).
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={exporterCsv} style={styles.refreshBtn} disabled={passes.length === 0}>Export CSV</button>
+          <button onClick={fetchPasses} style={styles.refreshBtn}>↻ Actualiser</button>
+        </div>
+      </div>
+
+      {message && <div style={{ marginBottom: 12, color: '#0F1B2D', fontSize: '0.875rem', fontWeight: 600 }}>{message}</div>}
+
+      {passes.map(p => (
+        <div key={p.id} style={{
+          background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+          padding: '14px 16px', marginBottom: 10,
+          display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center',
+        }}>
+          <div style={{ flex: '1 1 260px' }}>
+            <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{p.email}</span>
+            <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
+              {p.mode === 'precommande' ? 'Précommande' : 'Vente'} · acheté le {formatDate(p.created_at)} ·
+              valable du {formatDate(p.debut)} au {formatDate(p.fin)} ·
+              rétractation {p.retractation_renoncee ? 'renoncée (usage immédiat)' : 'conservée'}
+              {p.user_id ? ' · compte rattaché' : ' · compte non rattaché'}
+            </div>
+          </div>
+          <div style={{ fontWeight: 700, color: '#1E4D8C', whiteSpace: 'nowrap' }}>
+            {(p.montant_cents / 100).toLocaleString('fr-FR')} €
+          </div>
+          <span style={{
+            fontSize: '0.6875rem', fontWeight: 700, borderRadius: 100, padding: '3px 10px',
+            background: p.statut === 'rembourse' ? '#FEF2F2' : p.actif ? '#F0FDF4' : '#F0F2F5',
+            color: p.statut === 'rembourse' ? '#DC2626' : p.actif ? '#16A34A' : '#6B7280',
+          }}>
+            {p.statut === 'rembourse' ? 'Remboursé' : p.actif ? 'Actif' : 'Expiré'}
+          </span>
+          {p.statut !== 'rembourse' && (
+            <button
+              onClick={() => rembourser(p)}
+              disabled={enCours === p.id}
+              style={{
+                background: '#fff', color: '#DC2626', border: '1.5px solid rgba(220,38,38,0.35)',
+                borderRadius: 8, padding: '8px 14px', fontFamily: 'var(--sans)',
+                fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer',
+              }}
+            >
+              {enCours === p.id ? 'Remboursement…' : 'Rembourser'}
+            </button>
+          )}
+        </div>
+      ))}
+      {passes.length === 0 && (
+        <EmptyState icon="" title="Aucun Pass vendu" sub="Les achats apparaissent ici dès le premier paiement Stripe confirmé par le webhook." />
+      )}
+    </div>
+  )
+}
+
 // ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function AdminDashboard() {
@@ -919,6 +1043,7 @@ export default function AdminDashboard() {
   }
 
   const navItems = [
+    { key: 'passes',       label: 'Pass achat' },
     { key: 'missions',     label: 'Missions' },
     { key: 'applications', label: 'Candidatures' },
     { key: 'couts',        label: 'Coûts réparation' },
@@ -1010,6 +1135,7 @@ export default function AdminDashboard() {
         {/* ── Contenu principal ── */}
         <main style={{ flexGrow: 1, background: '#F8F9FA', minHeight: '100vh', overflowY: 'auto' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
+            {tab === 'passes'       && <PassesTab />}
             {tab === 'missions'     && <MissionsTab />}
             {tab === 'applications' && <ApplicationsTab />}
             {tab === 'couts'        && <CoutsTab />}

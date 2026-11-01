@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import { IDENTITE } from '../data/identite'
 
 export default function CGU() {
   return (
@@ -255,10 +256,12 @@ export default function CGU() {
           <h2 className="legal-h2">Article 17 — Contact</h2>
           <p className="legal-p">
             Pour toute question relative aux présentes CGU/CGV :<br /><br />
-            <strong>DUPLEX SAS</strong><br />
-            17 rue Pierre Deldi, 31100 Toulouse<br />
-            <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a><br />
-            <a href="https://inspexo.io" className="legal-a">https://inspexo.io</a>
+            <strong>{IDENTITE.raison_sociale}</strong> — {IDENTITE.forme_juridique} au capital de {IDENTITE.capital}<br />
+            {IDENTITE.adresse}<br />
+            SIREN : {IDENTITE.siren} — SIRET (siège) : {IDENTITE.siret}<br />
+            {IDENTITE.rcs} — TVA intracommunautaire : {IDENTITE.tva}<br />
+            <a href={`mailto:${IDENTITE.email}`} className="legal-a">{IDENTITE.email}</a><br />
+            <a href={IDENTITE.site} className="legal-a">{IDENTITE.site}</a>
           </p>
 
         </div>

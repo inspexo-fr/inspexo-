@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Turnstile from './Turnstile'
 import { analyzeListing, submitPendingAnalysis } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
@@ -42,6 +42,7 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
   const [waitState, setWaitState] = useState('idle') // idle | sending | done | error
   const [captchaRequis, setCaptchaRequis] = useState(false) // au-delà de 2 analyses/jour
   const [captchaToken, setCaptchaToken] = useState(null)
+  const [limiteAtteinte, setLimiteAtteinte] = useState(false) // 5/jour — le Pass lève la limite
 
   // Avancement des étapes indexé sur le temps écoulé (seuils réels du pipeline)
   useEffect(() => {
@@ -95,6 +96,9 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
       } else if (err.code === 'captcha_required') {
         // Au-delà de 2 analyses/jour : vérification anti-robots puis relance.
         setCaptchaRequis(true)
+        setError(err.message)
+      } else if (err.code === 'rate_limited') {
+        setLimiteAtteinte(true)
         setError(err.message)
       } else {
         setError(err.message)
@@ -305,7 +309,15 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
 
         {/* Erreur */}
         {error && (
-          <div className="alert alert-rouge" role="alert" style={{ margin: 0 }}>{error}</div>
+          <div className="alert alert-rouge" role="alert" style={{ margin: 0 }}>
+            {error}
+            {limiteAtteinte && (
+              <>
+                {' '}
+                <Link to="/pass">Le Pass achat (29 €, 30 jours) lève la limite.</Link>
+              </>
+            )}
+          </div>
         )}
 
         {captchaRequis && <Turnstile onToken={setCaptchaToken} action="score" />}
