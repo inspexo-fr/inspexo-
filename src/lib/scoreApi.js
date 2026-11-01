@@ -201,16 +201,32 @@ export const creerPassCheckout = (email, { renonceRetractation = false, analysis
     analysis_id: analysisId,
   })
 
+/** Y a-t-il une session ? Les RPC du Pass sont réservées à `authenticated` :
+ *  les appeler sans session renvoie 401 — une erreur réseau inutile sur
+ *  CHAQUE page de résultat vue par un visiteur anonyme. On s'abstient. */
+async function estConnecte() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    return !!session?.access_token
+  } catch (_) {
+    return false
+  }
+}
+
 /** Pass actif de l'utilisateur connecté — { mode, debut, fin } ou null.
  *  Rattache au passage les Pass achetés avec cet email avant le 1er login. */
 export async function getMonPass() {
+  if (!(await estConnecte())) return null
   const { data, error } = await supabase.rpc('get_mon_pass')
   if (error) throw error
   return data
 }
 
-/** Pré-remplissage du kit signature (Pass requis, vérifié serveur). */
+/** Pré-remplissage du kit signature (Pass requis, vérifié serveur).
+ *  Sans session : même forme que la réponse serveur « pas de Pass », sans
+ *  aller chercher un 401. Le déblocage reste décidé par la RPC. */
 export async function getKitSignature(analysisId) {
+  if (!(await estConnecte())) return { pass: false }
   const { data, error } = await supabase.rpc('get_kit_signature', { p_analysis_id: analysisId })
   if (error) throw error
   return data
