@@ -2,6 +2,8 @@
 // Si RESEND_API_KEY est absente, rien n'est envoyé et un event le trace :
 // aucune erreur n'est propagée à l'utilisateur final.
 
+import { piedIdentiteVendeur } from "./identite.ts";
+
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? null;
 const UNSUB_SECRET = Deno.env.get("UNSUB_SECRET") ?? null;
 const SUPABASE_URL_PUB = Deno.env.get("SUPABASE_URL") ?? "";
@@ -245,7 +247,8 @@ export async function emailPassActif(
      <p style="color:#6B7280;font-size:12px">Reçu et conditions disponibles dans l'email Stripe séparé.
      Droit de rétractation : voir les <a href="https://www.inspexo.io/cgv-pass">CGV du Pass</a>.
      Aucune reconduction automatique : le Pass s'arrête seul au bout de 30 jours.<br>
-     Vous recevez cet email parce que vous venez d'acheter un Pass. Pour toute question, répondez à ce message.</p>`,
+     Vous recevez cet email parce que vous venez d'acheter un Pass. Pour toute question, répondez à ce message.</p>
+     ${piedIdentiteVendeur()}`,
     { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
   );
 }
@@ -260,7 +263,8 @@ export async function emailPassRembourse(to: string, montantCents: number): Prom
      5 à 10 jours ouvrés sur le moyen de paiement utilisé, selon votre banque.</p>
      <p>L'accès aux fonctions du Pass est désactivé. Les analyses gratuites restent, elles,
      toujours disponibles.</p>
-     <p style="color:#6B7280;font-size:12px">Pour toute question, répondez à ce message.</p>`,
+     <p style="color:#6B7280;font-size:12px">Pour toute question, répondez à ce message.</p>
+     ${piedIdentiteVendeur()}`,
     { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
   );
 }

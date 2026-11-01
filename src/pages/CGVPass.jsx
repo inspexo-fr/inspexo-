@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { getPassConfig } from '../lib/scoreApi'
+import { IDENTITE } from '../data/identite'
 
 // SPRINT 7 — CGV du Pass achat (/cgv-pass). Présentées AVANT paiement : la
 // page /pass exige une case d'acceptation dédiée. Le médiateur de la
@@ -35,10 +36,11 @@ export default function CGVPass() {
 
           <h2 className="legal-h2">1. Vendeur</h2>
           <p className="legal-p">
-            <strong>DUPLEX SAS</strong>, société par actions simplifiée au capital de 30 000,00 €<br />
-            Siège social : 17 rue Pierre Deldi, 31100 Toulouse, France<br />
-            SIREN : 941 962 060 — RCS Toulouse — TVA intracommunautaire : FR33941962060<br />
-            Email : <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a> — nom commercial : Inspexo.
+            <strong>{IDENTITE.raison_sociale}</strong>, {IDENTITE.forme_juridique.toLowerCase()} au capital de {IDENTITE.capital}<br />
+            Siège social : {IDENTITE.adresse}<br />
+            SIREN : {IDENTITE.siren} — SIRET (siège) : {IDENTITE.siret}<br />
+            {IDENTITE.rcs} — TVA intracommunautaire : {IDENTITE.tva}<br />
+            Email : <a href={`mailto:${IDENTITE.email}`} className="legal-a">{IDENTITE.email}</a> — nom commercial : {IDENTITE.nom_commercial}.
           </p>
 
           <h2 className="legal-h2">2. Objet</h2>

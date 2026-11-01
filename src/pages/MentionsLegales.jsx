@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import { IDENTITE } from '../data/identite'
 
 export default function MentionsLegales() {
   return (
@@ -27,14 +28,14 @@ export default function MentionsLegales() {
           <h2 className="legal-h2">1. Éditeur du site</h2>
           <p className="legal-p">Le site inspexo.io est édité par :</p>
           <p className="legal-p">
-            <strong>DUPLEX SAS</strong><br />
-            Société par actions simplifiée au capital de 30 000,00€<br />
-            Siège social : 17 rue Pierre Deldi, 31100 Toulouse, France<br />
-            SIREN : 941 962 060<br />
-            SIRET : 941 962 060 00013<br />
-            RCS Toulouse : 941 962 060<br />
-            N° TVA intracommunautaire : FR33941962060<br />
-            Président : Boy Utku<br />
+            <strong>{IDENTITE.raison_sociale}</strong><br />
+            {IDENTITE.forme_juridique} au capital de {IDENTITE.capital}<br />
+            Siège social : {IDENTITE.adresse}<br />
+            SIREN : {IDENTITE.siren}<br />
+            SIRET (siège) : {IDENTITE.siret}<br />
+            {IDENTITE.rcs}<br />
+            N° TVA intracommunautaire : {IDENTITE.tva}<br />
+            Président : {IDENTITE.president}<br />
             Email : <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a><br />
             Site web : <a href="https://inspexo.io" className="legal-a">https://inspexo.io</a>
           </p>

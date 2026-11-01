@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import { IDENTITE } from '../data/identite'
 
 export default function PolitiqueConfidentialite() {
   return (
@@ -29,9 +30,9 @@ export default function PolitiqueConfidentialite() {
 
           <h2 className="legal-h2">1. Responsable du traitement</h2>
           <p className="legal-p">
-            DUPLEX SAS<br />
-            17 rue Pierre Deldi, 31100 Toulouse, France<br />
-            Email : <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a>
+            {IDENTITE.raison_sociale} — SIREN {IDENTITE.siren}<br />
+            {IDENTITE.adresse}<br />
+            Email : <a href={`mailto:${IDENTITE.email}`} className="legal-a">{IDENTITE.email}</a>
           </p>
 
           <h2 className="legal-h2">2. Données collectées</h2>
@@ -140,7 +141,7 @@ export default function PolitiqueConfidentialite() {
           <h2 className="legal-h2">11. Contact</h2>
           <p className="legal-p">
             Pour toute question relative à la protection de vos données :<br />
-            DUPLEX SAS — 17 rue Pierre Deldi, 31100 Toulouse<br />
+            {IDENTITE.raison_sociale} — SIREN {IDENTITE.siren} — {IDENTITE.adresse}<br />
             <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a>
           </p>
 
