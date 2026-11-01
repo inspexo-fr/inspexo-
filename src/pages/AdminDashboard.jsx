@@ -982,6 +982,152 @@ function PassesTab() {
   )
 }
 
+// ─── Onglet Inspecteurs (sprint 8) ────────────────────────────────────────────
+
+function InspecteursTab() {
+  const [data, setData]       = useState({ inspecteurs: [], inspections: [] })
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState(null)
+  const [message, setMessage] = useState(null)
+  const [enCours, setEnCours] = useState(null)
+
+  const fetchTout = useCallback(async () => {
+    setLoading(true); setError(null)
+    const d = await adminFetch('admin-inspecteurs', { method: 'GET' })
+    if (d.error) { setError(d.error); setLoading(false); return }
+    setData({ inspecteurs: d.inspecteurs || [], inspections: d.inspections || [] })
+    setLoading(false)
+  }, [])
+  useEffect(() => { fetchTout() }, [fetchTout])
+
+  const agir = async (id, action) => {
+    let motif = null
+    if (action !== 'valider') {
+      motif = window.prompt(action === 'refuser' ? 'Motif du refus (envoyé au candidat) :' : 'Motif de la suspension :')
+      if (motif === null) return
+    }
+    setEnCours(id); setMessage(null)
+    const d = await adminFetch('admin-inspecteurs', {
+      method: 'POST', body: JSON.stringify({ action, id, motif }),
+    })
+    setEnCours(null)
+    if (d.error) { setMessage(d.message ? `${d.error} — ${d.message}` : d.error); return }
+    setMessage(action === 'valider' ? 'Inspecteur validé (email envoyé).' : 'Décision enregistrée.')
+    fetchTout()
+  }
+
+  const voirDocument = async (id) => {
+    const d = await adminFetch(`admin-inspecteurs?document=${id}`, { method: 'GET' })
+    if (d.url) window.open(d.url, '_blank', 'noopener')
+    else setMessage('Attestation indisponible.')
+  }
+
+  if (loading) return <Spinner label="Chargement des inspecteurs..." />
+  if (error)   return <ErrorBox msg={error} />
+
+  const valides = data.inspecteurs.filter(i => i.statut === 'valide').length
+  const enAttente = data.inspecteurs.filter(i => i.statut === 'candidat').length
+  const Pastille = ({ ok, children }) => (
+    <span style={{
+      fontSize: '0.6875rem', fontWeight: 700, borderRadius: 100, padding: '2px 8px', marginRight: 6,
+      background: ok ? '#F0FDF4' : '#FEF2F2', color: ok ? '#16A34A' : '#DC2626',
+    }}>{ok ? '✓' : '✗'} {children}</span>
+  )
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>Inspecteurs</div>
+          <div style={styles.pageSub}>
+            {valides} validé{valides !== 1 ? 's' : ''} — {enAttente} en attente — {data.inspections.length} inspection(s).
+            {valides === 0 && ' Tant qu’aucun inspecteur n’est validé, le service reste fermé au public.'}
+          </div>
+        </div>
+        <button onClick={fetchTout} style={styles.refreshBtn}>↻ Actualiser</button>
+      </div>
+
+      {message && <div style={{ marginBottom: 12, fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>{message}</div>}
+
+      {data.inspecteurs.map(i => (
+        <div key={i.id} style={{
+          background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+          padding: '14px 16px', marginBottom: 10,
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ flex: '1 1 300px' }}>
+              <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{i.nom}</span>
+              <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
+                {i.email}{i.telephone ? ` · ${i.telephone}` : ''} · SIRET {i.siret}
+                {i.raison_sociale ? ` · ${i.raison_sociale}` : ''} · dép. {(i.departements || []).join(', ') || '—'}
+              </div>
+            </div>
+            <span style={{
+              fontSize: '0.6875rem', fontWeight: 700, borderRadius: 100, padding: '3px 10px',
+              background: i.statut === 'valide' ? '#F0FDF4' : i.statut === 'candidat' ? '#FFF4EE' : '#F0F2F5',
+              color: i.statut === 'valide' ? '#16A34A' : i.statut === 'candidat' ? '#FF4D00' : '#6B7280',
+            }}>{i.statut}</span>
+          </div>
+
+          <div style={{ marginTop: 10 }}>
+            <Pastille ok={i.pieces.siret_valide}>SIRET</Pastille>
+            <Pastille ok={i.pieces.rc_pro_valide}>RC pro {i.rc_pro_echeance ? `au ${formatDate(i.rc_pro_echeance)}` : ''}</Pastille>
+            <Pastille ok={i.pieces.rc_pro_document}>Attestation</Pastille>
+            <Pastille ok={i.pieces.charte_signee}>Charte {i.charte_version || ''}</Pastille>
+            <Pastille ok={i.pieces.stripe_pret}>Stripe</Pastille>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+            {i.rc_pro_document && (
+              <button onClick={() => voirDocument(i.id)} style={styles.refreshBtn}>Voir l’attestation</button>
+            )}
+            {i.statut !== 'valide' && (
+              <button onClick={() => agir(i.id, 'valider')} disabled={enCours === i.id} style={{
+                background: '#16A34A', color: '#fff', border: 'none', borderRadius: 8,
+                padding: '9px 16px', fontFamily: 'var(--sans)', fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer',
+              }}>
+                {enCours === i.id ? '…' : 'Valider'}
+              </button>
+            )}
+            {i.statut === 'candidat' && (
+              <button onClick={() => agir(i.id, 'refuser')} style={styles.refreshBtn}>Refuser</button>
+            )}
+            {i.statut === 'valide' && (
+              <button onClick={() => agir(i.id, 'suspendre')} style={styles.refreshBtn}>Suspendre</button>
+            )}
+          </div>
+        </div>
+      ))}
+      {data.inspecteurs.length === 0 && (
+        <EmptyState icon="" title="Aucun inspecteur" sub="Les candidatures déposées sur /inspecteur/inscription apparaissent ici." />
+      )}
+
+      {data.inspections.length > 0 && (
+        <>
+          <div style={{ ...styles.pageTitle, fontSize: '1rem', marginTop: 28, marginBottom: 10 }}>Inspections</div>
+          {data.inspections.map(ins => (
+            <div key={ins.id} style={{
+              background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+              padding: '12px 14px', marginBottom: 8, display: 'flex', justifyContent: 'space-between',
+              gap: 10, flexWrap: 'wrap', alignItems: 'center', fontSize: '0.875rem',
+            }}>
+              <span>
+                <strong>INS-{String(ins.ref_num || 0).padStart(5, '0')}</strong> · {ins.code_postal} ·{' '}
+                {formatDate(ins.created_at)}
+              </span>
+              <span style={{ color: '#6B7280' }}>
+                {ins.statut}
+                {ins.verse_le ? ` · versé ${(ins.part_inspecteur_cents / 100).toLocaleString('fr-FR')} €` : ''}
+                {ins.statut === 'faite' && !ins.transfer_id ? ' · VERSEMENT À RÉGULARISER' : ''}
+              </span>
+            </div>
+          ))}
+        </>
+      )}
+    </div>
+  )
+}
+
 // ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function AdminDashboard() {
@@ -1044,6 +1190,7 @@ export default function AdminDashboard() {
 
   const navItems = [
     { key: 'passes',       label: 'Pass achat' },
+    { key: 'inspecteurs',  label: 'Inspecteurs' },
     { key: 'missions',     label: 'Missions' },
     { key: 'applications', label: 'Candidatures' },
     { key: 'couts',        label: 'Coûts réparation' },
@@ -1136,6 +1283,7 @@ export default function AdminDashboard() {
         <main style={{ flexGrow: 1, background: '#F8F9FA', minHeight: '100vh', overflowY: 'auto' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
             {tab === 'passes'       && <PassesTab />}
+            {tab === 'inspecteurs'  && <InspecteursTab />}
             {tab === 'missions'     && <MissionsTab />}
             {tab === 'applications' && <ApplicationsTab />}
             {tab === 'couts'        && <CoutsTab />}
