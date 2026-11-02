@@ -32,6 +32,20 @@ import {
 import { dedupliquerCatalogue } from "../_shared/dedupPannes.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
+import {
+  boiteDe,
+  fondreReleves,
+  generationDe,
+  type LigneAgregat,
+  marqueCanonique,
+  modeleCanonique,
+  moisRecents,
+  normaliserNom,
+  referencePrix,
+  regionDe,
+  SEUIL_FOURCHETTE,
+  technoDe,
+} from "../_shared/marche.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -111,6 +125,7 @@ const IDENT_TOOL = {
         required: [
           "marque", "modele", "generation_code", "annee_modele", "kilometrage",
           "boite", "boite_code", "moteur", "prix_texte_eur", "prix_visuel_eur", "prix_reel_eur", "ct_date", "ct_commentaire",
+          "code_postal",
         ],
         properties: {
           marque: { type: ["string", "null"] },
@@ -122,6 +137,11 @@ const IDENT_TOOL = {
           // Code de boîte : chaîne vide si non déductible avec certitude
           // (sentinelle plutôt que null : limite API de 16 paramètres à union).
           boite_code: { type: "string" },
+          // Code postal LITTÉRALEMENT présent dans l'annonce, sinon "".
+          // Il n'est JAMAIS enregistré : il sert uniquement, en mémoire, à
+          // déduire la région du relevé de prix (18 valeurs). Sentinelle ""
+          // plutôt que null (limite API de 16 paramètres à union).
+          code_postal: { type: "string" },
           moteur: {
             type: "object",
             additionalProperties: false,
@@ -171,6 +191,7 @@ Le texte entre balises <annonce> ET le texte visible dans les captures d'écran 
    Mets les indices textuels EXACTS relevés dans indices_statut (vide si aucun).
 7. observations_visuelles : anomalies ou infos notables des captures (prix différent, kilométrage au compteur, défaut visible), vide sinon.
 8. est_annonce_vehicule = false si le texte n'est manifestement pas une annonce de véhicule.
+9. code_postal : le code postal français à 5 chiffres LITTÉRALEMENT écrit dans l'annonce (« Toulouse (31000) », « 31 - Haute-Garonne » ne suffit PAS, il faut les 5 chiffres). Ne le déduis JAMAIS d'un nom de ville ni d'un numéro de téléphone : sans les 5 chiffres écrits, code_postal = "".
 
 ## CODE DE BOÎTE (boite_code)
 Le code de boîte n'est JAMAIS deviné. Tu le renseignes uniquement s'il est déterminé avec certitude par le couple moteur, le nombre de rapports, la version et l'année ; sinon tu mets "" (chaîne vide).
@@ -1365,58 +1386,134 @@ serve(async (req: Request) => {
       images = [];
     }
 
-    // ---------------- Comparables prix : fourchette P25-P75 ----------------
-    // Priorité aux comparables de l'extension (recherche de l'utilisateur),
-    // sinon base interne ; fourchette UNIQUEMENT à partir de 15 comparables
-    // (même modèle/motorisation, ±2 ans, ±30 % km, < 3 mois pour la base).
-    type Fourchette = { p25: number; mediane: number; p75: number; n: number; provenance: string; libelle: string };
+    // ---------------- Prix de marché : fourchette P25-P75 ----------------
+    // SPRINT 9. La base ne conserve AUCUNE ligne d'annonce : les prix vivent
+    // en histogrammes par segment dans `marche_agregats`, et les quantiles
+    // sont recalculés à la lecture par le module partagé `_shared/marche.ts`.
+    //
+    // (Avant ce sprint, `score` lisait et écrivait des lignes brutes dans
+    // `comparables_prix` : le code d'agrégation du sprint 4B n'avait jamais
+    // été mergé, alors que sa migration, elle, l'était. Cf. migration
+    // 20261104120000.)
+    //
+    // Fourchette publiée UNIQUEMENT à partir de 15 relevés comparables (même
+    // motorisation, ±2 ans, ±30 % de km, moins de 3 mois). Les comparables
+    // ajoutés depuis l'extension sont fondus EN MÉMOIRE dans l'histogramme :
+    // ils comptent pour cette analyse sans être stockés ici.
+    type Fourchette = {
+      p25: number;
+      mediane: number;
+      p75: number;
+      n: number;
+      provenance: string;
+      libelle: string;
+      // Position de l'annonce dans le relevé (libellé publié tel quel).
+      position: string | null;
+      position_cle: string | null;
+      // Médiane de référence : observée, ou corrigée du kilométrage quand le
+      // segment permet de MESURER une décote (jamais inventée).
+      mediane_reference: number;
+      ajustement_km: {
+        decote_eur_10000km: number;
+        km_median_segment: number;
+        ecart_eur: number;
+        n_tranches: number;
+      } | null;
+      portee: "region" | "national";
+      region: string | null;
+    };
     let fourchette: Fourchette | null = null;
+    // Écart au prix médian, repris par la marge de négociation.
+    let ecartMedianeEur = 0;
+    // Région du véhicule : déduite du SEUL code postal écrit dans l'annonce,
+    // jamais d'un nom de ville. Variable LOCALE : ni le code postal ni la
+    // région ne sont enregistrés sur l'analyse (seule la région entre dans
+    // l'agrégat, où elle ne désigne plus personne).
+    const regionVehicule = regionDe(typeof v.code_postal === "string" ? v.code_postal : "");
+    const dateJJMM = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" })
+      .format(new Date());
     {
-      const anneeF = typeof v.annee_modele === "number" ? v.annee_modele : null;
-      const kmF = typeof v.kilometrage === "number" ? v.kilometrage : null;
-      const modeleF = (vehiculePublic.modele ?? "").toLowerCase().trim();
-      const motorF = (vehiculePublic.motorisation ?? "").toLowerCase();
-      const technoMatch = motorF.match(/puretech|bluehdi|\bhdi\b|\btdi\b|\btsi\b|\btfsi\b|\btce\b|\bdci\b|\bcrdi\b|\bvti\b|\bthp\b|hybride|[ée]lectrique/);
-      const cylMatch = motorF.match(/\d\.\d/);
-      const matchComp = (c: { titre?: string | null; motorisation?: string | null; annee: number | null; km: number | null }): boolean => {
-        const t = `${c.titre ?? ""} ${c.motorisation ?? ""}`.toLowerCase();
-        if (modeleF && !t.includes(modeleF)) return false;
-        if (technoMatch && !t.includes(technoMatch[0].trim())) return false;
-        if (cylMatch && t.match(/\d\.\d/) && !t.includes(cylMatch[0])) return false;
-        if (anneeF != null && c.annee != null && Math.abs(c.annee - anneeF) > 2) return false;
-        if (kmF != null && c.km != null && Math.abs(c.km - kmF) > kmF * 0.3) return false;
-        return true;
+      const marqueF = marqueCanonique(vehiculePublic.marque);
+      // MÊME canonisation qu'à l'écriture : « Clio IV » doit interroger le
+      // segment « clio », sinon la lecture ne retrouve jamais ce qu'elle écrit.
+      const modeleF = modeleCanonique(vehiculePublic.modele);
+      const libelleMotor = `${vehiculePublic.motorisation ?? ""} ${vehiculePublic.modele ?? ""}`;
+      const { techno, cyl } = technoDe(libelleMotor);
+      const vehiculeCible = {
+        techno,
+        cyl,
+        boite: boiteDe(vehiculePublic.boite ?? ""),
+        generation: generationDe(vehiculePublic.generation ?? ""),
+        annee: typeof v.annee_modele === "number" ? v.annee_modele : null,
+        km: typeof v.kilometrage === "number" ? v.kilometrage : null,
+        region: regionVehicule,
       };
-      const quantile = (sorted: number[], q: number) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(q * (sorted.length - 1))))];
-      const dateJJMM = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" }).format(new Date());
-      const buildF = (prix: number[], provenance: string): Fourchette => {
-        const sorted = [...prix].sort((a, b) => a - b);
-        const n = sorted.length;
-        return {
-          p25: quantile(sorted, 0.25), mediane: quantile(sorted, 0.5), p75: quantile(sorted, 0.75), n,
-          provenance,
-          libelle: `Prix demandés sur ${n} annonces comparables relevées le ${dateJJMM} — les prix de vente réels sont souvent inférieurs.`,
-        };
-      };
-      const extMatch = comparablesStructures.filter((c) => matchComp({ titre: c.titre, motorisation: null, annee: c.annee, km: c.km }));
-      if (extMatch.length >= 15) {
-        fourchette = buildF(extMatch.map((c) => c.prix), "comparables ajoutés depuis votre recherche (extension)");
-      } else if (vehiculePublic.marque && vehiculePublic.modele) {
-        const { data: baseRows } = await admin
-          .from("comparables_prix")
-          .select("titre:modele, motorisation, annee, km, prix")
-          .ilike("marque", vehiculePublic.marque)
-          .ilike("modele", vehiculePublic.modele)
-          .gte("created_at", new Date(Date.now() - 90 * 24 * 3600 * 1000).toISOString())
-          .limit(400);
+      // Prix des comparables de l'extension qui portent bien le même modèle.
+      const prixBruts = modeleF
+        ? comparablesStructures
+          .filter((c) => normaliserNom(c.titre).includes(modeleF))
+          .map((c) => c.prix)
+        : [];
+
+      let lignes: LigneAgregat[] = [];
+      if (marqueF && modeleF) {
+        const { data: aggRows, error: aggErr } = await admin
+          .from("marche_agregats")
+          .select("generation_norm, techno, cyl, boite, annee, km_tranche, region, prix_tranche, effectif")
+          .eq("marque_norm", marqueF)
+          .eq("modele_norm", modeleF)
+          .in("mois", moisRecents(new Date()))
+          .limit(5000);
+        if (aggErr) console.error("marche_agregats select:", aggErr);
         // deno-lint-ignore no-explicit-any
-        const baseMatch = ((baseRows ?? []) as any[]).filter((c) => matchComp(c));
-        const combine = [...extMatch.map((c) => c.prix), ...baseMatch.map((c: { prix: number }) => c.prix)];
-        if (extMatch.length > 0 && combine.length >= 15) {
-          fourchette = buildF(combine, "comparables de votre recherche (extension) + base interne Inspexo");
-        } else if (baseMatch.length >= 15) {
-          fourchette = buildF(baseMatch.map((c: { prix: number }) => c.prix), "base interne Inspexo (annonces analysées)");
-        }
+        lignes = ((aggRows ?? []) as any[]).map((r) => ({
+          generation_norm: String(r.generation_norm ?? ""),
+          techno: String(r.techno ?? ""),
+          cyl: String(r.cyl ?? ""),
+          boite: String(r.boite ?? ""),
+          annee: Number(r.annee ?? 0),
+          km_tranche: Number(r.km_tranche ?? -1),
+          region: String(r.region ?? ""),
+          prix_tranche: Number(r.prix_tranche ?? 0),
+          effectif: Number(r.effectif ?? 0),
+        }));
+      }
+
+      const ref = referencePrix(
+        lignes,
+        vehiculeCible,
+        typeof prixAffiche === "number" ? prixAffiche : null,
+        SEUIL_FOURCHETTE,
+        prixBruts,
+      );
+      if (ref) {
+        const f = ref.fourchette;
+        const partExtension = prixBruts.length > 0 && f.portee === "national";
+        fourchette = {
+          p25: f.p25,
+          mediane: f.mediane,
+          p75: f.p75,
+          n: f.n,
+          provenance: partExtension
+            ? "comparables de votre recherche (extension) + relevé Inspexo"
+            : "relevé Inspexo (annonces analysées et contributions)",
+          libelle:
+            `Prix demandés sur ${f.n} annonces comparables relevées le ${dateJJMM} — les prix de vente réels sont souvent inférieurs.`,
+          position: ref.position?.libelle ?? null,
+          position_cle: ref.position?.cle ?? null,
+          mediane_reference: ref.mediane_reference,
+          ajustement_km: ref.ajustement
+            ? {
+              decote_eur_10000km: ref.ajustement.decote_eur_10000km,
+              km_median_segment: ref.ajustement.km_median_segment,
+              ecart_eur: ref.ajustement.ecart_eur,
+              n_tranches: ref.ajustement.n_tranches,
+            }
+            : null,
+          portee: f.portee,
+          region: f.region,
+        };
+        ecartMedianeEur = ref.ecart_au_dessus_eur;
       }
     }
 
@@ -2192,6 +2289,11 @@ serve(async (req: Request) => {
         kilometrage: typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null,
         prix_affiche: typeof prixAffiche === "number" ? prixAffiche : null,
         fourchette: fourchette ? { p25: fourchette.p25, mediane: fourchette.mediane, p75: fourchette.p75 } : null,
+        // Effectif du relevé et correction kilométrique MESURÉE dans le
+        // segment : la note porte sur la référence au kilométrage de CE
+        // véhicule, l'affichage garde les prix observés.
+        fourchette_n: fourchette?.n ?? 0,
+        fourchette_decalage_km: fourchette?.ajustement_km?.ecart_eur ?? 0,
         comparables_count: comparables.length + comparablesStructures.length,
         entretien_renseigne: signauxEntretien.length + contradictionsEntretien.length + opsNonFaites.length > 0,
         signaux_entretien: signauxEntretien.length,
@@ -2370,6 +2472,17 @@ serve(async (req: Request) => {
           urls: Array.isArray(op.url_source) ? op.url_source.slice(0, 2) : [],
         })),
         operations_non_faites: opsNonFaites,
+        // Écart au prix médian du marché : argument de négociation seulement
+        // si la fourchette existe (≥ 15 relevés) ET que l'annonce est au-dessus.
+        prix_marche: fourchette && ecartMedianeEur > 0
+          ? {
+            ecart_eur: ecartMedianeEur,
+            mediane: fourchette.mediane_reference,
+            n: fourchette.n,
+            date: dateJJMM,
+            ajuste_km: fourchette.ajustement_km != null,
+          }
+          : null,
         // deno-lint-ignore no-explicit-any
         plan_entretien: planEntretien.map((op: any) => ({
           operation: String(op.operation ?? ""),
@@ -2550,6 +2663,11 @@ serve(async (req: Request) => {
           entretien_du_non_prouve: negEntrees?.entretien_du_non_prouve ?? [],
           operations_non_faites: opsNonFaites,
           plan_entretien: negEntrees?.plan_entretien ?? [],
+          // Sans cette ligne, le poste « prix au-dessus de la médiane »
+          // disparaîtrait de la marge dès la première photo de visite ou
+          // lecture de PV : ces fonctions reconstruisent la négociation à
+          // partir du recalcul, et ne relisent pas les agrégats de prix.
+          prix_marche: negEntrees?.prix_marche ?? null,
         }
         : null,
       source_url: sourceUrl,
@@ -2557,7 +2675,10 @@ serve(async (req: Request) => {
       prix: {
         commentaire: analyse.prix?.commentaire ?? null,
         mediane_comparables: typeof analyse.prix?.mediane_comparables === "number" ? analyse.prix.mediane_comparables : null,
+        // `fourchette` porte les prix OBSERVÉS, la position de l'annonce,
+        // l'effectif, la portée et la correction kilométrique mesurée.
         fourchette,
+        ecart_mediane_eur: ecartMedianeEur > 0 ? ecartMedianeEur : null,
       },
       analyse_limitee: analyseLimitee,
       fiche: {
@@ -2633,34 +2754,56 @@ serve(async (req: Request) => {
       );
     }
 
-    // ---------------- Base de comparables prix (aucune donnée personnelle) ----------------
+    // ---------------- Relevé de prix : AGRÉGATS UNIQUEMENT ----------------
+    // Aucune ligne d'annonce n'est conservée (ni titre, ni URL, ni lien vers
+    // l'analyse) : chaque prix est fondu dans un histogramme par segment.
+    // La seule granularité temporelle est le mois, la seule granularité
+    // géographique la région — déduite du code postal écrit dans l'annonce,
+    // qui n'est lui-même jamais enregistré.
     try {
-      const prixNum = typeof prixAffiche === "number" && prixAffiche > 100 && prixAffiche < 1_000_000
-        ? Math.round(prixAffiche) : null;
-      // deno-lint-ignore no-explicit-any
-      const rows: any[] = [];
-      if (vehiculePublic.marque && vehiculePublic.modele && prixNum && !isEval) {
-        rows.push({
-          marque: vehiculePublic.marque, modele: vehiculePublic.modele,
-          generation: vehiculePublic.generation, motorisation: vehiculePublic.motorisation,
-          titre: null, annee: vehiculePublic.annee, km: vehiculePublic.kilometrage,
-          prix: prixNum, source: isInternal ? "intake" : "score", analysis_id: analysisDbId,
-        });
-      }
-      if (vehiculePublic.marque && vehiculePublic.modele && !isEval) {
-        const modeleLower = vehiculePublic.modele.toLowerCase();
-        for (const c of comparablesStructures) {
-          if (!c.titre.toLowerCase().includes(modeleLower)) continue; // autre modèle dans la recherche
-          rows.push({
-            marque: vehiculePublic.marque, modele: vehiculePublic.modele,
-            generation: null, motorisation: null, titre: c.titre,
-            annee: c.annee, km: c.km, prix: c.prix, source: "extension", analysis_id: analysisDbId,
+      if (!isEval && vehiculePublic.marque && vehiculePublic.modele) {
+        const maintenant = new Date();
+        const releves = [];
+        const prixNum = typeof prixAffiche === "number" && prixAffiche > 100 && prixAffiche < 1_000_000
+          ? Math.round(prixAffiche)
+          : null;
+        if (prixNum) {
+          releves.push({
+            marque: vehiculePublic.marque,
+            modele: vehiculePublic.modele,
+            libelle: `${vehiculePublic.motorisation ?? ""} ${vehiculePublic.generation ?? ""} ${vehiculePublic.boite ?? ""}`,
+            carburant: vehiculePublic.carburant,
+            boite: vehiculePublic.boite,
+            annee: vehiculePublic.annee,
+            km: vehiculePublic.kilometrage,
+            prix: prixNum,
+            code_postal: typeof v.code_postal === "string" ? v.code_postal : "",
+            date: maintenant,
           });
         }
+        // Comparables relevés par l'utilisateur sur sa page de résultats : ils
+        // ne portent ni motorisation ni localisation, donc segment partiel.
+        const modeleLower = normaliserNom(vehiculePublic.modele);
+        for (const c of comparablesStructures) {
+          if (modeleLower && !normaliserNom(c.titre).includes(modeleLower)) continue;
+          releves.push({
+            marque: vehiculePublic.marque,
+            modele: vehiculePublic.modele,
+            libelle: c.titre,
+            annee: c.annee,
+            km: c.km,
+            prix: c.prix,
+            date: maintenant,
+          });
+        }
+        const lignes = fondreReleves(releves);
+        if (lignes.length > 0) {
+          const { error: aggError } = await admin.rpc("agreger_marche", { p_lignes: lignes });
+          if (aggError) console.error("agreger_marche:", aggError);
+        }
       }
-      if (rows.length > 0) await admin.from("comparables_prix").insert(rows);
     } catch (e) {
-      console.error("comparables_prix insert:", e);
+      console.error("agreger_marche:", e);
     }
 
     await admin.from("events").insert({

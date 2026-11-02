@@ -23,11 +23,18 @@ globalThis.INSPEXO_SITES.push({
         const kmM = txt.match(/([\d\s]{4,9})\s?km/i)
         if (!prixM) continue
         const titre = txt.slice(0, 120).trim()
+        // Le repli DOM ne lit que ce qui est écrit sur la carte d'annonce :
+        // carburant, boîte et code postal y sont rarement présents, ils
+        // restent donc vides plutôt que devinés (sprint 9).
+        const cpM = txt.match(/\b(\d{5})\b/)
         out.push({
           titre,
           annee: anneeM ? parseInt(anneeM[1], 10) : null,
           km: kmM ? parseInt(kmM[1].replace(/\s/g, ''), 10) : null,
           prix: parseInt(prixM[1].replace(/\s/g, ''), 10),
+          carburant: /\bdiesel\b/i.test(txt) ? 'Diesel' : /\bessence\b/i.test(txt) ? 'Essence' : '',
+          boite: /\bautomatique\b/i.test(txt) ? 'Automatique' : /\bmanuelle\b/i.test(txt) ? 'Manuelle' : '',
+          code_postal: cpM ? cpM[1] : '',
         })
         if (out.length >= 40) break
       }

@@ -30,6 +30,13 @@ globalThis.INSPEXO_SITES.push({
             annee: attrs.regdate ? parseInt(String(attrs.regdate).slice(0, 4), 10) : null,
             km: Number.isFinite(km) ? km : null,
             prix: Number(prix),
+            carburant: attrs.fuel ? String(attrs.fuel).slice(0, 40) : '',
+            boite: attrs.gearbox ? String(attrs.gearbox).slice(0, 40) : '',
+            // Code postal de l'annonce : utilisé UNIQUEMENT pour en déduire la
+            // région côté serveur, et jamais enregistré (sprint 9).
+            code_postal: String(
+              (ad.location && (ad.location.zipcode || ad.location.postal_code)) || '',
+            ).slice(0, 10),
           })
         }
         if (out.length) return out.slice(0, 40)

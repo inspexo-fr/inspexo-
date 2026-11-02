@@ -11,6 +11,13 @@ export type FaitsAxes = {
   prix_affiche: number | null;
   fourchette: { p25: number; mediane: number; p75: number } | null;
   comparables_count: number;
+  // SPRINT 9 — relevé de marché. `fourchette` porte les prix OBSERVÉS ;
+  // `fourchette_decalage_km` est la correction, mesurée DANS LE SEGMENT, qui
+  // ramène la référence au kilométrage de ce véhicule (0 si non mesurable :
+  // aucune décote n'est jamais inventée). `fourchette_n` est l'effectif du
+  // relevé, affiché pour que l'acheteur sache sur quoi la note s'appuie.
+  fourchette_n?: number;
+  fourchette_decalage_km?: number;
   // Entretien (après audit de la critique)
   entretien_renseigne: boolean; // l'annonce dit quelque chose de l'entretien
   signaux_entretien: number;
@@ -93,18 +100,33 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
         : "Non évalué — collez 3 annonces comparables lors de l'analyse pour situer le prix.",
     };
   } else {
-    const { p25, mediane, p75 } = f.fourchette;
+    // Les bornes servant à NOTER sont corrigées du kilométrage quand le
+    // segment permet de mesurer une décote ; celles AFFICHÉES restent les
+    // prix observés (le libellé « prix demandés relevés le … » doit rester
+    // littéralement vrai).
+    const decalage = f.fourchette_decalage_km ?? 0;
+    const p25 = f.fourchette.p25 + decalage;
+    const mediane = f.fourchette.mediane + decalage;
+    const p75 = f.fourchette.p75 + decalage;
     const p = f.prix_affiche;
     let note: number;
+    // Les trois positions publiées : quart le moins cher / moyenne / plus
+    // chère que 75 % des annonces comparables. Les paliers intermédiaires ne
+    // servent qu'à la note, jamais à qualifier l'annonce à l'écran.
     let position: string;
-    if (p <= p25) { note = 18; position = "parmi les moins chers des annonces comparables"; }
-    else if (p <= mediane) { note = 15; position = "sous la médiane des annonces comparables"; }
-    else if (p <= p75) { note = 11; position = "au-dessus de la médiane des annonces comparables"; }
-    else if (p <= p75 * 1.15) { note = 7; position = "parmi les plus chers des annonces comparables"; }
-    else { note = 4; position = "nettement au-dessus des annonces comparables"; }
+    if (p <= p25) { note = 18; position = "dans le quart le moins cher"; }
+    else if (p <= mediane) { note = 15; position = "dans la moyenne, sous la médiane"; }
+    else if (p <= p75) { note = 11; position = "dans la moyenne, au-dessus de la médiane"; }
+    else if (p <= p75 * 1.15) { note = 7; position = "plus chère que 75 % des annonces comparables"; }
+    else { note = 4; position = "plus chère que 75 % des annonces comparables, nettement"; }
+    const n = f.fourchette_n ?? 0;
     axes.prix = {
       note,
-      commentaire: `${fr(p)} € demandés, ${position} (P25 ${fr(p25)} € · médiane ${fr(mediane)} € · P75 ${fr(p75)} €).`,
+      commentaire: `${fr(p)} € demandés : ${position}` +
+        `${n > 0 ? ` sur ${fr(n)} annonces relevées` : ""}` +
+        ` (P25 ${fr(f.fourchette.p25)} € · médiane ${fr(f.fourchette.mediane)} € · P75 ${fr(f.fourchette.p75)} €` +
+        `${decalage !== 0 ? `, référence corrigée de ${decalage > 0 ? "+" : ""}${fr(decalage)} € pour le kilométrage` : ""}).` +
+        " Prix demandés, pas prix de vente.",
     };
   }
 

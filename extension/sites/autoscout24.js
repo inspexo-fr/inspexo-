@@ -31,6 +31,12 @@ globalThis.INSPEXO_SITES.push({
             annee: annee ? parseInt(String(annee).match(/(20[0-2]\d|19[89]\d)/)?.[1] ?? '', 10) || null : null,
             km: Number.isFinite(km) ? km : null,
             prix: Number(prix),
+            carburant: String(v.fuelType || v.fuelCategory || l.fuelType || '').slice(0, 40),
+            boite: String(v.transmissionType || v.transmission || l.transmissionType || '').slice(0, 40),
+            // Code postal : sert à déduire la région du relevé, jamais stocké.
+            code_postal: String(
+              (l.location && (l.location.zip || l.location.zipCode)) || l.zip || '',
+            ).replace(/^FR/i, '').slice(0, 10),
           })
           if (out.length >= 40) break
         }

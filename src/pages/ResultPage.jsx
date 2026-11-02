@@ -15,6 +15,7 @@ import InspectionBloc from '../components/InspectionBloc'
 import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
+import { LIBELLES_REGION, SEUIL_FOURCHETTE } from '../data/marche'
 import {
   getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
   trackEvent, dossierAdd, envoyerLienMagique,
@@ -1308,9 +1309,9 @@ export default function ResultPage() {
               <InspectionBloc analysisId={id} vehicule={vehiculeLabel} />
             )}
 
-            {/* Prix */}
+            {/* Prix — relevé de marché (sprint 9) */}
             {!enCours && (
-              <div className="doc-sec">
+              <div className="doc-sec" id="prix">
                 <p className="eyebrow">Prix</p>
                 {r.prix?.fourchette ? (
                   <>
@@ -1320,6 +1321,42 @@ export default function ResultPage() {
                       <div><dt>Médiane</dt><dd className="num">{euros1(r.prix.fourchette.mediane)}</dd></div>
                       <div><dt>P75</dt><dd className="num">{euros1(r.prix.fourchette.p75)}</dd></div>
                     </dl>
+                    {/* Position de l'annonce : la seule phrase que l'acheteur
+                        retient. Elle porte l'effectif du relevé, pour qu'on
+                        sache sur quoi elle s'appuie. */}
+                    {r.prix.fourchette.position && (
+                      <p style={{ fontSize: 15, lineHeight: 1.6, marginTop: 12, fontWeight: 600 }}>
+                        Cette annonce est{' '}
+                        <span className={
+                          r.prix.fourchette.position_cle === 'quart_moins_cher' ? 'c-vert'
+                            : r.prix.fourchette.position_cle === 'plus_cher_que_75' ? 'c-ambre' : ''
+                        }>{r.prix.fourchette.position}</span>
+                        {' '}(relevé de {r.prix.fourchette.n} annonces
+                        {r.prix.fourchette.portee === 'region' && r.prix.fourchette.region
+                          ? ` en ${LIBELLES_REGION[r.prix.fourchette.region] ?? r.prix.fourchette.region}`
+                          : ''}).
+                      </p>
+                    )}
+                    {/* Correction kilométrique : affichée seulement quand elle
+                        a été MESURÉE dans le segment, avec sa pente. Aucune
+                        décote n'est jamais appliquée « au barème ». */}
+                    {r.prix.fourchette.ajustement_km && (
+                      <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
+                        À kilométrage comparable, la référence se situe plutôt à{' '}
+                        <strong>{euros1(r.prix.fourchette.mediane_reference)}</strong> : ce véhicule affiche{' '}
+                        {vh.kilometrage != null ? `${Number(vh.kilometrage).toLocaleString('fr-FR')} km` : 'un kilométrage'}
+                        {' '}contre {Number(r.prix.fourchette.ajustement_km.km_median_segment).toLocaleString('fr-FR')} km
+                        {' '}pour la médiane du segment. Décote mesurée sur ce segment :{' '}
+                        {euros1(r.prix.fourchette.ajustement_km.decote_eur_10000km)} par 10 000 km
+                        {' '}({r.prix.fourchette.ajustement_km.n_tranches} tranches de kilométrage).
+                      </p>
+                    )}
+                    {r.prix.ecart_mediane_eur != null && (
+                      <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
+                        Écart à la référence : <strong>{euros1(r.prix.ecart_mediane_eur)}</strong> au-dessus.
+                        Cet écart est reporté dans la marge de négociation ci-dessous.
+                      </p>
+                    )}
                     <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginTop: 10 }}>
                       {r.prix.fourchette.libelle}
                       <br />Provenance : {r.prix.fourchette.provenance}.
@@ -1338,8 +1375,9 @@ export default function ResultPage() {
                   <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>{r.prix.commentaire}</p>
                 ) : !r.prix?.fourchette ? (
                   <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
-                    Collez 3 annonces comparables (même modèle, année proche) lors de l'analyse pour situer le prix.
-                    Sans comparables, aucune estimation n'est avancée.
+                    Non évalué : il faut au moins {SEUIL_FOURCHETTE} annonces comparables récentes
+                    (même motorisation, année et kilométrage proches) pour situer ce prix sans l'inventer.
+                    Collez des annonces comparables lors de l'analyse pour y contribuer.
                   </p>
                 ) : null}
               </div>

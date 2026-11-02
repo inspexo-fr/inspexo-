@@ -27,6 +27,15 @@ const verifie = (titre, faits, attendu) => {
     (ok ? '' : ` (attendu ${attendu.verdict ?? '*'} ${attendu.score_min ?? ''}-${attendu.score_max ?? ''})`))
 }
 
+// toLocaleString('fr-FR') sépare les milliers par une espace FINE INSÉCABLE
+// (U+202F) : comparer avec une espace ordinaire échouerait sans raison.
+const ns = (t) => String(t).replace(/[\u202f\u00a0\u2009\u2007]/g, ' ')
+
+const verifiePrix = (titre, cond, detail = '') => {
+  if (!cond) ko++
+  console.log(`${cond ? 'PASS' : 'FAIL'} — ${titre}${cond || !detail ? '' : ` → ${detail}`}`)
+}
+
 console.log('CALIBRATION\n')
 verifie('Audi S7 : 2 sécurité + 2 rappels + 3 majeures, intermédiaire, 159 000 km/11 ans',
   { statut_vendeur: 'intermediaire_pour_particulier', annee: 2015, kilometrage: 159000, incoherences: 2,
@@ -166,6 +175,58 @@ verifie('Annonce très courte : Golf 7 de 2015, 123 000 km, rien sur l\'entretie
     if (!ok) ko++
     console.log(`${ok ? 'PASS' : 'FAIL'} — horizon : ${titre}`)
   }
+}
+
+console.log('\nAXE PRIX — RELEVÉ DE MARCHÉ (sprint 9)')
+{
+  const prix = (faits) => calculerAxes({ ...base, ...faits }).axes.prix
+  const f = { p25: 13_000, mediane: 14_500, p75: 16_000 }
+
+  const sansRien = prix({ fourchette: null, prix_affiche: 15_000 })
+  verifiePrix('sans fourchette → non évalué, exclu du score',
+    sansRien.note === null && /Non évalué/.test(sansRien.commentaire))
+  const sansPrix = prix({ fourchette: f, prix_affiche: null, fourchette_n: 40 })
+  verifiePrix('sans prix affiché → non évalué', sansPrix.note === null)
+
+  const basse = prix({ fourchette: f, prix_affiche: 12_000, fourchette_n: 40 })
+  verifiePrix('sous le P25 → quart le moins cher, meilleure note',
+    basse.note === 18 && basse.commentaire.includes('dans le quart le moins cher'), basse.commentaire)
+  const moyenne = prix({ fourchette: f, prix_affiche: 15_000, fourchette_n: 40 })
+  verifiePrix('entre médiane et P75 → dans la moyenne',
+    moyenne.note === 11 && moyenne.commentaire.includes('dans la moyenne'), moyenne.commentaire)
+  const haute = prix({ fourchette: f, prix_affiche: 17_000, fourchette_n: 40 })
+  verifiePrix('au-dessus du P75 → plus chère que 75 %',
+    haute.note === 7 && haute.commentaire.includes('plus chère que 75 %'), haute.commentaire)
+
+  verifiePrix('effectif du relevé affiché', ns(moyenne.commentaire).includes('sur 40 annonces relevées'))
+  verifiePrix('mention « prix demandés, pas prix de vente » systématique',
+    moyenne.commentaire.includes('Prix demandés, pas prix de vente'))
+  verifiePrix('bornes AFFICHÉES = prix observés',
+    ns(moyenne.commentaire).includes('P25 13 000 €') && ns(moyenne.commentaire).includes('P75 16 000 €'))
+
+  // Correction kilométrique : elle déplace les bornes de NOTATION, pas celles
+  // qui sont affichées. Un véhicule plus roulé que le segment voit la
+  // référence baisser, donc son prix remonter dans le classement.
+  const corrige = prix({ fourchette: f, prix_affiche: 15_000, fourchette_n: 40, fourchette_decalage_km: -2_000 })
+  verifiePrix('référence corrigée vers le bas → le prix devient « plus cher »',
+    corrige.note === 7 && corrige.commentaire.includes('plus chère que 75 %'), corrige.commentaire)
+  verifiePrix('la correction est annoncée en clair',
+    ns(corrige.commentaire).includes('référence corrigée de -2 000 € pour le kilométrage'), corrige.commentaire)
+  verifiePrix('les bornes observées restent affichées malgré la correction',
+    ns(corrige.commentaire).includes('médiane 14 500 €'), corrige.commentaire)
+  const sansCorrection = prix({ fourchette: f, prix_affiche: 15_000, fourchette_n: 40, fourchette_decalage_km: 0 })
+  verifiePrix('décalage nul → aucune mention de correction',
+    !sansCorrection.commentaire.includes('corrigée'), sansCorrection.commentaire)
+
+  // L'axe prix entre bien dans le score : la même annonce notée avec et sans
+  // fourchette ne peut pas donner le même total.
+  const faitsCommuns = { annee: 2019, kilometrage: 90_000, entretien_renseigne: true,
+    signaux_entretien: 2, pannes: [panne('majeure')] }
+  const avec = calculerAxes({ ...base, ...faitsCommuns, fourchette: f, prix_affiche: 12_000, fourchette_n: 40 })
+  const sans = calculerAxes({ ...base, ...faitsCommuns, fourchette: null, prix_affiche: 12_000 })
+  verifiePrix('le critère prix SORT du « non évalué » et pèse sur le score',
+    avec.axes.prix.note === 18 && sans.axes.prix.note === null && avec.score !== sans.score,
+    `avec=${avec.score} sans=${sans.score}`)
 }
 
 console.log('\nDÉTERMINISME')

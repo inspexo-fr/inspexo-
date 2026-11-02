@@ -5,9 +5,11 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import { libelleSource } from '../components/DossierApercu'
-import { getMoteurPublic } from '../lib/scoreApi'
+import { getMoteurPublic, getPrixSegments } from '../lib/scoreApi'
 import { FAMILLES_MOTEUR, familleParSlug } from '../data/famillesMoteur'
 import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
+import { CIBLE_MODELE, fourchetteDepuisAgregats, SEUIL_FOURCHETTE } from '../data/marche'
+import { segmentsPourFamille } from '../data/segmentsModeles'
 
 // /moteur/<slug> — page publique d'une famille moteur.
 // RIEN n'est écrit ici qui ne vienne de la fiche : pannes, plan d'entretien,
@@ -21,6 +23,8 @@ const GRAVITE = {
   majeure: { label: 'Réparation majeure', classe: 'ambre' },
   mineure: { label: 'Désagrément', classe: 'muted' },
 }
+
+const euros1 = (n) => (n != null ? `${Number(n).toLocaleString('fr-FR')} €` : '')
 
 const euros = (min, max) => {
   const fr = (n) => Number(n).toLocaleString('fr-FR')
@@ -41,22 +45,29 @@ function intervalle(op) {
 export default function MoteurPage() {
   const { slug } = useParams()
   const famille = familleParSlug(slug)
-  // undefined = chargement, null = absente. Une page pré-rendue porte déjà sa
-  // fiche dans le HTML : on part de là pour que React hydrate.
-  const [fiche, setFiche] = useState(() => lirePrerendu(`moteur:${slug}`))
+  // undefined = chargement, { fiche: null } = absente. Une page pré-rendue
+  // porte déjà sa charge dans le HTML : on part de là pour que React hydrate.
+  const [charge, setCharge] = useState(() => lirePrerendu(`moteur:${slug}`))
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    if (!famille) { setFiche(null); return }
+    if (!famille) { setCharge({ fiche: null, prix: [] }); return }
     if (lirePrerendu(`moteur:${famille.slug}`) !== undefined) return
     let cancelled = false
-    getMoteurPublic(famille.marque, famille.famille)
-      .then((d) => {
+    const segments = segmentsPourFamille(famille.slug)
+    Promise.all([
+      getMoteurPublic(famille.marque, famille.famille),
+      // Le relevé de prix est accessoire : son échec ne doit jamais empêcher
+      // la fiche moteur de s'afficher.
+      segments.length ? getPrixSegments(segments).catch(() => []) : Promise.resolve([]),
+    ])
+      .then(([d, prix]) => {
         if (cancelled) return
-        setFiche(d || null)
-        declarerPrerendu(`moteur:${famille.slug}`, d || null)
+        const c = { fiche: d || null, prix: Array.isArray(prix) ? prix : [] }
+        setCharge(c)
+        declarerPrerendu(`moteur:${famille.slug}`, c)
       })
-      .catch(() => { if (!cancelled) setFiche(null) })
+      .catch(() => { if (!cancelled) setCharge({ fiche: null, prix: [] }) })
     return () => { cancelled = true }
   }, [famille?.slug]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -66,7 +77,25 @@ export default function MoteurPage() {
   const titre = `Pannes connues du ${nom} : ce qu'il faut vérifier avant d'acheter`
   const url = `https://www.inspexo.io/moteur/${famille.slug}`
 
-  if (fiche === undefined) {
+  const fiche = charge?.fiche
+  // Fourchettes par modèle : calculées par le MÊME code que /a/:id, et
+  // seulement au-delà du seuil (la RPC ne renvoie rien en dessous).
+  const prixModeles = (() => {
+    // Les agrégats sont indexés par modèle NORMALISÉ (sans accent) ; la table
+    // générée porte le libellé tel qu'il s'écrit (« Série 3 », « Mégane »).
+    const libelles = new Map(
+      segmentsPourFamille(famille?.slug).map((sg) => [`${sg.marque}|${sg.modele}`, sg.libelle]),
+    )
+    return (charge?.prix ?? [])
+      .map((seg) => {
+        const f = fourchetteDepuisAgregats(seg.lignes ?? [], CIBLE_MODELE, SEUIL_FOURCHETTE)
+        if (!f) return null
+        return { modele: libelles.get(`${seg.marque}|${seg.modele}`) ?? seg.modele, ...f }
+      })
+      .filter(Boolean)
+  })()
+
+  if (charge === undefined) {
     return (
       <>
         <Navbar />
@@ -209,6 +238,47 @@ export default function MoteurPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </section>
+        )}
+
+        {/* Prix constatés par modèle (sprint 9) — seulement au-delà du seuil.
+            RIEN n'est affiché pour un modèle sous les 15 relevés : une
+            fourchette tirée de 4 annonces n'informe pas, elle trompe. */}
+        {prixModeles.length > 0 && (
+          <section className="sec" id="prix">
+            <div className="wrap">
+              <div className="sec-head">
+                <h2>À quel prix se vend ce modèle ?</h2>
+                <p>
+                  Fourchettes relevées par Inspexo sur les annonces analysées et les contributions
+                  des utilisateurs, sur les trois derniers mois. Un modèle n'apparaît ici qu'à partir
+                  de {SEUIL_FOURCHETTE} annonces comparables. Ce sont des <strong>prix demandés</strong>,
+                  pas des prix de vente : les transactions se concluent souvent en dessous.
+                </p>
+              </div>
+              <div className="channels">
+                {prixModeles.map((p) => (
+                  <div className="channel" key={p.modele}>
+                    <h3 style={{ fontSize: 19 }}>{p.modele}</h3>
+                    <dl className="specs" style={{ marginTop: 10 }}>
+                      <div><dt>P25</dt><dd className="num">{euros1(p.p25)}</dd></div>
+                      <div><dt>Médiane</dt><dd className="num">{euros1(p.mediane)}</dd></div>
+                      <div><dt>P75</dt><dd className="num">{euros1(p.p75)}</dd></div>
+                    </dl>
+                    <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginTop: 8 }}>
+                      {p.n} annonces comparables, toutes années et kilométrages confondus.
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 18 }}>
+                Ces fourchettes mélangent les millésimes et les kilométrages d'un même modèle :
+                elles situent un ordre de grandeur, pas la valeur d'une voiture précise.{' '}
+                <Link to="/score">Analysez l'annonce qui vous intéresse</Link> pour obtenir une
+                fourchette à année, motorisation et kilométrage comparables, et la position du prix
+                demandé dans cette fourchette.
+              </p>
             </div>
           </section>
         )}
