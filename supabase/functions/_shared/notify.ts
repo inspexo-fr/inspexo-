@@ -269,6 +269,152 @@ export async function emailPassRembourse(to: string, montantCents: number): Prom
   );
 }
 
+// ---------- Inspection à la demande (sprint 8) ----------
+
+const dateFr = (iso: string | null) =>
+  iso
+    ? new Date(iso).toLocaleString("fr-FR", {
+      weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit",
+      timeZone: "Europe/Paris",
+    })
+    : "créneau à confirmer";
+
+/** Acheteur : sa commande d'inspection est enregistrée. */
+export async function emailInspectionCommandee(
+  to: string,
+  vehicule: string,
+  creneau: string | null,
+  refNum: number | null,
+): Promise<boolean> {
+  return await sendMail(
+    to,
+    `Inspection commandée — ${vehicule}`,
+    `<p>Votre inspection sur place est commandée${refNum ? ` (dossier n° INS-${String(refNum).padStart(5, "0")})` : ""}.</p>
+     <p><strong>Véhicule :</strong> ${vehicule.replace(/[<>]/g, "")}<br>
+     <strong>Créneau souhaité :</strong> ${dateFr(creneau)}</p>
+     <p>Un inspecteur indépendant de votre secteur va confirmer la mission. Vous recevrez son nom
+     et son téléphone dès qu'il aura accepté, puis le rapport photo dans votre
+     <a href="https://www.inspexo.io/dossier">dossier d'achat</a>.</p>
+     <p style="color:#6B7280;font-size:12px">L'inspecteur est payé par vous, jamais par le vendeur :
+     il a signé une charte d'indépendance.</p>
+     ${piedIdentiteVendeur()}`,
+    { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
+  );
+}
+
+/** Inspecteur : une mission est disponible dans sa zone. */
+export async function emailNouvelleMission(
+  to: string,
+  vehicule: string,
+  departement: string,
+  creneau: string | null,
+): Promise<boolean> {
+  return await sendMail(
+    to,
+    `Nouvelle mission d'inspection (${departement}) — ${vehicule}`,
+    `<p>Une inspection vient d'être payée dans votre secteur (département ${departement}).</p>
+     <p><strong>Véhicule :</strong> ${vehicule.replace(/[<>]/g, "")}<br>
+     <strong>Créneau souhaité :</strong> ${dateFr(creneau)}</p>
+     <p>La première acceptation emporte la mission. L'adresse et le téléphone du vendeur
+     s'affichent une fois que vous avez accepté.</p>
+     <p><a href="https://www.inspexo.io/inspecteur">Voir la mission</a></p>
+     <p style="color:#6B7280;font-size:12px">Vous recevez cet email parce que vous êtes inspecteur
+     validé sur ce département. Pour ne plus être sollicité, répondez « STOP ».</p>`,
+    { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
+  );
+}
+
+/** Acheteur : un inspecteur a accepté sa mission. */
+export async function emailInspectionAcceptee(
+  to: string,
+  vehicule: string,
+  inspecteur: string,
+  telephone: string | null,
+  creneau: string | null,
+): Promise<boolean> {
+  return await sendMail(
+    to,
+    `Inspecteur confirmé — ${vehicule}`,
+    `<p><strong>${inspecteur.replace(/[<>]/g, "")}</strong> prend en charge l'inspection de votre
+     ${vehicule.replace(/[<>]/g, "")}.</p>
+     <p><strong>Créneau :</strong> ${dateFr(creneau)}${telephone ? `<br><strong>Téléphone :</strong> ${telephone.replace(/[<>]/g, "")}` : ""}</p>
+     <p>Prévenez le vendeur de sa venue. Le rapport arrivera dans votre
+     <a href="https://www.inspexo.io/dossier">dossier d'achat</a>.</p>
+     <p style="color:#6B7280;font-size:12px">Inspecteur indépendant, payé par vous et jamais par le vendeur.</p>`,
+    { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
+  );
+}
+
+/** Acheteur : son rapport d'inspection est disponible. */
+export async function emailRapportPret(
+  to: string,
+  vehicule: string,
+  analysisId: string,
+  decision: string,
+): Promise<boolean> {
+  const libelle = decision === "acheter"
+    ? "Rien de bloquant constaté"
+    : decision === "ne_pas_acheter"
+    ? "L'inspecteur déconseille l'achat"
+    : "À négocier avant d'acheter";
+  const couleur = decision === "acheter" ? "#16A34A" : decision === "ne_pas_acheter" ? "#DC2626" : "#D97706";
+  return await sendMail(
+    to,
+    `Rapport d'inspection prêt — ${vehicule}`,
+    `<p>L'inspection de votre ${vehicule.replace(/[<>]/g, "")} est terminée.</p>
+     <p style="font-size:18px"><strong style="color:${couleur}">${libelle}</strong></p>
+     <p><a href="https://www.inspexo.io/a/${analysisId}">Lire le rapport et voir les photos</a></p>
+     <p style="color:#6B7280;font-size:12px">Les photos du rapport sont conservées dans votre dossier
+     parce qu'elles en font partie ; elles ne sont visibles que par vous et l'inspecteur.</p>`,
+    { "List-Unsubscribe": "<mailto:contact@inspexo.io?subject=STOP>" },
+  );
+}
+
+/** Exploitant : un versement d'inspecteur n'est pas parti. À régulariser. */
+export async function alerteVersementBloque(
+  inspecteur: string,
+  montantCents: number,
+  raison: string,
+): Promise<boolean> {
+  return await sendMail(
+    ADMIN_EMAIL,
+    "Inspexo — versement inspecteur à régulariser",
+    `<p>Un rapport d'inspection a été remis, mais le versement n'est pas parti.</p>
+     <p><strong>Inspecteur :</strong> ${inspecteur.replace(/[<>]/g, "")}<br>
+     <strong>Montant dû :</strong> ${(montantCents / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2 })} €<br>
+     <strong>Raison :</strong> ${raison.replace(/[<>]/g, "").slice(0, 200)}</p>
+     <p>L'acheteur a bien reçu son rapport. Régularisez depuis l'onglet Inspecteurs.</p>`,
+  );
+}
+
+/** Inspecteur : sa candidature est validée (ou refusée). */
+export async function emailInspecteurDecision(
+  to: string,
+  valide: boolean,
+  motif: string | null,
+): Promise<boolean> {
+  return valide
+    ? await sendMail(
+      to,
+      "Votre compte inspecteur Inspexo est validé",
+      `<p>Votre candidature est validée : SIRET, assurance et charte d'indépendance vérifiés.</p>
+       <p>Vous recevrez un email à chaque mission disponible dans vos départements.</p>
+       <p><a href="https://www.inspexo.io/inspecteur">Ouvrir mon espace inspecteur</a></p>
+       <p style="color:#6B7280;font-size:12px">Rappel : 60 % du prix payé par l'acheteur vous revient,
+       versé automatiquement à la remise du rapport.</p>
+       ${piedIdentiteVendeur()}`,
+    )
+    : await sendMail(
+      to,
+      "Votre candidature inspecteur Inspexo",
+      `<p>Nous ne pouvons pas donner suite à votre candidature pour le moment.</p>
+       ${motif ? `<p><strong>Motif :</strong> ${motif.replace(/[<>]/g, "").slice(0, 300)}</p>` : ""}
+       <p>Vous pouvez compléter votre dossier et nous le soumettre à nouveau depuis
+       <a href="https://www.inspexo.io/inspecteur/inscription">votre espace</a>.</p>
+       ${piedIdentiteVendeur()}`,
+    );
+}
+
 /** Envoi du verdict à un acheteur dont la demande était en attente. */
 export async function envoyerVerdict(
   to: string,

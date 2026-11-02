@@ -1,38 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import useScrollLock from '../hooks/useScrollLock'
 
 const ADMIN_EMAILS = ['contact@inspexo.io']
 
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL
 const ANON_KEY     = process.env.REACT_APP_SUPABASE_ANON_KEY
 
-const STATUS_LABELS = {
-  pending_payment: 'En attente paiement',
-  paid:            'Payé',
-  expert_assigned: 'Expert assigné',
-  in_progress:     'En cours',
-  completed:       'Terminé',
-  cancelled:       'Annulé',
-}
-const STATUS_COLORS = {
-  pending_payment: '#9CA3AF',
-  paid:            '#FF4D00',
-  expert_assigned: '#3B82F6',
-  in_progress:     '#1D4ED8',
-  completed:       '#16A34A',
-  cancelled:       '#DC2626',
-}
-const TIER_LABELS = { ia: 'IA ', visio: 'Visio ', inspection: 'Inspection ' }
-const APP_STATUS_LABELS = { pending: 'En attente', approved: 'Approuvée', rejected: 'Rejetée' }
-const APP_STATUS_COLORS = { pending: '#FF4D00', approved: '#16A34A', rejected: '#DC2626' }
-
 function formatDate(iso) {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
-}
-function shortId(id) {
-  return id ? id.slice(0, 8).toUpperCase() : '—'
 }
 
 async function adminFetch(path, options = {}) {
@@ -49,636 +25,11 @@ async function adminFetch(path, options = {}) {
   return res.json()
 }
 
-// ─── Onglet Missions ──────────────────────────────────────────────────────────
-
-function MissionsTab() {
-  const [missions, setMissions]           = useState([])
-  const [loading, setLoading]             = useState(true)
-  const [error, setError]                 = useState(null)
-  const [updating, setUpdating]           = useState(null)
-  const [showUnassignedOnly, setShowUnassignedOnly] = useState(false)
-
-  const fetchMissions = useCallback(async () => {
-    setLoading(true); setError(null)
-    const data = await adminFetch('admin-missions')
-    if (data.error) { setError(data.error); setLoading(false); return }
-    setMissions(data.missions || [])
-    setLoading(false)
-  }, [])
-
-  useEffect(() => { fetchMissions() }, [fetchMissions])
-
-  const updateStatus = async (id, status) => {
-    setUpdating(id)
-    const data = await adminFetch('admin-missions', {
-      method: 'PATCH',
-      body: JSON.stringify({ id, status }),
-    })
-    if (!data.error) {
-      setMissions(prev => prev.map(m => m.id === id ? { ...m, status } : m))
-    }
-    setUpdating(null)
-  }
-
-  if (loading) return <Spinner label="Chargement des missions..." />
-  if (error)   return <ErrorBox msg={error} />
-
-  const displayedMissions = showUnassignedOnly ? missions.filter(m => !m.expert_id) : missions
-  const totalCA = missions.reduce((sum, m) => sum + (m.price_platform || 0), 0)
-  const unassignedCount = missions.filter(m => !m.expert_id && ['paid', 'expert_assigned', 'in_progress'].includes(m.status)).length
-
-  return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <div>
-          <div style={styles.pageTitle}>Missions</div>
-          <div style={styles.pageSub}>{missions.length} mission{missions.length !== 1 ? 's' : ''} — CA plateforme : <strong>{totalCA.toFixed(2)}€</strong></div>
-        </div>
-        <button onClick={fetchMissions} style={styles.refreshBtn}>↻ Actualiser</button>
-      </div>
-      <div style={{ marginBottom: 20, display: 'flex', gap: 8, alignItems: 'center' }}>
-        <button
-          onClick={() => setShowUnassignedOnly(v => !v)}
-          style={{
-            padding: '6px 14px', borderRadius: 8, border: '1.5px solid',
-            borderColor: showUnassignedOnly ? '#FF4D00' : 'rgba(0,0,0,0.12)',
-            background: showUnassignedOnly ? '#FFF4EE' : '#fff',
-            color: showUnassignedOnly ? '#FF4D00' : '#6B7280',
-            fontSize: '0.8125rem', fontWeight: 600,
-            fontFamily: 'var(--sans)', cursor: 'pointer',
-          }}
-        >
-          Non assignées {unassignedCount > 0 && `(${unassignedCount})`}
-        </button>
-        {showUnassignedOnly && (
-          <span style={{ fontSize: '0.8125rem', color: '#9CA3AF', fontFamily: 'var(--sans)' }}>
-            {displayedMissions.length} mission{displayedMissions.length !== 1 ? 's' : ''} sans expert
-          </span>
-        )}
-      </div>
-
-      {missions.length === 0 ? (
-        <EmptyState icon="" title="Aucune mission" sub="Les missions apparaîtront ici après le premier paiement." />
-      ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={styles.table}>
-            <thead>
-              <tr style={styles.thead}>
-                {['ID', 'Client', 'Palier', 'Véhicule', 'Prix', 'Statut', 'Date', 'Expert', 'Actions'].map(h => (
-                  <th key={h} style={styles.th}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {displayedMissions.map((m, i) => (
-                <tr key={m.id} style={{ ...styles.tr, background: i % 2 === 0 ? '#fff' : '#FAFAFA' }}>
-                  <td style={styles.td}>
-                    <span style={styles.idBadge}>{shortId(m.id)}</span>
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.875rem', color: '#0F1B2D', fontWeight: 500 }}>
-                      {m.profiles?.email || m.user_id?.slice(0, 8) + '...'}
-                    </div>
-                  </td>
-                  <td style={styles.td}>
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 600 }}>
-                      {TIER_LABELS[m.tier] || m.tier}
-                    </span>
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.875rem', color: '#374151' }}>
-                      {[m.vehicle_brand, m.vehicle_model, m.vehicle_year].filter(Boolean).join(' ') || '—'}
-                    </div>
-                    {m.vehicle_url && (
-                      <a href={m.vehicle_url} target="_blank" rel="noopener noreferrer"
-                        style={{ fontSize: '0.75rem', color: '#FF4D00', textDecoration: 'none' }}>
-                        annonce
-                      </a>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F1B2D' }}>
-                      {m.price_total ? `${m.price_total}€` : '—'}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>
-                      plat. {m.price_platform ?? '?'}€
-                    </div>
-                  </td>
-                  <td style={styles.td}>
-                    <select
-                      value={m.status}
-                      disabled={updating === m.id}
-                      onChange={e => updateStatus(m.id, e.target.value)}
-                      style={{
-                        ...styles.select,
-                        color: STATUS_COLORS[m.status] || '#6B7280',
-                        opacity: updating === m.id ? 0.6 : 1,
-                      }}
-                    >
-                      {Object.entries(STATUS_LABELS).map(([val, label]) => (
-                        <option key={val} value={val}>{label}</option>
-                      ))}
-                    </select>
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.8125rem', color: '#6B7280', whiteSpace: 'nowrap' }}>
-                      {formatDate(m.created_at)}
-                    </div>
-                  </td>
-                  <td style={styles.td}>
-                    {m.expert_id ? (
-                      <span style={{
-                        fontSize: '0.75rem', fontWeight: 600,
-                        color: '#16A34A', background: '#F0FDF4',
-                        padding: '3px 10px', borderRadius: 100,
-                        fontFamily: 'var(--sans)',
-                      }}>
-                        ✓ Assigné
-                      </span>
-                    ) : (
-                      <span style={{
-                        fontSize: '0.75rem', fontWeight: 600,
-                        color: '#FF4D00', background: '#FFF4EE',
-                        padding: '3px 10px', borderRadius: 100,
-                        fontFamily: 'var(--sans)',
-                        whiteSpace: 'nowrap',
-                      }}>
-                        Non assigné
-                      </span>
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    <button
-                      style={styles.actionBtn}
-                      onClick={() => {
-                        const expertId = prompt('UUID de l\'expert à assigner :')
-                        if (expertId) adminFetch('admin-missions', {
-                          method: 'PATCH',
-                          body: JSON.stringify({ id: m.id, expert_id: expertId, status: 'expert_assigned' }),
-                        }).then(() => fetchMissions())
-                      }}
-                    >
-                      Assigner
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ─── Modale Stripe Connect ────────────────────────────────────────────────────
-
-function StripeConnectModal({ url, accountId, expertEmail, onClose }) {
-  useScrollLock()
-  const [copied, setCopied]       = useState(false)
-  const [sending, setSending]     = useState(false)
-  const [emailSent, setEmailSent] = useState(false)
-  const [emailError, setEmailError] = useState('')
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const handleSendEmail = async () => {
-    setSending(true); setEmailError('')
-    const data = await adminFetch('send-email', {
-      method: 'POST',
-      body: JSON.stringify({
-        to: expertEmail,
-        template: 'expert_stripe_onboarding',
-        data: { onboarding_url: url, expert_email: expertEmail },
-      }),
-    })
-    setSending(false)
-    if (data.error) setEmailError(data.error)
-    else setEmailSent(true)
-  }
-
-  return (
-    <div
-      style={{
-        position: 'fixed', inset: 0, zIndex: 10000,
-        background: 'rgba(15,27,45,0.85)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
-      }}
-      onClick={onClose}
-    >
-      <div
-        style={{
-          background: '#fff', borderRadius: 20, padding: '36px 32px',
-          maxWidth: 520, width: '100%',
-          maxHeight: '90vh', overflowX: 'hidden', overflowY: 'auto',
-          overscrollBehavior: 'contain',
-          fontFamily: 'var(--sans)',
-        }}
-        onClick={e => e.stopPropagation()}
-      >
-        <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.25rem', color: '#0F1B2D', marginBottom: 6 }}>
-          Lien Stripe Connect généré
-        </div>
-        <div style={{ fontSize: '0.875rem', color: '#6B7280', marginBottom: 24 }}>
-          Compte : <code style={{ background: '#F0F2F5', padding: '2px 6px', borderRadius: 4, fontSize: '0.8125rem' }}>{accountId}</code>
-          {expertEmail && <span style={{ marginLeft: 8 }}>· {expertEmail}</span>}
-        </div>
-
-        {/* URL */}
-        <div style={{
-          background: '#F8F9FA', border: '1.5px solid rgba(0,0,0,0.08)',
-          borderRadius: 10, padding: '12px 14px', marginBottom: 20,
-          fontSize: '0.8125rem', color: '#374151', wordBreak: 'break-all',
-          lineHeight: 1.5,
-        }}>
-          {url}
-        </div>
-
-        <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
-          <button
-            onClick={handleCopy}
-            style={{
-              flex: 1, padding: '11px 0', borderRadius: 10,
-              background: copied ? '#F0FDF4' : '#0F1B2D',
-              color: copied ? '#16A34A' : '#fff',
-              border: copied ? '1px solid #BBF7D0' : 'none',
-              fontFamily: 'var(--sans)', fontWeight: 700,
-              fontSize: '0.9rem', cursor: 'pointer',
-            }}
-          >
-            {copied ? '✓ Copié !' : 'Copier le lien'}
-          </button>
-          <button
-            onClick={handleSendEmail}
-            disabled={sending || emailSent || !expertEmail}
-            style={{
-              flex: 1, padding: '11px 0', borderRadius: 10,
-              background: emailSent ? '#F0FDF4' : '#FF4D00',
-              color: emailSent ? '#16A34A' : '#fff',
-              border: emailSent ? '1px solid #BBF7D0' : 'none',
-              fontFamily: 'var(--sans)', fontWeight: 700,
-              fontSize: '0.9rem', cursor: sending || emailSent || !expertEmail ? 'not-allowed' : 'pointer',
-              opacity: sending ? 0.7 : 1,
-            }}
-          >
-            {emailSent ? '✓ Email envoyé' : sending ? 'Envoi...' : 'Envoyer par email'}
-          </button>
-        </div>
-
-        {!expertEmail && (
-          <div style={{ fontSize: '0.8125rem', color: '#F59E0B', marginBottom: 12 }}>
-            Pas d'email associé — envoi impossible
-          </div>
-        )}
-        {emailError && (
-          <div style={{ fontSize: '0.8125rem', color: '#DC2626', marginBottom: 12 }}>
-            {emailError}
-          </div>
-        )}
-
-        <button
-          onClick={onClose}
-          style={{
-            width: '100%', padding: '10px', borderRadius: 10, border: 'none',
-            background: 'transparent', color: 'rgba(0,0,0,0.3)',
-            fontFamily: 'var(--sans)', fontSize: '0.875rem', cursor: 'pointer',
-          }}
-        >
-          Fermer
-        </button>
-      </div>
-    </div>
-  )
-}
-
-// ─── Onglet Candidatures ──────────────────────────────────────────────────────
-
-const EXP_BADGE = (exp) => {
-  if (!exp) return { bg: '#F0F2F5', color: '#6B7280', label: '—' }
-  if (exp === '10+ ans') return { bg: '#F0FDF4', color: '#16A34A', label: exp }
-  if (exp === '5-10 ans') return { bg: '#FFF4EE', color: '#FF4D00', label: exp }
-  return { bg: '#F0F2F5', color: '#6B7280', label: exp }
-}
-
-function ApplicationsTab() {
-  const [apps, setApps]             = useState([])
-  const [loading, setLoading]       = useState(true)
-  const [error, setError]           = useState(null)
-  const [updating, setUpdating]     = useState(null)
-  const [generating, setGenerating] = useState(null)
-  const [stripeModal, setStripeModal] = useState(null) // { url, account_id, email }
-  const [expandedApp, setExpandedApp] = useState(null)
-
-  const fetchApps = useCallback(async () => {
-    setLoading(true); setError(null)
-    const data = await adminFetch('admin-applications')
-    if (data.error) { setError(data.error); setLoading(false); return }
-    setApps(data.applications || [])
-    setLoading(false)
-  }, [])
-
-  useEffect(() => { fetchApps() }, [fetchApps])
-
-  const updateStatus = async (id, status) => {
-    setUpdating(id)
-    await adminFetch('admin-applications', {
-      method: 'PATCH',
-      body: JSON.stringify({ id, status }),
-    })
-    setApps(prev => prev.map(a => a.id === id ? { ...a, status } : a))
-    setUpdating(null)
-  }
-
-  const generateStripeLink = async (a) => {
-    setGenerating(a.id)
-    const data = await adminFetch('create-connect-account', {
-      method: 'POST',
-      body: JSON.stringify({ expert_id: a.expert_id || a.id }),
-    })
-    setGenerating(null)
-    if (data.error) {
-      alert(`Erreur Stripe Connect : ${data.error}`)
-      return
-    }
-    setStripeModal({ url: data.url, account_id: data.account_id, email: a.email })
-  }
-
-  if (loading) return <Spinner label="Chargement des candidatures..." />
-  if (error)   return <ErrorBox msg={error} />
-
-  const pending = apps.filter(a => a.status === 'pending').length
-
-  return (
-    <div>
-      {stripeModal && (
-        <StripeConnectModal
-          url={stripeModal.url}
-          accountId={stripeModal.account_id}
-          expertEmail={stripeModal.email}
-          onClose={() => setStripeModal(null)}
-        />
-      )}
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
-        <div>
-          <div style={styles.pageTitle}>Candidatures experts</div>
-          <div style={styles.pageSub}>{apps.length} candidature{apps.length !== 1 ? 's' : ''} — {pending} en attente</div>
-        </div>
-        <button onClick={fetchApps} style={styles.refreshBtn}>↻ Actualiser</button>
-      </div>
-
-      {apps.length === 0 ? (
-        <EmptyState icon="" title="Aucune candidature" sub="Les candidatures experts apparaîtront ici." />
-      ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={styles.table}>
-            <thead>
-              <tr style={styles.thead}>
-                {['Candidat', 'Email', 'Marques', 'Exp.', 'Structure', 'Ville', 'Statut', 'Actions'].map(h => (
-                  <th key={h} style={styles.th}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {apps.map((a, i) => {
-                const expBadge = EXP_BADGE(a.experience_years)
-                const isExpanded = expandedApp === a.id
-                return (
-                <React.Fragment key={a.id}>
-                <tr style={{ ...styles.tr, background: i % 2 === 0 ? '#fff' : '#FAFAFA', cursor: 'pointer' }} onClick={() => setExpandedApp(isExpanded ? null : a.id)}>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>
-                      {a.full_name || `${a.first_name || ''} ${a.last_name || ''}`.trim() || '—'}
-                    </div>
-                    <div style={{ fontSize: '0.6875rem', color: '#9CA3AF' }}>{formatDate(a.created_at)}</div>
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.8125rem', color: '#374151' }}>{a.email}</div>
-                    {a.phone && <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>{a.phone}</div>}
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, maxWidth: 200 }}>
-                      {(Array.isArray(a.brands) ? a.brands : []).slice(0, 4).map(b => (
-                        <span key={b} style={styles.brandPill}>{b}</span>
-                      ))}
-                      {(a.brands?.length || 0) > 4 && (
-                        <span style={{ ...styles.brandPill, background: '#F0F2F5' }}>+{a.brands.length - 4}</span>
-                      )}
-                    </div>
-                  </td>
-                  <td style={styles.td}>
-                    <span style={{
-                      display: 'inline-block', padding: '3px 9px', borderRadius: 100,
-                      fontSize: '0.75rem', fontWeight: 600,
-                      fontFamily: 'var(--sans)',
-                      background: expBadge.bg, color: expBadge.color,
-                    }}>
-                      {expBadge.label}
-                    </span>
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.8125rem', color: '#374151' }}>{a.structure_type || '—'}</div>
-                  </td>
-                  <td style={styles.td}>
-                    <div style={{ fontSize: '0.8125rem', color: '#374151' }}>{a.city || '—'}{a.postal_code ? ` (${a.postal_code})` : ''}</div>
-                  </td>
-                  <td style={styles.td}>
-                    <span style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 5,
-                      background: APP_STATUS_COLORS[a.status] + '15',
-                      color: APP_STATUS_COLORS[a.status] || '#6B7280',
-                      padding: '4px 10px', borderRadius: 100,
-                      fontSize: '0.75rem', fontWeight: 600,
-                      fontFamily: 'var(--sans)',
-                    }}>
-                      <span style={{
-                        width: 5, height: 5, borderRadius: '50%',
-                        background: APP_STATUS_COLORS[a.status] || '#9CA3AF',
-                      }} />
-                      {APP_STATUS_LABELS[a.status] || a.status}
-                    </span>
-                  </td>
-                  <td style={styles.td} onClick={e => e.stopPropagation()}>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {a.status !== 'approved' && (
-                        <button
-                          disabled={updating === a.id}
-                          onClick={() => updateStatus(a.id, 'approved')}
-                          style={{ ...styles.actionBtn, background: '#F0FDF4', color: '#16A34A', border: '1px solid #BBF7D0' }}
-                        >
-                          ✓ Approuver
-                        </button>
-                      )}
-                      {a.status !== 'rejected' && (
-                        <button
-                          disabled={updating === a.id}
-                          onClick={() => updateStatus(a.id, 'rejected')}
-                          style={{ ...styles.actionBtn, background: '#FEF2F2', color: '#DC2626', border: '1px solid #FECACA' }}
-                        >
-                          ✗ Rejeter
-                        </button>
-                      )}
-                      {a.status === 'approved' && (
-                        <button
-                          disabled={generating === a.id}
-                          onClick={() => generateStripeLink(a)}
-                          style={{
-                            ...styles.actionBtn,
-                            background: generating === a.id ? '#F0F2F5' : '#EEF2FF',
-                            color: '#4F46E5',
-                            border: '1px solid #C7D2FE',
-                            opacity: generating === a.id ? 0.7 : 1,
-                          }}
-                        >
-                          {generating === a.id ? 'Génération...' : 'Stripe Connect'}
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-                {/* Expanded detail row */}
-                {isExpanded && (
-                  <tr style={{ background: '#F8F9FA' }}>
-                    <td colSpan={8} style={{ padding: '16px 20px' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 16 }}>
-                        {[
-                          { label: 'Diplôme', value: a.diploma },
-                          { label: 'Assurance RC Pro', value: a.has_insurance },
-                          { label: 'Disponibilité', value: a.availability },
-                        ].map((item, idx) => (
-                          <div key={idx}>
-                            <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2, fontFamily: 'var(--sans)' }}>{item.label}</div>
-                            <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#0F1B2D', fontFamily: 'var(--sans)' }}>{item.value || '—'}</div>
-                          </div>
-                        ))}
-                      </div>
-                      {a.technical_answer && (
-                        <div style={{ marginBottom: 12 }}>
-                          <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6, fontFamily: 'var(--sans)' }}>Réponse technique</div>
-                          <div style={{
-                            background: '#fff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 10,
-                            padding: '14px 16px', fontSize: '0.875rem', color: '#374151',
-                            lineHeight: 1.65, fontFamily: 'var(--sans)',
-                            borderLeft: '3px solid #FF4D00',
-                          }}>
-                            {a.technical_answer}
-                          </div>
-                        </div>
-                      )}
-                      <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                        {a.motivation && (
-                          <div style={{ fontSize: '0.8125rem', color: '#6B7280', fontStyle: 'italic', fontFamily: 'var(--sans)', flex: 1, minWidth: 200 }}>
-                            « {a.motivation} »
-                          </div>
-                        )}
-                        {a.cv_url && (
-                          <a href={a.cv_url} target="_blank" rel="noopener noreferrer" style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 5,
-                            background: '#EFF6FF', color: '#3B82F6', border: '1px solid rgba(59,130,246,0.25)',
-                            padding: '5px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
-                            fontFamily: 'var(--sans)', textDecoration: 'none',
-                          }}>
-                            Voir le CV
-                          </a>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )}
-                </React.Fragment>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ─── Onglet Stats ─────────────────────────────────────────────────────────────
-
-function StatsTab({ missions, applications }) {
-  const total     = missions.length
-  const ca        = missions.reduce((s, m) => s + (m.price_platform || 0), 0)
-  const byTier    = { ia: 0, visio: 0, inspection: 0 }
-  missions.forEach(m => { if (byTier[m.tier] !== undefined) byTier[m.tier]++ })
-  const pending   = applications.filter(a => a.status === 'pending').length
-  const completed = missions.filter(m => m.status === 'completed').length
-
-  const cards = [
-    { label: 'Missions totales',       value: total,              color: '#FF4D00' },
-    { label: 'CA plateforme',          value: `${ca.toFixed(0)}€`, color: '#16A34A' },
-    { label: 'Missions terminées',     value: completed,          color: '#3B82F6' },
-    { label: 'Candidatures en attente', value: pending,           color: '#F59E0B' },
-  ]
-
-  return (
-    <div>
-      <div style={styles.pageTitle}>Statistiques</div>
-      <div style={{ ...styles.pageSub, marginBottom: 36 }}>Vue d'ensemble du MVP</div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 40 }}>
-        {cards.map((c, i) => (
-          <div key={i} style={{
-            background: '#fff', borderRadius: 16, padding: '24px 20px',
-            border: '1.5px solid rgba(0,0,0,0.07)',
-            boxShadow: '0 2px 12px rgba(15,27,45,0.04)',
-          }}>
-            <div style={{
-              fontFamily: 'var(--sans)', fontWeight: 800,
-              fontSize: '2rem', color: c.color, lineHeight: 1, marginBottom: 8,
-            }}>
-              {c.value}
-            </div>
-            <div style={{
-              fontFamily: 'var(--sans)',
-              fontSize: '0.8125rem', color: '#6B7280', fontWeight: 500,
-            }}>
-              {c.label}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div style={{
-        background: '#fff', borderRadius: 16, padding: '24px 28px',
-        border: '1.5px solid rgba(0,0,0,0.07)',
-      }}>
-        <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1rem', color: '#0F1B2D', marginBottom: 20 }}>
-          Missions par palier
-        </div>
-        {[
-          { tier: 'ia',         label: 'IA Spécialisée',     emoji: '', price: '9,90€' },
-          { tier: 'visio',      label: 'Visio Test Drive',    emoji: '', price: '59€' },
-          { tier: 'inspection', label: 'Inspection Physique', emoji: '', price: '249€' },
-        ].map(t => {
-          const count = byTier[t.tier]
-          const pct   = total > 0 ? Math.round((count / total) * 100) : 0
-          return (
-            <div key={t.tier} style={{ marginBottom: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <span style={{ fontFamily: 'var(--sans)', fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>
-                  {t.emoji} {t.label} <span style={{ color: '#9CA3AF', fontWeight: 400 }}>· {t.price}</span>
-                </span>
-                <span style={{ fontFamily: 'var(--sans)', fontSize: '0.875rem', color: '#6B7280' }}>
-                  {count} ({pct}%)
-                </span>
-              </div>
-              <div style={{ height: 6, background: '#F0F2F5', borderRadius: 100, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pct}%`, background: '#FF4D00', borderRadius: 100, transition: 'width 0.6s ease' }} />
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
+// Les onglets Missions, Candidatures et Statistiques du parcours experts
+// d'avant le pivot ont été retirés au sprint 8 : ils ne lisaient que les
+// tables héritées (missions, expert_applications), désormais sans aucun
+// accès, via des fonctions edge retirées. Le recrutement passe par
+// /inspecteur/inscription et le suivi par l'onglet Inspecteurs.
 
 // ─── Composants utilitaires ───────────────────────────────────────────────────
 
@@ -982,16 +333,158 @@ function PassesTab() {
   )
 }
 
+// ─── Onglet Inspecteurs (sprint 8) ────────────────────────────────────────────
+
+function InspecteursTab() {
+  const [data, setData]       = useState({ inspecteurs: [], inspections: [] })
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState(null)
+  const [message, setMessage] = useState(null)
+  const [enCours, setEnCours] = useState(null)
+
+  const fetchTout = useCallback(async () => {
+    setLoading(true); setError(null)
+    const d = await adminFetch('admin-inspecteurs', { method: 'GET' })
+    if (d.error) { setError(d.error); setLoading(false); return }
+    setData({ inspecteurs: d.inspecteurs || [], inspections: d.inspections || [] })
+    setLoading(false)
+  }, [])
+  useEffect(() => { fetchTout() }, [fetchTout])
+
+  const agir = async (id, action) => {
+    let motif = null
+    if (action !== 'valider') {
+      motif = window.prompt(action === 'refuser' ? 'Motif du refus (envoyé au candidat) :' : 'Motif de la suspension :')
+      if (motif === null) return
+    }
+    setEnCours(id); setMessage(null)
+    const d = await adminFetch('admin-inspecteurs', {
+      method: 'POST', body: JSON.stringify({ action, id, motif }),
+    })
+    setEnCours(null)
+    if (d.error) { setMessage(d.message ? `${d.error} — ${d.message}` : d.error); return }
+    setMessage(action === 'valider' ? 'Inspecteur validé (email envoyé).' : 'Décision enregistrée.')
+    fetchTout()
+  }
+
+  const voirDocument = async (id) => {
+    const d = await adminFetch(`admin-inspecteurs?document=${id}`, { method: 'GET' })
+    if (d.url) window.open(d.url, '_blank', 'noopener')
+    else setMessage('Attestation indisponible.')
+  }
+
+  if (loading) return <Spinner label="Chargement des inspecteurs..." />
+  if (error)   return <ErrorBox msg={error} />
+
+  const valides = data.inspecteurs.filter(i => i.statut === 'valide').length
+  const enAttente = data.inspecteurs.filter(i => i.statut === 'candidat').length
+  const Pastille = ({ ok, children }) => (
+    <span style={{
+      fontSize: '0.6875rem', fontWeight: 700, borderRadius: 100, padding: '2px 8px', marginRight: 6,
+      background: ok ? '#F0FDF4' : '#FEF2F2', color: ok ? '#16A34A' : '#DC2626',
+    }}>{ok ? '✓' : '✗'} {children}</span>
+  )
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>Inspecteurs</div>
+          <div style={styles.pageSub}>
+            {valides} validé{valides !== 1 ? 's' : ''} — {enAttente} en attente — {data.inspections.length} inspection(s).
+            {valides === 0 && ' Tant qu’aucun inspecteur n’est validé, le service reste fermé au public.'}
+          </div>
+        </div>
+        <button onClick={fetchTout} style={styles.refreshBtn}>↻ Actualiser</button>
+      </div>
+
+      {message && <div style={{ marginBottom: 12, fontSize: '0.875rem', fontWeight: 600, color: '#0F1B2D' }}>{message}</div>}
+
+      {data.inspecteurs.map(i => (
+        <div key={i.id} style={{
+          background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+          padding: '14px 16px', marginBottom: 10,
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ flex: '1 1 300px' }}>
+              <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{i.nom}</span>
+              <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
+                {i.email}{i.telephone ? ` · ${i.telephone}` : ''} · SIRET {i.siret}
+                {i.raison_sociale ? ` · ${i.raison_sociale}` : ''} · dép. {(i.departements || []).join(', ') || '—'}
+              </div>
+            </div>
+            <span style={{
+              fontSize: '0.6875rem', fontWeight: 700, borderRadius: 100, padding: '3px 10px',
+              background: i.statut === 'valide' ? '#F0FDF4' : i.statut === 'candidat' ? '#FFF4EE' : '#F0F2F5',
+              color: i.statut === 'valide' ? '#16A34A' : i.statut === 'candidat' ? '#FF4D00' : '#6B7280',
+            }}>{i.statut}</span>
+          </div>
+
+          <div style={{ marginTop: 10 }}>
+            <Pastille ok={i.pieces.siret_valide}>SIRET</Pastille>
+            <Pastille ok={i.pieces.rc_pro_valide}>RC pro {i.rc_pro_echeance ? `au ${formatDate(i.rc_pro_echeance)}` : ''}</Pastille>
+            <Pastille ok={i.pieces.rc_pro_document}>Attestation</Pastille>
+            <Pastille ok={i.pieces.charte_signee}>Charte {i.charte_version || ''}</Pastille>
+            <Pastille ok={i.pieces.stripe_pret}>Stripe</Pastille>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+            {i.rc_pro_document && (
+              <button onClick={() => voirDocument(i.id)} style={styles.refreshBtn}>Voir l’attestation</button>
+            )}
+            {i.statut !== 'valide' && (
+              <button onClick={() => agir(i.id, 'valider')} disabled={enCours === i.id} style={{
+                background: '#16A34A', color: '#fff', border: 'none', borderRadius: 8,
+                padding: '9px 16px', fontFamily: 'var(--sans)', fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer',
+              }}>
+                {enCours === i.id ? '…' : 'Valider'}
+              </button>
+            )}
+            {i.statut === 'candidat' && (
+              <button onClick={() => agir(i.id, 'refuser')} style={styles.refreshBtn}>Refuser</button>
+            )}
+            {i.statut === 'valide' && (
+              <button onClick={() => agir(i.id, 'suspendre')} style={styles.refreshBtn}>Suspendre</button>
+            )}
+          </div>
+        </div>
+      ))}
+      {data.inspecteurs.length === 0 && (
+        <EmptyState icon="" title="Aucun inspecteur" sub="Les candidatures déposées sur /inspecteur/inscription apparaissent ici." />
+      )}
+
+      {data.inspections.length > 0 && (
+        <>
+          <div style={{ ...styles.pageTitle, fontSize: '1rem', marginTop: 28, marginBottom: 10 }}>Inspections</div>
+          {data.inspections.map(ins => (
+            <div key={ins.id} style={{
+              background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+              padding: '12px 14px', marginBottom: 8, display: 'flex', justifyContent: 'space-between',
+              gap: 10, flexWrap: 'wrap', alignItems: 'center', fontSize: '0.875rem',
+            }}>
+              <span>
+                <strong>INS-{String(ins.ref_num || 0).padStart(5, '0')}</strong> · {ins.code_postal} ·{' '}
+                {formatDate(ins.created_at)}
+              </span>
+              <span style={{ color: '#6B7280' }}>
+                {ins.statut}
+                {ins.verse_le ? ` · versé ${(ins.part_inspecteur_cents / 100).toLocaleString('fr-FR')} €` : ''}
+                {ins.statut === 'faite' && !ins.transfer_id ? ' · VERSEMENT À RÉGULARISER' : ''}
+              </span>
+            </div>
+          ))}
+        </>
+      )}
+    </div>
+  )
+}
+
 // ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function AdminDashboard() {
   const [user, setUser]   = useState(null)
   const [loading, setLoading] = useState(true)
-  const [tab, setTab]     = useState('missions')
-
-  // Pour passer missions/applications aux stats sans refetch
-  const [missions, setMissions]         = useState([])
-  const [applications, setApplications] = useState([])
+  const [tab, setTab]     = useState('passes')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -1003,8 +496,6 @@ export default function AdminDashboard() {
   // Précharge pour les stats
   useEffect(() => {
     if (!user || !ADMIN_EMAILS.includes(user.email)) return
-    adminFetch('admin-missions').then(d => { if (!d.error) setMissions(d.missions || []) })
-    adminFetch('admin-applications').then(d => { if (!d.error) setApplications(d.applications || []) })
   }, [user])
 
   if (loading) {
@@ -1044,10 +535,8 @@ export default function AdminDashboard() {
 
   const navItems = [
     { key: 'passes',       label: 'Pass achat' },
-    { key: 'missions',     label: 'Missions' },
-    { key: 'applications', label: 'Candidatures' },
+    { key: 'inspecteurs',  label: 'Inspecteurs' },
     { key: 'couts',        label: 'Coûts réparation' },
-    { key: 'stats',        label: 'Statistiques' },
     { key: 'audit',        label: 'Audit justesse', href: '/admin/audit' },
   ]
 
@@ -1136,10 +625,8 @@ export default function AdminDashboard() {
         <main style={{ flexGrow: 1, background: '#F8F9FA', minHeight: '100vh', overflowY: 'auto' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
             {tab === 'passes'       && <PassesTab />}
-            {tab === 'missions'     && <MissionsTab />}
-            {tab === 'applications' && <ApplicationsTab />}
+            {tab === 'inspecteurs'  && <InspecteursTab />}
             {tab === 'couts'        && <CoutsTab />}
-            {tab === 'stats'        && <StatsTab missions={missions} applications={applications} />}
           </div>
         </main>
       </div>

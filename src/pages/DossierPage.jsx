@@ -9,6 +9,7 @@ import {
   dossierList, dossierSetStatut, dossierSetAlertes, dossierRemove,
   submitOutcome, envoyerLienMagique, getMonPass,
 } from '../lib/scoreApi'
+import { mesInspections } from '../lib/inspectionApi'
 
 const VERDICT_LABELS = { vert: 'FEU VERT', orange: 'PRUDENCE', rouge: 'SIGNAUX ROUGES' }
 const VERDICT_CLASSES = { vert: 'ok', orange: 'mid', rouge: 'bad' }
@@ -89,6 +90,7 @@ export default function DossierPage() {
   const [user, setUser] = useState(undefined) // undefined = chargement
   const [items, setItems] = useState(null)
   const [pass, setPass] = useState(null) // Pass achat actif { mode, debut, fin } ou null
+  const [inspections, setInspections] = useState([]) // inspections commandées
   const [email, setEmail] = useState('')
   const [lienEtat, setLienEtat] = useState('idle')
   const [captcha, setCaptcha] = useState(null)
@@ -111,8 +113,13 @@ export default function DossierPage() {
   // Pass achat : l'appel rattache aussi un Pass acheté avec cet email avant
   // la première connexion (l'email Stripe crée ou précède le compte).
   useEffect(() => {
-    if (user) getMonPass().then(setPass).catch(() => setPass(null))
-    else setPass(null)
+    if (user) {
+      getMonPass().then(setPass).catch(() => setPass(null))
+      mesInspections().then(setInspections).catch(() => setInspections([]))
+    } else {
+      setPass(null)
+      setInspections([])
+    }
   }, [user])
 
   const envoyerLien = async (e) => {
@@ -210,6 +217,37 @@ export default function DossierPage() {
                     SE DÉCONNECTER
                   </button>
                 </div>
+
+                {inspections.length > 0 && (
+                  <div style={{ border: '1px solid var(--rule-strong)', padding: '14px 16px', marginBottom: 14 }}>
+                    <p className="eyebrow">Inspections sur place</p>
+                    {inspections.map(i => (
+                      <div className="ctrl" key={i.id} style={{ alignItems: 'baseline' }}>
+                        <span>
+                          <Link to={`/a/${i.analysis_id}`} style={{ fontWeight: 600 }}>
+                            {[i.marque, i.modele].filter(Boolean).join(' ') || 'Véhicule'}
+                          </Link>
+                          <span className="mono c-graphite" style={{ display: 'block', fontSize: 11, marginTop: 2 }}>
+                            {i.ref_num ? `INS-${String(i.ref_num).padStart(5, '0')} · ` : ''}
+                            {i.creneau_confirme || i.creneau_souhaite
+                              ? new Date(i.creneau_confirme || i.creneau_souhaite).toLocaleString('fr-FR', {
+                                day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
+                              })
+                              : ''}
+                            {i.inspecteur_nom ? ` · ${i.inspecteur_nom}` : ''}
+                            {i.inspecteur_telephone ? ` · ${i.inspecteur_telephone}` : ''}
+                          </span>
+                        </span>
+                        <span className={`val ${i.statut === 'faite' ? 'ok' : i.statut === 'annulee' ? 'bad' : 'mid'}`}>
+                          {{
+                            a_attribuer: 'EN ATTENTE', acceptee: 'CONFIRMÉE',
+                            refusee: 'À RÉATTRIBUER', faite: 'RAPPORT PRÊT', annulee: 'ANNULÉE',
+                          }[i.statut] || i.statut.toUpperCase()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {pass && (
                   <div className="mono" style={{

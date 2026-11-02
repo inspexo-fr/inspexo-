@@ -11,6 +11,8 @@ import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
 import LectureCtBloc from '../components/LectureCtBloc'
 import VinBloc from '../components/VinBloc'
+import InspectionBloc from '../components/InspectionBloc'
+import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
 import {
@@ -1295,6 +1297,16 @@ export default function ResultPage() {
 
             {/* Numéro de châssis (sprint 7 — décodage normatif gratuit, local) */}
             {!enCours && r.type === 'vehicule' && <VinBloc vehicule={vh} />}
+
+            {/* Rapport d'inspection déjà remis (sprint 8) : il passe AVANT
+                le bloc de commande, c'est le livrable que l'acheteur a payé. */}
+            {!enCours && r.type === 'vehicule' && <RapportInspection analysisId={id} />}
+
+            {/* Inspection sur place (sprint 8 — ouverte seulement si un
+                inspecteur validé couvre le secteur, décidé serveur) */}
+            {!enCours && r.type === 'vehicule' && (
+              <InspectionBloc analysisId={id} vehicule={vehiculeLabel} />
+            )}
 
             {/* Prix */}
             {!enCours && (
