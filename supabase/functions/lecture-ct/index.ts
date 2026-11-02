@@ -320,6 +320,10 @@ serve(async (req: Request) => {
         entretien_du_non_prouve: Array.isArray(result.recalcul?.entretien_du_non_prouve)
           ? result.recalcul.entretien_du_non_prouve
           : [],
+        // Le relevé de prix n'est pas relu ici (pas d'accès aux agrégats) :
+        // il est repris tel quel du recalcul, sinon l'argument de prix
+        // disparaîtrait de la marge au premier ajout de photo.
+        prix_marche: result.recalcul?.prix_marche ?? null,
         operations_non_faites: Array.isArray(result.recalcul?.operations_non_faites)
           ? result.recalcul.operations_non_faites
           : [],

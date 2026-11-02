@@ -4,8 +4,8 @@
 - **Nom** : Inspexo — Analyser une annonce auto
 - **Catégorie** : Shopping (ou Outils de productivité)
 - **Langue** : Français
-- **Version** : 1.0.0
-- **Zip de soumission** : `extension/inspexo-extension-1.0.0.zip` (régénérer avec
+- **Version** : 1.1.0
+- **Zip de soumission** : `extension/inspexo-extension-1.1.0.zip` (régénérer avec
   `cd extension && zip -r inspexo-extension-$(jq -r .version manifest.json).zip . -x 'STORE.md' -x '*.zip' -x 'sites/common.js.orig' -x '.*'`)
 
 ## Objet unique (single purpose) — champ obligatoire
@@ -39,10 +39,17 @@ d'une minute :
 Gratuit, sans compte, 5 analyses par 24 heures. 100 % côté acheteur : Inspexo
 n'a aucun lien avec les vendeurs. Ce qui n'est pas prouvé n'apparaît pas.
 
-Confidentialité : aucune collecte, aucun tracking. L'extension ne lit la page
-qu'au moment du clic et ne communique qu'avec inspexo.io. Les photos sont
-redimensionnées dans votre navigateur, leurs métadonnées EXIF supprimées, et ne
-sont jamais conservées.
+Comparer les prix : sur une page de résultats, un bouton « Ajouter ces annonces
+comme comparables » joint les annonces affichées à votre prochaine analyse, pour
+situer le prix demandé. Une case facultative et décochée par défaut, « Contribuer
+anonymement aux prix de marché », permet en plus d'alimenter notre relevé de prix
+partagé — qui ne conserve que des comptages par modèle, motorisation, tranche
+d'année, tranche de kilométrage, région et mois, jamais une annonce.
+
+Confidentialité : aucune collecte sans votre action, aucun tracking. L'extension
+ne lit la page qu'au moment où vous cliquez et ne communique qu'avec inspexo.io.
+Les photos sont redimensionnées dans votre navigateur, leurs métadonnées EXIF
+supprimées, et ne sont jamais conservées.
 Politique de confidentialité : https://www.inspexo.io/extension/confidentialite
 
 ## Justification des permissions — champs du formulaire
@@ -51,7 +58,7 @@ Politique de confidentialité : https://www.inspexo.io/extension/confidentialite
 | `activeTab` | Lire la page d'annonce active uniquement lorsque l'utilisateur clique sur le bouton « Analyser avec Inspexo ». |
 | `scripting` | Injecter le bouton d'analyse et le style associé sur les pages d'annonce des trois sites supportés. |
 | `host_permissions` (leboncoin.fr, lacentrale.fr, autoscout24.fr) | Afficher le bouton sur les pages d'annonce de ces trois sites et télécharger les photos de l'annonce (hébergées sur leurs sous-domaines, ex. img.leboncoin.fr) afin de les redimensionner localement avant analyse. L'extension est inerte sur tout autre site. |
-| `storage` | Mémoriser localement (24 h max) les comparables de prix que l'utilisateur choisit d'ajouter depuis une page de résultats (titre, année, km, prix), joints à sa prochaine analyse puis effacés. Aucune synchronisation, aucune donnée de navigation. |
+| `storage` | Mémoriser localement (24 h max) les comparables de prix que l'utilisateur choisit d'ajouter depuis une page de résultats (titre, année, km, prix), joints à sa prochaine analyse puis effacés ; et retenir son choix sur la case « Contribuer anonymement aux prix de marché ». Aucune synchronisation, aucune donnée de navigation. |
 | Code distant | Aucun : tout le code est dans le paquet. |
 
 Note : les photos AutoScout24 sont servies depuis `pictures.autoscout24.net`
@@ -60,12 +67,29 @@ en-têtes CORS du CDN ; dans ce cas l'analyse part sans photos — choix assumé
 pour garder des permissions minimales. Élargir à `*.autoscout24.net` si le
 Web Store l'accepte sans friction.
 
+## Relevé de prix de marché (nouveau en 1.1) — à déclarer tel quel
+Fonctionnalité **facultative, désactivée par défaut**. Sur une page de
+résultats, l'utilisateur clique sur « Ajouter ces annonces comme comparables » ;
+si et seulement si la case « Contribuer anonymement aux prix de marché » est
+cochée, le même clic envoie à inspexo.io le titre, l'année, le kilométrage, le
+prix, le carburant, la boîte et le code postal des annonces **affichées sur la
+page qu'il regarde**. Aucun envoi en tâche de fond, aucun parcours automatique
+de pages, aucune requête vers un autre domaine qu'inspexo.io.
+
+Côté serveur, aucune annonce n'est conservée : chaque prix est fondu dans un
+comptage par segment (marque, modèle, motorisation, boîte, tranche d'année,
+tranche de kilométrage, région, mois). Le titre et le code postal ne servent
+qu'à déterminer le modèle et la région, en mémoire, puis sont oubliés — aucune
+URL, aucun titre, aucun code postal n'est enregistré. Le nombre de
+contributions est plafonné par jour et par utilisateur.
+
 ## Captures à fournir (1280×800, 3 à 5)
 1. Page d'annonce Leboncoin avec le bouton flottant « Analyser avec Inspexo » visible.
 2. Le verdict /a/:id affiché après le clic (bandeau rouge « Signaux rouges 33/100 » de la démo S7).
 3. Le bloc « Points de défaillance connus » avec badge « rappel constructeur officiel » et sources cliquables.
 4. Le bloc « Ce que montrent les photos » avec pastilles ok/attention/rouge.
-5. (Optionnel) La page /extension du site.
+5. Page de résultats avec le bouton « Ajouter ces annonces comme comparables » et la case de contribution décochée.
+6. (Optionnel) La page /extension du site.
 
 Fond uni ou capture d'écran réelle, pas de texte promotionnel surimprimé
 (règles du Web Store). Icône du store : `icons/icon128.png`.
@@ -81,4 +105,5 @@ Fond uni ou capture d'écran réelle, pas de texte promotionnel surimprimé
 
 ## Rappels avant soumission
 - Vérifier que `STORE_URL` dans `src/pages/ExtensionPage.jsx` est renseigné après publication.
+- Garder `extension/privacy.html` et `src/pages/ExtensionPrivacy.jsx` SYNCHRONES (même texte) : la première est la copie autonome exigée par le formulaire, la seconde la page publiée.
 - Tester en local : chrome://extensions → mode développeur → « Charger l'extension non empaquetée » → dossier `extension/`.

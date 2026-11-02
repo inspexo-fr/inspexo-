@@ -208,6 +208,54 @@ const coutFreins = {
     long.endsWith('…') && long.split(/\s+/).length === 15, long)
 }
 
+// ---------- Écart au prix médian du marché (sprint 9) ----------
+{
+  // Espace fine insécable des milliers (U+202F) ramenée à une espace simple.
+  const ns = (t) => String(t).replace(/[\u202f\u00a0\u2009\u2007]/g, ' ')
+  const marche = { ecart_eur: 1_400, mediane: 13_600, n: 42, date: '02/11', ajuste_km: true }
+  const seul = calculerNegociation({ ...base, prix_marche: marche })
+  const poste = seul.postes.find((p) => p.type === 'prix_marche')
+  verifie('un poste « prix de marché » est créé quand l’annonce est au-dessus', !!poste)
+  verifie('le poste porte l’écart au P50 comme montant',
+    poste && poste.cout_min_eur === 1_400 && poste.cout_max_eur === 1_400)
+  verifie('sa source est le relevé de marché, pas un tarif de garage',
+    poste && poste.source_statut === 'marche')
+  verifie('l’argument cite l’effectif et la date du relevé',
+    poste && ns(poste.argument).includes('42 annonces') && poste.argument.includes('02/11'), poste?.argument)
+  verifie('l’argument rappelle « prix demandés, pas prix de vente »',
+    poste && /prix demandés/.test(poste.argument) && /pas des prix de vente/.test(poste.argument))
+  verifie('l’argument signale la comparaison à kilométrage comparable',
+    poste && poste.argument.includes('à kilométrage comparable'))
+  verifie('un seul poste chiffré → toujours pas de total (règle des 2 postes)',
+    seul.total_min_eur === null, String(seul.total_min_eur))
+
+  const sansEcart = calculerNegociation({ ...base, prix_marche: { ...marche, ecart_eur: 0 } })
+  verifie('annonce au niveau ou sous la médiane → aucun poste de marché',
+    !sansEcart.postes.some((p) => p.type === 'prix_marche'))
+  const absent = calculerNegociation({ ...base, prix_marche: null })
+  verifie('pas de fourchette → aucun poste de marché',
+    !absent.postes.some((p) => p.type === 'prix_marche'))
+
+  // Avec un second poste chiffré, l'écart au marché entre dans le total.
+  const avecReparation = calculerNegociation({
+    ...base,
+    prix_marche: marche,
+    defauts_annonce: [{ description: 'embrayage fatigué', organe: 'embrayage' }],
+    couts: [coutEmbrayage],
+  })
+  verifie('l’écart au marché s’additionne aux réparations sourcées',
+    avecReparation.total_min_eur !== null &&
+    avecReparation.total_min_eur >= 1_400 + (coutEmbrayage.cout_min_eur ?? 0),
+    `total ${avecReparation.total_min_eur}-${avecReparation.total_max_eur}`)
+  verifie('l’argumentaire n’ajoute pas de parenthèse de tarif au poste de marché',
+    ns(avecReparation.argumentaire).includes('médiane de 13 600 €') &&
+    !/médiane de 13 600 €.*selon les/.test(ns(avecReparation.argumentaire)))
+  const ordre = avecReparation.postes.map((p) => p.type)
+  verifie('les postes restent triés par montant décroissant',
+    JSON.stringify(ordre) === JSON.stringify([...avecReparation.postes]
+      .sort((a, b) => (b.cout_max_eur ?? 0) - (a.cout_max_eur ?? 0)).map((p) => p.type)))
+}
+
 // ---------- Déterminisme ----------
 {
   const entree = {

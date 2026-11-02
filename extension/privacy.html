@@ -21,14 +21,22 @@
 <body>
 <main>
   <h1>Confidentialité de l'extension Chrome</h1>
-  <p class="date">Dernière mise à jour : 26 octobre 2026 — s'applique à l'extension « Inspexo — Analyser une annonce auto ».</p>
+  <p class="date">Dernière mise à jour : 4 novembre 2026 — s'applique à l'extension « Inspexo — Analyser une annonce auto » (version 1.1).</p>
   <section>
-    <h2>Aucune collecte, aucun suivi</h2>
-    <p>L'extension ne contient aucun traceur, aucune statistique d'usage, aucun cookie. Elle n'enregistre rien sur votre navigation et ne lit le contenu d'une page qu'au moment précis où vous cliquez sur le bouton « Analyser avec Inspexo ».</p>
+    <h2>Aucune collecte sans votre action</h2>
+    <p>L'extension ne contient aucun traceur, aucune statistique d'usage, aucun cookie, et n'enregistre rien sur votre navigation. Elle ne lit le contenu d'une page qu'au moment précis où vous cliquez : sur « Analyser avec Inspexo » pour une annonce, ou sur « Ajouter ces annonces comme comparables » sur une page de résultats. Rien ne part jamais en tâche de fond.</p>
   </section>
   <section>
-    <h2>Ce qui est envoyé, et à qui</h2>
-    <p>Au clic, l'extension extrait de la page d'annonce : titre, prix, année, kilométrage, carburant, boîte, description, type de vendeur affiché par le site, URL de l'annonce et jusqu'à 6 photos. Ces données sont envoyées exclusivement à inspexo.io pour produire l'analyse. Aucune requête n'est faite vers un autre service.</p>
+    <h2>Ce qui est envoyé pour une analyse, et à qui</h2>
+    <p>Au clic sur « Analyser avec Inspexo », l'extension extrait de la page d'annonce : titre, prix, année, kilométrage, carburant, boîte, description, type de vendeur affiché par le site, URL de l'annonce et jusqu'à 6 photos. Ces données sont envoyées exclusivement à inspexo.io pour produire l'analyse. Aucune requête n'est faite vers un autre service.</p>
+  </section>
+  <section>
+    <h2>Contribuer aux prix de marché : sur demande seulement</h2>
+    <p>Sur une page de résultats, le bouton « Ajouter ces annonces comme comparables » joint les annonces affichées à votre prochaine analyse. Une case « Contribuer anonymement aux prix de marché », DÉCOCHÉE par défaut, permet en plus d'alimenter notre relevé de prix : si vous la cochez, le même clic envoie le titre, l'année, le kilométrage, le prix, le carburant, la boîte et le code postal des annonces affichées. Votre choix est mémorisé et se décoche à tout moment. Sans cette case, aucune donnée ne part vers le relevé de prix.</p>
+  </section>
+  <section>
+    <h2>Le relevé de prix ne garde que des moyennes</h2>
+    <p>Une contribution n'est jamais conservée annonce par annonce. Chaque prix est immédiatement fondu dans un comptage par segment — marque, modèle, motorisation, boîte, tranche d'année, tranche de kilométrage, région et mois — qui ne permet de retrouver ni une annonce, ni un vendeur, ni vous. Le titre et le code postal servent uniquement, en mémoire, à déterminer le modèle et la région, puis sont oubliés : aucune URL, aucun titre, aucun code postal n'est enregistré, et la date la plus précise conservée est le mois. Rien n'est republié annonce par annonce. Le nombre de contributions est plafonné par jour et par utilisateur.</p>
   </section>
   <section>
     <h2>Photos : jamais stockées</h2>
@@ -40,7 +48,7 @@
   </section>
   <section>
     <h2>Permissions demandées</h2>
-    <p>activeTab et scripting : afficher le bouton et lire la page d'annonce au clic. Accès limité à leboncoin.fr, lacentrale.fr et autoscout24.fr : le bouton n'existe que sur ces trois sites, l'extension est inerte partout ailleurs.</p>
+    <p>activeTab et scripting : afficher le bouton et lire la page au clic. storage : retenir les annonces comparables (24 h maximum) et votre choix sur la case de contribution. Accès limité à leboncoin.fr, lacentrale.fr et autoscout24.fr : les boutons n'existent que sur ces trois sites, l'extension est inerte partout ailleurs.</p>
   </section>
   <section>
     <h2>Vos droits</h2>

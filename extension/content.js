@@ -1,5 +1,10 @@
 // Bouton flottant « Analyser avec Inspexo » sur les pages d'annonce.
-// Aucune collecte : rien n'est lu ni envoyé avant le clic de l'utilisateur.
+// AUCUNE COLLECTE SANS ACTION DE L'UTILISATEUR : rien n'est lu ni envoyé avant
+// un clic. Sur une page de résultats, le clic sur « Ajouter ces annonces comme
+// comparables » sert l'analyse en cours ; et SI — et seulement si —
+// l'utilisateur a coché « Contribuer anonymement aux prix de marché » (case
+// décochée par défaut, choix mémorisé), les mêmes données alimentent aussi le
+// relevé de prix agrégé. Jamais de relevé en tâche de fond.
 'use strict'
 
 const INSPEXO_BASE = 'https://www.inspexo.io'
@@ -74,28 +79,82 @@ async function onClick () {
 }
 
 // Page de résultats : bouton « Ajouter ces annonces comme comparables ».
-// Seuls titre/année/km/prix des annonces affichées sont extraits, à la demande,
-// et joints à la PROCHAINE analyse. Rien d'autre n'est collecté.
-function buildSerpButton () {
+// Seuls titre/année/km/prix/carburant/boîte/code postal des annonces AFFICHÉES
+// sont extraits, AU CLIC, et joints à la prochaine analyse. La case
+// « Contribuer anonymement aux prix de marché » (décochée par défaut) ajoute
+// l'envoi au relevé agrégé — et rien de plus : aucune URL, aucun titre
+// conservé côté serveur, la seule granularité est le mois et la région.
+const CLE_CONTRIB = 'inspexo_contribuer'
+
+async function contributionActive () {
+  try {
+    return (await chrome.storage.local.get(CLE_CONTRIB))[CLE_CONTRIB] === true
+  } catch (_) { return false }
+}
+
+function buildSerpBlock () {
+  const wrap = document.createElement('div')
+  wrap.id = 'inspexo-serp-bloc'
+
   const btn = document.createElement('button')
   btn.id = 'inspexo-comparables-btn'
   btn.type = 'button'
   btn.innerHTML = '<span id="inspexo-btn-dot"></span><span>Ajouter ces annonces comme comparables</span>'
+
+  const label = document.createElement('label')
+  label.id = 'inspexo-contrib-label'
+  const case_ = document.createElement('input')
+  case_.type = 'checkbox'
+  case_.id = 'inspexo-contrib-case'
+  // Décochée par défaut : l'absence de choix n'est jamais un consentement.
+  case_.checked = false
+  contributionActive().then((v) => { case_.checked = v })
+  case_.addEventListener('change', () => {
+    chrome.storage.local.set({ [CLE_CONTRIB]: case_.checked }).catch(() => {})
+  })
+  label.appendChild(case_)
+  label.appendChild(document.createTextNode('Contribuer anonymement aux prix de marché'))
+
+  const dire = (texte, ms = 5000) => {
+    const cible = btn.querySelector('span:last-child')
+    cible.textContent = texte
+    setTimeout(() => { cible.textContent = 'Ajouter ces annonces comme comparables' }, ms)
+  }
+
   btn.addEventListener('click', async () => {
     const site = currentSerpSite()
-    let comparables = []
-    try { comparables = site ? site.extractSerp(document) : [] } catch (_) { comparables = [] }
-    if (!comparables.length) {
-      btn.querySelector('span:last-child').textContent = 'Aucune annonce lisible sur cette page'
-      setTimeout(() => { btn.querySelector('span:last-child').textContent = 'Ajouter ces annonces comme comparables' }, 4000)
+    let annonces = []
+    try { annonces = site ? site.extractSerp(document) : [] } catch (_) { annonces = [] }
+    if (!annonces.length) {
+      dire('Aucune annonce lisible sur cette page', 4000)
       return
     }
-    await chrome.runtime.sendMessage({ type: 'inspexo_comparables', comparables })
-    btn.querySelector('span:last-child').textContent =
-      `${comparables.length} annonce${comparables.length > 1 ? 's' : ''} enregistrée${comparables.length > 1 ? 's' : ''} pour la prochaine analyse`
-    setTimeout(() => { btn.querySelector('span:last-child').textContent = 'Ajouter ces annonces comme comparables' }, 5000)
+    // 1) Toujours : comparables de la prochaine analyse (comportement d'origine).
+    await chrome.runtime.sendMessage({ type: 'inspexo_comparables', comparables: annonces })
+    const n = annonces.length
+    const pluriel = n > 1 ? 's' : ''
+    // 2) Seulement si l'utilisateur a coché : contribution au relevé agrégé.
+    if (case_.checked) {
+      const rep = await chrome.runtime.sendMessage({
+        type: 'inspexo_contribuer', site: site.nom, annonces,
+      }).catch(() => null)
+      if (rep && rep.ok) {
+        dire(`${n} annonce${pluriel} enregistrée${pluriel} + contribution envoyée`)
+        return
+      }
+      if (rep && rep.error === 'rate_limited') {
+        dire(`${n} annonce${pluriel} enregistrée${pluriel} — plafond de contributions atteint`, 6000)
+        return
+      }
+      dire(`${n} annonce${pluriel} enregistrée${pluriel} — contribution non envoyée`, 6000)
+      return
+    }
+    dire(`${n} annonce${pluriel} enregistrée${pluriel} pour la prochaine analyse`)
   })
-  return btn
+
+  wrap.appendChild(btn)
+  wrap.appendChild(label)
+  return wrap
 }
 
 function refresh () {
@@ -104,9 +163,9 @@ function refresh () {
   if (onAdPage && !existing && document.body) document.body.appendChild(buildButton())
   if (!onAdPage && existing) existing.remove()
 
-  const existingSerp = document.getElementById('inspexo-comparables-btn')
+  const existingSerp = document.getElementById('inspexo-serp-bloc')
   const onSerp = !onAdPage && !!currentSerpSite()
-  if (onSerp && !existingSerp && document.body) document.body.appendChild(buildSerpButton())
+  if (onSerp && !existingSerp && document.body) document.body.appendChild(buildSerpBlock())
   if (!onSerp && existingSerp) existingSerp.remove()
 }
 

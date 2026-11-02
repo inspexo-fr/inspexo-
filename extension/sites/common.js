@@ -20,11 +20,19 @@ globalThis.inspexoSerpFromJsonLd = function (doc) {
       const kmRaw = prod.mileageFromOdometer
       const km = kmRaw ? Number(typeof kmRaw === 'object' ? kmRaw.value : kmRaw) : null
       const annee = prod.vehicleModelDate || prod.productionDate || prod.dateVehicleFirstRegistered
+      // Carburant, boîte et code postal servent au relevé de prix de marché
+      // (sprint 9) : ils ne sont envoyés que si l'utilisateur a coché la
+      // contribution. Absents du JSON-LD → chaînes vides, jamais devinés.
+      const adresse = (offer && offer.availableAtOrFrom && offer.availableAtOrFrom.address) ||
+        prod.address || null
       out.push({
         titre: String(prod.name).slice(0, 160),
         annee: annee ? parseInt(String(annee).slice(0, 4), 10) : null,
         km: Number.isFinite(km) ? km : null,
         prix,
+        carburant: prod.fuelType ? String(prod.fuelType).slice(0, 40) : '',
+        boite: prod.vehicleTransmission ? String(prod.vehicleTransmission).slice(0, 40) : '',
+        code_postal: adresse && adresse.postalCode ? String(adresse.postalCode).slice(0, 10) : '',
       })
     }
   }

@@ -164,6 +164,16 @@ export async function getMoteurPublic(marque, famille) {
   return data
 }
 
+/** Histogrammes de prix pour une liste de couples { marque, modele }.
+ *  La RPC ne rend l'histogramme qu'au-delà du seuil de publication ; les
+ *  quantiles sont calculés côté client par `src/data/marche.js`, pour qu'il
+ *  n'existe qu'UNE implémentation des quantiles dans le projet. */
+export async function getPrixSegments(segments) {
+  const { data, error } = await supabase.rpc('get_prix_segments', { p_segments: segments })
+  if (error) throw error
+  return Array.isArray(data) ? data : []
+}
+
 /** Familles dont la fiche atteint le seuil de publication (sitemap, liens). */
 export async function listMoteursPublies() {
   const { data, error } = await supabase.rpc('list_moteurs_publies')

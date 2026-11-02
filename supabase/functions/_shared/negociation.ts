@@ -23,12 +23,17 @@ export type PosteNegociation = {
     | "defaut_annonce"
     | "ct_defaut"
     | "entretien_non_prouve"
-    | "echeance_proche";
+    | "echeance_proche"
+    // SPRINT 9 : écart au prix médian des annonces comparables. Ce n'est pas
+    // un coût de réparation mais un argument de marché — il est donc nommé
+    // comme tel dans l'argumentaire, jamais présenté comme une facture.
+    | "prix_marche";
   poste: string;
   argument: string;
   cout_min_eur: number | null;
   cout_max_eur: number | null;
-  source_statut: "valide_devis" | "source" | "fiche" | null;
+  // « marche » : relevé d'annonces comparables Inspexo (prix demandés).
+  source_statut: "valide_devis" | "source" | "fiche" | "marche" | null;
   urls: string[];
 };
 
@@ -191,6 +196,16 @@ type EntreeNegociation = {
   // Opérations que l'annonce déclare EXPLICITEMENT non faites (« distribution
   // jamais faite ») — déjà auditées par la critique.
   operations_non_faites: string[];
+  // SPRINT 9 — position du prix demandé dans le relevé d'annonces comparables.
+  // Renseigné SEULEMENT quand la fourchette existe (≥ 15 relevés) et que
+  // l'annonce est au-dessus de la médiane de référence.
+  prix_marche?: {
+    ecart_eur: number; // prix demandé − médiane de référence (> 0)
+    mediane: number;
+    n: number;
+    date: string; // 'JJ/MM' du relevé
+    ajuste_km: boolean; // la médiane a-t-elle été corrigée du kilométrage ?
+  } | null;
   plan_entretien: Array<{
     operation: string;
     intervalle_km: number | null;
@@ -250,6 +265,8 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
     cout_direct_min?: number | null;
     cout_direct_max?: number | null;
     cout_direct_urls?: string[];
+    // Statut de source d'un coût déjà connu (défaut : « fiche »).
+    cout_direct_statut?: "fiche" | "marche";
   }> = [];
 
   // 1) Défauts constatés sur les photos (jamais le compteur : un écart de
@@ -339,6 +356,26 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
     }
   }
 
+  // 6) Position du prix dans le relevé d'annonces comparables. Ajouté EN
+  //    DERNIER : si jamais il recoupait un poste de réparation, c'est la
+  //    réparation — plus concrète — qui gagnerait à la déduplication.
+  if (e.prix_marche && e.prix_marche.ecart_eur > 0) {
+    const m = e.prix_marche;
+    bruts.push({
+      type: "prix_marche",
+      poste: "Prix demandé au-dessus de la médiane des annonces comparables",
+      argument:
+        `Le prix demandé dépasse de ${fr(m.ecart_eur)} € la médiane de ${fr(m.mediane)} € ` +
+        `relevée sur ${m.n} annonces comparables le ${m.date}` +
+        `${m.ajuste_km ? ", à kilométrage comparable" : ""} — ce sont des prix demandés, ` +
+        `pas des prix de vente : les transactions se concluent souvent en dessous.`,
+      cout_direct_min: m.ecart_eur,
+      cout_direct_max: m.ecart_eur,
+      cout_direct_urls: [],
+      cout_direct_statut: "marche",
+    });
+  }
+
   // ---- Déduplication : un même fait (« distribution jamais faite ») peut
   // arriver par plusieurs canaux (défaut admis, opération non faite, plan) —
   // deux postes partageant au moins 2 mots significatifs sont fusionnés,
@@ -360,13 +397,13 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
   const chiffres: PosteNegociation[] = [];
   const sansMontant: PosteNegociation[] = [];
   for (const b of dedupliques) {
-    const { cout_direct_min, cout_direct_max, cout_direct_urls, ...reste } = b;
+    const { cout_direct_min, cout_direct_max, cout_direct_urls, cout_direct_statut, ...reste } = b;
     if (cout_direct_min != null || cout_direct_max != null) {
       chiffres.push({
         ...reste,
         cout_min_eur: cout_direct_min ?? null,
         cout_max_eur: cout_direct_max ?? null,
-        source_statut: "fiche",
+        source_statut: cout_direct_statut ?? "fiche",
         urls: (cout_direct_urls ?? []).slice(0, 2),
       });
       continue;
@@ -405,9 +442,17 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
   if (postes.length + arguments_sans_montant.length > 0) {
     const lignes = [
       ...postes.map((p) =>
-        `– ${p.argument} (${fourchetteTexte(p.cout_min_eur, p.cout_max_eur)} selon ${
-          p.source_statut === "valide_devis" ? "un devis vérifié" : p.source_statut === "source" ? "les tarifs publiés" : "les coûts publiés pour ce moteur"
-        })`
+        p.type === "prix_marche"
+          // Le poste de marché porte déjà son chiffre et sa source dans son
+          // argument : le répéter entre parenthèses le rendrait illisible.
+          ? `– ${p.argument}`
+          : `– ${p.argument} (${fourchetteTexte(p.cout_min_eur, p.cout_max_eur)} selon ${
+            p.source_statut === "valide_devis"
+              ? "un devis vérifié"
+              : p.source_statut === "source"
+              ? "les tarifs publiés"
+              : "les coûts publiés pour ce moteur"
+          })`
       ),
       ...arguments_sans_montant.map((p) => `– ${p.argument} (à faire chiffrer par un garage)`),
     ];

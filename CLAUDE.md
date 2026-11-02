@@ -390,6 +390,42 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - **Version d'un texte signé** : constante **SQL** (`charte_version_courante()`), jamais un paramètre client — et une signature posée ne se réécrit pas, c'est une preuve.
 - **Ce qui a tenu à l'audit** : double versement impossible (`!transfer_id` + `idempotencyKey` + CAS sur le statut), coordonnées du vendeur réellement masquées avant acceptation, acceptation atomique, les 3 RPC inspecteur vérifiant `statut = 'valide'`.
 
+## Sprint 9 — Prix de marché (nov. 2026)
+
+### ⚠️ L'écart fermé en ouvrant le sprint
+La règle « agrégats uniquement » était écrite depuis le sprint 4B mais **n'avait jamais été appliquée** : la migration `20261028150000` est arrivée sur main par le merge sprint5-da (elle a créé `comparables_agregats`, fondu les lignes brutes et vidé `comparables_prix`), **mais le changement de code correspondant est resté sur la branche `sprint4b`, jamais mergée** (commit `0bdcea7`). Résultat en prod jusqu'ici : `score` réinsérait des **lignes brutes d'annonces** dans `comparables_prix` — avec `analysis_id`, donc rattachables — et `comparables_agregats` était une table morte remplie une seule fois. **Leçon : une migration mergée ne prouve pas que le code qui l'accompagne l'est.** Vérifier `git branch --contains <commit>` avant de tenir une règle pour acquise.
+
+### Stockage — `marche_agregats` (migration `20261104120000`, additive)
+- Nouvelle table (la clé primaire de `comparables_agregats` ne pouvait pas accueillir génération / boîte / région sans être refaite) : `(marque_norm, modele_norm, generation_norm, techno, cyl, boite, annee, km_tranche, region, mois, prix_tranche) → effectif`. RLS active, **zéro policy**, accès service role + RPC.
+- `agreger_marche(jsonb)` (service role) : fusion par somme, **effectif plafonné à 25 par ligne**, lignes incomplètes ignorées en silence plutôt que lot rejeté. `get_prix_segments(jsonb)` (anon, pages /moteur) : rend l'**histogramme replié**, jamais les quantiles — ceux-ci sont calculés par le module partagé, pour qu'il n'existe **qu'une implémentation des quantiles dans le projet**.
+- Fonte des données existantes (agrégats 4B + lignes brutes accumulées depuis le 28/10), puis `delete from comparables_prix` et **révocation de l'INSERT** sur les deux tables héritées : un retour en arrière échouerait bruyamment au lieu de rétablir en silence un stockage interdit.
+- Granularité : le **mois** (jamais la date), la **région** (jamais la ville ni le code postal). Aucun titre, aucune URL, aucun lien vers une analyse.
+
+### Module pur `_shared/marche.ts` (213 contrôles, `tests/marche.test.mjs`)
+- **Canonisation, le point dur du sprint** : l'identification écrit « Clio IV », une page de résultats « Clio IV 1.5 dCi 90 Business », `famillesMoteur` « Clio III/IV ». Trois segments, aucun n'atteint 15, aucune fourchette ne sort. `marqueCanonique` (via `brandAliases`, « VW » → volkswagen) et `modeleCanonique` sont appliquées **à l'écriture ET à la lecture**. `modeleCanonique` retire les générations (romaines, arabes, phase, Mk, codes de caisse) puis **s'arrête au premier mot technique** (cylindrée, motorisation, carburant, boîte, désignation de puissance). Les vraies déclinaisons sont **conservées** : « Santa Fe », « C5 Aircross », « Discovery Sport », « 308 GT », « Sandero Stepway » forment leur propre segment — deux segments justes valent mieux qu'un segment qui publierait le prix d'une 308 de base sous l'étiquette d'une 308 GT.
+- Fourchette ≥ **15 relevés**, fenêtre **3 mois**, fusion d'histogrammes par somme (découper les relevés en lots ne change rien au résultat — c'est toute la raison d'être des agrégats). La **région est une préférence, pas un filtre** : si le sous-ensemble régional atteint seul le seuil il est publié, sinon repli national. Filtrer d'office affamerait le segment.
+- **Ajustement kilométrique MESURÉ** : pente lue sur les tranches de km réellement présentes (médiane par tranche, moindres carrés pondérés). Pas de pente mesurable — moins de 3 tranches peuplées, pente positive, pente invraisemblable — **pas d'ajustement**. Aucune décote « au barème », aucune extrapolation hors segment. La fourchette AFFICHÉE reste celle des prix observés (le libellé « prix demandés relevés le … » doit rester littéralement vrai) ; la correction ne déplace que la **référence** qui sert à la position et à la négociation.
+- Région dérivée du **seul code postal** (101 départements → 18 régions). Un nom de ville ne donne jamais de région. Le code postal est extrait par l'identification (sentinelle `""` s'il n'est pas écrit) et **jamais enregistré** : il ne sert qu'en mémoire à déduire la région.
+
+### Collecte — UNE COLLECTE = UN CLIC (décision d'Utku, ne pas défaire)
+- Pas de relevé en tâche de fond. Sur une page de résultats, le bouton existant « Ajouter ces annonces comme comparables » sert l'analyse en cours (inchangé) **et**, si la case « Contribuer anonymement aux prix de marché » est cochée (**décochée par défaut**, choix mémorisé dans `chrome.storage.local`), alimente `marche_agregats`. La promesse « aucune collecte sans votre action » reste littéralement vraie et c'est ce que disent les deux pages de confidentialité (`extension/privacy.html` + `src/pages/ExtensionPrivacy.jsx`, à garder synchrones).
+- Chaîne : content script → service worker → `https://www.inspexo.io/api/marche` (proxy Vercel, secret `MARCHE_PROXY_SECRET`, IP réelle transmise) → fonction `marche`. **Aucune requête de nos serveurs vers Leboncoin / La Centrale / AS24** : seul le DOM déjà chargé par l'utilisateur est lu.
+- **Marque et modèle sont déduits du titre PAR LE SERVEUR** (`segmentDepuisTitreAnnonce`, null en cas de doute) : le client ne décide pas dans quel segment ses prix atterrissent.
+- Plafonds par IP / 24 h : **20 lots et 600 annonces**, anti-TOCTOU (tentative insérée avant comptage). Extension en version **1.1.0**.
+
+### Affichage
+- `/a/:id`, bloc `#prix` : P25 / médiane / P75 observés, **position** (« dans le quart le moins cher » / « dans la moyenne » / « plus chère que 75 % des annonces comparables »), effectif, portée régionale, date, mention « prix demandés, pas prix de vente », ligne de correction kilométrique quand elle a été mesurée. Sous le seuil : « non évalué » inchangé.
+- Barème : l'axe prix sort du « non évalué » dès qu'une fourchette existe ; paliers fixes appliqués aux bornes **corrigées du kilométrage** (`fourchette_decalage_km`), bornes **observées** affichées.
+- Négociation : poste `prix_marche` = écart au P50 de référence quand l'annonce est au-dessus, `source_statut: 'marche'`. ⚠️ Il est porté par `result_json.recalcul.prix_marche` — sans quoi il **disparaîtrait de la marge dès la première photo de visite ou lecture de PV**, ces fonctions reconstruisant la négociation à partir du recalcul sans relire les agrégats.
+- `/moteur/<slug>`, bloc `#prix` : fourchette par modèle au-delà du seuil, données figées dans le HTML pré-rendu.
+
+### Deux copies, deux garde-fous (le périmètre de build de CRA interdit d'importer `supabase/functions`)
+- `src/data/marche.js` : copie client de la lecture. `tests/marche.test.mjs` rejoue **400 histogrammes tirés au hasard** dans les deux implémentations et exige des résultats identiques.
+- `src/data/segmentsModeles.js` : table **GÉNÉRÉE** (`scripts/generer-segments-modeles.mjs`, chaîné au `prebuild`) — 48 familles, 101 segments, avec le libellé d'affichage accentué (« Série 3 », « Mégane ») dont le test vérifie qu'il se renormalise exactement vers la clé. `--verifier` fait échouer l'éval si le fichier est périmé. On fige le RÉSULTAT du module serveur plutôt que de réécrire sa logique en JS.
+
+### Mise en service (ordre)
+1. dump prod hors dépôt, puis `npx supabase db push --linked --yes` (migration sprint 9) ; 2. déployer `marche`, puis `score`, `visite`, `lecture-ct` ; 3. poser `MARCHE_PROXY_SECRET` (secret supabase **et** variable Vercel prod) ; 4. éval ciblée S7/308/Mercedes — verdicts inchangés tant qu'aucun segment n'atteint 15 relevés ; 5. publier l'extension 1.1.0 après revue du Web Store.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

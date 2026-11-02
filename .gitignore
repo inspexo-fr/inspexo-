@@ -36,3 +36,4 @@ captures-sprint7/
 # Seul le PV SYNTHÉTIQUE (données fictives, généré par generer-pv.mjs) l'est.
 tests/eval-ct/*/photos/
 !tests/eval-ct/pv-synthetique/photos/
+captures-sprint9/

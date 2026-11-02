@@ -8,6 +8,7 @@
 'use strict'
 
 const INTAKE_URL = 'https://www.inspexo.io/api/intake'
+const MARCHE_URL = 'https://www.inspexo.io/api/marche'
 const RESULT_BASE = 'https://www.inspexo.io/a/'
 const MAX_DIM = 1600
 const MAX_PHOTOS = 6
@@ -42,6 +43,32 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     chrome.storage.local.set({
       inspexo_comparables: { items: (message.comparables || []).slice(0, 40), savedAt: Date.now() },
     }).then(() => sendResponse({ ok: true }))
+    return true
+  }
+  // Contribution au relevé de prix de marché : déclenchée UNIQUEMENT par le
+  // clic sur « Ajouter ces annonces comme comparables » avec la case
+  // « Contribuer anonymement aux prix de marché » cochée. Seules les
+  // métadonnées des annonces affichées partent (titre, année, km, prix,
+  // carburant, boîte, code postal) ; le serveur n'en garde que des agrégats.
+  if (message && message.type === 'inspexo_contribuer') {
+    ;(async () => {
+      const res = await fetch(MARCHE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          site: message.site,
+          annonces: (message.annonces || []).slice(0, 60).map((a) => ({
+            titre: a.titre, annee: a.annee, km: a.km, prix: a.prix,
+            carburant: a.carburant || '', boite: a.boite || '',
+            code_postal: a.code_postal || '',
+          })),
+        }),
+        signal: AbortSignal.timeout(20000),
+      })
+      const body = await res.json().catch(() => null)
+      if (res.ok && body && body.ok) sendResponse({ ok: true, retenus: body.retenus })
+      else sendResponse({ ok: false, error: (body && body.error) || `http_${res.status}` })
+    })().catch((e) => sendResponse({ ok: false, error: String((e && e.message) || e) }))
     return true
   }
   if (!message || message.type !== 'inspexo_analyser') return false
