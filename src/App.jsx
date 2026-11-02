@@ -25,8 +25,6 @@ const FiabilitePage = lazy(() => import('./pages/FiabilitePage'))
 const AdminAudit = lazy(() => import('./pages/AdminAudit'))
 const ExtensionPage = lazy(() => import('./pages/ExtensionPage'))
 const ExtensionPrivacy = lazy(() => import('./pages/ExtensionPrivacy'))
-const ClientDashboard = lazy(() => import('./pages/ClientDashboard'))
-const ExpertDashboard = lazy(() => import('./pages/ExpertDashboard'))
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
 const MentionsLegales = lazy(() => import('./pages/MentionsLegales'))
 const PolitiqueConfidentialite = lazy(() => import('./pages/PolitiqueConfidentialite'))
@@ -59,8 +57,9 @@ export default function App() {
           <Route path="/admin/audit" element={<AdminAudit />} />
           <Route path="/extension" element={<ExtensionPage />} />
           <Route path="/extension/confidentialite" element={<ExtensionPrivacy />} />
-          <Route path="/dashboard" element={<ClientDashboard />} />
-          <Route path="/expert" element={<ExpertDashboard />} />
+          {/* /dashboard et /expert (parcours experts d'avant le pivot) ont été
+              démontés au sprint 8 : plus aucun lien n'y menait, et les
+              fonctions qu'ils appelaient sont retirées. */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
