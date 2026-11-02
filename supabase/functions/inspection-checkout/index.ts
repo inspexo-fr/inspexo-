@@ -199,6 +199,12 @@ serve(async (req: Request) => {
     const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      // Carte uniquement : un moyen à notification différée (SEPA) encaisse
+      // en plusieurs jours alors que le produit promet une inspection sous
+      // 48 h — et l'événement async_payment_succeeded n'est pas dans notre
+      // chaîne. L'acheteur serait débité sans qu'aucun inspecteur ne soit
+      // prévenu (audit du 2 nov., mineur n° 7).
+      payment_method_types: ["card"],
       customer_email: user.email ?? undefined,
       line_items: [{
         quantity: 1,

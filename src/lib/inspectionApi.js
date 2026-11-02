@@ -71,18 +71,16 @@ export async function mesInspections() {
   return Array.isArray(data) ? data : []
 }
 
-/** Photos d'un rapport (chemins ; l'URL signée vient de la fonction). */
+/** Photos d'un rapport, déjà signées (5 min) — [{ url, organe, legende }].
+ *
+ *  La signature se fait CÔTÉ SERVEUR : une policy storage ne peut pas décider
+ *  ici, puisqu'elle devrait lire des tables volontairement fermées (RLS sans
+ *  policy). L'audit du 2 novembre a montré que l'ancienne policy était
+ *  toujours fausse : l'acheteur ne voyait jamais les photos qu'il avait
+ *  payées, et l'écran n'affichait même pas d'erreur. */
 export async function photosRapport(inspectionId) {
-  const { data, error } = await supabase.rpc('inspection_photos_liste', { p_inspection_id: inspectionId })
-  if (error) throw error
-  return Array.isArray(data) ? data : []
-}
-
-/** URL signée d'une photo de rapport (lecture réservée aux parties). */
-export async function urlPhotoRapport(chemin) {
-  const { data, error } = await supabase.storage.from('rapports').createSignedUrl(chemin, 300)
-  if (error) throw error
-  return data?.signedUrl ?? null
+  const { photos } = await appel('inspection-photo', { corps: { inspection_id: inspectionId } })
+  return Array.isArray(photos) ? photos : []
 }
 
 /* ---------- Côté inspecteur ---------- */

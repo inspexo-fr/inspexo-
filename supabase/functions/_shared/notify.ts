@@ -370,6 +370,23 @@ export async function emailRapportPret(
   );
 }
 
+/** Exploitant : un versement d'inspecteur n'est pas parti. À régulariser. */
+export async function alerteVersementBloque(
+  inspecteur: string,
+  montantCents: number,
+  raison: string,
+): Promise<boolean> {
+  return await sendMail(
+    ADMIN_EMAIL,
+    "Inspexo — versement inspecteur à régulariser",
+    `<p>Un rapport d'inspection a été remis, mais le versement n'est pas parti.</p>
+     <p><strong>Inspecteur :</strong> ${inspecteur.replace(/[<>]/g, "")}<br>
+     <strong>Montant dû :</strong> ${(montantCents / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2 })} €<br>
+     <strong>Raison :</strong> ${raison.replace(/[<>]/g, "").slice(0, 200)}</p>
+     <p>L'acheteur a bien reçu son rapport. Régularisez depuis l'onglet Inspecteurs.</p>`,
+  );
+}
+
 /** Inspecteur : sa candidature est validée (ou refusée). */
 export async function emailInspecteurDecision(
   to: string,

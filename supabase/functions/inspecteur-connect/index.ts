@@ -94,10 +94,16 @@ serve(async (req: Request) => {
       await admin.from("inspecteurs").update({ stripe_account_id: accountId }).eq("id", insp.id);
     }
 
+    // ⚠️ Le retour DOIT pointer vers /inspecteur/inscription : c'est le seul
+    // écran qui rappelle `etatConnect`, donc le seul qui repasse
+    // stripe_paiements_actifs à true après le KYC. Avec l'ancien retour vers
+    // /inspecteur, un inspecteur terminait son onboarding sans que le drapeau
+    // ne change : il acceptait des missions, se déplaçait, et le versement
+    // était silencieusement sauté (audit du 2 nov., défaut majeur n° 2).
     const lien = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${ORIGINE}/inspecteur?stripe=retour`,
-      return_url: `${ORIGINE}/inspecteur?stripe=ok`,
+      refresh_url: `${ORIGINE}/inspecteur/inscription?stripe=retour`,
+      return_url: `${ORIGINE}/inspecteur/inscription?stripe=ok`,
       type: "account_onboarding",
     });
 

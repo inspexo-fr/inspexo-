@@ -15,7 +15,16 @@ import { execSync } from 'node:child_process'
 
 const PROJECT_REF = 'pspsqtokhqmotzkyqnkj'
 const WEBHOOK_URL = `https://${PROJECT_REF}.supabase.co/functions/v1/inspection-webhook`
-const EVENTS = ['checkout.session.completed', 'charge.refunded']
+const EVENTS = [
+  'checkout.session.completed',
+  'charge.refunded',
+  // Litiges : consignés en base, la décision de contester reste humaine.
+  'charge.dispute.created',
+  'charge.dispute.funds_withdrawn',
+  // Fin de KYC d'un inspecteur (ou restriction) : met à jour le drapeau de
+  // versement sans attendre qu'il rouvre son espace.
+  'account.updated',
+]
 
 const env = {}
 for (const line of readFileSync(new URL('../.env.local', import.meta.url), 'utf8').split('\n')) {

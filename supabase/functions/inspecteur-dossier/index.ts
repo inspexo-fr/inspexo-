@@ -17,6 +17,24 @@ const TYPES = {
   "image/webp": "webp",
 } as const;
 
+const IP_HASH_SALT = Deno.env.get("IP_HASH_SALT");
+if (!IP_HASH_SALT) throw new Error("IP_HASH_SALT manquant — configurez le secret.");
+
+const MAX_DEPOTS_PAR_IP = 12; // par 24 h
+const MAX_DEPOTS_PAR_INSPECTEUR = 6; // par 24 h
+
+async function sha256Hex(input: string): Promise<string> {
+  const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
+  return Array.from(new Uint8Array(d)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function clientIp(req: Request): string {
+  const cf = req.headers.get("cf-connecting-ip");
+  if (cf) return cf.trim();
+  const first = (req.headers.get("x-forwarded-for") ?? "").split(",")[0]?.trim();
+  return first || req.headers.get("x-real-ip") || "unknown";
+}
+
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -42,6 +60,30 @@ serve(async (req: Request) => {
     if (!ins) return json({ error: "candidature_absente", message: "Remplissez d'abord votre candidature." }, 404);
     if (ins.statut === "suspendu") return json({ error: "forbidden" }, 403);
 
+    // Rate limit anti-TOCTOU : tentative insérée AVANT le comptage. C'était
+    // la seule fonction du sprint sans plafond — ~6 Mo acceptés par appel,
+    // sans limite, dans un quota de stockage partagé avec les rapports payés.
+    const ipHash = await sha256Hex(IP_HASH_SALT + clientIp(req));
+    await admin.from("events").insert({
+      name: "inspecteur_dossier_tentative",
+      ip_hash: ipHash,
+      props_json: { inspecteur_id: ins.id },
+    });
+    const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+    const [{ count: parIp }, { count: parInspecteur }] = await Promise.all([
+      admin.from("events").select("id", { count: "exact", head: true })
+        .eq("name", "inspecteur_dossier_tentative").eq("ip_hash", ipHash).gte("created_at", since),
+      admin.from("events").select("id", { count: "exact", head: true })
+        .eq("name", "inspecteur_dossier_tentative")
+        .contains("props_json", { inspecteur_id: ins.id }).gte("created_at", since),
+    ]);
+    if ((parIp ?? 0) > MAX_DEPOTS_PAR_IP || (parInspecteur ?? 0) > MAX_DEPOTS_PAR_INSPECTEUR) {
+      return json({
+        error: "rate_limited",
+        message: "Trop de dépôts aujourd'hui. Réessayez demain ou écrivez à contact@inspexo.io.",
+      }, 429);
+    }
+
     const body = await req.json().catch(() => null);
     const brut = typeof body?.document === "string" ? body.document : "";
     const m = brut.match(/^data:(application\/pdf|image\/(?:jpeg|png|webp));base64,(.+)$/s);
@@ -62,20 +104,34 @@ serve(async (req: Request) => {
       return json({ error: "invalid_input", message: "Document illisible." }, 400);
     }
 
-    const chemin = `${ins.id}/rc-pro-${Date.now()}.${TYPES[mime]}`;
+    // Chemin DÉTERMINISTE + upsert : c'est ce qui empêche structurellement
+    // les orphelins. Avec un horodatage dans le nom, deux dépôts concurrents
+    // laissaient des objets que plus aucune ligne ne référençait, donc que
+    // plus rien ne pouvait supprimer (audit du 2 nov., majeur n° 4).
+    const chemin = `${ins.id}/rc-pro.${TYPES[mime]}`;
+    // Une extension différente de la précédente laisserait l'ancien fichier :
+    // on nettoie le dossier de l'inspecteur avant d'écrire.
+    const { data: existants } = await admin.storage.from("inspecteurs").list(ins.id);
+    const aSupprimer = (existants ?? [])
+      .map((f) => `${ins.id}/${f.name}`)
+      .filter((c) => c !== chemin);
+    if (aSupprimer.length > 0) {
+      await admin.storage.from("inspecteurs").remove(aSupprimer).catch(() => {});
+    }
+
     const { error: upErr } = await admin.storage
-      .from("inspecteurs").upload(chemin, bytes, { contentType: mime, upsert: false });
+      .from("inspecteurs").upload(chemin, bytes, { contentType: mime, upsert: true });
     if (upErr) {
       console.error("upload rc pro:", upErr);
       return json({ error: "storage", message: "Dépôt impossible. Réessayez." }, 500);
     }
 
-    // Le remplacement d'une attestation efface l'ancienne : on ne garde pas
-    // de pièces d'identité professionnelle périmées plus que nécessaire.
-    if (ins.rc_pro_document) {
-      await admin.storage.from("inspecteurs").remove([ins.rc_pro_document]).catch(() => {});
-    }
     await admin.from("inspecteurs").update({ rc_pro_document: chemin }).eq("id", ins.id);
+    await admin.from("events").insert({
+      name: "inspecteur_attestation_deposee",
+      ip_hash: ipHash,
+      props_json: { inspecteur_id: ins.id, type: mime },
+    });
 
     return json({ ok: true });
   } catch (error) {

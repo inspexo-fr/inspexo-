@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { mesInspections, photosRapport, urlPhotoRapport } from '../lib/inspectionApi'
+import { mesInspections, photosRapport } from '../lib/inspectionApi'
 
 // SPRINT 8 — Rapport d'inspection remis à l'acheteur, affiché sur /a/:id.
 // Les photos SONT conservées (c'est le rapport acheté) : elles ne sont
 // lisibles que par l'acheteur et l'inspecteur, via des URL signées de courte
-// durée — jamais d'URL publique.
+// durée délivrées par la fonction `inspection-photo` (jamais d'URL publique,
+// et jamais de décision d'accès côté client).
 
 const DECISIONS = {
   acheter: { label: 'Rien de bloquant constaté', classe: 'c-vert' },
@@ -12,47 +13,28 @@ const DECISIONS = {
   ne_pas_acheter: { label: 'L\'inspecteur déconseille l\'achat', classe: 'c-rouge' },
 }
 
-function Photo({ chemin, legende, organe }) {
-  const [url, setUrl] = useState(null)
-  const [erreur, setErreur] = useState(false)
-  useEffect(() => {
-    let annule = false
-    urlPhotoRapport(chemin)
-      .then(u => { if (!annule) setUrl(u) })
-      .catch(() => { if (!annule) setErreur(true) })
-    return () => { annule = true }
-  }, [chemin])
-
-  if (erreur) return null
-  return (
-    <figure style={{ margin: 0 }}>
-      {url
-        ? <img src={url} alt={legende || organe || 'Photo du rapport'} loading="lazy"
-            style={{ width: '100%', height: 'auto', display: 'block', border: '1px solid var(--rule)' }} />
-        : <div style={{ aspectRatio: '4 / 3', border: '1px solid var(--rule)', background: 'var(--gris-2, #F0F2F5)' }} />}
-      {(legende || organe) && (
-        <figcaption className="mono c-graphite" style={{ fontSize: 11, marginTop: 4, lineHeight: 1.5 }}>
-          {[organe, legende].filter(Boolean).join(' — ')}
-        </figcaption>
-      )}
-    </figure>
-  )
-}
-
 export default function RapportInspection({ analysisId }) {
   const [inspection, setInspection] = useState(null)
   const [photos, setPhotos] = useState([])
+  // Une photo payée qui ne s'affiche pas doit se VOIR : le silence laisserait
+  // croire que l'inspecteur n'en a pas pris.
+  const [photosErreur, setPhotosErreur] = useState(false)
 
   useEffect(() => {
     let annule = false
     mesInspections()
-      .then(liste => {
+      .then(async (liste) => {
         const i = liste.find(x => x.analysis_id === analysisId && x.statut === 'faite' && x.rapport)
-        if (!annule) setInspection(i ?? null)
-        if (i) return photosRapport(i.id)
-        return []
+        if (annule) return
+        setInspection(i ?? null)
+        if (!i || !(i.rapport?.photos > 0)) return
+        try {
+          const p = await photosRapport(i.id)
+          if (!annule) setPhotos(p)
+        } catch (_) {
+          if (!annule) setPhotosErreur(true)
+        }
       })
-      .then(p => { if (!annule) setPhotos(Array.isArray(p) ? p : []) })
       .catch(() => {})
     return () => { annule = true }
   }, [analysisId])
@@ -98,8 +80,26 @@ export default function RapportInspection({ analysisId }) {
           display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
           gap: 10, marginTop: 14,
         }}>
-          {photos.map((p, i) => <Photo key={i} chemin={p.chemin} legende={p.legende} organe={p.organe} />)}
+          {photos.map((p, i) => (
+            <figure key={i} style={{ margin: 0 }}>
+              <img src={p.url} alt={p.legende || p.organe || 'Photo du rapport'} loading="lazy"
+                style={{ width: '100%', height: 'auto', display: 'block', border: '1px solid var(--rule)' }} />
+              {(p.legende || p.organe) && (
+                <figcaption className="mono c-graphite" style={{ fontSize: 11, marginTop: 4, lineHeight: 1.5 }}>
+                  {[p.organe, p.legende].filter(Boolean).join(' — ')}
+                </figcaption>
+              )}
+            </figure>
+          ))}
         </div>
+      )}
+
+      {photosErreur && (
+        <p className="c-ambre" style={{ fontSize: 13, marginTop: 12, lineHeight: 1.6 }}>
+          Les {r.photos} photo{r.photos > 1 ? 's' : ''} de ce rapport n'ont pas pu être chargées.
+          Rechargez la page ; si cela persiste, écrivez à contact@inspexo.io — elles existent et
+          vous y avez droit.
+        </p>
       )}
 
       <p className="mono c-graphite" style={{ marginTop: 12, fontSize: 11, lineHeight: 1.6 }}>

@@ -76,13 +76,15 @@ function Inspection({ mission, onFini }) {
     if (!decision) { setMessage('Donnez votre conclusion.'); return }
     setEtat('envoi')
     try {
-      await rendreRapport({
+      const r = await rendreRapport({
         inspection_id: mission.id,
         synthese: synthese.trim(),
         decision,
         constats: constats.filter(c => c.constat.trim()),
         photos,
       })
+      // Un versement qui n'est pas parti doit se dire, pas se taire.
+      if (r?.versement_erreur) window.alert(r.versement_erreur)
       onFini()
     } catch (err) {
       setEtat('erreur')

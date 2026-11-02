@@ -125,25 +125,116 @@ serve(async (req: Request) => {
         break;
       }
 
+      // Remboursement. Le handler d'origine était aveugle (audit du 2 nov.,
+      // défaut majeur n° 3) : il passait TOUT en « annulee », y compris un
+      // remboursement PARTIEL, y compris une inspection déjà « faite » — ce
+      // qui faisait disparaître de l'écran de l'acheteur le rapport qu'il
+      // avait payé — et ne reprenait jamais les 107,40 € déjà versés.
       case "charge.refunded": {
         const charge = event.data.object as Stripe.Charge;
         const pi = typeof charge.payment_intent === "string"
           ? charge.payment_intent
           : charge.payment_intent?.id ?? null;
         if (!pi) break;
-        const { data: maj } = await admin
+
+        const { data: insp } = await admin
           .from("inspections")
-          .update({ statut: "annulee", rembourse_le: new Date().toISOString(), maj_le: new Date().toISOString() })
+          .select("id, statut, transfer_id, part_inspecteur_cents")
           .eq("stripe_payment_intent", pi)
-          .neq("statut", "annulee")
-          .select("id")
           .maybeSingle();
-        if (maj) {
-          await admin.from("events").insert({
-            name: "inspection_remboursee",
-            props_json: { inspection_id: maj.id, via: "stripe_webhook" },
-          });
+        if (!insp || insp.statut === "annulee") break;
+
+        const total = charge.refunded === true || (charge.amount_refunded ?? 0) >= (charge.amount ?? 0);
+
+        // Reprendre la part déjà versée à l'inspecteur, proportionnellement.
+        let reversalId: string | null = null;
+        let reversalErreur: string | null = null;
+        if (insp.transfer_id) {
+          const part = total
+            ? insp.part_inspecteur_cents
+            : Math.min(
+              insp.part_inspecteur_cents,
+              Math.round((charge.amount_refunded ?? 0) * (insp.part_inspecteur_cents / Math.max(charge.amount ?? 1, 1))),
+            );
+          if (part > 0) {
+            try {
+              const rev = await stripe.transfers.createReversal(insp.transfer_id, {
+                amount: part,
+                metadata: { inspection_id: insp.id, motif: "remboursement_acheteur" },
+              }, { idempotencyKey: `inspection-reversal-${insp.id}-${charge.amount_refunded ?? 0}` });
+              reversalId = rev.id;
+            } catch (e) {
+              // Le compte de l'inspecteur peut ne plus avoir le solde : on
+              // trace une créance plutôt que de perdre l'information.
+              reversalErreur = String(e?.message ?? e).slice(0, 200);
+              console.error("reversal:", reversalErreur);
+            }
+          }
         }
+
+        // Un rapport déjà rendu reste visible pour l'acheteur : on note le
+        // remboursement sans écraser « faite ».
+        const maj: Record<string, unknown> = {
+          rembourse_le: new Date().toISOString(),
+          maj_le: new Date().toISOString(),
+        };
+        if (total && insp.statut !== "faite") maj.statut = "annulee";
+        await admin.from("inspections").update(maj).eq("id", insp.id);
+
+        await admin.from("events").insert({
+          name: "inspection_remboursee",
+          props_json: {
+            inspection_id: insp.id,
+            via: "stripe_webhook",
+            total,
+            montant_rembourse_cents: charge.amount_refunded ?? 0,
+            statut_conserve: insp.statut === "faite" ? "faite" : (total ? "annulee" : insp.statut),
+            reversal_id: reversalId,
+            reversal_erreur: reversalErreur,
+          },
+        });
+        break;
+      }
+
+      // Litige : aucune trace n'était gardée. On le consigne (la décision de
+      // contester appartient à l'exploitant, pas au code).
+      case "charge.dispute.created":
+      case "charge.dispute.funds_withdrawn": {
+        const dispute = event.data.object as Stripe.Dispute;
+        const pi = typeof dispute.payment_intent === "string"
+          ? dispute.payment_intent
+          : dispute.payment_intent?.id ?? null;
+        if (!pi) break;
+        const { data: insp } = await admin
+          .from("inspections").select("id, statut").eq("stripe_payment_intent", pi).maybeSingle();
+        await admin.from("events").insert({
+          name: "inspection_litige",
+          props_json: {
+            inspection_id: insp?.id ?? null,
+            statut: insp?.statut ?? null,
+            type: event.type,
+            montant_cents: dispute.amount ?? 0,
+            motif: dispute.reason ?? null,
+          },
+        });
+        break;
+      }
+
+      // Le compte de versement d'un inspecteur a changé d'état chez Stripe
+      // (KYC terminé, ou au contraire restriction). Sans cet abonnement, le
+      // drapeau ne bougeait que si l'inspecteur rouvrait lui-même son espace.
+      case "account.updated": {
+        const compte = event.data.object as Stripe.Account;
+        const inspecteurId = compte.metadata?.inspecteur_id;
+        if (!inspecteurId) break;
+        const actifs = compte.charges_enabled === true && compte.payouts_enabled === true;
+        await admin.from("inspecteurs")
+          .update({ stripe_paiements_actifs: actifs })
+          .eq("id", inspecteurId);
+        await admin.from("events").insert({
+          name: "inspecteur_connect_etat",
+          props_json: { inspecteur_id: inspecteurId, paiements_actifs: actifs },
+        });
         break;
       }
 

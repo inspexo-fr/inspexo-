@@ -17,7 +17,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { emailRapportPret } from "../_shared/notify.ts";
+import { alerteVersementBloque, emailRapportPret } from "../_shared/notify.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -140,34 +140,21 @@ serve(async (req: Request) => {
       }, 403);
     }
 
-    const chemins: Array<{ chemin: string; organe: string; legende: string }> = [];
-    for (const [i, p] of photos.entries()) {
-      const chemin = `${insp.id}/${Date.now()}-${i}.${p.ext}`;
-      const { error: upErr } = await admin.storage
-        .from("rapports")
-        .upload(chemin, p.bytes, { contentType: `image/${p.ext}`, upsert: false });
-      if (upErr) {
-        console.error("upload photo rapport:", upErr);
-        continue;
-      }
-      chemins.push({ chemin, organe: p.organe, legende: p.legende });
-    }
-    if (chemins.length > 0) {
-      await admin.from("inspection_photos").insert(
-        chemins.map((c) => ({ inspection_id: insp.id, chemin: c.chemin, organe: c.organe, legende: c.legende })),
-      );
-    }
-
+    // ⚠️ LA TRANSITION D'ABORD, LES PHOTOS ENSUITE (audit du 2 nov.,
+    // mineur n° 11). Dans l'ordre inverse, deux appels concurrents
+    // téléversaient chacun leur lot : le perdant laissait des photos
+    // rattachées à une version du rapport qui n'a jamais été validée.
+    // La bascule `acceptee → faite` est atomique : un seul appel la gagne,
+    // et lui seul dépose des photos.
     const rapport = {
       decision,
       synthese,
       constats,
-      photos: chemins.length,
+      photos: 0, // complété après le dépôt
       inspecteur: inspecteur.nom,
       rendu_le: new Date().toISOString(),
     };
 
-    // Idempotence : seule une ligne encore `acceptee` passe à `faite`.
     const { data: majRows, error: majErr } = await admin
       .from("inspections")
       .update({
@@ -186,10 +173,38 @@ serve(async (req: Request) => {
     }
     if (!majRows) return json({ error: "deja_rendu", message: "Le rapport a déjà été remis." }, 409);
 
+    const chemins: Array<{ chemin: string; organe: string; legende: string }> = [];
+    for (const [i, p] of photos.entries()) {
+      const chemin = `${insp.id}/${Date.now()}-${i}.${p.ext}`;
+      const { error: upErr } = await admin.storage
+        .from("rapports")
+        .upload(chemin, p.bytes, { contentType: `image/${p.ext}`, upsert: false });
+      if (upErr) {
+        console.error("upload photo rapport:", upErr);
+        continue;
+      }
+      chemins.push({ chemin, organe: p.organe, legende: p.legende });
+    }
+    if (chemins.length > 0) {
+      await admin.from("inspection_photos").insert(
+        chemins.map((c) => ({ inspection_id: insp.id, chemin: c.chemin, organe: c.organe, legende: c.legende })),
+      );
+      rapport.photos = chemins.length;
+      await admin.from("inspections")
+        .update({ rapport_json: rapport })
+        .eq("id", insp.id);
+    }
+
     // ---- Versement des 60 % (charge et transfert séparés) ----
     let transferId: string | null = null;
     let versementErreur: string | null = null;
-    if (!insp.transfer_id && inspecteur.stripe_account_id && inspecteur.stripe_paiements_actifs) {
+    // Le cas « compte Connect pas prêt » était traité par un silence : le
+    // rapport partait, l'inspecteur n'était pas payé, et RIEN ne le signalait
+    // (audit du 2 nov.). Il devient une anomalie tracée et annoncée.
+    if (!inspecteur.stripe_account_id || !inspecteur.stripe_paiements_actifs) {
+      versementErreur = "compte de versement non opérationnel";
+      console.error("versement impossible — Connect incomplet:", inspecteur.id);
+    } else if (!insp.transfer_id) {
       try {
         const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
         const transfer = await stripe.transfers.create({
@@ -238,11 +253,36 @@ serve(async (req: Request) => {
       },
     });
 
+    // Un versement raté ne doit pas se découvrir dans un tableur six semaines
+    // plus tard : l'exploitant est prévenu, et l'inspecteur voit un message
+    // clair plutôt qu'un silence.
+    if (versementErreur) {
+      await admin.from("events").insert({
+        name: "inspection_versement_a_regulariser",
+        props_json: {
+          inspection_id: insp.id,
+          inspecteur_id: inspecteur.id,
+          montant_cents: insp.part_inspecteur_cents,
+          raison: versementErreur,
+        },
+      });
+      await alerteVersementBloque(
+        inspecteur.nom ?? inspecteur.id,
+        insp.part_inspecteur_cents,
+        versementErreur,
+      );
+    }
+
     return json({
       ok: true,
       rapport,
       verse: transferId !== null,
-      ...(versementErreur ? { versement_erreur: "Le virement sera régularisé par Inspexo." } : {}),
+      ...(versementErreur
+        ? {
+          versement_erreur:
+            "Rapport enregistré, mais votre versement n'a pas pu partir (compte de versement incomplet ou refusé par Stripe). Inspexo a été prévenu et régularise sous 48 heures.",
+        }
+        : {}),
     });
   } catch (error) {
     console.error("inspection-rapport error:", error);

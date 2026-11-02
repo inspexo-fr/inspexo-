@@ -47,14 +47,25 @@ end $$;
 
 -- RLS reste active : sans policy, anon et authenticated n'ont AUCUN accès.
 -- (Une table RLS active sans policy rejette tout, sauf pour le service role.)
-alter table public.experts             enable row level security;
-alter table public.expert_applications enable row level security;
-alter table public.missions            enable row level security;
-alter table public.profiles            enable row level security;
-alter table public.messages            enable row level security;
-alter table public.chat_files          enable row level security;
-alter table public.reviews             enable row level security;
-alter table public.price_data          enable row level security;
+--
+-- ⚠️ Ces huit tables ne sont créées par AUCUNE migration : elles n'existent
+-- que dans la base de production, où elles ont été créées au dashboard avant
+-- le sprint 1. Sur un environnement neuf (supabase db reset, Postgres de
+-- test), elles sont absentes — d'où le test d'existence, sans lequel cette
+-- migration casserait tout rejeu depuis zéro.
+do $$
+declare
+  v_table text;
+begin
+  foreach v_table in array array[
+    'experts', 'expert_applications', 'missions', 'profiles',
+    'messages', 'chat_files', 'reviews', 'price_data'
+  ] loop
+    if to_regclass('public.' || quote_ident(v_table)) is not null then
+      execute format('alter table public.%I enable row level security', v_table);
+    end if;
+  end loop;
+end $$;
 
 -- Les buckets du chat IA d'avant le pivot : plus aucun écran n'y accède.
 do $$
