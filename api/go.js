@@ -56,6 +56,11 @@ module.exports = async (req, res) => {
       signal: AbortSignal.timeout(8000),
     })
     const body = await upstream.json().catch(() => null)
+    // Distinguer les deux échecs : un secret de proxy qui ne concorde pas
+    // (403) est une erreur de CONFIGURATION, pas un partenaire inconnu. Les
+    // confondre rendrait une mauvaise configuration invisible — la
+    // redirection serait identique dans les deux cas.
+    if (upstream.status === 403) return echec('indisponible')
     if (!upstream.ok || !body || !body.url) return echec('inconnu')
 
     res.statusCode = 302
