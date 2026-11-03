@@ -87,6 +87,9 @@ const csvEsc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`
 const FORMULAIRE_VIDE = {
   type: 'assurance', slug: '', nom: '', url: '', texte_valide: '',
   valide_le: new Date().toISOString().slice(0, 10),
+  // Volontairement vide : la rémunération doit être un choix conscient, pas
+  // une case préremplie. Le serveur refuse l'enregistrement sans elle.
+  remuneration: '',
 }
 
 function PartenairesTab() {
@@ -130,10 +133,10 @@ function PartenairesTab() {
 
   const exporter = () => {
     const stats = new Map((data?.stats ?? []).map(s => [s.partenaire_id, s]))
-    const lignes = [['partenaire', 'type', 'slug', 'actif', 'semaine', 'brut', 'net'].join(';')]
+    const lignes = [['partenaire', 'type', 'slug', 'actif', 'remuneration', 'semaine', 'brut', 'net'].join(';')]
     for (const p of (data?.partenaires ?? [])) {
       for (const sem of (stats.get(p.id)?.par_semaine ?? [])) {
-        lignes.push([p.nom, p.type, p.slug, p.actif ? 'oui' : 'non', sem.semaine, sem.brut, sem.net].map(csvEsc).join(';'))
+        lignes.push([p.nom, p.type, p.slug, p.actif ? 'oui' : 'non', p.remuneration, sem.semaine, sem.brut, sem.net].map(csvEsc).join(';'))
       }
     }
     telechargerCsv('mises-en-relation', lignes)
@@ -187,7 +190,8 @@ function PartenairesTab() {
                   color: p.actif ? '#16A34A' : '#6B7280',
                 }}>{p.actif ? 'ACTIF' : 'ÉTEINT'}</span>
                 <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
-                  {p.type} · /go/{p.slug} · texte validé le {formatDate(p.valide_le)}
+                  {p.type} · /go/{p.slug} · texte validé le {formatDate(p.valide_le)} ·
+                  {' '}{p.remuneration === 'commission' ? 'commission perçue' : 'aucune rémunération'}
                 </div>
                 <div style={{ fontSize: '0.8125rem', color: '#374151', marginTop: 8, lineHeight: 1.6 }}>{p.texte_valide}</div>
               </div>
@@ -221,7 +225,9 @@ function PartenairesTab() {
           Le texte doit être celui que le partenaire a validé par écrit. Il est contrôlé côté serveur :
           aucune couverture, aucun prix, aucun taux, aucune mensualité, aucune comparaison.
           Un texte de crédit doit porter la mention légale, et un partenaire crédit ne peut pas être
-          activé avant le 20/11/2026.
+          activé avant le 20/11/2026. La rémunération déclarée ici est affichée telle quelle à
+          l'acheteur, au-dessus du lien : une commission non déclarée viderait de son sens la
+          promesse d'indépendance.
         </div>
         <div style={{ display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))' }}>
           <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} style={styles.input}>
@@ -236,6 +242,12 @@ function PartenairesTab() {
             onChange={e => setForm(f => ({ ...f, url: e.target.value }))} />
           <input style={styles.input} type="date" value={form.valide_le} required
             onChange={e => setForm(f => ({ ...f, valide_le: e.target.value }))} />
+          <select value={form.remuneration} required style={styles.input}
+            onChange={e => setForm(f => ({ ...f, remuneration: e.target.value }))}>
+            <option value="">Rémunération ? (obligatoire)</option>
+            <option value="aucune">Aucune rémunération</option>
+            <option value="commission">Commission si souscription</option>
+          </select>
         </div>
         <textarea style={{ ...styles.input, marginTop: 10, width: '100%', minHeight: 96 }}
           placeholder="Texte validé par le partenaire (20 à 600 caractères)"

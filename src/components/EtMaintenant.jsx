@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import InspectionBloc from './InspectionBloc'
 import { getPartenairesActifs } from '../lib/scoreApi'
 import {
-  MENTION_CREDIT, partenairesAffichables, PREALABLE_ROUGE, texteSansMentionCredit,
+  MENTION_CREDIT, partenairesAffichables, phraseRemunerationGlobale,
+  phraseRemunerationPartenaire, PREALABLE_ROUGE, texteSansMentionCredit,
 } from '../data/partenaires'
 
 // SPRINT 10 — « Et maintenant ? » : ce que l'acheteur peut faire, une fois le
@@ -27,7 +28,7 @@ import {
 
 /** Lien de mise en relation : il passe par /go/<slug>, qui journalise puis
  *  redirige. L'URL du partenaire n'existe pas côté navigateur. */
-function LienPartenaire({ partenaire, analysisId }) {
+function LienPartenaire({ partenaire, analysisId, montrerRemuneration }) {
   const href = `/go/${partenaire.slug}${analysisId ? `?a=${analysisId}&s=web` : '?s=web'}`
   const estCredit = partenaire.type === 'credit'
   // La mention légale est obligatoire DANS le texte validé — c'est ainsi
@@ -39,6 +40,13 @@ function LienPartenaire({ partenaire, analysisId }) {
     <div style={{ padding: '14px 0', borderTop: '1px solid var(--filet)' }}>
       {corps && (
         <p style={{ fontSize: 14, lineHeight: 1.6, margin: 0 }}>{corps}</p>
+      )}
+      {/* Régimes de rémunération mélangés : la phrase ne peut pas être
+          généralisée, elle est dite partenaire par partenaire. */}
+      {montrerRemuneration && (
+        <p style={{ fontSize: 15, lineHeight: 1.6, marginTop: 10, fontWeight: 700 }}>
+          {phraseRemunerationPartenaire(partenaire.remuneration)}
+        </p>
       )}
       {/* Mention légale du crédit (art. L312-5 du code de la consommation) :
           À CÔTÉ du lien et lisible, jamais en note de bas de page. */}
@@ -97,18 +105,31 @@ export default function EtMaintenant({ analysisId, vehicule, verdict }) {
         <InspectionBloc analysisId={analysisId} vehicule={vehicule} nu />
       )}
 
-      {peutAfficherPartenaires && partenaires.length > 0 && (
-        <div style={{ marginTop: 18 }}>
-          <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6 }}>
-            Inspexo n'est ni assureur ni organisme de crédit. Les services ci-dessous sont proposés
-            par des partenaires indépendants, avec lesquels vous traitez directement : nous nous
-            limitons à vous les indiquer. Le verdict ci-dessus est calculé sans eux.
-          </p>
-          {partenaires.map(p => (
-            <LienPartenaire key={p.slug} partenaire={p} analysisId={analysisId} />
-          ))}
-        </div>
-      )}
+      {peutAfficherPartenaires && partenaires.length > 0 && (() => {
+        // Phrase unique si tous les partenaires ont le même régime, sinon
+        // une phrase par partenaire : on ne généralise jamais à tort.
+        const globale = phraseRemunerationGlobale(partenaires)
+        return (
+          <div style={{ marginTop: 18 }}>
+            <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6 }}>
+              Inspexo n'est ni assureur ni organisme de crédit. Les services ci-dessous sont proposés
+              par des partenaires indépendants, avec lesquels vous traitez directement : nous nous
+              limitons à vous les indiquer. Le verdict ci-dessus est calculé sans eux.
+            </p>
+            {/* Rémunération : dite AVANT les partenaires, dans le même style
+                que la mention légale — c'est une information de même poids. */}
+            {globale && (
+              <p style={{ fontSize: 15, lineHeight: 1.6, marginTop: 10, fontWeight: 700 }}>
+                {globale}
+              </p>
+            )}
+            {partenaires.map(p => (
+              <LienPartenaire key={p.slug} partenaire={p} analysisId={analysisId}
+                montrerRemuneration={globale === null} />
+            ))}
+          </div>
+        )
+      })()}
     </div>
   )
 }

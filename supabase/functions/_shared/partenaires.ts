@@ -219,6 +219,49 @@ export function compterNet(
 }
 
 // ---------------------------------------------------------------------------
+// TRANSPARENCE SUR LA RÉMUNÉRATION.
+//
+// Inspexo promet d'être du côté de l'acheteur. Toucher une commission d'un
+// partenaire sans le dire viderait cette promesse de son sens le jour où
+// quelqu'un le découvrirait. La phrase affichée n'est donc PAS un texte figé
+// dans le code : elle découle de ce qui est déclaré en base, partenaire par
+// partenaire (`partenaires.remuneration`, sans valeur par défaut). Elle ne
+// peut pas devenir fausse parce qu'on aurait oublié de la mettre à jour après
+// avoir signé un contrat.
+// ---------------------------------------------------------------------------
+
+export type Remuneration = "commission" | "aucune";
+
+export const PHRASE_COMMISSION =
+  "Inspexo perçoit une commission de ces partenaires si vous souscrivez via ce lien. " +
+  "Elle n'a aucune influence sur le score ni sur le verdict.";
+
+export const PHRASE_AUCUNE =
+  "Inspexo ne perçoit aucune rémunération de ces partenaires.";
+
+/** Même phrase, au singulier, quand elle porte sur UN partenaire. */
+export function phraseRemunerationPartenaire(remuneration: unknown): string {
+  return remuneration === "commission"
+    ? "Inspexo perçoit une commission de ce partenaire si vous souscrivez via ce lien. " +
+      "Elle n'a aucune influence sur le score ni sur le verdict."
+    : "Inspexo ne perçoit aucune rémunération de ce partenaire.";
+}
+
+/** Phrase unique à placer AU-DESSUS de la liste quand tous les partenaires
+ *  affichés ont le même régime. `null` quand ils diffèrent : il faut alors
+ *  l'afficher partenaire par partenaire, sinon elle serait inexacte pour
+ *  l'un d'eux. */
+export function phraseRemunerationGlobale(
+  partenaires: Array<{ remuneration?: unknown }>,
+): string | null {
+  if (!Array.isArray(partenaires) || partenaires.length === 0) return null;
+  const avecCommission = partenaires.filter((p) => p.remuneration === "commission").length;
+  if (avecCommission === partenaires.length) return PHRASE_COMMISSION;
+  if (avecCommission === 0) return PHRASE_AUCUNE;
+  return null; // régimes mélangés : jamais de généralisation
+}
+
+// ---------------------------------------------------------------------------
 // Ce qui s'affiche à l'écran.
 // ---------------------------------------------------------------------------
 

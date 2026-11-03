@@ -6,7 +6,7 @@ Inspexo aide les acheteurs de véhicules d'occasion à éviter les mauvaises aff
 - Le **Pass achat à 29 €** (à venir) est la montée en gamme : accompagnement IA complet jusqu'à la signature.
 - Les **experts humains** spécialisés par marque (Visio, Inspection) sont en **liste d'attente** le temps de constituer le réseau.
 
-L'indépendance reste totale : payé exclusivement par l'acheteur, jamais par le vendeur.
+L'indépendance reste totale : **jamais payé par le vendeur**. L'inspection est payée exclusivement par l'acheteur. ⚠️ Depuis le sprint 10, un partenaire assurance ou financement PEUT verser une commission d'apport : elle est alors **déclarée en base partenaire par partenaire** et affichée à l'écran au-dessus du lien. Ne plus écrire « Inspexo est payé exclusivement par l'acheteur » sans préciser de quoi on parle — la formule exacte est « l'inspection est payée exclusivement par l'acheteur ».
 
 ## URLs & Accès
 - **Site déployé** : inspexo-k2dv.vercel.app
@@ -458,6 +458,11 @@ Sans immatriculation ORIAS, Inspexo est **indicateur** : il met en relation, il 
 - Envoi à **J+21** par le cron `alertes`, sur l'union dossier + Pass + inspection + opt-in `rapport`. **Une seule invitation par (analyse, email)** : l'unicité est dans le schéma (`retours`), donc l'union est dédoublonnée par la base et non par la prudence du code. **Aucune relance n'existe dans le code.**
 - ⚠️ L'ancien envoi « J+30 après acheté » a été **RETIRÉ** (`emailRetourIssue` supprimée) : il aurait fait deux sollicitations pour le même véhicule. Le formulaire de `/dossier` (RPC `submit_outcome`) reste, c'est une action de l'utilisateur.
 - Nouvelle table `desinscriptions` (empreinte d'email) : la désinscription du sprint 3.1 ne coupait que les alertes d'un COMPTE, or une invitation peut partir vers quelqu'un qui n'en a pas. `desinscription` gagne un mode `e=<empreinte>&t=<signature>`.
+
+### Transparence sur la rémunération (ajout après relecture d'Utku)
+La phrase affichée n'est **pas figée dans le code** : `partenaires.remuneration` (`commission` | `aucune`, **NOT NULL sans valeur par défaut**) est déclarée à l'enregistrement, publiée par `get_partenaires_actifs` et traduite par `phraseRemunerationGlobale`. Elle ne peut donc pas devenir fausse parce qu'on aurait oublié de la changer après avoir signé un contrat. Régimes **mélangés** entre partenaires ⇒ la phrase globale est remplacée par une phrase **par partenaire** : on ne généralise jamais à tort. Une déclaration manquante est traitée comme « aucune rémunération », jamais l'inverse. Affichée dans le même style que la mention légale (gras, 15 px), au-dessus des liens.
+- **Promesse « payé exclusivement par l'acheteur » revue partout** : les seules occurrences portaient déjà sur l'INSPECTEUR (`InspectionBloc`, `RapportInspection`, `notify.ts`, charte) et restent exactes. Seule la CGU art. 2 était ambiguë — reformulée en « L'inspection est payée exclusivement par l'acheteur ». ⚠️ La charte d'indépendance (`src/data/charte.js` ≡ `_shared/inspection.ts`) n'a PAS été touchée : `tests/inspection.test.mjs` exige qu'elles restent identiques mot pour mot.
+- **CGU article 3 bis** : conditions de référencement d'un partenaire (texte validé, contrôle automatique, mention légale, activation manuelle, jamais sur un rouge), rémunération, et ce qui est transmis (rien).
 
 ### Admin et divers
 - Onglets **Partenaires** (enregistrer sous contrôle légal, activer/éteindre, mises en relation par semaine brut/net, export CSV) et **Retours** (taux de réponse sur les invitations ENVOYÉES, achats, écart médian prix affiché → prix payé, points confirmés par famille moteur).

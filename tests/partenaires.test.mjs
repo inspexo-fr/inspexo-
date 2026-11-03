@@ -10,8 +10,9 @@
 import {
   cleDedup, compterNet, contientMentionCredit, CREDIT_ACTIVABLE_LE, estRobot,
   MENTION_CREDIT, normaliserTexte, partenairesAffichables, peutActiver,
-  PREALABLE_ROUGE, texteSansMentionCredit, verifierTextePartenaire,
-  VERDICTS_PARTENAIRES,
+  PHRASE_AUCUNE, PHRASE_COMMISSION, phraseRemunerationGlobale,
+  phraseRemunerationPartenaire, PREALABLE_ROUGE, texteSansMentionCredit,
+  verifierTextePartenaire, VERDICTS_PARTENAIRES,
 } from '../supabase/functions/_shared/partenaires.ts'
 
 let ko = 0, total = 0
@@ -218,6 +219,35 @@ ok(!verifierTextePartenaire('credit', texteSansMentionCredit(CREDIT_OK)).ok,
   'le texte amputé de sa mention est REFUSÉ à l’enregistrement')
 
 // ---------------------------------------------------------------------------
+titre('Transparence sur la rémunération')
+// La phrase DÉCOULE de ce qui est déclaré en base : elle ne peut pas devenir
+// fausse parce qu'on aurait oublié de la changer après avoir signé.
+{
+  const c = { remuneration: 'commission' }
+  const a = { remuneration: 'aucune' }
+  eq(phraseRemunerationGlobale([c, c]), PHRASE_COMMISSION, 'tous commissionnés → phrase de commission')
+  eq(phraseRemunerationGlobale([a, a]), PHRASE_AUCUNE, 'aucun commissionné → phrase d’absence')
+  eq(phraseRemunerationGlobale([c]), PHRASE_COMMISSION, 'un seul partenaire commissionné')
+  eq(phraseRemunerationGlobale([c, a]), null,
+    'régimes MÉLANGÉS → aucune généralisation, la phrase sera dite partenaire par partenaire')
+  eq(phraseRemunerationGlobale([a, c]), null, 'ordre indifférent')
+  eq(phraseRemunerationGlobale([]), null, 'aucun partenaire → aucune phrase')
+  eq(phraseRemunerationGlobale(null), null, 'entrée absente')
+  // Un partenaire sans déclaration ne doit jamais être pris pour « commission ».
+  eq(phraseRemunerationGlobale([{}, {}]), PHRASE_AUCUNE,
+    'déclaration manquante traitée comme absence de rémunération, jamais l’inverse')
+
+  ok(PHRASE_COMMISSION.includes("n'a aucune influence sur le score ni sur le verdict"),
+    'la phrase de commission dit que le verdict n’en dépend pas')
+  ok(phraseRemunerationPartenaire('commission').includes('de ce partenaire'),
+    'version au singulier pour un partenaire isolé')
+  ok(phraseRemunerationPartenaire('aucune').includes('aucune rémunération de ce partenaire'),
+    'version au singulier, sans rémunération')
+  ok(phraseRemunerationPartenaire(undefined).includes('aucune rémunération'),
+    'déclaration absente → version sans rémunération')
+}
+
+// ---------------------------------------------------------------------------
 titre('Copie CLIENT ≡ source SERVEUR')
 // src/data/partenaires.js est une copie imposée par le périmètre de build de
 // CRA. Une divergence ferait apparaître un partenaire sur un verdict rouge
@@ -228,6 +258,19 @@ titre('Copie CLIENT ≡ source SERVEUR')
     'mêmes verdicts autorisés')
   eq(client.PREALABLE_ROUGE, PREALABLE_ROUGE, 'même phrase de préalable rouge, mot pour mot')
   eq(client.MENTION_CREDIT, MENTION_CREDIT, 'même mention légale, mot pour mot')
+  eq(client.PHRASE_COMMISSION, PHRASE_COMMISSION, 'même phrase de commission, mot pour mot')
+  eq(client.PHRASE_AUCUNE, PHRASE_AUCUNE, 'même phrase d’absence, mot pour mot')
+  for (const liste of [
+    [{ remuneration: 'commission' }], [{ remuneration: 'aucune' }],
+    [{ remuneration: 'commission' }, { remuneration: 'aucune' }], [], [{}],
+  ]) {
+    eq(client.phraseRemunerationGlobale(liste), phraseRemunerationGlobale(liste),
+      'même phrase globale côté client')
+  }
+  for (const r of ['commission', 'aucune', undefined]) {
+    eq(client.phraseRemunerationPartenaire(r), phraseRemunerationPartenaire(r),
+      'même phrase au singulier côté client')
+  }
   for (const t of [CREDIT_OK, ASSURANCE_OK, '', 'Attention! Un credit coute de l\'argent et doit etre rembourse. X']) {
     eq(client.texteSansMentionCredit(t), texteSansMentionCredit(t),
       'même retrait de mention côté client')

@@ -35,6 +35,11 @@ create table if not exists public.partenaires (
   -- _shared/partenaires.ts avant toute écriture (fonction admin).
   texte_valide text not null check (length(texte_valide) between 20 and 600),
   valide_le date not null,
+  -- Rémunération ÉVENTUELLE que nous percevons de ce partenaire. Déclarée
+  -- partenaire par partenaire, sans valeur par défaut : la phrase affichée à
+  -- l'acheteur en découle, et ne peut donc jamais devenir fausse parce qu'on
+  -- aurait oublié de la changer après avoir signé un contrat.
+  remuneration text not null check (remuneration in ('commission', 'aucune')),
   actif boolean not null default false,
   maj timestamptz not null default now()
 );
@@ -179,7 +184,8 @@ as $$
            'type', type,
            'nom', nom,
            'texte_valide', texte_valide,
-           'valide_le', valide_le
+           'valide_le', valide_le,
+           'remuneration', remuneration
          ) order by type, nom), '[]'::jsonb)
   from public.partenaires
   where actif;

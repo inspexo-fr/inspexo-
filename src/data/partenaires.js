@@ -40,3 +40,33 @@ const MENTION_CREDIT_RE =
 export function texteSansMentionCredit(texte) {
   return String(texte ?? '').replace(MENTION_CREDIT_RE, ' ').replace(/\s{2,}/g, ' ').trim()
 }
+
+// ---------------------------------------------------------------------------
+// Transparence sur la rémunération : la phrase DÉCOULE de ce qui est déclaré
+// en base, partenaire par partenaire. Elle n'est pas figée dans le code, donc
+// elle ne peut pas devenir fausse après la signature d'un contrat.
+// ---------------------------------------------------------------------------
+
+export const PHRASE_COMMISSION =
+  'Inspexo perçoit une commission de ces partenaires si vous souscrivez via ce lien. ' +
+  "Elle n'a aucune influence sur le score ni sur le verdict."
+
+export const PHRASE_AUCUNE =
+  'Inspexo ne perçoit aucune rémunération de ces partenaires.'
+
+export function phraseRemunerationPartenaire(remuneration) {
+  return remuneration === 'commission'
+    ? 'Inspexo perçoit une commission de ce partenaire si vous souscrivez via ce lien. ' +
+      "Elle n'a aucune influence sur le score ni sur le verdict."
+    : 'Inspexo ne perçoit aucune rémunération de ce partenaire.'
+}
+
+/** `null` quand les régimes diffèrent : il faut alors l'afficher partenaire
+ *  par partenaire, sinon la phrase serait inexacte pour l'un d'eux. */
+export function phraseRemunerationGlobale(partenaires) {
+  if (!Array.isArray(partenaires) || partenaires.length === 0) return null
+  const avecCommission = partenaires.filter(p => p.remuneration === 'commission').length
+  if (avecCommission === partenaires.length) return PHRASE_COMMISSION
+  if (avecCommission === 0) return PHRASE_AUCUNE
+  return null
+}

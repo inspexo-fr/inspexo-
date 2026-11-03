@@ -54,7 +54,7 @@ serve(async (req: Request) => {
     if (req.method === "GET") {
       const { data: partenaires, error } = await admin
         .from("partenaires")
-        .select("id, type, slug, nom, url, texte_valide, valide_le, actif, created_at, maj")
+        .select("id, type, slug, nom, url, texte_valide, valide_le, remuneration, actif, created_at, maj")
         .order("type").order("nom");
       if (error) throw error;
 
@@ -119,12 +119,19 @@ serve(async (req: Request) => {
         if (nom.length < 2 || nom.length > 80) return json({ error: "nom_invalide" }, 400);
         const valideLe = String(body?.valide_le ?? "");
         if (!/^\d{4}-\d{2}-\d{2}$/.test(valideLe)) return json({ error: "date_invalide" }, 400);
+        // Déclaration OBLIGATOIRE : c'est elle qui décide de la phrase de
+        // transparence affichée à l'acheteur. Aucune valeur par défaut, pour
+        // qu'on ne puisse pas publier un partenaire sans y avoir répondu.
+        const remuneration = String(body?.remuneration ?? "");
+        if (remuneration !== "commission" && remuneration !== "aucune") {
+          return json({ error: "remuneration_requise" }, 400);
+        }
 
         // Un texte modifié repart ÉTEINT : la validation d'hier ne vaut pas
         // pour le texte d'aujourd'hui.
         const { error: upErr } = await admin.from("partenaires").upsert({
           type, slug, nom, url, texte_valide: texte, valide_le: valideLe,
-          actif: false, maj: new Date().toISOString(),
+          remuneration, actif: false, maj: new Date().toISOString(),
         }, { onConflict: "slug" });
         if (upErr) throw upErr;
         await admin.from("events").insert({
