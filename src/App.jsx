@@ -16,6 +16,7 @@ const MoteurPage = lazy(() => import('./pages/MoteurPage'))
 const TakataPage = lazy(() => import('./pages/TakataPage'))
 const ResultPage = lazy(() => import('./pages/ResultPage'))
 const VisitePage = lazy(() => import('./pages/VisitePage'))
+const RetourPage = lazy(() => import('./pages/RetourPage'))
 const KitSignaturePage = lazy(() => import('./pages/KitSignaturePage'))
 const InspecteurPage = lazy(() => import('./pages/InspecteurPage'))
 const InspecteurInscription = lazy(() => import('./pages/InspecteurInscription'))
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="/dossier" element={<DossierPage />} />
           <Route path="/inspecteur" element={<InspecteurPage />} />
           <Route path="/inspecteur/inscription" element={<InspecteurInscription />} />
+          <Route path="/retour/:id" element={<RetourPage />} />
           <Route path="/fiabilite" element={<FiabilitePage />} />
           <Route path="/admin/audit" element={<AdminAudit />} />
           <Route path="/extension" element={<ExtensionPage />} />

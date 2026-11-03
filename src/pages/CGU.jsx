@@ -49,7 +49,10 @@ export default function CGU() {
             Inspexo est une plateforme de mise en relation entre des acheteurs de véhicules d'occasion et des experts automobiles spécialisés par marque. Inspexo propose également un service d'analyse par intelligence artificielle.
           </p>
           <p className="legal-p">
-            Inspexo agit en qualité d'intermédiaire. Les experts sont des professionnels indépendants payés exclusivement par l'acheteur.
+            Inspexo agit en qualité d'intermédiaire. L'inspection est payée exclusivement par l'acheteur&nbsp;: l'inspecteur est un professionnel indépendant qui ne reçoit aucune somme du vendeur, ni d'un garage, ni d'un concessionnaire. Il signe une charte d'indépendance en ce sens.
+          </p>
+          <p className="legal-p">
+            Cette règle vaut pour les prestations d'inspection. Les conditions de référencement des partenaires assurance et financement, et la question de leur rémunération éventuelle, sont décrites à l'article&nbsp;3&nbsp;bis.
           </p>
 
           <hr className="legal-sep" />
@@ -87,6 +90,67 @@ export default function CGU() {
 
           <p className="legal-p">
             Les prix sont indiqués en euros TTC. Inspexo se réserve le droit de modifier ses tarifs à tout moment. Les tarifs applicables sont ceux en vigueur au moment de la commande. La mention "prix de lancement" indique que ces tarifs sont susceptibles d'évoluer à la hausse.
+          </p>
+
+          <hr className="legal-sep" />
+
+          <h2 className="legal-h2">Article 3 bis — Partenaires assurance et financement</h2>
+
+          <h3 className="legal-h3">3 bis.1 Ce qu'Inspexo fait, et ne fait pas</h3>
+          <p className="legal-p">
+            Sous certains résultats d'analyse, Inspexo peut indiquer un partenaire proposant une
+            garantie mécanique ou un financement. Inspexo n'est <strong>ni assureur, ni
+            intermédiaire en assurance, ni établissement de crédit, ni intermédiaire en opérations
+            de banque</strong>, et n'est immatriculé à aucun de ces titres. Son rôle se limite à
+            celui d'indicateur&nbsp;: vous signaler l'existence d'un partenaire, puis vous laisser
+            traiter directement avec lui.
+          </p>
+          <p className="legal-p">
+            En conséquence, Inspexo ne décrit aucun contrat, ne compare aucune offre, n'affiche ni
+            prix, ni taux, ni mensualité, ne propose aucun simulateur et n'indique jamais qu'une
+            panne détectée par une analyse serait couverte par une garantie. Le texte affiché est
+            celui que le partenaire a lui-même rédigé et validé par écrit, à la date indiquée dans
+            notre système.
+          </p>
+
+          <h3 className="legal-h3">3 bis.2 Conditions de référencement</h3>
+          <p className="legal-p">Un partenaire n'apparaît que si toutes ces conditions sont réunies&nbsp;:</p>
+          <ul className="legal-ul">
+            <li>il a fourni un texte de présentation et l'a validé par écrit&nbsp;;</li>
+            <li>ce texte a passé le contrôle automatique qui écarte tout contenu de contrat, tout
+            chiffre commercial et, pour un financement, tout argument de facilité ou de rapidité&nbsp;;</li>
+            <li>un texte de financement porte la mention légale obligatoire de l'article L.&nbsp;312-5
+            du code de la consommation&nbsp;;</li>
+            <li>il a été activé manuellement&nbsp;: aucun partenaire n'est actif par défaut, et toute
+            modification de son texte le désactive jusqu'à réactivation&nbsp;;</li>
+            <li>le verdict de l'analyse est vert ou orange. <strong>Aucun partenaire n'est affiché
+            sous un verdict rouge</strong>, quelles que soient les circonstances.</li>
+          </ul>
+
+          <h3 className="legal-h3">3 bis.3 Rémunération</h3>
+          <p className="legal-p">
+            L'existence ou non d'une rémunération versée à Inspexo par un partenaire est
+            <strong> déclarée pour chaque partenaire</strong> et affichée à l'écran, juste au-dessus
+            du lien, dans l'une de ces deux formulations&nbsp;:
+          </p>
+          <ul className="legal-ul">
+            <li>«&nbsp;Inspexo perçoit une commission de ces partenaires si vous souscrivez via ce
+            lien. Elle n'a aucune influence sur le score ni sur le verdict.&nbsp;»&nbsp;;</li>
+            <li>«&nbsp;Inspexo ne perçoit aucune rémunération de ces partenaires.&nbsp;»</li>
+          </ul>
+          <p className="legal-p">
+            Dans tous les cas, <strong>le score, les notes par critère et la couleur du verdict sont
+            calculés sans aucune information liée à ces partenaires</strong>. Un contrôle automatique
+            vérifie, à chaque mise à jour du site, qu'aucun fichier participant au calcul du verdict
+            ne lit ces données. Une rémunération ne peut donc ni améliorer ni dégrader un résultat.
+          </p>
+
+          <h3 className="legal-h3">3 bis.4 Ce qui est transmis</h3>
+          <p className="legal-p">
+            Aucune donnée personnelle n'est transmise à un partenaire. En cliquant, vous arrivez
+            simplement sur son site&nbsp;; l'adresse de votre dossier d'analyse ne lui est pas
+            communiquée, et aucun traceur tiers n'est installé sur nos pages. Le détail figure dans
+            notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.
           </p>
 
           <hr className="legal-sep" />

@@ -6,7 +6,7 @@ Inspexo aide les acheteurs de véhicules d'occasion à éviter les mauvaises aff
 - Le **Pass achat à 29 €** (à venir) est la montée en gamme : accompagnement IA complet jusqu'à la signature.
 - Les **experts humains** spécialisés par marque (Visio, Inspection) sont en **liste d'attente** le temps de constituer le réseau.
 
-L'indépendance reste totale : payé exclusivement par l'acheteur, jamais par le vendeur.
+L'indépendance reste totale : **jamais payé par le vendeur**. L'inspection est payée exclusivement par l'acheteur. ⚠️ Depuis le sprint 10, un partenaire assurance ou financement PEUT verser une commission d'apport : elle est alors **déclarée en base partenaire par partenaire** et affichée à l'écran au-dessus du lien. Ne plus écrire « Inspexo est payé exclusivement par l'acheteur » sans préciser de quoi on parle — la formule exacte est « l'inspection est payée exclusivement par l'acheteur ».
 
 ## URLs & Accès
 - **Site déployé** : inspexo-k2dv.vercel.app
@@ -427,6 +427,49 @@ La règle « agrégats uniquement » était écrite depuis le sprint 4B mais **n
 1. dump prod hors dépôt (`~/inspexo-backups/schema-…` + `data-public-…`) ; 2. `db push` : migration `20261104120000` appliquée, 23/23 ; 3. `marche`, `score`, `visite`, `lecture-ct` déployées ; 4. `MARCHE_PROXY_SECRET` posé côté secrets Supabase **et** variables Vercel production ; 5. éval ciblée **PASS, verdicts identiques** (S7 rouge 38 / 308 orange 55 / Mercedes vert 71, 0,304 €) ; merge dans main et déploiement Vercel vérifiés.
 - Contrôles de surface en prod : `marche` rend **403** sans secret de proxy et avec un mauvais secret ; `/api/marche` rend **400** (donc le secret concorde des deux côtés) ; `get_prix_segments` ouverte à anon et bien formée ; `agreger_marche` et la table `marche_agregats` **refusées à anon** (42501).
 - ⬜ Reste à faire : publier l'extension 1.1.0 sur le Chrome Web Store (geste d'Utku). La nouvelle page de confidentialité est déjà en ligne, l'ancienne promesse « aucune collecte, aucun suivi » n'y figure plus.
+
+## Sprint 10 — Le moment du verdict (nov. 2026)
+
+### Cadre juridique — NE JAMAIS ASSOUPLIR
+Sans immatriculation ORIAS, Inspexo est **indicateur** : il met en relation, il ne conseille pas. Les règles sont appliquées **à l'écriture** par `_shared/partenaires.ts` (module pur, `tests/partenaires.test.mjs`, 105 contrôles) — un texte non conforme ne peut pas être enregistré, et le refus nomme le motif.
+- **Assurance** : aucun contenu de contrat. Ni couverture, ni franchise, ni plafond, ni exclusion, ni liste d'organes, ni prix, ni comparaison — et **aucun lien avec les pannes détectées** (« cette panne serait couverte » est explicitement refusé).
+- **Crédit** (art. R519-2 CMF) : ni taux, ni TAEG, ni mensualité, ni durée, ni simulateur, ni montant empruntable. La mention de l'**art. L312-5 du code de la consommation** est OBLIGATOIRE dans le texte validé, et les arguments de facilité ou de rapidité sont refusés (« rapide », « facile », « immédiat », « en quelques minutes », « sans justificatif », « accord garanti », « réponse immédiate »). **Activation impossible avant le 20/11/2026** (`CREDIT_ACTIVABLE_LE`), vérifiée à l'allumage.
+- La mention légale est **retirée du corps du texte à l'affichage** (`texteSansMentionCredit`) et réaffichée seule, en gras, juste au-dessus du lien : dans le paragraphe elle serait lue deux fois et banalisée.
+- **Éteints par défaut** : `partenaires.actif = false`, aucune ligne semée. Un texte modifié repart ÉTEINT — la validation d'hier ne vaut pas pour le texte d'aujourd'hui.
+
+### Indépendance du verdict — prouvée, pas affirmée
+`tests/independance-score.test.mjs` (chaîné dans `npm run eval`) : contrôle **statique** qu'aucun des 13 fichiers du chemin de notation ne cite un partenaire, la table des mises en relation, une RPC partenaire ou la route `/go/` — avec sept contre-exemples qui vérifient que le contrôle mord encore. Plus un contrôle **fonctionnel** : score identique flags ON et OFF sur six profils couvrant les trois verdicts, sans rémanence, et des champs de partenaire injectés dans les faits ne changent rien. ⚠️ Les mots « garantie », « crédit » et « retours » sont VOLONTAIREMENT hors de la liste : le projet les emploie légitimement (garantie constructeur, crédit d'API Anthropic, retours à la ligne) — un test qui crie à tort finit désactivé.
+
+### Bloc « Et maintenant ? » (`EtMaintenant.jsx`, sous les motifs)
+- **Vert / orange** : inspection (le bloc du sprint 8 y est **déplacé**, pas dupliqué — `InspectionBloc ... nu`), puis garantie et financement en liens secondaires si leur partenaire est actif.
+- **Rouge** : jamais de partenaire. La requête n'est **même pas émise** (vérifié dans les captures : aucun appel réseau), ce n'est pas un masquage CSS. L'inspection reste, mais jamais en action orange : phrase de préalable obligatoire (`PREALABLE_ROUGE`) puis repli secondaire.
+- Le composant ne reçoit **ni les pannes, ni le score, ni le prix** : il ne connaît que le verdict et l'identifiant du dossier. Un rapprochement panne ↔ garantie y est structurellement impossible.
+
+### Mise en relation
+- Tables `partenaires` et `mises_en_relation` (migration `20261105120000`, additive) : RLS active, zéro policy, accès par RPC SECURITY DEFINER.
+- `get_partenaires_actifs()` (anon) **ne rend jamais l'URL** : le navigateur n'a que le slug, la redirection passe obligatoirement par `/go/<slug>` → `api/go.js` → fonction `go` → 302. Sans ce détour, un lien serait suivi sans être compté.
+- `Referrer-Policy: no-referrer` sur la redirection : le partenaire ne reçoit pas l'adresse du dossier que l'acheteur lisait.
+- **Aucune transmission de coordonnées en V1** (décision d'Utku) : pas de case de consentement, pas d'envoi de données. À construire seulement si un partenaire l'exige.
+- **Comptage brut et net** : les robots et agents d'aperçu de lien (`estRobot`, même liste que la réécriture OG de `vercel.json`) sont journalisés mais exclus ; dédoublonnage **par dossier, par partenaire et par jour** (`cleDedup`). L'admin affiche les deux chiffres séparément.
+
+### Retour d'issue — l'existant était trop étroit
+⚠️ Le dispositif du sprint 3 **existait mais ne touchait presque personne** : il exigeait un compte ET un dossier marqué « acheté » à la main, et présupposait l'achat au lieu de le demander.
+- Nouveau : lien **signé HMAC** (`signatureRetour`, secret `UNSUB_SECRET`, seule l'empreinte est stockée) → page `/retour/:id?t=…`, **sans compte**. Trois questions : avez-vous acheté, à quel prix, les points signalés se sont-ils confirmés (oui / non / pas vérifié).
+- Envoi à **J+21** par le cron `alertes`, sur l'union dossier + Pass + inspection + opt-in `rapport`. **Une seule invitation par (analyse, email)** : l'unicité est dans le schéma (`retours`), donc l'union est dédoublonnée par la base et non par la prudence du code. **Aucune relance n'existe dans le code.**
+- ⚠️ L'ancien envoi « J+30 après acheté » a été **RETIRÉ** (`emailRetourIssue` supprimée) : il aurait fait deux sollicitations pour le même véhicule. Le formulaire de `/dossier` (RPC `submit_outcome`) reste, c'est une action de l'utilisateur.
+- Nouvelle table `desinscriptions` (empreinte d'email) : la désinscription du sprint 3.1 ne coupait que les alertes d'un COMPTE, or une invitation peut partir vers quelqu'un qui n'en a pas. `desinscription` gagne un mode `e=<empreinte>&t=<signature>`.
+
+### Transparence sur la rémunération (ajout après relecture d'Utku)
+La phrase affichée n'est **pas figée dans le code** : `partenaires.remuneration` (`commission` | `aucune`, **NOT NULL sans valeur par défaut**) est déclarée à l'enregistrement, publiée par `get_partenaires_actifs` et traduite par `phraseRemunerationGlobale`. Elle ne peut donc pas devenir fausse parce qu'on aurait oublié de la changer après avoir signé un contrat. Régimes **mélangés** entre partenaires ⇒ la phrase globale est remplacée par une phrase **par partenaire** : on ne généralise jamais à tort. Une déclaration manquante est traitée comme « aucune rémunération », jamais l'inverse. Affichée dans le même style que la mention légale (gras, 15 px), au-dessus des liens.
+- **Promesse « payé exclusivement par l'acheteur » revue partout** : les seules occurrences portaient déjà sur l'INSPECTEUR (`InspectionBloc`, `RapportInspection`, `notify.ts`, charte) et restent exactes. Seule la CGU art. 2 était ambiguë — reformulée en « L'inspection est payée exclusivement par l'acheteur ». ⚠️ La charte d'indépendance (`src/data/charte.js` ≡ `_shared/inspection.ts`) n'a PAS été touchée : `tests/inspection.test.mjs` exige qu'elles restent identiques mot pour mot.
+- **CGU article 3 bis** : conditions de référencement d'un partenaire (texte validé, contrôle automatique, mention légale, activation manuelle, jamais sur un rouge), rémunération, et ce qui est transmis (rien).
+
+### Admin et divers
+- Onglets **Partenaires** (enregistrer sous contrôle légal, activer/éteindre, mises en relation par semaine brut/net, export CSV) et **Retours** (taux de réponse sur les invitations ENVOYÉES, achats, écart médian prix affiché → prix payé, points confirmés par famille moteur).
+- `leads.code_postal` + RPC `submit_demande_zone` : la liste d'attente hors zone capture le code postal — c'est la carte de la demande, elle dit où recruter. Composant `DemandeZone.jsx`.
+- Route `/retour/:id`, réécriture `/go/:slug` dans `vercel.json`, secret **`GO_PROXY_SECRET`** (Supabase + Vercel prod) à poser avant la mise en service.
+- Page `/politique-de-confidentialite` : trois sections ajoutées (liens partenaires, code postal, retour après achat).
+- **Aucune modification du score** : aucune éval payante, coût 0 €.
 
 ## Marques Couvertes
 

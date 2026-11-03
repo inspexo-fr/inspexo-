@@ -66,6 +66,291 @@ function EmptyState({ icon, title, sub }) {
   )
 }
 
+
+// ─── Onglet Partenaires (assurance / crédit) ─────────────────────────────────
+//
+// Le contrôle légal vit CÔTÉ SERVEUR (_shared/partenaires.ts) : cet écran se
+// contente de relayer les motifs de refus mot pour mot. Rien n'est validé
+// ici, pour qu'un contournement du front ne contourne pas la loi.
+
+function telechargerCsv(nom, lignes) {
+  // BOM pour qu'Excel ouvre le CSV en UTF-8.
+  const blob = new Blob(['﻿' + lignes.join('\n')], { type: 'text/csv;charset=utf-8' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = `inspexo-${nom}-${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(a.href)
+}
+const csvEsc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`
+
+const FORMULAIRE_VIDE = {
+  type: 'assurance', slug: '', nom: '', url: '', texte_valide: '',
+  valide_le: new Date().toISOString().slice(0, 10),
+  // Volontairement vide : la rémunération doit être un choix conscient, pas
+  // une case préremplie. Le serveur refuse l'enregistrement sans elle.
+  remuneration: '',
+}
+
+function PartenairesTab() {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+  const [form, setForm] = useState(FORMULAIRE_VIDE)
+  const [motifs, setMotifs] = useState([])
+  const [message, setMessage] = useState(null)
+
+  const charger = useCallback(async () => {
+    setError(null)
+    const r = await adminFetch('admin-partenaires')
+    if (r?.error) setError(r.error)
+    else setData(r)
+  }, [])
+  useEffect(() => { charger() }, [charger])
+
+  const enregistrer = async (e) => {
+    e.preventDefault()
+    setMotifs([]); setMessage(null)
+    const r = await adminFetch('admin-partenaires', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'enregistrer', ...form }),
+    })
+    if (r?.error === 'texte_refuse') { setMotifs(r.motifs || []); return }
+    if (r?.error) { setMotifs([r.error]); return }
+    setMessage('Enregistré — et laissé ÉTEINT : un texte modifié doit être réactivé à la main.')
+    setForm(FORMULAIRE_VIDE)
+    charger()
+  }
+
+  const basculer = async (slug, actif) => {
+    setMotifs([]); setMessage(null)
+    const r = await adminFetch('admin-partenaires', {
+      method: 'POST', body: JSON.stringify({ action: 'activer', slug, actif }),
+    })
+    if (r?.error) { setMotifs(r.motifs || [r.error]); return }
+    setMessage(actif ? 'Partenaire activé — il apparaît maintenant sous les verdicts vert et orange.' : 'Partenaire éteint.')
+    charger()
+  }
+
+  const exporter = () => {
+    const stats = new Map((data?.stats ?? []).map(s => [s.partenaire_id, s]))
+    const lignes = [['partenaire', 'type', 'slug', 'actif', 'remuneration', 'semaine', 'brut', 'net'].join(';')]
+    for (const p of (data?.partenaires ?? [])) {
+      for (const sem of (stats.get(p.id)?.par_semaine ?? [])) {
+        lignes.push([p.nom, p.type, p.slug, p.actif ? 'oui' : 'non', p.remuneration, sem.semaine, sem.brut, sem.net].map(csvEsc).join(';'))
+      }
+    }
+    telechargerCsv('mises-en-relation', lignes)
+  }
+
+  if (error) return <ErrorBox msg={error} />
+  if (!data) return <Spinner label="Chargement des partenaires..." />
+
+  const stats = new Map((data.stats ?? []).map(s => [s.partenaire_id, s]))
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>Partenaires</div>
+          <div style={styles.pageSub}>
+            Mise en relation seulement. Jamais de contenu de contrat, jamais de chiffre commercial,
+            jamais sur un verdict rouge.
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={exporter} style={styles.refreshBtn} disabled={(data.partenaires ?? []).length === 0}>Export CSV</button>
+          <button onClick={charger} style={styles.refreshBtn}>↻ Actualiser</button>
+        </div>
+      </div>
+
+      {message && <div style={{ marginBottom: 12, color: '#0F1B2D', fontSize: '0.875rem', fontWeight: 600 }}>{message}</div>}
+      {motifs.length > 0 && (
+        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '14px 18px', marginBottom: 14 }}>
+          <div style={{ fontWeight: 700, color: '#DC2626', fontSize: '0.875rem', marginBottom: 6 }}>Refusé</div>
+          <ul style={{ margin: 0, paddingLeft: 18, color: '#DC2626', fontSize: '0.875rem', lineHeight: 1.6 }}>
+            {motifs.map((m, i) => <li key={i}>{m}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {(data.partenaires ?? []).length === 0 && (
+        <EmptyState title="Aucun partenaire" sub="Rien ne s'affiche sur le site tant qu'aucun partenaire n'est enregistré ET activé." />
+      )}
+
+      {(data.partenaires ?? []).map(p => {
+        const st = stats.get(p.id)
+        return (
+          <div key={p.id} style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '14px 16px', marginBottom: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ flex: '1 1 260px' }}>
+                <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{p.nom}</span>
+                <span style={{
+                  marginLeft: 8, fontSize: '0.6875rem', fontWeight: 700, padding: '2px 8px', borderRadius: 100,
+                  background: p.actif ? 'rgba(22,163,74,0.12)' : 'rgba(0,0,0,0.06)',
+                  color: p.actif ? '#16A34A' : '#6B7280',
+                }}>{p.actif ? 'ACTIF' : 'ÉTEINT'}</span>
+                <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
+                  {p.type} · /go/{p.slug} · texte validé le {formatDate(p.valide_le)} ·
+                  {' '}{p.remuneration === 'commission' ? 'commission perçue' : 'aucune rémunération'}
+                </div>
+                <div style={{ fontSize: '0.8125rem', color: '#374151', marginTop: 8, lineHeight: 1.6 }}>{p.texte_valide}</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F1B2D' }}>{st?.total_net ?? 0}</div>
+                <div style={{ fontSize: '0.6875rem', color: '#9CA3AF' }}>
+                  mises en relation (net)<br />{st?.total_brut ?? 0} brut, robots inclus
+                </div>
+                <button onClick={() => basculer(p.slug, !p.actif)} style={{ ...styles.refreshBtn, marginTop: 8 }}>
+                  {p.actif ? 'Éteindre' : 'Activer'}
+                </button>
+              </div>
+            </div>
+            {(st?.par_semaine ?? []).length > 0 && (
+              <div style={{ marginTop: 10, borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: 8 }}>
+                <div style={{ fontSize: '0.6875rem', color: '#9CA3AF', marginBottom: 4 }}>Par semaine — net / brut</div>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: '0.75rem', color: '#374151' }}>
+                  {st.par_semaine.slice(0, 12).map(s => (
+                    <span key={s.semaine}>{s.semaine.slice(5)} : <strong>{s.net}</strong> / {s.brut}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      })}
+
+      <form onSubmit={enregistrer} style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '18px 20px', marginTop: 18 }}>
+        <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 4 }}>Enregistrer un partenaire</div>
+        <div style={{ fontSize: '0.8125rem', color: '#6B7280', marginBottom: 14, lineHeight: 1.6 }}>
+          Le texte doit être celui que le partenaire a validé par écrit. Il est contrôlé côté serveur :
+          aucune couverture, aucun prix, aucun taux, aucune mensualité, aucune comparaison.
+          Un texte de crédit doit porter la mention légale, et un partenaire crédit ne peut pas être
+          activé avant le 20/11/2026. La rémunération déclarée ici est affichée telle quelle à
+          l'acheteur, au-dessus du lien : une commission non déclarée viderait de son sens la
+          promesse d'indépendance.
+        </div>
+        <div style={{ display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))' }}>
+          <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} style={styles.input}>
+            <option value="assurance">Assurance (garantie panne)</option>
+            <option value="credit">Crédit</option>
+          </select>
+          <input style={styles.input} placeholder="Nom affiché" value={form.nom} required
+            onChange={e => setForm(f => ({ ...f, nom: e.target.value }))} />
+          <input style={styles.input} placeholder="slug (a-z, chiffres, tirets)" value={form.slug} required
+            onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') }))} />
+          <input style={styles.input} placeholder="https://…" value={form.url} required
+            onChange={e => setForm(f => ({ ...f, url: e.target.value }))} />
+          <input style={styles.input} type="date" value={form.valide_le} required
+            onChange={e => setForm(f => ({ ...f, valide_le: e.target.value }))} />
+          <select value={form.remuneration} required style={styles.input}
+            onChange={e => setForm(f => ({ ...f, remuneration: e.target.value }))}>
+            <option value="">Rémunération ? (obligatoire)</option>
+            <option value="aucune">Aucune rémunération</option>
+            <option value="commission">Commission si souscription</option>
+          </select>
+        </div>
+        <textarea style={{ ...styles.input, marginTop: 10, width: '100%', minHeight: 96 }}
+          placeholder="Texte validé par le partenaire (20 à 600 caractères)"
+          value={form.texte_valide} required maxLength={600}
+          onChange={e => setForm(f => ({ ...f, texte_valide: e.target.value }))} />
+        <button type="submit" style={{ ...styles.refreshBtn, marginTop: 12 }}>Enregistrer (éteint)</button>
+      </form>
+    </div>
+  )
+}
+
+// ─── Onglet Retours d'issue ──────────────────────────────────────────────────
+
+function RetoursTab() {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+
+  const charger = useCallback(async () => {
+    setError(null)
+    const r = await adminFetch('admin-retours')
+    if (r?.error) setError(r.error)
+    else setData(r)
+  }, [])
+  useEffect(() => { charger() }, [charger])
+
+  const exporter = () => {
+    const lignes = [
+      ['date', 'vehicule', 'famille', 'verdict', 'score', 'achete', 'prix_affiche', 'prix_paye', 'ecart', 'points_confirmes', 'source', 'commentaire'].join(';'),
+      ...(data?.lignes ?? []).map(l => [
+        l.date, l.vehicule, l.famille, l.verdict, l.score,
+        l.achete === true ? 'oui' : l.achete === false ? 'non' : '',
+        l.prix_affiche ?? '', l.prix_paye ?? '',
+        (l.prix_affiche != null && l.prix_paye != null) ? l.prix_paye - l.prix_affiche : '',
+        l.points_confirmes ?? '', l.source, l.commentaire,
+      ].map(csvEsc).join(';')),
+    ]
+    telechargerCsv('retours', lignes)
+  }
+
+  if (error) return <ErrorBox msg={error} />
+  if (!data) return <Spinner label="Chargement des retours..." />
+
+  const Chiffre = ({ valeur, libelle, suffixe = '' }) => (
+    <div style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '16px 18px', flex: '1 1 160px' }}>
+      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F1B2D' }}>
+        {valeur == null ? '—' : `${valeur}${suffixe}`}
+      </div>
+      <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2, lineHeight: 1.5 }}>{libelle}</div>
+    </div>
+  )
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>Retours d'issue</div>
+          <div style={styles.pageSub}>
+            Une seule invitation par dossier et par email, jamais de relance. Le taux se calcule sur
+            les invitations réellement envoyées.
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={exporter} style={styles.refreshBtn} disabled={(data.lignes ?? []).length === 0}>Export CSV</button>
+          <button onClick={charger} style={styles.refreshBtn}>↻ Actualiser</button>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 18 }}>
+        <Chiffre valeur={data.invitations?.envoyees} libelle="invitations envoyées" />
+        <Chiffre valeur={data.invitations?.repondues} libelle="réponses reçues" />
+        <Chiffre valeur={data.invitations?.taux_reponse} suffixe=" %" libelle="taux de réponse" />
+        <Chiffre valeur={data.reponses?.achats} libelle="véhicules achetés" />
+        <Chiffre valeur={data.reponses?.taux_achat} suffixe=" %" libelle="part d'achats parmi les réponses" />
+        <Chiffre valeur={data.prix?.ecart_median} suffixe=" €" libelle={`écart médian prix affiché → prix payé (${data.prix?.n ?? 0} cas)`} />
+      </div>
+
+      <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 8 }}>Points confirmés, par famille moteur</div>
+      {(data.par_famille ?? []).length === 0 && (
+        <EmptyState title="Aucun retour pour l'instant" sub="Les invitations partent 3 semaines après l'analyse." />
+      )}
+      {(data.par_famille ?? []).map(f => (
+        <div key={f.famille} style={{
+          background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+          padding: '12px 16px', marginBottom: 8, display: 'flex', justifyContent: 'space-between',
+          gap: 10, flexWrap: 'wrap', alignItems: 'center',
+        }}>
+          <div>
+            <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{f.famille}</span>
+            <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
+              {f.total} retour{f.total > 1 ? 's' : ''} · {f.achats} achat{f.achats > 1 ? 's' : ''}
+            </div>
+          </div>
+          <div style={{ fontSize: '0.8125rem', color: '#374151' }}>
+            confirmés <strong style={{ color: '#16A34A' }}>{f.oui}</strong> ·
+            {' '}infirmés <strong style={{ color: '#DC2626' }}>{f.non}</strong> ·
+            {' '}non vérifiés <strong>{f.pas_verifie}</strong>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ─── Onglet Coûts de réparation (négociation chiffrée) ────────────────────────
 
 function fileEnDataUrl(file) {
@@ -536,6 +821,8 @@ export default function AdminDashboard() {
   const navItems = [
     { key: 'passes',       label: 'Pass achat' },
     { key: 'inspecteurs',  label: 'Inspecteurs' },
+    { key: 'partenaires',  label: 'Partenaires' },
+    { key: 'retours',      label: 'Retours' },
     { key: 'couts',        label: 'Coûts réparation' },
     { key: 'audit',        label: 'Audit justesse', href: '/admin/audit' },
   ]
@@ -626,6 +913,8 @@ export default function AdminDashboard() {
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
             {tab === 'passes'       && <PassesTab />}
             {tab === 'inspecteurs'  && <InspecteursTab />}
+            {tab === 'partenaires'  && <PartenairesTab />}
+            {tab === 'retours'      && <RetoursTab />}
             {tab === 'couts'        && <CoutsTab />}
           </div>
         </main>
@@ -644,6 +933,11 @@ const styles = {
   pageSub: {
     fontFamily: 'var(--sans)',
     fontSize: '0.9375rem', color: '#6B7280', fontWeight: 400,
+  },
+  input: {
+    border: '1.5px solid rgba(0,0,0,0.12)', borderRadius: 8, padding: '9px 12px',
+    fontFamily: 'var(--sans)', fontSize: '0.875rem', outline: 'none',
+    background: '#fff', color: '#0F1B2D',
   },
   refreshBtn: {
     background: '#fff', border: '1.5px solid rgba(0,0,0,0.1)',

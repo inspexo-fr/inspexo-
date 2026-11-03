@@ -11,7 +11,7 @@ import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
 import LectureCtBloc from '../components/LectureCtBloc'
 import VinBloc from '../components/VinBloc'
-import InspectionBloc from '../components/InspectionBloc'
+import EtMaintenant from '../components/EtMaintenant'
 import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
@@ -845,6 +845,14 @@ export default function ResultPage() {
               </div>
             )}
 
+            {/* « Et maintenant ? » (sprint 10) — l'inspection du sprint 8 y est
+                désormais imbriquée : un seul appel à l'action sur la page.
+                Les partenaires ne reçoivent ni les pannes, ni le score, ni le
+                prix, et n'apparaissent jamais sur un verdict rouge. */}
+            {!enCours && r.type === 'vehicule' && (
+              <EtMaintenant analysisId={id} vehicule={vehiculeLabel} verdict={r.verdict} />
+            )}
+
             {/* Contrôles officiels : Takata, RappelConso, campagnes citées */}
             <div className="doc-sec">
               <p className="eyebrow">Contrôles officiels</p>
@@ -1303,11 +1311,6 @@ export default function ResultPage() {
                 le bloc de commande, c'est le livrable que l'acheteur a payé. */}
             {!enCours && r.type === 'vehicule' && <RapportInspection analysisId={id} />}
 
-            {/* Inspection sur place (sprint 8 — ouverte seulement si un
-                inspecteur validé couvre le secteur, décidé serveur) */}
-            {!enCours && r.type === 'vehicule' && (
-              <InspectionBloc analysisId={id} vehicule={vehiculeLabel} />
-            )}
 
             {/* Prix — relevé de marché (sprint 9) */}
             {!enCours && (

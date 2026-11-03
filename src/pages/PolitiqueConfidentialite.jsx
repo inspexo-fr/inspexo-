@@ -97,6 +97,56 @@ export default function PolitiqueConfidentialite() {
           </ul>
           <p className="legal-p">Nous ne vendons jamais vos données personnelles à des tiers.</p>
 
+          <h2 className="legal-h2">6 bis. Liens vers des partenaires (assurance, financement)</h2>
+          <p className="legal-p">
+            Sous certains résultats d'analyse, nous pouvons indiquer un partenaire proposant une
+            garantie mécanique ou un financement. Inspexo n'est ni assureur, ni organisme de
+            crédit, ni intermédiaire immatriculé&nbsp;: nous nous limitons à vous indiquer ces
+            partenaires, et vous traitez ensuite directement avec eux.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>Aucune donnée personnelle ne leur est transmise.</strong> Il n'existe aucun
+              envoi de vos coordonnées&nbsp;: en cliquant, vous arrivez simplement sur leur site,
+              comme sur n'importe quel lien.
+            </li>
+            <li>
+              <strong>Aucun traceur tiers n'est installé sur nos pages.</strong> Le lien passe par
+              notre propre serveur (<code>/go/…</code>), qui enregistre uniquement le partenaire
+              concerné, le dossier d'analyse d'origine, la date et une empreinte technique de votre
+              adresse IP — jamais l'adresse elle-même, jamais votre identité.
+            </li>
+            <li>
+              <strong>Le partenaire ne sait pas quelle page vous lisiez.</strong> L'adresse de votre
+              dossier d'analyse ne lui est pas transmise (en-tête <em>referrer</em> supprimé).
+            </li>
+            <li>
+              <strong>Le verdict n'en dépend jamais.</strong> Le score, les critères et la couleur
+              du verdict sont calculés sans aucune information liée à ces partenaires, et aucun
+              partenaire n'apparaît sous un verdict rouge.
+            </li>
+          </ul>
+
+          <h2 className="legal-h2">6 ter. Code postal de la liste d'attente inspection</h2>
+          <p className="legal-p">
+            Si l'inspection sur place n'est pas encore disponible près du véhicule, vous pouvez
+            laisser votre email accompagné d'un code postal. Celui-ci sert uniquement à savoir dans
+            quels départements ouvrir le service&nbsp;: il désigne une commune, jamais une adresse.
+            Vous pouvez demander sa suppression comme toute autre donnée (section 7).
+          </p>
+
+          <h2 className="legal-h2">6 quater. Retour après achat</h2>
+          <p className="legal-p">
+            Environ trois semaines après une analyse, si vous nous avez laissé une adresse email
+            (Pass achat, inspection, ou demande d'envoi du rapport), nous vous écrivons une fois
+            pour vous demander ce que l'achat a donné. Le lien de réponse est signé et ne nécessite
+            aucun compte. <strong>Une seule invitation est envoyée par dossier et par adresse, et
+            il n'existe aucune relance.</strong> Chaque email contient un lien de désinscription en
+            un clic, qui vaut pour tous nos envois. Vos réponses ne sont jamais publiées
+            individuellement&nbsp;: seules des statistiques agrégées le sont, sur notre page
+            fiabilité.
+          </p>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">
