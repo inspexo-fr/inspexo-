@@ -38,7 +38,7 @@ export default function CGU() {
             <strong>"Inspexo"</strong> ou <strong>"la Plateforme"</strong> : le site inspexo.io, édité par DUPLEX SAS.<br />
             <strong>"Utilisateur"</strong> ou <strong>"Client"</strong> : toute personne physique ou morale utilisant le Site ou souscrivant à un service.<br />
             <strong>"Inspecteur"</strong> : professionnel automobile indépendant, qualifié et référencé sur la Plateforme.<br />
-            <strong>"Mission"</strong> : prestation commandée par un Client sur la Plateforme (analyse IA, visio, inspection).<br />
+            <strong>"Mission"</strong> : prestation commandée par un Client sur la Plateforme (score d'annonce, Pass achat, inspection).<br />
             <strong>"Rapport"</strong> : document de synthèse produit à l'issue d'une mission (par l'analyse IA ou par un inspecteur).
           </p>
 
@@ -59,37 +59,44 @@ export default function CGU() {
 
           <h2 className="legal-h2">Article 3 — Services et tarifs</h2>
 
-          <h3 className="legal-h3">3.1 Analyse IA gratuite</h3>
+          <h3 className="legal-h3">3.1 Score d'annonce — gratuit</h3>
           <p className="legal-p">
-            10 échanges gratuits avec l'analyse IA spécialisée.<br />
-            Rapport partiel automatique (scores et défaillances sans coûts détaillés).<br />
-            Limité à 3 analyses gratuites par compte.<br />
-            Sans engagement.
+            Analyse automatique du texte d'une annonce et des photos que le Client fournit : verdict, score,
+            motifs, pannes connues sourcées, rappels constructeur, incohérences.<br />
+            <strong>5 analyses par période de 24 heures</strong>, décomptées par adresse IP.<br />
+            <strong>Sans création de compte.</strong> Les photos transmises ne sont jamais conservées.<br />
+            Sans engagement. Ce service ne remplace pas un examen du véhicule.
           </p>
 
-          <h3 className="legal-h3">3.2 Analyse IA complète — 9,90€</h3>
+          <h3 className="legal-h3">3.2 Pass achat — 29,00 € TTC</h3>
           <p className="legal-p">
-            Conversation illimitée avec l'analyse IA spécialisée.<br />
-            Rapport complet avec coûts détaillés et arguments de négociation.<br />
-            Accès immédiat après paiement.
+            Accès pendant 30 jours aux fonctions d'accompagnement : analyses sans limitation de nombre, mode
+            visite, détail de la marge de négociation, lecture du procès-verbal de contrôle technique, kit
+            signature.<br />
+            Ce service est régi par ses propres conditions de vente :{' '}
+            <a href="/cgv-pass" className="legal-a">CGV du Pass achat</a>, qui prévalent sur les présentes pour
+            tout ce qui le concerne.
           </p>
 
-          <h3 className="legal-h3">3.3 Visio Test Drive — 59€ (prix de lancement)</h3>
+          <h3 className="legal-h3">3.3 Inspection à la demande — 179,00 € TTC</h3>
           <p className="legal-p">
-            Session visio de 30 minutes avec un inspecteur qualifié spécialisé par marque.<br />
-            L'inspecteur guide le client en direct pendant la visite du véhicule via Google Meet.<br />
-            Part inspecteur : 40€ / Part plateforme : 19€.
+            Inspection sur place par un inspecteur indépendant, dans la zone affichée au moment de la commande,
+            sur un créneau choisi par le Client. Rapport photo déposé dans son dossier.<br />
+            Ce service est régi par ses propres conditions de vente :{' '}
+            <a href="/cgv-inspection" className="legal-a">CGV de l'inspection à la demande</a>, qui prévalent sur
+            les présentes pour tout ce qui le concerne.
           </p>
 
-          <h3 className="legal-h3">3.4 Inspection Physique — 249€ (prix de lancement)</h3>
+          <h3 className="legal-h3">3.4 Services en préparation</h3>
           <p className="legal-p">
-            Inspection complète sur place par un inspecteur qualifié spécialisé par marque.<br />
-            Durée : environ 60 minutes. Rapport détaillé inclus.<br />
-            Part inspecteur : 170€ / Part plateforme : 79€.
+            L'accompagnement en visioconférence et l'inspection à distance sont en préparation et{' '}
+            <strong>ne sont pas commercialisés</strong>. Ils ne peuvent pas être commandés et aucun prix n'est
+            proposé pour eux. Le Site permet seulement de s'inscrire sur une liste d'attente.
           </p>
 
           <p className="legal-p">
-            Les prix sont indiqués en euros TTC. Inspexo se réserve le droit de modifier ses tarifs à tout moment. Les tarifs applicables sont ceux en vigueur au moment de la commande. La mention "prix de lancement" indique que ces tarifs sont susceptibles d'évoluer à la hausse.
+            Les prix sont indiqués en euros TTC. Inspexo se réserve le droit de modifier ses tarifs à tout
+            moment. Les tarifs applicables sont ceux en vigueur au moment de la commande.
           </p>
 
           <hr className="legal-sep" />
@@ -167,70 +174,63 @@ export default function CGU() {
             La commande est effectuée sur le Site en sélectionnant un service et en procédant au paiement. Le paiement est sécurisé par Stripe. Inspexo ne stocke aucune donnée bancaire. La commande est confirmée dès la validation du paiement. Un email de confirmation est envoyé au Client.
           </p>
           <p className="legal-p">
-            Pour les services Visio et Inspection, le paiement doit être effectué avant la réservation du créneau avec l'inspecteur. Les inspecteurs sont rémunérés via Stripe Connect. Aucun paiement direct entre le Client et l'inspecteur n'est autorisé.
+            Pour l'inspection à la demande, le Client choisit son créneau au moment de la commande&nbsp;: le paiement n'est
+            encaissé qu'une fois un inspecteur confirmé, selon les modalités des{' '}
+            <a href="/cgv-inspection" className="legal-a">CGV de l'inspection</a>. Les inspecteurs sont rémunérés
+            via Stripe Connect. Aucun paiement direct entre le Client et l'inspecteur n'est autorisé.
           </p>
 
           <hr className="legal-sep" />
 
           <h2 className="legal-h2">Article 6 — Déroulement des missions</h2>
 
-          <h3 className="legal-h3">6.1 Analyse IA</h3>
+          <h3 className="legal-h3">6.1 Score d'annonce</h3>
           <p className="legal-p">
-            La conversation avec l'analyse IA est accessible immédiatement après paiement (ou gratuitement pour les 10 premiers échanges). Le Client peut clôturer la conversation à tout moment pour générer son rapport. La clôture est irréversible.
+            L'analyse est produite automatiquement dès l'envoi du texte de l'annonce, sans intervention humaine.
+            Le résultat est accessible par un lien partageable. Aucune commande, aucun paiement.
           </p>
 
-          <h3 className="legal-h3">6.2 Visio Test Drive</h3>
+          <h3 className="legal-h3">6.2 Pass achat</h3>
           <p className="legal-p">
-            Après paiement, le Client réserve un créneau via le système de réservation. L'inspecteur rejoint la visio au créneau prévu. Si l'inspecteur est indisponible ou ne se présente pas, le Client est remboursé intégralement.
+            Les fonctions du Pass sont ouvertes dès l'encaissement du paiement, pour 30 jours. Le détail figure
+            dans les <a href="/cgv-pass" className="legal-a">CGV du Pass achat</a>.
           </p>
 
-          <h3 className="legal-h3">6.3 Inspection Physique</h3>
+          <h3 className="legal-h3">6.3 Inspection à la demande</h3>
           <p className="legal-p">
-            Après paiement, le Client réserve un créneau et communique l'adresse du véhicule. L'inspecteur se déplace sur place. Le rapport est remis au Client sous 24 heures suivant l'inspection.
-          </p>
-
-          <hr className="legal-sep" />
-
-          <h2 className="legal-h2">Article 7 — Garantie satisfaction 30 jours</h2>
-          <p className="legal-p">
-            Pour les services Visio Test Drive et Inspection Physique, Inspexo offre une garantie satisfaction de 30 jours à compter de la date de réalisation de la mission. Si le Client estime que la prestation n'a pas été conforme à ce qui était annoncé, il peut demander un remboursement en contactant <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a> dans un délai de 30 jours.
-          </p>
-          <p className="legal-p">
-            La demande de remboursement sera examinée au cas par cas. Le remboursement pourra être total ou partiel selon les circonstances.
-          </p>
-          <p className="legal-p">
-            Cette garantie ne s'applique pas si le Client a fourni des informations erronées sur le véhicule, s'il ne s'est pas présenté au rendez-vous, s'il a annulé moins de 24 heures avant le rendez-vous, ni au service d'analyse IA (rapport généré = service rendu).
+            Le Client commande en indiquant le créneau souhaité et les coordonnées du vendeur. Un inspecteur de
+            la zone confirme la mission, se déplace, puis dépose son rapport photo dans le dossier du Client. Le
+            déroulement complet figure dans les{' '}
+            <a href="/cgv-inspection" className="legal-a">CGV de l'inspection à la demande</a>.
           </p>
 
           <hr className="legal-sep" />
 
-          <h2 className="legal-h2">Article 8 — Annulation et remboursement</h2>
-
-          <h3 className="legal-h3">8.1 Analyse IA (9,90€)</h3>
+          <h2 className="legal-h2">Article 7 — Remboursement&nbsp;: une règle par offre</h2>
           <p className="legal-p">
-            Aucun remboursement une fois la conversation commencée. Si aucune conversation n'a eu lieu dans les 7 jours suivant le paiement, remboursement automatique.
+            Chaque offre a sa propre règle de remboursement, et une seule. Aucune demande n'est examinée
+            «&nbsp;au cas par cas&nbsp;»&nbsp;: le Client sait à l'avance ce à quoi il a droit.
+          </p>
+          <p className="legal-p">
+            <strong>Score d'annonce</strong>&nbsp;: service gratuit, sans paiement, donc sans remboursement.<br />
+            <strong>Pass achat</strong>&nbsp;: <strong>remboursé sans condition dans les 14 jours</strong> suivant
+            l'achat, sur simple demande à <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a>,
+            sans justification à fournir (<a href="/cgv-pass" className="legal-a">CGV du Pass achat</a>).<br />
+            <strong>Inspection à la demande</strong>&nbsp;: barème d'annulation et de remboursement fixé par les{' '}
+            <a href="/cgv-inspection" className="legal-a">CGV de l'inspection à la demande</a>.
           </p>
 
-          <h3 className="legal-h3">8.2 Visio Test Drive (59€)</h3>
-          <p className="legal-p">
-            Annulation gratuite jusqu'à 24 heures avant le créneau réservé → remboursement intégral.<br />
-            Annulation moins de 24 heures avant → remboursement de 50% (part inspecteur retenue).<br />
-            Non-présentation du Client → aucun remboursement.
-          </p>
+          <hr className="legal-sep" />
 
-          <h3 className="legal-h3">8.3 Inspection Physique (249€)</h3>
+          <h2 className="legal-h2">Article 8 — Annulation</h2>
           <p className="legal-p">
-            Annulation gratuite jusqu'à 48 heures avant le créneau réservé → remboursement intégral.<br />
-            Annulation entre 48 et 24 heures → remboursement de 70%.<br />
-            Annulation moins de 24 heures → remboursement de 50%.<br />
-            Non-présentation du Client → aucun remboursement.
+            <strong>Score d'annonce</strong>&nbsp;: rien à annuler, le service est gratuit et immédiat.<br />
+            <strong>Pass achat</strong>&nbsp;: voir l'article 7 et les{' '}
+            <a href="/cgv-pass" className="legal-a">CGV du Pass achat</a>.<br />
+            <strong>Inspection à la demande</strong>&nbsp;: les conditions d'annulation, par le Client comme par
+            l'inspecteur, ainsi que le sort du paiement, figurent aux{' '}
+            <a href="/cgv-inspection" className="legal-a">CGV de l'inspection à la demande</a>.
           </p>
-
-          <h3 className="legal-h3">8.4 Non-présentation de l'inspecteur</h3>
-          <p className="legal-p">
-            Si l'inspecteur ne se présente pas ou annule, le Client est remboursé intégralement sous 5 jours ouvrés.
-          </p>
-
           <p className="legal-p">
             Les remboursements sont effectués sur le moyen de paiement utilisé lors de la commande.
           </p>
@@ -288,10 +288,16 @@ export default function CGU() {
             Conformément à l'article L221-28 du Code de la consommation, le droit de rétractation ne s'applique pas aux services pleinement exécutés avant la fin du délai de rétractation et dont l'exécution a commencé avec l'accord du consommateur.
           </p>
           <p className="legal-p">
-            En validant sa commande pour le service d'analyse IA, le Client reconnaît que l'exécution du service commence immédiatement et renonce expressément à son droit de rétractation.
+            Le <strong>Pass achat</strong> et l'<strong>inspection à la demande</strong> sont tous deux soumis au
+            droit de rétractation de 14 jours de l'article L221-18 du Code de la consommation. Chacun prévoit, dans
+            ses propres conditions de vente, la façon dont le Client peut demander une exécution immédiate et ce
+            que cette demande implique&nbsp;: voir les{' '}
+            <a href="/cgv-pass" className="legal-a">CGV du Pass achat</a> et les{' '}
+            <a href="/cgv-inspection" className="legal-a">CGV de l'inspection à la demande</a>.
           </p>
           <p className="legal-p">
-            Pour les services Visio et Inspection, le droit de rétractation s'applique tant que le créneau n'a pas été réservé. Une fois le créneau réservé, les conditions d'annulation de l'Article 8 s'appliquent.
+            Le <strong>score d'annonce</strong> étant gratuit, il n'ouvre aucun droit de rétractation&nbsp;: celui-ci
+            ne s'applique qu'aux contrats à titre onéreux.
           </p>
 
           <hr className="legal-sep" />

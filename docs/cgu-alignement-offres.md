@@ -149,3 +149,94 @@ il n'existe pas de mot de passe à protéger.
 3. **Score : corriger le quota** (5/24 h/IP sans compte).
 4. **Articuler CGU ↔ CGV du Pass** (art. 7 et 14, contradiction à trancher).
 5. **Articles 4, 10, 11** — exactitude.
+
+---
+
+## 4. Décisions appliquées le 3 novembre 2026
+
+Appliqué dans `src/pages/CGU.jsx` : articles 3.2/3.3/3.4 historiques **supprimés**
+(9,90 € / 59 € / 249 €), 3.1 corrigé (**5 analyses / 24 h, sans compte**), Pass
+et inspection renvoyés à leurs CGV propres, et l'article 7 réécrit en **une
+règle par offre** — le « cas par cas » a disparu, le Pass garde son
+« remboursé sans condition sous 14 jours ».
+
+Au-delà de la liste explicite, j'ai dû toucher les articles **1, 5, 6, 8 et 14** :
+ils ne décrivaient que les offres supprimées (art. 6.2 Visio, art. 8.1 à 8.3 qui
+portaient les trois prix morts, art. 14 fondé sur une « réservation de créneau »
+inexistante). Les laisser aurait rendu le document incohérent — pire que périmé.
+
+Nouvelle page : **`/cgv-inspection`** (`src/pages/CGVInspection.jsx`), sur le
+modèle de `/cgv-pass`. Une offre payante, un document — et c'est ce texte que
+`inspection-checkout` estampillait déjà par `CGV_VERSION` sans qu'il existe.
+Prix, zone, délai et médiateur sont **lus dans la configuration serveur**, jamais
+recopiés : un prix en dur dans un contrat devient faux en silence.
+
+---
+
+## 5. ÉCARTS ENTRE LE CODE ET LE TEXTE — à combler avant d'ouvrir la vente
+
+> Le texte des CGV de l'inspection décrit les décisions prises. **Quatre d'entre
+> elles ne sont pas implémentées.** Le service est aujourd'hui **fermé**
+> (`MEDIATEUR_NOM` non posé ⇒ `ouvert: false`, aucune commande possible), donc
+> aucun acheteur n'est exposé. Mais il ne doit pas s'ouvrir avant que les quatre
+> premiers points soient faits.
+
+### 🔒 Bloquants
+
+**1. Le paiement est ENCAISSÉ à la commande, pas autorisé.**
+`inspection-checkout` crée la session Stripe **sans `capture_method: "manual"`**
+(vérifié : `payment_intent_data` ne porte que `description` et `transfer_group`).
+L'argent part donc au moment du paiement, et non à la confirmation de
+l'inspecteur — l'inverse de ce que dit l'article 5.
+⚠️ C'est une décision **déjà actée** dans `CLAUDE.md` (« Autorisation Stripe
+avant confirmation expert (éviter chargebacks) ») qui n'a jamais été appliquée à
+l'inspection.
+*Correctif* : `capture_method: "manual"`, capture au moment de
+`inspection_accepter`, et gestion de l'échec de capture.
+
+**2. Rien n'expire si aucun inspecteur ne confirme.**
+Aucune logique de délai : une inspection reste `a_attribuer` indéfiniment, avec
+l'argent déjà encaissé. L'article 5 promet l'annulation de l'autorisation.
+*Correctif* : échéance (créneau dépassé + marge), passage en `annulee` et
+`paymentIntents.cancel` depuis le cron `alertes`.
+
+**3. Aucune annulation n'existe, ni côté acheteur ni pour l'absence du vendeur.**
+Les seules RPC sont `inspection_accepter`, `inspection_refuser`,
+`inspection_consentement_photos`, `inspection_photos_liste`, `inspection_zone`.
+Donc : pas de règle des 24 h, pas de retenue de 40 €, pas de constat d'absence.
+Le statut `annulee` n'est posé que par `charge.refunded`, c'est-à-dire par un
+remboursement déclenché à la main.
+*Correctif* : RPC `inspection_annuler` (acheteur, transition atomique) et
+`inspection_constat_absence` (inspecteur), plus un **transfert partiel de 40 €**
+— chemin qui n'existe pas aujourd'hui : `inspection-rapport` ne sait transférer
+que `part_inspecteur_cents` à la remise du rapport.
+
+**4. Pas de demande expresse d'exécution immédiate.**
+La commande n'envoie que `accepte_cgv: true`. Le Pass a `retractation_renoncee` ;
+l'inspection n'a ni case, ni colonne.
+⚠️ **Conséquence si on ouvre en l'état** : l'acheteur conserve ses 14 jours de
+rétractation **même après l'inspection réalisée**. On aurait payé l'inspecteur et
+on devrait rembourser l'acheteur.
+*Correctif* : case dédiée, colonne `inspections.execution_immediate_demandee`,
+et refus serveur quand le créneau tombe dans les 14 jours sans cette demande.
+
+### À régler, non bloquants
+
+**5. Le délai de remise du rapport n'existe pas dans le code.** Les 48 heures
+portent sur le **créneau** (`validerCreneau`, fenêtre [+2 h, +48 h]), pas sur le
+rapport. L'article 4 annonce « au plus tard 24 heures après l'inspection » : à
+mesurer et relancer, ou à retirer du texte. Ne pas laisser une promesse que rien
+ne surveille.
+
+**6. La durée de conservation des photos n'est écrite nulle part** — ni dans le
+code, ni dans les CGV, ni dans la politique de confidentialité, qui **ne
+mentionne pas du tout les photos d'inspection**. L'article 8 y renvoie : il faut
+donc l'y écrire. Durée à décider.
+
+**7. `CGV_VERSION` vaut `"2026-11-01"`** dans `inspection-checkout`, alors que le
+texte est daté du **3 novembre 2026**. À aligner, sinon chaque commande
+estampille une version qui ne correspond à aucun document.
+
+**8. Politique de confidentialité** : ajouter les photos d'inspection (base
+légale, durée, destinataires) et les coordonnées du vendeur transmises par
+l'acheteur.
