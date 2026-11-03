@@ -3,6 +3,15 @@
 // annonce donnent le même score. Fonction pure, sans effet de bord, testable
 // hors ligne (tests/bareme.test.mjs).
 
+/** Version du barème, exposée par l'API de scoring pour qu'un client sache
+ *  sur quelle règle son résultat a été calculé. À INCRÉMENTER dès qu'une
+ *  modification change un score à faits identiques — pas pour un commentaire
+ *  ni un libellé.
+ *  11.0 : sprint 9 (axe prix sur relevé de marché, correction kilométrique).
+ *         Aucune évolution du calcul au sprint 11 : seule la version est
+ *         désormais publiée. */
+export const BAREME_VERSION = "11.0";
+
 export type FaitsAxes = {
   annee_courante: number;
   statut_vendeur: string;

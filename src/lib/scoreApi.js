@@ -174,6 +174,25 @@ export async function getPrixSegments(segments) {
   return Array.isArray(data) ? data : []
 }
 
+/** Événements de parcours (sprint 11) : reliés à l'analyse, SANS aucun
+ *  identifiant navigateur — ni cookie, ni empreinte d'IP. Un échec est
+ *  silencieux : une mesure ne doit jamais gêner l'utilisateur. */
+const marquerEtape = (nom, analysisId) =>
+  supabase.rpc('track_event', { p_name: nom, p_analysis_id: analysisId ?? null })
+    .then(() => {}, () => {})
+
+export const marquerClicPass = (analysisId) => marquerEtape('pass_clicked', analysisId)
+export const marquerClicInspection = (analysisId) => marquerEtape('inspection_clicked', analysisId)
+
+/** Demande de contact professionnel (page /pro). */
+export async function submitLeadPro({ email, societe, volume, message }) {
+  const { error } = await supabase.rpc('submit_lead_pro', {
+    p_email: email, p_societe: societe ?? null,
+    p_volume: volume ?? null, p_message: message ?? null,
+  })
+  if (error) throw error
+}
+
 /** Partenaires ACTIFS (assurance / crédit). La liste est vide tant qu'aucun
  *  partenaire n'a été activé en base : rien n'est codé en dur côté client, et
  *  l'URL du partenaire n'est jamais transmise au navigateur — le lien passe

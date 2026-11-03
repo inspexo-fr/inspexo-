@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import CookieBanner from './components/CookieBanner'
+import { capterSource } from './lib/source'
 
 // Chaque route est chargée à la demande. Sans cela, une page publique de
 // famille moteur embarquait les 22 pages du site — dashboards admin, mode
@@ -17,6 +18,8 @@ const TakataPage = lazy(() => import('./pages/TakataPage'))
 const ResultPage = lazy(() => import('./pages/ResultPage'))
 const VisitePage = lazy(() => import('./pages/VisitePage'))
 const RetourPage = lazy(() => import('./pages/RetourPage'))
+const ProPage = lazy(() => import('./pages/ProPage'))
+const ProApiPage = lazy(() => import('./pages/ProApiPage'))
 const KitSignaturePage = lazy(() => import('./pages/KitSignaturePage'))
 const InspecteurPage = lazy(() => import('./pages/InspecteurPage'))
 const InspecteurInscription = lazy(() => import('./pages/InspecteurInscription'))
@@ -37,6 +40,11 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 // Un texte ou un gabarit provisoire créerait un décalage visuel inutile.
 const Attente = <div style={{ minHeight: '100vh' }} aria-busy="true" />
 
+// Étiquette de campagne (?src=) relevée au tout premier rendu, avant toute
+// navigation interne : une entrée par /pass?src=… doit rester attribuable
+// même si l'utilisateur va ensuite analyser une annonce.
+capterSource()
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -55,6 +63,8 @@ export default function App() {
           <Route path="/inspecteur" element={<InspecteurPage />} />
           <Route path="/inspecteur/inscription" element={<InspecteurInscription />} />
           <Route path="/retour/:id" element={<RetourPage />} />
+          <Route path="/pro" element={<ProPage />} />
+          <Route path="/pro/api" element={<ProApiPage />} />
           <Route path="/fiabilite" element={<FiabilitePage />} />
           <Route path="/admin/audit" element={<AdminAudit />} />
           <Route path="/extension" element={<ExtensionPage />} />

@@ -351,6 +351,283 @@ function RetoursTab() {
   )
 }
 
+
+// ─── Onglet Parcours (tunnel de conversion, sans traceur) ────────────────────
+//
+// Les étapes sont reconstituées côté serveur à partir d'événements reliés par
+// analysis_id. Aucun cookie, aucun identifiant navigateur, aucune IP : la
+// source est une simple étiquette de campagne, affichée EN AGRÉGÉ seulement.
+
+const ETAPES_TUNNEL = [
+  ['analyse_lancee', 'Analyse lancée'],
+  ['verdict_affiche', 'Verdict affiché'],
+  ['clic_pass', 'Clic Pass'],
+  ['paiement_ouvert', 'Paiement ouvert'],
+  ['paiement_reussi', 'Paiement réussi'],
+  ['clic_inspection', 'Clic inspection'],
+  ['liste_attente', "Liste d'attente"],
+  ['clic_partenaire', 'Clic partenaire'],
+  ['optin_rapport', 'Opt-in rapport'],
+  ['retour_issue', "Retour d'issue"],
+]
+
+function dureeLisible(secondes) {
+  if (secondes == null) return '—'
+  const s = Number(secondes)
+  if (s < 3600) return `${Math.round(s / 60)} min`
+  if (s < 86400) return `${(s / 3600).toFixed(1)} h`
+  return `${(s / 86400).toFixed(1)} j`
+}
+
+function ParcoursTab() {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+  const [semaines, setSemaines] = useState(12)
+
+  const charger = useCallback(async () => {
+    setError(null)
+    const r = await adminFetch(`admin-parcours?semaines=${semaines}`)
+    if (r?.error) setError(r.error)
+    else setData(r)
+  }, [semaines])
+  useEffect(() => { charger() }, [charger])
+
+  if (error) return <ErrorBox msg={error} />
+  if (!data) return <Spinner label="Chargement du parcours..." />
+
+  const total = data.total ?? {}
+  const base = total.analyse_lancee || 0
+  const pct = (n) => (base > 0 ? Math.round((n / base) * 1000) / 10 : 0)
+
+  // Agrégation par source, toutes semaines confondues.
+  const parSource = new Map()
+  for (const l of (data.semaines ?? [])) {
+    if (!parSource.has(l.src)) parSource.set(l.src, Object.fromEntries(ETAPES_TUNNEL.map(([k]) => [k, 0])))
+    const acc = parSource.get(l.src)
+    for (const [k] of ETAPES_TUNNEL) acc[k] += l[k] || 0
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>Parcours</div>
+          <div style={styles.pageSub}>
+            Sans cookie ni traceur : étapes reconstituées côté serveur, reliées à l'analyse.
+            Analyses d'éval exclues.
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <select value={semaines} onChange={e => setSemaines(Number(e.target.value))} style={styles.input}>
+            {[4, 8, 12, 26, 52].map(n => <option key={n} value={n}>{n} semaines</option>)}
+          </select>
+          <button onClick={charger} style={styles.refreshBtn}>↻ Actualiser</button>
+        </div>
+      </div>
+
+      <div style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '18px 20px', marginBottom: 18 }}>
+        <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 12 }}>
+          Tunnel — {base} analyse{base > 1 ? 's' : ''} sur la période
+        </div>
+        {ETAPES_TUNNEL.map(([cle, label]) => {
+          const n = total[cle] || 0
+          return (
+            <div key={cle} style={{ marginBottom: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', marginBottom: 3 }}>
+                <span style={{ color: '#374151' }}>{label}</span>
+                <span style={{ color: '#0F1B2D', fontWeight: 700 }}>{n} · {pct(n)} %</span>
+              </div>
+              <div style={{ height: 6, background: 'rgba(0,0,0,0.06)', borderRadius: 3, overflow: 'hidden' }}>
+                <div style={{ width: `${pct(n)}%`, height: '100%', background: cle === 'paiement_reussi' ? '#16A34A' : '#FF4D00' }} />
+              </div>
+            </div>
+          )
+        })}
+        <div style={{ marginTop: 14, fontSize: '0.8125rem', color: '#6B7280' }}>
+          Délai médian analyse → paiement : <strong style={{ color: '#0F1B2D' }}>
+            {dureeLisible(data.delai_median_paiement_s)}
+          </strong>
+        </div>
+      </div>
+
+      <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 8 }}>Par source</div>
+      {parSource.size === 0 && <EmptyState title="Aucune analyse sur la période" sub="Les liens étiquetés (?src=…) apparaîtront ici." />}
+      {[...parSource.entries()].sort((a, b) => b[1].analyse_lancee - a[1].analyse_lancee).map(([src, v]) => (
+        <div key={src} style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '12px 16px', marginBottom: 8 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{src}</span>
+            <span style={{ fontSize: '0.8125rem', color: '#374151' }}>
+              {v.analyse_lancee} analyse{v.analyse_lancee > 1 ? 's' : ''} ·
+              {' '}{v.clic_pass} clic Pass · {v.paiement_reussi} payé{v.paiement_reussi > 1 ? 's' : ''} ·
+              {' '}{v.clic_inspection} clic inspection
+            </span>
+          </div>
+        </div>
+      ))}
+
+      <div style={{ fontWeight: 800, color: '#0F1B2D', margin: '18px 0 8px' }}>Par semaine</div>
+      <table style={styles.table}>
+        <thead style={styles.thead}>
+          <tr>
+            <th style={styles.th}>Semaine</th><th style={styles.th}>Source</th>
+            {ETAPES_TUNNEL.slice(0, 5).map(([k, l]) => <th key={k} style={styles.th}>{l}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {(data.semaines ?? []).slice(0, 60).map((l, i) => (
+            <tr key={i}>
+              <td style={styles.td}>{l.semaine}</td>
+              <td style={styles.td}>{l.src}</td>
+              {ETAPES_TUNNEL.slice(0, 5).map(([k]) => <td key={k} style={styles.td}>{l[k]}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+// ─── Onglet API ──────────────────────────────────────────────────────────────
+
+function ApiTab() {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
+  const [nom, setNom] = useState('')
+  const [contact, setContact] = useState('')
+  const [quota, setQuota] = useState(100)
+  const [cleNeuve, setCleNeuve] = useState(null)
+
+  const charger = useCallback(async () => {
+    setError(null)
+    const r = await adminFetch('admin-api')
+    if (r?.error) setError(r.error)
+    else setData(r)
+  }, [])
+  useEffect(() => { charger() }, [charger])
+
+  const creer = async (e) => {
+    e.preventDefault()
+    const r = await adminFetch('admin-api', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'creer', nom, contact, quota_mensuel: quota }),
+    })
+    if (r?.error) { setError(r.error); return }
+    setCleNeuve(r)
+    setNom(''); setContact('')
+    charger()
+  }
+
+  const revoquer = async (id, nomClient) => {
+    // Irréversible : la clé cesse de fonctionner immédiatement.
+    if (!window.confirm(`Révoquer la clé de « ${nomClient} » ? Elle cessera de fonctionner immédiatement.`)) return
+    await adminFetch('admin-api', { method: 'POST', body: JSON.stringify({ action: 'revoquer', id }) })
+    charger()
+  }
+
+  const exporter = () => {
+    const parClient = new Map((data?.clients ?? []).map(c => [c.id, c]))
+    const lignes = [
+      ['client', 'contact', 'mois', 'appels', 'quota_mensuel', 'actif', 'dernier_appel'].join(';'),
+      ...(data?.usage ?? []).map(u => {
+        const c = parClient.get(u.client_id)
+        return [c?.nom ?? u.client_id, c?.contact ?? '', u.mois, u.appels,
+          c?.quota_mensuel ?? '', c?.actif ? 'oui' : 'non', u.dernier_appel ?? ''].map(csvEsc).join(';')
+      }),
+    ]
+    telechargerCsv('api-usage', lignes)
+  }
+
+  if (error) return <ErrorBox msg={error} />
+  if (!data) return <Spinner label="Chargement de l'API..." />
+
+  const usageMois = new Map(
+    (data.usage ?? []).filter(u => u.mois === data.mois_courant).map(u => [u.client_id, u]))
+  const jourCourant = (data.jours ?? [])[0]
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <div>
+          <div style={styles.pageTitle}>API de scoring</div>
+          <div style={styles.pageSub}>
+            Plafond journalier global : {jourCourant?.appels ?? 0} / {data.plafond_jour_global} appels aujourd'hui.
+            Aucune facturation automatique — tarif sur devis.
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={exporter} style={styles.refreshBtn} disabled={(data.usage ?? []).length === 0}>Export CSV</button>
+          <button onClick={charger} style={styles.refreshBtn}>↻ Actualiser</button>
+        </div>
+      </div>
+
+      {cleNeuve && (
+        <div style={{ background: '#FFF4EE', border: '1.5px solid #FF4D00', borderRadius: 12, padding: '16px 18px', marginBottom: 14 }}>
+          <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 6 }}>
+            Clé de « {cleNeuve.client?.nom} » — affichée une seule fois
+          </div>
+          <code style={{ display: 'block', background: '#fff', padding: '10px 12px', borderRadius: 8, fontSize: '0.8125rem', wordBreak: 'break-all' }}>
+            {cleNeuve.cle}
+          </code>
+          <div style={{ fontSize: '0.8125rem', color: '#B45309', marginTop: 8 }}>{cleNeuve.avertissement}</div>
+          <button onClick={() => setCleNeuve(null)} style={{ ...styles.refreshBtn, marginTop: 10 }}>J'ai noté la clé</button>
+        </div>
+      )}
+
+      {(data.clients ?? []).length === 0 && (
+        <EmptyState title="Aucun client d'API" sub="Créez une clé ci-dessous. Elle ne sera affichée qu'une fois." />
+      )}
+
+      {(data.clients ?? []).map(c => {
+        const u = usageMois.get(c.id)
+        const appels = u?.appels ?? 0
+        return (
+          <div key={c.id} style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '14px 16px', marginBottom: 10, display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ flex: '1 1 260px' }}>
+              <span style={{ fontWeight: 700, color: '#0F1B2D', fontSize: '0.9375rem' }}>{c.nom}</span>
+              <span style={{ marginLeft: 8, fontSize: '0.6875rem', fontWeight: 700, padding: '2px 8px', borderRadius: 100,
+                background: c.actif ? 'rgba(22,163,74,0.12)' : 'rgba(0,0,0,0.06)',
+                color: c.actif ? '#16A34A' : '#6B7280' }}>
+                {c.actif ? 'ACTIVE' : 'RÉVOQUÉE'}
+              </span>
+              <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: 2 }}>
+                {c.cle_apercu} · créée le {formatDate(c.created_at)}
+                {c.contact ? ` · ${c.contact}` : ''}
+                {c.revoque_le ? ` · révoquée le ${formatDate(c.revoque_le)}` : ''}
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: appels >= c.quota_mensuel ? '#DC2626' : '#0F1B2D' }}>
+                {appels} / {c.quota_mensuel}
+              </div>
+              <div style={{ fontSize: '0.6875rem', color: '#9CA3AF' }}>appels ce mois-ci</div>
+              {c.actif && (
+                <button onClick={() => revoquer(c.id, c.nom)} style={{ ...styles.refreshBtn, marginTop: 8 }}>Révoquer</button>
+              )}
+            </div>
+          </div>
+        )
+      })}
+
+      <form onSubmit={creer} style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '18px 20px', marginTop: 18 }}>
+        <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 4 }}>Créer une clé</div>
+        <div style={{ fontSize: '0.8125rem', color: '#6B7280', marginBottom: 14, lineHeight: 1.6 }}>
+          La clé n'est affichée qu'une fois, à sa création : nous n'en conservons qu'une empreinte
+          salée et ne pourrons pas vous la rappeler. En cas de perte, il faut en créer une autre.
+        </div>
+        <div style={{ display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))' }}>
+          <input style={styles.input} placeholder="Nom du client" value={nom} required maxLength={80}
+            onChange={e => setNom(e.target.value)} />
+          <input style={styles.input} placeholder="Contact (email)" value={contact} maxLength={160}
+            onChange={e => setContact(e.target.value)} />
+          <input style={styles.input} type="number" min="0" max="100000" value={quota}
+            onChange={e => setQuota(Number(e.target.value))} aria-label="Quota mensuel" />
+        </div>
+        <button type="submit" style={{ ...styles.refreshBtn, marginTop: 12 }}>Créer la clé</button>
+      </form>
+    </div>
+  )
+}
+
 // ─── Onglet Coûts de réparation (négociation chiffrée) ────────────────────────
 
 function fileEnDataUrl(file) {
@@ -821,6 +1098,8 @@ export default function AdminDashboard() {
   const navItems = [
     { key: 'passes',       label: 'Pass achat' },
     { key: 'inspecteurs',  label: 'Inspecteurs' },
+    { key: 'parcours',     label: 'Parcours' },
+    { key: 'api',          label: 'API' },
     { key: 'partenaires',  label: 'Partenaires' },
     { key: 'retours',      label: 'Retours' },
     { key: 'couts',        label: 'Coûts réparation' },
@@ -913,6 +1192,8 @@ export default function AdminDashboard() {
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
             {tab === 'passes'       && <PassesTab />}
             {tab === 'inspecteurs'  && <InspecteursTab />}
+            {tab === 'parcours'     && <ParcoursTab />}
+            {tab === 'api'          && <ApiTab />}
             {tab === 'partenaires'  && <PartenairesTab />}
             {tab === 'retours'      && <RetoursTab />}
             {tab === 'couts'        && <CoutsTab />}

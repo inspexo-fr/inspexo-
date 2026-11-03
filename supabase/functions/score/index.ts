@@ -32,6 +32,7 @@ import {
 import { dedupliquerCatalogue } from "../_shared/dedupPannes.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
+import { estAppelApi } from "../_shared/apiClients.ts";
 import {
   boiteDe,
   fondreReleves,
@@ -827,6 +828,15 @@ serve(async (req: Request) => {
     const isInternal = !!forwardedIpHash &&
       req.headers.get("Authorization") === `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`;
     const isEval = await evalSecretMatches(req);
+    // SPRINT 11 — Appel venu de la fonction `api-analyses`. Il échappe à la
+    // limite de 5 analyses / 24 h par IP et au captcha, parce qu'il porte ses
+    // PROPRES quotas (par clé et globaux, décidés avant d'arriver ici).
+    // ⚠️ `estAppelApi` exige LES DEUX FACTEURS : la clé de service role ET
+    // l'en-tête. L'en-tête seul ne vaut rien — il est trivial à ajouter depuis
+    // un navigateur, et il ouvrirait le service gratuit à volonté.
+    // Vérifié hors ligne par tests/api-clients.test.mjs.
+    const isApi = estAppelApi(req.headers, SUPABASE_SERVICE_ROLE_KEY);
+    const apiClientId = isApi ? (req.headers.get("x-api-client") ?? "").slice(0, 40) : null;
     const ipHash = isInternal ? forwardedIpHash! : await sha256Hex(IP_HASH_SALT + clientIp(req));
     // Pass achat (sprint 7) : un utilisateur connecté avec Pass actif n'est
     // soumis ni à la limite de 5 analyses/24 h ni au captcha, et reçoit la
@@ -862,6 +872,11 @@ serve(async (req: Request) => {
     const inputHash = await sha256Hex(
       `${normaliserTexte(text)}|${sourceUrl ?? ""}|img:${imagesCount}|cmp:${comparables.length + comparablesStructures.length}|usage:${usage ?? ""}`,
     );
+    // Étiquette de campagne (?src=) : une étiquette, rien d'autre. Format
+    // strictement contraint, aucune donnée libre, aucun identifiant.
+    const srcCampagne = typeof body.src === "string" && /^[a-z0-9][a-z0-9-]{0,39}$/.test(body.src.trim())
+      ? body.src.trim()
+      : null;
     const sansCache = body.no_cache === true && isEval;
     // Forçage du modèle : réservé à l'éval (validation du modèle de secours).
     const forceModel = isEval && typeof body.force_model === "string" &&
@@ -926,7 +941,7 @@ serve(async (req: Request) => {
     // Des requêtes parallèles se comptent donc mutuellement.
     await admin.from("events").insert({
       name: "score_started",
-      ip_hash: isEval ? null : ipHash,
+      ip_hash: isEval || isApi ? null : ipHash,
       props_json: {
         images_count: images.length,
         comparables_count: comparables.length,
@@ -934,10 +949,14 @@ serve(async (req: Request) => {
         ...(isInternal ? { via: "intake" } : {}),
         ...(isEval ? { eval: true } : {}),
         ...(passActif ? { pass: true } : {}),
+        // Trafic API : tracé pour la facturation et pour pouvoir le séparer
+        // du public dans les mesures. Aucune empreinte d'IP n'est ajoutée.
+        ...(isApi ? { via: "api", api_client: apiClientId } : {}),
+        ...(srcCampagne ? { src: srcCampagne } : {}),
       },
     });
 
-    if (!isEval && !passActif) {
+    if (!isEval && !passActif && !isApi) {
       const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
       const { count, error: countError } = await admin
         .from("events")
@@ -1129,6 +1148,7 @@ serve(async (req: Request) => {
           is_eval: isEval,
           user_id: null,
           input_hash: inputHash,
+          src: srcCampagne,
           source_url: sourceUrl,
         })
         .select("id")
@@ -2733,6 +2753,7 @@ serve(async (req: Request) => {
           is_eval: isEval,
           user_id: null,
           input_hash: inputHash,
+          src: srcCampagne,
           source_url: sourceUrl,
         })
         .select("id")
@@ -2816,6 +2837,9 @@ serve(async (req: Request) => {
         time_to_first_content_ms: timeToFirstContentMs,
         time_to_final_ms: Date.now() - startedAt,
         progressive: analysisId != null,
+        // Trafic API tracé jusqu'au bout : sans cela, le coût d'un appel API
+        // serait indiscernable du trafic public dans les mesures de dépense.
+        ...(isApi ? { via: "api", api_client: apiClientId } : {}),
         model: [...modelesUtilises].join("+") || MODEL,
         verdict,
         score,
@@ -2966,6 +2990,7 @@ serve(async (req: Request) => {
           is_eval: isEval,
           user_id: null,
           input_hash: inputHash,
+          src: srcCampagne,
           source_url: sourceUrl,
         })
         .select("id")

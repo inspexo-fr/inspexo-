@@ -18,7 +18,7 @@ import { familleParCode } from '../data/famillesMoteur'
 import { LIBELLES_REGION, SEUIL_FOURCHETTE } from '../data/marche'
 import {
   getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
-  trackEvent, dossierAdd, envoyerLienMagique,
+  trackEvent, dossierAdd, envoyerLienMagique, marquerClicPass,
 } from '../lib/scoreApi'
 
 const VERDICT_LABELS = { vert: 'Feu vert', orange: 'Prudence', rouge: 'Signaux rouges' }
@@ -185,7 +185,14 @@ function PassCTA({ analysisId }) {
   const [open, setOpen] = useState(false)
   if (!open) {
     return (
-      <button type="button" className="btn-ghost btn-sm btn-auto" onClick={() => setOpen(true)}>
+      <button
+        type="button" className="btn-ghost btn-sm btn-auto"
+        onClick={() => {
+          setOpen(true)
+          // Étape du tunnel : reliée à l'analyse, sans aucun identifiant.
+          marquerClicPass(analysisId)
+        }}
+      >
         Être prévenu du lancement
       </button>
     )

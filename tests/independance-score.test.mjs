@@ -17,7 +17,8 @@
 //     éteints et partenaires allumés, sur une batterie de profils. Elle
 //     documente l'invariant et attrape un état global caché.
 import { readFileSync } from 'node:fs'
-import { calculerAxes } from '../supabase/functions/_shared/bareme.ts'
+import { BAREME_VERSION, calculerAxes } from '../supabase/functions/_shared/bareme.ts'
+import { estAppelApi } from '../supabase/functions/_shared/apiClients.ts'
 import {
   partenairesAffichables, peutActiver, verifierTextePartenaire,
 } from '../supabase/functions/_shared/partenaires.ts'
@@ -64,7 +65,19 @@ const INTERDITS = [
   { terme: 'la route de redirection /go/', re: /["'`]\/go\/|inspexo\.io\/go/i },
   { terme: 'un import du module partenaires', re: /_shared\/partenaires/i },
   { terme: 'la table des retours d’issue', re: /from\s*\(\s*["'`]retours|public\.retours|retour_token|submit_retour/i },
+  // SPRINT 11 — un client d'API ne doit influencer NI le calcul, NI le
+  // catalogue, NI la critique. Le drapeau de quota (`isApi`) est admis dans
+  // score/index.ts, mais rien qui lise la table des clients ou leur quota.
+  { terme: 'la table api_clients', re: /from\s*\(\s*["'`]api_clients|public\.api_clients/i },
+  { terme: 'un quota d’API', re: /api_consommer|api_rembourser|quota_mensuel|api_usage/i },
+  { terme: 'la table des contacts pro', re: /leads_pro/i },
 ]
+
+// `score/index.ts` porte LÉGITIMEMENT le drapeau de quota API : il décide
+// quel compteur s'applique, jamais ce que vaut le verdict. On l'exclut donc
+// des deux motifs qui le viseraient à tort, et on vérifie séparément que ce
+// drapeau exige bien les deux facteurs.
+const TOLERE_DANS_SCORE = new Set(['le mot partenaire'])
 
 for (const fichier of CHEMIN_NOTATION) {
   let source
@@ -74,7 +87,10 @@ for (const fichier of CHEMIN_NOTATION) {
     ok(false, `${fichier} : fichier introuvable — la liste du test est périmée`)
     continue
   }
-  const trouves = INTERDITS.filter((i) => i.re.test(source)).map((i) => i.terme)
+  const trouves = INTERDITS
+    .filter((i) => i.re.test(source))
+    .map((i) => i.terme)
+    .filter((t) => !(fichier.endsWith('score/index.ts') && TOLERE_DANS_SCORE.has(t)))
   ok(trouves.length === 0, `${fichier} ne cite aucun partenaire${
     trouves.length ? ` (trouvé : ${trouves.join(', ')})` : ''}`)
 }
@@ -179,6 +195,49 @@ ok(new Set(eteints.map((s) => s.split(':')[0])).size >= 3,
   ok(JSON.stringify(normal) === JSON.stringify(pollue),
     'des champs de partenaire injectés dans les faits ne changent rien au verdict')
 }
+
+// ---------------------------------------------------------------------------
+titre('3. Le drapeau de quota API n’ouvre pas le service gratuit')
+// Il décide QUEL COMPTEUR s'applique, jamais ce que vaut le verdict. Et il
+// exige les deux facteurs : sans la clé de service role, un appelant qui
+// ajoute l'en-tête depuis son navigateur reste plafonné à 5 analyses par
+// 24 heures et passe par le captcha.
+{
+  const h = (o) => ({
+    get: (n) => {
+      const k = Object.keys(o).find(x => x.toLowerCase() === String(n).toLowerCase())
+      return k ? o[k] : null
+    },
+  })
+  const SRK = 'cle-de-service-role'
+  ok(!estAppelApi(h({ 'x-api-client': 'c1' }), SRK),
+    'en-tête seul : l’appel reste PUBLIC (plafond 5/24 h + captcha)')
+  ok(!estAppelApi(h({ 'x-api-client': 'c1', authorization: 'Bearer cle-anon-publique' }), SRK),
+    'en-tête + clé anon publique : l’appel reste PUBLIC')
+  ok(estAppelApi(h({ 'x-api-client': 'c1', authorization: `Bearer ${SRK}` }), SRK),
+    'les deux facteurs : appel API reconnu')
+
+  const src = readFileSync(new URL('../supabase/functions/score/index.ts', import.meta.url), 'utf8')
+  ok(/estAppelApi\(req\.headers,\s*SUPABASE_SERVICE_ROLE_KEY\)/.test(src),
+    'score délègue la décision au prédicat testé, sans la réécrire sur place')
+  // L'en-tête ne doit jamais être lu SANS que le drapeau ait déjà tranché :
+  // toute ligne qui le mentionne doit aussi mentionner `isApi`.
+  const lignesEntete = src.split('\n').filter((l) => l.includes('x-api-client'))
+  ok(lignesEntete.length > 0 && lignesEntete.every((l) => /\bisApi\b/.test(l)),
+    'l’en-tête n’est jamais lu hors du drapeau à deux facteurs',
+  )
+  ok(/!isEval && !passActif && !isApi/.test(src),
+    'le drapeau n’agit que sur le plafond, à l’endroit du rate limit')
+  // Le drapeau ne doit toucher à RIEN d'autre que des compteurs.
+  const lignesIsApi = src.split('\n').filter((l) => /\bisApi\b/.test(l))
+  ok(lignesIsApi.length > 0 && lignesIsApi.length <= 6,
+    `le drapeau n’apparaît qu’à quelques endroits (${lignesIsApi.length})`)
+  ok(!lignesIsApi.some((l) => /score|verdict|axes|bareme|panne|gravite/i.test(l)),
+    'aucune ligne portant le drapeau ne touche au score, au verdict ni aux pannes')
+}
+
+titre('4. Version du barème')
+ok(/^\d+\.\d+$/.test(BAREME_VERSION), `BAREME_VERSION est une version lisible (${BAREME_VERSION})`)
 
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${total - ko}/${total} contrôles passés`)
 process.exit(ko === 0 ? 0 : 1)
