@@ -793,6 +793,8 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 
 0. **Agents et prod** : aucun agent (subagent, workflow d'audit, script de test) ne teste JAMAIS contre la base Supabase de production — sonde, injection, lecture ou écriture de table incluses. Tout test de ce type se fait sur `supabase start` en local ou sur une branche de preview Supabase. Seule exception : `npm run eval`, qui passe exclusivement par la whitelist d'éval (header `x-eval-secret`).
 
+0 bis. **Fichiers personnels d'Utku : JAMAIS ouverts.** N'ouvre, ne lis, ne copie et n'envoie aucun fichier situé hors du dépôt — `~/Documents`, `~/Downloads`, `~/Desktop`, iCloud Drive, et tout le reste du disque. Cela vaut aussi pour en relever une simple métadonnée (taille, nombre de pages, nombre de caractères) : « je n'ai pas affiché le contenu » n'est pas une permission de l'avoir lu. Pour éprouver un format ou une bibliothèque, **fabrique le fichier d'essai** (cf. le PDF témoin du sprint 13, `scripts/`-style, généré à la demande) ou utilise **uniquement ce qu'Utku a déposé dans le dépôt**. Un fichier déposé dans le dépôt est une autorisation ; un fichier trouvé sur le disque n'en est pas une. Seule exception : un chemin qu'Utku indique explicitement dans sa demande.
+
 1. **Variables d'environnement** : Clés API dans `.env.local` uniquement, JAMAIS dans le code
 2. **Supabase RLS** : Row Level Security sur TOUTES les tables
 3. **Logique sensible côté serveur** : Calcul de prix, webhooks Stripe, appels API Anthropic → Supabase Edge Functions ou Vercel Serverless, JAMAIS côté client

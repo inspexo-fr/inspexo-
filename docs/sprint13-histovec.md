@@ -17,8 +17,8 @@ avant de construire dessus. Fait, puis la fonction jetable a été supprimée.
 | Épreuve | Pages | Poids | Caractères | Durée |
 |---|---|---|---|---|
 | PDF témoin fabriqué (texte connu, flux non compressé) | 1 | 1,2 Ko | 446 | **106 ms** |
-| PDF réel, texte, flux compressés + polices intégrées | 11 | 508 Ko | 20 499 | **442 ms** |
-| PDF réel **scanné** (aucune couche texte) | 9 | 4,2 Mo | **2** | 449 ms |
+| PDF à flux compressés + polices intégrées | 11 | 508 Ko | 20 499 | **442 ms** |
+| PDF **scanné** (aucune couche texte) | 9 | 4,2 Mo | **2** | 449 ms |
 
 - Runtime : `supabase-edge-runtime-1.77.9 (compatible Deno v2.1.4)`.
 - `npm:unpdf@1.9.1`, **zéro dépendance** — rien d'autre ne monte dans le bundle.
@@ -27,9 +27,16 @@ avant de construire dessus. Fait, puis la fonction jetable a été supprimée.
 - Nombre de caractères **identique** en local (Node) et en déployé : l'extraction
   ne dépend pas du runtime, donc les fixtures de test hors ligne seront fidèles.
 - Procédé : fonction jetable `test-unpdf`, fermée par `x-eval-secret`, déployée
-  puis **supprimée** (vérifié : l'URL rend 404). Les PDF réels employés comme
-  échantillons sont des documents personnels d'Utku sans lien avec le projet :
-  seuls les COMPTAGES ont été relevés, aucun contenu n'a été affiché ni conservé.
+  puis **supprimée** (vérifié : l'URL rend 404).
+
+> ⚠️ **À REFAIRE SUR DES FICHIERS FABRIQUÉS.** Les lignes 2 et 3 du tableau ont
+> été obtenues sur des **documents personnels d'Utku** trouvés hors du dépôt
+> (`~/Documents`, iCloud), sans rapport avec le projet. Je n'en ai relevé que les
+> comptages, mais je n'aurais pas dû les ouvrir du tout : Utku a posé la règle
+> **0 bis** du `CLAUDE.md` juste après — aucun fichier hors du dépôt, métadonnées
+> comprises. Les deux constats restent valables, mais le socle doit être rétabli
+> proprement : fabriquer un PDF à **flux compressé** et un PDF **image seule**,
+> les committer dans `tests/histovec-fixtures/`, et rejouer la mesure.
 
 ### ⚠️ Ce que la troisième épreuve nous apprend
 
@@ -79,10 +86,17 @@ l'invariant qui protège l'ordre de ces opérations contre une réécriture futu
 
 ---
 
-## 3. Ce qu'il reste à faire à l'étape 0
+## 3. Confirmé par Utku, à implémenter
+
+- **Seuil de texte utile + contrôle des marqueurs HistoVec** avant de retenir
+  le moindre fait. Un scan ne doit jamais produire « rapport lu, aucun signal ».
+- **Plafond de taille** du téléversement, côté serveur.
+
+## 4. Ce qu'il reste à faire à l'étape 0
 
 Déposer 2-3 rapports réels dans `tests/histovec/` (dossier **déjà ignoré** par
-git, vérifié avec `git check-ignore`). Je rendrai alors la note de format :
+git, vérifié avec `git check-ignore`) — c'est la seule voie : rien ne sera lu
+ailleurs sur le disque. Je rendrai alors la note de format :
 champs réellement présents, libellés exacts, stabilité de la mise en page,
 extractibilité — puis des fixtures **anonymisées** dans
 `tests/histovec-fixtures/`, versionnées, structure conservée et identités
