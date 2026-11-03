@@ -18,6 +18,10 @@
       "destination": "/api/og?id=:id"
     },
     {
+      "source": "/go/:slug",
+      "destination": "/api/go"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }

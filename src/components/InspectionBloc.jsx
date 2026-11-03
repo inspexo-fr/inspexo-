@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import EmailCapture from './EmailCapture'
+import DemandeZone from './DemandeZone'
 import { supabase } from '../lib/supabaseClient'
 import { commanderInspection, getInspectionConfig, mesInspections } from '../lib/inspectionApi'
 import { euros } from '../data/charte'
@@ -9,7 +9,12 @@ import { euros } from '../data/charte'
 // Le service n'apparaît que si le SERVEUR dit qu'il est ouvert : médiateur
 // désigné, clé de paiement en place, et au moins un inspecteur validé dont
 // le compte Connect accepte les versements. Hors zone couverte : liste
-// d'attente par email, jamais de commande.
+// d'attente par email ET code postal (sprint 10 — c'est elle qui dessine la
+// carte de la demande et décide du prochain département ouvert), jamais de
+// commande.
+//
+// `nu` : rendu sans son propre cadre ni son titre, quand le bloc est imbriqué
+// dans « Et maintenant ? » (sprint 10) qui porte déjà les deux.
 
 /** Créneaux proposés : demain et après-demain, matin ou après-midi — dans la
  *  fenêtre de 48 h que le produit garantit. */
@@ -32,7 +37,7 @@ function creneauxProposes() {
   return out
 }
 
-export default function InspectionBloc({ analysisId, vehicule }) {
+export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
   const [config, setConfig] = useState(undefined) // undefined = chargement
   const [user, setUser] = useState(null)
   const [deja, setDeja] = useState(null) // inspection déjà commandée pour cette analyse
@@ -75,11 +80,16 @@ export default function InspectionBloc({ analysisId, vehicule }) {
 
   if (config === undefined) return null
 
+  /** Cadre du bloc : absent quand il est imbriqué (`nu`). */
+  const Cadre = ({ titre, children }) =>
+    nu
+      ? <div>{children}</div>
+      : <div className="doc-sec"><p className="eyebrow">{titre}</p>{children}</div>
+
   // ---- Une inspection existe déjà pour cette analyse ----
   if (deja) {
     return (
-      <div className="doc-sec">
-        <p className="eyebrow">Inspection sur place</p>
+      <Cadre titre="Inspection sur place">
         <p style={{ fontSize: 14, lineHeight: 1.7, marginTop: 8 }}>
           Inspection commandée{deja.ref_num ? ` (dossier n° INS-${String(deja.ref_num).padStart(5, '0')})` : ''} —{' '}
           <strong>{{
@@ -96,27 +106,24 @@ export default function InspectionBloc({ analysisId, vehicule }) {
         <p style={{ fontSize: 14, marginTop: 8 }}>
           <Link to="/dossier">Suivre dans mon dossier d'achat →</Link>
         </p>
-      </div>
+      </Cadre>
     )
   }
 
   // ---- Service pas encore ouvert : liste d'attente ----
   if (!config?.ouvert) {
     return (
-      <div className="doc-sec">
-        <p className="eyebrow">Inspection sur place</p>
+      <Cadre titre="Inspection sur place">
         <p style={{ fontSize: 14, lineHeight: 1.7, marginTop: 8 }}>
           Faire examiner la voiture par un professionnel indépendant avant d'acheter, sur place,
           sous 48 heures : nous constituons le réseau d'inspecteurs, à commencer par {config?.zone_libelle || 'Toulouse et la Haute-Garonne'}.
           L'inspecteur est payé par vous, jamais par le vendeur.
         </p>
-        <EmailCapture
+        <DemandeZone
           title="Être prévenu quand l'inspection ouvre près de chez moi"
-          buttonLabel="Être prévenu"
-          source="expert_waitlist"
           analysisId={analysisId}
         />
-      </div>
+      </Cadre>
     )
   }
 
@@ -144,8 +151,7 @@ export default function InspectionBloc({ analysisId, vehicule }) {
   }
 
   return (
-    <div className="doc-sec">
-      <p className="eyebrow">Faire inspecter cette voiture</p>
+    <Cadre titre="Faire inspecter cette voiture">
       <p style={{ fontSize: 14, lineHeight: 1.7, marginTop: 8 }}>
         Un professionnel indépendant se déplace, examine {vehicule || 'le véhicule'} point par point
         et vous remet un rapport photo. <strong>{euros(config.prix_cents)} TTC</strong>, créneau
@@ -168,11 +174,10 @@ export default function InspectionBloc({ analysisId, vehicule }) {
             Aucun inspecteur sur le département {zone.departement} pour l'instant — nous commençons
             par {config.zone_libelle}.
           </p>
-          <EmailCapture
+          <DemandeZone
             title="Me prévenir quand un inspecteur couvre mon secteur"
-            buttonLabel="Être prévenu"
-            source="expert_waitlist"
             analysisId={analysisId}
+            codePostalInitial={cp}
           />
         </div>
       )}
@@ -240,6 +245,6 @@ export default function InspectionBloc({ analysisId, vehicule }) {
           </p>
         </form>
       )}
-    </div>
+    </Cadre>
   )
 }

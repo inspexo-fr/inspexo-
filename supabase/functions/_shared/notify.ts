@@ -56,6 +56,79 @@ export async function signatureDesinscription(userId: string): Promise<string | 
   return Array.from(new Uint8Array(sig)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+// ---------- Retour d'issue par lien SIGNÉ, sans compte (sprint 10) ----------
+// Trois besoins, un seul secret (UNSUB_SECRET) et trois usages distincts
+// préfixés, pour qu'une signature d'un usage ne vaille jamais pour un autre.
+
+/** Empreinte d'une adresse email : sert à dédoublonner les invitations et à
+ *  enregistrer une opposition, sans conserver l'adresse une seconde fois. */
+export async function empreinteEmail(email: string): Promise<string | null> {
+  if (!UNSUB_SECRET) return null;
+  const data = new TextEncoder().encode(`email:${UNSUB_SECRET}:${email.trim().toLowerCase()}`);
+  const d = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(d)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function hmac(message: string): Promise<string | null> {
+  if (!UNSUB_SECRET) return null;
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(UNSUB_SECRET),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
+  return Array.from(new Uint8Array(sig)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Jeton du lien de retour d'issue : lie une analyse à UN destinataire. */
+export async function signatureRetour(analysisId: string, emailHash: string): Promise<string | null> {
+  return await hmac(`retour:${analysisId}:${emailHash}`);
+}
+
+/** Empreinte du jeton, seule forme stockée en base (`retours.token_hash`). */
+export async function empreinteJeton(token: string): Promise<string> {
+  const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`jeton:${token}`));
+  return Array.from(new Uint8Array(d)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Signature de désinscription par EMAIL (destinataire sans compte). */
+export async function signatureDesinscriptionEmail(emailHash: string): Promise<string | null> {
+  return await hmac(`desinscription-email:${emailHash}`);
+}
+
+export async function lienDesinscriptionEmail(emailHash: string): Promise<string | null> {
+  const t = await signatureDesinscriptionEmail(emailHash);
+  return t ? `${SUPABASE_URL_PUB}/functions/v1/desinscription?e=${emailHash}&t=${t}` : null;
+}
+
+/** Invitation au retour d'issue — lien signé, aucun compte requis.
+ *  Une seule invitation par dossier et par email : aucune relance n'existe
+ *  dans le code, c'est une garantie, pas une politique d'envoi. */
+export async function emailRetourSigne(
+  to: string,
+  vehicule: string,
+  analysisId: string,
+  token: string,
+  emailHash: string,
+): Promise<boolean> {
+  const lienUnsub = await lienDesinscriptionEmail(emailHash);
+  const lien = `https://www.inspexo.io/retour/${analysisId}?t=${token}`;
+  return await sendMail(
+    to,
+    `Votre ${vehicule} — qu'est-ce que ça a donné ?`,
+    `<p>Il y a trois semaines, vous avez analysé une ${vehicule} avec Inspexo.</p>
+     <p>Trois questions, une minute, sans créer de compte : avez-vous acheté ?
+     à quel prix ? et les points que nous avions signalés se sont-ils confirmés ?</p>
+     <p>Vos réponses servent à mesurer — et publier — la justesse de nos analyses.
+     C'est la seule fois où nous vous écrirons à ce sujet.</p>
+     <p><a href="${lien}">Répondre en une minute</a></p>
+     ${piedDossier(lienUnsub)}`,
+    enTetesDesinscription(lienUnsub),
+  );
+}
+
 async function lienDesinscription(userId: string): Promise<string | null> {
   const t = await signatureDesinscription(userId);
   return t ? `${SUPABASE_URL_PUB}/functions/v1/desinscription?u=${userId}&t=${t}` : null;
@@ -209,24 +282,10 @@ export async function emailNouveauRappel(
   );
 }
 
-/** J+30 après « acheté » : demande de retour d'issue (pannes confirmées, prix payé). */
-export async function emailRetourIssue(
-  to: string,
-  vehicule: string,
-  userId: string,
-): Promise<boolean> {
-  const lienUnsub = await lienDesinscription(userId);
-  return await sendMail(
-    to,
-    `Un mois après votre achat — comment se comporte votre ${vehicule} ?`,
-    `<p>Il y a un mois, vous avez marqué « acheté » sur une analyse Inspexo.</p>
-     <p>Deux minutes pour nous dire ce qu'il en est réellement (pannes confirmées ou non, prix payé) :
-     votre retour sert à mesurer — et publier — la justesse de nos analyses.</p>
-     <p><a href="https://www.inspexo.io/dossier">Laisser mon retour dans mon dossier d'achat</a></p>
-     ${piedDossier(lienUnsub)}`,
-    enTetesDesinscription(lienUnsub),
-  );
-}
+// RETIRÉ au sprint 10 : `emailRetourIssue` (J+30 après « acheté ») faisait
+// doublon avec l'invitation signée J+21, qui couvre toutes les sources et ne
+// se répète jamais. Deux emails pour le même véhicule contrediraient la règle
+// « une seule invitation par dossier et par email ».
 
 /** Confirmation d'achat du Pass (sprint 7) — email transactionnel. */
 export async function emailPassActif(

@@ -174,6 +174,44 @@ export async function getPrixSegments(segments) {
   return Array.isArray(data) ? data : []
 }
 
+/** Partenaires ACTIFS (assurance / crédit). La liste est vide tant qu'aucun
+ *  partenaire n'a été activé en base : rien n'est codé en dur côté client, et
+ *  l'URL du partenaire n'est jamais transmise au navigateur — le lien passe
+ *  obligatoirement par /go/<slug>, sinon la mise en relation ne serait pas
+ *  comptée. */
+export async function getPartenairesActifs() {
+  const { data, error } = await supabase.rpc('get_partenaires_actifs')
+  if (error) throw error
+  return Array.isArray(data) ? data : []
+}
+
+/** Demande d'inspection hors zone : email + code postal (carte de la demande,
+ *  qui dit où recruter des inspecteurs). */
+export async function submitDemandeZone(email, codePostal, analysisId = null) {
+  const { error } = await supabase.rpc('submit_demande_zone', {
+    p_email: email, p_code_postal: codePostal, p_analysis_id: analysisId,
+  })
+  if (error) throw error
+}
+
+/** Retour d'issue par lien signé — aucune session, le jeton fait foi. */
+async function appelRetour(payload) {
+  const { data, error } = await supabase.functions.invoke('retour', { body: payload })
+  if (error) {
+    // Les erreurs métier arrivent avec un statut non-2xx : on relaie le code.
+    let detail = null
+    try { detail = await error.context?.json?.() } catch (_) { /* corps illisible */ }
+    throw new Error(detail?.error || error.message || 'retour_indisponible')
+  }
+  return data
+}
+
+export const retourVerifier = (analysisId, token) =>
+  appelRetour({ action: 'verifier', analysis_id: analysisId, token })
+
+export const retourRepondre = (analysisId, token, reponse) =>
+  appelRetour({ action: 'repondre', analysis_id: analysisId, token, ...reponse })
+
 /** Familles dont la fiche atteint le seuil de publication (sitemap, liens). */
 export async function listMoteursPublies() {
   const { data, error } = await supabase.rpc('list_moteurs_publies')
