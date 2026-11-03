@@ -481,6 +481,33 @@ La phrase affichée n'est **pas figée dans le code** : `partenaires.remuneratio
 - Vérifié sur la prod réelle, à 390 px : sur un **rouge**, aucune requête partenaires n'est émise (règle appliquée avant le réseau), la phrase de préalable est là et l'inspection est repliée en lien secondaire ; sur un **vert**, la requête part et ne rend rien faute de partenaire actif. Zéro erreur JavaScript, zéro débordement. Captures dans `captures-sprint10/prod/`.
 - ⬜ Reste : désigner un partenaire assurance (puis l'enregistrer, déclarer sa rémunération et l'activer dans l'admin). **Crédit bloqué jusqu'au 20/11/2026** par `peutActiver`, vérifié à l'allumage.
 
+## Sprint 11 — Mesure du parcours et API pro v0 (nov. 2026)
+
+### ⚠️ Défaut corrigé en ouvrant le sprint
+`_request_ip_hash` calculait `sha256(prefixe || ip)`, **sans aucun sel secret**. Les 4 milliards d'adresses IPv4 s'énumèrent en quelques secondes : les empreintes stockées étaient **réversibles en pratique**, ce que ne disait ni la politique de confidentialité ni l'exemption CNIL invoquée. (Les fonctions edge, elles, utilisaient bien `IP_HASH_SALT`.) Corrigé par un **sel aléatoire quotidien** (`ip_salts`, purgé au-delà de 2 jours : passé ce délai la ré-identification est impossible même pour nous), et les **empreintes non salées déjà en base ont été effacées** — ciblage par nom d'événement, seuls les events insérés par les RPC SQL étant concernés.
+⚠️ Conséquence assumée : les plafonds SQL comptés sur 24 h (leads, `track_event`) se réinitialisent au changement de sel. Le plafond critique — **5 analyses / 24 h** — vit dans la fonction edge avec `IP_HASH_SALT` stable et **n'est pas affecté**.
+
+### A. Mesure du parcours — sans cookie, sans traceur, sans consentement
+- Dix étapes reliées par `analysis_id` **seul**. Six existaient déjà ; deux ont été ajoutées à la whitelist `track_event` (`pass_clicked`, `inspection_clicked`) et **n'écrivent AUCUNE empreinte d'IP** — plafonnées par analyse, pas par IP, puisqu'il n'y a pas d'identifiant.
+- `?src=` : étiquette de campagne, format `^[a-z0-9][a-z0-9-]{0,39}$` imposé **côté client et côté base**. Capturée au premier rendu (`src/lib/source.js`), gardée dans **une seule clé de `sessionStorage`** dont la valeur est l'étiquette seule, **effacée dès le rattachement** à une analyse. Colonne `analyses.src`. ⚠️ Elle n'apparaît **qu'en agrégé** dans l'admin, jamais dans un export à côté d'un email.
+- RPC `get_parcours(semaines)` (service role) + onglet admin **Parcours** : tunnel, taux de passage, ventilation par source, délai médian analyse → paiement.
+
+### B. API de scoring v0
+- `POST /api/v1/analyses` → `api/v1/analyses.js` (déplace la clé du client de `Authorization` vers `X-Inspexo-Key`, sans quoi elle entrerait en collision avec l'authentification Supabase) → fonction `api-analyses` → `score` en service→service. **Même pipeline, même barème, même cache 7 jours.**
+- Réponse : verdict, score, `axes`, `motifs`, `points` sourcés avec leurs URL, `bareme_version`, `quota`.
+- `api_clients` : la clé n'est **jamais stockée en clair** (empreinte salée `API_KEY_SALT`), affichée **une seule fois** à la création, comparaison en **temps constant**.
+- **Deux plafonds** : quota mensuel par client, et plafond **journalier global** séparé du public (`PLAFOND_JOUR_API`). Décision et débit **atomiques** dans `api_consommer` (deux appels simultanés ne peuvent pas consommer le même dernier crédit). `api_rembourser` rend le crédit quand l'analyse n'a rien produit.
+- Pages `/pro` et `/pro/api` pré-rendues, **aucun prix affiché**, formulaire → `leads_pro`. CUA en **brouillon non publié** : `docs/cua-api-v0.md` (5 points à trancher).
+
+### ⚠️ Le drapeau de quota API — les deux facteurs, toujours
+`estAppelApi(headers, serviceRoleKey)` exige **l'en-tête `x-api-client` ET la clé de service role**. L'en-tête seul ne vaut rien : il est trivial à ajouter depuis un navigateur et ouvrirait le service gratuit à volonté. Même construction que `isInternal` (extension). Le drapeau décide **quel compteur s'applique**, jamais ce que vaut le verdict.
+Prouvé par `tests/independance-score.test.mjs` : en-tête seul → appel public ; en-tête + clé anon → appel public ; les deux → appel API. Et, par lecture du source : `score` délègue au prédicat testé, ne lit jamais l'en-tête hors du drapeau, et **aucune ligne portant `isApi` ne touche au score, au verdict ni aux pannes**.
+
+### Divers
+- `BAREME_VERSION` dans `_shared/bareme.ts` — **additive, aucun effet sur le calcul**. À incrémenter dès qu'une modification change un score à faits identiques, jamais pour un libellé.
+- Page `/politique-de-confidentialite` : trois sections ajoutées (mesure d'audience, étiquette de campagne, API).
+- `npm run eval` enchaîne `tests/api-clients.test.mjs`.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

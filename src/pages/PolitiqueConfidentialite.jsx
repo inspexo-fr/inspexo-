@@ -147,6 +147,67 @@ export default function PolitiqueConfidentialite() {
             fiabilité.
           </p>
 
+          <h2 className="legal-h2">6 quinquies. Mesure d'audience — sans cookie ni traceur</h2>
+          <p className="legal-p">
+            Nous mesurons le parcours sur le site pour savoir ce qui fonctionne. Cette mesure
+            n'utilise <strong>aucun cookie, aucun traceur tiers et aucun identifiant de
+            navigateur</strong>. Elle ne requiert donc pas votre consentement, au titre de
+            l'exemption prévue pour la mesure d'audience.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>Ce qui est enregistré :</strong> des étapes, côté serveur, rattachées au
+              dossier d'analyse concerné — analyse lancée, verdict affiché, clic sur le Pass,
+              paiement ouvert, paiement réussi, clic sur l'inspection, inscription en liste
+              d'attente, clic vers un partenaire, demande du rapport par email, retour après achat.
+              Aucune de ces étapes ne porte d'identifiant vous concernant.
+            </li>
+            <li>
+              <strong>Adresse IP :</strong> elle n'est jamais conservée en clair. Pour les seuls
+              besoins de limitation d'abus, nous en gardons une empreinte calculée avec un
+              <strong> sel aléatoire renouvelé chaque jour</strong>, et les sels de plus de deux
+              jours sont détruits. Passé ce délai, une empreinte ne peut plus être rattachée à une
+              adresse, y compris par nous. Les empreintes antérieures à cette mesure, calculées
+              sans sel, ont été effacées.
+            </li>
+            <li>
+              <strong>Aucun recoupement :</strong> ces mesures ne sont jamais croisées avec
+              d'autres traitements, ni avec des données d'autres sites, ni transmises à un tiers.
+            </li>
+          </ul>
+
+          <h2 className="legal-h2">6 sexies. Étiquette de campagne (?src=)</h2>
+          <p className="legal-p">
+            Certains de nos liens (une vidéo, un article) portent un paramètre <code>?src=</code>
+            {' '}suivi d'une étiquette, par exemple <code>tiktok-03</code>. Elle nous permet de
+            savoir quel contenu amène du monde.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              Cette étiquette est conservée dans le <strong>stockage de session</strong> de votre
+              navigateur — une seule entrée, dont la valeur est l'étiquette et rien d'autre. Elle
+              disparaît à la fermeture de l'onglet.
+            </li>
+            <li>
+              Elle est <strong>effacée dès qu'elle a été rattachée à une analyse</strong> : elle a
+              alors joué son rôle.
+            </li>
+            <li>
+              Ce n'est pas un identifiant : elle désigne un lien, pas une personne, et elle
+              n'apparaît que sous forme de statistiques agrégées — <strong>jamais à côté d'une
+              adresse email</strong> ni dans un export nominatif.
+            </li>
+          </ul>
+
+          <h2 className="legal-h2">6 septies. API destinée aux professionnels</h2>
+          <p className="legal-p">
+            Les professionnels disposant d'une clé peuvent nous envoyer des annonces par API. Les
+            textes transmis servent à produire l'analyse demandée et suivent le même traitement
+            que ceux du site public. Nous conservons, pour la facturation, le nombre d'appels par
+            client et par mois — jamais le contenu des requêtes rattaché à une personne physique.
+            Les clés sont stockées sous forme d'empreinte salée, jamais en clair.
+          </p>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">

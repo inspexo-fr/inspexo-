@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import DemandeZone from './DemandeZone'
 import { supabase } from '../lib/supabaseClient'
 import { commanderInspection, getInspectionConfig, mesInspections } from '../lib/inspectionApi'
+import { marquerClicInspection } from '../lib/scoreApi'
 import { euros } from '../data/charte'
 
 // SPRINT 8 — Bloc « Faire inspecter cette voiture » de /a/:id.
@@ -68,15 +69,20 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
       .catch(() => {})
   }, [user, analysisId])
 
-  // Disponibilité du secteur dès que le code postal est complet.
+  // Disponibilité du secteur dès que le code postal est complet. Un code
+  // postal saisi = une intention d'inspection : c'est CETTE étape du tunnel
+  // qu'on mesure, pas le simple affichage du bloc.
   useEffect(() => {
     if (!/^[0-9]{5}$/.test(cp)) { setZone(null); return }
+    marquerClicInspection(analysisId)
     let annule = false
     getInspectionConfig(cp)
       .then(c => { if (!annule) setZone({ disponible: c.disponible_zone, departement: c.departement }) })
       .catch(() => { if (!annule) setZone(null) })
     return () => { annule = true }
-  }, [cp])
+    // `analysisId` ne change jamais pendant la vie du composant : l'inclure
+    // dans les dépendances ne changerait rien, mais la règle le réclame.
+  }, [cp, analysisId])
 
   if (config === undefined) return null
 

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Turnstile from './Turnstile'
 import { analyzeListing, submitPendingAnalysis } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
+import { lireSource, oublierSource } from '../lib/source'
 
 const MAX_TEXT = 6000
 const MAX_IMAGES = 6
@@ -86,8 +87,12 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
         // Verdict progressif : la page de résultat s'ouvre dès l'identification,
         // le reste de l'analyse arrive en direct (polling côté /a/:id).
         progressive: true,
+        // Étiquette de campagne de cette visite, s'il y en a une.
+        ...(lireSource() ? { src: lireSource() } : {}),
       }
       const { id, result, partial } = await analyzeListing(payload)
+      // Rattachée : elle n'a plus de raison d'exister côté navigateur.
+      oublierSource()
       navigate(`/a/${id}`, { state: { result, partial: partial === true } })
     } catch (err) {
       // Service IA indisponible : on propose la file d'attente plutôt qu'un échec sec.

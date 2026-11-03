@@ -148,6 +148,8 @@ const ROUTES = [
   { url: '/airbags-takata', attendre: '.faq details', priorite: '0.9' },
   { url: '/moteur', attendre: '.rows', priorite: '0.8', figer: true },
   { url: '/extension', attendre: '.channels', priorite: '0.6' },
+  { url: '/pro', attendre: '.channels', priorite: '0.7' },
+  { url: '/pro/api', attendre: '.doc-sec', priorite: '0.6' },
   { url: '/fiabilite', attendre: 'h1', priorite: '0.6' },
   { url: '/cgu', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/cgv-pass', attendre: '.legal-h1', priorite: '0.3' },
