@@ -232,6 +232,27 @@ export function compterNet(
 
 export type Remuneration = "commission" | "aucune";
 
+export const REMUNERATIONS: readonly string[] = ["commission", "aucune"];
+
+/** La rémunération de ce partenaire est-elle DÉCLARÉE ?
+ *
+ *  ⚠️ Une absence de déclaration n'est JAMAIS lue comme « aucune ». Afficher
+ *  « Inspexo ne perçoit aucune rémunération » alors que personne ne l'a
+ *  affirmé serait une allégation fausse — une pratique commerciale trompeuse
+ *  au sens de l'article L121-2 du code de la consommation. Le silence ne vaut
+ *  pas absence de commission : un partenaire sans déclaration n'est pas
+ *  affiché du tout. */
+export function remunerationDeclaree(partenaire: { remuneration?: unknown }): boolean {
+  return REMUNERATIONS.includes(String(partenaire?.remuneration ?? ""));
+}
+
+/** Les seuls partenaires publiables : ceux dont la rémunération est déclarée. */
+export function partenairesPubliables<T extends { remuneration?: unknown }>(
+  partenaires: T[],
+): T[] {
+  return Array.isArray(partenaires) ? partenaires.filter(remunerationDeclaree) : [];
+}
+
 export const PHRASE_COMMISSION =
   "Inspexo perçoit une commission de ces partenaires si vous souscrivez via ce lien. " +
   "Elle n'a aucune influence sur le score ni sur le verdict.";
@@ -239,12 +260,18 @@ export const PHRASE_COMMISSION =
 export const PHRASE_AUCUNE =
   "Inspexo ne perçoit aucune rémunération de ces partenaires.";
 
-/** Même phrase, au singulier, quand elle porte sur UN partenaire. */
-export function phraseRemunerationPartenaire(remuneration: unknown): string {
-  return remuneration === "commission"
-    ? "Inspexo perçoit une commission de ce partenaire si vous souscrivez via ce lien. " +
-      "Elle n'a aucune influence sur le score ni sur le verdict."
-    : "Inspexo ne perçoit aucune rémunération de ce partenaire.";
+/** Même phrase, au singulier, quand elle porte sur UN partenaire.
+ *  `null` si la rémunération n'est pas déclarée : on n'invente pas une
+ *  affirmation que personne n'a faite. */
+export function phraseRemunerationPartenaire(remuneration: unknown): string | null {
+  if (remuneration === "commission") {
+    return "Inspexo perçoit une commission de ce partenaire si vous souscrivez via ce lien. " +
+      "Elle n'a aucune influence sur le score ni sur le verdict.";
+  }
+  if (remuneration === "aucune") {
+    return "Inspexo ne perçoit aucune rémunération de ce partenaire.";
+  }
+  return null;
 }
 
 /** Phrase unique à placer AU-DESSUS de la liste quand tous les partenaires
@@ -255,6 +282,9 @@ export function phraseRemunerationGlobale(
   partenaires: Array<{ remuneration?: unknown }>,
 ): string | null {
   if (!Array.isArray(partenaires) || partenaires.length === 0) return null;
+  // Un seul partenaire sans déclaration suffit à interdire toute phrase
+  // globale : elle serait une affirmation sur quelqu'un qui n'a rien dit.
+  if (!partenaires.every(remunerationDeclaree)) return null;
   const avecCommission = partenaires.filter((p) => p.remuneration === "commission").length;
   if (avecCommission === partenaires.length) return PHRASE_COMMISSION;
   if (avecCommission === 0) return PHRASE_AUCUNE;

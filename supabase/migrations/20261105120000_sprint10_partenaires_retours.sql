@@ -188,7 +188,11 @@ as $$
            'remuneration', remuneration
          ) order by type, nom), '[]'::jsonb)
   from public.partenaires
-  where actif;
+  -- Rémunération non déclarée ⇒ partenaire NON publié. La contrainte CHECK
+  -- l'interdit déjà, mais ce filtre vaut garantie indépendante : afficher
+  -- « aucune rémunération » sans que personne ne l'ait affirmé serait une
+  -- allégation fausse.
+  where actif and remuneration in ('commission', 'aucune');
 $$;
 
 grant execute on function public.get_partenaires_actifs() to anon, authenticated;

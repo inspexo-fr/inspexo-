@@ -37,7 +37,14 @@ const MAX_EMAILS_PAR_RUN = 20;
 // Délai avant l'invitation au retour d'issue : trois semaines, le temps qu'un
 // achat se décide et qu'on ait roulé un peu.
 const JOURS_AVANT_RETOUR = 21;
-const MAX_RETOURS_PAR_RUN = 25;
+// Fenêtre haute : on ne réveille jamais une analyse de plus de 60 jours.
+// Si le cron reste à l'arrêt longtemps, le rattrapage ne doit pas écrire à
+// des gens dont l'achat est largement derrière eux.
+const JOURS_FENETRE_RETOUR = 60;
+// Plafond par passage. Il interagit avec la fenêtre : un arriéré plus grand
+// que 50 × (jours restants dans la fenêtre) perd silencieusement sa queue.
+// À une exécution par jour, 50 draine 3 000 invitations avant expiration.
+const MAX_RETOURS_PAR_RUN = 50;
 
 async function secretOk(req: Request): Promise<boolean> {
   if (req.headers.get("Authorization") === `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`) return true;
@@ -64,9 +71,9 @@ async function candidatsRetour(admin: any): Promise<Array<{
   vehicule: string;
 }>> {
   const depuis = new Date(Date.now() - JOURS_AVANT_RETOUR * 24 * 3600 * 1000).toISOString();
-  // Fenêtre basse : on ne réveille pas des analyses vieilles de six mois le
-  // jour où cette fonctionnalité est déployée.
-  const pasAvant = new Date(Date.now() - 90 * 24 * 3600 * 1000).toISOString();
+  // Fenêtre basse : on ne réveille pas des analyses anciennes le jour où
+  // cette fonctionnalité est déployée, ni après une interruption du cron.
+  const pasAvant = new Date(Date.now() - JOURS_FENETRE_RETOUR * 24 * 3600 * 1000).toISOString();
   const out: Array<{ analysis_id: string; email: string; source: "dossier" | "pass" | "inspection" | "lead"; vehicule: string }> = [];
   const libelle = (a: { marque?: string | null; modele?: string | null }) =>
     [a?.marque, a?.modele].filter(Boolean).join(" ") || "voiture";

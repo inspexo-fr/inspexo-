@@ -10,9 +10,10 @@
 import {
   cleDedup, compterNet, contientMentionCredit, CREDIT_ACTIVABLE_LE, estRobot,
   MENTION_CREDIT, normaliserTexte, partenairesAffichables, peutActiver,
-  PHRASE_AUCUNE, PHRASE_COMMISSION, phraseRemunerationGlobale,
-  phraseRemunerationPartenaire, PREALABLE_ROUGE, texteSansMentionCredit,
-  verifierTextePartenaire, VERDICTS_PARTENAIRES,
+  partenairesPubliables, PHRASE_AUCUNE, PHRASE_COMMISSION,
+  phraseRemunerationGlobale, phraseRemunerationPartenaire, PREALABLE_ROUGE,
+  remunerationDeclaree, texteSansMentionCredit, verifierTextePartenaire,
+  VERDICTS_PARTENAIRES,
 } from '../supabase/functions/_shared/partenaires.ts'
 
 let ko = 0, total = 0
@@ -233,9 +234,13 @@ titre('Transparence sur la rémunération')
   eq(phraseRemunerationGlobale([a, c]), null, 'ordre indifférent')
   eq(phraseRemunerationGlobale([]), null, 'aucun partenaire → aucune phrase')
   eq(phraseRemunerationGlobale(null), null, 'entrée absente')
-  // Un partenaire sans déclaration ne doit jamais être pris pour « commission ».
-  eq(phraseRemunerationGlobale([{}, {}]), PHRASE_AUCUNE,
-    'déclaration manquante traitée comme absence de rémunération, jamais l’inverse')
+  // RÈGLE : le silence ne vaut PAS « aucune rémunération ».
+  eq(phraseRemunerationGlobale([{}, {}]), null,
+    'déclaration manquante → AUCUNE phrase globale (le silence n’affirme rien)')
+  eq(phraseRemunerationGlobale([a, {}]), null,
+    'une seule déclaration manquante suffit à interdire la phrase globale')
+  eq(phraseRemunerationGlobale([c, { remuneration: 'peut-etre' }]), null,
+    'valeur inconnue traitée comme non déclarée')
 
   ok(PHRASE_COMMISSION.includes("n'a aucune influence sur le score ni sur le verdict"),
     'la phrase de commission dit que le verdict n’en dépend pas')
@@ -243,8 +248,37 @@ titre('Transparence sur la rémunération')
     'version au singulier pour un partenaire isolé')
   ok(phraseRemunerationPartenaire('aucune').includes('aucune rémunération de ce partenaire'),
     'version au singulier, sans rémunération')
-  ok(phraseRemunerationPartenaire(undefined).includes('aucune rémunération'),
-    'déclaration absente → version sans rémunération')
+  eq(phraseRemunerationPartenaire(undefined), null,
+    'déclaration absente → AUCUNE phrase, surtout pas « aucune rémunération »')
+  eq(phraseRemunerationPartenaire(''), null, 'déclaration vide → aucune phrase')
+  eq(phraseRemunerationPartenaire('gratuit'), null, 'valeur inventée → aucune phrase')
+}
+
+titre('Un partenaire sans déclaration n’est pas affiché du tout')
+// Afficher « Inspexo ne perçoit aucune rémunération » sans que personne ne
+// l'ait affirmé serait une allégation fausse (pratique commerciale
+// trompeuse). Le partenaire disparaît plutôt que de porter une phrase
+// inventée — et il n'apparaît pas non plus sans phrase.
+{
+  const c = { slug: 'a', remuneration: 'commission' }
+  const a = { slug: 'b', remuneration: 'aucune' }
+  const muet = { slug: 'c' }
+  const faux = { slug: 'd', remuneration: 'peut-etre' }
+  ok(remunerationDeclaree(c) && remunerationDeclaree(a), 'les deux valeurs prévues sont déclarées')
+  ok(!remunerationDeclaree(muet), 'champ absent → non déclaré')
+  ok(!remunerationDeclaree({ remuneration: null }), 'null → non déclaré')
+  ok(!remunerationDeclaree({ remuneration: '' }), 'chaîne vide → non déclarée')
+  ok(!remunerationDeclaree(faux), 'valeur inconnue → non déclarée')
+  ok(!remunerationDeclaree({}), 'objet vide → non déclaré')
+
+  eq(partenairesPubliables([c, muet, a, faux]).map((p) => p.slug), ['a', 'b'],
+    'seuls les partenaires déclarés sont publiables')
+  eq(partenairesPubliables([muet, faux]), [], 'aucun déclaré → aucun partenaire affiché')
+  eq(partenairesPubliables([]), [], 'liste vide')
+  eq(partenairesPubliables(null), [], 'entrée absente')
+  // Après filtrage, la phrase globale redevient possible.
+  eq(phraseRemunerationGlobale(partenairesPubliables([a, muet])), PHRASE_AUCUNE,
+    'le filtrage rend la phrase globale de nouveau sûre')
 }
 
 // ---------------------------------------------------------------------------
@@ -263,13 +297,18 @@ titre('Copie CLIENT ≡ source SERVEUR')
   for (const liste of [
     [{ remuneration: 'commission' }], [{ remuneration: 'aucune' }],
     [{ remuneration: 'commission' }, { remuneration: 'aucune' }], [], [{}],
+    [{ remuneration: 'aucune' }, {}], [{ remuneration: 'peut-etre' }],
   ]) {
     eq(client.phraseRemunerationGlobale(liste), phraseRemunerationGlobale(liste),
       'même phrase globale côté client')
+    eq(client.partenairesPubliables(liste), partenairesPubliables(liste),
+      'même filtrage des partenaires publiables côté client')
   }
-  for (const r of ['commission', 'aucune', undefined]) {
+  for (const r of ['commission', 'aucune', undefined, '', 'gratuit', null]) {
     eq(client.phraseRemunerationPartenaire(r), phraseRemunerationPartenaire(r),
       'même phrase au singulier côté client')
+    eq(client.remunerationDeclaree({ remuneration: r }), remunerationDeclaree({ remuneration: r }),
+      'même décision de déclaration côté client')
   }
   for (const t of [CREDIT_OK, ASSURANCE_OK, '', 'Attention! Un credit coute de l\'argent et doit etre rembourse. X']) {
     eq(client.texteSansMentionCredit(t), texteSansMentionCredit(t),

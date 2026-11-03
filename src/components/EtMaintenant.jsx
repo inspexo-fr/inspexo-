@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import InspectionBloc from './InspectionBloc'
 import { getPartenairesActifs } from '../lib/scoreApi'
 import {
-  MENTION_CREDIT, partenairesAffichables, phraseRemunerationGlobale,
-  phraseRemunerationPartenaire, PREALABLE_ROUGE, texteSansMentionCredit,
+  MENTION_CREDIT, partenairesAffichables, partenairesPubliables,
+  phraseRemunerationGlobale, phraseRemunerationPartenaire, PREALABLE_ROUGE,
+  texteSansMentionCredit,
 } from '../data/partenaires'
 
 // SPRINT 10 — « Et maintenant ? » : ce que l'acheteur peut faire, une fois le
@@ -43,7 +44,7 @@ function LienPartenaire({ partenaire, analysisId, montrerRemuneration }) {
       )}
       {/* Régimes de rémunération mélangés : la phrase ne peut pas être
           généralisée, elle est dite partenaire par partenaire. */}
-      {montrerRemuneration && (
+      {montrerRemuneration && phraseRemunerationPartenaire(partenaire.remuneration) && (
         <p style={{ fontSize: 15, lineHeight: 1.6, marginTop: 10, fontWeight: 700 }}>
           {phraseRemunerationPartenaire(partenaire.remuneration)}
         </p>
@@ -79,7 +80,10 @@ export default function EtMaintenant({ analysisId, vehicule, verdict }) {
     if (!peutAfficherPartenaires) { setPartenaires([]); return }
     let annule = false
     getPartenairesActifs()
-      .then(l => { if (!annule) setPartenaires(l) })
+      // Un partenaire dont la rémunération n'est pas déclarée n'est PAS
+      // affiché : sans déclaration, on ne peut rien affirmer, et affirmer
+      // « aucune rémunération » à tort serait trompeur.
+      .then(l => { if (!annule) setPartenaires(partenairesPubliables(l)) })
       .catch(() => { if (!annule) setPartenaires([]) })
     return () => { annule = true }
   }, [peutAfficherPartenaires])

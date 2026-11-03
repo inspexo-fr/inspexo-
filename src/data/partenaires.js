@@ -54,17 +54,37 @@ export const PHRASE_COMMISSION =
 export const PHRASE_AUCUNE =
   'Inspexo ne perçoit aucune rémunération de ces partenaires.'
 
+export const REMUNERATIONS = ['commission', 'aucune']
+
+/** ⚠️ Une absence de déclaration n'est JAMAIS lue comme « aucune ». Afficher
+ *  « Inspexo ne perçoit aucune rémunération » alors que personne ne l'a
+ *  affirmé serait une allégation fausse. Le partenaire n'est alors pas
+ *  affiché du tout. */
+export function remunerationDeclaree(partenaire) {
+  return REMUNERATIONS.includes(String(partenaire?.remuneration ?? ''))
+}
+
+/** Les seuls partenaires publiables. */
+export function partenairesPubliables(partenaires) {
+  return Array.isArray(partenaires) ? partenaires.filter(remunerationDeclaree) : []
+}
+
+/** `null` si la rémunération n'est pas déclarée. */
 export function phraseRemunerationPartenaire(remuneration) {
-  return remuneration === 'commission'
-    ? 'Inspexo perçoit une commission de ce partenaire si vous souscrivez via ce lien. ' +
+  if (remuneration === 'commission') {
+    return 'Inspexo perçoit une commission de ce partenaire si vous souscrivez via ce lien. ' +
       "Elle n'a aucune influence sur le score ni sur le verdict."
-    : 'Inspexo ne perçoit aucune rémunération de ce partenaire.'
+  }
+  if (remuneration === 'aucune') return 'Inspexo ne perçoit aucune rémunération de ce partenaire.'
+  return null
 }
 
 /** `null` quand les régimes diffèrent : il faut alors l'afficher partenaire
  *  par partenaire, sinon la phrase serait inexacte pour l'un d'eux. */
 export function phraseRemunerationGlobale(partenaires) {
   if (!Array.isArray(partenaires) || partenaires.length === 0) return null
+  // Un seul partenaire sans déclaration interdit toute phrase globale.
+  if (!partenaires.every(remunerationDeclaree)) return null
   const avecCommission = partenaires.filter(p => p.remuneration === 'commission').length
   if (avecCommission === partenaires.length) return PHRASE_COMMISSION
   if (avecCommission === 0) return PHRASE_AUCUNE
