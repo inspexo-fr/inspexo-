@@ -508,6 +508,14 @@ Prouvé par `tests/independance-score.test.mjs` : en-tête seul → appel public
 - Page `/politique-de-confidentialite` : trois sections ajoutées (mesure d'audience, étiquette de campagne, API).
 - `npm run eval` enchaîne `tests/api-clients.test.mjs`.
 
+### Mise en service partielle — 3 nov. 2026 (merge EN ATTENTE)
+Déployé pour pouvoir exécuter les deux vérifications demandées : dump prod hors dépôt, migration `20261106120000` (25/25), secret `API_KEY_SALT`, fonctions `score`, `api-analyses`, `admin-api`, `admin-parcours`. **Le merge de `sprint11` n'est pas fait.** `api/v1/analyses.js` et les pages `/pro` ne sont donc en ligne que sur la preview.
+- **Éval ciblée après `--reset-cout` : verdicts INCHANGÉS** — S7 rouge 38, 308 orange 55, Mercedes vert 71.
+- **Appel API réel** : Clio IV 1.5 dCi → orange 56, 5 points tous sourcés, `bareme_version` 11.0, quota décompté. Second appel sur la même annonce → `cache: true`, coût nul.
+- Chemins de refus vérifiés en conditions réelles : **401** sans clé et sur clé inconnue, **429** sur quota épuisé (message nommant le plafond et sa date de remise à zéro), **403** sur clé révoquée.
+- ⚠️ **Défaut trouvé par l'appel de contrôle, corrigé** : `axes` revenait `null`. `result_json.score_detail` **EST** la carte des axes, pas un objet qui la contient — `score_detail.axes` était donc toujours indéfini. C'est exactement ce que cet appel devait débusquer.
+- ⬜ Reste à la mise en service complète : merge, puis `/api/v1/analyses` et `/pro` en production.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

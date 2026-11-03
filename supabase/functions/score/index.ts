@@ -2837,6 +2837,9 @@ serve(async (req: Request) => {
         time_to_first_content_ms: timeToFirstContentMs,
         time_to_final_ms: Date.now() - startedAt,
         progressive: analysisId != null,
+        // Trafic API tracé jusqu'au bout : sans cela, le coût d'un appel API
+        // serait indiscernable du trafic public dans les mesures de dépense.
+        ...(isApi ? { via: "api", api_client: apiClientId } : {}),
         model: [...modelesUtilises].join("+") || MODEL,
         verdict,
         score,

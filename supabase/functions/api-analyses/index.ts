@@ -159,7 +159,10 @@ serve(async (req: Request) => {
         kilometrage: v.kilometrage ?? null,
         prix_affiche: v.prix_affiche ?? null,
       },
-      axes: r.score_detail?.axes ?? null,
+      // ⚠️ `score_detail` EST la carte des axes, pas un objet qui la
+      // contient : `score_detail.axes` rendait toujours null (constaté à
+      // l'appel de contrôle du 03/11, corrigé avant publication).
+      axes: r.score_detail ?? null,
       plafond_raison: r.plafond_raison ?? null,
       motifs: r.raisons_principales ?? [],
       // « Points sourcés » : chaque défaut porte ses sources consultables.
