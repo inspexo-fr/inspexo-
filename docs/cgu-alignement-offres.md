@@ -173,70 +173,70 @@ recopiés : un prix en dur dans un contrat devient faux en silence.
 
 ---
 
-## 5. ÉCARTS ENTRE LE CODE ET LE TEXTE — à combler avant d'ouvrir la vente
+## 5. ÉCARTS CODE ↔ TEXTE — COMBLÉS le 3 novembre 2026
 
-> Le texte des CGV de l'inspection décrit les décisions prises. **Quatre d'entre
-> elles ne sont pas implémentées.** Le service est aujourd'hui **fermé**
-> (`MEDIATEUR_NOM` non posé ⇒ `ouvert: false`, aucune commande possible), donc
-> aucun acheteur n'est exposé. Mais il ne doit pas s'ouvrir avant que les quatre
-> premiers points soient faits.
+Les quatre écarts bloquants du relevé précédent sont **implémentés**
+(migration `20261109120000_sprint12_inspection_paiement.sql`). Le service
+reste **fermé** (`MEDIATEUR_NOM` non posé) : rien n'est exposé avant les tests
+Stripe en mode test.
 
-### 🔒 Bloquants
+| Écart | État | Où |
+|---|---|---|
+| Paiement encaissé à la commande | ✅ **Autorisation puis capture** | `capture_method: "manual"` dans `inspection-checkout` ; capture dans `inspecteur-mission` à la confirmation ; webhook adapté |
+| Rien n'expirait | ✅ **48 h puis relâche** | `inspections_a_expirer` / `inspection_expirer` + passe 5 du cron `alertes` + `emailAutorisationExpiree` |
+| Aucune annulation | ✅ **Barème complet** | `decisionAnnulation` (pur) ; RPC `inspection_annuler`, `inspection_constat_absence`, `inspection_arbitrer` ; fonction `inspection-annuler` ; `_shared/inspectionArgent.ts` |
+| Pas de demande d'exécution | ✅ **Case obligatoire, horodatée** | `execution_immediate` exigé serveur ; `execution_immediate_le` + `cgv_version` en base ; texte exact vérifié par le test |
+| Rapport non remis sous 24 h | ✅ **Alerte exploitant** | `inspections_rapport_en_retard` + passe 6 du cron, une alerte par inspection |
+| `CGV_VERSION` périmée | ✅ **2026-11-03** | `inspection-checkout` |
+| Durée de conservation des photos | ✅ **2 ans / 5 ans / 3 mois** | CGV art. 8, politique § 5 et § 6 ter bis, et **appliqué** par la passe 7 du cron |
 
-**1. Le paiement est ENCAISSÉ à la commande, pas autorisé.**
-`inspection-checkout` crée la session Stripe **sans `capture_method: "manual"`**
-(vérifié : `payment_intent_data` ne porte que `description` et `transfer_group`).
-L'argent part donc au moment du paiement, et non à la confirmation de
-l'inspecteur — l'inverse de ce que dit l'article 5.
-⚠️ C'est une décision **déjà actée** dans `CLAUDE.md` (« Autorisation Stripe
-avant confirmation expert (éviter chargebacks) ») qui n'a jamais été appliquée à
-l'inspection.
-*Correctif* : `capture_method: "manual"`, capture au moment de
-`inspection_accepter`, et gestion de l'échec de capture.
+### Décisions de conception à connaître
 
-**2. Rien n'expire si aucun inspecteur ne confirme.**
-Aucune logique de délai : une inspection reste `a_attribuer` indéfiniment, avec
-l'argent déjà encaissé. L'article 5 promet l'annulation de l'autorisation.
-*Correctif* : échéance (créneau dépassé + marge), passage en `annulee` et
-`paymentIntents.cancel` depuis le cron `alertes`.
+- **48 h et pas plus.** Une autorisation de carte en ligne ne tient que
+  **7 jours**. La fenêtre de confirmation garde donc un facteur deux de marge,
+  et le test `tests/inspection.test.mjs` **interdit** qu'elle s'en approche :
+  une autorisation expirée chez Stripe rendrait une mission confirmable mais
+  impayable, après qu'un inspecteur s'est engagé.
+- **Le transfert part AVANT le remboursement** dans le cas « retenue ». Les
+  fonds de la charge sont encore entiers, donc `source_transaction` ne peut pas
+  manquer de disponible ; et un remboursement manqué est rattrapable depuis nos
+  colonnes, alors qu'un transfert manqué laisse l'inspecteur impayé pour un
+  déplacement réellement fait.
+- **La photo de constat est déposée AVANT la transition d'état**, à l'inverse
+  de la règle habituelle du projet. C'est délibéré : la preuve conditionne une
+  somme prélevée sur l'acheteur. Un fichier orphelin en cas de conflit est le
+  moindre mal face à une retenue sans justification.
+- **Le webhook ne défait pas le barème.** Nos quatre chemins d'annulation
+  passent la ligne en `annulee` avant d'appeler Stripe, et
+  `remboursement_pilote` est le filet. Sans cette garde, un remboursement de
+  139 € reprendrait une part des 40 € accordés à l'inspecteur.
+- **Si la capture échoue après acceptation**, la mission retourne à
+  l'attribution (`inspection_capture_echouee`) et l'exploitant est alerté :
+  une mission ne peut pas rester « confirmée » sans argent encaissé.
+- **Compte Connect incomplet au moment d'une retenue** : l'acheteur est
+  remboursé **intégralement** et l'indemnité se régularise à la main. Mieux
+  vaut une indemnité en retard qu'un acheteur bloqué.
 
-**3. Aucune annulation n'existe, ni côté acheteur ni pour l'absence du vendeur.**
-Les seules RPC sont `inspection_accepter`, `inspection_refuser`,
-`inspection_consentement_photos`, `inspection_photos_liste`, `inspection_zone`.
-Donc : pas de règle des 24 h, pas de retenue de 40 €, pas de constat d'absence.
-Le statut `annulee` n'est posé que par `charge.refunded`, c'est-à-dire par un
-remboursement déclenché à la main.
-*Correctif* : RPC `inspection_annuler` (acheteur, transition atomique) et
-`inspection_constat_absence` (inspecteur), plus un **transfert partiel de 40 €**
-— chemin qui n'existe pas aujourd'hui : `inspection-rapport` ne sait transférer
-que `part_inspecteur_cents` à la remise du rapport.
+### ⚠️ Bug trouvé par les tests, et corrigé
 
-**4. Pas de demande expresse d'exécution immédiate.**
-La commande n'envoie que `accepte_cgv: true`. Le Pass a `retractation_renoncee` ;
-l'inspection n'a ni case, ni colonne.
-⚠️ **Conséquence si on ouvre en l'état** : l'acheteur conserve ses 14 jours de
-rétractation **même après l'inspection réalisée**. On aurait payé l'inspecteur et
-on devrait rembourser l'acheteur.
-*Correctif* : case dédiée, colonne `inspections.execution_immediate_demandee`,
-et refus serveur quand le créneau tombe dans les 14 jours sans cette demande.
+L'invariant monétaire sur 20 000 annulations a échoué sur **661 cas** : avec un
+prix inférieur à 40 €, le remboursement devenait **négatif** — on aurait
+redemandé de l'argent à l'acheteur pour avoir annulé. À 179 € le cas
+n'arrivait pas, mais le prix est un paramètre. La retenue est désormais bornée
+par le montant encaissé, **côté TypeScript et dans les deux RPC SQL**.
 
-### À régler, non bloquants
+Autre défaut du même passage : le contrôle `if (ko > 0) process.exit(1)` de
+`tests/inspection.test.mjs` se trouvait **avant** les nouveaux blocs, donc
+leurs échecs n'auraient jamais fait échouer la suite. Déplacé en fin de
+fichier, et vérifié qu'il mord.
 
-**5. Le délai de remise du rapport n'existe pas dans le code.** Les 48 heures
-portent sur le **créneau** (`validerCreneau`, fenêtre [+2 h, +48 h]), pas sur le
-rapport. L'article 4 annonce « au plus tard 24 heures après l'inspection » : à
-mesurer et relancer, ou à retirer du texte. Ne pas laisser une promesse que rien
-ne surveille.
-
-**6. La durée de conservation des photos n'est écrite nulle part** — ni dans le
-code, ni dans les CGV, ni dans la politique de confidentialité, qui **ne
-mentionne pas du tout les photos d'inspection**. L'article 8 y renvoie : il faut
-donc l'y écrire. Durée à décider.
-
-**7. `CGV_VERSION` vaut `"2026-11-01"`** dans `inspection-checkout`, alors que le
-texte est daté du **3 novembre 2026**. À aligner, sinon chaque commande
-estampille une version qui ne correspond à aucun document.
-
-**8. Politique de confidentialité** : ajouter les photos d'inspection (base
-légale, durée, destinataires) et les coordonnées du vendeur transmises par
-l'acheteur.
+### Reste à faire
+- [ ] **Tests Stripe en mode test** (`sk_test`) : parcours complet
+      autorisation → confirmation → capture, expiration à 48 h, les trois cas
+      d'annulation, et l'arbitrage. Rien de cela n'est vérifiable hors ligne.
+- [ ] Désigner le médiateur, poser `MEDIATEUR_NOM` — c'est lui qui ouvre la
+      vente.
+- [ ] Faire re-signer la charte (version **2026-11-03**) aux inspecteurs. Il
+      n'y en a aucun aujourd'hui, donc aucun impact pour l'instant.
+- [ ] Relecture avocat des CGV de l'inspection, en particulier les articles 6
+      (barème) et 7 (rétractation).

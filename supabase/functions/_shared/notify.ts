@@ -446,6 +446,71 @@ export async function alerteVersementBloque(
   );
 }
 
+/** Alerte exploitant générique — sujet + corps déjà composés par l'appelant. */
+export async function alerteExploitant(sujet: string, html: string): Promise<boolean> {
+  return await sendMail(ADMIN_EMAIL, sujet, html);
+}
+
+/** Acheteur : aucun inspecteur n'a confirmé, l'autorisation est relâchée.
+ *  Rien n'a été débité — c'est la première chose à dire. */
+export async function emailAutorisationExpiree(
+  to: string,
+  vehicule: string,
+  analysisId: string | null,
+): Promise<boolean> {
+  return await sendMail(
+    to,
+    `Inspection non attribuée — aucun débit — ${vehicule.replace(/[<>]/g, "")}`,
+    `<p><strong>Aucun inspecteur n'a pu prendre votre inspection dans les 48 heures.</strong></p>
+     <p>L'autorisation de paiement a été annulée&nbsp;: <strong>vous n'avez rien été débité</strong>,
+     et vous ne devez rien. Selon votre banque, l'empreinte peut rester visible un jour ou deux
+     avant de disparaître.</p>
+     <p>Nous constituons le réseau d'inspecteurs zone par zone. Vous pouvez retenter plus tard.</p>
+     ${analysisId ? `<p><a href="https://www.inspexo.io/a/${analysisId}">Revoir votre dossier</a></p>` : ""}`,
+  );
+}
+
+/** Acheteur : son inspection est annulée. Le sort de l'argent est dit en
+ *  chiffres, pas en principe — c'est la question qu'il se pose. */
+export async function emailInspectionAnnulee(
+  to: string,
+  vehicule: string,
+  rembourseCents: number,
+  retenueCents: number,
+  motif: string,
+): Promise<boolean> {
+  const eur = (c: number) => `${(c / 100).toLocaleString("fr-FR", { minimumFractionDigits: 2 })} €`;
+  return await sendMail(
+    to,
+    `Inspection annulée — ${vehicule.replace(/[<>]/g, "")}`,
+    `<p>Votre inspection a été annulée.</p>
+     <p>${motif.replace(/[<>]/g, "").slice(0, 300)}</p>
+     ${retenueCents > 0
+      ? `<p><strong>${eur(rembourseCents)} vous sont remboursés</strong> sur le moyen de paiement utilisé.
+         <strong>${eur(retenueCents)}</strong> sont versés à l'inspecteur au titre de son déplacement&nbsp;;
+         cette somme ne revient pas à Inspexo.</p>`
+      : `<p><strong>${eur(rembourseCents)} vous sont remboursés intégralement</strong> sur le moyen de
+         paiement utilisé. Rien n'est retenu.</p>`}
+     <p>Le remboursement apparaît sous 5 à 10 jours ouvrés selon votre banque.</p>`,
+  );
+}
+
+/** Exploitant : un rapport n'a pas été remis dans les 24 h suivant le créneau. */
+export async function alerteRapportEnRetard(
+  inspectionId: string,
+  refNum: number | null,
+  creneau: string | null,
+): Promise<boolean> {
+  return await sendMail(
+    ADMIN_EMAIL,
+    "Inspexo — rapport d'inspection non remis sous 24 h",
+    `<p>Une inspection confirmée n'a pas de rapport plus de 24 heures après son créneau.</p>
+     <p><strong>Inspection :</strong> ${inspectionId}${refNum ? ` (n° ${refNum})` : ""}<br>
+     <strong>Créneau :</strong> ${creneau ?? "inconnu"}</p>
+     <p>L'acheteur attend le rapport qu'il a payé. Relancez l'inspecteur depuis l'onglet Inspecteurs.</p>`,
+  );
+}
+
 /** Inspecteur : sa candidature est validée (ou refusée). */
 export async function emailInspecteurDecision(
   to: string,

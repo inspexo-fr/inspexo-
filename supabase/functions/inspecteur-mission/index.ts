@@ -7,8 +7,12 @@
 // « deja_prise »). Cette fonction existe pour ce que la RPC ne peut pas
 // faire : prévenir l'acheteur par email avec les coordonnées de l'inspecteur.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { emailInspectionAcceptee } from "../_shared/notify.ts";
+import { emailInspectionAcceptee, alerteExploitant } from "../_shared/notify.ts";
+import { capturer, executerDecision } from "../_shared/inspectionArgent.ts";
+
+const STRIPE_SECRET_KEY = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -76,6 +80,36 @@ serve(async (req: Request) => {
         }, 409);
       }
 
+      // PAIEMENT EN DEUX TEMPS : c'est MAINTENANT que l'argent est débité.
+      // L'ordre est volontaire — la transition d'état atomique (la RPC
+      // ci-dessus) d'abord, pour qu'un seul inspecteur gagne la mission, puis
+      // la capture. Si la capture échoue, la mission ne peut pas rester
+      // « confirmée » sans argent encaissé : elle retourne à l'attribution.
+      const { data: pour_capture } = await admin
+        .from("inspections")
+        .select("stripe_payment_intent, capturee_le")
+        .eq("id", inspectionId)
+        .maybeSingle();
+      if (pour_capture && !pour_capture.capturee_le) {
+        const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
+        const cap = await capturer(stripe, admin, inspectionId, pour_capture.stripe_payment_intent);
+        if (!cap.ok) {
+          await admin.rpc("inspection_capture_echouee", { p_inspection_id: inspectionId });
+          await alerteExploitant(
+            "Inspexo — capture de paiement en échec",
+            `<p>L'inspecteur a confirmé une mission mais le paiement n'a pas pu être débité.</p>
+             <p>Inspection : ${inspectionId}<br />Erreur : ${cap.erreur ?? "inconnue"}</p>
+             <p>La mission est repassée en attente d'attribution.</p>`,
+          );
+          return json({
+            ok: false,
+            raison: "paiement_indisponible",
+            message:
+              "Le paiement de l'acheteur n'a pas pu être débité : la mission est remise en attente. Vous n'avez rien à faire.",
+          }, 409);
+        }
+      }
+
       // L'acheteur reçoit le nom et le téléphone de son inspecteur.
       const { data: insp } = await admin
         .from("inspections")
@@ -100,6 +134,68 @@ serve(async (req: Request) => {
         }
       }
       return json({ ok: true });
+    }
+
+    // ---- Vendeur absent / véhicule indisponible, constaté SUR PLACE ----
+    // Une PHOTO horodatée est exigée par la RPC : la retenue de 40 € est
+    // prélevée sur l'acheteur, elle ne peut pas reposer sur la seule parole
+    // de celui qui la touche.
+    if (action === "absence_vendeur") {
+      // La photo arrive en data-URL et c'est le SERVEUR qui la dépose : une
+      // décision d'accès ne se délègue pas à une policy storage, qui devrait
+      // lire des tables volontairement fermées (leçon de l'audit du 2 nov.).
+      const brut = typeof body?.photo === "string" ? body.photo : "";
+      const m = brut.match(/^data:image\/(jpeg|jpg|png|webp);base64,(.+)$/s);
+      const b64 = m ? m[2].replace(/\s/g, "") : "";
+      if (!m || b64.length < 100 || b64.length > 4_500_000 || !/^[A-Za-z0-9+/=]+$/.test(b64)) {
+        return json({
+          error: "photo_requise",
+          message: "Prenez une photo horodatée sur place : sans preuve, aucune indemnité ne peut être retenue.",
+        }, 400);
+      }
+      let octets: Uint8Array;
+      try {
+        octets = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      } catch (_) {
+        return json({ error: "photo_requise", message: "Photo illisible." }, 400);
+      }
+      const ext = m[1] === "jpg" ? "jpeg" : m[1];
+      const photo = `${inspectionId}/absence-${Date.now()}.${ext}`;
+
+      // ⚠️ On DÉPOSE AVANT de muter l'état, contrairement à la règle habituelle
+      // (transition d'abord). Ici la preuve conditionne la retenue de 40 € :
+      // une annulation enregistrée sans sa photo laisserait une somme prélevée
+      // sur l'acheteur sans justification. Un fichier orphelin en cas de
+      // conflit est le moindre mal.
+      const { error: upErr } = await admin.storage
+        .from("rapports")
+        .upload(photo, octets, { contentType: `image/${ext}`, upsert: false });
+      if (upErr) {
+        console.error("upload photo d'absence:", upErr);
+        return json({ error: "upload", message: "Dépôt de la photo impossible. Réessayez." }, 500);
+      }
+      const { data, error } = await commeUtilisateur.rpc("inspection_constat_absence", {
+        p_inspection_id: inspectionId,
+        p_photo_path: photo,
+      });
+      if (error) return json({ error: "rpc", message: error.message }, 400);
+      if (!data?.ok) return json({ ok: false, raison: data?.raison ?? "refuse" }, 409);
+
+      const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
+      const res = await executerDecision(stripe, admin, inspectionId, data);
+      if (!res.ok) {
+        await alerteExploitant(
+          "Inspexo — indemnité de déplacement non versée",
+          `<p>Un constat d'absence a été enregistré mais l'argent n'a pas suivi.</p>
+           <p>Inspection : ${inspectionId}<br />Erreur : ${res.erreur ?? "inconnue"}</p>`,
+        );
+      }
+      return json({
+        ok: true,
+        indemnite_cents: data.retenue_cents,
+        rembourse_cents: data.rembourse_cents,
+        versee: res.ok && !res.erreur,
+      });
     }
 
     return json({ error: "invalid_input", message: "Action inconnue." }, 400);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import DemandeZone from './DemandeZone'
 import { supabase } from '../lib/supabaseClient'
-import { commanderInspection, getInspectionConfig, mesInspections } from '../lib/inspectionApi'
+import { annulerInspection, commanderInspection, getInspectionConfig, mesInspections } from '../lib/inspectionApi'
 import { marquerClicInspection } from '../lib/scoreApi'
 import { euros } from '../data/charte'
 
@@ -50,6 +50,11 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
   const [vendeurTel, setVendeurTel] = useState('')
   const [vendeurAdresse, setVendeurAdresse] = useState('')
   const [cgv, setCgv] = useState(false)
+  // Demande expresse d'exécution avant la fin des 14 jours (L221-25). JAMAIS
+  // pré-cochée : sans elle, l'acheteur garderait son droit de rétractation
+  // après l'inspection réalisée, et nous aurions payé l'inspecteur pour rien.
+  const [executionImmediate, setExecutionImmediate] = useState(false)
+  const [annulation, setAnnulation] = useState(null)
   const [etat, setEtat] = useState('idle')
   const [message, setMessage] = useState(null)
 
@@ -112,6 +117,57 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
         <p style={{ fontSize: 14, marginTop: 8 }}>
           <Link to="/dossier">Suivre dans mon dossier d'achat →</Link>
         </p>
+
+        {/* Annulation. Le barème est appliqué SERVEUR : on annonce ici ce qui
+            va se passer, mais c'est le serveur qui décide — l'écran ne peut pas
+            promettre un remboursement qu'il ne contrôle pas. */}
+        {['a_attribuer', 'refusee', 'acceptee'].includes(deja.statut) && !annulation && (
+          <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--filet)' }}>
+            <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6 }}>
+              {deja.statut === 'acceptee'
+                ? "Un inspecteur a confirmé. Annulation gratuite jusqu'à 24 heures avant le créneau ; au-delà, 40 € vont à l'inspecteur pour son déplacement."
+                : "Aucun inspecteur n'a encore confirmé : l'annulation relâche l'autorisation, rien n'est débité."}
+            </p>
+            <button
+              type="button" className="btn-ghost btn-auto" style={{ marginTop: 8 }}
+              disabled={etat === 'annulation'}
+              onClick={async () => {
+                setEtat('annulation')
+                setMessage(null)
+                try {
+                  const r = await annulerInspection(deja.id)
+                  setAnnulation(r)
+                } catch (err) {
+                  setMessage(err?.message || 'Annulation impossible. Réessayez.')
+                } finally {
+                  setEtat('idle')
+                }
+              }}
+            >
+              {etat === 'annulation' ? 'Annulation…' : 'Annuler cette inspection'}
+            </button>
+            {message && <div className="c-rouge" style={{ fontSize: 13, marginTop: 8 }}>{message}</div>}
+          </div>
+        )}
+
+        {annulation && (
+          <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--filet)' }}>
+            <p style={{ fontSize: 14, lineHeight: 1.7 }}>
+              <strong>Inspection annulée.</strong>{' '}
+              {annulation.action === 'annuler_autorisation'
+                ? "L'autorisation de paiement a été annulée : vous n'avez rien été débité."
+                : annulation.retenue_cents > 0
+                  ? `${euros(annulation.rembourse_cents)} vous sont remboursés. ${euros(annulation.retenue_cents)} sont versés à l'inspecteur pour son déplacement.`
+                  : `${euros(annulation.rembourse_cents)} vous sont remboursés intégralement.`}
+            </p>
+            {annulation.argent_traite === false && (
+              <p className="c-rouge" style={{ fontSize: 13, marginTop: 6 }}>
+                Le mouvement bancaire n'a pas abouti du premier coup. Nous avons été prévenus et le
+                régularisons — vous n'avez rien à faire.
+              </p>
+            )}
+          </div>
+        )}
       </Cadre>
     )
   }
@@ -138,6 +194,10 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
     if (etat === 'envoi') return
     setMessage(null)
     if (!cgv) { setMessage('Acceptez les conditions de l\'inspection pour continuer.'); return }
+    if (!executionImmediate) {
+      setMessage('Cochez la demande d\'exécution immédiate : sans elle, nous ne pouvons pas lancer l\'inspection avant 14 jours.')
+      return
+    }
     setEtat('envoi')
     try {
       const { url } = await commanderInspection({
@@ -148,6 +208,7 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
         vendeur_telephone: vendeurTel,
         vendeur_adresse: vendeurAdresse,
         accepte_cgv: true,
+        execution_immediate: true,
       })
       window.location.assign(url)
     } catch (err) {
@@ -236,8 +297,21 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
           <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginTop: 12, cursor: 'pointer', fontSize: 13, lineHeight: 1.5 }}>
             <input type="checkbox" checked={cgv} onChange={() => setCgv(v => !v)} style={{ marginTop: 2, width: 16, height: 16 }} required />
             <span>
-              J'accepte les <Link to="/cgv-pass" target="_blank">conditions</Link> : inspection visuelle
-              et documentaire sur place, sans démontage ni passage au pont, par un professionnel indépendant assuré.
+              J'accepte les <Link to="/cgv-inspection" target="_blank">conditions de vente de l'inspection</Link> :
+              inspection visuelle et fonctionnelle sur place, sans démontage ni passage au pont, par un
+              professionnel indépendant assuré.
+            </span>
+          </label>
+
+          <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginTop: 10, cursor: 'pointer', fontSize: 13, lineHeight: 1.5 }}>
+            <input
+              type="checkbox" checked={executionImmediate}
+              onChange={() => setExecutionImmediate(v => !v)}
+              style={{ marginTop: 2, width: 16, height: 16 }} required
+            />
+            <span>
+              Je demande que l'inspection soit réalisée avant la fin du délai de rétractation de 14 jours
+              et je reconnais perdre ce droit une fois l'inspection entièrement réalisée.
             </span>
           </label>
 
@@ -246,8 +320,10 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
           </button>
           {message && <div className="c-rouge" style={{ fontSize: 13, marginTop: 8 }}>{message}</div>}
           <p className="mono c-graphite" style={{ marginTop: 8, fontSize: 11, lineHeight: 1.6 }}>
-            Paiement sécurisé Stripe. {Math.round(60)} % reviennent à l'inspecteur, versés à la remise
-            du rapport. Annulation et remboursement tant qu'aucun inspecteur n'a accepté.
+            Paiement sécurisé Stripe. Le montant est <strong>autorisé maintenant</strong> et{' '}
+            <strong>débité seulement quand un inspecteur confirme</strong>. Si personne ne confirme sous
+            {' '}{config.delai_heures} heures, l'autorisation est annulée et rien n'est débité.
+            60 % reviennent à l'inspecteur, versés à la remise du rapport.
           </p>
         </form>
       )}

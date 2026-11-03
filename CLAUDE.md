@@ -629,10 +629,122 @@ annonces comparables », « analyse », « fourchette de coûts ».
 - Les 15 suites hors ligne passent. **Aucune modification du calcul du score** :
   `tests/independance-score.test.mjs` passe inchangé (41/41).
 
+### Titre d'expert : « inspecteur » partout (L326-8 C. route)
+« Expert en automobile » est un **titre protégé** (usurpation sanctionnée). Le
+mot est remplacé par **« inspecteur »** partout où il désigne nos intervenants
+humains (CGU art. 1, 2, 5, 6, 8, 9, 10, 11 ; mentions légales ; FAQ ; footer),
+et « leur expertise » par « leur spécialisation ».
+- **Conservé volontairement** : les deux **dénégations** (« n'est pas […] un
+  expert automobile agréé », « ne constitue ni une expertise ») — elles
+  protègent précisément contre cette confusion. Et le commentaire de
+  `defectAtlas.js`.
+- Non touchés : `expert_waitlist` (valeur contrainte en base), « Peugeot
+  Expert » (utilitaire), la regex de `ResultPage:140` (elle MATCHE une sortie
+  de modèle).
+- ⚠️ Le premier relevé annonçait 11 occurrences dans CGU ; il y en avait **23**
+  — le contexte de `grep` collapsait plusieurs occurrences par ligne. Compter
+  les LIGNES change ne suffit pas : compter les occurrences.
+
+### CGU alignées sur les offres réellement vendues
+Supprimés : **9,90 €** (produit mort, `ai-chat` en 410), **Visio 59 €** et
+**Inspection 249 €** (liste d'attente). Plus aucun prix d'offre non vendue dans
+un document contractuel. 3.1 corrigé (**5 analyses / 24 h, sans compte**).
+Article 7 réécrit en **une règle par offre** — le « cas par cas » supprimé, le
+Pass garde « remboursé sans condition sous 14 jours ».
+- Les articles **1, 5, 6, 8 et 14** ont suivi : ils ne décrivaient plus que les
+  offres supprimées. Un document cohérent ou rien.
+- Nouvelle page **`/cgv-inspection`** : une offre payante, un document. C'est
+  ce texte que `inspection-checkout` estampillait déjà par `CGV_VERSION` sans
+  qu'il existe. **Prix, zone, délai et médiateur lus dans la configuration
+  serveur**, jamais recopiés — un prix en dur dans un contrat devient faux en
+  silence.
+- Détail et proposition : `docs/cgu-alignement-offres.md`.
+
+### Inspection : paiement en deux temps, expiration, annulation
+⚠️ **Ce que le code faisait et que personne n'avait vu** : le paiement était
+**encaissé à la commande**. Un acheteur payait 179 € pour une mission que
+personne n'avait prise et que rien n'obligeait à prendre. La décision
+« autorisation avant confirmation » était **actée depuis le sprint 1** et
+jamais appliquée à l'inspection.
+- **Autorisation puis capture** : `capture_method: "manual"` à la commande,
+  capture dans `inspecteur-mission` au moment où un inspecteur confirme.
+  ⚠️ Le webhook exigeait `payment_status === "paid"` : sous capture manuelle la
+  session arrive en `"unpaid"`, et l'inspection **n'aurait JAMAIS atteint « à
+  attribuer »**. Il accepte désormais l'autorisation (`requires_capture`).
+- ⚠️ **48 h, et pas plus** : une autorisation de carte ne tient que **7 jours**.
+  `tests/inspection.test.mjs` **interdit** à la fenêtre de s'en approcher (
+  facteur deux de marge). Au-delà de 48 h, le cron relâche l'autorisation
+  (`inspections_a_expirer`), rien n'est débité, l'acheteur est prévenu.
+- **Barème d'annulation** dans `_shared/inspection.ts` (`decisionAnnulation`,
+  **pur**) : avant confirmation → autorisation relâchée ; après, à plus de 24 h
+  → remboursement intégral ; à moins de 24 h **ou vendeur absent constaté** →
+  **40 € à l'inspecteur**, le reste rendu. L'absence l'emporte sur le délai : un
+  déplacement fait pour rien s'indemnise.
+- **Le constat d'absence exige une photo horodatée** : la retenue est prélevée
+  sur l'acheteur, elle ne peut pas reposer sur la parole de celui qui la
+  touche. ⚠️ La photo est déposée **AVANT** la transition d'état, à l'inverse de
+  la règle du projet : la preuve conditionne la somme. Un fichier orphelin vaut
+  mieux qu'une retenue injustifiée.
+- ⚠️ **Le transfert part AVANT le remboursement** (`_shared/inspectionArgent.ts`) :
+  les fonds de la charge sont encore entiers, donc `source_transaction` ne
+  manque pas de disponible ; et un remboursement manqué se rattrape depuis nos
+  colonnes, alors qu'un transfert manqué laisse l'inspecteur impayé.
+- ⚠️ **Le webhook ne doit pas défaire le barème** : `charge.refunded` applique
+  une reprise **proportionnelle** du transfert. Un remboursement de 139 €
+  aurait reprise une part des 40 € accordés. Garde : statut `annulee` (posé
+  avant Stripe) + `remboursement_pilote`.
+- **Capture en échec après acceptation** → `inspection_capture_echouee` remet
+  la mission en attribution et alerte : une mission ne reste pas « confirmée »
+  sans argent encaissé. **Compte Connect incomplet** lors d'une retenue →
+  l'acheteur est remboursé **intégralement**, l'indemnité se régularise à la
+  main.
+- **Demande expresse d'exécution immédiate** (L221-25) : case **obligatoire,
+  jamais pré-cochée**, texte exact dans `DEMANDE_EXECUTION_IMMEDIATE`,
+  horodatée avec `cgv_version`. Sans elle l'acheteur gardait **14 jours de
+  rétractation après l'inspection faite** — inspecteur payé, acheteur
+  remboursé. Le test vérifie que l'écran affiche le texte **mot pour mot**.
+- **Arbitrage exploitant** (`PATCH admin-inspecteurs`) : rendre ou confirmer la
+  retenue, **une seule fois** (la décision est une trace). La preuve se signe
+  par **identifiant d'inspection**, jamais par un chemin fourni par le client.
+- **Alerte** si un rapport n'est pas remis 24 h après le créneau, une par
+  inspection.
+
+### ⚠️ Bug trouvé par les tests — invariant monétaire
+L'invariant sur **20 000 annulations** a échoué sur **661 cas** : à un prix
+inférieur à 40 €, le remboursement devenait **négatif** — on redemandait de
+l'argent à l'acheteur pour avoir annulé. À 179 € le cas n'arrive pas, mais le
+prix est un paramètre. La retenue est bornée par le montant encaissé, **en TS
+et dans les deux RPC SQL**.
+⚠️ Et le `process.exit(1)` de `tests/inspection.test.mjs` se trouvait **avant**
+les nouveaux blocs : leurs échecs n'auraient jamais fait échouer la suite.
+Déplacé en fin de fichier, et vérifié qu'il mord. **Ajouter des tests après la
+porte de sortie revient à ne pas en ajouter.**
+
+### Conservation — les durées annoncées sont APPLIQUÉES
+Photos du rapport **2 ans** (délai de l'action en vices cachés, art. **1648
+C. civ.**), constatations écrites **5 ans**, coordonnées du vendeur **3 mois**.
+Écrit dans les CGV et la politique de confidentialité, **et** appliqué par la
+passe 7 du cron `alertes` — la suppression des fichiers se fait dans la
+fonction edge, le stockage n'étant pas une table. Charte **2026-11-03** :
+« aucune personne reconnaissable » (les inspecteurs devront re-signer ; il n'y
+en a aucun aujourd'hui).
+
 ### Mise en service — PAS FAITE (branche `sprint12-vocabulaire`, non mergée)
-1. dump prod hors dépôt ; 2. `db push --linked --yes` (migration
-`20261108120000`) ; 3. déployer `score`, `api-analyses`, `alertes` ; 4. éval
-ciblée S7/308/Mercedes pour confirmer les verdicts inchangés ; 5. merge.
+1. dump prod hors dépôt ; 2. essai en **transaction annulée** de la migration
+(`node scripts/essai-migration-annulee.mjs`, à coller dans l'éditeur SQL du
+dashboard — une seule session, `rollback` final) ; 3. `db push --linked --yes`
+(migrations `20261108120000` et `20261109120000`) ; 4. déployer `score`,
+`api-analyses`, `alertes`, `inspection-checkout`, `inspection-webhook`
+(**--no-verify-jwt**), `inspecteur-mission`, `inspection-annuler` (nouvelle),
+`admin-inspecteurs` ; 5. éval ciblée S7/308/Mercedes (verdicts inchangés) ;
+6. **tests Stripe en `sk_test`** du parcours autorisation → capture,
+expiration, les trois annulations et l'arbitrage ; 7. merge.
+- ⚠️ **Aucun outil local ne permet d'exécuter du SQL sur la prod** : pas de
+  `psql`, pas de Docker, et le CLI Supabase 3.0.0 n'a ni `db execute` ni
+  équivalent (`snippets` = list/download, `notebooks` = push/pull). L'essai en
+  transaction annulée passe donc par le dashboard, ou par un
+  `SUPABASE_ACCESS_TOKEN` (API de gestion) / `SUPABASE_DB_PASSWORD` (driver
+  `pg`) si l'un des deux est posé.
 - **`agreger_marche` est DROP puis CREATE**, mais l'ordre reste sans danger :
   `p_client_id` a une **valeur par défaut**, donc l'appel à un seul argument du
   `score` encore en place continue de résoudre. Déployer `score` juste après

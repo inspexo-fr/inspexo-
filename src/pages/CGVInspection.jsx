@@ -133,8 +133,10 @@ export default function CGVInspection() {
             confirme la mission</strong>.
           </p>
           <p className="legal-p">
-            <strong>Si aucun inspecteur ne confirme la mission dans le délai prévu, l'autorisation est annulée
-            et rien n'est débité.</strong> Le Client n'a aucune démarche à faire et ne doit rien.
+            <strong>Si aucun inspecteur ne confirme la mission dans les {delai} heures, l'autorisation est
+            annulée et rien n'est débité.</strong> Le Client en est informé par email et n'a aucune démarche à
+            faire. Selon sa banque, l'empreinte de l'autorisation peut rester visible un à deux jours avant de
+            disparaître.
           </p>
           <p className="legal-p">
             Le paiement est traité par Stripe. Inspexo ne stocke aucune donnée bancaire. Les paiements par carte
@@ -167,10 +169,13 @@ export default function CGVInspection() {
             ni pénalité, conformément à l'article <strong>L221-18</strong> du Code de la consommation.
           </p>
           <p className="legal-p">
-            L'inspection étant par nature exécutée à bref délai, le Client qui choisit un créneau situé à
-            l'intérieur de ces 14 jours <strong>demande expressément, par une case dédiée à la commande, que la
-            prestation soit exécutée avant la fin du délai de rétractation</strong>. Cette case est distincte de
-            l'acceptation des présentes conditions.
+            L'inspection étant par nature exécutée à bref délai, le Client{' '}
+            <strong>demande expressément, par une case dédiée à la commande, non pré-cochée et obligatoire</strong>,
+            que la prestation soit exécutée avant la fin du délai de rétractation. Le texte de cette case est le
+            suivant : «&nbsp;<em>Je demande que l'inspection soit réalisée avant la fin du délai de rétractation
+            de 14 jours et je reconnais perdre ce droit une fois l'inspection entièrement réalisée.</em>&nbsp;»
+            Elle est distincte de l'acceptation des présentes conditions, horodatée et conservée avec la version
+            des conditions acceptées. Sans elle, la commande n'est pas possible.
           </p>
           <p className="legal-p">
             <strong>Une fois l'inspection réalisée, le droit de rétractation ne peut plus être exercé</strong>,
@@ -198,7 +203,18 @@ export default function CGVInspection() {
             convenir du rendez-vous. Elles ne sont utilisées à aucune autre fin.
           </p>
           <p className="legal-p">
-            Les durées de conservation et les modalités d'exercice des droits figurent dans la{' '}
+            <strong>Durées de conservation.</strong> Les photos du rapport restent accessibles au Client et sont
+            conservées <strong>deux ans à compter de l'inspection</strong>, puis supprimées. Cette durée est
+            celle du délai d'action en garantie des vices cachés (article <strong>1648 du Code civil</strong>) :
+            c'est la période pendant laquelle les photos peuvent servir au Client. Les{' '}
+            <strong>constatations écrites du rapport, sans les photos, sont conservées cinq ans</strong>.
+          </p>
+          <p className="legal-p">
+            L'inspecteur s'engage par ailleurs, au titre de sa charte d'indépendance, à ne faire figurer{' '}
+            <strong>aucune personne reconnaissable</strong> sur les photos.
+          </p>
+          <p className="legal-p">
+            Les modalités d'exercice des droits figurent dans la{' '}
             <a href="/politique-de-confidentialite" className="legal-a">politique de confidentialité</a>.
           </p>
 

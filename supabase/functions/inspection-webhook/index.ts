@@ -46,7 +46,14 @@ serve(async (req: Request) => {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         if (session.metadata?.produit !== "inspection") break;
-        if (session.payment_status !== "paid") break;
+        // ⚠️ PAIEMENT EN DEUX TEMPS : avec `capture_method: "manual"`, une
+        // session dont l'autorisation a réussi arrive ici avec
+        // payment_status = "unpaid" — l'argent n'est pas encore débité, et
+        // c'est voulu. Exiger "paid" ferait que l'inspection n'atteindrait
+        // JAMAIS « à attribuer » : la commande disparaîtrait en silence.
+        // On accepte donc l'autorisation (`unpaid` + PI `requires_capture`)
+        // comme le paiement déjà capturé (`paid`, cas d'un ancien flux).
+        if (session.payment_status !== "paid" && session.payment_status !== "unpaid") break;
         const inspectionId = session.metadata?.inspection_id;
         if (!inspectionId) {
           console.error("inspection-webhook: session payée sans inspection_id", session.id);
@@ -60,13 +67,24 @@ serve(async (req: Request) => {
         // La charge sert de source_transaction au versement : sans elle, un
         // transfert peut échouer faute de fonds disponibles sur le solde.
         let chargeId: string | null = null;
+        let autorisee = false;
         if (paymentIntentId) {
           try {
             const pi = await stripe.paymentIntents.retrieve(paymentIntentId);
             chargeId = typeof pi.latest_charge === "string" ? pi.latest_charge : pi.latest_charge?.id ?? null;
+            // `requires_capture` = l'autorisation tient, rien n'est débité.
+            autorisee = pi.status === "requires_capture" || pi.status === "succeeded";
+            if (session.payment_status === "unpaid" && pi.status !== "requires_capture") {
+              console.error("session unpaid sans autorisation utilisable:", session.id, pi.status);
+              break;
+            }
           } catch (e) {
             console.error("récupération de la charge:", e);
           }
+        }
+        if (!autorisee) {
+          console.error("inspection-webhook: ni autorisation ni paiement", session.id);
+          break;
         }
 
         // Idempotence : seule une ligne encore `a_payer` bascule.
@@ -76,6 +94,8 @@ serve(async (req: Request) => {
             statut: "a_attribuer",
             stripe_payment_intent: paymentIntentId,
             stripe_charge: chargeId,
+            // Départ du compte à rebours des 48 heures de confirmation.
+            autorisee_le: new Date().toISOString(),
             maj_le: new Date().toISOString(),
           })
           .eq("id", inspectionId)
@@ -139,10 +159,16 @@ serve(async (req: Request) => {
 
         const { data: insp } = await admin
           .from("inspections")
-          .select("id, statut, transfer_id, part_inspecteur_cents")
+          .select("id, statut, transfer_id, part_inspecteur_cents, remboursement_pilote")
           .eq("stripe_payment_intent", pi)
           .maybeSingle();
-        if (!insp || insp.statut === "annulee") break;
+        // Ne pas défaire un barème que NOUS venons d'appliquer. Nos quatre
+        // chemins d'annulation passent la ligne en `annulee` AVANT d'appeler
+        // Stripe, donc le statut suffit déjà ; `remboursement_pilote` est le
+        // filet si cet ordre changeait un jour. Sans cette garde, un
+        // remboursement de 139 € reprendrait une part des 40 € que le barème
+        // vient d'accorder à l'inspecteur pour un déplacement réellement fait.
+        if (!insp || insp.statut === "annulee" || insp.remboursement_pilote === true) break;
 
         const total = charge.refunded === true || (charge.amount_refunded ?? 0) >= (charge.amount ?? 0);
 

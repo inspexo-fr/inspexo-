@@ -3,6 +3,7 @@
 // Luhn du SIRET (avec l'exception La Poste), la zone couverte, le créneau
 // sous 48 h, et l'intégrité de la charte signée.
 // Usage : node tests/inspection.test.mjs
+import { readFileSync } from 'node:fs'
 import {
   CHARTE_INDEPENDANCE,
   CHARTE_VERSION,
@@ -19,6 +20,13 @@ import {
   ZONE_LANCEMENT,
   ZONE_LIBELLE,
   CONSENTEMENT_PHOTOS,
+  autorisationExpiree,
+  decisionAnnulation,
+  DELAI_ANNULATION_GRATUITE_HEURES,
+  DELAI_CONFIRMATION_HEURES,
+  DEMANDE_EXECUTION_IMMEDIATE,
+  DUREE_AUTORISATION_JOURS,
+  RETENUE_DEPLACEMENT_CENTS,
 } from '../supabase/functions/_shared/inspection.ts'
 
 let ko = 0
@@ -126,8 +134,156 @@ verifie('Aucun engagement vide', CHARTE_INDEPENDANCE.every(c => c.trim().length 
     divergents.join(', '))
 }
 
+// ---------------------------------------------------------------------------
+// Petits adaptateurs : le reste du fichier utilise `verifie(titre, ok)`, les
+// blocs ci-dessous sont écrits dans le style des autres suites du projet.
+const titre = (t) => console.log(`\n▶ ${t}`)
+const ok = (c, label) => verifie(label, !!c)
+const eq = (a, b, label) => verifie(
+  label,
+  JSON.stringify(a) === JSON.stringify(b),
+  `obtenu ${JSON.stringify(a)}, attendu ${JSON.stringify(b)}`,
+)
+
+// ---------------------------------------------------------------------------
+titre('Paiement en deux temps : la fenêtre de confirmation tient dans l’autorisation')
+// ---------------------------------------------------------------------------
+// ⚠️ L'invariant qui compte : une autorisation de carte ne vit que 7 jours.
+// Si la fenêtre de confirmation l'approchait, une mission pourrait devenir
+// confirmable alors que l'autorisation a déjà expiré chez Stripe — donc
+// impayable, après qu'un inspecteur s'est engagé.
+ok(DELAI_CONFIRMATION_HEURES < DUREE_AUTORISATION_JOURS * 24,
+  'la fenêtre de confirmation est strictement plus courte que la durée d’autorisation')
+ok(DELAI_CONFIRMATION_HEURES * 2 <= DUREE_AUTORISATION_JOURS * 24,
+  'et elle garde une marge d’au moins un facteur deux')
+eq(DELAI_CONFIRMATION_HEURES, 48, 'fenêtre de confirmation à 48 heures')
+
+const T0 = new Date('2026-11-10T08:00:00Z')
+ok(autorisationExpiree(new Date('2026-11-08T07:59:00Z'), T0) === true,
+  'autorisation de plus de 48 h → expirée')
+ok(autorisationExpiree(new Date('2026-11-08T08:01:00Z'), T0) === false,
+  'autorisation de moins de 48 h → encore valable')
+ok(autorisationExpiree(null, T0) === false,
+  'sans date d’autorisation, rien n’expire — on n’annule pas sur une donnée absente')
+
+// ---------------------------------------------------------------------------
+titre('Barème d’annulation : la somme revient toujours au prix payé')
+// ---------------------------------------------------------------------------
+eq(RETENUE_DEPLACEMENT_CENTS, 4_000, 'indemnité de déplacement : 40,00 €')
+eq(DELAI_ANNULATION_GRATUITE_HEURES, 24, 'annulation gratuite jusqu’à 24 heures du créneau')
+
+const ctx = (p) => ({
+  statut: 'acceptee',
+  creneau: new Date('2026-11-12T10:00:00Z'),
+  maintenant: new Date('2026-11-10T10:00:00Z'),
+  prix_cents: PRIX_INSPECTION_CENTS,
+  ...p,
+})
+
+// Avant confirmation : rien n'a été débité, donc rien à rembourser.
+for (const statut of ['a_payer', 'a_attribuer', 'refusee']) {
+  const d = decisionAnnulation(ctx({ statut }))
+  eq(d.action, 'annuler_autorisation', `statut ${statut} → autorisation relâchée`)
+  eq(d.rembourse_cents, 0, `statut ${statut} → aucun remboursement (rien n’a été pris)`)
+  eq(d.retenue_cents, 0, `statut ${statut} → aucune retenue`)
+}
+
+// Après confirmation, à plus de 24 h : tout revient à l'acheteur.
+{
+  const d = decisionAnnulation(ctx({}))
+  eq(d.action, 'rembourser_integral', 'à 48 h du créneau → remboursement intégral')
+  eq(d.rembourse_cents, PRIX_INSPECTION_CENTS, 'l’acheteur récupère tout')
+  eq(d.retenue_cents, 0, 'rien n’est retenu')
+}
+
+// La borne des 24 h : au-delà c'est gratuit, en dessous la retenue s'applique.
+{
+  const juste = decisionAnnulation(ctx({ maintenant: new Date('2026-11-11T09:59:00Z') }))
+  eq(juste.action, 'rembourser_integral', 'à 24 h et 1 minute → encore gratuit')
+  const dedans = decisionAnnulation(ctx({ maintenant: new Date('2026-11-11T10:01:00Z') }))
+  eq(dedans.action, 'retenue_deplacement', 'à 23 h 59 → la retenue s’applique')
+  eq(dedans.retenue_cents, 4_000, 'la retenue vaut 40 €')
+  eq(dedans.rembourse_cents, PRIX_INSPECTION_CENTS - 4_000, 'le reste est remboursé')
+}
+
+// Vendeur absent : l'emporte sur le délai. Un inspecteur déplacé pour rien est
+// indemnisé même si le constat a lieu bien avant le créneau.
+{
+  const d = decisionAnnulation(ctx({ absence_vendeur: true, maintenant: new Date('2026-11-01T10:00:00Z') }))
+  eq(d.action, 'retenue_deplacement', 'absence constatée → retenue, quel que soit le délai')
+  eq(d.retenue_cents, 4_000, 'indemnité de 40 €')
+}
+
+// Créneau inconnu : jamais de barème sur une donnée manquante.
+{
+  const d = decisionAnnulation(ctx({ creneau: null }))
+  eq(d.action, 'rembourser_integral',
+    'créneau inconnu → au plus favorable pour l’acheteur, aucune retenue')
+}
+
+// Rien à faire sur une inspection déjà réalisée ou déjà annulée.
+for (const statut of ['faite', 'annulee']) {
+  const d = decisionAnnulation(ctx({ statut }))
+  eq(d.action, 'rien', `statut ${statut} → aucun mouvement`)
+}
+
+// INVARIANT MONÉTAIRE, sur 20 000 cas : remboursé + retenu ne dépasse JAMAIS
+// le prix payé, et aucune part n’est négative. C’est la garantie qu’aucun
+// barème ne peut rendre plus que ce qui a été encaissé.
+{
+  let fuites = 0
+  for (let i = 0; i < 20_000; i++) {
+    const prix = 1_000 + (i * 37) % 40_000
+    const heures = ((i * 13) % 200) - 50 // de -50 h à +149 h
+    const d = decisionAnnulation({
+      statut: i % 7 === 0 ? 'a_attribuer' : 'acceptee',
+      creneau: new Date(T0.getTime() + heures * 3_600_000),
+      maintenant: T0,
+      prix_cents: prix,
+      absence_vendeur: i % 5 === 0,
+    })
+    const total = d.rembourse_cents + d.retenue_cents
+    if (d.rembourse_cents < 0 || d.retenue_cents < 0) fuites++
+    else if (d.action === 'annuler_autorisation' && total !== 0) fuites++
+    else if (d.action !== 'annuler_autorisation' && total !== prix) fuites++
+  }
+  eq(fuites, 0, '20 000 annulations : remboursé + retenu = prix encaissé, jamais de part négative')
+}
+
+// ⚠️ Un prix inférieur à la retenue rendrait un remboursement négatif. Le
+// barème ne doit pas pouvoir produire ça — à 179 € le cas n'arrive pas, mais
+// la fonction est générique et le prix est un paramètre.
+{
+  const d = decisionAnnulation(ctx({ prix_cents: 3_000, maintenant: new Date('2026-11-12T09:00:00Z') }))
+  ok(d.rembourse_cents >= 0 || d.action === 'rien',
+    'prix inférieur à la retenue : le remboursement ne devient pas négatif')
+}
+
+// ---------------------------------------------------------------------------
+titre('Demande expresse d’exécution immédiate (L221-25)')
+// ---------------------------------------------------------------------------
+ok(/avant la fin du délai de rétractation de 14 jours/.test(DEMANDE_EXECUTION_IMMEDIATE),
+  'le texte nomme le délai de 14 jours')
+ok(/perdre ce droit/.test(DEMANDE_EXECUTION_IMMEDIATE),
+  'et dit explicitement que le droit est perdu')
+{
+  // Le texte affiché à l'acheteur doit être CELUI-LÀ, mot pour mot.
+  const bloc = readFileSync(new URL('../src/components/InspectionBloc.jsx', import.meta.url), 'utf8')
+  const normaliser = (t) => t.replace(/\s+/g, ' ').trim()
+  ok(normaliser(bloc).includes(normaliser(DEMANDE_EXECUTION_IMMEDIATE)),
+    'InspectionBloc affiche le texte exact de la demande d’exécution')
+  ok(/checked=\{executionImmediate\}/.test(bloc), 'la case est bien liée à son état')
+  // Jamais pré-cochée : l'état initial doit être `false`, et le serveur refuse
+  // la commande sans la demande (vérifié séparément dans inspection-checkout).
+  ok(/\[executionImmediate, setExecutionImmediate\] = useState\(false\)/.test(bloc),
+    'la case n’est JAMAIS pré-cochée')
+  ok(/execution_immediate: true/.test(bloc), 'la demande est transmise au serveur')
+}
+
+
 if (ko > 0) {
   console.error(`\n${ko} échec(s).`)
   process.exit(1)
 }
+
 console.log('\nTous les tests inspection passent.')

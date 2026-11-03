@@ -6,14 +6,14 @@
 // plus à ce qui a été affiché. tests/inspection.test.mjs compare les deux
 // fichiers phrase par phrase et fait échouer l'éval en cas d'écart.
 
-export const CHARTE_VERSION = '2026-11-01'
+export const CHARTE_VERSION = '2026-11-03'
 
 export const CHARTE_INDEPENDANCE = [
   "Je suis payé par l'acheteur, jamais par le vendeur. Je n'accepte, pendant ou après une inspection Inspexo, aucune somme, remise, commission, cadeau ni avantage de la part du vendeur du véhicule, de son mandataire, d'un garage ou d'un intermédiaire concerné par la vente.",
   "Je n'ai aucun intérêt dans la vente. Je n'inspecte pas un véhicule vendu par moi-même, par un proche, par mon employeur, ni par une entreprise dans laquelle j'ai un intérêt. Si je découvre un tel lien, je refuse la mission ou je la signale immédiatement.",
   "Je ne propose jamais de réparer ce que je constate. Je n'oriente pas l'acheteur vers mon propre atelier ni vers un garage avec lequel j'ai un accord commercial.",
   "Je rapporte ce que j'ai vu, pas ce qui arrange. Je ne tais aucun défaut constaté et je n'en invente aucun. Ce que je n'ai pas pu vérifier, je l'écris comme non vérifié.",
-  "Je respecte le véhicule et les personnes. Je me présente, j'explique ma démarche au vendeur, je ne photographie ni plaque d'immatriculation, ni document d'identité, ni personne.",
+  "Je respecte le véhicule et les personnes. Je me présente, j'explique ma démarche au vendeur, et je ne photographie ni plaque d'immatriculation, ni document d'identité, ni aucune personne reconnaissable — ni le vendeur, ni un passant, ni moi-même.",
   "Je suis indépendant et assuré. J'exerce sous mon propre numéro SIRET et je maintiens une assurance responsabilité civile professionnelle en cours de validité pendant toute ma collaboration.",
   "Je sais qu'un manquement met fin à la collaboration. Inspexo peut suspendre mon compte immédiatement, et la rémunération d'une mission entachée d'un manquement n'est pas due.",
 ]

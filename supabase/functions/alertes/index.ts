@@ -19,8 +19,13 @@
 // L'alerte « annonce revenue à un autre prix » vit dans la fonction `score`
 // (déclenchée au moment précis de la réanalyse), pas ici.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { executerDecision } from "../_shared/inspectionArgent.ts";
 import {
+  alerteExploitant,
+  alerteRapportEnRetard,
+  emailAutorisationExpiree,
   emailNouveauRappel,
   emailRetourSigne,
   empreinteEmail,
@@ -223,6 +228,10 @@ serve(async (req: Request) => {
     invitations_ignorees: 0,
     textes_api_purges: 0,
     preuves_api_purgees: 0,
+    autorisations_relachees: 0,
+    rapports_en_retard: 0,
+    photos_inspection_purgees: 0,
+    coordonnees_vendeur_purgees: 0,
     erreurs: 0,
   };
 
@@ -342,6 +351,102 @@ serve(async (req: Request) => {
       bilan.preuves_api_purgees = Number(expirees ?? 0);
     } catch (e) {
       console.error("purger_preuves_api:", e);
+      bilan.erreurs += 1;
+    }
+
+    // ========== 5. Autorisations non confirmées à 48 h ====================
+    // Personne n'a pris la mission : on RELÂCHE l'autorisation. Rien n'a
+    // jamais été débité, et l'acheteur doit l'apprendre de nous.
+    // ⚠️ 48 h et pas plus : une autorisation de carte ne tient que 7 jours.
+    // Laissée filer, elle expirerait chez Stripe et la mission serait
+    // confirmable sans être payable.
+    try {
+      const { data: aExpirer } = await admin.rpc("inspections_a_expirer", { p_limite: 50 });
+      const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", { apiVersion: "2023-10-16" });
+      for (const insp of (aExpirer ?? [])) {
+        const { data: pris } = await admin.rpc("inspection_expirer", { p_inspection_id: insp.id });
+        if (pris !== true) continue; // quelqu'un l'a prise entre-temps
+        const res = await executerDecision(stripe, admin, insp.id, {
+          action: "annuler_autorisation",
+          payment_intent: insp.stripe_payment_intent,
+        });
+        if (!res.ok) {
+          bilan.erreurs += 1;
+          await alerteExploitant(
+            "Inspexo — autorisation non relâchée",
+            `<p>Inspection ${insp.id} expirée, mais l'autorisation n'a pas pu être annulée.</p>
+             <p>Erreur : ${res.erreur ?? "inconnue"}</p>`,
+          );
+        }
+        bilan.autorisations_relachees += 1;
+        try {
+          const [{ data: acheteur }, { data: analyse }] = await Promise.all([
+            admin.auth.admin.getUserById(insp.acheteur_id),
+            admin.from("analyses").select("marque, modele").eq("id", insp.analysis_id).maybeSingle(),
+          ]);
+          if (acheteur?.user?.email) {
+            await emailAutorisationExpiree(
+              acheteur.user.email,
+              [analyse?.marque, analyse?.modele].filter(Boolean).join(" ") || "votre véhicule",
+              insp.analysis_id ?? null,
+            );
+          }
+        } catch (e) {
+          console.error("email d'expiration:", e);
+        }
+      }
+    } catch (e) {
+      console.error("expiration des autorisations:", e);
+      bilan.erreurs += 1;
+    }
+
+    // ========== 6. Rapports non remis sous 24 h ===========================
+    // L'acheteur attend un rapport qu'il a payé. Une alerte exploitant, une
+    // seule par inspection (`rapport_alerte_le`).
+    try {
+      const { data: retards } = await admin.rpc("inspections_rapport_en_retard", { p_limite: 50 });
+      for (const insp of (retards ?? [])) {
+        await alerteRapportEnRetard(insp.id, insp.ref_num ?? null, insp.creneau_confirme ?? null);
+        await admin.rpc("inspection_noter_alerte_rapport", { p_inspection_id: insp.id });
+        bilan.rapports_en_retard += 1;
+      }
+    } catch (e) {
+      console.error("rapports en retard:", e);
+      bilan.erreurs += 1;
+    }
+
+    // ========== 7. Conservation : appliquer les durées ANNONCÉES ==========
+    // CGV et politique de confidentialité : photos du rapport 2 ans,
+    // constatations écrites 5 ans, coordonnées du vendeur 3 mois. Une durée
+    // écrite que rien n'applique serait une promesse fausse.
+    try {
+      const { data: lots } = await admin.rpc("inspections_photos_a_purger", { p_limite: 20 });
+      for (const lot of (lots ?? [])) {
+        const chemins: string[] = Array.isArray(lot.chemins) ? lot.chemins : [];
+        if (chemins.length > 0) {
+          // Le stockage n'est pas une table : la suppression des fichiers se
+          // fait ici, en service role, AVANT de marquer la ligne purgée.
+          const { error } = await admin.storage.from("rapports").remove(chemins);
+          if (error) {
+            console.error("suppression des photos d'inspection:", error);
+            bilan.erreurs += 1;
+            continue; // la ligne reste à purger : on repassera demain
+          }
+        }
+        await admin.rpc("inspection_noter_photos_purgees", { p_inspection_id: lot.inspection_id });
+        bilan.photos_inspection_purgees += 1;
+      }
+    } catch (e) {
+      console.error("purge des photos d'inspection:", e);
+      bilan.erreurs += 1;
+    }
+
+    try {
+      const { data: n } = await admin.rpc("purger_coordonnees_vendeur");
+      bilan.coordonnees_vendeur_purgees = Number(n ?? 0);
+      await admin.rpc("purger_rapports_inspection");
+    } catch (e) {
+      console.error("purge des coordonnées vendeur:", e);
       bilan.erreurs += 1;
     }
 
