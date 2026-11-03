@@ -528,6 +528,117 @@ Déployé pour pouvoir exécuter les deux vérifications demandées : dump prod 
 ### Page de confidentialité — manque comblé
 Le formulaire pro collectait email, société, volume et message libre (`leads_pro`) sans que la politique n'en dise un mot. Sections **2.f** et **6 octies** ajoutées : finalité unique, base légale (mesures précontractuelles), conservation 3 ans après le dernier contact.
 
+## Sprint 12 — Vocabulaire et compléments CUA API (nov. 2026)
+
+### Vocabulaire : jamais « la valeur » d'un véhicule
+La détermination de la valeur d'un véhicule est réservée aux **experts en
+automobile inscrits** (art. **L326-4 I-2° du code de la route**). Notre analyse
+ne détermine pas une valeur : elle **relève des prix observés** et situe le prix
+demandé par **écart avec les annonces comparables**. Vocabulaire proscrit quand
+il s'applique à NOTRE analyse : « valeur », « estimation », « cote »,
+« expertise », « expert ». Remplacements : « prix observés », « écart avec les
+annonces comparables », « analyse », « fourchette de coûts ».
+- ⚠️ **Trois familles d'occurrences ne se touchent PAS, et pour des raisons
+  différentes.** (1) Les **dénégations** (« ne constitue ni une expertise
+  automobile au sens réglementaire ») : les retirer affaiblirait la protection
+  qu'elles apportent — elles disent précisément que nous n'en sommes pas une.
+  (2) Les occurrences qui désignent les **inspecteurs humains** (CGU art. 2, 7,
+  8, 10, 11 ; mentions légales ; FAQ ; footer) : ce sont de vrais
+  professionnels, le mot est juste. (3) Les **identifiants** : la source de lead
+  `expert_waitlist` est une valeur contrainte en base, « Peugeot Expert » est un
+  modèle d'utilitaire, et le filtre de `ResultPage` qui MATCHE « estimation de
+  valeur » dans une justification de la critique lit une sortie de modèle — le
+  changer casserait l'appariement sans rien assainir.
+- « Décote mesurée sur ce segment » devient « **Écart observé sur ce segment** »
+  à l'affichage. Le calcul et les noms internes (`decote_eur_10000km`) sont
+  inchangés : c'est bien une pente mesurée sur des prix demandés.
+
+### Compléments aux CUA de l'API (`docs/cua-api-v0.md`, toujours NON PUBLIÉ)
+- **Restitution à un tiers = le verdict COMPLET, ou rien** (art. 4.4-4.7) :
+  score, **date d'analyse**, `bareme_version`, mention « analyse automatisée de
+  l'annonce, sans examen du véhicule », lien `/a/:id`, attribution. Ni extrait
+  ni modification. **Interdit au vendeur du véhicule analysé** — mise dans les
+  mains du vendeur, l'analyse devient un argument de vente.
+  - ⚠️ **La date d'analyse MANQUAIT dans la réponse de l'API** : vérifié, elle
+    n'y était pas. Ajoutée (`date_analyse`, lue sur `analyses.created_at`) —
+    donc sur un résultat servi par le cache c'est la date de l'analyse
+    **d'origine**, ce qui est exactement le point : sans elle, un verdict de
+    sept jours se lit comme un verdict du jour. L'obligation d'affichage est
+    aussi rendue **comme donnée** (objet `restitution`), pas seulement comme
+    prose contractuelle.
+- **Conservation** (art. 6.4) : avant la purge du texte à 30 jours, le résultat
+  et une **empreinte sha256 du texte** sont conservés **5 ans** (preuve en cas
+  de litige, art. **L110-4 C. com.**), puis effacés par `purger_preuves_api()`.
+  - ⚠️ **L'ordre des deux passes de `purger_textes_api` EST la garantie** :
+    passe 1 pose l'empreinte (sans attendre 30 jours), passe 2 n'efface QUE les
+    textes qui en portent une (`texte_sha256 is not null`). Inversées, elles
+    perdraient la preuve en silence et pour toujours.
+  - ⚠️ **L'empreinte est un sha256 NON SALÉ, et c'est voulu** : sa valeur de
+    preuve vient de ce que le client peut la recalculer. Rien à voir avec le
+    défaut d'IP non salée corrigé au sprint 11 — une IP s'énumère en quelques
+    secondes, un texte d'annonce non.
+- **Prix partagés** (art. 6.3) : annonces **publiques** uniquement, segment
+  publié à partir de **15 relevés** ET **si aucun client d'API ne pèse plus de
+  20 %** du segment. Un relevé dominé par une source n'observe plus le marché,
+  il reflète cette source.
+  - `marche_agregats.parts_api` (carte {client → effectif}, vide dans le cas
+    normal) + `PART_API_MAX` / `partApiDominante` / `partApiAcceptable` dans
+    `_shared/marche.ts`, miroir dans `src/data/marche.js`, et `part_api_max()`
+    + `get_prix_segments` côté base. La **région reste une préférence** : un
+    sous-ensemble régional dominé se replie sur le national, il ne se publie
+    pas. Le dénominateur est le total **publié** (comparables en mémoire
+    compris).
+  - ⚠️ **`agreger_marche(jsonb)` est SUPPRIMÉE, pas surchargée** : laisser
+    vivre la signature à un argument rouvrirait un chemin d'écriture **sans
+    attribution**, donc une façon de faire entrer des prix d'API dans un
+    segment sans qu'ils y soient comptés. Un verrou contournable par
+    l'ancienne porte n'est pas un verrou. Un identifiant de client invalide
+    fait **échouer le lot** au lieu de le basculer en « public ».
+- **Responsabilité** (art. 7) : **obligation de moyens**, le client répond seul
+  de l'usage du verdict auprès de ses clients et **garantit Inspexo** en cas
+  d'usage trompeur, plafond = **le plus élevé** entre les sommes payées sur
+  12 mois et un plancher.
+  - 🔒 **BLOQUANT** : le plancher est un `[MONTANT À FIXER AVEC L'AVOCAT ET
+    L'ASSUREUR RC PRO]`. Un plancher supérieur à la garantie souscrite serait
+    un engagement pris sur les fonds propres sans le savoir. **Aucun contrat ne
+    peut être signé avant qu'il soit arrêté.**
+- **Annexes, brouillons NON PUBLIÉS** : `docs/cgv-pro-v0.md` (tarifs sur devis,
+  paiement 60 j **maximum** — plafond impératif de L441-10, pénalités au taux
+  BCE + 10 points, indemnité forfaitaire de **40 €** par facture, mentions de
+  L441-9 à poser sur le gabarit de facture) et `docs/dpa-api-v0.md` (art. 28
+  RGPD : Inspexo **sous-traitant**, instructions documentées, sous-traitants
+  ultérieurs dont **Anthropic hors UE**, effacement en fin de contrat — sauf la
+  preuve de 5 ans et les pièces comptables, réserve de l'art. 28.3 g).
+- ⚠️ **Le périmètre de l'acte art. 28 est explicite** : Inspexo est
+  sous-traitant pour l'analyse, mais **responsable du traitement pour son
+  propre compte** sur la facturation et le relevé de prix agrégé. Confondre les
+  deux qualifications ferait signer un acte qui ne couvre pas ce qu'il prétend.
+
+### Tests — hors ligne, aucune éval payante (coût 0 €)
+- `tests/purge-api.test.mjs` (**nouveau**, chaîné dans `npm run eval`) :
+  36 contrôles **statiques** sur la migration. Les règles vérifiées sont des
+  garanties d'**ordre** et de **portée**, pas des calculs — c'est la forme du
+  code qu'on fige. Il contrôle aussi que le seuil des 20 % est **identique en
+  SQL et en TypeScript**, et que la signature sans client est bien supprimée.
+- `tests/marche.test.mjs` : +32 contrôles sur le verrou des 20 % (borne incluse
+  à 20 %, règle **par client** et non sur le cumul, poids cumulé sur plusieurs
+  lignes, interaction avec la préférence régionale, effet des comparables en
+  mémoire). Le tirage de parité client/serveur génère désormais des
+  `parts_api`, et le test **exige que le verrou morde** sur ce tirage — sans
+  quoi la parité ne prouverait rien à son sujet.
+- Les 15 suites hors ligne passent. **Aucune modification du calcul du score** :
+  `tests/independance-score.test.mjs` passe inchangé (41/41).
+
+### Mise en service — PAS FAITE (branche `sprint12-vocabulaire`, non mergée)
+1. dump prod hors dépôt ; 2. `db push --linked --yes` (migration
+`20261108120000`) ; 3. déployer `score`, `api-analyses`, `alertes` ; 4. éval
+ciblée S7/308/Mercedes pour confirmer les verdicts inchangés ; 5. merge.
+- **`agreger_marche` est DROP puis CREATE**, mais l'ordre reste sans danger :
+  `p_client_id` a une **valeur par défaut**, donc l'appel à un seul argument du
+  `score` encore en place continue de résoudre. Déployer `score` juste après
+  la migration sert seulement à ce que l'attribution commence à être
+  enregistrée — pas à éviter une panne.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

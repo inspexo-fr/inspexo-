@@ -66,7 +66,7 @@ export default function MentionsLegales() {
 
           <h2 className="legal-h2">4. Responsabilité</h2>
           <p className="legal-p">
-            Les informations fournies par l'expert IA Inspexo sont données à titre indicatif et ne constituent pas un diagnostic professionnel certifié. DUPLEX SAS ne saurait être tenue responsable des décisions prises sur la base de ces informations.
+            Les informations fournies par l'analyse Inspexo sont données à titre indicatif et ne constituent pas un diagnostic professionnel certifié. DUPLEX SAS ne saurait être tenue responsable des décisions prises sur la base de ces informations.
           </p>
           <p className="legal-p">
             Les experts référencés sur la plateforme sont des professionnels indépendants. DUPLEX SAS agit en qualité d'intermédiaire de mise en relation et ne se substitue pas à la responsabilité des experts dans l'exercice de leurs missions.

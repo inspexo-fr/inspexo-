@@ -383,6 +383,10 @@ export type LigneAgregat = {
   mois?: string;
   prix_tranche: number;
   effectif: number;
+  /** Ventilation {client_api → effectif} des SEULES contributions reçues par
+   *  API. Absente ou vide dans le cas normal : le partage des prix est éteint
+   *  par défaut, et les relevés publics de l'extension n'ont pas de client. */
+  parts_api?: Record<string, number>;
 };
 
 export type VehiculeCible = {
@@ -459,6 +463,44 @@ function quantileHisto(histo: Histo, total: number, q: number): number {
   return tranches[tranches.length - 1][0] + TRANCHE_PRIX / 2;
 }
 
+/** Part maximale qu'un seul client d'API peut peser dans un segment publié.
+ *
+ *  Miroir de `part_api_max()` côté base. Au-delà, le segment n'est pas publié :
+ *  nous écririons « prix observés » sur ce qui serait, pour un cinquième et
+ *  plus, le catalogue d'un seul acteur. Un relevé dominé par une source n'est
+ *  plus une observation du marché, c'est le reflet de cette source. */
+export const PART_API_MAX = 0.20;
+
+/** Client d'API le plus lourd dans un ensemble de lignes, et son poids.
+ *
+ *  `total` est le total PUBLIÉ (il comprend les prix bruts fournis en mémoire,
+ *  qui n'ont pas de client) : c'est bien de la population affichée que la part
+ *  est calculée, pas d'un sous-ensemble choisi. */
+export function partApiDominante(
+  lignes: LigneAgregat[],
+  total: number,
+): { client: string | null; effectif: number; part: number } {
+  const parClient = new Map<string, number>();
+  for (const l of lignes) {
+    if (!Number.isFinite(l.effectif) || l.effectif <= 0) continue;
+    for (const [client, n] of Object.entries(l.parts_api ?? {})) {
+      if (!Number.isFinite(n) || (n as number) <= 0) continue;
+      parClient.set(client, (parClient.get(client) ?? 0) + (n as number));
+    }
+  }
+  let client: string | null = null;
+  let effectif = 0;
+  for (const [c, n] of parClient) {
+    if (n > effectif) { client = c; effectif = n; }
+  }
+  return { client, effectif, part: total > 0 ? effectif / total : 0 };
+}
+
+/** Un segment est-il publiable au regard du seul poids des clients d'API ? */
+export function partApiAcceptable(lignes: LigneAgregat[], total: number): boolean {
+  return partApiDominante(lignes, total).part <= PART_API_MAX;
+}
+
 /** Fourchette P25 / médiane / P75 depuis les agrégats d'un modèle.
  *
  *  La région est une PRÉFÉRENCE, pas un filtre : si le sous-ensemble régional
@@ -480,6 +522,9 @@ export function fourchetteDepuisAgregats(
   const construire = (sousEnsemble: LigneAgregat[], portee: "region" | "national", bruts: number[]) => {
     const { histo, total } = histogramme(sousEnsemble, bruts);
     if (total < minimum) return null;
+    // Second verrou, indépendant du premier : 15 relevés ne suffisent pas si
+    // l'un d'eux pèse à lui seul plus d'un cinquième du segment.
+    if (!partApiAcceptable(sousEnsemble, total)) return null;
     return {
       p25: Math.round(quantileHisto(histo, total, 0.25)),
       mediane: Math.round(quantileHisto(histo, total, 0.5)),

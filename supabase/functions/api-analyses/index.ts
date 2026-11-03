@@ -155,6 +155,21 @@ serve(async (req: Request) => {
       }, res.status >= 400 ? res.status : 502);
     }
 
+    // Date de l'analyse — OBLIGATOIRE dans toute restitution à un tiers
+    // (CUA art. 4.4). Sur un résultat servi par le cache, c'est la date de
+    // l'analyse D'ORIGINE, pas celle de l'appel : c'est précisément ce qui
+    // rend visible qu'un verdict a vieilli. Sans ce champ, un verdict de
+    // trois jours s'afficherait comme neuf.
+    let dateAnalyse: string | null = null;
+    if (brut.id) {
+      const { data: ligne } = await admin
+        .from("analyses")
+        .select("created_at")
+        .eq("id", brut.id)
+        .maybeSingle();
+      dateAnalyse = ligne?.created_at ?? null;
+    }
+
     // CUA art. 5.5 — un même client qui redemande la MÊME annonce sous
     // 7 jours n'est pas refacturé. Le crédit vient d'être débité : on le rend
     // s'il avait déjà payé pour cette analyse-là. Toute autre requête,
@@ -183,8 +198,26 @@ serve(async (req: Request) => {
       url: `https://www.inspexo.io/a/${brut.id}`,
       verdict: r.verdict,
       score: r.score,
+      date_analyse: dateAnalyse,
       bareme_version: BAREME_VERSION,
       cache: Boolean(brut.cache),
+      // Ce que toute restitution à un tiers doit porter, mot pour mot
+      // (CUA art. 4.4). Rendu DANS la réponse plutôt que laissé au contrat
+      // seul : une obligation d'affichage que le client doit retrouver dans
+      // un PDF est une obligation qu'il appliquera de travers.
+      restitution: {
+        attribution: "Analyse Inspexo",
+        mention: "Analyse automatisée de l'annonce, sans examen du véhicule.",
+        lien: brut.id ? `https://www.inspexo.io/a/${brut.id}` : null,
+        champs_obligatoires: [
+          "verdict",
+          "score",
+          "date_analyse",
+          "bareme_version",
+          "mention",
+          "lien",
+        ],
+      },
       vehicule: {
         marque: v.marque ?? null,
         modele: v.modele ?? null,

@@ -1486,7 +1486,7 @@ serve(async (req: Request) => {
       if (marqueF && modeleF) {
         const { data: aggRows, error: aggErr } = await admin
           .from("marche_agregats")
-          .select("generation_norm, techno, cyl, boite, annee, km_tranche, region, prix_tranche, effectif")
+          .select("generation_norm, techno, cyl, boite, annee, km_tranche, region, prix_tranche, effectif, parts_api")
           .eq("marque_norm", marqueF)
           .eq("modele_norm", modeleF)
           .in("mois", moisRecents(new Date()))
@@ -1503,6 +1503,9 @@ serve(async (req: Request) => {
           region: String(r.region ?? ""),
           prix_tranche: Number(r.prix_tranche ?? 0),
           effectif: Number(r.effectif ?? 0),
+          // Ventilation des contributions reçues par API : elle sert le
+          // verrou des 20 % appliqué dans `fourchetteDepuisAgregats`.
+          parts_api: (r.parts_api ?? {}) as Record<string, number>,
         }));
       }
 
@@ -2827,7 +2830,13 @@ serve(async (req: Request) => {
         }
         const lignes = fondreReleves(releves);
         if (lignes.length > 0) {
-          const { error: aggError } = await admin.rpc("agreger_marche", { p_lignes: lignes });
+          // L'identifiant du client est transmis pour que sa contribution
+          // soit ATTRIBUÉE : sans attribution, le verrou des 20 % (CUA
+          // art. 6.3) serait invérifiable. null pour les relevés publics.
+          const { error: aggError } = await admin.rpc("agreger_marche", {
+            p_lignes: lignes,
+            p_client_id: apiClientId,
+          });
           if (aggError) console.error("agreger_marche:", aggError);
         }
       }

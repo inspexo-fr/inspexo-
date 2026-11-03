@@ -255,7 +255,7 @@ export default function CGU() {
             Les experts référencés sur la Plateforme sont des professionnels indépendants. Inspexo vérifie leurs qualifications mais ne se substitue pas à leur responsabilité professionnelle.
           </p>
           <p className="legal-p">
-            Inspexo ne garantit pas l'absence de défauts non détectables lors d'une inspection visuelle, l'exactitude absolue des estimations de coûts fournies par l'IA, la disponibilité permanente du service, ni les décisions d'achat prises par le Client sur la base des informations fournies. La responsabilité d'Inspexo est limitée au montant de la prestation commandée.
+            Inspexo ne garantit pas l'absence de défauts non détectables lors d'une inspection visuelle, l'exactitude absolue des fourchettes de coûts fournies par l'analyse, la disponibilité permanente du service, ni les décisions d'achat prises par le Client sur la base des informations fournies. La responsabilité d'Inspexo est limitée au montant de la prestation commandée.
           </p>
 
           <hr className="legal-sep" />

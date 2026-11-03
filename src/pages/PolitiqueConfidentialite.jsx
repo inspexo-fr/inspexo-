@@ -49,7 +49,7 @@ export default function PolitiqueConfidentialite() {
           </ul>
           <h3 className="legal-h3">c) Données de conversation IA</h3>
           <ul className="legal-ul">
-            <li>Messages échangés avec l'expert IA</li>
+            <li>Messages échangés avec l'analyse IA</li>
             <li>Fichiers uploadés (devis, factures) — anonymisés après traitement</li>
           </ul>
           <h3 className="legal-h3">d) Données de paiement</h3>
@@ -83,7 +83,7 @@ export default function PolitiqueConfidentialite() {
 
           <h2 className="legal-h2">4. Anonymisation des données prix</h2>
           <p className="legal-p">
-            Les données de prix collectées (devis, factures, estimations) sont anonymisées avant stockage dans notre base de données de référence. Aucune donnée permettant d'identifier l'utilisateur n'est conservée dans cette base. Les données anonymisées sont utilisées pour améliorer la précision des estimations de coûts fournies par notre service.
+            Les données de prix collectées (devis, factures, fourchettes de réparation) sont anonymisées avant stockage dans notre base de données de référence. Aucune donnée permettant d'identifier l'utilisateur n'est conservée dans cette base. Les données anonymisées sont utilisées pour améliorer la précision des fourchettes de coûts fournies par notre service.
           </p>
 
           <h2 className="legal-h2">5. Durée de conservation</h2>

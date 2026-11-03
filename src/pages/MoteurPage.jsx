@@ -274,7 +274,7 @@ export default function MoteurPage() {
               </div>
               <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 18 }}>
                 Ces fourchettes mélangent les millésimes et les kilométrages d'un même modèle :
-                elles situent un ordre de grandeur, pas la valeur d'une voiture précise.{' '}
+                elles situent un ordre de grandeur, pas le prix d'une voiture précise.{' '}
                 <Link to="/score">Analysez l'annonce qui vous intéresse</Link> pour obtenir une
                 fourchette à année, motorisation et kilométrage comparables, et la position du prix
                 demandé dans cette fourchette.

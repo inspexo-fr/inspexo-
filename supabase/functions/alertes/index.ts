@@ -222,6 +222,7 @@ serve(async (req: Request) => {
     invitations_envoyees: 0,
     invitations_ignorees: 0,
     textes_api_purges: 0,
+    preuves_api_purgees: 0,
     erreurs: 0,
   };
 
@@ -321,12 +322,26 @@ serve(async (req: Request) => {
 
     // ========== 3. Purge des textes d'annonces reçues par API (30 jours) ====
     // L'usage (date, clé, nombre) reste pour la comptabilité ; le texte, lui,
-    // n'a plus aucune raison d'être conservé (CUA art. 6.4).
+    // n'a plus aucune raison d'être conservé (CUA art. 6.4). La fonction pose
+    // d'abord l'empreinte sha256, et n'efface QUE les textes qui en portent
+    // une : c'est l'ordre des deux passes qui garantit la preuve.
     try {
       const { data: purgees } = await admin.rpc("purger_textes_api");
       bilan.textes_api_purges = Number(purgees ?? 0);
     } catch (e) {
       console.error("purger_textes_api:", e);
+      bilan.erreurs += 1;
+    }
+
+    // ========== 4. Expiration des preuves d'API (5 ans) ====================
+    // Passé la durée que nous avons ANNONCÉE, la preuve s'en va : résultat et
+    // empreinte. Conserver plus longtemps que l'engagement pris serait une
+    // rétention sans base légale (CUA art. 6.4, art. L110-4 C. com.).
+    try {
+      const { data: expirees } = await admin.rpc("purger_preuves_api");
+      bilan.preuves_api_purgees = Number(expirees ?? 0);
+    } catch (e) {
+      console.error("purger_preuves_api:", e);
       bilan.erreurs += 1;
     }
 
