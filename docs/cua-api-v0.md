@@ -253,6 +253,16 @@ articles 3 ou 4, après notification écrite.
 9.1. Le barème évolue. Sa version est publiée dans chaque réponse
 (`bareme_version`) et change dès qu'un score changerait à faits identiques.
 
+9.3. **Versions publiées à ce jour.** `11.0` (version initiale de l'API) et
+`11.1` — cette dernière ajoute au barème deux faits issus du certificat de
+situation administrative HistoVec (opposition, procédure pour véhicule
+gravement endommagé non levée). **À faits identiques, c'est-à-dire sans
+certificat déposé, le score est inchangé entre 11.0 et 11.1** ; la version
+change néanmoins, parce que la surface d'entrée du barème a changé et que vous
+suivez ce numéro. Ces deux faits ne sont accessibles qu'au dépôt d'un
+certificat par un acheteur : l'API, qui ne reçoit que du texte d'annonce, rend
+donc les mêmes scores qu'en 11.0.
+
 9.2. Toute modification des présentes est notifiée trente jours à l'avance.
 
 ## 10. Droit applicable

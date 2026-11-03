@@ -10,7 +10,12 @@
  *  11.0 : sprint 9 (axe prix sur relevé de marché, correction kilométrique).
  *         Aucune évolution du calcul au sprint 11 : seule la version est
  *         désormais publiée. */
-export const BAREME_VERSION = "11.0";
+// 11.1 — SPRINT 13 : deux faits HistoVec entrent dans le barème
+// (`histovec_opposition`, `histovec_vge_en_cours`). À faits identiques, c'est
+// à dire SANS rapport HistoVec, le score est inchangé — vérifié par
+// `tests/bareme.test.mjs`. La version bouge quand même : la surface d'entrée
+// du barème a changé, et les clients d'API suivent ce numéro.
+export const BAREME_VERSION = "11.1";
 
 export type FaitsAxes = {
   annee_courante: number;
@@ -51,6 +56,15 @@ export type FaitsAxes = {
   // Compteur photographié contredisant le kilométrage annoncé (> 2 %) :
   // preuve matérielle de fraude — plafonne le score en rouge à lui seul.
   compteur_contredit?: boolean;
+  // SPRINT 13 — faits lus sur le certificat de situation administrative
+  // HistoVec. Absents (undefined) quand aucun rapport n'a été déposé : le
+  // score est alors identique à celui d'avant ce sprint.
+  /** Vol, gage, opposition au transfert, saisie, ou certificat annulé : la
+   *  carte grise ne peut pas être mise au nom de l'acheteur. */
+  histovec_opposition?: boolean;
+  /** Procédure « véhicule gravement endommagé » NON LEVÉE : le véhicule n'est
+   *  pas autorisé à circuler avant validation de la réparation. */
+  histovec_vge_en_cours?: boolean;
   // Transverse
   incoherences: number;
 };
@@ -293,6 +307,16 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     poser(55, "Une opération d'entretien critique est déclarée non faite.");
   }
   if (nRappels >= 1) poser(48, "Un rappel constructeur reste à faire confirmer sur ce véhicule.");
+  // HistoVec. Ces deux faits sont des EMPÊCHEMENTS, pas des défauts
+  // mécaniques : on ne peut pas devenir propriétaire (opposition) ou on ne
+  // peut pas circuler (procédure non levée). Le plafond est donc plus bas que
+  // celui d'un défaut de sécurité.
+  if (f.histovec_opposition) {
+    poser(30, "Le certificat de situation administrative porte une opposition : ne rien payer avant sa levée.");
+  }
+  if (f.histovec_vge_en_cours) {
+    poser(32, "Procédure « véhicule gravement endommagé » non levée : le véhicule n'est pas autorisé à circuler.");
+  }
   score = Math.min(score, plafond);
 
   // ---------- Le rouge est réservé aux faits graves ----------
@@ -307,7 +331,10 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const casseNonCouverte = f.pannes.some((p) => p.gravite === "casse");
   const rougeJustifie = securiteNonCouverte || casseNonCouverte ||
     Boolean(f.rappel_stop_drive) || Boolean(f.juridique_grave) || Boolean(f.fraude_suspectee) ||
-    Boolean(f.compteur_contredit);
+    Boolean(f.compteur_contredit) ||
+    // Une opposition ou une procédure non levée justifie le rouge à elle
+    // seule : l'acheteur ne pourrait ni devenir propriétaire, ni circuler.
+    Boolean(f.histovec_opposition) || Boolean(f.histovec_vge_en_cours);
   if (!rougeJustifie && score < 40) score = 40;
 
   const verdict = score >= 70 ? "vert" : score >= 40 ? "orange" : "rouge";
@@ -349,6 +376,9 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     let plafondC = 100;
     // Une fraude au compteur n'est jamais « couverte » par une garantie.
     if (f.compteur_contredit) plafondC = Math.min(plafondC, 35);
+    // Aucune garantie ne lève un gage ni une procédure administrative.
+    if (f.histovec_opposition) plafondC = Math.min(plafondC, 30);
+    if (f.histovec_vge_en_cours) plafondC = Math.min(plafondC, 32);
     if (!f.entretien_renseigne && vehiculeUse) plafondC = Math.min(plafondC, 65);
     if (axesNotes <= 2) plafondC = Math.min(plafondC, 72);
     if (gravites.includes("securite")) plafondC = Math.min(plafondC, 58);

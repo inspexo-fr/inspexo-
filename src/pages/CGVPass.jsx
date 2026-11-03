@@ -50,7 +50,11 @@ export default function CGVPass() {
             utilisée au paiement : aux analyses d'annonces sans limitation de nombre, au mode visite complet
             (photos analysées sur place, verdict mis à jour), au détail complet de la marge de négociation
             (postes, sources, argumentaire), à la lecture du procès-verbal de contrôle technique, et au kit
-            signature (checklist des documents, contrat de cession pré-rempli, démarches).
+            signature (checklist des documents, contrat de cession pré-rempli, démarches), et à la lecture
+            complète du certificat de situation administrative HistoVec. Pour ce dernier, les signaux les plus
+            graves (vol, gage, opposition, procédure pour véhicule gravement endommagé) sont affichés à tout
+            utilisateur, même sans Pass&nbsp;: seul le détail est réservé au Pass. Les documents déposés —
+            photos de procès-verbal, certificat de situation administrative — ne sont jamais conservés.
           </p>
           <p className="legal-p">
             Le Pass achat fournit une aide documentaire et automatisée : il ne constitue ni une expertise

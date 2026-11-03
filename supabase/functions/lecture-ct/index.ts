@@ -20,7 +20,14 @@ import {
   negociationPublique,
   type CoutCandidat,
 } from "../_shared/negociation.ts";
-import { comparerKmCt, CT_SYSTEM, CT_TOOL, relierEtChiffrer, validerLectureCt } from "../_shared/lectureCt.ts";
+import {
+  appliquerCorrectionsKm,
+  comparerKmCt,
+  CT_SYSTEM,
+  CT_TOOL,
+  relierEtChiffrer,
+  validerLectureCt,
+} from "../_shared/lectureCt.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 
 const corsHeaders = {
@@ -152,6 +159,65 @@ serve(async (req: Request) => {
     const admin = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     const isEval = await evalSecretMatches(req);
     const { userId, passActif } = await passDepuisReq(admin, req);
+
+    // ---- Correction d'un relevé kilométrique mal lu ----------------------
+    // Le signal est ROUGE et vient d'une lecture automatique sur photo :
+    // l'acheteur doit pouvoir rectifier un chiffre. AUCUN nouvel appel au
+    // modèle — on applique la correction à la série déjà lue et on rejoue le
+    // barème. Réservé au Pass comme le reste de la lecture.
+    if (body?.action === "corriger_km") {
+      if (!passActif && !isEval) {
+        return jsonResponse({ error: "pass_requis", message: "Fonction du Pass achat." }, 403);
+      }
+      const { data: ligne } = await admin
+        .from("analyses").select("id, verdict, score, result_json").eq("id", analysisId).maybeSingle();
+      const res = ligne?.result_json as Record<string, any> | null;
+      const serie = res?.lecture_ct?.km?.serie;
+      if (!Array.isArray(serie) || serie.length === 0) {
+        return jsonResponse({ error: "rien_a_corriger", message: "Aucun relevé kilométrique à corriger." }, 422);
+      }
+      const corrections = Array.isArray(body?.corrections) ? body.corrections : [];
+      const corrigee = appliquerCorrectionsKm(serie, corrections);
+      // On recompare sur la série corrigée. Le dernier relevé est celui du
+      // contrôle du jour : on le ressort pour conserver la même sémantique.
+      const dernier = corrigee[corrigee.length - 1];
+      const km = comparerKmCt(
+        dernier?.km ?? null,
+        dernier?.date ?? null,
+        typeof res?.vehicule?.kilometrage === "number" ? res.vehicule.kilometrage : null,
+        corrigee.slice(0, -1),
+      );
+      res!.lecture_ct = { ...res!.lecture_ct, km: { serie: km.serie, recul: km.recul } };
+      if (res!.recalcul?.faits) {
+        const faits = {
+          ...res!.recalcul.faits,
+          compteur_contredit: km.compteur_contredit,
+          fraude_suspectee: km.compteur_contredit,
+        };
+        const calcul = calculerAxes(faits);
+        res!.score_detail = calcul.axes;
+        res!.score = calcul.score;
+        res!.verdict = calcul.verdict;
+        res!.plafond_raison = calcul.plafond_raison;
+        res!.verdict_conditionnel = calcul.verdict_conditionnel;
+        res!.recalcul.faits = faits;
+      }
+      await admin.from("analyses")
+        .update({ verdict: res!.verdict, score: res!.score, result_json: res })
+        .eq("id", analysisId);
+      await admin.from("events").insert({
+        name: "ct_km_corrige",
+        analysis_id: analysisId,
+        props_json: { corrections: corrections.length, compteur_contredit: km.compteur_contredit },
+      });
+      return jsonResponse({
+        ok: true,
+        lecture_ct: res!.lecture_ct,
+        verdict: res!.verdict,
+        score: res!.score,
+        plafond_raison: res!.plafond_raison ?? null,
+      });
+    }
 
     // Fonction du Pass : décidé ICI, côté serveur.
     if (!passActif && !isEval) {
@@ -338,7 +404,10 @@ serve(async (req: Request) => {
     }
 
     result.incoherences = incoherences;
-    result.lecture_ct = lecture;
+    // La série lue et le recul détecté sont conservés AVEC la lecture : un
+    // signal rouge issu d'une lecture automatique doit montrer les chiffres
+    // qui le motivent, et rester corrigeable.
+    result.lecture_ct = { ...lecture, km: { serie: km.serie, recul: km.recul } };
 
     if (persiste) {
       if (!result.verdict_initial && (row.verdict !== result.verdict || row.score !== result.score)) {

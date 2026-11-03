@@ -2612,7 +2612,7 @@ serve(async (req: Request) => {
     const messageVendeur = questionsMessage.length > 0
       ? `Bonjour, votre annonce ${modeleLabel} m'intéresse. Quelques questions avant de me déplacer :\n${
         questionsMessage.map((q, i) => `${i + 1}. ${q}`).join("\n")
-      }\nPourriez-vous aussi me communiquer le VIN (numéro de châssis) et une photo de la carte grise ? Cela me permet de consulter le rapport HistoVec (gratuit et officiel). Merci d'avance !`
+      }\nPourriez-vous aussi m'envoyer deux documents ?\n- le Certificat de situation administrative détaillé : bouton « Imprimer le CSA » sur ${HISTOVEC_URL} (c'est gratuit et ça prend 2 minutes, c'est vous qui le générez) ;\n- une photo du dernier procès-verbal de contrôle technique.\nMerci d'avance !`
       : null;
 
     // ---------------- Logs critique ----------------

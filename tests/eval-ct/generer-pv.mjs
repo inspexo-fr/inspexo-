@@ -35,6 +35,12 @@ const HTML = `<!doctype html><html><head><meta charset="utf-8"><style>
     <tr><td class="lbl">Titulaire</td><td>M. JEAN FICTIF — 1 rue de l'Exemple, 31000 Toulouse</td></tr>
     <tr><td class="lbl">Kilométrage relevé</td><td><b>188 452 km</b></td></tr>
     <tr><td class="lbl">Kilométrage contrôle précédent</td><td>154 310 km (03/07/2024)</td></tr>
+    <!-- Section obligatoire depuis le 20 mai 2018, au format du modèle
+         officiel (une ligne, relevés séparés par « // »). Les valeurs
+         CROISSENT ici : le cas de recul est un second PV, pour que ce cas-ci
+         continue d'éprouver la lecture normale. -->
+    <tr><td class="lbl">Kilométrages relevés lors des précédents contrôles techniques depuis le 20 mai 2018</td>
+        <td>02/08/2019 : 48330 Km // 13/08/2020 : 57428 Km // 01/02/2021 : 60049 Km // 03/07/2024 : 154310 Km</td></tr>
   </table>
   <div class="sec">DÉFAILLANCES CONSTATÉES</div>
   <div class="def maj">1.1.3.a.1 — Plaquettes de frein avant : usure excessive (au-delà du témoin) — DÉFAILLANCE MAJEURE (S)</div>

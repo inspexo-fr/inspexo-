@@ -751,6 +751,140 @@ expiration, les trois annulations et l'arbitrage ; 7. merge.
   la migration sert seulement à ce que l'attribution commence à être
   enregistrée — pas à éviter une panne.
 
+## Sprint 13 — Lecture du rapport HistoVec (nov. 2026)
+
+### ⚠️ Ce que HistoVec produit réellement — étudié dans le code source officiel
+`github.com/histovec/histovec-beta`, **dernier commit de `main` le 5 octobre
+2023** (plus de trois ans : à reconfirmer sur un rapport récent). Note complète :
+`docs/sprint13-histovec-format.md`.
+- Le bouton du vendeur s'appelle **« Imprimer le CSA »** et produit le
+  **« Certificat de situation administrative détaillé »**. Le **rapport**
+  HistoVec, lui, est une **page web à onglets** partagée par un lien, et les
+  onglets « Contrôles techniques » et « Kilométrage » sont **conditionnels**.
+  Aucune feuille `@media print` dans le dépôt : imprimer la page ne rendrait que
+  l'onglet actif.
+- **Le PDF ne contient NI kilométrage, NI contrôles techniques, NI nombre de
+  titulaires, NI modèle, NI énergie.** Cinq des six règles tiennent quand même —
+  le nombre de détenteurs se **déduit** des opérations `CHANG_TIT_NORMAL*`, et
+  `CHANG_LOC` révèle un passage en location. **Décision : le kilométrage est
+  traité par `lecture-ct`, pas par HistoVec.**
+- ⚠️ **Piège documenté dans leur code** : pour une OVE, le CSA écrit
+  « Véhicule endommagé » là où le rapport web écrit « Procédure de réparation
+  contrôlée » — divergence assumée par la DSR. Les deux doivent être reconnues.
+- ⚠️ **Trois formes négatives** : « Aucune » (oppositions, saisie), « Aucun »
+  (gage), « Non » (suspensions). Une seule regex les manque.
+
+### ⚠️ Appariement POSITIONNEL, validé par format
+Mesuré sur des CSA produits par le générateur officiel : la mise en page à deux
+colonnes sort les **quatre libellés d'identification d'affilée, PUIS les quatre
+valeurs**. Une règle « libellé : valeur sur la même ligne » ne trouve **rien**.
+- L'appariement est donc positionnel — et comme une position est une hypothèse,
+  **chaque valeur est validée par SON format** (plaque SIV ou FNI, date
+  JJ/MM/AAAA réelle, VIN de 17 caractères sans I/O/Q, marque dans une liste).
+  Format inattendu ⇒ **rien n'est attribué**, jamais d'approximation. Test avec
+  deux valeurs inversées : ni plaque ni VIN attribués, le champ resté en place
+  conservé.
+- ⚠️ `marqueCanonique` **NORMALISE sans valider** : elle rend
+  « zzzzpasunemarque » pour une marque inventée. S'en servir comme contrôle
+  laissait passer n'importe quoi — défaut trouvé par le test. La liste vient de
+  `BRAND_ALIAS_GROUPS` **plus un complément** (`MARQUES_COMPLEMENT`), car la
+  table d'alias n'existe que pour les marques AYANT des alias : SMART n'y était
+  pas, et son CSA était refusé.
+- Les espaces doubles du code source **n'arrivent pas à l'extraction** ; les
+  libellés se **replient sur deux lignes**.
+
+### Ordre des opérations — c'est un INVARIANT
+`extraire → comparer (règle 0) → retirer VIN et plaque → garder les faits`.
+La concordance a besoin des identifiants que le filtre doit retirer : l'ordre
+est donc la garantie, et un test vérifie qu'aucun VIN ni plaque ne survit dans
+les faits sérialisés.
+
+### Produit
+- Module **pur** `_shared/histovec.ts` (extraction + règle 0 + 5 règles), zéro
+  IA, zéro réseau. Fonction `lecture-histovec` (`npm:unpdf@1.9.1`, extraction en
+  mémoire, PDF **jamais stocké**, plafond 6 Mo, 10 lectures/IP/24 h, 5/analyse).
+- ⚠️ **Un signal ROUGE est affiché même sans Pass** : on ne cache pas un vol, un
+  gage ou une procédure non levée derrière un paiement. Le masquage du détail est
+  **SERVEUR** (`_histovec_publique` ≡ `histovecPublique`), posé dans
+  `get_public_analysis` au même endroit que celui de la négociation. La fonction
+  est **redéclarée à l'identique** dans la migration plutôt que modifiée par
+  chirurgie de chaîne sur `pg_get_functiondef` : une substitution peut
+  s'appliquer à moitié sans que personne ne le voie.
+- ⚠️ **Un rapport discordant ne produit AUCUN autre signal** — sinon on prêterait
+  à cette voiture l'historique d'une autre.
+- **Seuil de texte utile** (400 caractères) **+ contrôle des marqueurs** avant de
+  retenir un seul fait. Mesuré : un PDF de 9 pages peut s'analyser sans erreur en
+  ne rendant que **2 caractères** (c'était un scan). « Aucune erreur » ne vaut pas
+  « lecture réussie » : sans ce seuil, l'écran afficherait « rapport lu, aucun
+  signal », qui rassure à tort.
+
+### Barème — `BAREME_VERSION` 11.1
+Deux faits : `histovec_opposition` (plafond **30**) et `histovec_vge_en_cours`
+(plafond **32**) — ce sont des **empêchements** (on ne peut pas devenir
+propriétaire, ou pas circuler), donc plafonds plus bas qu'un défaut de sécurité.
+Aucune garantie ne les lève dans le conditionnel.
+- **SANS HistoVec, le score est strictement identique** : prouvé par
+  `tests/bareme.test.mjs` sur 4 profils × 3 formes du même fait (champ absent,
+  `undefined`, `false`). Et le contraire est testé aussi, sinon le premier test
+  serait vrai pour la mauvaise raison.
+- La version bouge quand même : la surface d'entrée a changé et les clients
+  d'API suivent ce numéro. Mentionné aux CUA, art. 9.3.
+
+### Kilométrage du PV — `lecture-ct` ne lisait que le relevé du jour
+La section « Kilométrages relevés lors des précédents contrôles techniques
+depuis le 20 mai 2018 » était **ignorée**. Format réel, relevé sur le modèle
+officiel : **une seule ligne**, relevés séparés par `//`, au format
+`02/08/2019 : 48330 Km // 13/08/2020 : 57428 Km`.
+- `comparerKmCt` lit désormais la **SÉRIE** : un relevé qui recule entre deux
+  contrôles officiels pose `compteur_contredit` **même quand l'annonce est
+  cohérente** avec le dernier relevé — le fait grave est la série, deux chiffres
+  imprimés par deux centres à deux dates.
+- **Le signal rouge montre ses chiffres** : les relevés exacts avec leurs dates
+  (« 17/01/2023 : 61 953 km → 22/01/2025 : 59 450 km ») et « vérifiez ces
+  chiffres sur votre PV ». Une valeur mal lue se **corrige** (`corriger_km`), ce
+  qui rejoue le barème **sans nouvel appel au modèle**.
+- ⚠️ Les relevés sont **réordonnés par date** : la détection dépend de l'ordre,
+  et le document liste souvent du plus récent au plus ancien.
+
+### Message vendeur — il était FAUX
+Il demandait « le VIN et une photo de la carte grise » pour « consulter le
+rapport HistoVec ». **Un acheteur ne peut pas consulter HistoVec avec un VIN** :
+seul le titulaire génère le rapport et le partage. Remplacé par la demande des
+**deux documents nommés exactement** : le « Certificat de situation
+administrative détaillé » (bouton « Imprimer le CSA ») et une photo du dernier
+procès-verbal de contrôle technique.
+
+### Fixtures
+`tests/histovec-fixtures/` — sept CSA produits par le **générateur officiel**
+(`csaAsPdf` + pdf-lib), donc fidèles à l'octet, **données entièrement
+inventées**, donc versionnés. Chaque `.txt` est le texte réellement extrait :
+le module prend du TEXTE, donc les tests hors ligne n'ont besoin d'aucun
+analyseur PDF. `tests/histovec/` (rapports réels) et
+`tests/eval-ct/publics/` (PV publics) sont **ignorés par git**.
+- ⚠️ **Défaut trouvé par le test** : `{ ...FAITS_VIDES }` partageait la
+  **référence** du tableau `operations` entre tous les appels — chaque lecture
+  s'ajoutait aux précédentes (5 opérations là où le document en portait 3).
+  `operations: []` est désormais explicite.
+
+### ⬜ Reste à faire — la fonctionnalité n'est PAS en ligne
+- **Aucun drapeau d'activation n'a encore été posé** : la fonction est déployée
+  et le bloc est monté, mais rien n'a été validé sur un **vrai rapport récent**.
+  C'est la condition posée par Utku avant mise en ligne.
+- **PV publics non téléchargés** : `automotive.encheres-vo.com` redirige vers
+  `/login` et `fiveauction.fr` rend **403**. Les documents sont derrière une
+  authentification — je n'ai pas cherché à la contourner. Le PV synthétique
+  porte désormais la section kilométrique, au format du modèle officiel.
+
+### Mise en service partielle — 3 nov. 2026 (merge EN ATTENTE)
+`score`, `lecture-ct` et `lecture-histovec` déployées pour l'éval. Migration
+`20261111120000` **non appliquée**.
+- **Éval ciblée : S7 rouge 38 et 308 orange 55, identiques à la référence.**
+  Mercedes a rendu **77 au premier passage, 71 au second** — la référence est 71.
+  Vérifié sur l'analyse produite : ni fait HistoVec, ni plafond, ni fourchette de
+  prix, donc **le barème n'est pas en cause** ; c'est la variance d'extraction des
+  faits d'entretien. ⚠️ 6 points d'écart, soit **au-delà de la tolérance de 5**
+  de l'éval de stabilité : à surveiller sur ce cas. Coût total **0,38 €**.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)
