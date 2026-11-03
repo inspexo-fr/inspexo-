@@ -85,6 +85,15 @@ serve(async (req: Request) => {
       // ci-dessus) d'abord, pour qu'un seul inspecteur gagne la mission, puis
       // la capture. Si la capture échoue, la mission ne peut pas rester
       // « confirmée » sans argent encaissé : elle retourne à l'attribution.
+      // Instant de la confirmation : il ouvre l'heure de grâce pendant
+      // laquelle l'acheteur annule sans frais. `creneau_confirme` est le
+      // RENDEZ-VOUS, pas l'instant de la confirmation — les confondre faisait
+      // démarrer la grâce au mauvais moment.
+      await admin.from("inspections")
+        .update({ confirmee_le: new Date().toISOString() })
+        .eq("id", inspectionId)
+        .is("confirmee_le", null);
+
       const { data: pour_capture } = await admin
         .from("inspections")
         .select("stripe_payment_intent, capturee_le")

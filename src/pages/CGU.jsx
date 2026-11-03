@@ -46,7 +46,7 @@ export default function CGU() {
 
           <h2 className="legal-h2">Article 2 — Objet</h2>
           <p className="legal-p">
-            Inspexo est une plateforme de mise en relation entre des acheteurs de véhicules d'occasion et des inspecteurs spécialisés par marque. Inspexo propose également un service d'analyse par intelligence artificielle.
+            Inspexo est une plateforme de mise en relation entre des acheteurs de véhicules d'occasion et des inspecteurs indépendants. Inspexo propose également un service d'analyse automatique d'annonces.
           </p>
           <p className="legal-p">
             Inspexo agit en qualité d'intermédiaire. L'inspection est payée exclusivement par l'acheteur&nbsp;: l'inspecteur est un professionnel indépendant qui ne reçoit aucune somme du vendeur, ni d'un garage, ni d'un concessionnaire. Il signe une charte d'indépendance en ce sens.
@@ -255,14 +255,14 @@ export default function CGU() {
             Les inspecteurs référencés sur la Plateforme sont des professionnels indépendants. Inspexo vérifie leurs qualifications mais ne se substitue pas à leur responsabilité professionnelle.
           </p>
           <p className="legal-p">
-            Inspexo ne garantit pas l'absence de défauts non détectables lors d'une inspection visuelle, l'exactitude absolue des fourchettes de coûts fournies par l'analyse, la disponibilité permanente du service, ni les décisions d'achat prises par le Client sur la base des informations fournies. La responsabilité d'Inspexo est limitée au montant de la prestation commandée.
+            L'objet de nos prestations est celui décrit à l'article 3. L'analyse d'annonce porte sur le texte et les documents fournis, l'inspection sur ce qui est observable sur place sans démontage&nbsp;: elles ne portent donc pas sur les défauts qui ne sont pas décelables dans ces conditions, ne garantissent pas l'exactitude absolue des fourchettes de coûts, ni la disponibilité permanente du service. La décision d'acheter ou non appartient au Client seul. Pour l'inspection à la demande, Inspexo est responsable de plein droit de la bonne exécution de la prestation (article L221-15 du Code de la consommation)&nbsp;: voir les <a href="/cgv-inspection" className="legal-a">CGV de l'inspection</a>.
           </p>
 
           <hr className="legal-sep" />
 
           <h2 className="legal-h2">Article 11 — Qualification des inspecteurs</h2>
           <p className="legal-p">
-            Les inspecteurs référencés sur Inspexo sont des professionnels qualifiés, sélectionnés pour leur spécialisation sur des marques spécifiques. Le terme "qualifié" désigne un professionnel dont les compétences ont été vérifiées par Inspexo. Il ne s'agit pas d'une certification officielle délivrée par un organisme agréé. Inspexo se réserve le droit de suspendre ou retirer un inspecteur de la Plateforme à tout moment.
+            Les inspecteurs référencés sur Inspexo sont des professionnels qualifiés, dont les <strong>compétences ont été vérifiées par Inspexo</strong>. Avant tout référencement, Inspexo exige et contrôle&nbsp;: un numéro SIRET valide, une attestation d'assurance de responsabilité civile professionnelle en cours de validité, et la signature de la charte d'indépendance. Le terme "qualifié" ne désigne pas une certification officielle délivrée par un organisme agréé. Inspexo se réserve le droit de suspendre ou retirer un inspecteur de la Plateforme à tout moment.
           </p>
 
           <hr className="legal-sep" />
@@ -285,7 +285,7 @@ export default function CGU() {
 
           <h2 className="legal-h2">Article 14 — Droit de rétractation</h2>
           <p className="legal-p">
-            Conformément à l'article L221-28 du Code de la consommation, le droit de rétractation ne s'applique pas aux services pleinement exécutés avant la fin du délai de rétractation et dont l'exécution a commencé avec l'accord du consommateur.
+            Conformément à l'article L221-28, 1° du Code de la consommation, le droit de rétractation ne peut être exercé pour les contrats de prestation de services pleinement exécutés avant la fin du délai de rétractation et dont l'exécution a commencé <strong>après accord préalable exprès du consommateur et renoncement exprès à son droit de rétractation</strong>.
           </p>
           <p className="legal-p">
             Le <strong>Pass achat</strong> et l'<strong>inspection à la demande</strong> sont tous deux soumis au
@@ -318,7 +318,7 @@ export default function CGU() {
             Le médiateur de la consommation compétent sera communiqué prochainement. En attendant, pour toute réclamation, contactez-nous à contact@inspexo.io. Nous nous engageons à traiter votre demande sous 30 jours.
           </p>
           <p className="legal-p">
-            À défaut de résolution amiable, les tribunaux de Toulouse seront seuls compétents.
+            À défaut de résolution amiable, le litige relève des juridictions désignées par les règles légales de compétence. Le Client consommateur peut saisir, à son choix, la juridiction du lieu où il demeurait lors de la conclusion du contrat ou de la survenance du fait dommageable, ou celle du lieu où demeure DUPLEX SAS (article R631-3 du Code de la consommation).
           </p>
 
           <hr className="legal-sep" />

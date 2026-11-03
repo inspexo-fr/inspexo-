@@ -125,7 +125,7 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
           <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--filet)' }}>
             <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6 }}>
               {deja.statut === 'acceptee'
-                ? "Un inspecteur a confirmé. Annulation gratuite jusqu'à 24 heures avant le créneau ; au-delà, 40 € vont à l'inspecteur pour son déplacement."
+                ? "Un inspecteur a confirmé. Annulation gratuite dans l'heure qui suit sa confirmation, et jusqu'à 24 heures avant le créneau. Ensuite, 40 € restent acquis au titre du rendez-vous organisé et du déplacement réservé."
                 : "Aucun inspecteur n'a encore confirmé : l'annulation relâche l'autorisation, rien n'est débité."}
             </p>
             <button
@@ -157,7 +157,7 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
               {annulation.action === 'annuler_autorisation'
                 ? "L'autorisation de paiement a été annulée : vous n'avez rien été débité."
                 : annulation.retenue_cents > 0
-                  ? `${euros(annulation.rembourse_cents)} vous sont remboursés. ${euros(annulation.retenue_cents)} sont versés à l'inspecteur pour son déplacement.`
+                  ? `${euros(annulation.rembourse_cents)} vous sont remboursés. ${euros(annulation.retenue_cents)} restent acquis au titre du service déjà fourni (rendez-vous organisé, déplacement réservé) et sont versés à l'inspecteur.`
                   : `${euros(annulation.rembourse_cents)} vous sont remboursés intégralement.`}
             </p>
             {annulation.argent_traite === false && (
@@ -321,9 +321,9 @@ export default function InspectionBloc({ analysisId, vehicule, nu = false }) {
           {message && <div className="c-rouge" style={{ fontSize: 13, marginTop: 8 }}>{message}</div>}
           <p className="mono c-graphite" style={{ marginTop: 8, fontSize: 11, lineHeight: 1.6 }}>
             Paiement sécurisé Stripe. Le montant est <strong>autorisé maintenant</strong> et{' '}
-            <strong>débité seulement quand un inspecteur confirme</strong>. Si personne ne confirme sous
-            {' '}{config.delai_heures} heures, l'autorisation est annulée et rien n'est débité.
-            60 % reviennent à l'inspecteur, versés à la remise du rapport.
+            <strong>débité seulement quand un inspecteur confirme</strong>. Sans confirmation au plus tard 2 h
+            avant le créneau, et dans tous les cas sous {config.delai_heures} heures, l'autorisation est annulée
+            et rien n'est débité. 60 % reviennent à l'inspecteur, versés à la remise du rapport.
           </p>
         </form>
       )}

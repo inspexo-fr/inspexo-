@@ -240,3 +240,90 @@ fichier, et vérifié qu'il mord.
       n'y en a aucun aujourd'hui, donc aucun impact pour l'instant.
 - [ ] Relecture avocat des CGV de l'inspection, en particulier les articles 6
       (barème) et 7 (rétractation).
+
+---
+
+## 6. Relecture juridique consommateur — 3 novembre 2026
+
+Onze corrections demandées après relecture. Ce qui change dans le **code** est
+dans la migration `20261110120000_sprint12_cgv_consommateur.sql`.
+
+### Clauses retirées parce qu'abusives
+
+- **Plafond de responsabilité** « limitée au prix payé » / « limitée au montant
+  de la prestation commandée » : **clause noire** (art. **R212-1 6°** C. conso),
+  irréfragablement abusive face à un consommateur. Retirée des **CGV de
+  l'inspection (art. 10)** et des **CGU (art. 10)**. Les CGV du Pass n'en
+  contenaient pas.
+  - Ce qui reste : l'**obligation de moyens** et la **description de l'objet**
+    (inspection visuelle et fonctionnelle, sans démontage, à un instant donné).
+    Elles définissent l'étendue de l'obligation, elles ne la limitent pas.
+- **Compétence « les tribunaux de Toulouse seuls compétents »** : renvoyée aux
+  règles légales (art. **R631-3** C. conso) dans les CGV de l'inspection
+  (art. 12) **et dans les CGU (art. 16)** — même clause, même défaut.
+- **« Les conditions de l'article 6 ne lui sont pas opposables »** (rétractation)
+  supprimée : elle créait deux régimes concurrents. Une seule règle désormais, et
+  la retenue est présentée pour ce qu'elle est — le **montant proportionné au
+  service déjà fourni** au sens de l'art. **L221-25**, pas une pénalité.
+
+### Qualité d'Inspexo
+
+Inspexo est le **vendeur** (art. 1) : il est donc **responsable de plein droit de
+la bonne exécution** de l'inspection (art. **L221-15** C. conso), qu'elle soit
+faite par lui ou par l'inspecteur qu'il missionne, **sans préjudice de son
+recours** contre celui-ci. La mention « intermédiaire de mise en relation » est
+retirée des CGV de l'inspection — elle contredisait l'article 1.
+
+### Trois corrections qui touchent au code
+
+1. **Heure de grâce** (`DELAI_GRACE_CONFIRMATION_HEURES`) — l'acheteur annule
+   sans frais dans l'heure suivant la confirmation, quel que soit le créneau.
+   ⚠️ Sans elle, un créneau choisi à +3 h rendait l'annulation payante **avant
+   que l'acheteur ait pu lire l'email de confirmation**.
+2. **Échéance de confirmation à DEUX bornes** (`echeanceConfirmation`) — 2 h
+   avant le créneau **ou** 48 h après l'autorisation, le premier des deux.
+   ⚠️ Avant correction, une mission restait confirmable **après l'heure du
+   rendez-vous** : le créneau peut être à 2 h de la commande quand la
+   confirmation a 48 h pour arriver.
+3. **`confirmee_le`** : nouvelle colonne. `creneau_confirme` est le
+   **rendez-vous**, pas l'instant de la confirmation — les confondre faisait
+   démarrer la grâce au mauvais moment.
+
+### Une promesse qui était fausse
+
+Les CGV et la politique affirmaient que les photos du rapport étaient « la
+**seule** situation » où Inspexo conserve des photographies. **Faux** : la photo
+de constat d'absence est conservée aussi. Elle est désormais annoncée
+(**1 an**, pour les litiges et contestations de paiement), purgée par le cron
+(`inspections_preuves_a_purger`), et soumise à la même règle « aucune personne
+reconnaissable ».
+
+### Coordonnées du vendeur — base légale et art. 14 RGPD
+
+Base légale déclarée : **intérêt légitime** (art. 6.1.f) — exécuter la
+prestation commandée par l'acheteur. Comme ces données ne viennent **pas de la
+personne concernée**, l'art. **14** impose de l'informer : l'inspecteur le fait
+dès son premier contact et indique la politique de confidentialité. Nouvel
+engagement **8** de la charte (texte identique client/serveur, vérifié par le
+test).
+
+### Promesses vérifiées dans le code (item 9)
+
+| Promesse | Verdict |
+|---|---|
+| Pass : « analyses sans limitation de nombre » | ✅ **Vrai.** Le bloc de plafond ET le captcha sont dans `if (!isEval && !passActif && !isApi)` : un Pass n'a **aucun** plafond, pas même anti-abus |
+| Pass : « kit signature » | ✅ RPC `get_kit_signature` + `KitSignaturePage` |
+| Pass : « détail de la marge de négociation » | ✅ `negociationPublique` / `_negociation_publique` démasquent avec Pass |
+| « Inspexo vérifie l'attestation RC pro avant de référencer » | ✅ **Vrai.** `admin-inspecteurs` refuse la validation sans attestation déposée ni échéance future. Reformulé en « exige et contrôle » |
+| CGU art. 11 : « spécialisation sur des marques spécifiques » | ❌ **FAUX** — la table `inspecteurs` n'a **aucun champ marque**, seulement `departements`. Remplacé par « compétences vérifiées par Inspexo », avec la liste de ce qui est réellement contrôlé |
+| CGU art. 2 : « inspecteurs spécialisés par marque » | ❌ **FAUX**, même cause. Corrigé en « inspecteurs indépendants » — l'item 9 ne visait que l'art. 11, mais la même affirmation s'y trouvait |
+
+### Autres
+
+- **Plateforme européenne de RLL supprimée** (règlement UE **2024/3228**) des
+  CGV de l'inspection **et des CGV du Pass** — elle y figurait aussi.
+- **Usage du rapport** (art. 2) : « destiné au seul Client, ni revendu ni
+  publié, le Client reste libre de s'en servir pour négocier ».
+- **CGU art. 14** aligné sur le texte actuel de **L221-28 1°** : « après accord
+  préalable exprès du consommateur et renoncement exprès à son droit de
+  rétractation ».

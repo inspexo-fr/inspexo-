@@ -102,8 +102,8 @@ serve(async (req: Request) => {
           Number(data.rembourse_cents ?? 0),
           Number(data.retenue_cents ?? 0),
           data.retenue_cents > 0
-            ? "Annulation à moins de 24 heures du créneau : le déplacement réservé par l'inspecteur est indemnisé."
-            : "Annulation à plus de 24 heures du créneau : rien n'est retenu.",
+            ? "Montant proportionné au service déjà fourni : rendez-vous organisé et déplacement réservé (art. L221-25 du Code de la consommation)."
+            : "Annulation sans frais : rien n'est retenu.",
         );
       }
     }

@@ -26,6 +26,9 @@ import {
   DELAI_CONFIRMATION_HEURES,
   DEMANDE_EXECUTION_IMMEDIATE,
   DUREE_AUTORISATION_JOURS,
+  DELAI_GRACE_CONFIRMATION_HEURES,
+  MARGE_AVANT_CRENEAU_HEURES,
+  echeanceConfirmation,
   RETENUE_DEPLACEMENT_CENTS,
 } from '../supabase/functions/_shared/inspection.ts'
 
@@ -97,7 +100,7 @@ verifie('Zone de lancement = Haute-Garonne seule', JSON.stringify(ZONE_LANCEMENT
 
 // ---------- Charte ----------
 verifie('Charte versionnée', /^\d{4}-\d{2}-\d{2}$/.test(CHARTE_VERSION))
-verifie('Charte en 7 engagements', CHARTE_INDEPENDANCE.length === 7)
+verifie('Charte en 8 engagements', CHARTE_INDEPENDANCE.length === 8)
 verifie('Le premier engagement est « payé par l’acheteur, jamais par le vendeur »',
   /jamais par le vendeur/i.test(CHARTE_INDEPENDANCE[0]))
 verifie('La charte interdit la commission du vendeur',
@@ -165,6 +168,85 @@ ok(autorisationExpiree(new Date('2026-11-08T08:01:00Z'), T0) === false,
   'autorisation de moins de 48 h → encore valable')
 ok(autorisationExpiree(null, T0) === false,
   'sans date d’autorisation, rien n’expire — on n’annule pas sur une donnée absente')
+
+// ⚠️ L'ÉCHÉANCE A DEUX BORNES. Le créneau peut être à 2 h de la commande
+// alors que la confirmation a 48 h pour arriver : c'est la borne la plus
+// PROCHE qui s'applique. Sans celle du créneau, une mission restait
+// confirmable après l'heure du rendez-vous.
+eq(MARGE_AVANT_CRENEAU_HEURES, 2, 'marge de 2 heures avant le créneau')
+{
+  const autorisee = new Date('2026-11-10T08:00:00Z')
+  // Créneau proche (+3 h) : l'échéance est le créneau moins 2 h, pas les 48 h.
+  const proche = echeanceConfirmation(autorisee, new Date('2026-11-10T11:00:00Z'))
+  eq(proche.toISOString(), '2026-11-10T09:00:00.000Z',
+    'créneau à +3 h → échéance à 2 h avant le créneau')
+  // Créneau lointain : c'est la borne des 48 h qui mord.
+  const loin = echeanceConfirmation(autorisee, new Date('2026-11-20T11:00:00Z'))
+  eq(loin.toISOString(), '2026-11-12T08:00:00.000Z',
+    'créneau lointain → échéance à 48 h après l’autorisation')
+  // Et le cas qui motivait la correction : une mission ne doit plus être
+  // confirmable 1 h avant le rendez-vous, même si les 48 h courent encore.
+  ok(autorisationExpiree(autorisee, new Date('2026-11-10T10:00:00Z'), new Date('2026-11-10T11:00:00Z')) === true,
+    'une heure avant le créneau → expirée, même dans la fenêtre des 48 h')
+  ok(autorisationExpiree(autorisee, new Date('2026-11-10T08:30:00Z'), new Date('2026-11-10T11:00:00Z')) === false,
+    'trois heures avant le créneau → encore confirmable')
+  eq(echeanceConfirmation(null, null), null, 'aucune borne connue → aucune échéance')
+}
+
+// ---------------------------------------------------------------------------
+titre('Heure de grâce après la confirmation')
+// ---------------------------------------------------------------------------
+// Un créneau choisi à +3 h rendrait l'annulation payante AVANT que l'acheteur
+// ait pu réagir à la confirmation qu'il vient de recevoir. L'heure de grâce
+// l'emporte donc sur la règle des 24 h.
+eq(DELAI_GRACE_CONFIRMATION_HEURES, 1, 'délai de grâce d’une heure')
+{
+  const confirmee = new Date('2026-11-10T08:00:00Z')
+  const creneau = new Date('2026-11-10T11:00:00Z') // dans 3 h : sous les 24 h
+  const base = { statut: 'acceptee', creneau, prix_cents: PRIX_INSPECTION_CENTS, confirmee_le: confirmee }
+
+  const dansLHeure = decisionAnnulation({ ...base, maintenant: new Date('2026-11-10T08:45:00Z') })
+  eq(dansLHeure.action, 'rembourser_integral',
+    'dans l’heure suivant la confirmation → remboursement intégral malgré un créneau proche')
+  eq(dansLHeure.retenue_cents, 0, 'aucune retenue pendant la grâce')
+
+  const apres = decisionAnnulation({ ...base, maintenant: new Date('2026-11-10T09:30:00Z') })
+  eq(apres.action, 'retenue_deplacement',
+    'passé l’heure de grâce, le créneau proche fait jouer la retenue')
+
+  // La grâce ne crée pas de passe-droit : au-delà, les 24 h reprennent.
+  const loin = decisionAnnulation({
+    ...base,
+    creneau: new Date('2026-11-13T11:00:00Z'),
+    maintenant: new Date('2026-11-10T09:30:00Z'),
+  })
+  eq(loin.action, 'rembourser_integral', 'créneau à plus de 24 h → gratuit de toute façon')
+
+  // Sans instant de confirmation connu, la grâce ne s'applique pas — et on ne
+  // la devine pas depuis le créneau.
+  const sans = decisionAnnulation({ ...base, confirmee_le: null, maintenant: new Date('2026-11-10T09:30:00Z') })
+  eq(sans.action, 'retenue_deplacement', 'sans instant de confirmation, pas de grâce')
+
+  // Une confirmation dans le FUTUR (horloge décalée) ne doit pas ouvrir une
+  // grâce perpétuelle.
+  const futur = decisionAnnulation({
+    ...base,
+    confirmee_le: new Date('2026-11-10T12:00:00Z'),
+    maintenant: new Date('2026-11-10T09:30:00Z'),
+  })
+  eq(futur.action, 'retenue_deplacement', 'confirmation dans le futur → aucune grâce')
+}
+
+// ---------------------------------------------------------------------------
+titre('Charte : devoir d’information du vendeur (art. 14 RGPD)')
+// ---------------------------------------------------------------------------
+{
+  const info = CHARTE_INDEPENDANCE.find(e => /informe le vendeur/i.test(e))
+  ok(!!info, 'un engagement porte l’information du vendeur')
+  ok(/politique-de-confidentialite/.test(info ?? ''),
+    'il indique où lire la politique de confidentialité')
+  ok(/suppression/i.test(info ?? ''), 'et le droit de demander la suppression')
+}
 
 // ---------------------------------------------------------------------------
 titre('Barème d’annulation : la somme revient toujours au prix payé')

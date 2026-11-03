@@ -79,9 +79,8 @@ export default function CGVInspection() {
             au moment où elle a lieu.
           </p>
           <p className="legal-p">
-            Le rapport est remis à l'acheteur <strong>pour son usage personnel</strong> et pour éclairer sa
-            décision d'achat. Il ne peut être ni revendu, ni publié, ni remis au vendeur du véhicule comme
-            argument de vente.
+            <strong>Le rapport est destiné au seul Client.</strong> Il ne peut être ni revendu ni publié. Le
+            Client reste libre de s'en servir pour négocier.
           </p>
           <p className="legal-p">
             <strong>L'inspection ne constitue pas une expertise au sens de l'article L326-4 du Code de la
@@ -133,10 +132,12 @@ export default function CGVInspection() {
             confirme la mission</strong>.
           </p>
           <p className="legal-p">
-            <strong>Si aucun inspecteur ne confirme la mission dans les {delai} heures, l'autorisation est
-            annulée et rien n'est débité.</strong> Le Client en est informé par email et n'a aucune démarche à
-            faire. Selon sa banque, l'empreinte de l'autorisation peut rester visible un à deux jours avant de
-            disparaître.
+            <strong>Si aucun inspecteur ne confirme la mission, l'autorisation est annulée et rien n'est
+            débité.</strong> La confirmation doit intervenir <strong>au plus tard 2 heures avant le créneau
+            choisi</strong>, et <strong>dans tous les cas sous {delai} heures</strong> à compter de la
+            commande&nbsp;: c'est le premier de ces deux termes qui s'applique. Un créneau proche raccourcit
+            donc le délai de confirmation. Le Client est informé par email et n'a aucune démarche à faire. Selon
+            sa banque, l'empreinte de l'autorisation peut rester visible un à deux jours avant de disparaître.
           </p>
           <p className="legal-p">
             Le paiement est traité par Stripe. Inspexo ne stocke aucune donnée bancaire. Les paiements par carte
@@ -145,15 +146,22 @@ export default function CGVInspection() {
 
           <h2 className="legal-h2">6. Annulation</h2>
           <p className="legal-p">
-            <strong>Annulation par le Client plus de 24 heures avant le créneau</strong> :{' '}
-            <strong>remboursement intégral</strong>. Rien n'est retenu.
+            <strong>Avant la confirmation par un inspecteur</strong> : annulation gratuite, l'autorisation de
+            paiement est levée et <strong>rien n'est débité</strong>.
           </p>
           <p className="legal-p">
-            <strong>Annulation par le Client moins de 24 heures avant le créneau</strong>, ou{' '}
-            <strong>vendeur absent ou véhicule indisponible constaté sur place par l'inspecteur</strong> :{' '}
-            <strong>40,00 € sont retenus et versés à l'inspecteur</strong> au titre de son déplacement. Le solde
-            est remboursé au Client. Cette retenue indemnise un déplacement réellement engagé ; elle ne revient
-            pas à Inspexo.
+            <strong>Après la confirmation, à plus de 24 heures du créneau, ou dans l'heure qui suit la
+            confirmation</strong> : <strong>remboursement intégral</strong>. Rien n'est retenu. L'heure qui suit
+            la confirmation est acquise au Client même si le créneau est proche&nbsp;: il doit pouvoir revenir
+            sur sa commande après avoir reçu la confirmation.
+          </p>
+          <p className="legal-p">
+            <strong>Dans les autres cas</strong> — annulation à moins de 24 heures du créneau et passé l'heure
+            qui suit la confirmation, ou <strong>vendeur absent ou véhicule indisponible constaté sur place par
+            l'inspecteur</strong> — <strong>40,00 € sont retenus</strong> et le solde est remboursé au Client.
+            Ce montant correspond au <strong>service déjà fourni</strong> au sens de l'article{' '}
+            <strong>L221-25</strong> du Code de la consommation&nbsp;: organisation du rendez-vous et
+            déplacement réservé ou effectué. Il est versé à l'inspecteur et ne revient pas à Inspexo.
           </p>
           <p className="legal-p">
             <strong>Si l'inspecteur ne se présente pas ou annule</strong> : le Client est remboursé
@@ -178,19 +186,24 @@ export default function CGVInspection() {
             des conditions acceptées. Sans elle, la commande n'est pas possible.
           </p>
           <p className="legal-p">
-            <strong>Une fois l'inspection réalisée, le droit de rétractation ne peut plus être exercé</strong>,
-            la prestation étant pleinement exécutée (article <strong>L221-28, 1°</strong> du Code de la
-            consommation). Avant la réalisation de l'inspection, le Client conserve son droit de rétractation et
-            l'exerce sans retenue ni frais — les conditions d'annulation de l'article 6 ne lui sont pas
-            opposables dans ce cas.
+            <strong>Une fois l'inspection entièrement réalisée, le droit de rétractation ne peut plus être
+            exercé</strong>, la prestation étant pleinement exécutée après accord préalable exprès du Client et
+            renoncement exprès à son droit de rétractation (article <strong>L221-28, 1°</strong> du Code de la
+            consommation).
+          </p>
+          <p className="legal-p">
+            Avant la réalisation de l'inspection, le Client exerce son droit de rétractation à tout moment. Les
+            conséquences financières sont celles de l'article 6&nbsp;: elles ne sont pas une pénalité, mais le
+            montant proportionné au service déjà fourni que l'article <strong>L221-25</strong> autorise à
+            retenir lorsque l'exécution a commencé à la demande du Client.
           </p>
 
           <h2 className="legal-h2">8. Photos du rapport et données personnelles</h2>
           <p className="legal-p">
             <strong>Les photos prises par l'inspecteur pendant l'inspection sont conservées</strong> : elles
-            constituent le rapport que le Client a acheté. C'est la seule situation dans laquelle Inspexo
-            conserve des photographies — celles que le Client transmet lui-même pour une analyse d'annonce, un
-            mode visite ou la lecture d'un procès-verbal de contrôle technique ne sont jamais stockées.
+            constituent le rapport que le Client a acheté. Les photos que le Client transmet lui-même — pour une
+            analyse d'annonce, en mode visite ou pour la lecture d'un procès-verbal de contrôle technique — ne
+            sont, elles, <strong>jamais stockées</strong>.
           </p>
           <p className="legal-p">
             Elles sont déposées dans un espace privé et ne sont accessibles qu'au Client, à l'inspecteur qui les
@@ -210,8 +223,14 @@ export default function CGVInspection() {
             <strong>constatations écrites du rapport, sans les photos, sont conservées cinq ans</strong>.
           </p>
           <p className="legal-p">
-            L'inspecteur s'engage par ailleurs, au titre de sa charte d'indépendance, à ne faire figurer{' '}
-            <strong>aucune personne reconnaissable</strong> sur les photos.
+            <strong>Photo de constat.</strong> Lorsque l'inspecteur constate sur place que le véhicule ne lui
+            est pas présenté, il prend une <strong>photo horodatée</strong> qui justifie la retenue de
+            l'article 6. Cette photo est également conservée, <strong>un an</strong>, le temps d'une
+            contestation ou d'un litige de paiement, puis supprimée. Sans elle, aucune retenue n'est possible.
+          </p>
+          <p className="legal-p">
+            Sur l'ensemble de ces photos, l'inspecteur s'engage au titre de sa charte d'indépendance à ne faire
+            figurer <strong>aucune personne reconnaissable</strong>.
           </p>
           <p className="legal-p">
             Les modalités d'exercice des droits figurent dans la{' '}
@@ -238,19 +257,23 @@ export default function CGVInspection() {
 
           <h2 className="legal-h2">10. Responsabilité</h2>
           <p className="legal-p">
-            Inspexo agit en qualité d'intermédiaire de mise en relation et répond de l'organisation du service.
-            L'inspecteur, professionnel indépendant, répond de la réalisation de l'inspection et du contenu de
-            son rapport ; il est assuré en responsabilité civile professionnelle, Inspexo vérifiant son
-            attestation avant de le référencer.
+            <strong>Inspexo est responsable de plein droit envers le Client de la bonne exécution de
+            l'inspection</strong>, conformément à l'article <strong>L221-15</strong> du Code de la consommation,
+            qu'elle soit réalisée par elle-même ou par l'inspecteur indépendant qu'elle a missionné. Le Client
+            n'a qu'un seul interlocuteur&nbsp;: {IDENTITE.raison_sociale}.
           </p>
           <p className="legal-p">
-            Compte tenu de la nature de la prestation (article 2), ni Inspexo ni l'inspecteur ne garantissent
-            l'absence de défauts non décelables lors d'une inspection visuelle et fonctionnelle sans démontage.
-            La décision d'acheter ou non appartient au Client seul.
+            Cette responsabilité s'exerce sans préjudice du recours d'Inspexo contre l'inspecteur. L'inspecteur
+            exerce sous son propre numéro SIRET et doit justifier d'une assurance de responsabilité civile
+            professionnelle en cours de validité&nbsp;: Inspexo exige son attestation et en contrôle la validité
+            avant tout référencement.
           </p>
           <p className="legal-p">
-            La responsabilité d'Inspexo au titre d'une inspection est limitée au prix payé pour celle-ci, sauf
-            faute lourde ou dolosive et sauf dans les cas où la loi l'écarte.
+            L'objet de la prestation est celui décrit à l'article 2&nbsp;: une inspection visuelle et
+            fonctionnelle, sans démontage, à un instant donné. Elle ne porte donc pas sur les défauts qui ne
+            sont ni visibles, ni audibles, ni décelables à l'essai dans ces conditions, et ne vaut ni contrôle
+            technique ni garantie sur l'état du véhicule. La décision d'acheter ou non appartient au Client
+            seul.
           </p>
 
           <h2 className="legal-h2">11. Réclamation et médiation de la consommation</h2>
@@ -266,13 +289,16 @@ export default function CGVInspection() {
               {config?.mediateur
                 || "en cours de désignation — la vente de l'inspection n'est ouverte qu'une fois le médiateur désigné"}
             </strong>.
-            Il peut également utiliser la plateforme européenne de règlement en ligne des litiges.
+            La saisine du médiateur est gratuite pour le consommateur et n'empêche pas d'agir en justice.
           </p>
 
           <h2 className="legal-h2">12. Droit applicable</h2>
           <p className="legal-p">
-            Droit français. À défaut de résolution amiable, et sans préjudice des règles protectrices du
-            consommateur quant à la juridiction compétente, les tribunaux de Toulouse sont compétents.
+            Droit français. À défaut de résolution amiable, le litige relève des juridictions désignées par les
+            règles légales de compétence. Le Client consommateur peut saisir, à son choix, la juridiction du
+            lieu où il demeurait lors de la conclusion du contrat ou de la survenance du fait dommageable, ou
+            celle du lieu où demeure {IDENTITE.raison_sociale} (article <strong>R631-3</strong> du Code de la
+            consommation).
           </p>
           <p className="legal-p">
             Les présentes conditions complètent les{' '}

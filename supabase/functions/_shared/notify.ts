@@ -487,8 +487,9 @@ export async function emailInspectionAnnulee(
      <p>${motif.replace(/[<>]/g, "").slice(0, 300)}</p>
      ${retenueCents > 0
       ? `<p><strong>${eur(rembourseCents)} vous sont remboursés</strong> sur le moyen de paiement utilisé.
-         <strong>${eur(retenueCents)}</strong> sont versés à l'inspecteur au titre de son déplacement&nbsp;;
-         cette somme ne revient pas à Inspexo.</p>`
+         <strong>${eur(retenueCents)}</strong> restent acquis au titre du service déjà fourni — rendez-vous
+         organisé et déplacement réservé — et sont versés à l'inspecteur&nbsp;; cette somme ne revient pas
+         à Inspexo.</p>`
       : `<p><strong>${eur(rembourseCents)} vous sont remboursés intégralement</strong> sur le moyen de
          paiement utilisé. Rien n'est retenu.</p>`}
      <p>Le remboursement apparaît sous 5 à 10 jours ouvrés selon votre banque.</p>`,

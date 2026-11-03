@@ -123,6 +123,7 @@ export const CHARTE_INDEPENDANCE = [
   "Je ne propose jamais de réparer ce que je constate. Je n'oriente pas l'acheteur vers mon propre atelier ni vers un garage avec lequel j'ai un accord commercial.",
   "Je rapporte ce que j'ai vu, pas ce qui arrange. Je ne tais aucun défaut constaté et je n'en invente aucun. Ce que je n'ai pas pu vérifier, je l'écris comme non vérifié.",
   "Je respecte le véhicule et les personnes. Je me présente, j'explique ma démarche au vendeur, et je ne photographie ni plaque d'immatriculation, ni document d'identité, ni aucune personne reconnaissable — ni le vendeur, ni un passant, ni moi-même.",
+  "J'informe le vendeur dès mon premier contact. Je lui dis que l'acheteur a commandé cette inspection, que ses coordonnées m'ont été transmises pour ce seul rendez-vous, et je lui indique où lire la politique de confidentialité d'Inspexo (inspexo.io/politique-de-confidentialite). Il peut m'y demander la suppression de ses coordonnées.",
   "Je suis indépendant et assuré. J'exerce sous mon propre numéro SIRET et je maintiens une assurance responsabilité civile professionnelle en cours de validité pendant toute ma collaboration.",
   "Je sais qu'un manquement met fin à la collaboration. Inspexo peut suspendre mon compte immédiatement, et la rémunération d'une mission entachée d'un manquement n'est pas due.",
 ];
@@ -154,6 +155,37 @@ export const CONSENTEMENT_PHOTOS = [
 export const DELAI_CONFIRMATION_HEURES = 48;
 export const DUREE_AUTORISATION_JOURS = 7; // limite Stripe, pour mémoire
 
+/** Marge avant le créneau : au-delà, confirmer n'a plus de sens — l'inspecteur
+ *  n'aurait pas le temps de s'y rendre, et l'acheteur attendrait pour rien. */
+export const MARGE_AVANT_CRENEAU_HEURES = 2;
+
+/** Délai de grâce après la confirmation : l'acheteur peut revenir sur sa
+ *  commande dans l'heure, quel que soit le créneau. Sans lui, un créneau
+ *  choisi à +3 h rendrait l'annulation payante AVANT que l'acheteur ait pu
+ *  réagir à la confirmation qu'il vient de recevoir. */
+export const DELAI_GRACE_CONFIRMATION_HEURES = 1;
+
+/** Échéance de confirmation : le PREMIER des deux termes.
+ *
+ *  Le créneau peut être à 2 h de la commande alors que la confirmation a 48 h
+ *  pour arriver : les deux bornes doivent coexister, et c'est la plus proche
+ *  qui s'applique. Sans la borne du créneau, une mission restait confirmable
+ *  après l'heure du rendez-vous. */
+export function echeanceConfirmation(
+  autoriseeLe: Date | null,
+  creneau: Date | null,
+): Date | null {
+  const bornes: number[] = [];
+  if (autoriseeLe && !Number.isNaN(autoriseeLe.getTime())) {
+    bornes.push(autoriseeLe.getTime() + DELAI_CONFIRMATION_HEURES * 3_600_000);
+  }
+  if (creneau && !Number.isNaN(creneau.getTime())) {
+    bornes.push(creneau.getTime() - MARGE_AVANT_CRENEAU_HEURES * 3_600_000);
+  }
+  if (bornes.length === 0) return null;
+  return new Date(Math.min(...bornes));
+}
+
 /** Au-delà, l'annulation par l'acheteur n'est plus gratuite : un inspecteur a
  *  réservé son créneau et va se déplacer. */
 export const DELAI_ANNULATION_GRATUITE_HEURES = 24;
@@ -180,6 +212,8 @@ export type ContexteAnnulation = {
   creneau: Date | null;
   maintenant: Date;
   prix_cents: number;
+  /** Instant où l'inspecteur a confirmé — ouvre l'heure de grâce. */
+  confirmee_le?: Date | null;
   /** L'inspecteur a constaté sur place que le véhicule n'était pas montrable. */
   absence_vendeur?: boolean;
 };
@@ -229,8 +263,19 @@ export function decisionAnnulation(c: ContexteAnnulation): DecisionAnnulation {
       action: "retenue_deplacement",
       rembourse_cents: prix - retenue,
       retenue_cents: retenue,
-      motif: "Véhicule non présenté : le déplacement de l'inspecteur est indemnisé.",
+      motif: "Véhicule non présenté : montant proportionné au service déjà fourni "
+        + "(organisation du rendez-vous et déplacement effectué).",
     };
+  }
+
+  // Heure de grâce : l'acheteur peut revenir sur sa commande dans l'heure qui
+  // suit la confirmation, quel que soit le créneau.
+  if (c.confirmee_le && !Number.isNaN(c.confirmee_le.getTime())) {
+    const depuis = (c.maintenant.getTime() - c.confirmee_le.getTime()) / 3_600_000;
+    if (depuis >= 0 && depuis <= DELAI_GRACE_CONFIRMATION_HEURES) {
+      return { action: "rembourser_integral", rembourse_cents: prix, retenue_cents: 0,
+        motif: "Annulation dans l'heure suivant la confirmation : remboursement intégral." };
+    }
   }
 
   const heures = c.creneau
@@ -248,18 +293,23 @@ export function decisionAnnulation(c: ContexteAnnulation): DecisionAnnulation {
     action: "retenue_deplacement",
     rembourse_cents: prix - retenue,
     retenue_cents: retenue,
-    motif: "Annulation à moins de 24 heures du créneau : le déplacement réservé est indemnisé.",
+    motif: "Annulation à moins de 24 heures du créneau : montant proportionné au "
+      + "service déjà fourni (organisation du rendez-vous et déplacement réservé).",
   };
 }
 
-/** Une autorisation non confirmée doit-elle être relâchée ? */
+/** Une autorisation non confirmée doit-elle être relâchée ?
+ *
+ *  Vrai dès que l'échéance de confirmation est passée — 48 h après
+ *  l'autorisation, ou 2 h avant le créneau, selon ce qui arrive d'abord. */
 export function autorisationExpiree(
   autoriseeLe: Date | null,
   maintenant: Date,
-  delaiHeures = DELAI_CONFIRMATION_HEURES,
+  creneau: Date | null = null,
 ): boolean {
-  if (!autoriseeLe || Number.isNaN(autoriseeLe.getTime())) return false;
-  return (maintenant.getTime() - autoriseeLe.getTime()) / 3_600_000 >= delaiHeures;
+  const echeance = echeanceConfirmation(autoriseeLe, creneau);
+  if (!echeance) return false;
+  return maintenant.getTime() >= echeance.getTime();
 }
 
 /** Texte EXACT de la demande d'exécution immédiate. Case obligatoire, jamais

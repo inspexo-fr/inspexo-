@@ -14,6 +14,7 @@ export const CHARTE_INDEPENDANCE = [
   "Je ne propose jamais de réparer ce que je constate. Je n'oriente pas l'acheteur vers mon propre atelier ni vers un garage avec lequel j'ai un accord commercial.",
   "Je rapporte ce que j'ai vu, pas ce qui arrange. Je ne tais aucun défaut constaté et je n'en invente aucun. Ce que je n'ai pas pu vérifier, je l'écris comme non vérifié.",
   "Je respecte le véhicule et les personnes. Je me présente, j'explique ma démarche au vendeur, et je ne photographie ni plaque d'immatriculation, ni document d'identité, ni aucune personne reconnaissable — ni le vendeur, ni un passant, ni moi-même.",
+  "J'informe le vendeur dès mon premier contact. Je lui dis que l'acheteur a commandé cette inspection, que ses coordonnées m'ont été transmises pour ce seul rendez-vous, et je lui indique où lire la politique de confidentialité d'Inspexo (inspexo.io/politique-de-confidentialite). Il peut m'y demander la suppression de ses coordonnées.",
   "Je suis indépendant et assuré. J'exerce sous mon propre numéro SIRET et je maintiens une assurance responsabilité civile professionnelle en cours de validité pendant toute ma collaboration.",
   "Je sais qu'un manquement met fin à la collaboration. Inspexo peut suspendre mon compte immédiatement, et la rémunération d'une mission entachée d'un manquement n'est pas due.",
 ]

@@ -231,6 +231,7 @@ serve(async (req: Request) => {
     autorisations_relachees: 0,
     rapports_en_retard: 0,
     photos_inspection_purgees: 0,
+    preuves_absence_purgees: 0,
     coordonnees_vendeur_purgees: 0,
     erreurs: 0,
   };
@@ -438,6 +439,28 @@ serve(async (req: Request) => {
       }
     } catch (e) {
       console.error("purge des photos d'inspection:", e);
+      bilan.erreurs += 1;
+    }
+
+    // Photo de constat d'absence : UN AN (litiges et contestations de
+    // paiement), puis suppression. Elle est conservée, donc elle doit être
+    // annoncée et purgée comme le reste.
+    try {
+      const { data: preuves } = await admin.rpc("inspections_preuves_a_purger", { p_limite: 20 });
+      for (const p of (preuves ?? [])) {
+        if (p.chemin) {
+          const { error } = await admin.storage.from("rapports").remove([p.chemin]);
+          if (error) {
+            console.error("suppression de la photo de constat:", error);
+            bilan.erreurs += 1;
+            continue;
+          }
+        }
+        await admin.rpc("inspection_noter_preuve_purgee", { p_inspection_id: p.inspection_id });
+        bilan.preuves_absence_purgees += 1;
+      }
+    } catch (e) {
+      console.error("purge des preuves d'absence:", e);
       bilan.erreurs += 1;
     }
 
