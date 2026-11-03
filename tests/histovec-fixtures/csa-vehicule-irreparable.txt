@@ -1,0 +1,51 @@
+Certificat de situation administrative détaillé
+(Articles L.322-2 et R.322-4 du code de la route)
+Certificat attestant la situation administrative au :
+dimanche 1 novembre 2026 (généré le mardi 3 novembre 2026 à 23h08)
+La valeur du certificat de situation administrative détaillé ne saurait excéder 15 jours, les données étant susceptibles
+d'évoluer. Le QR code ci-contre renvoie au site https://histovec.interieur.gouv.fr - il permet de vous assurer de la
+conformité des informations retranscrites et de leurs mises à jour. Ce code sera disponible jusqu'au changement de
+titulaire et au plus tard jusqu'au 2026-11-16. Au-delà, un nouveau rapport devra être généré.
+https://histovec.interieur.gou...
+Identification du véhicule
+Numéro d'immatriculation du véhicule :
+Date de première immatriculation du véhicule :
+Numéro VIN du véhicule (ou numéro de série) :
+Marque :
+DD-321-DD
+29/02/2016
+VF7ZZZZZZZZZZZZZZ
+CITROEN
+Historique du véhicule
+13/04/2020 IMMAT_NORMALE
+11/07/2023 DEC_VE
+28/08/2023 PREM_RAP_VE
+15/09/2023 CHANG_TIT_NORMAL
+Situation administrative du véhicule
+- Opposition au transfert du certificat
+d'immatriculation (OTCI)
+Aucune
+- Opposition véhicule économiquement
+irréparable
+- Date de l'opposition : 03/03/2024
+- Procédure de réparation contrôlée
+oui
+- Déclaration valant saisie
+- Nom de l'autorité à l'origine de l'inscription :
+TRESORERIE FIXTURE
+Date de la déclaration valant saisie : 09/10/2024
+- Gage
+Aucun
+- Immatriculation suspendue
+- Motif : PVE
+Date de la suspension : 01/03/2024
+- Immatriculation annulée
+- Véhicule volé
+non
+- Certificat d'immatriculation volé
+non
+- Certificat d'immatriculation perdu
+non
+- Certificat d'immatriculation duplicata
+oui
+Page 1 / 1

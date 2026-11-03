@@ -276,7 +276,10 @@ serve(async (req: Request) => {
     const kmAnnonce = typeof result.vehicule?.kilometrage === "number" && result.vehicule.kilometrage > 0
       ? result.vehicule.kilometrage
       : null;
-    const km = comparerKmCt(lecture.km_releve, lecture.date_ct, kmAnnonce);
+    // La série des relevés précédents entre dans la comparaison : un compteur
+    // qui recule entre deux contrôles officiels est le signal le plus fort, et
+    // un relevé isolé ne peut pas le montrer.
+    const km = comparerKmCt(lecture.km_releve, lecture.date_ct, kmAnnonce, lecture.km_historique);
     let incoherences: string[] = Array.isArray(result.incoherences) ? [...result.incoherences] : [];
     if (km.incoherence && !incoherences.some((i) => /proc[eè]s-verbal/i.test(i) && /km/i.test(i))) {
       incoherences = [km.incoherence, ...incoherences].slice(0, 10);

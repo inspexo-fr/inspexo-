@@ -1,0 +1,37 @@
+[
+  {
+    "nom": "csa-aucune-anomalie",
+    "quoi": "Rien à signaler. Couvre les TROIS formes négatives : « Aucune » (oppositions, saisie), « Aucun » (gage), « Non » (suspensions).",
+    "octets": 15259
+  },
+  {
+    "nom": "csa-gage-et-opposition",
+    "quoi": "Gage ET opposition au transfert : « ne rien payer avant levée ».",
+    "octets": 15415
+  },
+  {
+    "nom": "csa-vehicule-endommage-en-cours",
+    "quoi": "Procédure de réparation contrôlée EN COURS, libellé CSA « Opposition véhicule endommagé ».",
+    "octets": 15326
+  },
+  {
+    "nom": "csa-vehicule-irreparable",
+    "quoi": "Véhicule économiquement irréparable (OVEI) + suspension motivée.",
+    "octets": 15540
+  },
+  {
+    "nom": "csa-vole",
+    "quoi": "Véhicule déclaré volé.",
+    "octets": 15252
+  },
+  {
+    "nom": "csa-ancienne-location",
+    "quoi": "Passage en location (CHANG_LOC) : « voiture de particulier » contredite.",
+    "octets": 15274
+  },
+  {
+    "nom": "csa-certificat-annule",
+    "quoi": "Certificat annulé : la section détaillée DISPARAÎT entièrement.",
+    "octets": 14268
+  }
+]

@@ -173,3 +173,59 @@ pour la règle la plus lourde de conséquences.
 - Le CSA 2026 porte-t-il les mêmes libellés qu'en 2023 ?
 - L'ordre d'extraction du texte dans la mise en page à deux colonnes.
 - La date des données est-elle affichée (drapeau `showDataDate`) ?
+
+---
+
+## 7. Ce que l'extraction rend RÉELLEMENT (mesuré sur les fixtures générées)
+
+Sept CSA produits avec le générateur officiel, puis extraits par `unpdf`
+(1 page, 1 000 à 1 700 caractères, ~45 lignes). Quatre constats changent la
+conception de l'analyseur — aucun n'était devinable depuis le code source seul.
+
+**1. Dans l'identification, les libellés et les valeurs sont SÉPARÉS.** La mise
+en page à deux colonnes donne les quatre libellés d'affilée, PUIS les quatre
+valeurs dans le même ordre :
+
+```
+Numéro d'immatriculation du véhicule :
+Date de première immatriculation du véhicule :
+Numéro VIN du véhicule (ou numéro de série) :
+Marque :
+BB-456-BB
+05/09/2018
+VF1YYYYYYYYYYYYYY
+RENAULT
+```
+
+Une règle « libellé : valeur sur la même ligne » ne trouverait **rien**.
+L'appariement doit être **positionnel** : n libellés reconnus, puis n valeurs.
+
+**2. Dans la section administrative, libellé et valeur alternent** — mais un
+libellé peut **se replier sur deux lignes**, et une valeur aussi :
+
+```
+- Opposition au transfert du certificat
+d'immatriculation (OTCI)
+PV(s) en attente
+- Date du PV : 22/01/2025
+...
+- Gage
+- Nom du créancier : ORGANISME DE CREDIT
+FIXTURE
+```
+
+**3. Les espaces doubles du code source n'arrivent PAS à l'extraction.**
+`- Date du PV :  22/01/2025` (deux espaces à l'écriture) ressort avec **une
+seule** espace. Toute comparaison doit normaliser les blancs — le § 2 de cette
+note était trompeur sur ce point, il est corrigé ici.
+
+**4. Six libellés de plus que ceux trouvés dans les littéraux de `content.js`** :
+`- Immatriculation suspendue`, `- Immatriculation annulée`, `- Véhicule volé`,
+`- Certificat d'immatriculation volé`, `- Certificat d'immatriculation perdu`,
+`- Certificat d'immatriculation duplicata`. Et `- Immatriculation annulée` peut
+n'avoir **aucune valeur** derrière lui. La liste des marqueurs attendus doit
+donc venir des fixtures, pas d'une lecture du source.
+
+Autre détail : la **date de validité ressort au format ISO** (`2026-11-16`) dans
+le paragraphe d'en-tête, alors que la date des données est en français long
+(« dimanche 1 novembre 2026 »). Deux formats dans le même document.
