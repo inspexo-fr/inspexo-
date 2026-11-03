@@ -471,6 +471,13 @@ La phrase affichée n'est **pas figée dans le code** : `partenaires.remuneratio
 - Page `/politique-de-confidentialite` : trois sections ajoutées (liens partenaires, code postal, retour après achat).
 - **Aucune modification du score** : aucune éval payante, coût 0 €.
 
+### Mise en service — FAITE le 3 nov. 2026
+1. `GO_PROXY_SECRET` posé côté secrets Supabase **et** variables Vercel production ; 2. dump prod hors dépôt puis migration `20261105120000` appliquée (**24/24**) ; 3. `go`, `retour`, `admin-partenaires`, `admin-retours`, `alertes`, `desinscription` déployées — ⚠️ `desinscription` a **conservé `verify_jwt=false`** au redéploiement (vérifié : les liens de désinscription des emails restent valides) ; 4. merge dans main et déploiement Vercel ; 5. vérification en production sur un dossier vert et un rouge.
+- Contrôles de surface en prod : `get_partenaires_actifs` rend `[]` (aucun partenaire actif) ; `partenaires`, `mises_en_relation`, `retours` et `desinscriptions` **refusées à anon** (401) ; `go` rend **403** sans secret de proxy ; `retour` rend **403** sur un jeton inconnu.
+- ⚠️ `/go/<inconnu>` redirige vers `?lien=inconnu` et non `?lien=indisponible` : **c'est la preuve que les deux secrets concordent** (un secret discordant donnerait un 403 de la fonction, donc `indisponible`). Les deux codes ont été séparés exprès — les confondre rendait une erreur de configuration invisible.
+- Vérifié sur la prod réelle, à 390 px : sur un **rouge**, aucune requête partenaires n'est émise (règle appliquée avant le réseau), la phrase de préalable est là et l'inspection est repliée en lien secondaire ; sur un **vert**, la requête part et ne rend rien faute de partenaire actif. Zéro erreur JavaScript, zéro débordement. Captures dans `captures-sprint10/prod/`.
+- ⬜ Reste : désigner un partenaire assurance (puis l'enregistrer, déclarer sa rémunération et l'activer dans l'admin). **Crédit bloqué jusqu'au 20/11/2026** par `peutActiver`, vérifié à l'allumage.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)
