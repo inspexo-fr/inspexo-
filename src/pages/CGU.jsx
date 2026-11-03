@@ -37,16 +37,16 @@ export default function CGU() {
           <p className="legal-p">
             <strong>"Inspexo"</strong> ou <strong>"la Plateforme"</strong> : le site inspexo.io, édité par DUPLEX SAS.<br />
             <strong>"Utilisateur"</strong> ou <strong>"Client"</strong> : toute personne physique ou morale utilisant le Site ou souscrivant à un service.<br />
-            <strong>"Expert"</strong> : professionnel automobile indépendant, qualifié et référencé sur la Plateforme.<br />
+            <strong>"Inspecteur"</strong> : professionnel automobile indépendant, qualifié et référencé sur la Plateforme.<br />
             <strong>"Mission"</strong> : prestation commandée par un Client sur la Plateforme (analyse IA, visio, inspection).<br />
-            <strong>"Rapport"</strong> : document de synthèse produit à l'issue d'une mission (par l'IA ou par un expert).
+            <strong>"Rapport"</strong> : document de synthèse produit à l'issue d'une mission (par l'analyse IA ou par un inspecteur).
           </p>
 
           <hr className="legal-sep" />
 
           <h2 className="legal-h2">Article 2 — Objet</h2>
           <p className="legal-p">
-            Inspexo est une plateforme de mise en relation entre des acheteurs de véhicules d'occasion et des experts automobiles spécialisés par marque. Inspexo propose également un service d'analyse par intelligence artificielle.
+            Inspexo est une plateforme de mise en relation entre des acheteurs de véhicules d'occasion et des inspecteurs spécialisés par marque. Inspexo propose également un service d'analyse par intelligence artificielle.
           </p>
           <p className="legal-p">
             Inspexo agit en qualité d'intermédiaire. L'inspection est payée exclusivement par l'acheteur&nbsp;: l'inspecteur est un professionnel indépendant qui ne reçoit aucune somme du vendeur, ni d'un garage, ni d'un concessionnaire. Il signe une charte d'indépendance en ce sens.
@@ -61,7 +61,7 @@ export default function CGU() {
 
           <h3 className="legal-h3">3.1 Analyse IA gratuite</h3>
           <p className="legal-p">
-            10 échanges gratuits avec l'expert IA spécialisé.<br />
+            10 échanges gratuits avec l'analyse IA spécialisée.<br />
             Rapport partiel automatique (scores et défaillances sans coûts détaillés).<br />
             Limité à 3 analyses gratuites par compte.<br />
             Sans engagement.
@@ -69,23 +69,23 @@ export default function CGU() {
 
           <h3 className="legal-h3">3.2 Analyse IA complète — 9,90€</h3>
           <p className="legal-p">
-            Conversation illimitée avec l'expert IA spécialisé.<br />
+            Conversation illimitée avec l'analyse IA spécialisée.<br />
             Rapport complet avec coûts détaillés et arguments de négociation.<br />
             Accès immédiat après paiement.
           </p>
 
           <h3 className="legal-h3">3.3 Visio Test Drive — 59€ (prix de lancement)</h3>
           <p className="legal-p">
-            Session visio de 30 minutes avec un expert qualifié spécialisé par marque.<br />
-            L'expert guide le client en direct pendant la visite du véhicule via Google Meet.<br />
-            Part expert : 40€ / Part plateforme : 19€.
+            Session visio de 30 minutes avec un inspecteur qualifié spécialisé par marque.<br />
+            L'inspecteur guide le client en direct pendant la visite du véhicule via Google Meet.<br />
+            Part inspecteur : 40€ / Part plateforme : 19€.
           </p>
 
           <h3 className="legal-h3">3.4 Inspection Physique — 249€ (prix de lancement)</h3>
           <p className="legal-p">
-            Inspection complète sur place par un expert qualifié spécialisé par marque.<br />
+            Inspection complète sur place par un inspecteur qualifié spécialisé par marque.<br />
             Durée : environ 60 minutes. Rapport détaillé inclus.<br />
-            Part expert : 170€ / Part plateforme : 79€.
+            Part inspecteur : 170€ / Part plateforme : 79€.
           </p>
 
           <p className="legal-p">
@@ -167,7 +167,7 @@ export default function CGU() {
             La commande est effectuée sur le Site en sélectionnant un service et en procédant au paiement. Le paiement est sécurisé par Stripe. Inspexo ne stocke aucune donnée bancaire. La commande est confirmée dès la validation du paiement. Un email de confirmation est envoyé au Client.
           </p>
           <p className="legal-p">
-            Pour les services Visio et Inspection, le paiement doit être effectué avant la réservation du créneau avec l'expert. Les experts sont rémunérés via Stripe Connect. Aucun paiement direct entre le Client et l'expert n'est autorisé.
+            Pour les services Visio et Inspection, le paiement doit être effectué avant la réservation du créneau avec l'inspecteur. Les inspecteurs sont rémunérés via Stripe Connect. Aucun paiement direct entre le Client et l'inspecteur n'est autorisé.
           </p>
 
           <hr className="legal-sep" />
@@ -176,17 +176,17 @@ export default function CGU() {
 
           <h3 className="legal-h3">6.1 Analyse IA</h3>
           <p className="legal-p">
-            La conversation avec l'expert IA est accessible immédiatement après paiement (ou gratuitement pour les 10 premiers échanges). Le Client peut clôturer la conversation à tout moment pour générer son rapport. La clôture est irréversible.
+            La conversation avec l'analyse IA est accessible immédiatement après paiement (ou gratuitement pour les 10 premiers échanges). Le Client peut clôturer la conversation à tout moment pour générer son rapport. La clôture est irréversible.
           </p>
 
           <h3 className="legal-h3">6.2 Visio Test Drive</h3>
           <p className="legal-p">
-            Après paiement, le Client réserve un créneau via le système de réservation. L'expert rejoint la visio au créneau prévu. Si l'expert est indisponible ou ne se présente pas, le Client est remboursé intégralement.
+            Après paiement, le Client réserve un créneau via le système de réservation. L'inspecteur rejoint la visio au créneau prévu. Si l'inspecteur est indisponible ou ne se présente pas, le Client est remboursé intégralement.
           </p>
 
           <h3 className="legal-h3">6.3 Inspection Physique</h3>
           <p className="legal-p">
-            Après paiement, le Client réserve un créneau et communique l'adresse du véhicule. L'expert se déplace sur place. Le rapport est remis au Client sous 24 heures suivant l'inspection.
+            Après paiement, le Client réserve un créneau et communique l'adresse du véhicule. L'inspecteur se déplace sur place. Le rapport est remis au Client sous 24 heures suivant l'inspection.
           </p>
 
           <hr className="legal-sep" />
@@ -214,7 +214,7 @@ export default function CGU() {
           <h3 className="legal-h3">8.2 Visio Test Drive (59€)</h3>
           <p className="legal-p">
             Annulation gratuite jusqu'à 24 heures avant le créneau réservé → remboursement intégral.<br />
-            Annulation moins de 24 heures avant → remboursement de 50% (part expert retenue).<br />
+            Annulation moins de 24 heures avant → remboursement de 50% (part inspecteur retenue).<br />
             Non-présentation du Client → aucun remboursement.
           </p>
 
@@ -226,9 +226,9 @@ export default function CGU() {
             Non-présentation du Client → aucun remboursement.
           </p>
 
-          <h3 className="legal-h3">8.4 Non-présentation de l'expert</h3>
+          <h3 className="legal-h3">8.4 Non-présentation de l'inspecteur</h3>
           <p className="legal-p">
-            Si l'expert ne se présente pas ou annule, le Client est remboursé intégralement sous 5 jours ouvrés.
+            Si l'inspecteur ne se présente pas ou annule, le Client est remboursé intégralement sous 5 jours ouvrés.
           </p>
 
           <p className="legal-p">
@@ -239,7 +239,7 @@ export default function CGU() {
 
           <h2 className="legal-h2">Article 9 — Obligations de l'utilisateur</h2>
           <p className="legal-p">
-            L'Utilisateur s'engage à utiliser le Site conformément à sa destination, à fournir des informations exactes sur le véhicule analysé, à ne pas utiliser le service d'analyse IA à des fins frauduleuses, à ne pas tenter de contourner les limitations du service gratuit, à respecter les experts et adopter un comportement courtois, et à ne pas solliciter directement un expert en dehors de la Plateforme pour une mission initiée sur Inspexo.
+            L'Utilisateur s'engage à utiliser le Site conformément à sa destination, à fournir des informations exactes sur le véhicule analysé, à ne pas utiliser le service d'analyse IA à des fins frauduleuses, à ne pas tenter de contourner les limitations du service gratuit, à respecter les inspecteurs et adopter un comportement courtois, et à ne pas solliciter directement un inspecteur en dehors de la Plateforme pour une mission initiée sur Inspexo.
           </p>
 
           <hr className="legal-sep" />
@@ -249,10 +249,10 @@ export default function CGU() {
             Inspexo agit en qualité d'intermédiaire de mise en relation. Inspexo n'est pas un centre de contrôle technique, un garage, un expert automobile agréé, ni un conseiller financier.
           </p>
           <p className="legal-p">
-            Les analyses fournies par l'expert IA sont données à titre informatif et reposent sur les connaissances disponibles. Elles ne se substituent pas à un diagnostic professionnel réalisé en personne.
+            Les analyses fournies par Inspexo sont données à titre informatif et reposent sur les connaissances disponibles. Elles ne se substituent pas à un diagnostic professionnel réalisé en personne.
           </p>
           <p className="legal-p">
-            Les experts référencés sur la Plateforme sont des professionnels indépendants. Inspexo vérifie leurs qualifications mais ne se substitue pas à leur responsabilité professionnelle.
+            Les inspecteurs référencés sur la Plateforme sont des professionnels indépendants. Inspexo vérifie leurs qualifications mais ne se substitue pas à leur responsabilité professionnelle.
           </p>
           <p className="legal-p">
             Inspexo ne garantit pas l'absence de défauts non détectables lors d'une inspection visuelle, l'exactitude absolue des fourchettes de coûts fournies par l'analyse, la disponibilité permanente du service, ni les décisions d'achat prises par le Client sur la base des informations fournies. La responsabilité d'Inspexo est limitée au montant de la prestation commandée.
@@ -260,16 +260,16 @@ export default function CGU() {
 
           <hr className="legal-sep" />
 
-          <h2 className="legal-h2">Article 11 — Qualification des experts</h2>
+          <h2 className="legal-h2">Article 11 — Qualification des inspecteurs</h2>
           <p className="legal-p">
-            Les experts référencés sur Inspexo sont des professionnels qualifiés, sélectionnés pour leur expertise sur des marques spécifiques. Le terme "qualifié" désigne un professionnel dont les compétences ont été vérifiées par Inspexo. Il ne s'agit pas d'une certification officielle délivrée par un organisme agréé. Inspexo se réserve le droit de suspendre ou retirer un expert de la Plateforme à tout moment.
+            Les inspecteurs référencés sur Inspexo sont des professionnels qualifiés, sélectionnés pour leur spécialisation sur des marques spécifiques. Le terme "qualifié" désigne un professionnel dont les compétences ont été vérifiées par Inspexo. Il ne s'agit pas d'une certification officielle délivrée par un organisme agréé. Inspexo se réserve le droit de suspendre ou retirer un inspecteur de la Plateforme à tout moment.
           </p>
 
           <hr className="legal-sep" />
 
           <h2 className="legal-h2">Article 12 — Propriété intellectuelle</h2>
           <p className="legal-p">
-            Les rapports générés par l'IA Inspexo et les rapports d'experts sont la propriété du Client qui les a commandés. Le Client autorise Inspexo à utiliser les données anonymisées issues des conversations et rapports pour améliorer ses services, conformément à la Politique de Confidentialité. L'ensemble du Site (code, design, marque, logo) est la propriété exclusive de DUPLEX SAS.
+            Les rapports générés par l'IA Inspexo et les rapports d'inspection sont la propriété du Client qui les a commandés. Le Client autorise Inspexo à utiliser les données anonymisées issues des conversations et rapports pour améliorer ses services, conformément à la Politique de Confidentialité. L'ensemble du Site (code, design, marque, logo) est la propriété exclusive de DUPLEX SAS.
           </p>
 
           <hr className="legal-sep" />
