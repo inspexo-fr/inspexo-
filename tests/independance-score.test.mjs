@@ -228,12 +228,29 @@ titre('3. Le drapeau de quota API n’ouvre pas le service gratuit')
   )
   ok(/!isEval && !passActif && !isApi/.test(src),
     'le drapeau n’agit que sur le plafond, à l’endroit du rate limit')
-  // Le drapeau ne doit toucher à RIEN d'autre que des compteurs.
+  // Le drapeau ne doit servir qu'à des usages ÉNUMÉRÉS. Un simple plafond
+  // sur le nombre de lignes ne dirait rien : ce qui compte est à quoi elles
+  // servent. Toute nouvelle utilisation hors de cette liste fait échouer le
+  // test, et oblige à décider si elle est légitime.
+  const USAGES_ADMIS = [
+    { quoi: 'définition du drapeau', re: /const isApi = estAppelApi/ },
+    { quoi: 'identifiant du client à débiter', re: /const apiClientId = isApi/ },
+    { quoi: 'partage des prix (défaut : exclu)', re: /const partagerPrix = !isApi/ },
+    { quoi: 'omission de l’empreinte d’IP', re: /ip_hash: isEval \|\| isApi \? null/ },
+    { quoi: 'trace de provenance dans un event', re: /\.\.\.\(isApi \? \{ via: "api"/ },
+    { quoi: 'porte du plafond de débit', re: /!isEval && !passActif && !isApi/ },
+    { quoi: 'colonne de provenance de l’analyse', re: /^\s*via_api: isApi,$/ },
+  ]
   const lignesIsApi = src.split('\n').filter((l) => /\bisApi\b/.test(l))
-  ok(lignesIsApi.length > 0 && lignesIsApi.length <= 6,
-    `le drapeau n’apparaît qu’à quelques endroits (${lignesIsApi.length})`)
-  ok(!lignesIsApi.some((l) => /score|verdict|axes|bareme|panne|gravite/i.test(l)),
+  const inconnues = lignesIsApi.filter((l) => !USAGES_ADMIS.some((u) => u.re.test(l)))
+  ok(lignesIsApi.length > 0 && inconnues.length === 0,
+    `les ${lignesIsApi.length} usages du drapeau sont tous énumérés${
+      inconnues.length ? ` — inconnu : ${inconnues[0].trim().slice(0, 70)}` : ''}`)
+  ok(!lignesIsApi.some((l) => /\bscore\b|verdict|axes|bareme|panne|gravite|catalogue|critique/i.test(l)),
     'aucune ligne portant le drapeau ne touche au score, au verdict ni aux pannes')
+  // Et le contraire : score ne lit jamais le contrat du client.
+  ok(!/prix_partages/.test(src),
+    'score ne lit pas le contrat du client : il reçoit un booléen, c’est api-analyses qui lit')
 }
 
 titre('4. Version du barème')

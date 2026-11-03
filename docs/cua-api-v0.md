@@ -1,10 +1,14 @@
 # Conditions d'utilisation de l'API Inspexo — BROUILLON v0
 
-> ⚠️ **BROUILLON — NON PUBLIÉ.** À relire et à valider par Utku avant toute
-> mise en ligne et avant la remise d'une première clé. Les points marqués
-> « à trancher » appellent une décision, pas une rédaction.
+> ⚠️ **BROUILLON — NON PUBLIÉ.** Les cinq points en suspens ont été tranchés
+> par Utku le 3 novembre 2026 et sont intégrés ci-dessous. Le document reste
+> non publié.
+>
+> ⚠️ **À FAIRE RELIRE PAR UN AVOCAT AVANT LE PREMIER CONTRAT.** Ce texte est
+> rédigé par un non-juriste ; l'article 7 (responsabilité) en particulier
+> engage la société et doit être validé.
 
-**Version** : 0 (brouillon du 3 novembre 2026)
+**Version** : 0 (brouillon du 3 novembre 2026, décisions intégrées)
 **Éditeur** : DUPLEX SAS (Inspexo), SIREN 941 962 060 — contact@inspexo.io
 
 ---
@@ -57,6 +61,13 @@ une base de données proposée à des tiers.
 4.2. L'usage autorisé est **l'usage interne** et **la restitution à ses propres
 utilisateurs finaux** dans le cadre de son propre service.
 
+4.4. **Attribution lors d'une restitution à un tiers.** Dès lors que le verdict
+est montré à une personne autre que le client lui-même — utilisateur final,
+prospect, partenaire —, la restitution porte la mention « Analyse Inspexo » et
+un lien cliquable vers le dossier correspondant (`https://www.inspexo.io/a/…`,
+rendu par le champ `url` de la réponse). En **usage strictement interne**, cette
+mention est libre.
+
 4.3. L'extraction systématique du catalogue de défauts, des fiches moteur ou
 du relevé de prix par appels répétés est interdite.
 
@@ -75,9 +86,12 @@ donne lieu à une réponse HTTP 429 explicite, jamais à une coupure silencieuse
 5.4. Un appel qui n'aboutit pas à une analyse (indisponibilité du fournisseur
 d'IA) n'est pas décompté.
 
-5.5. Une annonce déjà analysée dans les sept jours renvoie le résultat en
-cache, marqué comme tel. **Il est décompté comme un appel** — à trancher si
-nous voulons l'offrir.
+5.5. **Cache et facturation.** Une annonce déjà analysée dans les sept jours
+renvoie le résultat en cache, marqué `"cache": true`. Lorsque **le même client
+redemande la même annonce** dans ce délai, l'appel **n'est pas refacturé** : le
+champ `quota.facture` vaut alors `false` et le crédit lui est rendu. Toute
+autre requête est facturée, y compris la même annonce demandée par un autre
+client, et la même annonce redemandée au-delà de sept jours.
 
 ## 6. Données transmises par le client
 
@@ -88,21 +102,37 @@ d'annonces qu'il envoie.
 (nom, téléphone, adresse d'un vendeur). Inspexo ne les demande pas et ne les
 exploite pas.
 
-6.3. Les prix transmis alimentent un relevé de marché **strictement agrégé**,
-jamais republié annonce par annonce. — *à trancher : faut-il permettre au
-client de s'y opposer ?*
+6.3. **Prix transmis — exclus par défaut.** Les prix contenus dans les annonces
+que vous nous envoyez par API **n'alimentent pas** notre relevé de marché. Ils
+ne sont intégrés que si votre contrat le prévoit expressément ; le défaut est
+l'exclusion, sans démarche de votre part.
+
+6.4. **Conservation.** Le **texte des annonces reçues par API est effacé
+automatiquement au bout de trente jours**. Les données d'usage nécessaires à la
+comptabilité — date, clé utilisée, nombre d'appels, **sans le texte** — sont
+conservées pendant la durée légale applicable aux pièces comptables.
 
 ## 7. Disponibilité, responsabilité
 
 7.1. L'API est fournie sans engagement de disponibilité en version 0. Une
 analyse complète prend typiquement 40 à 90 secondes.
 
-7.2. Inspexo ne répond pas des décisions d'achat, de vente, de tarification ou
-d'octroi prises par le client ou ses utilisateurs sur la base d'un verdict.
+7.2. **Le verdict est une aide à la décision, pas une expertise.** Il est
+produit automatiquement à partir du seul texte d'une annonce, sans examen du
+véhicule. Inspexo ne répond pas des décisions d'achat, de vente, de
+tarification ou d'octroi prises par le client ou ses utilisateurs sur la base
+d'un verdict.
 
-7.3. La responsabilité d'Inspexo est, en tout état de cause, plafonnée au
-montant payé par le client au titre des douze derniers mois. — *à trancher
-avec un conseil : plafond et exclusions.*
+7.3. **Plafond.** La responsabilité d'Inspexo est, en tout état de cause,
+plafonnée au montant effectivement payé par le client au titre des **douze
+derniers mois**.
+
+7.4. **Dommages indirects exclus.** Sont exclus de toute indemnisation les
+dommages indirects, notamment la perte de chiffre d'affaires, la perte de
+marge, la perte de clientèle, l'atteinte à l'image et la perte de données.
+
+7.5. Les plafonds et exclusions des articles 7.3 et 7.4 ne s'appliquent pas en
+cas de faute lourde ou dolosive, ni dans les cas où la loi les écarte.
 
 ## 8. Durée, résiliation
 
@@ -126,9 +156,21 @@ compétents.
 
 ---
 
-### Points à trancher avant publication
-1. Le résultat servi depuis le cache est-il facturé ? (art. 5.5)
-2. Le client peut-il s'opposer à l'usage des prix dans le relevé agrégé ? (art. 6.3)
-3. Plafond de responsabilité et exclusions — à valider avec un conseil. (art. 7.3)
-4. Faut-il exiger un lien visible vers `/a/:id` lors d'une restitution publique ?
-5. Durée de conservation des textes d'annonces reçus par API.
+### Décisions prises le 3 novembre 2026 — et où elles vivent dans le code
+
+Une règle écrite ici mais non appliquée par le code serait un engagement faux.
+Les trois décisions qui touchent au comportement sont donc implémentées :
+
+| Décision | Article | Implémentation |
+|---|---|---|
+| Pas de refacturation du cache pour le même client sous 7 jours | 5.5 | `api_deja_facture` / `api_noter_appel` + remboursement dans `api-analyses` ; réponse `quota.facture` |
+| Prix reçus par API exclus du relevé agrégé par défaut | 6.3 | `api_clients.prix_partages` (défaut **false**) → `partager_prix` transmis à `score` |
+| Texte des annonces effacé à 30 jours, usage conservé | 6.4 | `analyses.via_api` + `purger_textes_api()`, appelée chaque jour par le cron `alertes` |
+| Attribution « Analyse Inspexo » + lien `/a/:id` dès restitution à un tiers | 4.4 | contractuel — le champ `url` de la réponse fournit le lien |
+| Responsabilité plafonnée 12 mois, indirects exclus, aide à la décision | 7.2 à 7.5 | contractuel |
+
+### Reste à faire avant le premier contrat
+- [ ] **Relecture par un avocat**, en particulier les articles 4, 7 et 8.
+- [ ] Vérifier l'articulation avec les CGU du site (`/cgu`) pour éviter toute
+      contradiction entre les deux textes.
+- [ ] Décider du canal de remise de la clé (l'admin l'affiche une seule fois).

@@ -70,6 +70,15 @@ serve(async (req: Request) => {
 
     // Décision ET débit en une seule opération atomique : deux appels
     // simultanés ne peuvent pas consommer le même dernier crédit.
+    // Le contrat du client décide si ses prix alimentent le relevé agrégé.
+    // Lu ICI : `score` ne lit jamais la table des clients, il reçoit un
+    // booléen (voir tests/independance-score.test.mjs).
+    const { data: contrat } = await admin
+      .from("api_clients")
+      .select("prix_partages")
+      .eq("cle_hash", await hacherCle(cle, API_KEY_SALT))
+      .maybeSingle();
+
     const { data: quota, error: quotaErr } = await admin.rpc("api_consommer", {
       p_cle_hash: await hacherCle(cle, API_KEY_SALT),
       p_plafond_jour: PLAFOND_JOUR_API,
@@ -128,7 +137,12 @@ serve(async (req: Request) => {
         Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
         "x-api-client": String(quota.client_id),
       },
-      body: JSON.stringify({ text: texteComplet }),
+      body: JSON.stringify({
+        text: texteComplet,
+        // Exclusion par défaut : seul un contrat explicite autorise l'usage
+        // des prix reçus par API dans le relevé de marché.
+        partager_prix: contrat?.prix_partages === true,
+      }),
     });
     const brut = await res.json().catch(() => null);
 
@@ -139,6 +153,27 @@ serve(async (req: Request) => {
         error: brut?.error ?? "analyse_indisponible",
         message: brut?.message ?? "L'analyse n'a pas abouti. Réessayez dans un instant.",
       }, res.status >= 400 ? res.status : 502);
+    }
+
+    // CUA art. 5.5 — un même client qui redemande la MÊME annonce sous
+    // 7 jours n'est pas refacturé. Le crédit vient d'être débité : on le rend
+    // s'il avait déjà payé pour cette analyse-là. Toute autre requête,
+    // y compris la même annonce par un autre client, reste facturée.
+    let refacture = true;
+    if (brut.id) {
+      const { data: dejaPaye } = await admin.rpc("api_deja_facture", {
+        p_client_id: quota.client_id,
+        p_analysis_id: brut.id,
+      });
+      if (dejaPaye === true) {
+        await admin.rpc("api_rembourser", { p_client_id: quota.client_id });
+        refacture = false;
+      }
+      await admin.rpc("api_noter_appel", {
+        p_client_id: quota.client_id,
+        p_analysis_id: brut.id,
+        p_facture: refacture,
+      });
     }
 
     const r = brut.result;
@@ -181,10 +216,15 @@ serve(async (req: Request) => {
       incoherences: r.incoherences ?? [],
       avertissement: r.avertissement,
       quota: {
-        restant_mois: quota.restant_mois,
+        // `facture: false` = même annonce redemandée par le même client sous
+        // 7 jours, le crédit a été rendu.
+        facture: refacture,
+        restant_mois: refacture ? quota.restant_mois : (quota.restant_mois ?? 0) + 1,
         quota_mensuel: quota.quota_mensuel,
       },
-    }, 200, { "X-Quota-Restant": String(quota.restant_mois ?? "") });
+    }, 200, {
+      "X-Quota-Restant": String(refacture ? (quota.restant_mois ?? "") : (quota.restant_mois ?? 0) + 1),
+    });
   } catch (e) {
     console.error("api-analyses:", e);
     return json({ error: "server_error", message: "Erreur interne." }, 500);

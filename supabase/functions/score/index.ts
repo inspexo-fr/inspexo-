@@ -837,6 +837,12 @@ serve(async (req: Request) => {
     // Vérifié hors ligne par tests/api-clients.test.mjs.
     const isApi = estAppelApi(req.headers, SUPABASE_SERVICE_ROLE_KEY);
     const apiClientId = isApi ? (req.headers.get("x-api-client") ?? "").slice(0, 40) : null;
+    // Les prix reçus par API n'alimentent le relevé agrégé QUE si le contrat
+    // du client le prévoit. Le défaut est l'exclusion : on ne récupère pas,
+    // par commodité, une donnée qu'on n'a pas négociée. Le drapeau est décidé
+    // par `api-analyses` (qui lit le contrat) et transmis — `score` ne lit
+    // jamais la table des clients.
+    const partagerPrix = !isApi || body.partager_prix === true;
     const ipHash = isInternal ? forwardedIpHash! : await sha256Hex(IP_HASH_SALT + clientIp(req));
     // Pass achat (sprint 7) : un utilisateur connecté avec Pass actif n'est
     // soumis ni à la limite de 5 analyses/24 h ni au captcha, et reçoit la
@@ -1149,6 +1155,7 @@ serve(async (req: Request) => {
           user_id: null,
           input_hash: inputHash,
           src: srcCampagne,
+          via_api: isApi,
           source_url: sourceUrl,
         })
         .select("id")
@@ -2754,6 +2761,7 @@ serve(async (req: Request) => {
           user_id: null,
           input_hash: inputHash,
           src: srcCampagne,
+          via_api: isApi,
           source_url: sourceUrl,
         })
         .select("id")
@@ -2782,7 +2790,7 @@ serve(async (req: Request) => {
     // géographique la région — déduite du code postal écrit dans l'annonce,
     // qui n'est lui-même jamais enregistré.
     try {
-      if (!isEval && vehiculePublic.marque && vehiculePublic.modele) {
+      if (!isEval && partagerPrix && vehiculePublic.marque && vehiculePublic.modele) {
         const maintenant = new Date();
         const releves = [];
         const prixNum = typeof prixAffiche === "number" && prixAffiche > 100 && prixAffiche < 1_000_000
@@ -2991,6 +2999,7 @@ serve(async (req: Request) => {
           user_id: null,
           input_hash: inputHash,
           src: srcCampagne,
+          via_api: isApi,
           source_url: sourceUrl,
         })
         .select("id")

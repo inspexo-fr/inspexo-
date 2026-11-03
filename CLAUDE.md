@@ -514,7 +514,19 @@ Déployé pour pouvoir exécuter les deux vérifications demandées : dump prod 
 - **Appel API réel** : Clio IV 1.5 dCi → orange 56, 5 points tous sourcés, `bareme_version` 11.0, quota décompté. Second appel sur la même annonce → `cache: true`, coût nul.
 - Chemins de refus vérifiés en conditions réelles : **401** sans clé et sur clé inconnue, **429** sur quota épuisé (message nommant le plafond et sa date de remise à zéro), **403** sur clé révoquée.
 - ⚠️ **Défaut trouvé par l'appel de contrôle, corrigé** : `axes` revenait `null`. `result_json.score_detail` **EST** la carte des axes, pas un objet qui la contient — `score_detail.axes` était donc toujours indéfini. C'est exactement ce que cet appel devait débusquer.
-- ⬜ Reste à la mise en service complète : merge, puis `/api/v1/analyses` et `/pro` en production.
+- Merge fait le 3 nov. 2026 : `/api/v1/analyses` et `/pro` sont en production, les deux pages **pré-rendues** et servies sans JavaScript, **aucun prix affiché**.
+
+### Décisions CUA du 3 nov. 2026 — écrites ET appliquées
+⚠️ Une règle écrite dans les CUA que le code n'applique pas serait un engagement faux. Les trois décisions comportementales sont donc implémentées (migration `20261107120000`), pas seulement rédigées :
+- **Cache non refacturé pour le MÊME client sur la MÊME annonce sous 7 jours** : `api_appels` + `api_deja_facture`, remboursement dans `api-analyses`, champ `quota.facture` dans la réponse. Une autre annonce, un autre client, ou plus de 7 jours ⇒ facturé.
+- **Prix reçus par API EXCLUS du relevé agrégé par défaut** : `api_clients.prix_partages` (défaut **false**) lu par `api-analyses`, transmis à `score` sous forme de booléen `partager_prix`. ⚠️ `score` ne lit **jamais** la table des clients — le test d'indépendance l'interdit explicitement.
+- **Texte des annonces API effacé à 30 jours** : `analyses.via_api` + `purger_textes_api()`, appelée chaque jour par le cron `alertes`. L'usage (date, clé, nombre) reste pour la comptabilité.
+- Attribution « Analyse Inspexo » + lien `/a/:id` dès restitution à un tiers, et responsabilité plafonnée (12 mois, indirects exclus) : contractuel.
+- ⬜ **`docs/cua-api-v0.md` reste NON PUBLIÉ et doit être relu par un avocat avant le premier contrat.**
+- Le test d'indépendance énumère désormais les **7 usages admis** du drapeau `isApi` : toute utilisation nouvelle hors de cette liste fait échouer `npm run eval`, ce qui force à décider si elle est légitime. Un simple plafond sur le nombre de lignes n'aurait rien garanti.
+
+### Page de confidentialité — manque comblé
+Le formulaire pro collectait email, société, volume et message libre (`leads_pro`) sans que la politique n'en dise un mot. Sections **2.f** et **6 octies** ajoutées : finalité unique, base légale (mesures précontractuelles), conservation 3 ans après le dernier contact.
 
 ## Marques Couvertes
 

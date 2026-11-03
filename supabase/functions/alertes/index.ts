@@ -221,6 +221,7 @@ serve(async (req: Request) => {
     alertes_rappel: 0,
     invitations_envoyees: 0,
     invitations_ignorees: 0,
+    textes_api_purges: 0,
     erreurs: 0,
   };
 
@@ -317,6 +318,17 @@ serve(async (req: Request) => {
 
     // ========== 2. J+21 : invitation au retour d'issue, lien signé ==========
     await inviterAuxRetours(admin, bilan);
+
+    // ========== 3. Purge des textes d'annonces reçues par API (30 jours) ====
+    // L'usage (date, clé, nombre) reste pour la comptabilité ; le texte, lui,
+    // n'a plus aucune raison d'être conservé (CUA art. 6.4).
+    try {
+      const { data: purgees } = await admin.rpc("purger_textes_api");
+      bilan.textes_api_purges = Number(purgees ?? 0);
+    } catch (e) {
+      console.error("purger_textes_api:", e);
+      bilan.erreurs += 1;
+    }
 
     return new Response(JSON.stringify(bilan), { headers: { "Content-Type": "application/json" } });
   } catch (err) {

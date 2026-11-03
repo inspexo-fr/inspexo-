@@ -61,6 +61,15 @@ export default function PolitiqueConfidentialite() {
             <li>Adresse IP (logs serveur)</li>
             <li>Type de navigateur et appareil</li>
           </ul>
+          <h3 className="legal-h3">f) Demande de contact professionnel</h3>
+          <ul className="legal-ul">
+            <li>Adresse email professionnelle (obligatoire)</li>
+            <li>Société, volume estimé et description du besoin (facultatifs)</li>
+          </ul>
+          <p className="legal-p">
+            Ces informations, saisies dans le formulaire de la page <a href="/pro">/pro</a>, ne
+            servent qu'à vous répondre et à établir une proposition. Voir la section 6 octies.
+          </p>
 
           <h2 className="legal-h2">3. Finalités du traitement</h2>
           <ul className="legal-ul">
@@ -207,6 +216,32 @@ export default function PolitiqueConfidentialite() {
             client et par mois — jamais le contenu des requêtes rattaché à une personne physique.
             Les clés sont stockées sous forme d'empreinte salée, jamais en clair.
           </p>
+
+          <h2 className="legal-h2">6 octies. Formulaire de contact professionnel</h2>
+          <p className="legal-p">
+            Le formulaire de la page <a href="/pro">/pro</a> enregistre l'adresse email que vous
+            indiquez et, s'ils sont renseignés, le nom de votre société, le volume que vous
+            estimez et le message libre décrivant votre besoin.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>Finalité unique :</strong> vous recontacter et établir une proposition
+              commerciale. Ces données ne servent à rien d'autre, ne sont pas transmises à un
+              tiers et ne nourrissent aucune mesure d'audience.
+            </li>
+            <li>
+              <strong>Base légale :</strong> mesures précontractuelles prises à votre demande.
+            </li>
+            <li>
+              <strong>Conservation :</strong> trois ans à compter du dernier contact, puis
+              suppression. Vous pouvez demander la suppression immédiate à tout moment
+              (section 7).
+            </li>
+            <li>
+              Le formulaire porte la même mention de consentement que nos autres champs email, et
+              chaque message que nous vous enverrons comportera un lien de désinscription.
+            </li>
+          </ul>
 
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
