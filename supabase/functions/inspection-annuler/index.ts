@@ -4,10 +4,16 @@
 // le jeton de l'acheteur, donc auth.uid() le désigne) ; ce module exécute le
 // mouvement d'argent via `_shared/inspectionArgent.ts`.
 //
-// Le barème lui-même n'est écrit ni ici ni dans la RPC seule : il vient de
+// Le barème lui-même n'est écrit ni ici ni dans ce module : il vient de
 // `decisionAnnulation` dans `_shared/inspection.ts`, fonction pure testée hors
-// ligne, dont la RPC est la transcription SQL. Les deux sont vérifiées
-// concordantes par `tests/inspection.test.mjs`.
+// ligne, dont la RPC est la transcription SQL.
+//
+// ⚠️ Ce commentaire affirmait que les deux étaient « vérifiées concordantes
+// par tests/inspection.test.mjs ». C'ÉTAIT FAUX : aucun test ne lisait le SQL.
+// C'est ainsi que le sprint 14 a pu factoriser les montants par prestation en
+// TypeScript sans toucher aux constantes de l'inspection restées en dur dans
+// les deux RPC. Depuis la migration 20261115120000, les nombres viennent de
+// `prestation_bareme` et le test les compare vraiment à `PRESTATIONS`.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";

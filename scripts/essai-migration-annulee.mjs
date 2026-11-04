@@ -260,11 +260,28 @@ select pg_temp.essai_verifie('inspections_a_expirer applique les DEUX bornes',
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public' and p.proname = 'inspections_a_expirer';
 
--- La retenue ne peut jamais depasser l encaisse.
-select pg_temp.essai_verifie('inspection_annuler borne la retenue par le prix',
-  position('least(4000' in pg_get_functiondef(p.oid)) > 0)
+-- La retenue ne peut jamais depasser l encaisse, ET elle vient du bareme de la
+-- PRESTATION. L assertion portait auparavant sur la chaine litterale
+-- 'least(4000' : elle verifiait donc la presence de la constante de
+-- l inspection, c est-a-dire exactement le defaut corrige par la migration
+-- 20261115120000 (une visio annulee retenait 40 EUR au lieu de 0).
+select pg_temp.essai_verifie(
+  p.proname || ' borne la retenue par le prix et lit le bareme du type',
+  position('least(' in pg_get_functiondef(p.oid)) > 0
+  and position('prix_cents' in pg_get_functiondef(p.oid)) > 0
+  and position('prestation_bareme' in pg_get_functiondef(p.oid)) > 0)
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-where n.nspname = 'public' and p.proname = 'inspection_annuler';
+where n.nspname = 'public'
+  and p.proname in ('inspection_annuler', 'inspection_constat_absence');
+
+-- Le bareme SQL doit dire ce que dit PRESTATIONS cote TypeScript.
+select pg_temp.essai_verifie('prestation_bareme : visio 2000 / 0 h, inspection 4000 / 24 h',
+  (public.prestation_bareme('visio')->>'retenue_cents')::int = 2000
+  and (public.prestation_bareme('visio')->>'annulation_gratuite_heures')::int = 0
+  and (public.prestation_bareme('inspection')->>'retenue_cents')::int = 4000
+  and (public.prestation_bareme('inspection')->>'annulation_gratuite_heures')::int = 24
+  -- un type inconnu ne doit jamais tomber sur le bareme le moins cher
+  and (public.prestation_bareme(null)->>'retenue_cents')::int = 4000);
 
 -- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
 -- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On

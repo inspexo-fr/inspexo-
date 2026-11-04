@@ -1127,13 +1127,14 @@ peut plus afficher « tous les tests passent » sans avoir franchi le contrôle.
    `20261114120000` appliquée (une seule en attente) ; 4. 19 suites hors ligne
    OK ; 5. merge `sprint14` → `main` et push, déploiement Vercel **Ready** ;
    6. **cinq** fonctions déployées.
-- ⚠️ **`inspection-annuler` était à redéployer sans avoir changé d'une ligne** :
-  elle importe `_shared/inspection.ts`, où `decisionAnnulation` est devenue
-  consciente du type. Non redéployée, elle aurait appliqué à une visio le
-  barème de l'inspection (retenue de 40 € sur une annulation à moins de 24 h,
-  là où la visio s'annule librement). **Un module `_shared` modifié oblige à
-  redéployer TOUS ceux qui l'importent**, pas seulement les fonctions dont le
-  fichier a bougé — `git diff --name-only` ne le dit pas.
+- ⚠️ **J'ai redéployé `inspection-annuler` en croyant qu'elle importait
+  `_shared/inspection.ts` : c'est FAUX.** Elle n'importe que `notify.ts` et
+  `inspectionArgent.ts`, et aucun des deux ne mène au barème ; la chaîne que
+  j'avais « trouvée » venait d'un `grep` qui avait matché une occurrence en
+  **commentaire**. Le redéploiement était inutile (inoffensif, mais inutile),
+  et la leçon que j'en avais tirée était construite sur du sable.
+  **`scripts/fonctions-a-redeployer.mjs` a rendu 4 fonctions là où j'en
+  annonçais 5, et c'est le script qui avait raison.**
 - Vérifié en production : **308 PureTech → orange 55**, sa référence (0,121 €) ;
   `drapeau_actif` rend **false** pour `visio_guidee` et `lecture_histovec` ;
   `pass-checkout` `actif:false` ; `inspection-checkout` `ouvert:false` pour les
@@ -1147,6 +1148,55 @@ peut plus afficher « tous les tests passent » sans avoir franchi le contrôle.
   pas encore connu — une demande de **visio** recevait « L'inspection n'est pas
   encore ouverte ». Message rendu neutre (branche
   `fix-message-prestation-fermee`, non mergée).
+
+### ⚠️ Ce que la vérification de mon erreur a trouvé : le barème SQL ignorait le type
+En allant voir POURQUOI le script me contredisait, j'ai trouvé un vrai défaut,
+plus grave que celui que je croyais avoir évité. Le sprint 14 a factorisé les
+montants par prestation **en TypeScript** (`PRESTATIONS`), mais les deux
+fonctions SQL qui décident de l'argent avaient gardé les constantes de
+l'inspection **en dur** : `24` heures et `least(4000, prix_cents)`.
+- Sur une visio de 59 €, si le drapeau avait été allumé : annulation à moins de
+  24 h du créneau ⇒ **40 € retenus** alors que la visio s'annule **librement**
+  jusqu'au créneau ; absence constatée ⇒ **40 € au lieu des 20 €** annoncés aux
+  CGV. Deux montants contractuels faux, au détriment de l'acheteur.
+- **Jamais atteint en production** : `visio_guidee` est éteint depuis le
+  premier jour et aucune visio n'a pu être commandée. C'est un défaut de code,
+  pas un incident — ne pas le raconter autrement.
+- ⚠️ **Le commentaire en tête de `inspection-annuler/index.ts` affirmait que
+  TypeScript et SQL étaient « vérifiées concordantes par
+  tests/inspection.test.mjs ». Aucun test ne lisait le SQL.** Une affirmation
+  de concordance dans un commentaire n'est pas une concordance : c'est elle qui
+  a endormi la vigilance au moment de factoriser.
+- Correctif (migration `20261115120000`) : **une seule source SQL**,
+  `prestation_bareme(type)`, dont `tests/inspection.test.mjs` vérifie qu'elle
+  énonce exactement les nombres de `PRESTATIONS`, et qu'aucune des deux RPC ne
+  les recopie à côté. Vérifié que le test mord (2000 → 2500, et fenêtre remise
+  en dur : échec dans les deux cas).
+- ⚠️ L'assertion de `scripts/essai-migration-annulee.mjs` cherchait la chaîne
+  **`least(4000`** — elle vérifiait donc la **présence de la constante
+  fautive**. Un contrôle écrit en recopiant le code qu'il surveille valide le
+  défaut au lieu de le trouver. Réécrit sur la **propriété** : retenue bornée
+  par l'encaissé **et** lue dans le barème du type, pour les deux RPC.
+
+### `scripts/fonctions-a-redeployer.mjs` — à lancer à CHAQUE mise en ligne
+Il lit les imports réels du code, construit le graphe **inverse** et remonte
+**transitivement** (un module `_shared` peut en importer un autre) : à partir
+des fichiers modifiés — commités ou non — il nomme toutes les fonctions edge à
+redéployer, y compris celles qu'aucun `git diff --name-only` ne cite.
+
+```sh
+node scripts/fonctions-a-redeployer.mjs sprint15   # depuis une réf
+node scripts/fonctions-a-redeployer.mjs --commande # juste la ligne à coller
+```
+- Il **sépare** les fonctions à déployer avec **`--no-verify-jwt`**
+  (`pass-webhook`, `inspection-webhook`, `desinscription`) : leur
+  authentification est dans le code, oublier le drapeau casse un webhook de
+  paiement ou tous les liens de désinscription déjà envoyés. Si l'une d'elles
+  disparaît du dépôt, le script **s'arrête** plutôt que de laisser la liste
+  pourrir.
+- Il signale aussi un module `_shared` **importé par personne**.
+- Il ne sait pas qu'un changement est purement rédactionnel : il surdéploie
+  plutôt que de sous-déployer, ce qui est le bon sens de l'erreur.
 
 ### Captures
 `scripts/captures-visio.mjs` (dossier `captures-sprint14/`, gitignoré). Deux

@@ -1,0 +1,9 @@
+{
+	"appId": "io.inspexo.app",
+	"appName": "Inspexo",
+	"webDir": "build",
+	"packageClassList": [
+		"AppPlugin",
+		"InAppBrowserPlugin"
+	]
+}

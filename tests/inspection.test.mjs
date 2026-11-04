@@ -506,6 +506,60 @@ titre('SPRINT 14 — absence de l’acheteur : pas avant 15 minutes d’attente'
   eq(fuites, 0, '20 000 annulations sur les DEUX prestations : remboursé + retenu = encaissé')
 }
 
+// ── Le barème SQL dit-il la même chose que PRESTATIONS ? ───────────────────
+//
+// ⚠️ Ce contrôle manquait, et le commentaire en tête de
+// `supabase/functions/inspection-annuler/index.ts` affirmait pourtant qu'il
+// existait. Résultat : les montants ont été factorisés par prestation côté
+// TypeScript au sprint 14, et les deux fonctions SQL qui décident de l'argent
+// ont gardé les constantes de l'inspection en dur. Une visio annulée à moins
+// de 24 h aurait retenu 40 € au lieu de 0, une absence 40 € au lieu de 20.
+//
+// On ne peut pas exécuter du PL/pgSQL ici : ce qui est vérifié, c'est que la
+// SOURCE SQL unique (`prestation_bareme`) énonce exactement les nombres de
+// `PRESTATIONS`, et qu'aucune des deux RPC ne les recopie à côté.
+{
+  const sql = readFileSync(new URL('../supabase/migrations/20261115120000_sprint14_bareme_sql_par_type.sql', import.meta.url), 'utf8')
+
+  const source = sql.slice(
+    sql.indexOf('create or replace function public.prestation_bareme'),
+    sql.indexOf('revoke all on function public.prestation_bareme'),
+  )
+  for (const [type, cle, attendu] of [
+    ['visio', 'retenue_cents', PRESTATIONS.visio.retenue_cents],
+    ['visio', 'annulation_gratuite_heures', PRESTATIONS.visio.annulation_gratuite_heures],
+    ['inspection', 'retenue_cents', PRESTATIONS.inspection.retenue_cents],
+    ['inspection', 'annulation_gratuite_heures', PRESTATIONS.inspection.annulation_gratuite_heures],
+  ]) {
+    // La branche `then` est celle de la visio, la branche `else` l'inspection.
+    const branche = type === 'visio'
+      ? source.slice(source.indexOf('then'), source.indexOf('else'))
+      : source.slice(source.indexOf('else'))
+    const m = branche.match(new RegExp(`'${cle}',\\s*(-?\\d+)`))
+    eq(m ? Number(m[1]) : null, attendu, `prestation_bareme(${type}).${cle} = PRESTATIONS.${type}.${cle}`)
+  }
+
+  // Aucune des deux RPC ne doit porter un montant ni une fenêtre en dur : le
+  // chiffre doit venir du barème, sinon la divergence recommence.
+  for (const nom of ['inspection_annuler', 'inspection_constat_absence']) {
+    const i = sql.indexOf(`create or replace function public.${nom}`)
+    const corps = sql.slice(i, sql.indexOf('\n$$;', i))
+    ok(i > 0, `${nom} est bien redéfinie par la migration`)
+    ok(corps.includes('prestation_bareme'), `${nom} lit le barème de la prestation`)
+    ok(!/least\(\s*\d{3,}/.test(corps), `${nom} ne retient plus un montant écrit en dur`)
+    ok(!/v_heures\s*>\s*\d+/.test(corps), `${nom} ne compare plus à une fenêtre écrite en dur`)
+  }
+
+  // Et le garde-fou qui avait déjà sauvé 661 cas : la retenue reste bornée par
+  // l'encaissé, dans les deux RPC comme en TypeScript.
+  for (const nom of ['inspection_annuler', 'inspection_constat_absence']) {
+    const i = sql.indexOf(`create or replace function public.${nom}`)
+    const corps = sql.slice(i, sql.indexOf('\n$$;', i))
+    ok(/least\(/.test(corps) && corps.includes('prix_cents'),
+      `${nom} borne la retenue par le montant encaissé`)
+  }
+}
+
 // ⚠️ PORTE DE SORTIE — DOIT RESTER LA DERNIÈRE INSTRUCTION DU FICHIER.
 // Elle a déjà été dépassée trois fois : des tests ajoutés après elle
 // s'exécutaient, affichaient « FAIL », et la suite sortait quand même en 0.
