@@ -292,6 +292,138 @@ select essai_verifie(
     where d.defaclnamespace = 'public'::regnamespace and d.defaclobjtype = 'r' limit 1));
 
 -- -----------------------------------------------------------------------
+-- 4 quater. SECURITY DEFINER : LE POINT QUI CASSERAIT TOUT.
+--
+-- Apres la revocation, une fonction SECURITY INVOKER appelee avec la cle anon
+-- ou un jeton utilisateur s'executerait avec les droits de l'appelant — donc
+-- sans aucun droit sur les tables. Elle casserait immediatement, en
+-- production. Une seule suffit.
+--
+-- Deux assertions, volontairement redondantes :
+--   1. la liste NOMMEE, relevee sur les sites d'appel reels : 28 \`.rpc()\` du
+--      front + 5 appelees par une fonction edge avec le jeton de l'utilisateur.
+--      L'extension n'appelle aucune RPC, elle passe par les proxys en service
+--      role ;
+--   2. une regle GENERALE qui se maintient d'elle-meme : toute fonction dont
+--      l'execution est accordee a anon ou authenticated doit etre DEFINER.
+--      Elle attrapera celles que la liste oublierait.
+-- -----------------------------------------------------------------------
+create temporary table essai_rpc_publiques (nom text primary key);
+insert into essai_rpc_publiques (nom) select unnest(array[
+     'dossier_add','dossier_list','dossier_remove','dossier_set_alertes','dossier_set_statut',
+     'drapeau_actif','get_analysis_etape','get_defect_sheet','get_fiabilite','get_kit_signature',
+     'get_mon_pass','get_moteur_public','get_partenaires_actifs','get_prix_segments',
+     'get_public_analysis','inspecteur_candidater','inspecteur_missions','inspecteur_signer_charte',
+     'inspection_zone','list_moteurs_publies','mes_inspections','mon_profil_inspecteur',
+     'submit_demande_zone','submit_lead','submit_lead_pro','submit_outcome',
+     'submit_pending_analysis','track_event','inspection_accepter','inspection_annuler',
+     'inspection_consentement_photos','inspection_constat_absence','inspection_refuser'
+]);
+
+select essai_verifie(
+  'les 33 fonctions appelees avec la cle anon ou un jeton utilisateur existent',
+  (select count(*) from essai_rpc_publiques f
+    join pg_proc p on p.proname = f.nom
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public') >= 33,
+  'trouvees : ' || (select count(distinct p.proname)::text from essai_rpc_publiques f
+    join pg_proc p on p.proname = f.nom
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public')
+  || ' / 33 attendues — manquantes : '
+  || coalesce((select string_agg(f.nom, ', ') from essai_rpc_publiques f
+      where not exists (select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'public' and p.proname = f.nom)), 'aucune'));
+
+select essai_verifie(
+  'ces 33 fonctions sont toutes SECURITY DEFINER',
+  (select count(*) from essai_rpc_publiques f
+    join pg_proc p on p.proname = f.nom
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    where not p.prosecdef) = 0,
+  (select string_agg(distinct p.proname, ', ') from essai_rpc_publiques f
+    join pg_proc p on p.proname = f.nom
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    where not p.prosecdef));
+
+select essai_verifie(
+  'toute fonction executable par anon ou authenticated est SECURITY DEFINER',
+  (select count(*) from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    cross join (values ('anon'),('authenticated')) as r(nom)
+    where n.nspname = 'public' and not p.prosecdef
+      and has_function_privilege(r.nom, p.oid, 'EXECUTE')) = 0,
+  (select string_agg(distinct p.proname, ', ') from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    cross join (values ('anon'),('authenticated')) as r(nom)
+    where n.nspname = 'public' and not p.prosecdef
+      and has_function_privilege(r.nom, p.oid, 'EXECUTE')));
+
+-- -----------------------------------------------------------------------
+-- 4 quinquies. ESSAI REEL SOUS LE ROLE ANON.
+--
+-- La preuve qui compte : apres la revocation, une RPC publique repond-elle
+-- encore ? On prend le role anon pour de vrai, on appelle deux RPC de lecture,
+-- et on rend le role. L'identifiant est capture AVANT le changement de role
+-- (anon ne peut plus lire la table) et garde dans une variable, qui survit au
+-- changement de role.
+--
+-- p_track => false : un essai n'incremente pas un compteur de vues et n'ecrit
+-- pas d'event.
+-- -----------------------------------------------------------------------
+do $anon$
+declare
+  v_id uuid;
+  v_res jsonb;
+  v_seg jsonb;
+  v_erreur text;
+  v_lecture_directe boolean := null;
+begin
+  select id into v_id from public.analyses
+   where result_json is not null order by created_at desc limit 1;
+
+  begin
+    set local role anon;
+    if v_id is not null then
+      v_res := public.get_public_analysis(v_id, false);
+    end if;
+    v_seg := public.get_prix_segments('[{"marque":"peugeot","modele":"308"}]'::jsonb);
+    reset role;
+  exception when others then
+    v_erreur := sqlerrm;
+    reset role;
+  end;
+
+  perform essai_verifie(
+    'sous le role anon, get_public_analysis repond encore',
+    v_erreur is null and (v_id is null or (v_res is not null and v_res ? 'id')),
+    coalesce(v_erreur, case when v_id is null then 'aucune analyse en base' end));
+  perform essai_verifie(
+    'sous le role anon, get_prix_segments repond encore',
+    v_erreur is null and v_seg is not null and jsonb_typeof(v_seg) = 'array',
+    v_erreur);
+
+  -- Contre-epreuve : sous anon, la lecture DIRECTE doit echouer. Si elle
+  -- passait, la revocation n'aurait pas pris — et l'assertion precedente
+  -- serait vraie pour la mauvaise raison.
+  begin
+    set local role anon;
+    begin
+      perform 1 from public.analyses limit 1;
+      v_lecture_directe := true;
+    exception when insufficient_privilege then
+      v_lecture_directe := false;
+    end;
+    reset role;
+  exception when others then
+    reset role;
+  end;
+  perform essai_verifie(
+    'sous le role anon, la lecture DIRECTE de analyses est refusee',
+    v_lecture_directe is false,
+    case when v_lecture_directe then 'la lecture directe a REUSSI : revocation non prise' end);
+end
+$anon$;
+
+-- -----------------------------------------------------------------------
 -- 4 ter. LE VERDICT. C'est le SEUL résultat que l'éditeur affichera, et il
 --        lève une erreur si quoi que ce soit a échoué.
 -- -----------------------------------------------------------------------

@@ -982,6 +982,31 @@ une fuite.
   et les droits par défaut. Une table ajoutée sans révocation fera désormais
   échouer l'essai.
 
+### ⚠️ Ce que la révocation aurait pu casser : SECURITY INVOKER
+Après la révocation, une fonction **SECURITY INVOKER** appelée avec la clé anon
+ou un jeton utilisateur s'exécuterait avec les droits de l'appelant — donc sans
+aucun droit sur les tables. Elle casserait **immédiatement et en production**.
+Une seule aurait suffi.
+- Inventaire des sites d'appel réels : **28 `.rpc()` dans le front** + **5 RPC
+  appelées par une fonction edge avec le jeton de l'utilisateur**
+  (`inspection_accepter`, `inspection_annuler`,
+  `inspection_consentement_photos`, `inspection_constat_absence`,
+  `inspection_refuser`, via `commeUtilisateur` / `commeAppelant`). **33 au
+  total.** L'extension n'appelle aucune RPC : elle passe par les proxys Vercel,
+  en service role.
+- **Les 33 sont SECURITY DEFINER** (vérifié sur la dernière définition de
+  chacune dans les migrations). Aucune ne manque.
+- L'essai le vérifie sur l'état RÉEL (`prosecdef`), avec trois assertions :
+  les 33 existent (sinon la vérification serait vraie pour la mauvaise raison),
+  les 33 sont DEFINER, et — règle **qui se maintient d'elle-même** — toute
+  fonction dont l'exécution est accordée à anon ou authenticated est DEFINER.
+- **Essai réel sous le rôle `anon`** : `set local role anon`, appel de
+  `get_public_analysis` (avec `p_track => false`, un essai n'incrémente pas un
+  compteur) et de `get_prix_segments`, puis `reset role`. Plus la
+  **contre-épreuve** : sous `anon`, la lecture DIRECTE de `analyses` doit
+  échouer. Sans elle, le succès des RPC serait vrai pour la mauvaise raison —
+  la révocation pourrait n'avoir pas pris.
+
 ### Mise en service partielle — 3-4 nov. 2026 (merge EN ATTENTE)
 `score`, `lecture-ct` et `lecture-histovec` déployées pour l'éval. Migration
 `20261111120000` **non appliquée**.
