@@ -708,8 +708,15 @@ export default function ResultPage() {
         <meta property="og:description" content={(r.raisons_principales || []).join(' · ')} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={pageUrl} />
-        <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
-        <meta name="twitter:card" content="summary" />
+        {/* L'image porte le verdict du dossier, comme la réécriture serveur
+            pour les robots (api/og.js). Les deux doivent dire la même chose :
+            un aperçu qui diffère selon le chemin est un aperçu qu'on ne peut
+            pas vérifier. */}
+        <meta property="og:image" content={`https://www.inspexo.io/api/og-image?id=${id}`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={`https://www.inspexo.io/api/og-image?id=${id}`} />
       </Helmet>
 
       <Navbar />

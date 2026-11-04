@@ -18,7 +18,8 @@ import defectAtlas from "../_shared/defectAtlas.json" with { type: "json" };
 import { sameBrand } from "../_shared/brandAliases.ts";
 import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts";
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
-import { alerteServiceIndisponible } from "../_shared/notify.ts";
+import { alerteExploitant, alerteServiceIndisponible } from "../_shared/notify.ts";
+import { alerterUneFoisParHeure, estCreditOuCle } from "../_shared/alerting.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
 import {
   codeEtranger,
@@ -645,15 +646,93 @@ function estServiceIndisponible(err: { error: string; detail?: string }): boolea
   return /credit balance|billing|quota|rate.?limit|overloaded|capacity|temporarily unavailable|insufficient/.test(d);
 }
 
-/** Trace une erreur de pipeline en base (diagnostic — les logs console sont peu accessibles). */
+/** Trace une erreur de pipeline en base (diagnostic — les logs console sont peu accessibles).
+ *
+ *  SPRINT 17 — et ALERTE l'exploitant quand c'est utile. Deux motifs, et deux
+ *  seulement, parce qu'une alerte qui part pour tout ne se lit plus :
+ *   · crédit épuisé ou clé invalide — ça ne se résout PAS tout seul ;
+ *   · plus de N échecs dans la fenêtre — quelque chose est cassé en amont.
+ *  Une surcharge passagère (429, 529) n'alerte pas : elle se résout seule. */
 // deno-lint-ignore no-explicit-any
 async function logPipelineError(admin: any, stage: string, err: { error: string; detail?: string }) {
+  const code = err.error ?? "";
+  const detail = (err.detail ?? "").slice(0, 300);
   try {
     await admin.from("events").insert({
       name: "pipeline_error",
-      props_json: { stage, code: err.error, detail: (err.detail ?? "").slice(0, 300) },
+      props_json: { stage, code, detail },
     });
   } catch (_) { /* best effort */ }
+
+  try {
+    if (estCreditOuCle(code, detail)) {
+      await alerterUneFoisParHeure(
+        admin,
+        "credit_ou_cle",
+        `<p>Les appels à l'API Anthropic sont refusés pour un motif qui <strong>ne se résoudra pas seul</strong>.</p>
+         <p><strong>Étape&nbsp;:</strong> ${stage}<br>
+            <strong>Code&nbsp;:</strong> <code>${code.replace(/[<>]/g, "")}</code><br>
+            <strong>Détail&nbsp;:</strong> <code>${detail.replace(/[<>]/g, "")}</code></p>
+         <p>À vérifier&nbsp;: le solde de crédit du compte Anthropic, puis la validité de
+            <code>ANTHROPIC_API_KEY</code> dans les secrets Supabase.</p>
+         <p>Les demandes reçues entre-temps sont mises en file et rejouées au rétablissement.</p>`,
+        alerteExploitant,
+      );
+      return; // inutile d'ajouter l'alerte « échecs répétés » par-dessus
+    }
+
+    const fenetre = Number(
+      (await admin.rpc("config_lire", { p_cle: "echecs_fenetre_minutes", p_defaut: 15 })).data ?? 15,
+    );
+    const seuil = Number(
+      (await admin.rpc("config_lire", { p_cle: "echecs_seuil", p_defaut: 3 })).data ?? 3,
+    );
+    const { data: recents } = await admin.rpc("echecs_recents", { p_minutes: fenetre });
+    if (Number(recents ?? 0) > seuil) {
+      await alerterUneFoisParHeure(
+        admin,
+        "echecs_repetes",
+        `<p><strong>${recents} analyses ont échoué en ${fenetre} minutes</strong> (seuil&nbsp;: ${seuil}).</p>
+         <p><strong>Dernière étape en échec&nbsp;:</strong> ${stage}<br>
+            <strong>Code&nbsp;:</strong> <code>${code.replace(/[<>]/g, "")}</code><br>
+            <strong>Détail&nbsp;:</strong> <code>${detail.replace(/[<>]/g, "")}</code></p>
+         <p>Les seuils se règlent en base, table <code>config</code>, sans redéploiement.</p>`,
+        alerteExploitant,
+        `${recents} en ${fenetre} min`,
+      );
+    }
+  } catch (e) {
+    // Une alerte qui échoue ne doit jamais casser l'analyse en cours.
+    console.error("alerte pipeline:", e);
+  }
+}
+
+/** SPRINT 17 — Le coût IA du jour a-t-il dépassé le seuil ?
+ *
+ *  Appelée APRÈS la réponse (`waitUntil`) : la surveillance ne doit pas
+ *  ajouter une milliseconde à la latence de l'acheteur. */
+// deno-lint-ignore no-explicit-any
+async function surveillerCoutDuJour(admin: any): Promise<void> {
+  try {
+    const seuil = Number(
+      (await admin.rpc("config_lire", { p_cle: "cout_ia_seuil_jour_eur", p_defaut: 5 })).data ?? 5,
+    );
+    const { data: cout } = await admin.rpc("cout_ia_jour", {});
+    const depense = Number(cout ?? 0);
+    if (depense <= seuil) return;
+    await alerterUneFoisParHeure(
+      admin,
+      "cout_du_jour",
+      `<p>Le coût IA cumulé de la journée atteint <strong>${depense.toFixed(2)} €</strong>,
+          au-dessus du seuil de ${seuil.toFixed(2)} €.</p>
+       <p>Ce montant inclut les analyses d'éval&nbsp;: c'est de l'argent réellement dépensé.</p>
+       <p>Le seuil se règle en base (<code>config.cout_ia_seuil_jour_eur</code>), sans redéploiement.</p>`,
+      alerteExploitant,
+      `${depense.toFixed(2)} €`,
+    );
+  } catch (e) {
+    console.error("surveillerCoutDuJour:", e);
+  }
 }
 
 // ============================================================
@@ -3076,6 +3155,11 @@ serve(async (req: Request) => {
         ...(adminIllimite ? { admin: true } : {}),
       },
     });
+
+    // SPRINT 17 — Surveillance du coût du jour, APRÈS la réponse : elle ne
+    // doit pas ajouter une milliseconde à la latence de l'acheteur.
+    if (typeof EdgeRuntime !== "undefined") EdgeRuntime.waitUntil(surveillerCoutDuJour(admin));
+    else await surveillerCoutDuJour(admin);
 
     // Le service répond : on rejoue les demandes mises en attente pendant la
     // dernière panne (non bloquant pour l'utilisateur courant).
