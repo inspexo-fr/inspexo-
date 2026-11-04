@@ -45,6 +45,25 @@ process.stdout.write(`-- =======================================================
 begin;
 
 -- -----------------------------------------------------------------------
+-- 0. CONTRÔLES = ASSERTIONS, PAS DES \`select\`.
+--
+-- ⚠️ L'éditeur SQL n'affiche QUE LE DERNIER résultat. Une batterie de
+-- \`select\` y est donc invisible : on croit avoir vérifié, on n'a rien vu.
+-- Chaque contrôle écrit ici son verdict dans une table, et le bloc final
+-- LÈVE UNE ERREUR en listant tout ce qui a échoué. Pas d'erreur = tout est
+-- vérifié, et c'est le dernier résultat affiché qui le dit.
+-- -----------------------------------------------------------------------
+create temporary table essai_controles (
+  n serial, controle text, ok boolean, detail text
+);
+
+create or replace function essai_verifie(p_controle text, p_ok boolean, p_detail text default null)
+returns void language sql as $fn$
+  insert into essai_controles (controle, ok, detail)
+  values (p_controle, coalesce(p_ok, false), p_detail);
+$fn$;
+
+-- -----------------------------------------------------------------------
 -- 1. ÉTAT AVANT. On fige la liste des segments interrogés, pour que l'avant
 --    et l'après portent sur EXACTEMENT la même question.
 -- -----------------------------------------------------------------------
@@ -88,16 +107,18 @@ select public.get_prix_segments((select q from essai_segments)) as res;
 -- get_prix_segments doit rendre LA MÊME CHOSE qu'avant. La seule différence
 -- attendue est le champ \`part_api_excessive\`, ajouté par la migration : on
 -- le retire avant de comparer. Toute autre différence est une régression.
-select 'COMPARAISON' as phase,
+select essai_verifie(
+  'get_prix_segments rend la MEME chose qu avant (hors nouveau champ)',
   ( select coalesce(jsonb_agg(e - 'part_api_excessive'::text order by ord), '[]'::jsonb)
       from jsonb_array_elements((select res from essai_apres)) with ordinality t(e, ord) )
   = ( select coalesce(jsonb_agg(e order by ord), '[]'::jsonb)
         from jsonb_array_elements((select res from essai_avant)) with ordinality t(e, ord) )
-    as get_prix_segments_identique,
-  -- Et aucun segment ne doit avoir été rendu non publiable : \`parts_api\` est
-  -- vide partout au départ, donc le verrou des 20 % ne peut pas se déclencher.
+);
+select essai_verifie(
+  'aucun segment rendu non publiable par le verrou des 20 %',
   ( select count(*) from jsonb_array_elements((select res from essai_apres)) e
-     where (e->>'part_api_excessive')::boolean ) as segments_bloques_par_le_verrou;
+     where (e->>'part_api_excessive')::boolean ) = 0
+);
 
 -- Les deux histogrammes, côte à côte, pour lecture à l'œil si besoin.
 select 'AVANT ' as phase, (select res from essai_avant) as histogrammes
@@ -108,13 +129,13 @@ select 'APRES ' as phase, (select res from essai_apres);
 -- 4. LES NOUVEAUX OBJETS FONCTIONNENT-ILS SUR LES DONNÉES RÉELLES ?
 -- -----------------------------------------------------------------------
 -- Seuil partagé base / TypeScript.
-select 'part_api_max' as objet, public.part_api_max() as valeur;
+select essai_verifie('part_api_max() = 0.20', public.part_api_max() = 0.20, public.part_api_max()::text);
 
 -- L'appel à UN seul argument doit encore résoudre (p_client_id a un défaut) :
 -- c'est ce qui rend l'ordre migration → déploiement de \`score\` sans danger.
-select 'agreger_marche 1 argument' as objet, public.agreger_marche('[]'::jsonb) as lignes_traitees;
-select 'agreger_marche 2 arguments' as objet,
-       public.agreger_marche('[]'::jsonb, '00000000-0000-4000-8000-000000000000') as lignes_traitees;
+select essai_verifie('agreger_marche accepte encore 1 argument (defaut)', public.agreger_marche('[]'::jsonb) = 0);
+select essai_verifie('agreger_marche accepte 2 arguments',
+  public.agreger_marche('[]'::jsonb, '00000000-0000-4000-8000-000000000000') = 0);
 
 -- Un identifiant de client invalide doit ÉCHOUER, pas basculer en « public ».
 do $essai$
@@ -131,74 +152,137 @@ $essai$;
 
 -- Les deux purges, sur les données réelles. Les comptages renvoyés sont ce
 -- qui SERAIT fait ; le rollback final les annule.
-select 'purger_textes_api'  as objet, public.purger_textes_api()  as textes_effaces;
-select 'purger_preuves_api' as objet, public.purger_preuves_api() as preuves_expirees;
+-- Les purges doivent S EXECUTER sans erreur ; le nombre importe peu ici.
+select essai_verifie('purger_textes_api s execute', public.purger_textes_api() >= 0);
+select essai_verifie('purger_preuves_api s execute', public.purger_preuves_api() >= 0);
 
 -- Après la passe 1, aucun texte d'API encore présent ne doit être sans empreinte.
-select 'INVARIANT' as phase,
-       (select count(*) from public.analyses
-         where via_api and input_text is not null
-           and input_text not like '[texte effacé%'
-           and texte_sha256 is null) as textes_sans_empreinte_doit_etre_0,
-       (select count(*) from public.analyses
-         where via_api and input_text like '[texte effacé%'
-           and texte_sha256 is null) as textes_effaces_sans_empreinte_doit_etre_0;
+select essai_verifie('aucun texte d API encore present sans empreinte',
+  (select count(*) from public.analyses
+    where via_api and input_text is not null
+      and input_text not like '[texte effacé%' and texte_sha256 is null) = 0);
+select essai_verifie('aucun texte efface sans empreinte conservee',
+  (select count(*) from public.analyses
+    where via_api and input_text like '[texte effacé%' and texte_sha256 is null) = 0);
 
 -- -----------------------------------------------------------------------
 -- 4 bis. LES NOUVEAUX OBJETS DU SPRINT 13.
 -- -----------------------------------------------------------------------
 -- Le drapeau doit être ÉTEINT à la création : une fonction nouvelle ne
 -- s'ouvre pas parce qu'on a oublié de la fermer.
-select 'drapeau lecture_histovec' as objet, etat,
-       (etat = 'eteint') as eteint_comme_attendu
-  from public.drapeaux where cle = 'lecture_histovec';
+select essai_verifie('drapeau lecture_histovec existe et est ETEINT',
+  (select etat from public.drapeaux where cle = 'lecture_histovec') = 'eteint',
+  (select etat from public.drapeaux where cle = 'lecture_histovec'));
 
-select 'drapeau_actif (eteint)' as objet,
-       public.drapeau_actif('lecture_histovec') as doit_etre_false;
-select 'drapeau_actif (cle inconnue)' as objet,
-       public.drapeau_actif('cle_qui_n_existe_pas') as doit_etre_false;
+select essai_verifie('drapeau_actif rend false sur un drapeau eteint',
+  public.drapeau_actif('lecture_histovec') is false);
+select essai_verifie('drapeau_actif rend false sur une cle inconnue',
+  public.drapeau_actif('cle_qui_n_existe_pas') is false);
 
--- Masquage HistoVec : un signal « toujours visible » passe, l'autre non.
-select 'masquage histovec' as objet,
-       jsonb_array_length(m -> 'signaux') as signaux_rendus_doit_etre_1,
-       (m ->> 'nb_masques')::int as masques_doit_etre_1,
-       (m ->> 'masque') as masque
-from public._histovec_publique(jsonb_build_object(
+-- Masquage HistoVec : le signal « toujours visible » passe, l'autre non.
+select essai_verifie('masquage histovec : 1 signal rendu, 1 masque',
+  (m.m -> 'signaux') is not null
+  and jsonb_array_length(m.m -> 'signaux') = 1
+  and (m.m ->> 'nb_masques')::int = 1
+  and (m.m ->> 'masque') = 'true',
+  m.m::text)
+from (select public._histovec_publique(jsonb_build_object(
   'lu_le', '2026-11-04',
   'concordance', jsonb_build_object('concorde', true),
   'signaux', jsonb_build_array(
     jsonb_build_object('cle','opposition','niveau','rouge','toujours_visible',true,'texte','gage'),
     jsonb_build_object('cle','location','niveau','orange','toujours_visible',false,'texte','location')
   )
-)) m;
+)) as m) m;
+
+select essai_verifie('le signal rouge rendu est bien l opposition',
+  (m.m -> 'signaux' -> 0 ->> 'cle') = 'opposition')
+from (select public._histovec_publique(jsonb_build_object(
+  'signaux', jsonb_build_array(
+    jsonb_build_object('cle','location','niveau','orange','toujours_visible',false),
+    jsonb_build_object('cle','opposition','niveau','rouge','toujours_visible',true)
+  )
+)) as m) m;
 
 -- get_public_analysis doit masquer les DEUX : la négociation ET HistoVec.
-select 'get_public_analysis' as objet,
-       position('_negociation_publique' in pg_get_functiondef(p.oid)) > 0 as masque_negociation,
-       position('_histovec_publique' in pg_get_functiondef(p.oid)) > 0 as masque_histovec
+select essai_verifie('get_public_analysis masque la negociation',
+  position('_negociation_publique' in pg_get_functiondef(p.oid)) > 0)
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public' and p.proname = 'get_public_analysis';
 
--- Heure de grâce : la colonne existe et l'annulation la lit.
-select 'confirmee_le' as objet,
-       exists (select 1 from information_schema.columns
-                where table_schema='public' and table_name='inspections'
-                  and column_name='confirmee_le') as colonne_presente,
-       position('confirmee_le' in pg_get_functiondef(p.oid)) > 0 as lue_par_inspection_annuler
+select essai_verifie('get_public_analysis masque histovec',
+  position('_histovec_publique' in pg_get_functiondef(p.oid)) > 0)
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'get_public_analysis';
+
+-- Heure de grâce : la colonne existe ET l'annulation la lit.
+select essai_verifie('colonne inspections.confirmee_le presente',
+  exists (select 1 from information_schema.columns
+           where table_schema='public' and table_name='inspections'
+             and column_name='confirmee_le'));
+
+select essai_verifie('inspection_annuler lit confirmee_le (heure de grace)',
+  position('confirmee_le' in pg_get_functiondef(p.oid)) > 0)
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public' and p.proname = 'inspection_annuler';
 
--- Échéance de confirmation à deux bornes.
-select 'inspections_a_expirer' as objet,
-       position('least(' in pg_get_functiondef(p.oid)) > 0 as deux_bornes
+-- Échéance de confirmation à deux bornes (creneau - 2 h, ou autorisation + 48 h).
+select essai_verifie('inspections_a_expirer applique les DEUX bornes',
+  position('least(' in pg_get_functiondef(p.oid)) > 0
+  and position('2 hours' in pg_get_functiondef(p.oid)) > 0
+  and position('48 hours' in pg_get_functiondef(p.oid)) > 0)
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public' and p.proname = 'inspections_a_expirer';
 
+-- La retenue ne peut jamais depasser l encaisse.
+select essai_verifie('inspection_annuler borne la retenue par le prix',
+  position('least(4000' in pg_get_functiondef(p.oid)) > 0)
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'inspection_annuler';
+
 -- Les tables sensibles restent fermées à anon.
-select 'droits anon' as objet, c.relname,
-       has_table_privilege('anon', c.oid, 'SELECT') as anon_peut_lire_doit_etre_false
+select essai_verifie(
+  'anon ne peut pas lire ' || c.relname,
+  has_table_privilege('anon', c.oid, 'SELECT') is false)
+from pg_class c join pg_namespace n on n.oid = c.relnamespace
+where n.nspname = 'public'
+  and c.relname in ('drapeaux','api_appels','marche_agregats','inspections','analyses');
+
+-- RLS active sur les tables ajoutees.
+select essai_verifie('RLS active sur ' || c.relname, c.relrowsecurity is true)
 from pg_class c join pg_namespace n on n.oid = c.relnamespace
 where n.nspname = 'public' and c.relname in ('drapeaux','api_appels','marche_agregats');
+
+-- -----------------------------------------------------------------------
+-- 4 ter. LE VERDICT. C'est le SEUL résultat que l'éditeur affichera, et il
+--        lève une erreur si quoi que ce soit a échoué.
+-- -----------------------------------------------------------------------
+do $verdict$
+declare
+  v_echecs text;
+  v_total integer;
+  v_ko integer;
+begin
+  select count(*), count(*) filter (where not ok) into v_total, v_ko from essai_controles;
+  if v_total = 0 then
+    raise exception 'ESSAI INVALIDE : aucun controle n a ete enregistre';
+  end if;
+  if v_ko > 0 then
+    select string_agg(format('  - %s%s', controle, coalesce(' [' || detail || ']', '')), E'\n' order by n)
+      into v_echecs from essai_controles where not ok;
+    raise exception E'ESSAI ECHOUE : %/% controles en echec\n%', v_ko, v_total, v_echecs;
+  end if;
+  raise notice 'ESSAI CONCLUANT : %/% controles passes', v_total, v_total;
+end
+$verdict$;
+
+-- Dernier résultat affiché : le décompte, et la liste pour relecture.
+select count(*) filter (where ok) as controles_passes,
+       count(*) filter (where not ok) as controles_en_echec,
+       'si cette ligne s affiche, AUCUN controle n a echoue' as lecture
+  from essai_controles;
+
+select n, controle, ok from essai_controles order by n;
 
 -- -----------------------------------------------------------------------
 -- 5. ON N'APPLIQUE RIEN.

@@ -928,11 +928,28 @@ CHOISIT quelles entrées citer, et ce choix varie.
     (`securite`) et un rappel officiel applicable. Ils ne dépendent pas d'un
     équipement.
 - **Résultat : Mercedes 71 / 71 / 71**, et les deux références tiennent —
-  S7 **rouge 38**, 308 **orange 55**. `BAREME_VERSION` → **11.2**.
+  S7 **rouge 38**, 308 **orange 55**. `BAREME_VERSION` → **11.3**, documentée
+  aux CUA art. 9.3 avec un tableau des versions : `11.1` ne changeait aucun
+  score rendu par l'API, `11.3` **en change** (la liste des défauts qui pèsent
+  n'est plus le choix du modèle). La `11.2` n'a jamais été servie à un client.
 - 42 contrôles hors ligne, dont 500 évaluations du même couple
   (entrée, annonce) sans divergence.
 - 29 contrôles hors ligne, dont les **cinq titres réels** qui avaient été
   injectés à tort.
+
+### ⚠️ Un essai de migration doit ASSERTER, pas afficher
+Le premier script d'essai en transaction annulée comportait **16 `select`
+d'information et un seul vrai contrôle**. Or **l'éditeur SQL de Supabase
+n'affiche QUE LE DERNIER résultat** : la batterie de `select` était invisible,
+et l'essai « passé sans erreur » ne prouvait que l'application des migrations —
+aucun invariant n'était vérifié.
+- Réécrit : **23 assertions** qui écrivent leur verdict dans une table
+  temporaire, puis un bloc final qui **lève une erreur** en listant tout ce qui
+  a échoué. Pas d'erreur = tout est vérifié, et le dernier résultat affiché le
+  dit explicitement.
+- Règle à garder : **un contrôle qui n'échoue pas bruyamment n'est pas un
+  contrôle.** C'est la même leçon que le `process.exit(1)` placé avant les
+  nouveaux tests dans `tests/inspection.test.mjs` au sprint 12.
 
 ### Mise en service partielle — 3-4 nov. 2026 (merge EN ATTENTE)
 `score`, `lecture-ct` et `lecture-histovec` déployées pour l'éval. Migration

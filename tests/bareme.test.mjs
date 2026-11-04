@@ -91,7 +91,7 @@ const verifiePrix = (titre, cond, detail = '') => {
     (avecOpposition.verdict_conditionnel?.score ?? 0) <= 30)
 }
 {
-  affirme('BAREME_VERSION passée à 11.2', BAREME_VERSION === '11.2', BAREME_VERSION)
+  affirme('BAREME_VERSION passée à 11.3', BAREME_VERSION === '11.3', BAREME_VERSION)
 }
 
 console.log('CALIBRATION\n')
