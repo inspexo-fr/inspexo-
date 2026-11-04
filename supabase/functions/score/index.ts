@@ -729,11 +729,14 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
           cout_max_eur: typeof dd.cout_max_eur === "number" ? dd.cout_max_eur : cost.max,
           urls: atlasUrls,
           sources: atlasSources,
-          // ⚠️ Une entrée sourcée par recherche web n'est PAS « relue à la
-          // main » : son étiquette reste celle du catalogue interne tant
-          // qu'un humain ne l'a pas validée. Le libellé affiché est une
-          // décision d'Utku, pas une conséquence du sourcing.
-          source_statut: "base_inspexo",
+          // ⚠️ DÉCISION DU 4 NOVEMBRE 2026 : une entrée d'atlas qui cite des
+          // pages publiques s'affiche comme une fiche moteur — « Sources : »
+          // suivi des liens. Plus d'étiquette « base Inspexo » sur une entrée
+          // sourcée : « base Inspexo », c'est nous, et le lecteur doit pouvoir
+          // aller voir. L'étiquette n'est conservée que pour une entrée sans
+          // URL — laquelle est de toute façon retirée de l'affichage par la
+          // règle du sprint 15.1.
+          source_statut: atlasUrls.length > 0 ? "en_ligne" : "base_inspexo",
           contexte: [d.models, d.years].filter(Boolean).join(" — ") || null,
           rappel_code: null,
           rappel_date: null,

@@ -178,6 +178,26 @@ export const defectAtlas = {
     "logo": "/logos/renault.svg",
     "defects": [
       {
+        "id": "renault-1.2-tce-conso-huile",
+        "severity": "CRITIQUE",
+        "title": "1.2 TCe (H5Ft) — consommation d'huile et casse moteur",
+        "description": "Moteur 1.2 TCe 115/120 ch : consommation d'huile excessive due à segmentation défectueuse + risque de casse moteur (bielle). Programme de prise en charge Renault existant mais conditionnel.",
+        "models": "Clio IV, Captur, Mégane III/IV, Scénic III, Kadjar",
+        "years": "2012-2018",
+        "gravite": "majeure",
+        "sources": [
+          {
+            "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE23164.pdf",
+            "title": null
+          }
+        ],
+        "url_source": [
+          "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE23164.pdf"
+        ],
+        "cout_min_eur": 6000,
+        "remede": "Remplacement de la segmentation des pistons (voire du moteur complet en cas de casse avérée) accompagné d'une reprogrammation du calculateur moteur, pris en charge par Renault selon des critères conditionnels (entretien, kilométrage, historique)."
+      },
+      {
         "id": "renault-1.5-dci-injecteurs",
         "severity": "MAJEUR",
         "title": "Injecteurs Delphi 1.5 dCi (K9K)",

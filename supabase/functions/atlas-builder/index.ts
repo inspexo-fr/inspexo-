@@ -252,9 +252,36 @@ serve(async (req: Request) => {
     }
 
     let usd = 0;
-    const recherche = await chercherSources(entree);
-    if (!recherche) return json({ error: "recherche_echouee" }, 502);
-    usd += TARIF(recherche.usage);
+
+    // ── Mode RATTRAPAGE : des URL déjà connues, aucune recherche ──────────
+    // La première campagne a écarté 22 pages pour « illisible », surtout des
+    // PDF (notes NHTSA, documents constructeur) que l'extracteur ne lisait
+    // pas. Maintenant qu'il les lit, on repasse ces pages SANS repayer la
+    // recherche — seule la vérification indépendante est rejouée, et elle
+    // tranche exactement comme pour les autres.
+    const urlsFournies: string[] = Array.isArray(body?.urls)
+      ? body.urls.filter((u: unknown) => typeof u === "string").slice(0, MAX_SOURCES)
+      : [];
+    const rattrapage = urlsFournies.length > 0;
+
+    // deno-lint-ignore no-explicit-any
+    let recherche: { input: any; usage: Usage } | null = null;
+    if (rattrapage) {
+      recherche = {
+        input: {
+          sources: urlsFournies.map((u) => ({ url: u, titre: "", type: String(body?.type_source ?? "presse_auto"), nomme_cible: true })),
+          remede: String(body?.remede ?? ""),
+          cout_min_eur: Number(body?.cout_min_eur) || 0,
+          cout_max_eur: Number(body?.cout_max_eur) || 0,
+          motif_rejet: "",
+        },
+        usage: { input_tokens: 0, output_tokens: 0 },
+      };
+    } else {
+      recherche = await chercherSources(entree);
+      if (!recherche) return json({ error: "recherche_echouee" }, 502);
+      usd += TARIF(recherche.usage);
+    }
 
     const propose = Array.isArray(recherche.input?.sources) ? recherche.input.sources.slice(0, MAX_SOURCES) : [];
     const cible = `${entree.marque} ${entree.models ?? ""} ${entree.years ?? ""}`.replace(/\s+/g, " ").trim();
@@ -315,6 +342,7 @@ serve(async (req: Request) => {
     return json({
       marque: entree.marque,
       title: entree.title,
+      rattrapage,
       garde,
       motif: garde ? "" : (retenues.length > 0 ? "forum_seul" : (String(recherche.input?.motif_rejet ?? "") || "aucune_source_retenue")),
       sources: retenues,

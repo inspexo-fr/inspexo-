@@ -645,8 +645,13 @@ export default function ResultPage() {
     'base-inspexo',
     'Base Inspexo — fiche moteur relue avant publication.',
   )]
+  // ⚠️ LES LIENS D'ABORD, L'ÉTIQUETTE ENSUITE.
+  // Ce test court-circuitait sur `base_inspexo` AVANT de regarder les URL :
+  // la courroie de la 308, entrée fusionnée portant l'étiquette du catalogue
+  // ET quatre pages publiques, n'affichait aucun lien. « Base Inspexo », c'est
+  // nous — quand des pages existent, le lecteur doit pouvoir aller voir.
   const numsPourPanne = (p) => {
-    if (p.source_statut === 'base_inspexo') return numsBaseInspexo()
+    if (!(p.urls || []).length && p.source_statut === 'base_inspexo') return numsBaseInspexo()
     const nums = []
     for (const u of (p.urls || []).slice(0, 3)) {
       const title = (p.sources || []).find(s => s && s.url === u)?.title || null
@@ -1111,7 +1116,9 @@ export default function ResultPage() {
                         </p>
                       )}
                       <p className="mono c-graphite" style={{ fontSize: 11, marginTop: 6 }}>
-                        {p.source_statut === 'base_inspexo' ? 'source : base Inspexo' : 'sources en ligne, à confirmer sur place'}
+                        {(p.urls || []).length > 0
+                          ? 'sources en ligne, à confirmer sur place'
+                          : 'source : base Inspexo'}
                       </p>
                     </div>
                   )
@@ -1138,8 +1145,8 @@ export default function ResultPage() {
                     ? new Date(ficheInfo.updated_at).toLocaleDateString('fr-FR')
                     : null
                   if (urlsFiche.size === 0) return null
-                  const nAtlas = pannesAffichees.filter(x => x.source_statut === 'base_inspexo').length
-                  const nLigne = pannesAffichees.filter(x => x.source_statut !== 'base_inspexo').length
+                  const nAtlas = pannesAffichees.filter(x => !(x.urls || []).length).length
+                  const nLigne = pannesAffichees.filter(x => (x.urls || []).length > 0).length
                   const mix = [
                     nAtlas > 0 ? `${nAtlas} panne${nAtlas > 1 ? 's' : ''} base Inspexo` : null,
                     nLigne > 0 ? `${nLigne} panne${nLigne > 1 ? 's' : ''} sources en ligne` : null,

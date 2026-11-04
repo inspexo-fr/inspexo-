@@ -47,21 +47,24 @@
       "sources": [],
       "ecartees": [
         {
-          "url": "https://static.nhtsa.gov/odi/tsbs/2017/MC-10142923-9999.pdf",
-          "motif": "page_illisible"
-        },
-        {
-          "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10186213-9999.pdf",
-          "motif": "page_illisible"
-        },
-        {
-          "url": "https://static.nhtsa.gov/odi/tsbs/2021/MC-10204656-9999.pdf",
-          "motif": "page_illisible"
-        },
-        {
           "url": "https://www.motor.com/magazine-summary/trouble-shooter-april-2020/",
           "motif": "non_soutenue",
           "justification": "La page confirme des problèmes de chaîne de distribution, de tendeur et de guide sur le moteur N20/N26 nécessitant un kit de remplacement complet, mais elle ne dit pas que le tendeur est 'sous-dimensionné' ni qu'il lâche systématiquement 'avant 100 000 km' (l'exemple cité évoque une panne vers 75 000 miles, soit environ 120 000 km, sur un véhicule d'occasion déjà usagé)."
+        },
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2017/MC-10142923-9999.pdf",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10186213-9999.pdf",
+          "motif": "non_soutenue",
+          "justification": "La page confirme une extension de garantie pour la chaîne de distribution et de pompe à huile des moteurs N20/N26, mais ne mentionne nulle part un sous-dimensionnement du tendeur de chaîne."
+        },
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2021/MC-10204656-9999.pdf",
+          "motif": "non_soutenue",
+          "justification": "La page décrit un défaut du module de chaîne de distribution/pompe à huile pouvant entraîner une usure ou un étirement de la chaîne et une panne moteur, mais elle ne mentionne jamais un tendeur de chaîne sous-dimensionné comme cause."
         }
       ],
       "remede": "Remplacement complet du module de chaîne de distribution : chaîne de distribution, tendeur de chaîne, rail de glissement, rail de tension et rail de guidage, ainsi que le module de chaîne d'entraînement de la pompe à huile (pièces mises à jour), conformément au bulletin technique BMW SI B11 03 17.",
@@ -69,7 +72,8 @@
       "cout_max_eur": 0,
       "gravite": null,
       "gravite_avant": "CRITIQUE",
-      "cout_eur": 0.202
+      "cout_eur": 0.202,
+      "relue_en_pdf": true
     },
     {
       "cle": "BMW",
@@ -126,13 +130,13 @@
           "justification": ""
         },
         {
-          "url": "https://automotivetechinfo.com/wp-content/uploads/2021/01/BMW-Fuel-Injectors-Theory-Operation-Diagnosis-Recalls.pdf",
-          "motif": "page_illisible"
-        },
-        {
           "url": "https://www.threepiece.us/blog/bmw-335i-n54-problems-why-you-should-not-buy-one/",
           "motif": "non_soutenue",
           "justification": ""
+        },
+        {
+          "url": "https://automotivetechinfo.com/wp-content/uploads/2021/01/BMW-Fuel-Injectors-Theory-Operation-Diagnosis-Recalls.pdf",
+          "motif": "hors_sujet"
         }
       ],
       "remede": "Remplacement de la pompe haute pression (HPFP) et/ou mise à jour logicielle, et remplacement des injecteurs piézo défaillants (souvent par banc de 3, avec recalibrage électronique) ; BMW a aussi étendu la garantie pompe et injecteurs à 10 ans/120 000 miles sur les VIN concernés.",
@@ -140,7 +144,8 @@
       "cout_max_eur": 4150,
       "gravite": null,
       "gravite_avant": "MAJEUR",
-      "cout_eur": 0.2569
+      "cout_eur": 0.2569,
+      "relue_en_pdf": true
     },
     {
       "cle": "BMW",
@@ -242,7 +247,8 @@
       "cout_max_eur": 2200,
       "gravite": null,
       "gravite_avant": "CRITIQUE",
-      "cout_eur": 0.1333
+      "cout_eur": 0.1333,
+      "relue_en_pdf": true
     },
     {
       "cle": "AUDI",
@@ -374,6 +380,11 @@
       "sources": [],
       "ecartees": [
         {
+          "url": "https://foreignautomotive.ca/blogs/news/mercedes-airmatic-suspension-symptoms-causes-and-repair-costs",
+          "motif": "non_soutenue",
+          "justification": "La page décrit bien les fuites de coussins et les pannes de compresseur sur l'Airmatic de ces modèles, mais elle ne donne aucun chiffre de coût (le paragraphe 'AIRMATIC Repair Costs' est coupé avant d'indiquer un montant), donc les prix de 600 et 500 ne sont pas vérifiables sur cette page."
+        },
+        {
           "url": "https://www.import-car.com/mercedes-benz-airmatic-suspensions/",
           "motif": "page_illisible"
         },
@@ -384,11 +395,6 @@
         {
           "url": "https://bavarian-dismantlers.com/workshop/w211-e-class-airmatic-suspension-guide",
           "motif": "page_illisible"
-        },
-        {
-          "url": "https://foreignautomotive.ca/blogs/news/mercedes-airmatic-suspension-symptoms-causes-and-repair-costs",
-          "motif": "non_soutenue",
-          "justification": "La page décrit bien les fuites de coussins et les pannes de compresseur sur l'Airmatic de ces modèles, mais elle ne donne aucun chiffre de coût (le paragraphe 'AIRMATIC Repair Costs' est coupé avant d'indiquer un montant), donc les prix de 600 et 500 ne sont pas vérifiables sur cette page."
         }
       ],
       "remede": "Remplacement du ou des coussins (boudins) pneumatiques qui fuient, et remplacement du compresseur (avec son relais et son filtre) lorsqu'il est usé ou grillé par la surcharge de fonctionnement due aux fuites.",
@@ -396,7 +402,8 @@
       "cout_max_eur": 0,
       "gravite": null,
       "gravite_avant": "MAJEUR",
-      "cout_eur": 0.1323
+      "cout_eur": 0.1323,
+      "relue_en_pdf": true
     },
     {
       "cle": "MERCEDES",
@@ -485,7 +492,8 @@
       "cout_max_eur": 0,
       "gravite": null,
       "gravite_avant": "MAJEUR",
-      "cout_eur": 0.2675
+      "cout_eur": 0.2675,
+      "relue_en_pdf": true
     },
     {
       "cle": "PEUGEOT",
@@ -558,9 +566,17 @@
       "cle": "RENAULT",
       "marque": "Renault",
       "title": "1.2 TCe (H5Ft) — consommation d'huile et casse moteur",
-      "garde": false,
-      "motif": "aucune_source_retenue",
-      "sources": [],
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE23164.pdf",
+          "titre": "",
+          "type": "constructeur_ou_rappel",
+          "nomme_cible": true,
+          "justification": "La page confirme explicitement que le moteur essence 1.2 (type H5Ft) de Renault-Dacia présente une surconsommation d'huile pouvant aller jusqu'à la casse du moteur."
+        }
+      ],
       "ecartees": [
         {
           "url": "https://www.quechoisir.org/actualite-moteur-1-2-renault-400-000-voitures-en-danger-n67215/",
@@ -575,18 +591,15 @@
         {
           "url": "https://www.auto-infos.fr/article/les-moteurs-1-2-l-de-renault-sujets-a-trop-de-casses.158949",
           "motif": "page_illisible"
-        },
-        {
-          "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE23164.pdf",
-          "motif": "page_illisible"
         }
       ],
       "remede": "Remplacement de la segmentation des pistons (voire du moteur complet en cas de casse avérée) accompagné d'une reprogrammation du calculateur moteur, pris en charge par Renault selon des critères conditionnels (entretien, kilométrage, historique).",
       "cout_min_eur": 6000,
       "cout_max_eur": 0,
-      "gravite": null,
+      "gravite": "majeure",
       "gravite_avant": "CRITIQUE",
-      "cout_eur": 0.1512
+      "cout_eur": 0.1512,
+      "rattrapee": true
     },
     {
       "cle": "RENAULT",
@@ -673,17 +686,17 @@
           "justification": ""
         },
         {
+          "url": "https://www.planeterenault.com/forum/megane-ii-pb-avec-la-carte-main-libre-t3610.html",
+          "motif": "non_soutenue",
+          "justification": "La page décrit bien des pannes de capteurs optiques de porte et de carte main-libre (perte de reconnaissance, capteurs défectueux) sur Mégane II, mais ne mentionne aucune fourchette de coût de 100 euros ni n'évoque explicitement un 'refus de démarrage' généralisé ou une reprogrammation chiffrée."
+        },
+        {
           "url": "https://www.telecommandier.fr/reparation-carte-mainlibre-renault.htm",
           "motif": "page_illisible"
         },
         {
           "url": "https://forum-auto.caradisiac.com/topic/58281-carte-main-libre-laguna-iii/",
           "motif": "page_illisible"
-        },
-        {
-          "url": "https://www.planeterenault.com/forum/megane-ii-pb-avec-la-carte-main-libre-t3610.html",
-          "motif": "non_soutenue",
-          "justification": "La page décrit bien des pannes de capteurs optiques de porte et de carte main-libre (perte de reconnaissance, capteurs défectueux) sur Mégane II, mais ne mentionne aucune fourchette de coût de 100 euros ni n'évoque explicitement un 'refus de démarrage' généralisé ou une reprogrammation chiffrée."
         }
       ],
       "remede": "Remplacement (ou reprogrammation, voire réparation par micro-soudure) de la carte mains-libres défectueuse, le lecteur/boîtier UCH n'étant à changer que dans les cas les plus sévères.",
@@ -691,7 +704,8 @@
       "cout_max_eur": 400,
       "gravite": null,
       "gravite_avant": "MINEUR",
-      "cout_eur": 0.2423
+      "cout_eur": 0.2423,
+      "relue_en_pdf": true
     },
     {
       "cle": "VW",

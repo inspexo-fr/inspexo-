@@ -5,6 +5,7 @@
 // prompt plus doux que celui de la mesure publiée, le taux publié sur
 // /fiabilite flatterait des entrées que sa propre méthode aurait recalées.
 // Un seul texte, un seul outil, un seul barème de verdicts.
+import { extractText, getDocumentProxy } from "npm:unpdf@1.9.1";
 
 export const VERIF_SYSTEM =
   `Tu vérifies des affirmations techniques sur un véhicule d'occasion en les confrontant à UNE page web.
@@ -53,17 +54,42 @@ export const neutraliser = (t: string) => String(t ?? "").replace(/</g, "‹").r
 
 export const MAX_TEXTE_SOURCE = 14_000;
 
-/** Texte brut d'une page. null = illisible (404, PDF, blocage, timeout, ou
- *  page trop pauvre pour juger : mur de consentement, rendu côté client). */
+/** Texte brut d'une page. null = illisible (404, blocage, timeout, ou page
+ *  trop pauvre pour juger : mur de consentement, rendu côté client).
+ *
+ *  ⚠️ LES PDF SONT LUS. La première campagne de sourcing de l'atlas a écarté
+ *  22 pages pour « illisible », et c'étaient surtout des PDF : notes
+ *  techniques NHTSA, documents constructeur — c'est-à-dire exactement les
+ *  sources de rang 1. Refuser le format le plus fiable au motif qu'il n'est
+ *  pas du HTML biaisait la mesure contre les meilleures preuves.
+ *  `unpdf` est déjà utilisé par `lecture-histovec`, sans dépendance. */
 export async function texteDeLaPage(url: string, minCaracteres = 400): Promise<string | null> {
   try {
     const res = await fetch(url, {
-      signal: AbortSignal.timeout(12_000),
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; InspexoBot/1.0)", Accept: "text/html" },
+      signal: AbortSignal.timeout(15_000),
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; InspexoBot/1.0)", Accept: "text/html,application/pdf" },
       redirect: "follow",
     });
     if (!res.ok) return null;
-    if (!(res.headers.get("content-type") ?? "").includes("html")) return null;
+    const type = res.headers.get("content-type") ?? "";
+
+    if (type.includes("pdf") || /\.pdf(\?|$)/i.test(url)) {
+      const octets = new Uint8Array(await res.arrayBuffer());
+      // Un PDF de plus de 12 Mo n'est pas une note technique : on ne le lit pas.
+      if (octets.byteLength === 0 || octets.byteLength > 12_000_000) return null;
+      try {
+        const doc = await getDocumentProxy(octets);
+        const extrait = await extractText(doc, { mergePages: true });
+        const brut = (typeof extrait === "string" ? extrait : (extrait?.text ?? "")).replace(/\s+/g, " ").trim();
+        // Même seuil de texte utile que partout : un scan rend deux
+        // caractères sans erreur, et « aucune erreur » ne vaut pas « lu ».
+        return brut.length >= minCaracteres ? brut.slice(0, MAX_TEXTE_SOURCE) : null;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    if (!type.includes("html")) return null;
     const html = (await res.text()).slice(0, 400_000);
     const txt = html
       .replace(/<script[\s\S]*?<\/script>/gi, " ")

@@ -107,6 +107,27 @@ ok(affirmationSansCout('T', 'x'.repeat(900)).length <= 500, 'l’affirmation est
     'aucune entrée n’est « casse » sans un coût sourcé qui le justifie')
 }
 
+// ── Affichage : les liens d'abord, l'étiquette ensuite ─────────────────────
+//
+// ⚠️ Décision du 4 novembre 2026 : une entrée d'atlas qui cite des pages
+// publiques s'affiche comme une fiche moteur, « Sources : » suivi des liens.
+// Le code court-circuitait sur `base_inspexo` AVANT de regarder les URL — la
+// courroie de la 308, entrée fusionnée portant l'étiquette du catalogue ET
+// quatre pages, n'affichait aucun lien.
+{
+  const page = readFileSync(new URL('../src/pages/ResultPage.jsx', import.meta.url), 'utf8')
+  ok(/if \(!\(p\.urls \|\| \[\]\)\.length && p\.source_statut === 'base_inspexo'\) return numsBaseInspexo\(\)/.test(page),
+    'le registre ne retombe sur « base Inspexo » que si l’entrée ne cite AUCUNE page')
+  ok(/\(p\.urls \|\| \[\]\)\.length > 0\s*\n?\s*\? 'sources en ligne/.test(page),
+    'le libellé affiché suit la présence de sources, pas l’étiquette interne')
+  ok(!/x\.source_statut === 'base_inspexo'\)\.length/.test(page),
+    'le décompte des pannes suit lui aussi les sources réelles')
+
+  const score = readFileSync(new URL('../supabase/functions/score/index.ts', import.meta.url), 'utf8')
+  ok(/source_statut: atlasUrls\.length > 0 \? "en_ligne" : "base_inspexo"/.test(score),
+    'côté serveur, une entrée d’atlas sourcée n’est plus étiquetée « base Inspexo »')
+}
+
 console.log(`\n${ok_} contrôles passés, ${ko} échec(s).`)
 if (ko > 0) process.exit(1)
 console.log('Tous les tests atlas-source passent.')

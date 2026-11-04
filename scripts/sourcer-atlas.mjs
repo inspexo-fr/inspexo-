@@ -120,6 +120,20 @@ if (args.includes('--appliquer')) {
   const { resultats } = JSON.parse(readFileSync(RELEVE, 'utf8'))
   const parId = new Map(resultats.map((r) => [`${r.cle}|${r.title}`, r]))
 
+  // ⚠️ GARDE-FOU : ne jamais appliquer sur un atlas DÉJÀ réécrit.
+  // Lancé deux fois de suite, le script lisait sa propre sortie : les entrées
+  // retirées n'y figuraient plus, donc « 0 retirées » — et une entrée
+  // rattrapée après coup était impossible à réintégrer, en silence.
+  // L'atlas d'entrée doit contenir au moins autant d'entrées que le relevé en
+  // a traitées.
+  const entreesEntree = Object.values(defectAtlas).reduce((n, b) => n + (b.defects?.length ?? 0), 0)
+  if (entreesEntree < resultats.length) {
+    console.error(`✗ L'atlas d'entrée ne porte que ${entreesEntree} entrées alors que le relevé en a traité ${resultats.length}.`)
+    console.error('  Il a déjà été réécrit. Restaurer la version d’origine avant de réappliquer :')
+    console.error('    git show <commit-avant-sprint16>:src/data/defectAtlas.js > src/data/defectAtlas.js')
+    process.exit(1)
+  }
+
   const sortie = {}
   let gardees = 0, retirees = 0, rejugees = 0
   const journal = []
