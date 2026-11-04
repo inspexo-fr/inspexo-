@@ -21,6 +21,7 @@ const MIGRATIONS = [
   // sprint13
   '20261111120000_sprint13_histovec.sql',
   '20261112120000_sprint13_drapeaux.sql',
+  '20261113120000_sprint13_droits_anon.sql',
 ]
 
 const corpsDe = (f) => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8')
@@ -240,18 +241,55 @@ select essai_verifie('inspection_annuler borne la retenue par le prix',
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public' and p.proname = 'inspection_annuler';
 
--- Les tables sensibles restent fermées à anon.
+-- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
+-- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On
+-- assère donc sur TOUT le schéma public, tables et vues comprises, pour les
+-- DEUX rôles. Une table ajoutée demain sans révocation fera échouer l'essai.
 select essai_verifie(
-  'anon ne peut pas lire ' || c.relname,
-  has_table_privilege('anon', c.oid, 'SELECT') is false)
-from pg_class c join pg_namespace n on n.oid = c.relnamespace
-where n.nspname = 'public'
-  and c.relname in ('drapeaux','api_appels','marche_agregats','inspections','analyses');
+  'anon ne peut lire AUCUN objet de public',
+  (select count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind in ('r','p','v','m')
+      and has_table_privilege('anon', c.oid, 'SELECT')) = 0,
+  (select string_agg(c.relname, ', ') from pg_class c join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind in ('r','p','v','m')
+      and has_table_privilege('anon', c.oid, 'SELECT')));
 
--- RLS active sur les tables ajoutees.
-select essai_verifie('RLS active sur ' || c.relname, c.relrowsecurity is true)
-from pg_class c join pg_namespace n on n.oid = c.relnamespace
-where n.nspname = 'public' and c.relname in ('drapeaux','api_appels','marche_agregats');
+select essai_verifie(
+  'authenticated ne peut lire AUCUN objet de public',
+  (select count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind in ('r','p','v','m')
+      and has_table_privilege('authenticated', c.oid, 'SELECT')) = 0,
+  (select string_agg(c.relname, ', ') from pg_class c join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind in ('r','p','v','m')
+      and has_table_privilege('authenticated', c.oid, 'SELECT')));
+
+-- Et aucun droit d'ÉCRITURE non plus.
+select essai_verifie(
+  'ni anon ni authenticated ne peuvent ecrire dans public',
+  (select count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace
+    cross join (values ('anon'),('authenticated')) as r(nom)
+    where n.nspname = 'public' and c.relkind in ('r','p')
+      and (has_table_privilege(r.nom, c.oid, 'INSERT')
+        or has_table_privilege(r.nom, c.oid, 'UPDATE')
+        or has_table_privilege(r.nom, c.oid, 'DELETE'))) = 0);
+
+-- RLS active sur TOUTES les tables de public, pas seulement les nouvelles.
+select essai_verifie(
+  'RLS active sur toutes les tables de public',
+  (select count(*) from pg_class c join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity) = 0,
+  (select string_agg(c.relname, ', ') from pg_class c join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity));
+
+-- Les droits PAR DÉFAUT aussi : c'est la cause racine du défaut trouvé.
+select essai_verifie(
+  'les droits par defaut de public n accordent plus rien a anon/authenticated',
+  (select count(*) from pg_default_acl d
+    where d.defaclnamespace = 'public'::regnamespace and d.defaclobjtype = 'r'
+      and (array_to_string(d.defaclacl, ',') like '%anon=%'
+        or array_to_string(d.defaclacl, ',') like '%authenticated=%')) = 0,
+  (select array_to_string(d.defaclacl, ' ') from pg_default_acl d
+    where d.defaclnamespace = 'public'::regnamespace and d.defaclobjtype = 'r' limit 1));
 
 -- -----------------------------------------------------------------------
 -- 4 ter. LE VERDICT. C'est le SEUL résultat que l'éditeur affichera, et il

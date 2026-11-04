@@ -951,6 +951,37 @@ aucun invariant n'était vérifié.
   contrôle.** C'est la même leçon que le `process.exit(1)` placé avant les
   nouveaux tests dans `tests/inspection.test.mjs` au sprint 12.
 
+### ⚠️ Droits d'anon : neuf tables sans `revoke` (trouvé par l'essai, corrigé)
+L'essai a signalé qu'`anon` détenait SELECT sur `inspections`. Vérification par
+un appel REST réel avec la clé anon : **HTTP 200, ZÉRO ligne**. **Aucune donnée
+n'a été exposée** — la RLS, active et sans policy, bloque chaque ligne. Le
+défaut est une **absence de défense en profondeur**, pas une fuite : il
+suffirait qu'une policy soit ajoutée, ou la RLS désactivée le temps d'une
+maintenance, pour qu'il devienne effectif. Ne pas raconter cet épisode comme
+une fuite.
+- **Origine** : les tables du **sprint 1** (`analyses`, `events`, `leads`,
+  `rappels_cache`), du **sprint 7** (`passes`) et du **sprint 8**
+  (`inspecteurs`, `inspections`, `inspection_photos`, `inspection_refus`)
+  activent la RLS mais ne révoquent rien : elles ont hérité des **droits par
+  défaut** que Supabase accorde dans `public`. Les tables plus récentes portent
+  toutes un `revoke all` — l'habitude a été prise en route, après celles-là.
+- **`authenticated` est révoqué aussi** : mesuré, **rien dans le front ne lit
+  une table en direct** — 29 appels `.rpc(...)`, zéro `.from('table')` (les
+  quatre `.from(` sont des `Array.from`). Aucun écran ne perd rien.
+- Migration `20261113120000` : **boucle** sur tous les objets de `public`
+  (tables, partitions, vues, vues matérialisées) plutôt qu'une liste — une
+  liste oublierait les 8 tables héritées du dashboard, qu'aucune migration ne
+  crée, et oublierait la prochaine. Elle **vérifie elle-même** l'état atteint et
+  lève si un droit subsiste.
+- ⚠️ **Cause racine traitée** : `alter default privileges … revoke all on tables
+  from anon, authenticated`. Sans cela, la prochaine table créée héritera à
+  nouveau des mêmes droits et personne ne le verra.
+- L'assertion de l'essai ne porte plus sur une **liste de cinq tables** — c'est
+  précisément ce qui avait laissé passer les neuf autres. Elle porte sur **tout
+  le schéma public**, les deux rôles, en lecture **et** en écriture, plus la RLS
+  et les droits par défaut. Une table ajoutée sans révocation fera désormais
+  échouer l'essai.
+
 ### Mise en service partielle — 3-4 nov. 2026 (merge EN ATTENTE)
 `score`, `lecture-ct` et `lecture-histovec` déployées pour l'éval. Migration
 `20261111120000` **non appliquée**.
