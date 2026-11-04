@@ -4,9 +4,80 @@
 // tests/inspection.test.mjs, chaîné dans `npm run eval`.
 
 // ---------------------------------------------------------------------------
-// Argent — tout en CENTIMES, jamais en flottants d'euros.
+// SPRINT 14 — DEUX PRESTATIONS, UN SEUL CIRCUIT.
+//
+// La visio guidée réutilise TOUT le circuit de l'inspection : commande avec
+// créneau, autorisation Stripe puis capture à la confirmation, échéance à deux
+// bornes, annulation, arbitrage, Stripe Connect, charte, admin. Rien n'est
+// dupliqué — ce qui change d'une prestation à l'autre est rassemblé ICI, dans
+// une table indexée par type, et le reste du code lit cette table.
+//
+// ⚠️ Les valeurs de `inspection` sont IDENTIQUES à celles d'avant ce sprint.
+// `tests/inspection.test.mjs` le prouve explicitement : une factorisation qui
+// déplace un montant au passage serait une régression silencieuse sur un
+// produit déjà vendable.
 // ---------------------------------------------------------------------------
-export const PRIX_INSPECTION_CENTS = 17_900; // 179,00 € TTC
+export type TypePrestation = "inspection" | "visio";
+
+export type Prestation = {
+  type: TypePrestation;
+  libelle: string;
+  prix_cents: number;
+  /** Part de l'inspecteur, en CENTIMES. Figée à la commande. */
+  part_inspecteur_cents: number;
+  /** Départements couverts, ou "*" pour la France entière. */
+  zone: string[] | "*";
+  zone_libelle: string;
+  /** Au-delà, l'annulation par l'acheteur n'est plus gratuite. 0 = gratuite
+   *  jusqu'au créneau (cas de la visio : aucun déplacement engagé). */
+  annulation_gratuite_heures: number;
+  /** Retenue en cas d'annulation tardive ou d'absence, en centimes. */
+  retenue_cents: number;
+  /** Délai de remise du compte rendu, en heures. */
+  rapport_heures: number;
+  /** Minutes d'attente avant qu'une absence puisse être constatée. */
+  attente_absence_minutes: number;
+};
+
+export const PRESTATIONS: Record<TypePrestation, Prestation> = {
+  // Valeurs d'avant le sprint 14, inchangées.
+  inspection: {
+    type: "inspection",
+    libelle: "Inspection sur place",
+    prix_cents: 17_900, // 179,00 € TTC
+    part_inspecteur_cents: 10_740, // 60 %
+    zone: ["31"],
+    zone_libelle: "Toulouse et Haute-Garonne",
+    annulation_gratuite_heures: 24,
+    retenue_cents: 4_000, // 40,00 € — un déplacement réellement engagé
+    rapport_heures: 24,
+    attente_absence_minutes: 0, // constat sur place, pas d'attente codifiée
+  },
+  visio: {
+    type: "visio",
+    libelle: "Visio guidée",
+    prix_cents: 5_900, // 59,00 € TTC
+    part_inspecteur_cents: 4_000, // 40,00 €
+    // ⚠️ France entière : c'est tout l'intérêt de la visio. Aucun
+    // déplacement, donc aucune contrainte géographique.
+    zone: "*",
+    zone_libelle: "France entière",
+    // ⚠️ Gratuite À TOUT MOMENT avant le créneau (décision du 4 nov. 2026) :
+    // aucun déplacement n'est engagé, et cela reste aligné sur le droit de
+    // rétractation. La retenue ne vient PAS d'une annulation tardive mais
+    // d'une ABSENCE, constatée 15 minutes après le début du créneau.
+    annulation_gratuite_heures: 0,
+    retenue_cents: 2_000, // 20,00 € — indemnise un créneau bloqué, pas un trajet
+    rapport_heures: 2,
+    attente_absence_minutes: 15,
+  },
+};
+
+export const prestation = (t: TypePrestation): Prestation => PRESTATIONS[t] ?? PRESTATIONS.inspection;
+
+// Compatibilité : ces deux constantes restent exportées parce qu'elles sont
+// lues ailleurs, et elles valent exactement ce qu'elles valaient.
+export const PRIX_INSPECTION_CENTS = PRESTATIONS.inspection.prix_cents;
 export const PART_INSPECTEUR = 0.6; // 60 % à l'inspecteur
 
 /** Part de l'inspecteur, arrondie au centime. Le reste va à la plateforme :
@@ -15,6 +86,16 @@ export const PART_INSPECTEUR = 0.6; // 60 % à l'inspecteur
 export function partInspecteurCents(prixCents: number = PRIX_INSPECTION_CENTS): number {
   return Math.round(prixCents * PART_INSPECTEUR);
 }
+
+/** Parts d'une prestation donnée. Pour la visio, la part de l'inspecteur est
+ *  un MONTANT FIXE (40 € sur 59 €), pas un pourcentage : l'écrire en ratio
+ *  donnerait 67,796 %, donc un arrondi à chaque calcul là où le contrat
+ *  annonce un chiffre rond. */
+export function partsPrestation(t: TypePrestation): { inspecteur: number; plateforme: number } {
+  const p = prestation(t);
+  const inspecteur = Math.min(p.part_inspecteur_cents, p.prix_cents);
+  return { inspecteur, plateforme: p.prix_cents - inspecteur };
+}
 export function partPlateformeCents(prixCents: number = PRIX_INSPECTION_CENTS): number {
   return prixCents - partInspecteurCents(prixCents);
 }
@@ -22,8 +103,8 @@ export function partPlateformeCents(prixCents: number = PRIX_INSPECTION_CENTS): 
 // ---------------------------------------------------------------------------
 // Zone couverte — Toulouse et Haute-Garonne au lancement.
 // ---------------------------------------------------------------------------
-export const ZONE_LANCEMENT = ["31"];
-export const ZONE_LIBELLE = "Toulouse et Haute-Garonne";
+export const ZONE_LANCEMENT = PRESTATIONS.inspection.zone as string[];
+export const ZONE_LIBELLE = PRESTATIONS.inspection.zone_libelle;
 
 /** Département d'un code postal français (miroir de public._departement). */
 export function departementDeCp(cp: string): string | null {
@@ -34,8 +115,17 @@ export function departementDeCp(cp: string): string | null {
 }
 
 export function dansZoneLancement(cp: string): boolean {
+  return dansZone(cp, "inspection");
+}
+
+/** Le code postal est-il dans la zone de CETTE prestation ?
+ *  La visio couvre "*" — mais un code postal valide reste exigé : on ne
+ *  commande pas une visio sans savoir où est la voiture. */
+export function dansZone(cp: string, t: TypePrestation): boolean {
   const d = departementDeCp(cp);
-  return d !== null && ZONE_LANCEMENT.includes(d);
+  if (d === null) return false;
+  const z = prestation(t).zone;
+  return z === "*" ? true : z.includes(d);
 }
 
 // ---------------------------------------------------------------------------
@@ -207,6 +297,9 @@ export type DecisionAnnulation = {
 };
 
 export type ContexteAnnulation = {
+  /** Type de prestation. Absent = inspection, pour que tout appelant d'avant
+   *  le sprint 14 garde exactement le comportement qu'il avait. */
+  type?: TypePrestation;
   statut: string;
   /** Créneau confirmé par l'inspecteur, ou à défaut créneau souhaité. */
   creneau: Date | null;
@@ -231,9 +324,10 @@ export type ContexteAnnulation = {
  *  déplacé pour rien doit être indemnisé, même si le constat a lieu bien avant
  *  le créneau annoncé. */
 export function decisionAnnulation(c: ContexteAnnulation): DecisionAnnulation {
+  const p = prestation(c.type ?? "inspection");
   const prix = Number.isFinite(c.prix_cents) && c.prix_cents > 0
     ? Math.round(c.prix_cents)
-    : PRIX_INSPECTION_CENTS;
+    : p.prix_cents;
 
   if (c.statut === "faite") {
     return { action: "rien", rembourse_cents: 0, retenue_cents: 0,
@@ -256,15 +350,18 @@ export function decisionAnnulation(c: ContexteAnnulation): DecisionAnnulation {
   // l'argent à l'acheteur pour l'avoir annulé. À 179 € le cas n'arrive pas,
   // mais le prix est un paramètre : le garde-fou est ici, pas dans l'espoir
   // que le prix reste au-dessus de 40 €.
-  const retenue = Math.min(RETENUE_DEPLACEMENT_CENTS, prix);
+  const retenue = Math.min(p.retenue_cents, prix);
 
   if (c.absence_vendeur === true) {
     return {
       action: "retenue_deplacement",
       rembourse_cents: prix - retenue,
       retenue_cents: retenue,
-      motif: "Véhicule non présenté : montant proportionné au service déjà fourni "
-        + "(organisation du rendez-vous et déplacement effectué).",
+      motif: p.type === "visio"
+        ? "Acheteur absent au rendez-vous : montant proportionné au créneau réservé "
+          + "par l'inspecteur, qui n'a pas pu être réemployé."
+        : "Véhicule non présenté : montant proportionné au service déjà fourni "
+          + "(organisation du rendez-vous et déplacement effectué).",
     };
   }
 
@@ -284,18 +381,56 @@ export function decisionAnnulation(c: ContexteAnnulation): DecisionAnnulation {
 
   // Créneau inconnu : on traite au plus favorable pour l'acheteur. Un barème
   // ne se déclenche pas sur une donnée manquante.
-  if (heures === null || heures > DELAI_ANNULATION_GRATUITE_HEURES) {
-    return { action: "rembourser_integral", rembourse_cents: prix, retenue_cents: 0,
-      motif: "Annulation à plus de 24 heures du créneau : remboursement intégral." };
+  if (heures === null || heures > p.annulation_gratuite_heures) {
+    return {
+      action: "rembourser_integral",
+      rembourse_cents: prix,
+      retenue_cents: 0,
+      motif: p.annulation_gratuite_heures === 0
+        // Visio : aucun déplacement engagé, donc gratuit jusqu'au créneau.
+        ? "Annulation avant le créneau : remboursement intégral, rien n'est retenu."
+        : `Annulation à plus de ${p.annulation_gratuite_heures} heures du créneau : remboursement intégral.`,
+    };
   }
 
   return {
     action: "retenue_deplacement",
     rembourse_cents: prix - retenue,
     retenue_cents: retenue,
-    motif: "Annulation à moins de 24 heures du créneau : montant proportionné au "
-      + "service déjà fourni (organisation du rendez-vous et déplacement réservé).",
+    motif: p.type === "visio"
+      // Pour une visio, passé l'heure du créneau il ne s'agit plus d'une
+      // annulation mais d'une absence : le créneau de l'inspecteur est perdu.
+      ? "Créneau dépassé : le créneau réservé par l'inspecteur est indemnisé."
+      : `Annulation à moins de ${p.annulation_gratuite_heures} heures du créneau : montant `
+        + "proportionné au service déjà fourni (organisation du rendez-vous et déplacement réservé).",
   };
+}
+
+/** L'absence de l'acheteur peut-elle être constatée ?
+ *
+ *  Pour une visio, la retenue de 20 € n'indemnise pas un déplacement mais un
+ *  CRÉNEAU BLOQUÉ : elle ne se justifie qu'après une attente réelle. Quinze
+ *  minutes après l'heure du rendez-vous, pas avant — et jamais avant l'heure
+ *  du rendez-vous elle-même. */
+export function absenceConstatable(
+  t: TypePrestation,
+  creneau: Date | null,
+  maintenant: Date,
+): { ok: true } | { ok: false; raison: string; minutes_restantes: number } {
+  const p = prestation(t);
+  if (p.attente_absence_minutes === 0) return { ok: true }; // inspection : constat sur place
+  if (!creneau || Number.isNaN(creneau.getTime())) {
+    return { ok: false, raison: "creneau_inconnu", minutes_restantes: 0 };
+  }
+  const ecoulees = (maintenant.getTime() - creneau.getTime()) / 60_000;
+  if (ecoulees < p.attente_absence_minutes) {
+    return {
+      ok: false,
+      raison: "attente_insuffisante",
+      minutes_restantes: Math.ceil(p.attente_absence_minutes - ecoulees),
+    };
+  }
+  return { ok: true };
 }
 
 /** Une autorisation non confirmée doit-elle être relâchée ?
