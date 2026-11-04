@@ -26,7 +26,7 @@
 // d'annonce identique, le score peut différer de celui rendu en 11.1 ou 11.2.
 // C'est exactement ce que cette version signale aux clients d'API — et c'est
 // ce qui rend le même texte toujours égal au même score (71/71/71 mesuré).
-export const BAREME_VERSION = "11.3";
+export const BAREME_VERSION = "11.4";
 
 export type FaitsAxes = {
   annee_courante: number;

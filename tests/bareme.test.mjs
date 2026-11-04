@@ -91,7 +91,10 @@ const verifiePrix = (titre, cond, detail = '') => {
     (avecOpposition.verdict_conditionnel?.score ?? 0) <= 30)
 }
 {
-  affirme('BAREME_VERSION passée à 11.3', BAREME_VERSION === '11.3', BAREME_VERSION)
+  // 11.4 — une entrée de catalogue sans source publique ne pèse plus du tout,
+  // même quand l'annonce mentionne ce qu'elle vise. La liste des défauts qui
+  // comptent change : la version DOIT bouger, les clients d'API la suivent.
+  affirme('BAREME_VERSION passée à 11.4', BAREME_VERSION === '11.4', BAREME_VERSION)
 }
 
 console.log('CALIBRATION\n')

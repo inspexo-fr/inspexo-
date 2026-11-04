@@ -5,9 +5,10 @@
 // Mesuré avant correction sur la Mercedes 220 d (OM654) : deux analyses du même
 // texte, même fiche, zéro affirmation écartée — 2 pannes retenues d'un côté,
 // 0 de l'autre, axe risques 13 vs 16, score 71 vs 77.
+import { readFileSync } from 'node:fs'
 import {
   atlasConfirme, ciblesAtlas, entreeApplicable, panneCompteDansScore,
-  pannesApplicables, refsManquantes,
+  pannesApplicables, questionSansSource, refsManquantes, sansSourcePublique,
 } from '../supabase/functions/_shared/pannesApplicables.ts'
 
 let ko = 0
@@ -216,6 +217,58 @@ ok(!atlasConfirme(e({ ref: 'A7', titre: 'Suspension Airmatic' }), ''),
   eq(divergences, 0, '500 évaluations du même couple : aucune divergence')
   eq(JSON.parse(reference).map((r) => r.compte), [false, false, true, false],
     'sur cette annonce : seule l’entrée de fiche compte')
+}
+
+// ── SPRINT 15.1 — « base Inspexo » n'est pas une source ────────────────────
+//
+// Une entrée d'atlas sans URL ne s'affiche plus comme une panne : elle devient
+// une question, et ne pèse jamais sur le score, même si l'annonce mentionne ce
+// qu'elle vise.
+{
+  ok(sansSourcePublique('A1', []), 'entrée d’atlas sans URL : sans source publique')
+  ok(sansSourcePublique('A12', null), 'urls absentes = sans source publique')
+  ok(sansSourcePublique('A3', ['', '  ', 'base Inspexo']),
+    'une mention qui n’est pas une URL ne vaut pas source')
+  ok(!sansSourcePublique('A1', ['https://exemple.test/page']),
+    'une entrée d’atlas QUI cite une page garde son statut de panne')
+  ok(!sansSourcePublique('F1', []),
+    'une entrée de FICHE n’est jamais retirée par cette règle — sa source est la fiche')
+  ok(!sansSourcePublique('', []), 'une réf vide n’est pas une entrée d’atlas')
+
+  // ⚠️ LE CAS QUI AURAIT TOUT CASSÉ. La courroie de la 308 existe DANS LES
+  // DEUX catalogues : l'atlas (gravité plus sévère, aucune URL) et la fiche
+  // EB2 (URLs). La déduplication amont garde la plus grave — donc la réf de
+  // l'ATLAS — mais fusionne les URLs des deux. L'entrée fusionnée cite donc
+  // des pages, et la règle ne la retire pas. Si la fusion ne transmettait pas
+  // les URLs, cette règle supprimerait la panne centrale du dossier 308.
+  ok(!sansSourcePublique('A7', ['https://fiche.test/eb2-courroie']),
+    'entrée d’atlas fusionnée avec une entrée de fiche : les URLs héritées la sauvent')
+
+  const q = questionSansSource('Chaîne de distribution N47 défaillante')
+  ok(!/\bpanne/i.test(q), 'la question ne contient jamais le mot « panne »')
+  ok(!/\bdéfaut\b/i.test(q), 'ni le mot « défaut » : nous n’avons pas de source pour l’affirmer')
+  ok(!/ce modèle connaît/i.test(q), 'elle n’affirme pas que le modèle « connaît » quoi que ce soit')
+  ok(q.includes('source publique'), 'elle dit explicitement qu’aucune source publique n’a été trouvée')
+  ok(q.trim().endsWith(')') || q.includes('?'), 'c’est une question')
+  ok(questionSansSource('x'.repeat(300)).match(/« (x+) »/)[1].length === 120,
+    'le sujet repris est borné à 120 caractères')
+}
+
+// Le code de `score` applique bien la règle AVANT le barème et la négociation :
+// une entrée retirée ne doit laisser de trace ni dans la note, ni dans la marge.
+{
+  const src = readFileSync(new URL('../supabase/functions/score/index.ts', import.meta.url), 'utf8')
+  const iRetrait = src.indexOf('sansSourcePublique(p.source_ref, p.urls)')
+  const iBareme = src.indexOf('const calcul = calculerAxes(faits)')
+  const iNego = src.indexOf('negociation = calculerNegociation(')
+  const iResultat = src.indexOf('pannes_connues: pannesJoined.map(')
+  ok(iRetrait > 0, 'score applique la règle')
+  ok(iRetrait < iBareme, 'le retrait précède le calcul du barème')
+  ok(iRetrait < iNego, 'le retrait précède le calcul de la marge de négociation')
+  ok(iRetrait < iResultat, 'le retrait précède la composition du dossier')
+  ok(/BAREME_VERSION = "11\.4"/.test(
+    readFileSync(new URL('../supabase/functions/_shared/bareme.ts', import.meta.url), 'utf8')),
+    'la version du barème est incrémentée : la liste des défauts qui pèsent a changé')
 }
 
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${total - ko}/${total} contrôles passés`)
