@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { getFiabilite } from '../lib/scoreApi'
+import { tauxLisible } from '../lib/intervalle'
 
 // SPRINT 15 — La mesure publiée change de méthode.
 //
@@ -46,6 +47,7 @@ export default function FiabilitePage() {
   const v = data?.verification
   const denominateur = v?.verifiables ?? 0
   const nonSoutenues = (v?.non_soutenues ?? 0) + (v?.mauvais_moteur ?? 0)
+  const global = tauxLisible(nonSoutenues, denominateur)
 
   return (
     <>
@@ -140,26 +142,46 @@ export default function FiabilitePage() {
                 <div className="hero-facts" style={{ marginTop: 28 }}>
                   <div><span>Analyses vérifiées</span><span className="num">{String(data.analyses_verifiees)}</span></div>
                   <div><span>Affirmations vérifiables</span><span className="num">{String(denominateur)}</span></div>
-                  <div><span>Non soutenues</span><span className="num">{pct(nonSoutenues, denominateur)}</span></div>
+                  <div><span>Non soutenues</span><span className="num">{global.brut}</span></div>
                   <div><span>Erreurs corrigées</span><span className="num">{String(v?.corrigees ?? 0)}</span></div>
                 </div>
 
+                {/* ⚠️ Le NOMBRE BRUT d'abord, le taux ensuite. « 2 sur 70 » se
+                    vérifie ; « 2,9 % » se cite hors contexte. Et tant que
+                    l'intervalle est large, il est donné : un taux publié sans
+                    son incertitude affirme plus que ce que les données
+                    permettent. */}
+                <p style={{ fontSize: 17, lineHeight: 1.7, marginTop: 20 }}>
+                  <strong>{global.brut}</strong> affirmation{nonSoutenues > 1 ? 's' : ''} non
+                  soutenue{nonSoutenues > 1 ? 's' : ''} par la source citée, soit{' '}
+                  <strong>{global.taux}</strong>
+                  {global.intervalle && (
+                    <> — intervalle de confiance à 95 % : <strong>{global.intervalle}</strong></>
+                  )}.
+                </p>
+                {global.intervalle && (
+                  <p className="mono c-graphite" style={{ marginTop: 8, fontSize: 11, lineHeight: 1.7 }}>
+                    L'échantillon est encore petit : le taux réel peut raisonnablement se trouver
+                    n'importe où dans cet intervalle. Il se resserrera à mesure que le nombre
+                    d'analyses vérifiées augmentera.
+                  </p>
+                )}
+
                 <div className="crit" style={{ marginTop: 24 }}>
-                  <div>
-                    <span>Soutenues par leur source</span>
-                    <span className="leader" aria-hidden="true"></span>
-                    <span className="val num ok">{pct(v?.soutenues ?? 0, denominateur)}</span>
-                  </div>
-                  <div>
-                    <span>Non soutenues par leur source</span>
-                    <span className="leader" aria-hidden="true"></span>
-                    <span className={`val num ${(v?.non_soutenues ?? 0) > 0 ? 'bad' : 'ok'}`}>{pct(v?.non_soutenues ?? 0, denominateur)}</span>
-                  </div>
-                  <div>
-                    <span>Source parlant d'un autre moteur</span>
-                    <span className="leader" aria-hidden="true"></span>
-                    <span className={`val num ${(v?.mauvais_moteur ?? 0) > 0 ? 'bad' : 'ok'}`}>{pct(v?.mauvais_moteur ?? 0, denominateur)}</span>
-                  </div>
+                  {[
+                    ['Soutenues par leur source', v?.soutenues ?? 0, true],
+                    ['Non soutenues par leur source', v?.non_soutenues ?? 0, false],
+                    ["Source parlant d'un autre moteur", v?.mauvais_moteur ?? 0, false],
+                  ].map(([libelle, n, bon]) => {
+                    const t = tauxLisible(n, denominateur)
+                    return (
+                      <div key={libelle}>
+                        <span>{libelle} <span className="c-graphite">({t.brut})</span></span>
+                        <span className="leader" aria-hidden="true"></span>
+                        <span className={`val num ${bon || n === 0 ? 'ok' : 'bad'}`}>{t.taux}</span>
+                      </div>
+                    )
+                  })}
                 </div>
 
                 <p className="mono c-graphite" style={{ marginTop: 14, fontSize: 11, lineHeight: 1.7 }}>
@@ -179,10 +201,12 @@ export default function FiabilitePage() {
                         .sort((a, b) => (b[1].verifiables ?? 0) - (a[1].verifiables ?? 0))
                         .map(([type, s]) => (
                           <div key={type}>
-                            <span>{TYPE_LABELS[type] || type} <span className="c-graphite">({s.verifiables ?? 0})</span></span>
+                            <span>{TYPE_LABELS[type] || type} <span className="c-graphite">
+                              ({tauxLisible((s.non_soutenues ?? 0) + (s.mauvais_moteur ?? 0), s.verifiables ?? 0).brut})
+                            </span></span>
                             <span className="leader" aria-hidden="true"></span>
                             <span className={`val num ${((s.non_soutenues ?? 0) + (s.mauvais_moteur ?? 0)) > 0 ? 'bad' : 'ok'}`}>
-                              {pct((s.non_soutenues ?? 0) + (s.mauvais_moteur ?? 0), s.verifiables ?? 0)}
+                              {tauxLisible((s.non_soutenues ?? 0) + (s.mauvais_moteur ?? 0), s.verifiables ?? 0).taux}
                             </span>
                           </div>
                         ))}

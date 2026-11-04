@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import AnalyseForm from '../components/AnalyseForm'
 import PhotoSlot from '../components/PhotoSlot'
 import Rows from '../components/Rows'
+import { getFiabilite } from '../lib/scoreApi'
 import DossierApercu from '../components/DossierApercu'
 import PassCheckout from '../components/PassCheckout'
 
@@ -13,6 +14,33 @@ import PassCheckout from '../components/PassCheckout'
 // Structure et textes mot pour mot ; le formulaire du hero est le VRAI
 // formulaire de /score (même composant) ; « Un dossier réel » lit la vraie
 // analyse S7 depuis la base.
+// ⚠️ L'ÉTAT DE LA MESURE EST LU EN BASE, JAMAIS ÉCRIT EN DUR.
+//
+// Cette ligne annonçait « publié dès 50 dossiers relus à la main » depuis le
+// sprint 3, alors que pas un seul dossier n'avait été relu. Une promesse figée
+// dans un fichier ne se dément jamais toute seule : elle vieillit en silence.
+// Elle affiche donc ce que la base dit, et la méthode réelle avec.
+function EtatFiabilite() {
+  const [etat, setEtat] = useState(undefined)
+  useEffect(() => { getFiabilite().then(setEtat).catch(() => setEtat(null)) }, [])
+
+  const methode = 'Chaque affirmation est relue contre la page qu’elle cite.'
+  let suite = null
+  if (etat && etat.publie) {
+    suite = `${etat.analyses_verifiees} analyses vérifiées — voir le taux.`
+  } else if (etat) {
+    suite = `Mesure en cours : ${etat.analyses_verifiees ?? 0} analyse${
+      (etat.analyses_verifiees ?? 0) > 1 ? 's' : ''} vérifiée${
+      (etat.analyses_verifiees ?? 0) > 1 ? 's' : ''}, publication à ${etat.seuil ?? 30}.`
+  }
+
+  return (
+    <Link to="/fiabilite">
+      {methode}{suite ? ` ${suite}` : ''}
+    </Link>
+  )
+}
+
 export default function HomePage() {
   return (
     <>
@@ -156,7 +184,7 @@ export default function HomePage() {
               <div className="proof"><div className="k">2 <small>LECTURES</small></div><p>Une première écrit le dossier. Une seconde le relit contre l'annonce et les sources, et retire ce qui ne tient pas. Le compte des retraits est affiché.</p></div>
               <div className="proof"><div className="k">0 <small>CHIFFRE INVENTÉ</small></div><p>Pas de « juste prix » sans assez d'annonces comparables. Pas de coût de réparation sans source. On écrit « non évalué » plutôt qu'un nombre.</p></div>
             </div>
-            <p style={{ marginTop: 28 }}><Link to="/fiabilite">Notre taux d'erreur, publié dès trente analyses vérifiées.</Link></p>
+            <p style={{ marginTop: 28 }}><EtatFiabilite /></p>
           </div>
         </section>
 

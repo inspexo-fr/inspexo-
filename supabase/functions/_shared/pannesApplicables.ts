@@ -274,3 +274,34 @@ export function panneCompteDansScore(
     ? { compte: true, motif: "atlas_confirme" }
     : { compte: false, motif: "atlas_non_confirme" };
 }
+
+// ── SPRINT 15.1 — « source : base Inspexo » n'est pas une source ────────────
+//
+// Le Defect Atlas ne porte AUCUNE URL (vérifié : zéro dans
+// `src/data/defectAtlas.js`). Ses entrées s'affichaient pourtant comme des
+// pannes connues, sous la mention « source : base Inspexo » — c'est-à-dire
+// nous-mêmes. Mesuré sur les 505 analyses de production : 55 % des
+// affirmations d'une analyse ne citent aucune page publique.
+//
+// Décision d'Utku, 4 novembre 2026 : tant qu'une entrée d'atlas n'a pas d'URL
+// publique, elle ne s'affiche plus comme une panne. Elle devient une QUESTION
+// au vendeur, sans le mot « panne », et sans effet sur le score — même quand
+// l'annonce mentionne ce qu'elle vise. La règle du sprint 13 (une entrée
+// d'atlas ne pèse que si l'annonce la confirme) reste en vigueur pour les
+// entrées d'atlas QUI AURONT une source.
+
+/** L'entrée vient-elle de l'atlas de marque SANS citer la moindre page ? */
+export function sansSourcePublique(ref: string, urls: readonly string[] | null | undefined): boolean {
+  if (!/^A\d/i.test(String(ref ?? ""))) return false;
+  return !(urls ?? []).some((u) => /^https?:\/\/\S+/i.test(String(u ?? "")));
+}
+
+/** La question posée à la place. Elle n'affirme RIEN : ni « panne », ni
+ *  « défaut », ni « ce modèle connaît ». Nous n'avons pas de source — le dire
+ *  est la seule formulation honnête. */
+export function questionSansSource(titre: string): string {
+  const sujet = String(titre ?? "").trim().replace(/\s+/g, " ").slice(0, 120);
+  return `Avez-vous rencontré quelque chose du côté de « ${sujet} » ? ` +
+    `(point de vigilance relevé sur ce modèle, que nous n'avons pas pu rattacher ` +
+    `à une source publique : à confirmer avec le carnet et les factures.)`;
+}

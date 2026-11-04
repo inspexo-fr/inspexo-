@@ -20,7 +20,13 @@ import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts"
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
-import { panneCompteDansScore, pannesApplicables, refsManquantes } from "../_shared/pannesApplicables.ts";
+import {
+  panneCompteDansScore,
+  pannesApplicables,
+  questionSansSource,
+  refsManquantes,
+  sansSourcePublique,
+} from "../_shared/pannesApplicables.ts";
 import { calculerNegociation, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
@@ -2392,6 +2398,30 @@ serve(async (req: Request) => {
       // C'est ce qui rend le résultat déterministe sans encoder l'équipement :
       // la décision ne dépend plus d'un jugement, mais de la présence d'un mot
       // dans un texte.
+      // ── SPRINT 15.1 — Une entrée sans source publique n'est pas une panne ──
+      //
+      // « source : base Inspexo » n'est pas une source : c'est nous. Tant
+      // qu'une entrée d'atlas ne cite aucune page, elle est RETIRÉE de la
+      // liste des pannes, ne pèse pas sur le score — même si l'annonce
+      // mentionne ce qu'elle vise — et devient une question au vendeur,
+      // formulée sans affirmer quoi que ce soit.
+      //
+      // ⚠️ Le retrait a lieu ICI, avant le barème, la négociation et la
+      // composition du résultat : une entrée retirée ne doit laisser aucune
+      // trace, ni dans la note, ni dans la marge, ni dans le dossier.
+      const sansSource = pannesJoined.filter((p) => sansSourcePublique(p.source_ref, p.urls));
+      if (sansSource.length > 0) {
+        const gardees = pannesJoined.filter((p) => !sansSourcePublique(p.source_ref, p.urls));
+        pannesJoined.length = 0;
+        pannesJoined.push(...gardees);
+        pannesJoined.forEach((p, i) => { p.id = `P${i + 1}`; });
+        for (const p of sansSource.slice(0, 3)) questions.push(questionSansSource(p.titre));
+        await admin.from("events").insert({
+          name: "panne_sans_source_retiree",
+          props_json: { refs: sansSource.map((p) => p.source_ref).slice(0, 8), nb: sansSource.length },
+        });
+      }
+
       const atlasAConfirmer: typeof pannesJoined = [];
       for (const p of pannesJoined) {
         const d = panneCompteDansScore(
