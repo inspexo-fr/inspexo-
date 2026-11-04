@@ -26,6 +26,23 @@ const MIGRATIONS = [
 
 const corpsDe = (f) => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8')
 
+// ⚠️ DEUX USAGES, DEUX FORMES.
+//
+//  - sans drapeau : le script COMPLET, migrations incluses, encadré par
+//    BEGIN/ROLLBACK. C'est la forme pour éprouver des migrations NON encore
+//    appliquées — typiquement sur la prod, depuis l'éditeur SQL.
+//
+//  - `--assertions` : les assertions SEULES. C'est la forme locale, après un
+//    `supabase db reset` qui a déjà rejoué toute l'histoire des migrations sur
+//    une base vide. Rejouer les corps une seconde fois échouerait, et à juste
+//    titre : une migration n'est pas idempotente (`drop function` puis
+//    `create function` ne se rejoue pas).
+//
+// Le reset local est d'ailleurs la vérification la PLUS forte : il exige que
+// l'intégralité des 33 migrations passe depuis zéro, pas seulement les
+// dernières.
+const ASSERTIONS_SEULES = process.argv.includes('--assertions')
+
 for (const f of MIGRATIONS) {
   if (/^\s*(begin|commit|rollback)\s*;/im.test(corpsDe(f))) {
     console.error(`${f} contient son propre contrôle de transaction : à vérifier avant.`)
@@ -95,7 +112,12 @@ select 'AVANT' as phase,
 -- -----------------------------------------------------------------------
 -- 2. LES MIGRATIONS, insérées telles quelles, DANS L'ORDRE.
 -- -----------------------------------------------------------------------
-${MIGRATIONS.map((f, i) => `
+${ASSERTIONS_SEULES
+  ? `-- MODE ASSERTIONS : les migrations ne sont PAS rejouees ici. Elles l'ont
+-- ete par \`supabase db reset\`, qui a replay l'histoire complete sur une base
+-- vide — ce qui est une epreuve plus forte que ce bloc.
+select 'migrations non rejouees (mode --assertions)' as etape;`
+  : MIGRATIONS.map((f, i) => `
 -- ======================================================================
 -- [${i + 1}/${MIGRATIONS.length}] ${f}
 -- ======================================================================
