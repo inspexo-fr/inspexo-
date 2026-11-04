@@ -8,7 +8,7 @@
 import { readFileSync } from 'node:fs'
 import {
   atlasConfirme, ciblesAtlas, entreeApplicable, panneCompteDansScore,
-  pannesApplicables, questionSansSource, refsManquantes, sansSourcePublique,
+  codeEtranger, pannesApplicables, questionSansSource, refsManquantes, sansSourcePublique,
 } from '../supabase/functions/_shared/pannesApplicables.ts'
 
 let ko = 0
@@ -269,6 +269,35 @@ ok(!atlasConfirme(e({ ref: 'A7', titre: 'Suspension Airmatic' }), ''),
   ok(/BAREME_VERSION = "11\.4"/.test(
     readFileSync(new URL('../supabase/functions/_shared/bareme.ts', import.meta.url), 'utf8')),
     'la version du barème est incrémentée : la liste des défauts qui pèsent a changé')
+}
+
+// ── SPRINT 16 — un code étranger sort du CATALOGUE, pas de l'affichage ─────
+//
+// ⚠️ Risque CRÉÉ par le sourcing. Tant que l'atlas n'avait pas d'URL, une
+// entrée « EA888 » proposée pour une S7 en EA824 était de toute façon retirée
+// de l'affichage. Sourcée, elle redevient citable — et le cas d'éval de la S7
+// interdit explicitement le mot « EA888 ».
+{
+  const s7 = { famille_moteur: 'EA824', designation: 'S7 Sportback 4.0 TFSI' }
+  eq(codeEtranger('Consommation d’huile excessive 2.0 TFSI EA888', '', s7), 'moteur_incompatible',
+    'une entrée qui nomme EA888 ne sort jamais pour une EA824')
+  eq(codeEtranger('Défaillance des turbos EA824', 'crépine', s7), null,
+    'une entrée qui nomme NOTRE moteur passe')
+  eq(codeEtranger('Corrosion des ailes avant', 'rouille sous le joint', s7), null,
+    'une entrée qui ne nomme aucun code n’est pas écartée par cette règle')
+
+  const merco = { famille_moteur: 'OM654', designation: 'Classe C 220 d' }
+  eq(codeEtranger('Injecteurs Delphi OM651', '', merco), 'moteur_incompatible',
+    'OM651 ne sort pas pour une OM654 — le cas réel du sprint 13')
+  eq(codeEtranger('Corrosion structurelle', 'W203, W211, W210', merco), 'caisse_incompatible',
+    'une caisse étrangère est écartée elle aussi')
+
+  // Le filtre est posé sur le CATALOGUE, donc avant que le modèle ne le voie.
+  const src = readFileSync(new URL('../supabase/functions/score/index.ts', import.meta.url), 'utf8')
+  const iFiltre = src.indexOf('const motif = codeEtranger(e.titre, e.symptome, vCodes)')
+  const iPrompt = src.indexOf('catalogueByRef')
+  ok(iFiltre > 0 && iFiltre < iPrompt,
+    'le filtre s’applique au catalogue avant sa présentation au modèle')
 }
 
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${total - ko}/${total} contrôles passés`)

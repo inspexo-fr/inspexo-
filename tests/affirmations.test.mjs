@@ -123,10 +123,16 @@ eq(identiteVehicule({}).marque, '', 'une analyse vide ne fait pas tomber l’ext
 // fonction et on exige qu'elle ne construise son message qu'à partir de
 // l'identité, des affirmations et du texte de la page.
 {
+  // Depuis le sprint 16, le juge est PARTAGÉ avec `atlas-builder` : si le
+  // sourcing se relisait avec un prompt plus doux que celui de la mesure
+  // publiée, le taux de /fiabilite flatterait des entrées que sa propre
+  // méthode aurait recalées. Le contrôle porte donc sur les deux fichiers.
   const src = readFileSync(new URL('../supabase/functions/verification/index.ts', import.meta.url), 'utf8')
-  const debut = src.indexOf('const corps = (model: string)')
-  const fin = src.indexOf('for (const model of [MODEL, FALLBACK_MODEL])')
-  const message = src.slice(debut, fin)
+    + '\n' + readFileSync(new URL('../supabase/functions/_shared/verifSource.ts', import.meta.url), 'utf8')
+  const fn = readFileSync(new URL('../supabase/functions/verification/index.ts', import.meta.url), 'utf8')
+  const debut = fn.indexOf('const corps = (model: string)')
+  const fin = fn.indexOf('for (const model of [MODEL, FALLBACK_MODEL])')
+  const message = fn.slice(debut, fin)
   ok(debut > 0 && fin > debut, 'le corps du message au modèle est localisé')
 
   for (const interdit of [
@@ -137,8 +143,10 @@ eq(identiteVehicule({}).marque, '', 'une analyse vide ne fait pas tomber l’ext
   }
   ok(message.includes('identite.marque') && message.includes('identite.famille_moteur'),
     'le message porte l’identité du véhicule — sans elle, « mauvais moteur » serait indécidable')
-  ok(message.includes('liste') && message.includes('texteSource'),
+  ok(message.includes('affirmations') && message.includes('texteSource'),
     'le message porte les affirmations et le texte de la page, et rien d’autre')
+  ok(message.includes('messageVerification'),
+    'le message est composé par le helper PARTAGÉ : un seul texte pour les deux usages')
 
   // Le doute ne profite jamais à l'affirmation.
   ok(/hésites.*non_soutenue|DOUTE profite/i.test(src),
