@@ -1292,6 +1292,62 @@ La vérification est la partie **la moins chère** : ce sont les analyses, et
 surtout les fiches moteur à générer pour des familles non couvertes, qui font
 le budget.
 
+### Sprint 15.1 — « source : base Inspexo » n'est pas une source
+Décision d'Utku du 4 nov. 2026. Tant qu'une entrée du Defect Atlas n'a pas
+d'**URL publique**, elle **ne s'affiche plus comme une panne**. Elle devient
+une **question au vendeur**, sans le mot « panne » ni « défaut », et **sans
+effet sur le score — même quand l'annonce mentionne ce qu'elle vise** (ce qui
+abroge, pour ces entrées, la règle du sprint 13 ; celle-ci reste en vigueur
+pour les entrées d'atlas qui auront une source).
+- `sansSourcePublique` / `questionSansSource` dans `_shared/pannesApplicables.ts`.
+  Le retrait a lieu **avant le barème, la négociation et la composition du
+  dossier** — une entrée retirée ne laisse de trace ni dans la note, ni dans la
+  marge. Event `panne_sans_source_retiree`. **`BAREME_VERSION` → 11.4.**
+- ⚠️ **LE CAS QUI AURAIT TOUT CASSÉ** : la courroie de la 308 existe dans
+  l'atlas (gravité plus sévère, zéro URL) **et** dans la fiche EB2 (quatre
+  URLs). La déduplication amont garde la réf de l'**atlas** mais **fusionne les
+  URLs des deux** — l'entrée fusionnée cite donc des pages et n'est pas
+  retirée. Sans cette fusion, la règle supprimait la panne centrale du dossier.
+  Vérifié en production : la courroie sort avec `statut base_inspexo` ET
+  4 URLs. Un test dédié fige ce comportement.
+- **Verdicts de référence INCHANGÉS** : S7 rouge 38, 308 orange 55, Mercedes
+  vert 71 (0,30 €). ⚠️ À dire honnêtement : dans ces trois dossiers, **chaque
+  panne affichée citait déjà au moins une page** — la règle n'y retire rien, et
+  c'est pourquoi rien ne bouge. Son effet se verra sur les marques où l'atlas
+  est fourni et la fiche mince. Les trois cas prouvent l'absence de régression,
+  pas l'exercice de la règle.
+
+### Promesses publiques : plus rien de figé dans un fichier
+- **Accueil** : « publié dès 50 dossiers relus à la main » est remplacé par la
+  méthode réelle **et un état LU EN BASE** (`EtatFiabilite`, appelle
+  `get_fiabilite`). ⚠️ Cette ligne a menti pendant un mois parce qu'elle était
+  écrite en dur : **une promesse figée dans un fichier ne se dément jamais
+  toute seule**. Toute phrase qui annonce un état doit lire cet état.
+- **`/fiabilite`** : les **nombres bruts** (« 2 sur 70 ») sont donnés à côté du
+  taux, et l'**intervalle de Wilson à 95 %** tant qu'il est large.
+  `src/lib/intervalle.js` (pur, `tests/intervalle.test.mjs`, 26 contrôles).
+  - Wilson et non l'approximation normale : à 0 erreur sur 70, la normale rend
+    un intervalle de **largeur nulle** — elle ferait dire « 0 % d'erreur »
+    quand la vérité est « au plus 5 % ». Le seuil d'affichage porte sur la
+    **largeur** (≥ 2 points), pas sur n : c'est la largeur qui dit si le
+    chiffre est solide.
+  - ⚠️ **Un taux publié sans son incertitude affirme plus que ce que les
+    données permettent.** À 30 analyses le dénominateur fera ≈ 70 affirmations
+    et l'intervalle ≈ 9 points.
+
+### Sprint 16 préparé, NON lancé — sourcer le Defect Atlas
+`docs/sprint16-sourcer-atlas.md`. **30 entrées, 6 marques, zéro URL**, mais les
+30 portent `models` et `years` : la cible est explicite. Méthode reprise de
+`sheet-builder` (≥ 1 URL, montant/code vérifié littéralement, au moins une
+source nommant le moteur ou la caisse, gravité jugée sur le remède, **entrée
+retirée si rien n'est trouvé**), puis repassage par le dispositif de
+vérification du sprint 15 — se citer soi-même est précisément la faute à ne pas
+refaire. **≈ 8,50 €**, plafond proposé 10 €.
+- ⚠️ **Une option B existe et mérite d'être pesée** : retirer l'atlas. Ses
+  6 marques sont déjà couvertes par 29 des 48 familles moteur, et les fiches
+  sont sourcées par construction. Sur la courroie de la 308, l'apport réel de
+  l'atlas était **un jugement de gravité, pas une connaissance**.
+
 ## Outillage local (4 nov. 2026)
 
 **Docker Desktop est installé**, et avec lui la pile Supabase locale. ⚠️ Le
