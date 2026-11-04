@@ -1350,8 +1350,8 @@ refaire. **≈ 8,50 €**, plafond proposé 10 €.
 
 ## Sprint 16 — Sourcer le Defect Atlas (4 nov. 2026)
 
-**30 entrées passées au crible : 9 gardées, 21 retirées, 4 gravités rejugées.**
-Coût **6,70 €** sur un plafond de 10 €. Verdicts de référence **inchangés** :
+**30 entrées passées au crible : 10 gardées, 20 retirées, 5 gravités rejugées**
+(après le rattrapage PDF). Coût **6,82 €** sur un plafond de 10 €. Verdicts de référence **inchangés** :
 S7 rouge 38, 308 orange 55, Mercedes vert 71.
 
 ### Le dispositif — quatre étapes, et l'ordre EST la garantie
@@ -1427,12 +1427,33 @@ donc sans repayer la collecte).
 4. **Gravité qui descend : on garde l'entrée avec sa nouvelle gravité** — c'est
    l'information juste. BMW N47 passe de CRITIQUE à `majeure` et reste publiée.
 
-### ⬜ Resté en suspens, volontairement
-`source_statut` des entrées d'atlas **n'a pas changé** : elles restent
-étiquetées « base Inspexo ». Une entrée sourcée par recherche web n'est pas
-« relue à la main », et basculer l'étiquette modifierait un **texte public**
-(sur la 308, la courroie fusionnée afficherait « sources en ligne » au lieu de
-« base Inspexo »). Décision d'Utku.
+### Rattrapage PDF et affichage (4 nov. 2026, décidé après le rapport)
+- **Les PDF sont lus** (`unpdf` branché sur `texteDeLaPage`, partagé). Les 22
+  pages écartées « illisibles » étaient surtout des **notes techniques NHTSA et
+  des documents constructeur** — les sources de rang 1. Refuser le format le
+  plus fiable biaisait la mesure contre les meilleures preuves.
+  - Relues et repassées par la **vérification indépendante** : **1 entrée
+    rattrapée** (Renault 1.2 TCe H5Ft). Les NHTSA sont revenues
+    « non soutenues » sur le fond, les autres pages sont réellement
+    injoignables (429, 410). **L'atlas publié compte 10 entrées sur 30.**
+  - ⚠️ Le relevé enregistre le verdict du **second passage même quand il ne
+    sauve rien** : laisser « page illisible » pour une page qu'on vient de lire
+    et de rejeter sur le fond serait un compte rendu faux.
+- **Affichage : les liens d'abord, l'étiquette ensuite.** Une entrée qui cite
+  des pages s'affiche comme une fiche moteur, « Sources : » suivi des liens.
+  ⚠️ `numsPourPanne` court-circuitait sur `base_inspexo` **avant** de regarder
+  les URL : la courroie de la 308 — entrée fusionnée portant l'étiquette du
+  catalogue **et quatre pages publiques** — n'affichait aucun lien. Vérifié en
+  production : **14 liens de sources**, plus aucune panne étiquetée
+  « base Inspexo ».
+- ⚠️ **Garde-fou sur `--appliquer`** : il refusait de voir qu'il tournait sur
+  un atlas **déjà réécrit**. Lancé deux fois, il lisait sa propre sortie — « 0
+  retirées » — et l'entrée rattrapée était impossible à réintégrer, **en
+  silence**. Il compare maintenant le nombre d'entrées d'entrée au nombre de
+  résultats du relevé et s'arrête.
+- ⬜ **L'atlas s'arrête là.** Son extension à d'autres marques sera décidée
+  après la mesure de fiabilité — c'est elle qui dira si la méthode vaut la
+  dépense.
 
 ## Outillage local (4 nov. 2026)
 
