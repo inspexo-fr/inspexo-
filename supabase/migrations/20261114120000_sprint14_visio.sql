@@ -124,12 +124,24 @@ declare
   v public.inspecteurs;
 begin
   select * into v from public.inspecteurs where user_id = auth.uid();
-  if not found or v.statut <> 'valide' then return '[]'::jsonb; end if;
+  -- ⚠️ GARDE-FOU DU SPRINT 8 (audit) — NE PAS LE PERDRE. Un inspecteur sans
+  -- versement Stripe actif, ou dont l'assurance RC professionnelle a expiré,
+  -- ne voit AUCUNE mission : l'écran d'achat promet « un professionnel
+  -- indépendant assuré ». Je l'avais supprimé en réécrivant cette fonction de
+  -- mémoire ; c'est `tests/fonctions-redefinies.test.mjs` qui l'a rattrapé.
+  if not found
+     or v.statut <> 'valide'
+     or not v.stripe_paiements_actifs
+     or v.rc_pro_echeance is null
+     or v.rc_pro_echeance < current_date then
+    return '[]'::jsonb;
+  end if;
 
   return coalesce((
     select jsonb_agg(x order by x->>'created_at' desc) from (
       select jsonb_build_object(
         'id', i.id,
+        -- SPRINT 14 : seul ajout à cette fonction.
         'type', i.type,
         'ref_num', i.ref_num,
         'statut', i.statut,
@@ -142,13 +154,13 @@ begin
         'marque', a.marque, 'modele', a.modele, 'annee', a.annee,
         'analysis_id', i.analysis_id,
         'verdict', a.verdict, 'score', a.score,
-        -- Coordonnées du vendeur : UNIQUEMENT après acceptation par CET
-        -- inspecteur. Avant, il ne voit que la zone et le véhicule.
         'vendeur_nom', case when i.inspecteur_id = v.id then i.vendeur_nom end,
         'vendeur_telephone', case when i.inspecteur_id = v.id then i.vendeur_telephone end,
         'vendeur_adresse', case when i.inspecteur_id = v.id then i.vendeur_adresse end,
-        -- Le lien vidéo suit la même règle : jamais avant acceptation.
+        -- Le lien vidéo suit la règle des coordonnées : jamais avant acceptation.
         'visio_url_inspecteur', case when i.inspecteur_id = v.id then i.visio_url_inspecteur end,
+        'photos_consentement_le', i.photos_consentement_le,
+        'captures_consentement_le', i.captures_consentement_le,
         'rapport_rendu_le', i.rapport_rendu_le,
         'created_at', i.created_at
       ) as x
@@ -157,8 +169,8 @@ begin
       where (
         (i.statut in ('a_attribuer', 'refusee')
          and (
-           -- Inspection : la zone s'applique. Visio : il faut avoir activé
-           -- l'option, mais aucune contrainte géographique.
+           -- SPRINT 14 : la zone ne s'applique QU'À l'inspection. Pour une
+           -- visio, il faut avoir activé l'option — mais aucun département.
            (i.type = 'inspection' and i.departement = any (v.departements))
            or (i.type = 'visio' and v.visio)
          )
@@ -187,20 +199,44 @@ as $$
 declare
   v public.inspecteurs;
   v_maj integer;
+  v_creneau timestamptz;
 begin
   select * into v from public.inspecteurs where user_id = auth.uid();
-  if not found or v.statut <> 'valide' then raise exception 'inspecteur non validé'; end if;
+  if not found or v.statut <> 'valide' then
+    raise exception 'inspecteur non validé';
+  end if;
+  -- ⚠️ TROIS GARDE-FOUS DU SPRINT 8 (audit) — NE PAS LES PERDRE. Je les avais
+  -- supprimés en réécrivant cette fonction de mémoire : un inspecteur sans
+  -- versement actif ou sans assurance valide aurait pu prendre une mission,
+  -- et un créneau fantaisiste aurait pu être confirmé.
+  if not v.stripe_paiements_actifs then
+    return jsonb_build_object('ok', false, 'raison', 'connect_incomplet');
+  end if;
+  if v.rc_pro_echeance is null or v.rc_pro_echeance < current_date then
+    return jsonb_build_object('ok', false, 'raison', 'assurance_expiree');
+  end if;
 
-  -- La clause de statut fait l'exclusion mutuelle : deux acceptations
-  -- simultanées, une seule passe.
+  -- Créneau : entre +1 h et +72 h. Au-delà, ce n'est plus l'offre vendue
+  -- (« sous 48 h ») et l'acheteur recevrait une date fantaisiste.
+  v_creneau := coalesce(p_creneau, (
+    select creneau_souhaite from public.inspections where id = p_inspection_id
+  ));
+  if v_creneau is null
+     or v_creneau < now() + interval '1 hour'
+     or v_creneau > now() + interval '72 hours' then
+    return jsonb_build_object('ok', false, 'raison', 'creneau_invalide');
+  end if;
+
   update public.inspections i
   set inspecteur_id = v.id,
       statut = 'acceptee',
-      creneau_confirme = coalesce(p_creneau, i.creneau_souhaite),
+      creneau_confirme = v_creneau,
       maj_le = now()
   where i.id = p_inspection_id
     and i.statut in ('a_attribuer', 'refusee')
     and (
+      -- SPRINT 14 : seule modification. La zone ne vaut que pour l'inspection ;
+      -- une visio exige l'option, pas un département.
       (i.type = 'inspection' and i.departement = any (v.departements))
       or (i.type = 'visio' and v.visio)
     );
@@ -210,7 +246,9 @@ begin
     return jsonb_build_object('ok', false, 'raison', 'deja_prise');
   end if;
   insert into public.events (name, props_json)
-  values ('inspection_acceptee', jsonb_build_object('inspection_id', p_inspection_id));
+  values ('inspection_acceptee', jsonb_build_object('inspection_id', p_inspection_id, 'type', (
+    select type from public.inspections where id = p_inspection_id
+  )));
   return jsonb_build_object('ok', true);
 end;
 $$;
