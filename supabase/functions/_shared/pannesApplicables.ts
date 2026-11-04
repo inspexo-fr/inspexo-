@@ -305,3 +305,37 @@ export function questionSansSource(titre: string): string {
     `(point de vigilance relevé sur ce modèle, que nous n'avons pas pu rattacher ` +
     `à une source publique : à confirmer avec le carnet et les factures.)`;
 }
+
+// ── SPRINT 16 — Les codes incompatibles sortent du CATALOGUE ───────────────
+//
+// ⚠️ Risque créé par le sourcing de l'atlas. Jusqu'ici, une entrée d'atlas
+// nommant un moteur étranger au véhicule — « Consommation d'huile 2.0 TFSI
+// EA888 » proposée pour une S7 en EA824 — ne pouvait pas nuire : sans URL,
+// elle était retirée de l'affichage par la règle du sprint 15.1. Maintenant
+// qu'elle porte une source, elle redevient citable.
+//
+// `entreeApplicable` ne protège QUE la liste garantie, et ne juge jamais les
+// entrées d'atlas. Le filtre doit donc être posé plus haut : sur le CATALOGUE,
+// avant qu'il ne soit présenté au modèle. Ce qui n'est jamais montré ne peut
+// pas être cité — même principe que le filtre de code de boîte, qui existe
+// déjà à cet endroit depuis le sprint 2.
+
+/** L'entrée nomme-t-elle un moteur ou une caisse qui n'est pas celui-là ?
+ *
+ *  Rend le motif, ou null si rien ne s'y oppose. Une entrée qui ne nomme
+ *  aucun code n'est jamais écartée par cette règle : elle reste soumise à
+ *  l'appréciation du modèle puis à `atlasConfirme`. */
+export function codeEtranger(
+  titre: string,
+  symptome: string | null,
+  v: { famille_moteur: string; designation: string },
+): "moteur_incompatible" | "caisse_incompatible" | null {
+  const texte = `${titre ?? ""} ${symptome ?? ""}`;
+  if (!codeConcorde(codesCites(texte, RE_CODE_MOTEUR), [v.famille_moteur])) {
+    return "moteur_incompatible";
+  }
+  if (!codeConcorde(codesCites(texte, RE_CODE_CAISSE), [v.designation, v.famille_moteur])) {
+    return "caisse_incompatible";
+  }
+  return null;
+}

@@ -1,0 +1,819 @@
+{
+  "resultats": [
+    {
+      "cle": "BMW",
+      "marque": "BMW",
+      "title": "Chaîne de distribution N47 défaillante",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.quechoisir.org/actualite-moteur-diesel-bmw-chaine-de-distribution-fragile-n11281/",
+          "titre": "Moteur Diesel BMW - Chaîne de distribution fragile - Que Choisir",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que sur les moteurs diesel N47 depuis 2007, la chaîne de distribution placée côté boîte de vitesses peut se détendre et casser."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://faultycar.co.uk/faults/bmw-n47-timing-chain",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.forumbmw.net/topic-439-les-problemes-de-chaine-de-distribution-sur-les-moteurs-n47-n57-m57.html",
+          "motif": "non_soutenue",
+          "justification": "La page confirme la casse de chaîne sur le N47 nécessitant la dépose de la culasse (et évoque des réparations lourdes), mais elle ne précise pas que la chaîne est placée côté boîte de vitesses ni qu'une 'dépose moteur' complète est requise, parlant plutôt de démontage de culasse."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/BMW_N47",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Remplacement du kit complet de chaîne de distribution (chaîne, pignons, tendeur et patins/guides), opération nécessitant la dépose de la boîte de vitesses car la chaîne est logée côté volant moteur ; en cas de rupture ayant endommagé soupapes/pistons, remplacement ou reconstruction du moteur.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": "majeure",
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1701
+    },
+    {
+      "cle": "BMW",
+      "marque": "BMW",
+      "title": "Tendeur de chaîne N20/N26 sous-dimensionné",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2017/MC-10142923-9999.pdf",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10186213-9999.pdf",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2021/MC-10204656-9999.pdf",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.motor.com/magazine-summary/trouble-shooter-april-2020/",
+          "motif": "non_soutenue",
+          "justification": "La page confirme des problèmes de chaîne de distribution, de tendeur et de guide sur le moteur N20/N26 nécessitant un kit de remplacement complet, mais elle ne dit pas que le tendeur est 'sous-dimensionné' ni qu'il lâche systématiquement 'avant 100 000 km' (l'exemple cité évoque une panne vers 75 000 miles, soit environ 120 000 km, sur un véhicule d'occasion déjà usagé)."
+        }
+      ],
+      "remede": "Remplacement complet du module de chaîne de distribution : chaîne de distribution, tendeur de chaîne, rail de glissement, rail de tension et rail de guidage, ainsi que le module de chaîne d'entraînement de la pompe à huile (pièces mises à jour), conformément au bulletin technique BMW SI B11 03 17.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.202
+    },
+    {
+      "cle": "BMW",
+      "marque": "BMW",
+      "title": "Joints VANOS / Valvetronic fuyards",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.fcpeuro.com/blog/bmw-n5x-camshaft-bearing-ledge-wear-an-invisible-disaster",
+          "motif": "non_soutenue",
+          "justification": "La page décrit une usure des portées de paliers d'arbre à cames (cam bearing ledge wear) liée aux joints rectangring causant des fuites d'huile et des codes VANOS, mais ne mentionne ni durcissement de joints Valvetronic distincts, ni symptômes de ralenti instable/à-coups décrits, ni fourchette de coût de réparation 800-1500€."
+        },
+        {
+          "url": "https://southsideeuro.com/blog/bmw-vanos-failure-symptoms-repair-costs/",
+          "motif": "non_soutenue",
+          "justification": "La page parle de défaillance des joints VANOS (durcissement, fuite, ralenti instable, rattle à froid) mais ne mentionne jamais le Valvetronic ni de fourchette de coût autour de 800€, les chiffres donnés étant en dollars pour des jobs de joints VANOS (900 à 1800$) sans référence au Valvetronic."
+        },
+        {
+          "url": "https://www.e90post.com/forums/showthread.php?t=401494",
+          "motif": "non_soutenue",
+          "justification": "La page indique explicitement que les joints VANOS classiques concernent les moteurs M52TU, M56 et M54, et que cela ne s'applique PAS aux moteurs N52, N51, N52k, N54 ou N55, et elle ne mentionne aucun coût de réparation ni le Valvetronic."
+        },
+        {
+          "url": "https://cars-one.fr/2025/04/02/probleme-de-vanos-calage-variable-moteur-bmw-n52/",
+          "motif": "non_soutenue",
+          "justification": "La page traite du système Vanos (calage variable) du moteur N52 avec des symptômes comme ralenti instable et voyant moteur, mais elle ne mentionne jamais le Valvetronic ni des joints qui durcissent et fuient, et ne donne aucune fourchette de coût de réparation (800 à ...)."
+        }
+      ],
+      "remede": "Remplacement des joints/bagues d'étanchéité (rectangring) des unités VANOS, parfois associé à la réfection des unités VANOS complètes (joints, pistons) lorsque l'usure de la portée de l'arbre à cames a endommagé les joints d'origine ; sur le N54, BMW documente ce remplacement via une mesure techniqu",
+      "cout_min_eur": 800,
+      "cout_max_eur": 1700,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2686
+    },
+    {
+      "cle": "BMW",
+      "marque": "BMW",
+      "title": "Injecteurs et pompe HPFP N54",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://en.wikipedia.org/wiki/BMW_N54",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.theautopian.com/why-the-bmw-335i-and-other-cars-with-the-n54-engine-are-ticking-time-bombs/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://automotivetechinfo.com/wp-content/uploads/2021/01/BMW-Fuel-Injectors-Theory-Operation-Diagnosis-Recalls.pdf",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.threepiece.us/blog/bmw-335i-n54-problems-why-you-should-not-buy-one/",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Remplacement de la pompe haute pression (HPFP) et/ou mise à jour logicielle, et remplacement des injecteurs piézo défaillants (souvent par banc de 3, avec recalibrage électronique) ; BMW a aussi étendu la garantie pompe et injecteurs à 10 ans/120 000 miles sur les VIN concernés.",
+      "cout_min_eur": 900,
+      "cout_max_eur": 4150,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2569
+    },
+    {
+      "cle": "BMW",
+      "marque": "BMW",
+      "title": "Vanne EGR et FAP encrassés (diesel)",
+      "garde": false,
+      "motif": "Seuls des forums (ma-bmw.com, forum-bmw.fr, bmw-serie3.com) et des sites commerciaux/SEO de décalaminage ou de coût (carbon-cleaning, my-procar, re-fap, blogs génériques) évoquent l'encrassement EGR/FAP sur ces BMW diesel ; aucun document constructeur/rappel officiel ni article de presse automobile reconnue ne vient étayer ce défaut précis, or un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2019
+    },
+    {
+      "cle": "AUDI",
+      "marque": "Audi",
+      "title": "Consommation d'huile excessive 2.0 TFSI EA888 gen 2",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.auto-platinium.com/blogs/410-fiabilite-20-tsi",
+          "titre": "Moteur 2.0 TSI : Fiabilité & durée de vie",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que le 2.0 TSI/TFSI Gen 2 (2008-2013, CCZA/CCZB, montée sur Audi A4 B8, Q5) souffre d'un défaut de segments pistons causant une consommation d'huile pouvant dépasser 1L/1000km, nécessitant une réfection complète (pistons/segments), ce qui correspond à une dépose moteur."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2015/MC-10119856-9999.pdf",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://autocopilot.fr/motorisations/2-0-tfsi-ea888",
+          "motif": "non_soutenue",
+          "justification": "La page attribue la consommation d'huile excessive jusqu'à 1L/1000km principalement à la Gen 1 (2008-2011), et dit explicitement que sur la Gen 2 (2011-2013) le problème est 'amélioré' et 'reste possible mais souvent plus modéré', donc l'affirmation présentant ce défaut comme touchant également la 'deuxième génération' au même niveau n'est pas soutenue telle quelle."
+        },
+        {
+          "url": "https://carnews.fr/problemes-automobiles/problemes-de-voiture-audi/audi-a4/consommation-excessive-dhuile-sur-laudi-a4-tfsi/",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Dépose du moteur, démontage du bloc-cylindres et remplacement des pistons et de leurs segments (racleurs) par la version révisée (« piston kit »), parfois accompagné d'une révision du système de ventilation de carter (PCV).",
+      "cout_min_eur": 3000,
+      "cout_max_eur": 5500,
+      "gravite": "casse",
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1588
+    },
+    {
+      "cle": "AUDI",
+      "marque": "Audi",
+      "title": "Mécatronique DSG DQ200 7 rapports défaillante",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.2054
+    },
+    {
+      "cle": "AUDI",
+      "marque": "Audi",
+      "title": "Tendeur de chaîne 2.0 TFSI EA888",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://autoliva.com/blog/chaine-distribution-tendeur-2-0-tfsi-ea888-gen-2-codes-defaut",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://zonerupteur.fr/fiches-vehicules/20-tfsi-fiabilite/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://au7o.io/fr/known-issues/audi-q3",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.automoto-gp.com/5-problemes-courants-du-moteur-2-0-tfsi-daudi-a-connaitre-absolument/",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement du tendeur de chaîne hydraulique (souvent en kit complet avec chaîne, patins et guides) par une version renforcée/corrigée.",
+      "cout_min_eur": 250,
+      "cout_max_eur": 2200,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1333
+    },
+    {
+      "cle": "AUDI",
+      "marque": "Audi",
+      "title": "Boîte Multitronic (CVT) fragile",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.1175
+    },
+    {
+      "cle": "AUDI",
+      "marque": "Audi",
+      "title": "Pompe à injection CP4 (2.0/3.0 TDI)",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://dieselspecialisten.se/info/cp4-problem-vw-audi-vanligt-fel-i-20-tdi-och-30-tdi/",
+          "titre": "CP4 problem VW Audi – vanligt fel i 2.0 TDI och 3.0 TDI",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la pompe Bosch CP4 utilisée sur les 2.0 TDI et 3.0 TDI (dont Audi A3, A4, A6, Q5) est sensible à la qualité du gazole et à l'eau, et qu'en cas de panne les débris métalliques contaminent injecteurs, rail et conduites, nécessitant un remplacement complet pour un coût estimé entre 30 000 et 80 000 couronnes suédoises (soit un devis conséquent)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.autonorma.fr/blog/post/71-defaillances-du-systeme-d-alimentation-en-carburant-du-moteur-3-0-l-v6-tdi-vw-audi",
+          "motif": "mauvais_moteur",
+          "justification": "La page traite de la défaillance de la pompe CP4 et du remplacement complet du circuit de carburant, mais spécifiquement pour le moteur 3.0 V6 TDI (Audi A8 D3, VW Phaeton/Touareg), pas pour les moteurs 2.0/3.0 TDI des A3, A4, A6, Q5 2008-2016 visés par l'affirmation."
+        },
+        {
+          "url": "https://tdi-tuning.pl/3-0-tdi-awaria-pompy-cp4-i-koszt-wymiany-ukladu/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://autocopilot.fr/motorisations/2-0-tdi-ea288",
+          "motif": "mauvais_moteur",
+          "justification": "La page traite du moteur EA288 (2014-2024), successeur du moteur équipant les A3/A4/A6/Q5 2008-2016 visés par l'affirmation, donc il s'agit d'une autre génération de moteur même si le problème de pompe CP4 et les coûts sont décrits de façon similaire."
+        }
+      ],
+      "remede": "Remplacement complet de la pompe haute pression CP4, des injecteurs, de la rampe commune (rail) et des canalisations contaminées par les débris métalliques issus de la casse de la pompe.",
+      "cout_min_eur": 4000,
+      "cout_max_eur": 6000,
+      "gravite": "casse",
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.1937
+    },
+    {
+      "cle": "MERCEDES",
+      "marque": "Mercedes-Benz",
+      "title": "Injecteurs Delphi OM651 (2.1 CDI)",
+      "garde": false,
+      "motif": "Les seules pages trouvées sont soit des forums (forum-auto.caradisiac.com, forum-mercedes.com), insuffisants seuls selon la hiérarchie, soit des sites de type « blog SEO/guide d'achat » (monconseilauto.fr, carverif.fr, autocopilot.fr, kit-ethanol-auto.fr, autoliva.com, cars-one.fr, docteurmoteurs.com, skanyx.com, enginefinders.co.uk) qui ne constituent pas de la presse automobile reconnue ni un document constructeur/base de rappel officielle ; aucune source de rang 1 ou 2 n'a pu être vérifiée directement pour attester ce défaut précis sur les modèles visés.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1953
+    },
+    {
+      "cle": "MERCEDES",
+      "marque": "Mercedes-Benz",
+      "title": "Plaque conductrice 7G-Tronic (722.9)",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1128
+    },
+    {
+      "cle": "MERCEDES",
+      "marque": "Mercedes-Benz",
+      "title": "Corrosion structurelle (W203, W211, W210)",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://amgcourtenay.fr/mercedes-classe-e-w210-histoire-moteurs-et-achat/",
+          "titre": "Mercedes Classe E W210 : histoire, moteurs et achat",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la rouille touche les passages de roue, bas de caisse et pourtour du coffre de la W210, recommandant d'inspecter méthodiquement ces zones avant achat."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://absolutelycars.fr/cars-fun/derriere-le-volant-mercedes-benz-classe-e-w210-letoile-pour-les-amateurs-de-haut-de-gamme/",
+          "motif": "non_soutenue",
+          "justification": "La page est un article de type essai/présentation de la Classe E W210 (motorisations, finitions, confort) et ne mentionne à aucun moment la corrosion, les problèmes d'apprêt ou de soubassement."
+        },
+        {
+          "url": "https://www.piecesauto-pro.fr/magazine/mercedes-c-w203-problemes-lies-au-demarrage-a-la-boite-de-vitesses-automatique-et-autres-defaillances-3100",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.auto-doc.fr/info/quel-est-le-prix-pour-une-reparation-de-bas-de-caisse",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Traitement anticorrosion localisé : ponçage/décapage de la rouille, application d'un convertisseur de rouille et d'un apprêt, puis repeinture des zones touchées (passages de roue, bas de portes, bas de caisse, ailes) ; en cas de corrosion perforante, remplacement par soudure des tôles de bas de cais",
+      "cout_min_eur": 600,
+      "cout_max_eur": 2500,
+      "gravite": "majeure",
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2406
+    },
+    {
+      "cle": "MERCEDES",
+      "marque": "Mercedes-Benz",
+      "title": "Suspension Airmatic — compresseur et coussins",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.import-car.com/mercedes-benz-airmatic-suspensions/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.forum-mercedes.com/topic-61726-w212-probleme-suspension-airmatic.html",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://bavarian-dismantlers.com/workshop/w211-e-class-airmatic-suspension-guide",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://foreignautomotive.ca/blogs/news/mercedes-airmatic-suspension-symptoms-causes-and-repair-costs",
+          "motif": "non_soutenue",
+          "justification": "La page décrit bien les fuites de coussins et les pannes de compresseur sur l'Airmatic de ces modèles, mais elle ne donne aucun chiffre de coût (le paragraphe 'AIRMATIC Repair Costs' est coupé avant d'indiquer un montant), donc les prix de 600 et 500 ne sont pas vérifiables sur cette page."
+        }
+      ],
+      "remede": "Remplacement du ou des coussins (boudins) pneumatiques qui fuient, et remplacement du compresseur (avec son relais et son filtre) lorsqu'il est usé ou grillé par la surcharge de fonctionnement due aux fuites.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.1323
+    },
+    {
+      "cle": "MERCEDES",
+      "marque": "Mercedes-Benz",
+      "title": "Pignon de balancier moteur M272/M273",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.1142
+    },
+    {
+      "cle": "PEUGEOT",
+      "marque": "Peugeot",
+      "title": "Courroie de distribution 1.2 PureTech dans le bain d'huile",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-nouveau-rappel-de-grande-ampleur-pour-le-moteur-1-2-puretech-30024702.html",
+          "titre": "Peugeot-Citroën-DS-Opel. Nouveau rappel de grande ampleur pour le moteur 1.2 PureTech",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que sur le 1.2 PureTech (EB), la courroie de distribution baigne dans l'huile, se dégrade et ses débris peuvent colmater la pompe (à vide/à huile), entraînant des rappels Stellantis ne couvrant pas tous les modèles (plage de production limitée, normes Euro 6.2 exclues)."
+        },
+        {
+          "url": "https://www.largus.fr/actualite-automobile/moteur-psa-12-puretech-lusure-de-la-courroie-un-probleme-regle-10546406.html",
+          "titre": "Moteur PSA 1.2 PureTech. L'usure de la courroie, un problème réglé ?",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la courroie de distribution du 1.2 PureTech est immergée dans l'huile, se dégrade et colmate la pompe (à vide, selon la page), entraînant des problèmes, et mentionne une action de prise en charge constructeur qui ne couvre pas tous les modèles (grille selon âge/kilométrage)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/136482-rappel-v%C3%A9rification-courroie-distribution-3008-12-puretech-130-bv6/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://chaine-courroie.com/puretech/guide-complet-puretech",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Remplacement de la courroie de distribution à bain d'huile (kit distribution) et, si des particules ont colmaté le circuit, nettoyage ou remplacement de la crépine/pompe à huile ainsi que de la pompe à vide du système de freinage.",
+      "cout_min_eur": 850,
+      "cout_max_eur": 1500,
+      "gravite": "majeure",
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.2575
+    },
+    {
+      "cle": "PEUGEOT",
+      "marque": "Peugeot",
+      "title": "FAP et turbo 1.6 HDi (DV6)",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Peugeot-3008-en-occasion-92361.htm",
+          "motif": "non_soutenue",
+          "justification": "La page évoque bien des casses prématurées de turbo sur le 1.6 HDI 110/112 du Peugeot 3008, mais elle ne mentionne ni le colmatage du FAP en usage urbain, ni la marque Garrett, ni aucun chiffrage de coûts de décrassage FAP ou de remplacement turbo."
+        },
+        {
+          "url": "https://www.fiches-auto.fr/fiabilite-peugeot/fiabilite-185-pannes-peugeot-308.php",
+          "motif": "non_soutenue",
+          "justification": "La page mentionne pour le 1.6 HDI 90/92/110/112/115 ch des problèmes d'injecteurs, joints d'injecteurs, turbo, EGR, FAP, volant moteur et embrayage mais ne précise ni la marque du turbo (Garrett), ni un axe usé ou une fuite d'huile spécifique, ni aucun montant de coût pour le décrassage FAP ou l'échange turbo."
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/331459-deuxi%C3%A8me-casse-turbo-308-16-hdi-110/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/329818-3008-defaut-colmatage-fap-malgr%C3%A9-d%C3%A9montage-complet-et-nettoyage/",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement du turbo (échange standard) après casse par manque de lubrification, et nettoyage ou remplacement du FAP colmaté.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2675
+    },
+    {
+      "cle": "PEUGEOT",
+      "marque": "Peugeot",
+      "title": "Distribution 1.6 THP (EP6) — chaîne et VVT",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2280-fiabilite-des-16-thp.php",
+          "titre": "Fiabilité des 1.6 THP Peugeot / Citroën / DS / Mini",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme explicitement pour le 1.6 THP une chaîne de distribution qui casse/ne tient pas la durée, des problèmes de déphaseurs (AAC/Dephaseur) et une consommation d'huile importante, ce qui correspond aux organes cités même si aucun chiffrage de réparation en euros n'est donné."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.caradisiac.com/fiabilite-de-la-peugeot-508-la-maxi-fiche-occasion-de-caradisiac-113407.htm",
+          "motif": "mauvais_moteur",
+          "justification": "La page concerne la Peugeot 508 (et mentionne le 1.6 THP 156 comme moteur de cette dernière) et non les modèles 207, 208, 308, 3008, 5008, RCZ, DS3, DS4 visés par l'affirmation."
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/329605-308-solution-probl%C3%A9me-cha%C3%AEne-16-thp/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/135784-cha%C3%AEne-de-distribution-3008-thp/",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la chaîne de distribution et de son tendeur hydraulique (parfois guides/patins associés) sur le bloc 1.6 THP concerné.",
+      "cout_min_eur": 991,
+      "cout_max_eur": 2500,
+      "gravite": "majeure",
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2492
+    },
+    {
+      "cle": "PEUGEOT",
+      "marque": "Peugeot",
+      "title": "Boîte manuelle BVM6 (MS6/MA6) — synchros 2e",
+      "garde": false,
+      "motif": "Seuls des forums (forum-peugeot.com, feline208.net, forum-auto.caradisiac.com) évoquent des craquements de synchro de 2e ou des changements d'embrayage/volant bi-masse sur des Peugeot à BVM6/BE4, mais aucune source constructeur, rappel officiel ou presse automobile reconnue ne vient corroborer ce défaut précisément pour les 308/3008/5008/508 (2008-2018) ; un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.1765
+    },
+    {
+      "cle": "PEUGEOT",
+      "marque": "Peugeot",
+      "title": "BSI capricieux — bugs électroniques",
+      "garde": false,
+      "motif": "Aucune source de presse automobile reconnue ni document constructeur/rappel officiel n'atteste nommément ce défaut de BSI capricieux sur les Peugeot 207/308/3008/508 2005-2016 ; les seuls résultats sont des sites commerciaux de garages spécialisés en réparation électronique (Cotrolia, Aurel-Automobile, Jaqu'Auto, Breztek, Val-Méca, Skytronic, Diagcompteur, Incarline…) qui décrivent génériquement les pannes de BSI PSA sans être des médias automobiles indépendants, et un seul forum (feline207.net) qui ne porte d'ailleurs pas sur ce symptôme précis mais sur une incompatibilité d'autoradio — un forum ne pouvant de toute façon jamais attester seul le défaut.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MINEUR",
+      "cout_eur": 0.0995
+    },
+    {
+      "cle": "RENAULT",
+      "marque": "Renault",
+      "title": "1.2 TCe (H5Ft) — consommation d'huile et casse moteur",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.quechoisir.org/actualite-moteur-1-2-renault-400-000-voitures-en-danger-n67215/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.caradisiac.com/motorgate-faut-il-acheter-une-renault-equipee-du-1-2-tce-en-occasion-195804.htm",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.auto-infos.fr/article/les-moteurs-1-2-l-de-renault-sujets-a-trop-de-casses.158949",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE23164.pdf",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la segmentation des pistons (voire du moteur complet en cas de casse avérée) accompagné d'une reprogrammation du calculateur moteur, pris en charge par Renault selon des critères conditionnels (entretien, kilométrage, historique).",
+      "cout_min_eur": 6000,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1512
+    },
+    {
+      "cle": "RENAULT",
+      "marque": "Renault",
+      "title": "Boîte EDC (DC4) — mécatronique et double embrayage",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.2208
+    },
+    {
+      "cle": "RENAULT",
+      "marque": "Renault",
+      "title": "Injecteurs Delphi 1.5 dCi (K9K)",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://goyalive.com/moteur-1-5-dci/",
+          "titre": "Moteur 1.5 dCi : Fiabilité, Problèmes et Durée de Vie - Goyalive",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que sur les premières générations à injection Delphi (K9K Euro 3, 2001-2005) les injecteurs se grippent ou fuient en retour, provoquant démarrage difficile et ralenti instable, pour un jeu complet à 800-1200 euros, ce qui correspond à la fourchette annoncée."
+        },
+        {
+          "url": "https://autocopilot.fr/motorisations/1-5-dci-k9k",
+          "titre": "Moteur Renault K9K 1.5 dCi : fiabilité, injecteurs, turbo",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme les injecteurs Delphi défaillants sur le K9K 1.5 dCi avec symptômes similaires (démarrage difficile, fumée, mode dégradé) et un tarif jeu de 4 injecteurs neufs posés de 1000-1600 €, fourchette compatible avec '1 200-€'."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.otomobile.fr/pourquoi-certains-1-5-dci-sont-tres-fiables-et-dautres-cassent-tot/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.garage-pouget.fr/articles/moteur-1-5-dci-kangoo-problemes/",
+          "motif": "non_soutenue",
+          "justification": "La page confirme la fragilité des injecteurs Delphi (limaille, démarrage difficile, voyant injection) sur le K9K mais évoque un coût de contamination pouvant atteindre 4 200 € sans jamais donner de fourchette autour de 1 200 € pour un jeu complet d'injecteurs."
+        }
+      ],
+      "remede": "Remplacement du jeu d'injecteurs Delphi grippés ou fuyards (test de débit retour préalable), avec codage électronique obligatoire après pose.",
+      "cout_min_eur": 1000,
+      "cout_max_eur": 1600,
+      "gravite": "majeure",
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.1836
+    },
+    {
+      "cle": "RENAULT",
+      "marque": "Renault",
+      "title": "FAP et vanne EGR 2.0 dCi (M9R)",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2141
+    },
+    {
+      "cle": "RENAULT",
+      "marque": "Renault",
+      "title": "Cartes mains-libres et électronique",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/carte-mains-libres-renault-20-ans-de-succes-et-de-difficultes-10808399.html",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.telecommandier.fr/reparation-carte-mainlibre-renault.htm",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/58281-carte-main-libre-laguna-iii/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.planeterenault.com/forum/megane-ii-pb-avec-la-carte-main-libre-t3610.html",
+          "motif": "non_soutenue",
+          "justification": "La page décrit bien des pannes de capteurs optiques de porte et de carte main-libre (perte de reconnaissance, capteurs défectueux) sur Mégane II, mais ne mentionne aucune fourchette de coût de 100 euros ni n'évoque explicitement un 'refus de démarrage' généralisé ou une reprogrammation chiffrée."
+        }
+      ],
+      "remede": "Remplacement (ou reprogrammation, voire réparation par micro-soudure) de la carte mains-libres défectueuse, le lecteur/boîtier UCH n'étant à changer que dans les cas les plus sévères.",
+      "cout_min_eur": 72,
+      "cout_max_eur": 400,
+      "gravite": null,
+      "gravite_avant": "MINEUR",
+      "cout_eur": 0.2423
+    },
+    {
+      "cle": "VW",
+      "marque": "Volkswagen",
+      "title": "Consommation d'huile 2.0 TFSI EA888 (gen 2)",
+      "garde": false,
+      "motif": "Les seules pages trouvées nommant explicitement le EA888 Gen 2 sur Golf VI GTI/Scirocco/Passat/Tiguan sont des blogs SEO non qualifiables (auto-platinium, becquet-voiture, autocopilot, vag-perf, scanicar, defi-auto, automoto-guide) et un unique fil de forum (golf6forum.fr) qui ne peut porter seul l'entrée ; aucune note constructeur, aucun rappel officiel (RappelConso/NHTSA) ni article de presse automobile reconnue n'atteste nommément ce défaut pour ces modèles/années, et les class actions US identifiées concernent en réalité l'EA888 Gen 3/Gen 3B sur Tiguan 2022-2023, pas le Gen 2 2008-2014 visé ici — de plus la Golf VII GTI citée dans la description est motorisée en EA888 Gen 3 et non Gen 2, ce qui indique une confusion de génération dans l'entrée à vérifier.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.2056
+    },
+    {
+      "cle": "VW",
+      "marque": "Volkswagen",
+      "title": "Mécatronique DSG 7 (DQ200) sèche",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1989
+    },
+    {
+      "cle": "VW",
+      "marque": "Volkswagen",
+      "title": "Pompe HPFP CP4 (TDI EA189/EA288)",
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": "CRITIQUE",
+      "cout_eur": 0.1168
+    },
+    {
+      "cle": "VW",
+      "marque": "Volkswagen",
+      "title": "Chaîne de distribution 1.4 TSI",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://thecarlane.com/1-4-tsi-engine-problems/",
+          "titre": "VW 1.4 TSI Engine Problems by Model: Chain, Pistons, Costs",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page décrit exactement ce défaut pour l'EA111 (incluant CAVA, CTHE cités dans les listes de codes) : tendeur et chaîne de distribution défaillants, bruit de chaîne au démarrage, et un coût de kit chaîne autour de £1,300 (environ 1200€+), ce qui correspond à l'affirmation."
+        },
+        {
+          "url": "https://www.wearebargain.com/blog/fiabilite-auto/probleme-chaine-distribution-tsi",
+          "titre": "Problème chaîne TSI : quels moteurs VW éviter en occasion",
+          "type": "cout_publie",
+          "nomme_cible": true,
+          "justification": "La page confirme que le 1.4 TSI (EA111, 2008-2013) souffre d'une chaîne/tendeur défaillants avant 100-120 000 km, avec bruit au démarrage, pour un coût de réparation de 900 à 1800 €, compatible avec la fourchette annoncée de 1200€+."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-des-moteurs-a-essence-tsi-6352385.html",
+          "motif": "non_soutenue",
+          "justification": "La page confirme des claquements/tendeur et chaîne défaillants sur les 1.4 TSI 122 et 140 (codes CAX, CAV), mais ne mentionne ni les codes moteur CAVA/CTHE, ni le seuil de 100 000 km, ni un coût de réparation de 1 200€."
+        },
+        {
+          "url": "https://grantwalker.com.au/volkswagen-cavd-engine-problems/",
+          "motif": "hors_sujet"
+        }
+      ],
+      "remede": "Remplacement de la chaîne de distribution, du tendeur hydraulique (version révisée depuis 2012) et des guides/patins (kit de distribution complet), parfois avec calage de la distribution.",
+      "cout_min_eur": 900,
+      "cout_max_eur": 1800,
+      "gravite": "majeure",
+      "gravite_avant": "MAJEUR",
+      "cout_eur": 0.2379
+    },
+    {
+      "cle": "VW",
+      "marque": "Volkswagen",
+      "title": "Séquelles update Dieselgate (EA189)",
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.autocar.co.uk/car-news/industry/volkswagen-denies-its-dieselgate-fix-causes-breakdowns",
+          "titre": "Volkswagen denies its Dieselgate fix causes breakdowns",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page rapporte, pour le moteur EA189 ciblé par la mise à jour Dieselgate, des cas de pannes EGR, défaillance/colmatage du FAP et turbocompresseurs défaillants suite au fix."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://fr.motor1.com/news/178774/dieselgate-pannes-mise-a-jour-logiciel/",
+          "motif": "hors_sujet"
+        },
+        {
+          "url": "https://www.generation-nt.com/dieselgate-mise-jour-endommage-moteurs-dementi-volkswagen-actualite-1935065.html",
+          "motif": "non_soutenue",
+          "justification": "La page évoque une rumeur relayée par le Spiegel selon laquelle la mise à jour pourrait entraîner pannes et usure prématurée, mais Volkswagen dément et aucune mention précise d'EGR, FAP colmatés ou turbo fatigué n'est faite."
+        },
+        {
+          "url": "https://www.golf6forum.fr/index.php?topic=26615.0",
+          "motif": "hors_sujet"
+        }
+      ],
+      "remede": "Remplacement de la vanne EGR, des injecteurs et parfois du turbocompresseur défaillants suite à la sursollicitation induite par la mise à jour anti-pollution EA189 ; dans certains cas un retrait de la pièce bridant l'admission d'air a aussi été pratiqué.",
+      "cout_min_eur": 1000,
+      "cout_max_eur": 3000,
+      "gravite": "majeure",
+      "gravite_avant": "MINEUR",
+      "cout_eur": 0.1134
+    }
+  ]
+}

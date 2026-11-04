@@ -21,6 +21,7 @@ import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from ".
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
 import {
+  codeEtranger,
   panneCompteDansScore,
   pannesApplicables,
   questionSansSource,
@@ -702,17 +703,36 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
       if (!sameBrand(brandKey, marque) && !sameBrand(brand.label, marque)) continue;
       brand.defects.forEach((d, i) => {
         const cost = extractCostRange(d.description ?? "");
+        // SPRINT 16 — L'atlas porte désormais ses sources. Une entrée qui n'en
+        // a pas reste sans URL, et le filtre `sansSourcePublique` la sortira
+        // de la liste des pannes : ce n'est pas un oubli, c'est la règle.
+        // deno-lint-ignore no-explicit-any
+        const dd = d as any;
+        const atlasUrls: string[] = Array.isArray(dd.url_source) ? dd.url_source.filter((u: unknown) =>
+          typeof u === "string" && /^https?:\/\//i.test(u)
+        ) : [];
+        const atlasSources = Array.isArray(dd.sources)
+          ? dd.sources.filter((x: { url?: string }) => x && typeof x.url === "string")
+          : atlasUrls.map((u) => ({ url: u, title: null }));
         entries.push({
           ref: `A${i + 1}`,
           titre: d.title,
           organe: null,
           symptome: d.description,
           km_typique: null,
-          gravite: d.severity === "MINEUR" ? "mineure" : "majeure",
-          cout_min_eur: cost.min,
-          cout_max_eur: cost.max,
-          urls: [],
-          sources: [],
+          // `gravite` (barème) si le sourcing l'a rejugée, sinon l'ancienne
+          // étiquette. On ne PROMEUT jamais : pas de « casse » sans coût sourcé.
+          gravite: typeof dd.gravite === "string" && dd.gravite
+            ? dd.gravite
+            : (d.severity === "MINEUR" ? "mineure" : "majeure"),
+          cout_min_eur: typeof dd.cout_min_eur === "number" ? dd.cout_min_eur : cost.min,
+          cout_max_eur: typeof dd.cout_max_eur === "number" ? dd.cout_max_eur : cost.max,
+          urls: atlasUrls,
+          sources: atlasSources,
+          // ⚠️ Une entrée sourcée par recherche web n'est PAS « relue à la
+          // main » : son étiquette reste celle du catalogue interne tant
+          // qu'un humain ne l'a pas validée. Le libellé affiché est une
+          // décision d'Utku, pas une conséquence du sourcing.
           source_statut: "base_inspexo",
           contexte: [d.models, d.years].filter(Boolean).join(" — ") || null,
           rappel_code: null,
@@ -1404,6 +1424,22 @@ serve(async (req: Request) => {
         }
         return true;
       });
+      // SPRINT 16 — Même principe pour les codes MOTEUR et CAISSE. Une entrée
+      // qui nomme un moteur étranger au véhicule ne doit pas être présentée au
+      // modèle : ce qui n'est jamais montré ne peut pas être cité.
+      {
+        const vCodes = {
+          famille_moteur: String(vehiculePublic.famille_moteur ?? ""),
+          designation: [vehiculePublic.modele, vehiculePublic.generation, vehiculePublic.motorisation]
+            .filter(Boolean).join(" "),
+        };
+        catalogue = catalogue.filter((e) => {
+          const motif = codeEtranger(e.titre, e.symptome, vCodes);
+          if (!motif) return true;
+          ecartees.push({ ref: e.ref, titre: e.titre.slice(0, 120), code_cite: motif });
+          return false;
+        });
+      }
       if (ecartees.length > 0) {
         await admin.from("events").insert(
           ecartees.map((x) => ({ name: "panne_boite_ecartee", props_json: x })),

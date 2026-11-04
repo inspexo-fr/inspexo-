@@ -53,3 +53,4 @@ tests/histovec/
 # ils portent plaque et VIN. Jamais versionnes.
 tests/eval-ct/publics/
 .verification-cout.json
+.atlas-cout.json

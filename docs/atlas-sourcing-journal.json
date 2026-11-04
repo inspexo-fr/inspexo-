@@ -1,0 +1,160 @@
+[
+  {
+    "cle": "BMW",
+    "title": "Chaîne de distribution N47 défaillante",
+    "action": "gravite",
+    "de": "CRITIQUE",
+    "vers": "majeure",
+    "cout_source": "aucun"
+  },
+  {
+    "cle": "BMW",
+    "title": "Tendeur de chaîne N20/N26 sous-dimensionné",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "BMW",
+    "title": "Joints VANOS / Valvetronic fuyards",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "BMW",
+    "title": "Injecteurs et pompe HPFP N54",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "BMW",
+    "title": "Vanne EGR et FAP encrassés (diesel)",
+    "action": "retiree",
+    "motif": "Seuls des forums (ma-bmw.com, forum-bmw.fr, bmw-serie3.com) et des sites commerciaux/SEO de décalaminage ou de coût (carbon-cleaning, my-procar, re-fap, blogs génériques) évoquent l'encrassement EGR/FAP sur ces BMW diesel ; aucun document constructeur/rappel officiel ni article de presse automobile reconnue ne vient étayer ce défaut précis, or un forum seul ne peut porter l'entrée."
+  },
+  {
+    "cle": "AUDI",
+    "title": "Mécatronique DSG DQ200 7 rapports défaillante",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "AUDI",
+    "title": "Tendeur de chaîne 2.0 TFSI EA888",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "AUDI",
+    "title": "Boîte Multitronic (CVT) fragile",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "AUDI",
+    "title": "Pompe à injection CP4 (2.0/3.0 TDI)",
+    "action": "gravite",
+    "de": "MAJEUR",
+    "vers": "casse",
+    "cout_source": "4000-6000 €"
+  },
+  {
+    "cle": "MERCEDES",
+    "title": "Injecteurs Delphi OM651 (2.1 CDI)",
+    "action": "retiree",
+    "motif": "Les seules pages trouvées sont soit des forums (forum-auto.caradisiac.com, forum-mercedes.com), insuffisants seuls selon la hiérarchie, soit des sites de type « blog SEO/guide d'achat » (monconseilauto.fr, carverif.fr, autocopilot.fr, kit-ethanol-auto.fr, autoliva.com, cars-one.fr, docteurmoteurs.com, skanyx.com, enginefinders.co.uk) qui ne constituent pas de la presse automobile reconnue ni un document constructeur/base de rappel officielle ; aucune source de rang 1 ou 2 n'a pu être vérifiée directement pour attester ce défaut précis sur les modèles visés."
+  },
+  {
+    "cle": "MERCEDES",
+    "title": "Plaque conductrice 7G-Tronic (722.9)",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "MERCEDES",
+    "title": "Suspension Airmatic — compresseur et coussins",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "MERCEDES",
+    "title": "Pignon de balancier moteur M272/M273",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "PEUGEOT",
+    "title": "Courroie de distribution 1.2 PureTech dans le bain d'huile",
+    "action": "gravite",
+    "de": "CRITIQUE",
+    "vers": "majeure",
+    "cout_source": "850-1500 €"
+  },
+  {
+    "cle": "PEUGEOT",
+    "title": "FAP et turbo 1.6 HDi (DV6)",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "PEUGEOT",
+    "title": "Boîte manuelle BVM6 (MS6/MA6) — synchros 2e",
+    "action": "retiree",
+    "motif": "Seuls des forums (forum-peugeot.com, feline208.net, forum-auto.caradisiac.com) évoquent des craquements de synchro de 2e ou des changements d'embrayage/volant bi-masse sur des Peugeot à BVM6/BE4, mais aucune source constructeur, rappel officiel ou presse automobile reconnue ne vient corroborer ce défaut précisément pour les 308/3008/5008/508 (2008-2018) ; un forum seul ne peut porter l'entrée."
+  },
+  {
+    "cle": "PEUGEOT",
+    "title": "BSI capricieux — bugs électroniques",
+    "action": "retiree",
+    "motif": "Aucune source de presse automobile reconnue ni document constructeur/rappel officiel n'atteste nommément ce défaut de BSI capricieux sur les Peugeot 207/308/3008/508 2005-2016 ; les seuls résultats sont des sites commerciaux de garages spécialisés en réparation électronique (Cotrolia, Aurel-Automobile, Jaqu'Auto, Breztek, Val-Méca, Skytronic, Diagcompteur, Incarline…) qui décrivent génériquement les pannes de BSI PSA sans être des médias automobiles indépendants, et un seul forum (feline207.net) qui ne porte d'ailleurs pas sur ce symptôme précis mais sur une incompatibilité d'autoradio — un forum ne pouvant de toute façon jamais attester seul le défaut."
+  },
+  {
+    "cle": "RENAULT",
+    "title": "1.2 TCe (H5Ft) — consommation d'huile et casse moteur",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "RENAULT",
+    "title": "Boîte EDC (DC4) — mécatronique et double embrayage",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "RENAULT",
+    "title": "FAP et vanne EGR 2.0 dCi (M9R)",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "RENAULT",
+    "title": "Cartes mains-libres et électronique",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "VW",
+    "title": "Consommation d'huile 2.0 TFSI EA888 (gen 2)",
+    "action": "retiree",
+    "motif": "Les seules pages trouvées nommant explicitement le EA888 Gen 2 sur Golf VI GTI/Scirocco/Passat/Tiguan sont des blogs SEO non qualifiables (auto-platinium, becquet-voiture, autocopilot, vag-perf, scanicar, defi-auto, automoto-guide) et un unique fil de forum (golf6forum.fr) qui ne peut porter seul l'entrée ; aucune note constructeur, aucun rappel officiel (RappelConso/NHTSA) ni article de presse automobile reconnue n'atteste nommément ce défaut pour ces modèles/années, et les class actions US identifiées concernent en réalité l'EA888 Gen 3/Gen 3B sur Tiguan 2022-2023, pas le Gen 2 2008-2014 visé ici — de plus la Golf VII GTI citée dans la description est motorisée en EA888 Gen 3 et non Gen 2, ce qui indique une confusion de génération dans l'entrée à vérifier."
+  },
+  {
+    "cle": "VW",
+    "title": "Mécatronique DSG 7 (DQ200) sèche",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "VW",
+    "title": "Pompe HPFP CP4 (TDI EA189/EA288)",
+    "action": "retiree",
+    "motif": "aucune_source_retenue"
+  },
+  {
+    "cle": "VW",
+    "title": "Séquelles update Dieselgate (EA189)",
+    "action": "gravite",
+    "de": "MINEUR",
+    "vers": "majeure",
+    "cout_source": "1000-3000 €"
+  }
+]

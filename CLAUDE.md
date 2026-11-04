@@ -1348,6 +1348,92 @@ refaire. **≈ 8,50 €**, plafond proposé 10 €.
   sont sourcées par construction. Sur la courroie de la 308, l'apport réel de
   l'atlas était **un jugement de gravité, pas une connaissance**.
 
+## Sprint 16 — Sourcer le Defect Atlas (4 nov. 2026)
+
+**30 entrées passées au crible : 9 gardées, 21 retirées, 4 gravités rejugées.**
+Coût **6,70 €** sur un plafond de 10 €. Verdicts de référence **inchangés** :
+S7 rouge 38, 308 orange 55, Mercedes vert 71.
+
+### Le dispositif — quatre étapes, et l'ordre EST la garantie
+`atlas-builder` : recherche web (≤ 3 requêtes) → **filtre déterministe** (page
+lisible ET portant ≥ 2 marqueurs distinctifs de l'entrée) → **vérification
+indépendante** → gravité rejugée sur le remède.
+- ⚠️ L'étape de vérification emploie **le juge de `/fiabilite`**, extrait dans
+  `_shared/verifSource.ts` et partagé mot pour mot. Si le sourcing se relisait
+  avec un prompt plus doux que celui de la mesure publiée, le taux de
+  `/fiabilite` flatterait des entrées que **sa propre méthode** aurait recalées.
+  Le test d'indépendance contrôle désormais les deux fichiers.
+- Elle ne voit **ni la recherche, ni ce que l'étape 1 a conclu** : sans ce
+  cloisonnement, le sourcing se relirait lui-même — la faute exacte que le
+  sprint 15 a corrigée.
+
+### ⚠️ Le défaut trouvé par la première campagne réelle : le prix dans le paquet
+Premier passage sur BMW : **4 entrées sur 5 retirées**, dont la **chaîne de
+distribution N47** — l'un des défauts les mieux documentés de la marque.
+Cause : la description de l'atlas finit par « Coût constaté : 2 500 à 4 500 € ».
+Soumise telle quelle, l'affirmation devient un **paquet** : une page qui atteste
+parfaitement le défaut mais ne donne aucun prix est jugée « non soutenue », et
+l'entrée disparaît.
+- `affirmationSansCout` (`_shared/atlasSource.ts`) retire la phrase de coût
+  avant vérification. Le coût suit son propre chemin : retenu seulement s'il est
+  publié, il ne décide **jamais** du sort de l'entrée. Après correction, le N47
+  est gardé.
+- ⚠️ Vérifié sur l'atlas d'origine : la forme « coûte 450 EUR », que la
+  première regex manquait, **n'apparaissait dans aucune entrée** — la campagne
+  n'en a donc pas souffert. Le test couvre quand même les quatre formes.
+
+### ⚠️ Un risque CRÉÉ par le sourcing, et attrapé avant l'éval
+Tant que l'atlas n'avait pas d'URL, une entrée nommant un moteur étranger —
+« Consommation d'huile 2.0 TFSI **EA888** » pour une S7 en **EA824** — ne
+pouvait pas nuire : la règle du sprint 15.1 la retirait de l'affichage.
+**Sourcée, elle redevenait citable**, et le cas d'éval de la S7 interdit
+explicitement le mot « EA888 ».
+- `entreeApplicable` ne protège que la liste garantie et ne juge **jamais** les
+  entrées d'atlas. Le filtre est donc posé **sur le CATALOGUE**, avant qu'il ne
+  soit présenté au modèle (`codeEtranger`, au même endroit que le filtre de
+  code de boîte) : **ce qui n'est jamais montré ne peut pas être cité.**
+
+### ⚠️ On ne promeut jamais une gravité sans coût publié
+La fonction retombe sur « majeure » quand aucune page ne donne de prix — ce qui,
+pour une entrée notée MINEUR, serait une **aggravation décidée par défaut**. Un
+défaut ne devient pas plus grave parce que personne n'en a publié le prix. Sans
+coût sourcé, le rang d'origine est conservé (appliqué en phase `--appliquer`,
+donc sans repayer la collecte).
+
+### Résultats
+- **Gardées (9)** : BMW N47 · Audi EA888 consommation d'huile (**casse**,
+  3 000-5 500 € sourcés) et pompe CP4 (**casse**, 4 000-6 000 €) · Mercedes
+  corrosion W203/W211/W210 · Peugeot courroie PureTech (2 sources, 850-1 500 €)
+  et distribution EP6 · Renault injecteurs Delphi K9K · VW chaîne 1.4 TSI et
+  séquelles Dieselgate EA189.
+- **Retirées (21)**, motif dominant : aucune source de rang 1 ou 2, **seuls des
+  forums et des pages commerciales de garages**. Exemple : « Vanne EGR et FAP
+  encrassés (diesel) » — ma-bmw.com, forum-bmw.fr, carbon-cleaning, re-fap.
+- **Pages écartées** : 28 « non soutenue » (le juge), 22 **illisibles**, 3
+  « mauvais moteur », 3 hors sujet. ⚠️ **Les 22 illisibles sont un biais contre
+  les meilleures sources** : ce sont surtout des PDF (notes techniques NHTSA,
+  documents constructeur) que l'extracteur ne lit pas. À traiter avec `unpdf`,
+  déjà utilisé par `lecture-histovec`.
+- **Effet mesuré** : sur une analyse 308 produite après le sourcing, **1
+  affirmation sur 9 sans source publique (11 %)**, contre **55 %** mesurés sur
+  les 505 analyses d'avant.
+
+### Décisions appliquées (les 4 questions du document de préparation)
+1. **Option A** — sourcer, pas retirer l'atlas.
+2. **Plafond 10 €** — 6,70 € dépensés, compteur `.atlas-cout.json`.
+3. **Forums en appui seulement** — un forum ne porte jamais une entrée seul,
+   côté prompt **et** côté serveur (`nonForum.length > 0`). C'est le motif de
+   retrait le plus fréquent.
+4. **Gravité qui descend : on garde l'entrée avec sa nouvelle gravité** — c'est
+   l'information juste. BMW N47 passe de CRITIQUE à `majeure` et reste publiée.
+
+### ⬜ Resté en suspens, volontairement
+`source_statut` des entrées d'atlas **n'a pas changé** : elles restent
+étiquetées « base Inspexo ». Une entrée sourcée par recherche web n'est pas
+« relue à la main », et basculer l'étiquette modifierait un **texte public**
+(sur la 308, la courroie fusionnée afficherait « sources en ligne » au lieu de
+« base Inspexo »). Décision d'Utku.
+
 ## Outillage local (4 nov. 2026)
 
 **Docker Desktop est installé**, et avec lui la pile Supabase locale. ⚠️ Le
