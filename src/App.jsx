@@ -25,6 +25,8 @@ const InspecteurPage = lazy(() => import('./pages/InspecteurPage'))
 const InspecteurInscription = lazy(() => import('./pages/InspecteurInscription'))
 const CGVPass = lazy(() => import('./pages/CGVPass'))
 const CGVInspection = lazy(() => import('./pages/CGVInspection'))
+const CGVVisio = lazy(() => import('./pages/CGVVisio'))
+const VisioPage = lazy(() => import('./pages/VisioPage'))
 const DossierPage = lazy(() => import('./pages/DossierPage'))
 const FiabilitePage = lazy(() => import('./pages/FiabilitePage'))
 const AdminAudit = lazy(() => import('./pages/AdminAudit'))
@@ -79,6 +81,8 @@ export default function App() {
           <Route path="/cgu" element={<CGU />} />
           <Route path="/cgv-pass" element={<CGVPass />} />
           <Route path="/cgv-inspection" element={<CGVInspection />} />
+          <Route path="/cgv-visio" element={<CGVVisio />} />
+          <Route path="/visio/:id" element={<VisioPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

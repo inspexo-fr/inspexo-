@@ -154,6 +154,7 @@ const ROUTES = [
   { url: '/cgu', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/cgv-pass', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/cgv-inspection', attendre: '.legal-h1', priorite: '0.3' },
+  { url: '/cgv-visio', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/mentions-legales', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/politique-de-confidentialite', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/extension/confidentialite', attendre: '.rows', priorite: '0.3' },

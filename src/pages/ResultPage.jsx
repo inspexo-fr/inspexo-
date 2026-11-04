@@ -11,6 +11,7 @@ import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
 import LectureCtBloc from '../components/LectureCtBloc'
 import HistovecBloc from '../components/HistovecBloc'
+import VisioBloc from '../components/VisioBloc'
 import VinBloc from '../components/VinBloc'
 import EtMaintenant from '../components/EtMaintenant'
 import RapportInspection from '../components/RapportInspection'
@@ -1311,6 +1312,10 @@ export default function ResultPage() {
                 onMaj={(maj) => setAnalysis(prev => prev ? { ...prev, result: adaptResult(maj) } : prev)}
               />
             )}
+
+            {/* Visio guidée (sprint 14). Fermée par son drapeau ; le bloc ne
+                s'affiche pas tant qu'il est éteint. */}
+            {!enCours && r.type === 'vehicule' && <VisioBloc analysisId={id} />}
 
             {/* Certificat de situation administrative HistoVec (sprint 13).
                 Les signaux ROUGES sont affichés même sans Pass : on ne cache

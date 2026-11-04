@@ -48,6 +48,36 @@ async function appel(nom, { methode = 'POST', corps = null, requete = '' } = {})
 
 /** Configuration publique de l'inspection ; avec un code postal, la
  *  disponibilité réelle du secteur. */
+/** Configuration publique de la visio guidée — { ouvert, prix_cents,
+ *  part_inspecteur_cents, retenue_cents, attente_absence_minutes,
+ *  rapport_heures, mediateur, cgv_version }. */
+export const getVisioConfig = () =>
+  appel('inspection-checkout', { methode: 'GET', requete: '?type=visio' })
+
+/** Commande une visio. Le créneau et la demande d'exécution immédiate sont
+ *  exigés côté serveur. */
+export const commanderVisio = (payload) =>
+  appel('inspection-checkout', { corps: { ...payload, type: 'visio' } })
+
+/** Annule une visio. Même barème serveur que l'inspection, type « visio ». */
+export const annulerVisio = (inspectionId) =>
+  appel('inspection-annuler', { corps: { inspection_id: inspectionId } })
+
+/** Lien de l'appel. L'accès est décidé SERVEUR : hors de la fenêtre
+ *  (15 min avant, 90 min après), cette fonction refuse — le lien seul n'est
+ *  pas un droit d'entrée. */
+export const accesVisio = (inspectionId) =>
+  appel('visio-acces', { corps: { inspection_id: inspectionId } })
+
+/** L'acheteur autorise les captures d'écran pendant l'appel. */
+export async function autoriserCaptures(inspectionId) {
+  const { data, error } = await supabase.rpc('visio_consentement_captures', {
+    p_inspection_id: inspectionId,
+  })
+  if (error) throw error
+  return data
+}
+
 export const getInspectionConfig = (codePostal = null) =>
   appel('inspection-checkout', { methode: 'GET', requete: codePostal ? `?cp=${encodeURIComponent(codePostal)}` : '' })
 

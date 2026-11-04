@@ -38,7 +38,7 @@ export default function CGU() {
             <strong>"Inspexo"</strong> ou <strong>"la Plateforme"</strong> : le site inspexo.io, édité par DUPLEX SAS.<br />
             <strong>"Utilisateur"</strong> ou <strong>"Client"</strong> : toute personne physique ou morale utilisant le Site ou souscrivant à un service.<br />
             <strong>"Inspecteur"</strong> : professionnel automobile indépendant, qualifié et référencé sur la Plateforme.<br />
-            <strong>"Mission"</strong> : prestation commandée par un Client sur la Plateforme (score d'annonce, Pass achat, inspection).<br />
+            <strong>"Mission"</strong> : prestation commandée par un Client sur la Plateforme (score d'annonce, Pass achat, visio guidée, inspection).<br />
             <strong>"Rapport"</strong> : document de synthèse produit à l'issue d'une mission (par l'analyse IA ou par un inspecteur).
           </p>
 
@@ -87,11 +87,24 @@ export default function CGU() {
             les présentes pour tout ce qui le concerne.
           </p>
 
-          <h3 className="legal-h3">3.4 Services en préparation</h3>
+          <h3 className="legal-h3">3.4 Visio guidée — 59,00 € TTC</h3>
           <p className="legal-p">
-            L'accompagnement en visioconférence et l'inspection à distance sont en préparation et{' '}
-            <strong>ne sont pas commercialisés</strong>. Ils ne peuvent pas être commandés et aucun prix n'est
-            proposé pour eux. Le Site permet seulement de s'inscrire sur une liste d'attente.
+            Accompagnement à distance, en direct : le Client est devant le véhicule avec son téléphone, un
+            inspecteur indépendant le guide par appel vidéo sur la checklist établie pour ce véhicule. Appel de
+            30 à 40 minutes, compte rendu écrit déposé dans son dossier sous 2 heures.<br />
+            <strong>France entière</strong> — aucun déplacement n'étant nécessaire.<br />
+            L'appel n'est <strong>jamais enregistré</strong>. Le compte rendu porte la liste explicite des
+            points qui n'ont pas pu être vérifiés à distance.<br />
+            Ce service est régi par ses propres conditions de vente :{' '}
+            <a href="/cgv-visio" className="legal-a">CGV de la visio guidée</a>, qui prévalent sur les présentes
+            pour tout ce qui le concerne.
+          </p>
+
+          <h3 className="legal-h3">3.5 Services en préparation</h3>
+          <p className="legal-p">
+            L'inspection à distance sans accompagnement est en préparation et{' '}
+            <strong>n'est pas commercialisée</strong>. Elle ne peut pas être commandée et aucun prix n'est
+            proposé pour elle. Le Site permet seulement de s'inscrire sur une liste d'attente.
           </p>
 
           <p className="legal-p">

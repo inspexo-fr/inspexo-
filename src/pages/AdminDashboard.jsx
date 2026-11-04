@@ -951,6 +951,19 @@ function InspecteursTab() {
     fetchTout()
   }
 
+  // Option « visio » : activable inspecteur par inspecteur. Éteinte par
+  // défaut — guider au téléphone n'est pas le même métier que se déplacer.
+  const basculerVisio = async (i) => {
+    setEnCours(i.id); setMessage(null)
+    const d = await adminFetch('admin-inspecteurs', {
+      method: 'PUT', body: JSON.stringify({ id: i.id, visio: !i.visio }),
+    })
+    setEnCours(null)
+    if (d.error) { setMessage(d.message ? `${d.error} — ${d.message}` : d.error); return }
+    setMessage(`Visio ${d.visio ? 'activée' : 'désactivée'} pour ${i.nom || i.email}.`)
+    fetchTout()
+  }
+
   const voirDocument = async (id) => {
     const d = await adminFetch(`admin-inspecteurs?document=${id}`, { method: 'GET' })
     if (d.url) window.open(d.url, '_blank', 'noopener')
@@ -1029,6 +1042,13 @@ function InspecteursTab() {
             )}
             {i.statut === 'valide' && (
               <button onClick={() => agir(i.id, 'suspendre')} style={styles.refreshBtn}>Suspendre</button>
+            )}
+            {i.statut === 'valide' && (
+              <button onClick={() => basculerVisio(i)} disabled={enCours === i.id}
+                title="Guider un acheteur par appel vidéo, partout en France"
+                style={{ ...styles.refreshBtn, background: i.visio ? '#0F1B2D' : '#fff', color: i.visio ? '#fff' : '#0F1B2D' }}>
+                {i.visio ? 'Visio activée' : 'Activer la visio'}
+              </button>
             )}
           </div>
         </div>

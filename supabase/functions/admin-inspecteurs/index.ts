@@ -19,7 +19,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   // PATCH : arbitrage d'une annulation contestée. Sans cette ligne, le
   // préflight du navigateur refuse la méthode et le bouton ne part jamais.
-  "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, OPTIONS",
 };
 
 function json(body: unknown, status = 200): Response {
@@ -70,10 +70,10 @@ serve(async (req: Request) => {
 
       const [{ data: inspecteurs }, { data: inspections }] = await Promise.all([
         admin.from("inspecteurs")
-          .select("id, email, nom, telephone, siret, raison_sociale, rc_pro_assureur, rc_pro_numero, rc_pro_echeance, rc_pro_document, charte_version, charte_signee_le, departements, stripe_account_id, stripe_paiements_actifs, statut, motif_refus, valide_le, created_at")
+          .select("id, email, nom, telephone, siret, raison_sociale, rc_pro_assureur, rc_pro_numero, rc_pro_echeance, rc_pro_document, charte_version, charte_signee_le, departements, visio, stripe_account_id, stripe_paiements_actifs, statut, motif_refus, valide_le, created_at")
           .order("created_at", { ascending: false }).limit(200),
         admin.from("inspections")
-          .select("id, ref_num, statut, departement, code_postal, prix_cents, part_inspecteur_cents, creneau_souhaite, creneau_confirme, inspecteur_id, transfer_id, verse_le, rapport_rendu_le, created_at, annulee_par, annulee_le, annulation_motif, retenue_cents, retenue_transfer_id, absence_constatee_le, absence_photo_path, arbitrage_decision, arbitrage_note, arbitre_le, autorisee_le, capturee_le, rembourse_le, execution_immediate_le, cgv_version")
+          .select("id, type, ref_num, statut, departement, code_postal, prix_cents, part_inspecteur_cents, creneau_souhaite, creneau_confirme, inspecteur_id, transfer_id, verse_le, rapport_rendu_le, created_at, annulee_par, annulee_le, annulation_motif, retenue_cents, retenue_transfer_id, absence_constatee_le, absence_photo_path, arbitrage_decision, arbitrage_note, arbitre_le, autorisee_le, capturee_le, rembourse_le, execution_immediate_le, cgv_version")
           .order("created_at", { ascending: false }).limit(200),
       ]);
 
@@ -143,6 +143,27 @@ serve(async (req: Request) => {
         props_json: { action, inspecteur_id: id, par: acces.user.email },
       });
       return json({ ok: true });
+    }
+
+    // ---- Option « visio » d'un inspecteur -----------------------------
+    // Guider un acheteur au téléphone n'est pas le même métier que de se
+    // déplacer : tout inspecteur validé n'est pas d'office disponible pour ça.
+    // L'option est donc éteinte par défaut et activée un par un.
+    if (req.method === "PUT") {
+      const body = await req.json().catch(() => null);
+      const id = typeof body?.id === "string" ? body.id : null;
+      if (!id || !/^[0-9a-f-]{36}$/i.test(id)) {
+        return json({ error: "invalid_input", message: "id requis." }, 400);
+      }
+      const { error } = await admin.from("inspecteurs")
+        .update({ visio: body?.visio === true })
+        .eq("id", id);
+      if (error) return json({ error: error.message }, 500);
+      await admin.from("events").insert({
+        name: "inspecteur_visio",
+        props_json: { inspecteur_id: id, visio: body?.visio === true, par: acces.user.email },
+      });
+      return json({ ok: true, visio: body?.visio === true });
     }
 
     // ---- Arbitrage d'une annulation contestée -------------------------

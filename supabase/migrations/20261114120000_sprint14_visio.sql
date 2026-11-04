@@ -281,6 +281,79 @@ $$;
 revoke all on function public.visio_consentement_captures(uuid) from public, anon;
 grant execute on function public.visio_consentement_captures(uuid) to authenticated;
 
+create or replace function public.inspection_constat_absence(
+  p_inspection_id uuid,
+  p_photo_path text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_insp public.inspections;
+  v_moi uuid;
+begin
+  select id into v_moi from public.inspecteurs
+   where user_id = auth.uid() and statut = 'valide';
+  if v_moi is null then
+    return jsonb_build_object('ok', false, 'raison', 'non_inspecteur');
+  end if;
+
+  select * into v_insp from public.inspections
+   where id = p_inspection_id and inspecteur_id = v_moi;
+
+  -- ⚠️ LA PREUVE N'EST PAS LA MÊME SELON LA PRESTATION.
+  --
+  -- Inspection sur place : une PHOTO horodatée est exigée. La retenue de 40 €
+  -- est prélevée sur l'acheteur, elle ne peut pas reposer sur la seule parole
+  -- de celui qui la touche.
+  --
+  -- Visio : l'inspecteur ne peut pas photographier une voiture qu'il ne voit
+  -- pas. La preuve est ailleurs — le délai d'attente de 15 minutes, vérifié
+  -- par la fonction edge (`absenceConstatable`), et l'arbitrage exploitant qui
+  -- reste ouvert en cas de contestation. Exiger une photo ici aurait conduit à
+  -- en fabriquer une, ce qui vaut moins qu'une absence de preuve assumée.
+  if v_insp.type <> 'visio' and coalesce(btrim(p_photo_path), '') = '' then
+    return jsonb_build_object('ok', false, 'raison', 'photo_requise');
+  end if;
+  if not found then
+    return jsonb_build_object('ok', false, 'raison', 'introuvable');
+  end if;
+  if v_insp.statut <> 'acceptee' then
+    return jsonb_build_object('ok', false, 'raison', 'statut_' || v_insp.statut);
+  end if;
+
+  update public.inspections
+     set statut = 'annulee',
+         annulee_par = 'absence_vendeur',
+         annulee_le = now(),
+         annulation_motif = 'retenue_deplacement',
+         absence_constatee_le = now(),
+         absence_photo_path = left(p_photo_path, 300),
+         -- Même garde-fou que ci-dessus : jamais plus que l'encaissé.
+         retenue_cents = least(4000, v_insp.prix_cents),
+         maj_le = now()
+   where id = p_inspection_id and statut = 'acceptee';
+  if not found then
+    return jsonb_build_object('ok', false, 'raison', 'conflit');
+  end if;
+
+  return jsonb_build_object(
+    'ok', true,
+    'action', 'retenue_deplacement',
+    'retenue_cents', least(4000, v_insp.prix_cents),
+    'rembourse_cents', v_insp.prix_cents - least(4000, v_insp.prix_cents),
+    'payment_intent', v_insp.stripe_payment_intent,
+    'charge', v_insp.stripe_charge,
+    'transfer_group', v_insp.transfer_group,
+    'inspecteur_id', v_insp.inspecteur_id
+  );
+end;
+$$;
+revoke all on function public.inspection_constat_absence(uuid, text) from public, anon;
+grant execute on function public.inspection_constat_absence(uuid, text) to authenticated;
+
 -- ---------------------------------------------------------------------------
 -- Vérification intégrée : les lignes existantes restent des inspections.
 -- ---------------------------------------------------------------------------

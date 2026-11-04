@@ -1047,6 +1047,88 @@ est donc restreinte au rôle `postgres`, celui qui crée nos objets.
   faits d'entretien. ⚠️ 6 points d'écart, soit **au-delà de la tolérance de 5**
   de l'éval de stabilité : à surveiller sur ce cas. Coût total **0,38 €**.
 
+## Sprint 14 — Visio guidée, partout en France (nov. 2026)
+
+### Deux prestations, un seul circuit
+Table **`PRESTATIONS`** dans `_shared/inspection.ts`, indexée par
+`inspection | visio` : prix, part inspecteur, zone, délai d'annulation
+gratuite, retenue, délai de compte rendu, attente avant constat d'absence.
+Côté base, une **colonne `type`** sur `inspections` — pas une table `visios` :
+toute la machinerie d'argent est réutilisée sans une ligne dupliquée.
+- Visio : **59 €**, dont **40 € à l'inspecteur en MONTANT FIXE** (40/59 vaut
+  67,7966 % — un ratio obligerait à arrondir là où le contrat annonce un
+  chiffre rond), **France entière**, compte rendu sous **2 h**.
+- ⚠️ **L'inspection n'a pas bougé** : `tests/inspection.test.mjs` fige les
+  valeurs d'avant le sprint et vérifie que sans type passé le barème rend la
+  même décision. Invariant monétaire sur 20 000 cas, les **deux** prestations.
+- **Annulation visio gratuite à tout moment avant le créneau** (aucun
+  déplacement engagé). La retenue de **20 €** ne vient pas d'une annulation
+  tardive mais d'une **absence**, constatable seulement **15 min** après
+  l'heure du rendez-vous (`absenceConstatable`, qui refuse aussi sur un
+  créneau inconnu).
+- ⚠️ Pour une visio, l'inspecteur **ne peut pas photographier** une voiture
+  qu'il ne voit pas : `inspection_constat_absence` n'exige la photo que pour
+  une inspection. La preuve d'une absence en visio est le délai d'attente plus
+  l'arbitrage exploitant — exiger une image aurait conduit à en fabriquer une.
+
+### Vidéo : Whereby Embedded
+Retenu contre LiveKit Cloud et LiveKit auto-hébergé. Le point décisif n'est pas
+le prix mais l'**hébergement** : « users in European countries will connect to a
+data center physically located within the EEC », DPA publié, et « Media sent
+between participants in a room will not be stored ». LiveKit ne documente
+aucune résidence de données hors du plan à 500 $/mois.
+- Coût : **0,0042 $/minute-participant**, soit ≈ 0,29 $ par visio de 35 min à
+  deux — **0,5 % d'une vente de 59 €**. LiveKit serait 8× moins cher, pour un
+  gain de 0,25 $ qui ne paie pas une journée d'intégration.
+- ⚠️ **Le palier gratuit plafonne à 30 min par réunion**, or l'appel dure 30 à
+  40 min : le plan Build (10,99 $/mois) est à souscrire **avant la première
+  visio réelle**, pas après.
+- ⚠️ **L'enregistrement n'est jamais demandé** : aucun champ de la requête ne
+  l'active, et les CGV l'affirment. Ajouter `recording` dans
+  `_shared/whereby.ts` contredirait un document contractuel.
+- ⚠️ **Le lien n'est pas un droit d'entrée.** `fenetreVisio` (−15 min, +90 min)
+  est vérifiée **serveur** à chaque demande (`visio-acces`) : une URL recopiée
+  hors fenêtre ne donne rien.
+
+### Ce que la visio ne peut pas faire — et le dire est le produit
+`pointsNonVerifiables` déduit de la **checklist du véhicule** (même source que
+le mode visite) ce qui reste hors de portée, en trois familles : passer **sous**
+la voiture, **démonter** ou brancher un outil, **conduire**. La liste figure au
+compte rendu, et `compteRenduConforme` interdit « expertise », « valeur du
+véhicule » et « cote ».
+- **Aucune coordonnée du vendeur n'est collectée** pour une visio : l'acheteur
+  est lui-même devant la voiture. Un formulaire qui les réclamerait collecterait
+  les données d'un tiers sans aucun usage.
+
+### ⚠️ Le garde-fou qui a trouvé un vrai défaut dès sa première exécution
+`tests/fonctions-redefinies.test.mjs` compare, pour chaque fonction SQL
+redéfinie, les colonnes rendues avant et après. Une colonne qui disparaît sans
+être **nommée dans la migration qui la retire** fait échouer la suite.
+- Il a immédiatement signalé que j'avais repris le corps d'`inspecteur_missions`
+  du **sprint 8** au lieu du **sprint 8-audit**, perdant `photos_consentement_le`
+  — et surtout le garde-fou interdisant à un inspecteur **sans versement actif
+  ou à l'assurance RC pro expirée** de voir la moindre mission. Même chose sur
+  `inspection_accepter` : Connect, assurance, et fenêtre de créneau +1 h/+72 h.
+  **Un inspecteur sans assurance valide aurait pu prendre une mission.**
+- ⚠️ `inspecteur_missions` ET `inspection_accepter` filtraient aussi sur
+  `i.departement = any(v.departements)` : une visio, sans zone, n'aurait jamais
+  été ni visible ni acceptable — liste vide, aucune erreur.
+
+### ⚠️ La porte de sortie des tests, dépassée une TROISIÈME fois
+Mes nouveaux blocs s'exécutaient après `process.exit(1)` : la suite sortait en 0
+avec des `FAIL` à l'écran. Elle est désormais la **dernière instruction** de
+`tests/inspection.test.mjs` et **fusionnée avec le message de succès** — on ne
+peut plus afficher « tous les tests passent » sans avoir franchi le contrôle.
+
+### Captures
+`scripts/captures-visio.mjs` (dossier `captures-sprint14/`, gitignoré). Deux
+pièges rencontrés, tous deux visibles seulement sur l'image :
+- ⚠️ chez Playwright, **la route enregistrée EN DERNIER gagne** : mon
+  fourre-tout Supabase interceptait aussi `visio-acces`, et l'écran affichait
+  « Aucune checklist pour ce véhicule » ;
+- ⚠️ un `iframe` en `height:100%` dans un parent à `minHeight` ne remplit rien :
+  une bande noire sous la vidéo. Hauteur **définie** désormais.
+
 ## Outillage local (4 nov. 2026)
 
 **Docker Desktop est installé**, et avec lui la pile Supabase locale. ⚠️ Le

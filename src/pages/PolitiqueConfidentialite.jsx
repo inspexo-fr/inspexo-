@@ -110,6 +110,10 @@ export default function PolitiqueConfidentialite() {
             <li>
               <strong>Photo de constat d'absence de véhicule : 1 an</strong>, puis suppression
             </li>
+            <li>
+              <strong>Captures d'écran d'une visio guidée : 2 ans</strong> à compter de l'appel, puis
+              suppression. <strong>L'appel lui-même n'est jamais enregistré</strong>
+            </li>
           </ul>
 
           <h2 className="legal-h2">6. Partage des données</h2>
@@ -212,6 +216,33 @@ export default function PolitiqueConfidentialite() {
             Un vendeur qui le souhaite peut demander l'accès, la rectification ou la suppression de ses
             coordonnées, et s'opposer à ce traitement, en écrivant à{' '}
             <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a> (section 7).
+          </p>
+
+          <h2 className="legal-h2">6 ter bis bis. Visio guidée : aucun enregistrement</h2>
+          <p className="legal-p">
+            Pendant une visio guidée, <strong>l'appel n'est jamais enregistré</strong> — ni l'image, ni le son.
+            La fonction d'enregistrement n'est pas activée chez notre prestataire vidéo, et aucun flux n'est
+            conservé. Il n'existe donc aucune vidéo de votre voiture, ni de vous.
+          </p>
+          <p className="legal-p">
+            <strong>Prestataire vidéo : Whereby AS</strong> (Norvège, Espace économique européen), en qualité de
+            sous-traitant. Il achemine les flux sans les stocker&nbsp;: «&nbsp;<em>Media sent between
+            participants in a room will not be stored</em>&nbsp;», et les utilisateurs européens sont connectés
+            à un centre de données situé dans l'EEE. L'accord de traitement est publié à{' '}
+            <a href="https://whereby.com/information/dpa/" target="_blank" rel="noopener noreferrer" className="legal-a">
+              whereby.com/information/dpa
+            </a>.
+          </p>
+          <p className="legal-p">
+            <strong>Captures d'écran.</strong> L'inspecteur peut avoir besoin de figer une image — un compteur,
+            une plaque de défaut, un carnet d'entretien. Il ne le fait <strong>qu'avec votre accord</strong>,
+            demandé pendant l'appel et horodaté. Ces captures suivent les règles des photos d'inspection&nbsp;:
+            espace privé, <strong>aucune personne reconnaissable</strong>, conservation <strong>deux
+            ans</strong>, puis suppression. Sans votre accord, aucune capture n'est acceptée.
+          </p>
+          <p className="legal-p">
+            Le lien de l'appel est unique par mission et n'est actif qu'autour du créneau (15 minutes avant,
+            90 minutes après). En dehors de cette fenêtre, il ne donne accès à rien.
           </p>
 
           <h2 className="legal-h2">6 ter ter. Certificat de situation administrative (HistoVec)</h2>
