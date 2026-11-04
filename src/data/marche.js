@@ -86,6 +86,33 @@ function quantileHisto(histo, total, q) {
   return tranches[tranches.length - 1][0] + TRANCHE_PRIX / 2
 }
 
+/** Miroir de `PART_API_MAX` (module serveur) : part maximale qu'un seul
+ *  client d'API peut peser dans un segment publié. */
+export const PART_API_MAX = 0.20
+
+/** Miroir de `partApiDominante` (module serveur). */
+export function partApiDominante(lignes, total) {
+  const parClient = new Map()
+  for (const l of lignes) {
+    if (!Number.isFinite(l.effectif) || l.effectif <= 0) continue
+    for (const [client, n] of Object.entries(l.parts_api ?? {})) {
+      if (!Number.isFinite(n) || n <= 0) continue
+      parClient.set(client, (parClient.get(client) ?? 0) + n)
+    }
+  }
+  let client = null
+  let effectif = 0
+  for (const [c, n] of parClient) {
+    if (n > effectif) { client = c; effectif = n }
+  }
+  return { client, effectif, part: total > 0 ? effectif / total : 0 }
+}
+
+/** Miroir de `partApiAcceptable` (module serveur). */
+export function partApiAcceptable(lignes, total) {
+  return partApiDominante(lignes, total).part <= PART_API_MAX
+}
+
 /** Miroir de `fourchetteDepuisAgregats` (module serveur).
  *  null si moins de `minimum` relevés : le prix reste « non évalué ». */
 export function fourchetteDepuisAgregats(lignes, vehicule, minimum = SEUIL_FOURCHETTE, prixBruts = []) {
@@ -94,6 +121,9 @@ export function fourchetteDepuisAgregats(lignes, vehicule, minimum = SEUIL_FOURC
   const construire = (sousEnsemble, portee, bruts) => {
     const { histo, total } = histogramme(sousEnsemble, bruts)
     if (total < minimum) return null
+    // Second verrou, indépendant du premier : 15 relevés ne suffisent pas si
+    // l'un d'eux pèse à lui seul plus d'un cinquième du segment.
+    if (!partApiAcceptable(sousEnsemble, total)) return null
     return {
       p25: Math.round(quantileHisto(histo, total, 0.25)),
       mediane: Math.round(quantileHisto(histo, total, 0.5)),

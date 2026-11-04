@@ -28,10 +28,11 @@ export default function Footer() {
           </div>
           <div className="col">
             <p>Société</p>
-            <a href="/#faq">Experts et garages : liste d'attente</a>
+            <a href="/#faq">Inspecteurs et garages : liste d'attente</a>
             <Link to="/mentions-legales">Mentions légales</Link>
             <Link to="/cgu">Conditions d'utilisation</Link>
             <Link to="/cgv-pass">CGV du Pass achat</Link>
+            <Link to="/cgv-inspection">CGV de l'inspection</Link>
             <Link to="/politique-de-confidentialite">Confidentialité</Link>
             <a href="mailto:contact@inspexo.io">Contact</a>
           </div>

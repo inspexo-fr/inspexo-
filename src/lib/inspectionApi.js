@@ -136,3 +136,18 @@ export const consentirPhotos = (inspectionId) =>
   appel('inspecteur-mission', { corps: { action: 'consentement_photos', inspection_id: inspectionId } })
 
 export const rendreRapport = (payload) => appel('inspection-rapport', { corps: payload })
+
+/** Vendeur absent / véhicule indisponible, constaté SUR PLACE. Une photo
+ *  horodatée est exigée : la retenue est prélevée sur l'acheteur, elle ne peut
+ *  pas reposer sur la seule parole de celui qui la touche. */
+export const constatAbsence = (inspectionId, photoDataUrl) =>
+  appel('inspecteur-mission', {
+    corps: { action: 'absence_vendeur', inspection_id: inspectionId, photo: photoDataUrl },
+  })
+
+/* ---------- Côté acheteur : annulation ---------- */
+
+/** Annule une inspection. Le sort de l'argent est décidé SERVEUR (barème des
+ *  CGV) : le client ne propose aucun montant. */
+export const annulerInspection = (inspectionId) =>
+  appel('inspection-annuler', { corps: { inspection_id: inspectionId } })

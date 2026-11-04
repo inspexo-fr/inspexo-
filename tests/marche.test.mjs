@@ -9,8 +9,9 @@
 //     d'ajustement — jamais de décote inventée ;
 //  4. la région dérivée du seul code postal.
 import {
-  ANNEE_INCONNUE, KM_INCONNU, SEUIL_FOURCHETTE, TRANCHE_PRIX,
+  ANNEE_INCONNUE, KM_INCONNU, PART_API_MAX, SEUIL_FOURCHETTE, TRANCHE_PRIX,
   ajustementKm, boiteDe, departementDe, fondreReleves, fourchetteDepuisAgregats,
+  partApiAcceptable, partApiDominante,
   generationDe, ligneCompatible, marqueCanonique, milieuTrancheKm, moisRecents,
   modeleCanonique, normaliserNom, positionPrix, referencePrix, regionDe,
   segmentDe, segmentDepuisTitreAnnonce, segmentsDepuisLibelleModele, technoDe,
@@ -249,6 +250,99 @@ titre('Fourchette : la région est une PRÉFÉRENCE, jamais un filtre')
 }
 
 // ---------------------------------------------------------------------------
+titre('Fourchette : aucun client d’API ne pèse plus de 20 % du segment')
+// CUA art. 6.3. Deux verrous INDÉPENDANTS : 15 relevés, ET aucune source
+// dominante. Atteindre le seuil ne suffit pas — un segment dont un cinquième
+// vient d'un seul client d'API n'est plus une observation du marché, c'est le
+// reflet de ce client, et nous l'afficherions sous l'étiquette « prix
+// observés ».
+eq(PART_API_MAX, 0.20, 'le seuil est bien d’un cinquième')
+
+// `L(prix)` porte effectif 1. On attribue en plaçant une carte parts_api.
+const avecApi = (prix, parts) => ({ ...L(prix), parts_api: parts })
+
+// Référence : 15 relevés, aucune contribution d’API → publiée.
+ok(fourchetteDepuisAgregats(lignes(15, 15_000), cible) !== null,
+  '15 relevés sans aucune contribution d’API → publiée')
+
+// 3 sur 15 = exactement 20 % : la borne est INCLUSE, « plus de 20 % » exclut.
+ok(fourchetteDepuisAgregats(
+  [...lignes(14, 15_000), avecApi(15_000, { A: 3 })], cible) !== null,
+  'un client à exactement 20 % → encore publiée (la borne est incluse)')
+
+// 4 sur 15 ≈ 26,7 % : au-delà, le segment ne sort pas.
+ok(fourchetteDepuisAgregats(
+  [...lignes(14, 15_000), avecApi(15_000, { A: 4 })], cible) === null,
+  'un client au-delà de 20 % → segment NON publié')
+
+// La règle est PAR CLIENT, pas sur le cumul : deux clients à 20 % chacun
+// (40 % d’API au total) passent, parce qu’aucun des deux ne domine seul.
+ok(fourchetteDepuisAgregats(
+  [...lignes(13, 15_000), avecApi(15_000, { A: 3 }), avecApi(15_000, { B: 3 })],
+  cible) !== null,
+  'deux clients à 20 % chacun → publiée (la règle est par client)')
+ok(fourchetteDepuisAgregats(
+  [...lignes(13, 15_000), avecApi(15_000, { A: 4 }), avecApi(15_000, { B: 4 })],
+  cible) === null,
+  'deux clients au-delà de 20 % chacun → non publiée')
+
+// Le poids d’un client se CUMULE sur toutes les lignes du segment : le
+// répartir en petites contributions ne doit rien changer.
+ok(fourchetteDepuisAgregats(
+  [...lignes(11, 15_000), avecApi(15_000, { A: 1 }), avecApi(15_250, { A: 1 }),
+   avecApi(15_500, { A: 1 }), avecApi(15_750, { A: 1 })], cible) === null,
+  'un client éparpillé sur 4 lignes est compté une seule fois, et bloque')
+
+// Le dénominateur est le total PUBLIÉ : des prix bruts fournis en mémoire
+// (comparables de l’extension) élargissent la population et peuvent ramener
+// un client sous la barre. C’est cohérent — le segment affiché est bien moins
+// dominé qu’il ne l’était.
+ok(fourchetteDepuisAgregats(
+  [...lignes(14, 15_000), avecApi(15_000, { A: 4 })], cible) === null,
+  'client à 4 relevés sur 15 → bloquée')
+ok(fourchetteDepuisAgregats(
+  [...lignes(14, 15_000), avecApi(15_000, { A: 4 })], cible, SEUIL_FOURCHETTE,
+  [15_000, 15_100, 15_200, 15_300, 15_400]) !== null,
+  'les mêmes relevés élargis par 5 prix bruts → publiée (4 sur 20 = 20 %)')
+
+// Une ligne d’effectif nul ne contribue à rien, pas même à une part d’API.
+ok(fourchetteDepuisAgregats(
+  [...lignes(15, 15_000), { ...avecApi(15_000, { A: 99 }), effectif: 0 }],
+  cible) !== null,
+  'une ligne d’effectif nul ne porte aucune part d’API')
+
+// Les deux verrous ne se compensent jamais : sous le seuil, rien ne sort,
+// qu’il y ait ou non une source dominante.
+ok(fourchetteDepuisAgregats(lignes(14, 15_000), cible) === null,
+  'sous le seuil, pas de fourchette même sans aucune part d’API')
+
+// Interaction avec la PRÉFÉRENCE régionale : si le sous-ensemble régional est
+// dominé par un client, on ne le publie pas — on retombe sur le national, qui
+// est plus large et moins dominé. La préférence ne contourne pas le verrou.
+{
+  const mixte = [
+    ...Array.from({ length: 14 }, () => ({ ...L(15_000), region: 'occitanie' })),
+    { ...avecApi(15_000, { A: 5 }), region: 'occitanie' },
+    ...Array.from({ length: 30 }, () => ({ ...L(16_000), region: 'bretagne' })),
+  ]
+  const f = fourchetteDepuisAgregats(mixte, { ...cible, region: 'occitanie' })
+  ok(f !== null && f.portee === 'national',
+    'région dominée par un client → repli sur le national, jamais de publication dominée')
+}
+
+// La fonction pure, isolée.
+eq(partApiDominante([], 0), { client: null, effectif: 0, part: 0 },
+  'aucune ligne → aucune part dominante')
+eq(partApiDominante([avecApi(15_000, { A: 2, B: 5 })], 20).client, 'B',
+  'le client le plus lourd est identifié')
+eq(partApiDominante([avecApi(15_000, { A: 2, B: 5 })], 20).part, 0.25,
+  'sa part est calculée sur le total publié')
+ok(partApiAcceptable([avecApi(15_000, { A: 2 })], 10) === true, '2/10 = 20 % → acceptable')
+ok(partApiAcceptable([avecApi(15_000, { A: 3 })], 10) === false, '3/10 = 30 % → refusé')
+// Une carte absente est le cas NORMAL (partage des prix éteint par défaut).
+ok(partApiAcceptable(lignes(15, 15_000), 15) === true,
+  'absence de carte parts_api → aucune part, segment acceptable')
+
 titre('Position de l’annonce dans la fourchette')
 eq(positionPrix(9_000, { p25: 10_000, p75: 20_000 }).cle, 'quart_moins_cher', 'sous le P25')
 eq(positionPrix(10_000, { p25: 10_000, p75: 20_000 }).cle, 'quart_moins_cher', 'au P25 : encore le quart bas')
@@ -481,6 +575,7 @@ titre('Copie CLIENT ≡ source SERVEUR')
   const serveur = await import('../supabase/functions/_shared/marche.ts')
 
   eq(client.SEUIL_FOURCHETTE, serveur.SEUIL_FOURCHETTE, 'même seuil de publication')
+  eq(client.PART_API_MAX, serveur.PART_API_MAX, 'même plafond de part d’un client d’API')
   eq(client.TRANCHE_PRIX, serveur.TRANCHE_PRIX, 'même largeur de tranche de prix')
   eq(client.TRANCHE_KM, serveur.TRANCHE_KM, 'même largeur de tranche de km')
   eq(client.KM_INCONNU, serveur.KM_INCONNU, 'même sentinelle de km inconnu')
@@ -499,6 +594,7 @@ titre('Copie CLIENT ≡ source SERVEUR')
   const REGIONS = ['', 'occitanie', 'ile-de-france', 'bretagne']
   let divergences = 0
   let avecFourchette = 0
+  let bloquesParPartApi = 0
   for (let cas = 0; cas < 400; cas++) {
     const lignes = Array.from({ length: rnd(30) }, () => ({
       generation_norm: '',
@@ -510,6 +606,10 @@ titre('Copie CLIENT ≡ source SERVEUR')
       region: REGIONS[rnd(REGIONS.length)],
       prix_tranche: 2_000 + rnd(80) * 250,
       effectif: 1 + rnd(6),
+      // Une contribution d'API sur six lignes environ, attribuée à l'un de
+      // trois clients : le tirage doit traverser le verrou des 20 % dans les
+      // deux implémentations, pas seulement le seuil de 15.
+      ...(rnd(6) === 0 ? { parts_api: { [`c${rnd(3)}`]: 1 + rnd(5) } } : {}),
     }))
     const cible = {
       techno: TECHNOS[rnd(TECHNOS.length)],
@@ -524,10 +624,22 @@ titre('Copie CLIENT ≡ source SERVEUR')
     const b = serveur.fourchetteDepuisAgregats(lignes, cible, serveur.SEUIL_FOURCHETTE, bruts)
     if (JSON.stringify(a) !== JSON.stringify(b)) divergences++
     if (a) avecFourchette++
+    // Cas bloqué par le SEUL verrou des 20 % : la fourchette serait sortie
+    // si on ignorait les parts d'API.
+    if (!a) {
+      const sansParts = lignes.map(({ parts_api, ...reste }) => reste)
+      if (serveur.fourchetteDepuisAgregats(sansParts, cible, serveur.SEUIL_FOURCHETTE, bruts)) {
+        bloquesParPartApi++
+      }
+    }
   }
   eq(divergences, 0, '400 histogrammes tirés au hasard : aucune divergence client/serveur')
   ok(avecFourchette > 20 && avecFourchette < 380,
     `le tirage couvre les deux cas (${avecFourchette}/400 au-dessus du seuil)`)
+  // Et le tirage doit RÉELLEMENT exercer le verrou des 20 %, sans quoi la
+  // parité ne prouverait rien à son sujet : on recompte les cas où il mord.
+  ok(bloquesParPartApi > 0,
+    `le tirage exerce bien le verrou des 20 % (${bloquesParPartApi} cas bloqués par lui seul)`)
 }
 
 // ---------------------------------------------------------------------------

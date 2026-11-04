@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabaseClient'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
 import { getPublicAnalysis } from '../lib/scoreApi'
 import {
-  accepterMission, consentirPhotos, inspecteurMissions, monProfilInspecteur,
+  accepterMission, consentirPhotos, constatAbsence, inspecteurMissions, monProfilInspecteur,
   refuserMission, rendreRapport,
 } from '../lib/inspectionApi'
 import { CONSENTEMENT_PHOTOS, euros, PART_INSPECTEUR_CENTS } from '../data/charte'
@@ -326,6 +326,37 @@ export default function InspecteurPage() {
                             <button type="button" className="btn-ghost btn-auto" style={{ width: 'auto' }} onClick={() => refuser(m)}>
                               Me désister
                             </button>
+                            {/* Véhicule non présenté. Une photo horodatée prise SUR PLACE est
+                                exigée : l'indemnité de 40 € est prélevée sur l'acheteur, elle ne
+                                peut pas reposer sur la seule parole de celui qui la touche. */}
+                            <label className="btn-ghost btn-auto" style={{ width: 'auto', cursor: 'pointer' }}>
+                              Véhicule non présenté
+                              <input
+                                type="file" accept="image/*" capture="environment"
+                                style={{ display: 'none' }}
+                                onChange={async (e) => {
+                                  const f = e.target.files?.[0]
+                                  e.target.value = ''
+                                  if (!f) return
+                                  if (!window.confirm(
+                                    "Confirmez-vous que le véhicule ne vous a pas été présenté ?\n\n"
+                                    + "40 € vous seront versés pour le déplacement, le reste sera remboursé "
+                                    + "à l'acheteur. Votre photo sert de preuve et peut être réexaminée.",
+                                  )) return
+                                  setMessage(null)
+                                  try {
+                                    const image = await resizeImageToDataUrl(f)
+                                    const r = await constatAbsence(m.id, image)
+                                    setMessage(r?.versee === false
+                                      ? "Constat enregistré. Le versement de l'indemnité est en cours de régularisation."
+                                      : 'Constat enregistré : votre indemnité de déplacement part sous peu.')
+                                    charger()
+                                  } catch (err) {
+                                    setMessage(err?.message || 'Constat impossible. Réessayez.')
+                                  }
+                                }}
+                              />
+                            </label>
                           </div>
                         )}
                         {ouverte?.id === m.id && m.statut !== 'faite' && (

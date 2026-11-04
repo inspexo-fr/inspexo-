@@ -929,6 +929,28 @@ function InspecteursTab() {
     fetchTout()
   }
 
+  // Arbitrage d'une annulation contestée. Le barème est automatique ; il peut
+  // se tromper sur un cas réel (vendeur qui conteste son absence, inspecteur
+  // qui s'est trompé d'adresse). Une inspection ne s'arbitre QU'UNE FOIS.
+  const arbitrer = async (ins, decision) => {
+    const libelle = decision === 'rembourser_integral'
+      ? `rendre les ${(ins.retenue_cents / 100).toLocaleString('fr-FR')} € retenus à l'acheteur`
+      : 'confirmer la retenue au bénéfice de l\'inspecteur'
+    const note = window.prompt(`Arbitrage INS-${String(ins.ref_num || 0).padStart(5, '0')} — ${libelle}.\n\nNote (conservée, 500 car. max) :`)
+    if (note === null) return
+    setEnCours(ins.id); setMessage(null)
+    const d = await adminFetch('admin-inspecteurs', {
+      method: 'PATCH',
+      body: JSON.stringify({ inspection_id: ins.id, decision, note }),
+    })
+    setEnCours(null)
+    if (d.error) { setMessage(d.message ? `${d.error} — ${d.message}` : d.error); return }
+    setMessage(d.argent_traite === false
+      ? `Décision enregistrée, mais le mouvement bancaire a échoué (${d.erreur || 'erreur inconnue'}). À régulariser dans Stripe.`
+      : 'Arbitrage enregistré.')
+    fetchTout()
+  }
+
   const voirDocument = async (id) => {
     const d = await adminFetch(`admin-inspecteurs?document=${id}`, { method: 'GET' })
     if (d.url) window.open(d.url, '_blank', 'noopener')
@@ -1030,9 +1052,38 @@ function InspecteursTab() {
               </span>
               <span style={{ color: '#6B7280' }}>
                 {ins.statut}
+                {ins.annulee_par ? ` (${ins.annulee_par})` : ''}
+                {ins.autorisee_le && !ins.capturee_le && ins.statut === 'a_attribuer' ? ' · AUTORISÉ, NON DÉBITÉ' : ''}
                 {ins.verse_le ? ` · versé ${(ins.part_inspecteur_cents / 100).toLocaleString('fr-FR')} €` : ''}
+                {ins.retenue_cents > 0 ? ` · retenue ${(ins.retenue_cents / 100).toLocaleString('fr-FR')} €` : ''}
+                {ins.retenue_cents > 0 && !ins.retenue_transfer_id ? ' · INDEMNITÉ NON VERSÉE' : ''}
                 {ins.statut === 'faite' && !ins.transfer_id ? ' · VERSEMENT À RÉGULARISER' : ''}
+                {ins.arbitre_le ? ` · arbitré : ${ins.arbitrage_decision}` : ''}
               </span>
+
+              {/* Arbitrage : seulement là où il y a une retenue à trancher. */}
+              {ins.retenue_cents > 0 && !ins.arbitre_le && (
+                <span style={{ display: 'flex', gap: 6, flexWrap: 'wrap', width: '100%' }}>
+                  {ins.absence_photo_path && (
+                    <button type="button" style={styles.refreshBtn} disabled={enCours === ins.id}
+                      onClick={async () => {
+                        const d = await adminFetch(`admin-inspecteurs?preuve=${ins.id}`, { method: 'GET' })
+                        if (d.url) window.open(d.url, '_blank', 'noopener')
+                        else setMessage('Photo indisponible.')
+                      }}>
+                      Voir la preuve
+                    </button>
+                  )}
+                  <button type="button" style={styles.refreshBtn} disabled={enCours === ins.id}
+                    onClick={() => arbitrer(ins, 'rembourser_integral')}>
+                    Rendre la retenue
+                  </button>
+                  <button type="button" style={styles.refreshBtn} disabled={enCours === ins.id}
+                    onClick={() => arbitrer(ins, 'confirmer_retenue')}>
+                    Confirmer la retenue
+                  </button>
+                </span>
+              )}
             </div>
           ))}
         </>

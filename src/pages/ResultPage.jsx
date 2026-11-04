@@ -1356,7 +1356,7 @@ export default function ResultPage() {
                         <strong>{euros1(r.prix.fourchette.mediane_reference)}</strong> : ce véhicule affiche{' '}
                         {vh.kilometrage != null ? `${Number(vh.kilometrage).toLocaleString('fr-FR')} km` : 'un kilométrage'}
                         {' '}contre {Number(r.prix.fourchette.ajustement_km.km_median_segment).toLocaleString('fr-FR')} km
-                        {' '}pour la médiane du segment. Décote mesurée sur ce segment :{' '}
+                        {' '}pour la médiane du segment. Écart observé sur ce segment :{' '}
                         {euros1(r.prix.fourchette.ajustement_km.decote_eur_10000km)} par 10 000 km
                         {' '}({r.prix.fourchette.ajustement_km.n_tranches} tranches de kilométrage).
                       </p>

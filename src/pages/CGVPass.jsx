@@ -100,7 +100,7 @@ export default function CGVPass() {
             Après une réclamation écrite restée insatisfaite auprès de contact@inspexo.io, vous pouvez saisir
             gratuitement le médiateur de la consommation dont relève DUPLEX SAS :{' '}
             <strong>{config?.mediateur || 'en cours de désignation — la vente du Pass n\'est ouverte qu\'une fois le médiateur désigné'}</strong>.
-            Vous pouvez également utiliser la plateforme européenne de règlement en ligne des litiges.
+            La saisine du médiateur est gratuite pour le consommateur et n'empêche pas d'agir en justice.
           </p>
 
           <h2 className="legal-h2">7. Données personnelles</h2>

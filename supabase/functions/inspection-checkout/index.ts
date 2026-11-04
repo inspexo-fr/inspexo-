@@ -36,7 +36,7 @@ const IP_HASH_SALT = Deno.env.get("IP_HASH_SALT");
 if (!IP_HASH_SALT) throw new Error("IP_HASH_SALT manquant — configurez le secret.");
 
 const ORIGINE = "https://www.inspexo.io";
-const CGV_VERSION = "2026-11-01";
+const CGV_VERSION = "2026-11-03";
 const COMMANDES_MAX_PAR_IP = 6; // par 24 h
 
 function json(body: unknown, status = 200): Response {
@@ -136,6 +136,18 @@ serve(async (req: Request) => {
     const creneau = validerCreneau(body?.creneau);
     if (!creneau.ok) return json({ error: "creneau_invalide", message: creneau.raison }, 400);
 
+    // Rétractation (L221-25) : sans demande EXPRESSE d'exécution avant la fin
+    // des 14 jours, l'acheteur garderait son droit de rétractation après
+    // l'inspection réalisée — inspecteur payé, acheteur remboursé. La case est
+    // distincte de l'acceptation des CGV et n'est jamais pré-cochée côté
+    // client ; ici, on refuse simplement la commande sans elle.
+    if (body?.execution_immediate !== true) {
+      return json({
+        error: "execution_immediate_requise",
+        message:
+          "Vous devez demander expressément que l'inspection soit réalisée avant la fin du délai de rétractation de 14 jours.",
+      }, 400);
+    }
     if (body?.accepte_cgv !== true) {
       return json({ error: "cgv_requises", message: "Vous devez accepter les conditions de l'inspection." }, 400);
     }
@@ -214,7 +226,7 @@ serve(async (req: Request) => {
           product_data: {
             name: `Inspection sur place — ${vehicule}`,
             description:
-              `Inspection par un professionnel indépendant, sur place, sous 48 heures. Rapport photo remis dans votre dossier Inspexo. Prix TTC.`,
+              `Inspection par un professionnel indépendant, sur place, sous 48 heures. Rapport photo remis dans votre dossier Inspexo. Prix TTC. Montant autorisé maintenant, débité seulement quand un inspecteur confirme.`,
           },
         },
       }],
@@ -222,6 +234,13 @@ serve(async (req: Request) => {
       cancel_url: `${ORIGINE}/a/${analysisId}?inspection=annule`,
       payment_intent_data: {
         description: `Inspexo — inspection ${vehicule}`,
+        // PAIEMENT EN DEUX TEMPS. À la commande, le montant est seulement
+        // AUTORISÉ ; il n'est débité qu'au moment où un inspecteur confirme
+        // (capture dans `inspecteur-mission`). Personne ne paie pour une
+        // mission que personne n'a prise.
+        // ⚠️ Une autorisation de carte ne tient que 7 jours : la fenêtre de
+        // confirmation est à 48 h, et le cron relâche au-delà.
+        capture_method: "manual",
         // Charge et transfert séparés : le groupe est posé ICI et réutilisé
         // tel quel au versement (inspection-rapport).
         transfer_group: transferGroup,
@@ -237,7 +256,15 @@ serve(async (req: Request) => {
     if (!session.url) throw new Error("session Stripe sans URL");
 
     await admin.from("inspections")
-      .update({ stripe_session: session.id, transfer_group: transferGroup, maj_le: new Date().toISOString() })
+      .update({
+        stripe_session: session.id,
+        transfer_group: transferGroup,
+        // Preuve de la demande d'exécution immédiate, avec la version du texte
+        // accepté : c'est ce couple qui vaut consentement, pas la case seule.
+        execution_immediate_le: new Date().toISOString(),
+        cgv_version: CGV_VERSION,
+        maj_le: new Date().toISOString(),
+      })
       .eq("id", insp.id);
 
     return json({ url: session.url, inspection_id: insp.id });
