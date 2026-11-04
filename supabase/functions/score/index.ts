@@ -20,7 +20,7 @@ import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts"
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
-import { pannesApplicables, refsManquantes } from "../_shared/pannesApplicables.ts";
+import { panneCompteDansScore, pannesApplicables, refsManquantes } from "../_shared/pannesApplicables.ts";
 import { calculerNegociation, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import {
@@ -1653,6 +1653,9 @@ serve(async (req: Request) => {
       rappel_code: string | null; rappel_date: string | null; rappel_vehicules: string | null;
       rappel_annee_debut: number | null; rappel_annee_fin: number | null;
       rappel_hors_periode: boolean;
+      /** L'entrée pèse-t-elle sur le score ? Faux pour une entrée d'atlas que
+       *  l'annonce ne confirme pas : elle reste affichée, en question. */
+      compte_score?: boolean;
     };
     const pannesJoined: PanneOut[] = [];
     const seenRefs = new Set<string>();
@@ -2366,7 +2369,51 @@ serve(async (req: Request) => {
       // l'acheteur doit la connaître — mais ne pèse pas sur la note. Un danger
       // pour les occupants ou un rappel applicable pèsent toujours, eux.
       const kmActuel = typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null;
+      // ---- ATLAS : AFFICHÉ TOUJOURS, COMPTÉ SI CONFIRMÉ -----------------
+      // L'atlas est un catalogue de MARQUE. Une entrée comme « Suspension
+      // Airmatic » ou « Corrosion W203 » ne concerne CE véhicule que s'il a
+      // cet équipement, cette génération ou ce code. Nous ne pouvons pas le
+      // savoir — sauf si l'annonce le dit. Elle ne pèse donc sur le score que
+      // si l'annonce le mentionne explicitement ; sinon elle reste affichée et
+      // devient une question au vendeur.
+      //
+      // C'est ce qui rend le résultat déterministe sans encoder l'équipement :
+      // la décision ne dépend plus d'un jugement, mais de la présence d'un mot
+      // dans un texte.
+      const atlasAConfirmer: typeof pannesJoined = [];
+      for (const p of pannesJoined) {
+        const d = panneCompteDansScore(
+          { ref: p.source_ref, titre: p.titre, organe: p.organe, symptome: p.symptome,
+            km_typique: p.km_typique, gravite: p.gravite, rappel_code: p.rappel_code },
+          // Le texte de l'annonce TEL QUE FOURNI : c'est lui qui confirme ou
+          // non ce que vise une entrée d'atlas.
+          text,
+        );
+        p.compte_score = d.compte;
+        // Un rappel officiel applicable et un danger pour les occupants
+        // pèsent quoi qu'il arrive : ils ne dépendent pas d'un équipement.
+        if (!d.compte && (p.gravite === "securite" || (p.rappel_code && !p.rappel_hors_periode))) {
+          p.compte_score = true;
+        }
+        if (!p.compte_score) atlasAConfirmer.push(p);
+      }
+      if (atlasAConfirmer.length > 0) {
+        // Chaque entrée non confirmée devient une question, formulée à partir
+        // de ce qu'elle VISE : c'est la seule chose qu'on sache d'elle.
+        for (const p of atlasAConfirmer.slice(0, 3)) {
+          questions.push(
+            `Ce modèle connaît un défaut « ${p.titre} » : votre véhicule est-il concerné (équipement, génération, millésime) ?`,
+          );
+        }
+        await admin.from("events").insert({
+          name: "atlas_non_confirme",
+          props_json: { nombre: atlasAConfirmer.length, refs: atlasAConfirmer.map((p) => p.source_ref) },
+        });
+      }
+
       const pannesQuiPesent = pannesJoined.filter((p) => {
+        // Entrée d'atlas non confirmée par l'annonce : affichée, pas comptée.
+        if (p.compte_score === false) return false;
         if (p.gravite === "securite") return true; // un danger pèse toujours
         if (p.rappel_code && !p.rappel_hors_periode) return true;
         const dansHorizon = panneDansHorizon(kmActuel, seuilKmPanne(p.km_typique));

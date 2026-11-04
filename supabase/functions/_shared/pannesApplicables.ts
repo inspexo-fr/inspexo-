@@ -195,3 +195,82 @@ export function refsManquantes(
   const citees = new Set(refsCitees.map((r) => r.toUpperCase()));
   return applicables.map((e) => e.ref).filter((ref) => !citees.has(ref.toUpperCase()));
 }
+
+// ---------------------------------------------------------------------------
+// ENTRÉES D'ATLAS : AFFICHÉES TOUJOURS, COMPTÉES SEULEMENT SI CONFIRMÉES.
+//
+// L'atlas est un catalogue de MARQUE : il couvre toute la gamme. Une entrée
+// comme « Suspension Airmatic » ou « Corrosion W203 » ne concerne ce
+// véhicule-ci que s'il a cet équipement, cette génération ou ce code — ce que
+// nous ne pouvons pas savoir… sauf si l'annonce le dit.
+//
+// D'où la règle (décision d'Utku, 4 novembre 2026) : une entrée d'atlas ne
+// pèse sur le score que si **l'annonce mentionne explicitement** ce qu'elle
+// vise. Sinon elle reste AFFICHÉE et devient une QUESTION au vendeur.
+//
+// C'est ce qui rend le résultat déterministe sans encoder l'équipement : la
+// décision ne dépend plus du jugement du modèle, mais de la présence d'un mot
+// dans un texte — vérifiable, reproductible, et explicable à l'acheteur.
+// ---------------------------------------------------------------------------
+
+/** Mots à initiale majuscule qui ne désignent jamais un équipement : ils
+ *  ouvrent une phrase ou sont des termes génériques. Sans cette liste, le
+ *  premier mot de chaque titre deviendrait une « cible ». */
+const MOTS_NON_CIBLES = new Set([
+  "defaillances", "defaillance", "panne", "pannes", "probleme", "problemes",
+  "usure", "casse", "fuite", "fuites", "corrosion", "bruit", "bruits",
+  "vibrations", "tremblements", "rates", "demarrage", "moteur", "boite",
+  "suspension", "direction", "freins", "frein", "embrayage", "distribution",
+  "injecteurs", "injecteur", "turbo", "capteur", "capteurs", "vanne", "vannes",
+  "pompe", "courroie", "chaine", "volant", "plaque", "pignon", "compresseur",
+  "coussins", "structurelle", "electrique", "electronique", "premieres",
+  "premiers", "motorisations", "motorisation", "versions", "version", "modeles",
+  "modele", "sur", "les", "des", "une", "aux", "avec", "sans", "pour", "dans",
+]);
+
+const sansAccents = (t: string) =>
+  t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+/** Ce qu'une entrée d'atlas VISE : codes et noms d'équipement distinctifs. */
+export function ciblesAtlas(e: EntreeCatalogue): string[] {
+  const texte = `${e.titre} ${e.symptome ?? ""}`;
+  const cibles = new Set<string>();
+
+  for (const re of [RE_CODE_MOTEUR, RE_CODE_CAISSE, RE_CODE_BOITE_REF, RE_CODE_BOITE]) {
+    for (const c of codesCites(texte, re)) cibles.add(c);
+  }
+  // Noms propres d'équipement : initiale majuscule ou tout en capitales, au
+  // moins quatre lettres, hors mots génériques.
+  for (const m of texte.matchAll(/\b([A-ZÀ-Þ][A-Za-zÀ-ÿ]{3,}|[A-Z]{4,})\b/g)) {
+    const mot = sansAccents(m[1]);
+    if (!MOTS_NON_CIBLES.has(mot)) cibles.add(nettoie(m[1]));
+  }
+  return [...cibles];
+}
+
+/** L'annonce mentionne-t-elle explicitement ce que vise cette entrée d'atlas ?
+ *
+ *  Une entrée qui ne vise RIEN de distinctif ne peut pas être confirmée : elle
+ *  reste une question. C'est volontairement conservateur — mieux vaut une
+ *  question de trop qu'un point de score pris sur une supposition. */
+export function atlasConfirme(e: EntreeCatalogue, texteAnnonce: string): boolean {
+  const cibles = ciblesAtlas(e);
+  if (cibles.length === 0) return false;
+  const annonce = nettoie(texteAnnonce);
+  if (annonce.length === 0) return false;
+  return cibles.some((c) => c.length >= 3 && annonce.includes(c));
+}
+
+/** Une panne doit-elle PESER sur le score ?
+ *
+ *  Fiche moteur → toujours (elle est propre à ce moteur).
+ *  Atlas → seulement si l'annonce confirme ce qu'elle vise. */
+export function panneCompteDansScore(
+  e: EntreeCatalogue,
+  texteAnnonce: string,
+): { compte: boolean; motif: "fiche" | "atlas_confirme" | "atlas_non_confirme" } {
+  if (/^F/i.test(e.ref)) return { compte: true, motif: "fiche" };
+  return atlasConfirme(e, texteAnnonce)
+    ? { compte: true, motif: "atlas_confirme" }
+    : { compte: false, motif: "atlas_non_confirme" };
+}

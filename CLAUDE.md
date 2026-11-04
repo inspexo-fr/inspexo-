@@ -910,11 +910,27 @@ CHOISIT quelles entrées citer, et ce choix varie.
   un code de **famille moteur**, de **caisse** ou de **boîte** ne s'applique que
   si c'est celui du véhicule. Si l'entrée nomme et que nous ne savons pas, elle
   est écartée — on n'affirme pas.
-- **Résultat : variance ramenée de 6 points à 2** (vert 73 / vert 71, référence
-  71). **Pas zéro.** Le résidu vient des entrées d'atlas, laissées au jugement :
-  les rendre déterministes demanderait d'encoder l'équipement et la caisse, ce
-  que nous n'avons pas. `BAREME_VERSION` → **11.2** (la liste reçue par le
-  barème change à texte identique).
+- Variance d'abord ramenée de 6 points à 2 (vert 73 / 71) — insuffisant : **près
+  d'un seuil, 2 points changent le verdict**.
+- ⚠️ **RÈGLE FINALE (4 nov. 2026) — une entrée d'ATLAS ne pèse sur le score que
+  si l'annonce mentionne EXPLICITEMENT ce qu'elle vise** (équipement, génération
+  ou code). Sinon elle reste **affichée** et devient une **question au vendeur**.
+  Les entrées de FICHE restent garanties.
+  - C'est ce qui rend le résultat déterministe **sans encoder l'équipement** :
+    la décision ne dépend plus d'un jugement de modèle mais de la présence d'un
+    mot dans un texte — vérifiable, reproductible, explicable à l'acheteur.
+  - `ciblesAtlas` extrait ce qu'une entrée vise : codes (moteur, caisse, boîte)
+    et noms propres d'équipement (« Airmatic »), hors mots génériques. Une
+    entrée qui ne vise **rien de distinctif** n'est jamais confirmée : question.
+    Conservateur à dessein — mieux vaut une question de trop qu'un point de
+    score pris sur une supposition.
+  - **Exceptions qui pèsent toujours** : un danger pour les occupants
+    (`securite`) et un rappel officiel applicable. Ils ne dépendent pas d'un
+    équipement.
+- **Résultat : Mercedes 71 / 71 / 71**, et les deux références tiennent —
+  S7 **rouge 38**, 308 **orange 55**. `BAREME_VERSION` → **11.2**.
+- 42 contrôles hors ligne, dont 500 évaluations du même couple
+  (entrée, annonce) sans divergence.
 - 29 contrôles hors ligne, dont les **cinq titres réels** qui avaient été
   injectés à tort.
 

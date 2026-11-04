@@ -6,7 +6,8 @@
 // texte, même fiche, zéro affirmation écartée — 2 pannes retenues d'un côté,
 // 0 de l'autre, axe risques 13 vs 16, score 71 vs 77.
 import {
-  entreeApplicable, pannesApplicables, refsManquantes,
+  atlasConfirme, ciblesAtlas, entreeApplicable, panneCompteDansScore,
+  pannesApplicables, refsManquantes,
 } from '../supabase/functions/_shared/pannesApplicables.ts'
 
 let ko = 0
@@ -152,6 +153,69 @@ ok(entreeApplicable(e({ ref: 'F1', titre: 'Injecteurs' }), vh()).ok,
   const r = entreeApplicable(e({ ref: 'F1', titre: 'Injecteurs OM651' }), vh({ famille_moteur: '' }))
   ok(!r.ok && r.motif === 'moteur_incompatible',
     'famille moteur du véhicule inconnue + entrée qui nomme un moteur → écartée')
+}
+
+// ---------------------------------------------------------------------------
+titre('Atlas : affiché toujours, compté seulement si l’annonce le confirme')
+// ---------------------------------------------------------------------------
+// Décision du 4 novembre 2026. L'atlas est un catalogue de MARQUE : une entrée
+// ne concerne CE véhicule que s'il a l'équipement, la génération ou le code
+// visés. Nous ne pouvons pas le savoir — sauf si l'annonce le dit. La décision
+// ne dépend donc plus d'un jugement, mais de la présence d'un mot dans un
+// texte : vérifiable, reproductible, explicable à l'acheteur.
+{
+  const airmatic = e({ ref: 'A7', titre: 'Suspension Airmatic — compresseur et coussins' })
+  ok(ciblesAtlas(airmatic).includes('AIRMATIC'), 'la cible « Airmatic » est extraite',
+    JSON.stringify(ciblesAtlas(airmatic)))
+  ok(atlasConfirme(airmatic, 'Classe C 220d, suspension Airmatic, 36 000 km'),
+    'annonce qui mentionne Airmatic → confirmée')
+  ok(!atlasConfirme(airmatic, 'Classe C 220d, 36 000 km, boîte auto'),
+    'annonce muette sur l’équipement → NON confirmée')
+}
+{
+  const w203 = e({ ref: 'A4', titre: 'Corrosion structurelle (W203, W211, W210)' })
+  ok(atlasConfirme(w203, 'Mercedes Classe C W203 de 2004'), 'code de caisse cité dans l’annonce → confirmée')
+  ok(!atlasConfirme(w203, 'Mercedes Classe C 220d de 2025'), 'caisse absente de l’annonce → non confirmée')
+}
+{
+  // Une entrée qui ne vise RIEN de distinctif ne peut pas être confirmée :
+  // elle reste une question. Conservateur à dessein — mieux vaut une question
+  // de trop qu'un point de score pris sur une supposition.
+  const vague = e({ ref: 'A9', titre: 'Usure des freins' })
+  eq(ciblesAtlas(vague), [], 'aucune cible distinctive')
+  ok(!atlasConfirme(vague, 'Classe C 220d, freins neufs'), 'sans cible, jamais confirmée')
+}
+ok(!atlasConfirme(e({ ref: 'A7', titre: 'Suspension Airmatic' }), ''),
+  'annonce vide → jamais confirmée')
+
+// La porte d'entrée utilisée par `score`.
+{
+  const r1 = panneCompteDansScore(e({ ref: 'F1', titre: 'Injecteurs OM654' }), 'Mercedes 220d')
+  ok(r1.compte && r1.motif === 'fiche', 'entrée de fiche : compte toujours')
+  const r2 = panneCompteDansScore(e({ ref: 'A7', titre: 'Suspension Airmatic' }), 'avec Airmatic')
+  ok(r2.compte && r2.motif === 'atlas_confirme', 'atlas confirmé : compte')
+  const r3 = panneCompteDansScore(e({ ref: 'A7', titre: 'Suspension Airmatic' }), 'sans mention')
+  ok(!r3.compte && r3.motif === 'atlas_non_confirme', 'atlas non confirmé : ne compte pas')
+}
+
+// DÉTERMINISME : c'est tout l'objet de la règle. Le même couple
+// (entrée, annonce) doit toujours rendre la même décision.
+{
+  const entrees = [
+    e({ ref: 'A7', titre: 'Suspension Airmatic — compresseur' }),
+    e({ ref: 'A4', titre: 'Corrosion structurelle (W203, W211)' }),
+    e({ ref: 'F1', titre: 'Injecteurs OM654' }),
+    e({ ref: 'A9', titre: 'Usure des freins' }),
+  ]
+  const annonce = 'Mercedes Classe C 220 d, 2025, 36 606 km, boîte automatique, entretien à jour'
+  const reference = JSON.stringify(entrees.map((x) => panneCompteDansScore(x, annonce)))
+  let divergences = 0
+  for (let i = 0; i < 500; i++) {
+    if (JSON.stringify(entrees.map((x) => panneCompteDansScore(x, annonce))) !== reference) divergences++
+  }
+  eq(divergences, 0, '500 évaluations du même couple : aucune divergence')
+  eq(JSON.parse(reference).map((r) => r.compte), [false, false, true, false],
+    'sur cette annonce : seule l’entrée de fiche compte')
 }
 
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${total - ko}/${total} contrôles passés`)
