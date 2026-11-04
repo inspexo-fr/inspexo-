@@ -22,7 +22,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { executerDecision } from "../_shared/inspectionArgent.ts";
-import { alerterUneFoisParHeure, bilanHtml, sujetBilan } from "../_shared/alerting.ts";
+import { alerterUneFoisParHeure, bilanHtml, sujetAlerte, sujetBilan } from "../_shared/alerting.ts";
 import {
   alerteExploitant,
   alerteRapportEnRetard,
@@ -233,6 +233,47 @@ serve(async (req: Request) => {
   // si quelqu'un martèle le point de contrôle public.
   try {
     const corps = await req.clone().json().catch(() => null);
+
+    // SPRINT 17 — Tâche « test » : envoie UNE alerte et UN bilan factices,
+    // pour vérifier que la chaîne d'email arrive et régler les filtres de
+    // boîte mail. Protégée par le même secret que le cron.
+    //
+    // ⚠️ Les deux messages portent « TEST » DANS L'OBJET et le disent en
+    // première ligne : un message d'essai qui ressemble à une vraie alerte
+    // apprend à ignorer les vraies. Et elle n'emprunte PAS l'étranglement
+    // horaire — sinon un test consommerait le droit d'alerter de l'heure, et
+    // un incident survenant juste après resterait muet.
+    if (corps?.tache === "test") {
+      const alerte = await alerteExploitant(
+        `${sujetAlerte("fonction_en_erreur")} — TEST`.replace("fonction en erreur — TEST", "TEST"),
+        `<p><strong>Ceci est un message d'essai.</strong> Aucun incident n'est en cours.</p>
+         <p>Il sert à vérifier que les alertes arrivent et à régler les filtres de boîte mail.
+            Les vraies alertes portent le même préfixe <code>[URGENT] Inspexo —</code>,
+            suivi du motif (crédit ou clé, échecs répétés, fonction en erreur, coût du jour).</p>
+         <p>Une alerte par motif et par heure, au maximum.</p>`,
+      );
+      const bilan = await alerteExploitant(
+        `${sujetBilan(new Date().toLocaleDateString("fr-FR"))} — TEST`,
+        `<p><strong>Ceci est un bilan d'essai.</strong> Les chiffres ci-dessous sont factices.</p>` +
+          bilanHtml({
+            jour: new Date().toISOString().slice(0, 10),
+            analyses: 12,
+            analyses_par_source: { "tiktok-01": 7, direct: 5 },
+            verdicts: { orange: 6, rouge: 4, vert: 2 },
+            clics: { pass: 3, inspection: 1, partage: 5 },
+            paiements: { pass: 1, inspections: 0 },
+            listes_attente: { pass_waitlist: 2 },
+            leads_pro: 1,
+            erreurs: { total: 0, par_etape: {}, service_indisponible: 0 },
+            cout_ia_eur: 1.23,
+            analyses_eval: 3,
+          }),
+      );
+      return new Response(JSON.stringify({ tache: "test", alerte, bilan }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     if (corps?.tache === "sante") {
       const detail = String(corps?.detail ?? "").slice(0, 300).replace(/[<>]/g, "");
       const etat = await alerterUneFoisParHeure(
