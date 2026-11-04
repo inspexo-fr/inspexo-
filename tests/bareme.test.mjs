@@ -1,7 +1,7 @@
 // Test hors ligne du barème déterministe (aucun appel API).
 // Vérifie la calibration sur des profils réels et, surtout, le DÉTERMINISME.
 // Usage : node tests/bareme.test.mjs
-import { calculerAxes, seuilKmPanne, panneDansHorizon } from '../supabase/functions/_shared/bareme.ts'
+import { BAREME_VERSION, calculerAxes, seuilKmPanne, panneDansHorizon } from '../supabase/functions/_shared/bareme.ts'
 
 const base = {
   annee_courante: 2026,
@@ -27,6 +27,13 @@ const verifie = (titre, faits, attendu) => {
     (ok ? '' : ` (attendu ${attendu.verdict ?? '*'} ${attendu.score_min ?? ''}-${attendu.score_max ?? ''})`))
 }
 
+// Assertion générique : `verifie` ci-dessus est spécialisée (elle appelle
+// elle-même calculerAxes et compare un verdict attendu).
+const affirme = (titre, cond, detail = '') => {
+  if (!cond) ko++
+  console.log(`${cond ? 'PASS' : 'FAIL'} — ${titre}${cond || !detail ? '' : ` (${detail})`}`)
+}
+
 // toLocaleString('fr-FR') sépare les milliers par une espace FINE INSÉCABLE
 // (U+202F) : comparer avec une espace ordinaire échouerait sans raison.
 const ns = (t) => String(t).replace(/[\u202f\u00a0\u2009\u2007]/g, ' ')
@@ -34,6 +41,57 @@ const ns = (t) => String(t).replace(/[\u202f\u00a0\u2009\u2007]/g, ' ')
 const verifiePrix = (titre, cond, detail = '') => {
   if (!cond) ko++
   console.log(`${cond ? 'PASS' : 'FAIL'} — ${titre}${cond || !detail ? '' : ` → ${detail}`}`)
+}
+
+// ---------------------------------------------------------------------------
+// SPRINT 13 — SANS HistoVec, le score est STRICTEMENT identique.
+//
+// Deux faits HistoVec sont entrés dans le barème. La garantie qui compte est
+// qu'ils ne changent RIEN quand aucun rapport n'a été déposé : c'est ce qui
+// rend la nouveauté sans effet de bord sur les analyses existantes.
+// On le prouve en rejouant des profils variés sous trois formes du même fait :
+// champ absent, champ undefined, champ false.
+// ---------------------------------------------------------------------------
+{
+  const profils = [
+    { nom: 'vert sobre', f: { annee_courante: 2026, statut_vendeur: 'particulier', annee: 2022, kilometrage: 40000, prix_affiche: 18000, fourchette: { p25: 17000, mediane: 18500, p75: 20000 }, comparables_count: 20, entretien_renseigne: true, signaux_entretien: 3, contradictions_entretien: 0, operations_critiques_non_faites: 0, catalogue_vide: false, pannes: [], incoherences: 0 } },
+    { nom: 'orange panne majeure', f: { annee_courante: 2026, statut_vendeur: 'particulier', annee: 2019, kilometrage: 120000, prix_affiche: 9000, fourchette: null, comparables_count: 0, entretien_renseigne: true, signaux_entretien: 1, contradictions_entretien: 1, operations_critiques_non_faites: 0, catalogue_vide: false, pannes: [{ gravite: 'majeure', rappel_officiel: false, rappel_confirme_effectue: false }], incoherences: 1 } },
+    { nom: 'rouge securite', f: { annee_courante: 2026, statut_vendeur: 'pro_deguise_probable', annee: 2015, kilometrage: 230000, prix_affiche: 5000, fourchette: null, comparables_count: 0, entretien_renseigne: false, signaux_entretien: 0, contradictions_entretien: 0, operations_critiques_non_faites: 1, catalogue_vide: false, pannes: [{ gravite: 'securite', rappel_officiel: true, rappel_confirme_effectue: false }], incoherences: 2, juridique_grave: true } },
+    { nom: 'compteur contredit', f: { annee_courante: 2026, statut_vendeur: 'particulier', annee: 2020, kilometrage: 60000, prix_affiche: 12000, fourchette: null, comparables_count: 0, entretien_renseigne: true, signaux_entretien: 2, contradictions_entretien: 0, operations_critiques_non_faites: 0, catalogue_vide: false, pannes: [], incoherences: 1, compteur_contredit: true } },
+  ]
+  let divergences = []
+  for (const { nom, f } of profils) {
+    const sansChamp = JSON.stringify(calculerAxes(f))
+    const indefini = JSON.stringify(calculerAxes({ ...f, histovec_opposition: undefined, histovec_vge_en_cours: undefined }))
+    const faux = JSON.stringify(calculerAxes({ ...f, histovec_opposition: false, histovec_vge_en_cours: false }))
+    if (sansChamp !== indefini) divergences.push(`${nom} : absent ≠ undefined`)
+    if (sansChamp !== faux) divergences.push(`${nom} : absent ≠ false`)
+  }
+  affirme('SANS HistoVec, le score est strictement identique (4 profils × 3 formes)',
+    divergences.length === 0, divergences.join(' | '))
+}
+{
+  // Et AVEC, les deux faits mordent bien — sinon le test ci-dessus serait
+  // vrai pour la mauvaise raison (un champ jamais lu).
+  const base = { annee_courante: 2026, statut_vendeur: 'particulier', annee: 2022, kilometrage: 30000, prix_affiche: 20000, fourchette: null, comparables_count: 0, entretien_renseigne: true, signaux_entretien: 3, contradictions_entretien: 0, operations_critiques_non_faites: 0, catalogue_vide: false, pannes: [], incoherences: 0 }
+  const normal = calculerAxes(base)
+  const avecOpposition = calculerAxes({ ...base, histovec_opposition: true })
+  const avecVge = calculerAxes({ ...base, histovec_vge_en_cours: true })
+  affirme('Une opposition HistoVec fait tomber le verdict en rouge',
+    normal.verdict === 'vert' && avecOpposition.verdict === 'rouge' && avecOpposition.score <= 30,
+    `${normal.score} → ${avecOpposition.score} (${avecOpposition.verdict})`)
+  affirme('Une procédure VGE non levée fait tomber le verdict en rouge',
+    avecVge.verdict === 'rouge' && avecVge.score <= 32, `${avecVge.score} ${avecVge.verdict}`)
+  affirme('Le motif du plafond nomme la cause',
+    /opposition/i.test(avecOpposition.plafond_raison ?? '') &&
+    /gravement endommag/i.test(avecVge.plafond_raison ?? ''),
+    `${avecOpposition.plafond_raison} | ${avecVge.plafond_raison}`)
+  // Aucune garantie ne lève un gage.
+  affirme('Le conditionnel de garantie ne lève jamais une opposition',
+    (avecOpposition.verdict_conditionnel?.score ?? 0) <= 30)
+}
+{
+  affirme('BAREME_VERSION passée à 11.3', BAREME_VERSION === '11.3', BAREME_VERSION)
 }
 
 console.log('CALIBRATION\n')

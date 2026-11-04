@@ -301,6 +301,29 @@ export async function getKitSignature(analysisId) {
 
 /** Lecture du PV de contrôle technique (Pass requis, vérifié serveur).
  *  Photos envoyées au modèle puis oubliées — jamais stockées. */
+/* ---------- Certificat de situation administrative HistoVec (sprint 13) ---------- */
+
+/** Le drapeau est évalué EN BASE avec le jeton de l'appelant : c'est elle qui
+ *  tranche « admin_uniquement », pas le navigateur. Sert uniquement à ne pas
+ *  afficher un bouton inutile — la fermeture réelle est côté fonction. */
+export async function drapeauActif(cle) {
+  const { data, error } = await supabase.rpc('drapeau_actif', { p_cle: cle })
+  if (error) return false
+  return data === true
+}
+
+
+/** Dépose le PDF du CSA. Le fichier n'est JAMAIS stocké : le serveur en extrait
+ *  le texte en mémoire, en tire les faits par des règles fixes, et l'oublie.
+ *  Un signal ROUGE revient même sans Pass. */
+export const lectureHistovec = (analysisId, pdfBase64) =>
+  callFunction('lecture-histovec', { analysis_id: analysisId, pdf_base64: pdfBase64 })
+
+/** Corrige un relevé kilométrique mal lu sur le PV et relance le calcul.
+ *  Aucun nouvel appel au modèle : on rejoue le barème sur la série corrigée. */
+export const corrigerKmCt = (analysisId, corrections) =>
+  callFunction('lecture-ct', { analysis_id: analysisId, action: 'corriger_km', corrections })
+
 export const lectureCt = (analysisId, images, constatsPrecedents = []) =>
   callFunction('lecture-ct', {
     analysis_id: analysisId, images, constats_precedents: constatsPrecedents,

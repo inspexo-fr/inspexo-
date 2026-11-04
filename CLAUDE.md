@@ -751,6 +751,302 @@ expiration, les trois annulations et l'arbitrage ; 7. merge.
   la migration sert seulement à ce que l'attribution commence à être
   enregistrée — pas à éviter une panne.
 
+## Sprint 13 — Lecture du rapport HistoVec (nov. 2026)
+
+### ⚠️ Ce que HistoVec produit réellement — étudié dans le code source officiel
+`github.com/histovec/histovec-beta`, **dernier commit de `main` le 5 octobre
+2023** (plus de trois ans : à reconfirmer sur un rapport récent). Note complète :
+`docs/sprint13-histovec-format.md`.
+- Le bouton du vendeur s'appelle **« Imprimer le CSA »** et produit le
+  **« Certificat de situation administrative détaillé »**. Le **rapport**
+  HistoVec, lui, est une **page web à onglets** partagée par un lien, et les
+  onglets « Contrôles techniques » et « Kilométrage » sont **conditionnels**.
+  Aucune feuille `@media print` dans le dépôt : imprimer la page ne rendrait que
+  l'onglet actif.
+- **Le PDF ne contient NI kilométrage, NI contrôles techniques, NI nombre de
+  titulaires, NI modèle, NI énergie.** Cinq des six règles tiennent quand même —
+  le nombre de détenteurs se **déduit** des opérations `CHANG_TIT_NORMAL*`, et
+  `CHANG_LOC` révèle un passage en location. **Décision : le kilométrage est
+  traité par `lecture-ct`, pas par HistoVec.**
+- ⚠️ **Piège documenté dans leur code** : pour une OVE, le CSA écrit
+  « Véhicule endommagé » là où le rapport web écrit « Procédure de réparation
+  contrôlée » — divergence assumée par la DSR. Les deux doivent être reconnues.
+- ⚠️ **Trois formes négatives** : « Aucune » (oppositions, saisie), « Aucun »
+  (gage), « Non » (suspensions). Une seule regex les manque.
+
+### ⚠️ Appariement POSITIONNEL, validé par format
+Mesuré sur des CSA produits par le générateur officiel : la mise en page à deux
+colonnes sort les **quatre libellés d'identification d'affilée, PUIS les quatre
+valeurs**. Une règle « libellé : valeur sur la même ligne » ne trouve **rien**.
+- L'appariement est donc positionnel — et comme une position est une hypothèse,
+  **chaque valeur est validée par SON format** (plaque SIV ou FNI, date
+  JJ/MM/AAAA réelle, VIN de 17 caractères sans I/O/Q, marque dans une liste).
+  Format inattendu ⇒ **rien n'est attribué**, jamais d'approximation. Test avec
+  deux valeurs inversées : ni plaque ni VIN attribués, le champ resté en place
+  conservé.
+- ⚠️ `marqueCanonique` **NORMALISE sans valider** : elle rend
+  « zzzzpasunemarque » pour une marque inventée. S'en servir comme contrôle
+  laissait passer n'importe quoi — défaut trouvé par le test. La liste vient de
+  `BRAND_ALIAS_GROUPS` **plus un complément** (`MARQUES_COMPLEMENT`), car la
+  table d'alias n'existe que pour les marques AYANT des alias : SMART n'y était
+  pas, et son CSA était refusé.
+- Les espaces doubles du code source **n'arrivent pas à l'extraction** ; les
+  libellés se **replient sur deux lignes**.
+
+### Ordre des opérations — c'est un INVARIANT
+`extraire → comparer (règle 0) → retirer VIN et plaque → garder les faits`.
+La concordance a besoin des identifiants que le filtre doit retirer : l'ordre
+est donc la garantie, et un test vérifie qu'aucun VIN ni plaque ne survit dans
+les faits sérialisés.
+
+### Produit
+- Module **pur** `_shared/histovec.ts` (extraction + règle 0 + 5 règles), zéro
+  IA, zéro réseau. Fonction `lecture-histovec` (`npm:unpdf@1.9.1`, extraction en
+  mémoire, PDF **jamais stocké**, plafond 6 Mo, 10 lectures/IP/24 h, 5/analyse).
+- ⚠️ **Un signal ROUGE est affiché même sans Pass** : on ne cache pas un vol, un
+  gage ou une procédure non levée derrière un paiement. Le masquage du détail est
+  **SERVEUR** (`_histovec_publique` ≡ `histovecPublique`), posé dans
+  `get_public_analysis` au même endroit que celui de la négociation. La fonction
+  est **redéclarée à l'identique** dans la migration plutôt que modifiée par
+  chirurgie de chaîne sur `pg_get_functiondef` : une substitution peut
+  s'appliquer à moitié sans que personne ne le voie.
+- ⚠️ **Un rapport discordant ne produit AUCUN autre signal** — sinon on prêterait
+  à cette voiture l'historique d'une autre.
+- **Seuil de texte utile** (400 caractères) **+ contrôle des marqueurs** avant de
+  retenir un seul fait. Mesuré : un PDF de 9 pages peut s'analyser sans erreur en
+  ne rendant que **2 caractères** (c'était un scan). « Aucune erreur » ne vaut pas
+  « lecture réussie » : sans ce seuil, l'écran afficherait « rapport lu, aucun
+  signal », qui rassure à tort.
+
+### Barème — `BAREME_VERSION` 11.1
+Deux faits : `histovec_opposition` (plafond **30**) et `histovec_vge_en_cours`
+(plafond **32**) — ce sont des **empêchements** (on ne peut pas devenir
+propriétaire, ou pas circuler), donc plafonds plus bas qu'un défaut de sécurité.
+Aucune garantie ne les lève dans le conditionnel.
+- **SANS HistoVec, le score est strictement identique** : prouvé par
+  `tests/bareme.test.mjs` sur 4 profils × 3 formes du même fait (champ absent,
+  `undefined`, `false`). Et le contraire est testé aussi, sinon le premier test
+  serait vrai pour la mauvaise raison.
+- La version bouge quand même : la surface d'entrée a changé et les clients
+  d'API suivent ce numéro. Mentionné aux CUA, art. 9.3.
+
+### Kilométrage du PV — `lecture-ct` ne lisait que le relevé du jour
+La section « Kilométrages relevés lors des précédents contrôles techniques
+depuis le 20 mai 2018 » était **ignorée**. Format réel, relevé sur le modèle
+officiel : **une seule ligne**, relevés séparés par `//`, au format
+`02/08/2019 : 48330 Km // 13/08/2020 : 57428 Km`.
+- `comparerKmCt` lit désormais la **SÉRIE** : un relevé qui recule entre deux
+  contrôles officiels pose `compteur_contredit` **même quand l'annonce est
+  cohérente** avec le dernier relevé — le fait grave est la série, deux chiffres
+  imprimés par deux centres à deux dates.
+- **Le signal rouge montre ses chiffres** : les relevés exacts avec leurs dates
+  (« 17/01/2023 : 61 953 km → 22/01/2025 : 59 450 km ») et « vérifiez ces
+  chiffres sur votre PV ». Une valeur mal lue se **corrige** (`corriger_km`), ce
+  qui rejoue le barème **sans nouvel appel au modèle**.
+- ⚠️ Les relevés sont **réordonnés par date** : la détection dépend de l'ordre,
+  et le document liste souvent du plus récent au plus ancien.
+
+### Message vendeur — il était FAUX
+Il demandait « le VIN et une photo de la carte grise » pour « consulter le
+rapport HistoVec ». **Un acheteur ne peut pas consulter HistoVec avec un VIN** :
+seul le titulaire génère le rapport et le partage. Remplacé par la demande des
+**deux documents nommés exactement** : le « Certificat de situation
+administrative détaillé » (bouton « Imprimer le CSA ») et une photo du dernier
+procès-verbal de contrôle technique.
+
+### Fixtures
+`tests/histovec-fixtures/` — sept CSA produits par le **générateur officiel**
+(`csaAsPdf` + pdf-lib), donc fidèles à l'octet, **données entièrement
+inventées**, donc versionnés. Chaque `.txt` est le texte réellement extrait :
+le module prend du TEXTE, donc les tests hors ligne n'ont besoin d'aucun
+analyseur PDF. `tests/histovec/` (rapports réels) et
+`tests/eval-ct/publics/` (PV publics) sont **ignorés par git**.
+- ⚠️ **Défaut trouvé par le test** : `{ ...FAITS_VIDES }` partageait la
+  **référence** du tableau `operations` entre tous les appels — chaque lecture
+  s'ajoutait aux précédentes (5 opérations là où le document en portait 3).
+  `operations: []` est désormais explicite.
+
+### ⬜ Reste à faire — la fonctionnalité n'est PAS en ligne
+- **Aucun drapeau d'activation n'a encore été posé** : la fonction est déployée
+  et le bloc est monté, mais rien n'a été validé sur un **vrai rapport récent**.
+  C'est la condition posée par Utku avant mise en ligne.
+- **PV publics non téléchargés** : `automotive.encheres-vo.com` redirige vers
+  `/login` et `fiveauction.fr` rend **403**. Les documents sont derrière une
+  authentification — je n'ai pas cherché à la contourner. Le PV synthétique
+  porte désormais la section kilométrique, au format du modèle officiel.
+
+### Drapeaux de fonctionnalité (migration `20261112120000`)
+Table `drapeaux` (RLS active, zéro policy), trois états : **`eteint`** (défaut),
+**`admin_uniquement`**, `public`. Onglet admin « Fonctionnalités ».
+- ⚠️ Évalué **CÔTÉ SERVEUR** à chaque appel, via `drapeau_actif` appelée **avec
+  le jeton de l'appelant** (elle a besoin de `auth.uid()` pour trancher
+  « admin uniquement »). Un drapeau lu au navigateur ne ferait que cacher un
+  bouton : la fonction resterait appelable.
+- `admin_uniquement` est l'état qui compte : il permet d'éprouver une fonction
+  **en production, sur de vraies données**, avant de l'ouvrir. `lecture_histovec`
+  y est câblé et **éteint**.
+- Clé inconnue ⇒ **éteint**. On n'ouvre pas une fonction par faute de frappe.
+
+### ⚠️ Stabilité : la cause n'était PAS l'entretien — et mon premier correctif était FAUX
+Mercedes 220 d, même texte : **77 puis 71**. Diagnostic (gratuit, en comparant
+les deux analyses déjà produites) : faits d'entretien **identiques**, axe
+entretien **13 dans les deux**, même fiche (`cache: hit`, OM654), zéro
+affirmation écartée. L'écart venait de **`risques_mecaniques` (16 vs 13)** :
+**2 pannes du catalogue retenues d'un côté, AUCUNE de l'autre**. Le modèle
+CHOISIT quelles entrées citer, et ce choix varie.
+- Correctif n° 1 — `_shared/pannesApplicables.ts` garantissant **toutes** les
+  entrées applicables (filtres horizon km + code de boîte). **Déterministe
+  (55/55/55) mais FAUX** : il a attribué à une Mercedes de 2025 des défauts
+  d'**OM651**, de **M272/M273 (V6 essence)**, de boîte **722.9** et de caisses
+  **W203/W211/W210**. Score tombé à **orange 55**. Leçon : *le modèle faisait un
+  vrai travail d'appariement, et le filet l'avait supprimé.*
+- ⚠️ **Le discriminant est la SOURCE de l'entrée.** Les réfs **`F…` viennent de
+  la fiche moteur**, indexée par marque + famille + années : elles sont déjà
+  propres à ce moteur. Les réfs **`A…` viennent de l'atlas de marque**, qui
+  couvre toute la gamme — savoir si « Suspension Airmatic » concerne cette
+  voiture suppose de connaître son équipement. **Le filet ne garantit donc que
+  les entrées de FICHE** ; l'atlas reste au jugement du modèle.
+- Filtres d'appariement généralisés par la même occasion : une entrée qui NOMME
+  un code de **famille moteur**, de **caisse** ou de **boîte** ne s'applique que
+  si c'est celui du véhicule. Si l'entrée nomme et que nous ne savons pas, elle
+  est écartée — on n'affirme pas.
+- Variance d'abord ramenée de 6 points à 2 (vert 73 / 71) — insuffisant : **près
+  d'un seuil, 2 points changent le verdict**.
+- ⚠️ **RÈGLE FINALE (4 nov. 2026) — une entrée d'ATLAS ne pèse sur le score que
+  si l'annonce mentionne EXPLICITEMENT ce qu'elle vise** (équipement, génération
+  ou code). Sinon elle reste **affichée** et devient une **question au vendeur**.
+  Les entrées de FICHE restent garanties.
+  - C'est ce qui rend le résultat déterministe **sans encoder l'équipement** :
+    la décision ne dépend plus d'un jugement de modèle mais de la présence d'un
+    mot dans un texte — vérifiable, reproductible, explicable à l'acheteur.
+  - `ciblesAtlas` extrait ce qu'une entrée vise : codes (moteur, caisse, boîte)
+    et noms propres d'équipement (« Airmatic »), hors mots génériques. Une
+    entrée qui ne vise **rien de distinctif** n'est jamais confirmée : question.
+    Conservateur à dessein — mieux vaut une question de trop qu'un point de
+    score pris sur une supposition.
+  - **Exceptions qui pèsent toujours** : un danger pour les occupants
+    (`securite`) et un rappel officiel applicable. Ils ne dépendent pas d'un
+    équipement.
+- **Résultat : Mercedes 71 / 71 / 71**, et les deux références tiennent —
+  S7 **rouge 38**, 308 **orange 55**. `BAREME_VERSION` → **11.3**, documentée
+  aux CUA art. 9.3 avec un tableau des versions : `11.1` ne changeait aucun
+  score rendu par l'API, `11.3` **en change** (la liste des défauts qui pèsent
+  n'est plus le choix du modèle). La `11.2` n'a jamais été servie à un client.
+- 42 contrôles hors ligne, dont 500 évaluations du même couple
+  (entrée, annonce) sans divergence.
+- 29 contrôles hors ligne, dont les **cinq titres réels** qui avaient été
+  injectés à tort.
+
+### ⚠️ Un essai de migration doit ASSERTER, pas afficher
+Le premier script d'essai en transaction annulée comportait **16 `select`
+d'information et un seul vrai contrôle**. Or **l'éditeur SQL de Supabase
+n'affiche QUE LE DERNIER résultat** : la batterie de `select` était invisible,
+et l'essai « passé sans erreur » ne prouvait que l'application des migrations —
+aucun invariant n'était vérifié.
+- Réécrit : **23 assertions** qui écrivent leur verdict dans une table
+  temporaire, puis un bloc final qui **lève une erreur** en listant tout ce qui
+  a échoué. Pas d'erreur = tout est vérifié, et le dernier résultat affiché le
+  dit explicitement.
+- Règle à garder : **un contrôle qui n'échoue pas bruyamment n'est pas un
+  contrôle.** C'est la même leçon que le `process.exit(1)` placé avant les
+  nouveaux tests dans `tests/inspection.test.mjs` au sprint 12.
+
+### ⚠️ Droits d'anon : neuf tables sans `revoke` (trouvé par l'essai, corrigé)
+L'essai a signalé qu'`anon` détenait SELECT sur `inspections`. Vérification par
+un appel REST réel avec la clé anon : **HTTP 200, ZÉRO ligne**. **Aucune donnée
+n'a été exposée** — la RLS, active et sans policy, bloque chaque ligne. Le
+défaut est une **absence de défense en profondeur**, pas une fuite : il
+suffirait qu'une policy soit ajoutée, ou la RLS désactivée le temps d'une
+maintenance, pour qu'il devienne effectif. Ne pas raconter cet épisode comme
+une fuite.
+- **Origine** : les tables du **sprint 1** (`analyses`, `events`, `leads`,
+  `rappels_cache`), du **sprint 7** (`passes`) et du **sprint 8**
+  (`inspecteurs`, `inspections`, `inspection_photos`, `inspection_refus`)
+  activent la RLS mais ne révoquent rien : elles ont hérité des **droits par
+  défaut** que Supabase accorde dans `public`. Les tables plus récentes portent
+  toutes un `revoke all` — l'habitude a été prise en route, après celles-là.
+- **`authenticated` est révoqué aussi** : mesuré, **rien dans le front ne lit
+  une table en direct** — 29 appels `.rpc(...)`, zéro `.from('table')` (les
+  quatre `.from(` sont des `Array.from`). Aucun écran ne perd rien.
+- Migration `20261113120000` : **boucle** sur tous les objets de `public`
+  (tables, partitions, vues, vues matérialisées) plutôt qu'une liste — une
+  liste oublierait les 8 tables héritées du dashboard, qu'aucune migration ne
+  crée, et oublierait la prochaine. Elle **vérifie elle-même** l'état atteint et
+  lève si un droit subsiste.
+- ⚠️ **Cause racine traitée** : `alter default privileges … revoke all on tables
+  from anon, authenticated`. Sans cela, la prochaine table créée héritera à
+  nouveau des mêmes droits et personne ne le verra.
+- L'assertion de l'essai ne porte plus sur une **liste de cinq tables** — c'est
+  précisément ce qui avait laissé passer les neuf autres. Elle porte sur **tout
+  le schéma public**, les deux rôles, en lecture **et** en écriture, plus la RLS
+  et les droits par défaut. Une table ajoutée sans révocation fera désormais
+  échouer l'essai.
+
+### ⚠️ Ce que la révocation aurait pu casser : SECURITY INVOKER
+Après la révocation, une fonction **SECURITY INVOKER** appelée avec la clé anon
+ou un jeton utilisateur s'exécuterait avec les droits de l'appelant — donc sans
+aucun droit sur les tables. Elle casserait **immédiatement et en production**.
+Une seule aurait suffi.
+- Inventaire des sites d'appel réels : **28 `.rpc()` dans le front** + **5 RPC
+  appelées par une fonction edge avec le jeton de l'utilisateur**
+  (`inspection_accepter`, `inspection_annuler`,
+  `inspection_consentement_photos`, `inspection_constat_absence`,
+  `inspection_refuser`, via `commeUtilisateur` / `commeAppelant`). **33 au
+  total.** L'extension n'appelle aucune RPC : elle passe par les proxys Vercel,
+  en service role.
+- **Les 33 sont SECURITY DEFINER** (vérifié sur la dernière définition de
+  chacune dans les migrations). Aucune ne manque.
+- L'essai le vérifie sur l'état RÉEL (`prosecdef`), avec trois assertions :
+  les 33 existent (sinon la vérification serait vraie pour la mauvaise raison),
+  les 33 sont DEFINER, et — règle **qui se maintient d'elle-même** — toute
+  fonction dont l'exécution est accordée à anon ou authenticated est DEFINER.
+- **Essai réel sous le rôle `anon`** : `set local role anon`, appel de
+  `get_public_analysis` (avec `p_track => false`, un essai n'incrémente pas un
+  compteur) et de `get_prix_segments`, puis `reset role`. Plus la
+  **contre-épreuve** : sous `anon`, la lecture DIRECTE de `analyses` doit
+  échouer. Sans elle, le succès des RPC serait vrai pour la mauvaise raison —
+  la révocation pourrait n'avoir pas pris.
+
+### ⚠️ Cinq fonctions SECURITY INVOKER exécutables par anon (trouvé par l'essai)
+L'assertion générale « toute fonction exécutable par anon est DEFINER » a
+immédiatement trouvé cinq cas — alors que la liste nommée des 33 RPC, elle,
+passait. C'est l'intérêt d'une règle qui se maintient d'elle-même par rapport à
+une énumération.
+- **`essai_verifie`** : mon propre outil de mesure, créé dans `public`, se
+  signalait lui-même. Déplacé dans **`pg_temp`** — l'outil ne doit pas peser
+  sur ce qu'il mesure.
+- **`update_updated_at`** : fonction de trigger. EXECUTE révoqué de `public`,
+  `anon`, `authenticated` — PostgreSQL ne vérifie pas EXECUTE au déclenchement
+  d'un trigger, c'est donc sans risque.
+- **`_departement`, `charte_version_courante`, `part_api_max`** : vérifié,
+  **aucune n'est appelée par le front ni par l'extension** (`p_departements`,
+  dans `inspectionApi.js`, est un nom de paramètre, pas un appel). Elles sont
+  appelées depuis d'autres fonctions SQL, où `current_user` est le
+  propriétaire. EXECUTE révoqué.
+- **Cause racine** : PostgreSQL accorde EXECUTE à `PUBLIC` sur toute fonction
+  nouvelle. Inversé par `alter default privileges for role postgres … revoke
+  execute on functions`, et la migration **vérifie elle-même** que les 33 RPC
+  conservent leur grant — révoquer un défaut ne doit rien retirer à l'existant.
+
+### ⚠️ Droits par défaut : une entrée n'est pas à nous
+Il reste dans `pg_default_acl` une entrée appartenant à **`supabase_admin`**
+(`anon=arwdDxtm/supabase_admin`) que nos migrations, qui tournent en
+`postgres`, **ne peuvent pas modifier**. L'assertion sur les droits par défaut
+est donc restreinte au rôle `postgres`, celui qui crée nos objets.
+- Ce n'est pas un assouplissement : le filet contre une table créée autrement
+  reste l'assertion **globale** « `anon` ne peut lire AUCUN objet de `public` »,
+  qui ne dépend d'aucun propriétaire et attraperait le cas.
+
+### Mise en service partielle — 3-4 nov. 2026 (merge EN ATTENTE)
+`score`, `lecture-ct` et `lecture-histovec` déployées pour l'éval. Migration
+`20261111120000` **non appliquée**.
+- **Éval ciblée : S7 rouge 38 et 308 orange 55, identiques à la référence.**
+  Mercedes a rendu **77 au premier passage, 71 au second** — la référence est 71.
+  Vérifié sur l'analyse produite : ni fait HistoVec, ni plafond, ni fourchette de
+  prix, donc **le barème n'est pas en cause** ; c'est la variance d'extraction des
+  faits d'entretien. ⚠️ 6 points d'écart, soit **au-delà de la tolérance de 5**
+  de l'éval de stabilité : à surveiller sur ce cas. Coût total **0,38 €**.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)
@@ -792,6 +1088,12 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 ## Sécurité — OBLIGATIONS
 
 0. **Agents et prod** : aucun agent (subagent, workflow d'audit, script de test) ne teste JAMAIS contre la base Supabase de production — sonde, injection, lecture ou écriture de table incluses. Tout test de ce type se fait sur `supabase start` en local ou sur une branche de preview Supabase. Seule exception : `npm run eval`, qui passe exclusivement par la whitelist d'éval (header `x-eval-secret`).
+
+0 bis. **Fichiers personnels d'Utku : JAMAIS ouverts.** N'ouvre, ne lis, ne copie et n'envoie aucun fichier situé hors du dépôt — `~/Documents`, `~/Downloads`, `~/Desktop`, iCloud Drive, et tout le reste du disque. Cela vaut aussi pour en relever une simple métadonnée (taille, nombre de pages, nombre de caractères) : « je n'ai pas affiché le contenu » n'est pas une permission de l'avoir lu. Pour éprouver un format ou une bibliothèque, **fabrique le fichier d'essai** (cf. le PDF témoin du sprint 13, `scripts/`-style, généré à la demande) ou utilise **uniquement ce qu'Utku a déposé dans le dépôt**. Un fichier déposé dans le dépôt est une autorisation ; un fichier trouvé sur le disque n'en est pas une. Seule exception : un chemin qu'Utku indique explicitement dans sa demande.
+
+0 ter. **Aucune table ni fonction créée depuis le dashboard Supabase — UNIQUEMENT par migration.** Un objet créé à la main n'est décrit par aucun fichier, échappe à l'essai en transaction annulée, et hérite des droits par défaut sans que personne ne le voie. C'est ainsi que neuf tables (sprints 1, 7 et 8) se sont retrouvées lisibles par `anon` — sans fuite, la RLS tenant, mais sans défense en profondeur.
+
+0 quater. **Toute nouvelle RPC destinée au front porte un `grant execute … to anon` (ou `to authenticated`) EXPLICITE.** Depuis la migration `20261113120000`, les droits par défaut du rôle `postgres` dans `public` ne donnent plus ni SELECT sur les tables ni EXECUTE sur les fonctions. Un accès public est donc une **décision écrite**, jamais un héritage. Une RPC sans grant ne sera pas appelable : c'est le bon sens de l'échec. ⚠️ Corollaire : une fonction qu'on ne destine PAS au front ne reçoit aucun grant — et si elle est appelée depuis une autre fonction, celle-ci doit être `SECURITY DEFINER` (sinon `current_user` est l'appelant, qui n'a plus EXECUTE).
 
 1. **Variables d'environnement** : Clés API dans `.env.local` uniquement, JAMAIS dans le code
 2. **Supabase RLS** : Row Level Security sur TOUTES les tables

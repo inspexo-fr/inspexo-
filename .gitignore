@@ -39,3 +39,12 @@ tests/eval-ct/*/photos/
 captures-sprint9/
 captures-sprint10/
 captures-sprint11/
+
+# Rapports HistoVec deposes pour mise au point : DONNEES PERSONNELLES
+# (titulaire, plaque, VIN). Jamais versionnes. Les fixtures de test sont
+# anonymisees et vivent dans tests/histovec-fixtures/.
+tests/histovec/
+
+# PV de controle technique publics telecharges pour mise au point locale :
+# ils portent plaque et VIN. Jamais versionnes.
+tests/eval-ct/publics/

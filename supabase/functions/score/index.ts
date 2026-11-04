@@ -20,6 +20,7 @@ import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts"
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
+import { panneCompteDansScore, pannesApplicables, refsManquantes } from "../_shared/pannesApplicables.ts";
 import { calculerNegociation, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import {
@@ -1652,6 +1653,9 @@ serve(async (req: Request) => {
       rappel_code: string | null; rappel_date: string | null; rappel_vehicules: string | null;
       rappel_annee_debut: number | null; rappel_annee_fin: number | null;
       rappel_hors_periode: boolean;
+      /** L'entrée pèse-t-elle sur le score ? Faux pour une entrée d'atlas que
+       *  l'annonce ne confirme pas : elle reste affichée, en question. */
+      compte_score?: boolean;
     };
     const pannesJoined: PanneOut[] = [];
     const seenRefs = new Set<string>();
@@ -2001,6 +2005,73 @@ serve(async (req: Request) => {
       pannesJoined.length = 0;
       pannesJoined.push(...pannesKept);
 
+      // ---- FILET DÉTERMINISTE SUR LES PANNES DU CATALOGUE ----------------
+      // Mesuré sur un cas réel : deux analyses du MÊME texte, même fiche,
+      // zéro affirmation écartée — 2 pannes retenues d'un côté, AUCUNE de
+      // l'autre (axe risques 13 vs 16, score 71 vs 77). La cause est que le
+      // modèle CHOISIT quelles entrées citer, et que ce choix varie.
+      //
+      // Les entrées du catalogue sont déjà filtrées pour CE véhicule (famille
+      // moteur, plage d'années) : leur applicabilité ne relève plus d'un
+      // jugement. Le serveur garantit donc la LISTE, et le modèle garde ce
+      // qu'il fait bien — la formulation. Même esprit qu'`entretienDeclare` :
+      // appliqué APRÈS l'audit, pour que ni l'oubli du modèle ni la critique
+      // ne puissent faire disparaître une entrée objectivement applicable.
+      {
+        const vApp = {
+          kilometrage: typeof v.kilometrage === "number" ? v.kilometrage : null,
+          boite_code: typeof v.boite_code === "string" ? v.boite_code : "",
+          boite_automatique: /auto|dsg|s.?tronic|eat|bva|edc|tct|mct/i.test(
+            `${v.boite ?? ""} ${v.boite_code ?? ""}`,
+          ),
+          famille_moteur: typeof v.famille_moteur === "string" ? v.famille_moteur : "",
+          designation: [v.modele, v.generation, v.motorisation].filter(Boolean).join(" "),
+        };
+        const { applicables, ecartees } = pannesApplicables(catalogue, vApp);
+        const manquantes = refsManquantes(applicables, pannesJoined.map((pj) => pj.source_ref));
+        for (const ref of manquantes) {
+          const src = catalogueByRef.get(ref.toUpperCase());
+          if (!src) continue;
+          pannesJoined.push({
+            id: `P${pannesJoined.length + 1}`,
+            titre: src.titre,
+            organe: src.organe,
+            symptome: src.symptome,
+            // Pas de formulation du modèle pour ces entrées : on reprend le
+            // symptôme du catalogue plutôt que d'inventer une pertinence.
+            pertinence: src.symptome ?? "",
+            verification_sur_place: "",
+            gravite: src.gravite,
+            km_typique: src.km_typique,
+            source_statut: src.source_statut,
+            urls: src.urls,
+            sources: src.sources,
+            cout_min_eur: src.cout_min_eur,
+            cout_max_eur: src.cout_max_eur,
+            source_ref: src.ref,
+            rappel_code: src.rappel_code,
+            rappel_date: src.rappel_date,
+            rappel_vehicules: src.rappel_vehicules,
+            rappel_annee_debut: src.rappel_annee_debut,
+            rappel_annee_fin: src.rappel_annee_fin,
+            rappel_hors_periode: rappelHorsPlage(src),
+          });
+        }
+        if (manquantes.length > 0 || ecartees.length > 0) {
+          await admin.from("events").insert({
+            name: "pannes_filet_applicable",
+            // Pas d'analysis_id ici : la ligne n'est pas encore insérée à ce
+            // stade du pipeline (même convention que `panne_boite_ecartee`).
+            props_json: {
+              reinjectees: manquantes.length,
+              ecartees: ecartees.length,
+              motifs: ecartees.map((x) => x.motif),
+              citees_par_modele: pannesJoined.length - manquantes.length,
+            },
+          });
+        }
+      }
+
       checklist = checklist.filter((c, i) => {
         const d = decisions.get(`C${i + 1}`);
         if (d && (d.decision === "supprimee" || d.source === "aucune")) {
@@ -2298,7 +2369,51 @@ serve(async (req: Request) => {
       // l'acheteur doit la connaître — mais ne pèse pas sur la note. Un danger
       // pour les occupants ou un rappel applicable pèsent toujours, eux.
       const kmActuel = typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null;
+      // ---- ATLAS : AFFICHÉ TOUJOURS, COMPTÉ SI CONFIRMÉ -----------------
+      // L'atlas est un catalogue de MARQUE. Une entrée comme « Suspension
+      // Airmatic » ou « Corrosion W203 » ne concerne CE véhicule que s'il a
+      // cet équipement, cette génération ou ce code. Nous ne pouvons pas le
+      // savoir — sauf si l'annonce le dit. Elle ne pèse donc sur le score que
+      // si l'annonce le mentionne explicitement ; sinon elle reste affichée et
+      // devient une question au vendeur.
+      //
+      // C'est ce qui rend le résultat déterministe sans encoder l'équipement :
+      // la décision ne dépend plus d'un jugement, mais de la présence d'un mot
+      // dans un texte.
+      const atlasAConfirmer: typeof pannesJoined = [];
+      for (const p of pannesJoined) {
+        const d = panneCompteDansScore(
+          { ref: p.source_ref, titre: p.titre, organe: p.organe, symptome: p.symptome,
+            km_typique: p.km_typique, gravite: p.gravite, rappel_code: p.rappel_code },
+          // Le texte de l'annonce TEL QUE FOURNI : c'est lui qui confirme ou
+          // non ce que vise une entrée d'atlas.
+          text,
+        );
+        p.compte_score = d.compte;
+        // Un rappel officiel applicable et un danger pour les occupants
+        // pèsent quoi qu'il arrive : ils ne dépendent pas d'un équipement.
+        if (!d.compte && (p.gravite === "securite" || (p.rappel_code && !p.rappel_hors_periode))) {
+          p.compte_score = true;
+        }
+        if (!p.compte_score) atlasAConfirmer.push(p);
+      }
+      if (atlasAConfirmer.length > 0) {
+        // Chaque entrée non confirmée devient une question, formulée à partir
+        // de ce qu'elle VISE : c'est la seule chose qu'on sache d'elle.
+        for (const p of atlasAConfirmer.slice(0, 3)) {
+          questions.push(
+            `Ce modèle connaît un défaut « ${p.titre} » : votre véhicule est-il concerné (équipement, génération, millésime) ?`,
+          );
+        }
+        await admin.from("events").insert({
+          name: "atlas_non_confirme",
+          props_json: { nombre: atlasAConfirmer.length, refs: atlasAConfirmer.map((p) => p.source_ref) },
+        });
+      }
+
       const pannesQuiPesent = pannesJoined.filter((p) => {
+        // Entrée d'atlas non confirmée par l'annonce : affichée, pas comptée.
+        if (p.compte_score === false) return false;
         if (p.gravite === "securite") return true; // un danger pèse toujours
         if (p.rappel_code && !p.rappel_hors_periode) return true;
         const dansHorizon = panneDansHorizon(kmActuel, seuilKmPanne(p.km_typique));
@@ -2612,7 +2727,7 @@ serve(async (req: Request) => {
     const messageVendeur = questionsMessage.length > 0
       ? `Bonjour, votre annonce ${modeleLabel} m'intéresse. Quelques questions avant de me déplacer :\n${
         questionsMessage.map((q, i) => `${i + 1}. ${q}`).join("\n")
-      }\nPourriez-vous aussi me communiquer le VIN (numéro de châssis) et une photo de la carte grise ? Cela me permet de consulter le rapport HistoVec (gratuit et officiel). Merci d'avance !`
+      }\nPourriez-vous aussi m'envoyer deux documents ?\n- le Certificat de situation administrative détaillé : bouton « Imprimer le CSA » sur ${HISTOVEC_URL} (c'est gratuit et ça prend 2 minutes, c'est vous qui le générez) ;\n- une photo du dernier procès-verbal de contrôle technique.\nMerci d'avance !`
       : null;
 
     // ---------------- Logs critique ----------------

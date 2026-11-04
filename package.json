@@ -16,7 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eval": "node tests/api-clients.test.mjs && node tests/partenaires.test.mjs && node tests/independance-score.test.mjs && node tests/marche.test.mjs && node tests/purge-api.test.mjs && node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node tests/gravite-remede.test.mjs && node tests/lecture-ct.test.mjs && node tests/vin.test.mjs && node tests/identite.test.mjs && node tests/inspection.test.mjs && node scripts/eval.mjs",
+    "eval": "node tests/api-clients.test.mjs && node tests/partenaires.test.mjs && node tests/independance-score.test.mjs && node tests/marche.test.mjs && node tests/purge-api.test.mjs && node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node tests/gravite-remede.test.mjs && node tests/lecture-ct.test.mjs && node tests/vin.test.mjs && node tests/identite.test.mjs && node tests/inspection.test.mjs && node tests/histovec.test.mjs && node tests/pannes-applicables.test.mjs && node scripts/eval.mjs",
     "eject": "react-scripts eject",
     "prebuild": "node scripts/photos-disponibles.mjs && node scripts/generer-segments-modeles.mjs",
     "postbuild": "node scripts/prerendu.mjs",

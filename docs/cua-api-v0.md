@@ -253,6 +253,33 @@ articles 3 ou 4, après notification écrite.
 9.1. Le barème évolue. Sa version est publiée dans chaque réponse
 (`bareme_version`) et change dès qu'un score changerait à faits identiques.
 
+9.3. **Versions publiées à ce jour.**
+
+| Version | Ce qui change | Effet sur un score rendu par l'API |
+|---|---|---|
+| `11.0` | version initiale de l'API | — |
+| `11.1` | deux faits issus du certificat de situation administrative HistoVec (opposition, procédure pour véhicule gravement endommagé non levée) | **aucun.** Ces faits n'existent qu'au dépôt d'un certificat par un acheteur ; l'API ne reçoit que du texte d'annonce |
+| `11.3` | la **liste des défauts qui pèsent** sur le score est décidée par des règles serveur, non plus par le choix du modèle | **oui, les scores peuvent changer** à texte identique |
+
+La version `11.2` a existé brièvement et n'a jamais été servie à un client.
+
+**Ce que change `11.3`, et pourquoi.** Les défauts connus d'un modèle viennent
+de deux sources : une **fiche moteur** (indexée par marque, famille moteur et
+plage d'années) et un **atlas de marque** (qui couvre toute la gamme). Jusqu'en
+`11.2`, c'est le modèle qui décidait lesquels retenir, et ce choix variait d'un
+appel à l'autre : le même texte pouvait rendre deux scores différents.
+
+Désormais : les entrées de **fiche** sont toujours retenues, puisqu'elles sont
+propres au moteur du véhicule ; les entrées d'**atlas** ne pèsent sur le score
+que si le texte de l'annonce **mentionne explicitement** l'équipement, la
+génération ou le code qu'elles visent. Sinon elles restent **affichées** et
+deviennent une **question au vendeur**, sans effet sur la note. Un danger pour
+les occupants et un rappel officiel applicable, eux, pèsent toujours.
+
+**Conséquence pour vous : à texte identique, le score est désormais stable** —
+mesuré trois fois de suite sur un même cas, avec un résultat identique. C'est
+l'intérêt de cette version, et la raison du changement de numéro.
+
 9.2. Toute modification des présentes est notifiée trente jours à l'avance.
 
 ## 10. Droit applicable

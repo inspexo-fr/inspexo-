@@ -1,0 +1,44 @@
+Certificat de situation administrative détaillé
+(Articles L.322-2 et R.322-4 du code de la route)
+Certificat attestant la situation administrative au :
+dimanche 1 novembre 2026 (généré le mardi 3 novembre 2026 à 23h08)
+La valeur du certificat de situation administrative détaillé ne saurait excéder 15 jours, les données étant susceptibles
+d'évoluer. Le QR code ci-contre renvoie au site https://histovec.interieur.gouv.fr - il permet de vous assurer de la
+conformité des informations retranscrites et de leurs mises à jour. Ce code sera disponible jusqu'au changement de
+titulaire et au plus tard jusqu'au 2026-11-16. Au-delà, un nouveau rapport devra être généré.
+https://histovec.interieur.gou...
+Identification du véhicule
+Numéro d'immatriculation du véhicule :
+Date de première immatriculation du véhicule :
+Numéro VIN du véhicule (ou numéro de série) :
+Marque :
+EE-654-EE
+08/11/2021
+WBAZZZZZZZZZZZZZZ
+BMW
+Historique du véhicule
+13/04/2020 IMMAT_NORMALE
+Situation administrative du véhicule
+- Opposition au transfert du certificat
+d'immatriculation (OTCI)
+Aucune
+- Opposition véhicule endommagé
+Aucune
+- Procédure de réparation contrôlée
+non
+- Déclaration valant saisie
+Aucune
+- Gage
+Aucun
+- Immatriculation suspendue
+Non
+- Immatriculation annulée
+- Véhicule volé
+oui
+- Certificat d'immatriculation volé
+oui
+- Certificat d'immatriculation perdu
+oui
+- Certificat d'immatriculation duplicata
+non
+Page 1 / 1

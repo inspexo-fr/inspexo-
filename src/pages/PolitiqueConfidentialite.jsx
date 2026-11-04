@@ -94,6 +94,10 @@ export default function PolitiqueConfidentialite() {
             <li>Données anonymisées de prix : conservées indéfiniment (aucun lien avec l'utilisateur)</li>
             <li>Logs techniques : 12 mois</li>
             <li>
+              Faits tirés d'un certificat de situation administrative : même durée que l'analyse
+              rattachée. <strong>Le PDF lui-même n'est jamais conservé</strong>
+            </li>
+            <li>
               <strong>Photos d'un rapport d'inspection : 2 ans</strong> à compter de l'inspection, puis
               suppression
             </li>
@@ -208,6 +212,29 @@ export default function PolitiqueConfidentialite() {
             Un vendeur qui le souhaite peut demander l'accès, la rectification ou la suppression de ses
             coordonnées, et s'opposer à ce traitement, en écrivant à{' '}
             <a href="mailto:contact@inspexo.io" className="legal-a">contact@inspexo.io</a> (section 7).
+          </p>
+
+          <h2 className="legal-h2">6 ter ter. Certificat de situation administrative (HistoVec)</h2>
+          <p className="legal-p">
+            Vous pouvez déposer le <strong>certificat de situation administrative</strong> que le vendeur a
+            produit sur histovec.interieur.gouv.fr. <strong>Le PDF n'est jamais conservé</strong>&nbsp;: son
+            texte est extrait en mémoire, les faits utiles en sont tirés par des règles fixes, et le fichier
+            est oublié. Aucune intelligence artificielle n'intervient sur ce document.
+          </p>
+          <p className="legal-p">
+            Ce qui est conservé avec votre analyse&nbsp;: les <strong>faits administratifs</strong> (gage,
+            opposition, saisie, vol, procédure pour véhicule endommagé, suspension, certificat annulé), le
+            nombre de détenteurs successifs déduit des opérations d'immatriculation, le passage éventuel en
+            location, la date de première immatriculation, la marque et la date de validité du certificat.
+          </p>
+          <p className="legal-p">
+            Ce qui n'est <strong>jamais</strong> conservé&nbsp;: le <strong>numéro de série (VIN)</strong> et
+            l'<strong>immatriculation</strong>. Ils sont lus en mémoire le temps de vérifier que le certificat
+            décrit bien le véhicule de l'annonce, puis retirés avant tout enregistrement. Le nom, l'adresse et
+            le code postal du titulaire ne sont ni lus ni conservés.
+          </p>
+          <p className="legal-p">
+            Ces faits suivent la durée de conservation de l'analyse à laquelle ils sont rattachés (section 5).
           </p>
 
           <h2 className="legal-h2">6 quater. Retour après achat</h2>

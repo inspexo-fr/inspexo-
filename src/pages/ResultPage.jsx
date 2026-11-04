@@ -10,6 +10,7 @@ import Stamp from '../components/Stamp'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
 import LectureCtBloc from '../components/LectureCtBloc'
+import HistovecBloc from '../components/HistovecBloc'
 import VinBloc from '../components/VinBloc'
 import EtMaintenant from '../components/EtMaintenant'
 import RapportInspection from '../components/RapportInspection'
@@ -1305,6 +1306,18 @@ export default function ResultPage() {
             {/* PV de contrôle technique (sprint 7 — fonction du Pass, démo annoncée) */}
             {!enCours && r.type === 'vehicule' && (
               <LectureCtBloc
+                analysisId={id}
+                result={r}
+                onMaj={(maj) => setAnalysis(prev => prev ? { ...prev, result: adaptResult(maj) } : prev)}
+              />
+            )}
+
+            {/* Certificat de situation administrative HistoVec (sprint 13).
+                Les signaux ROUGES sont affichés même sans Pass : on ne cache
+                pas un vol ou un gage derrière un paiement. Le masquage du
+                détail est fait SERVEUR (_histovec_publique). */}
+            {!enCours && r.type === 'vehicule' && (
+              <HistovecBloc
                 analysisId={id}
                 result={r}
                 onMaj={(maj) => setAnalysis(prev => prev ? { ...prev, result: adaptResult(maj) } : prev)}

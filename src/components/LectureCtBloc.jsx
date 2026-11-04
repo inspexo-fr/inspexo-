@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { lectureCt, getMonPass } from '../lib/scoreApi'
+import { corrigerKmCt, lectureCt, getMonPass } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
 
 // SPRINT 7 — Bloc « PV de contrôle technique » de /a/:id (fonction du Pass).
@@ -22,7 +22,83 @@ const euros = (min, max) => {
   return f(min ?? max)
 }
 
-function LectureAffichee({ lecture }) {
+// SPRINT 13 — Un recul de compteur est un signal ROUGE fondé sur une lecture
+// automatique de photo. On montre donc les relevés EXACTEMENT tels qu'ils ont
+// été lus, avec leurs dates, et on invite à les vérifier sur le document.
+// Une valeur mal lue se corrige ici : le calcul est relancé sans nouvel appel
+// au modèle (le serveur rejoue le barème sur la série corrigée).
+function SerieKm({ analysisId, km, onMaj }) {
+  const [valeurs, setValeurs] = useState(null) // null = pas encore modifié
+  const [etat, setEtat] = useState('idle')
+  const [message, setMessage] = useState(null)
+  if (!km?.serie?.length) return null
+
+  const serie = km.serie
+  const courantes = valeurs ?? serie.map((e) => String(e.km))
+  const modifie = courantes.some((v, i) => Number(v) !== serie[i].km)
+  const jour = (d) => (d ? d.split('-').reverse().join('/') : 'date illisible')
+
+  const envoyer = async () => {
+    setEtat('envoi'); setMessage(null)
+    try {
+      const corrections = courantes
+        .map((v, index) => ({ index, km: Number(v) }))
+        .filter((c) => Number.isFinite(c.km) && c.km > 0 && c.km !== serie[c.index].km)
+      const r = await corrigerKmCt(analysisId, corrections)
+      setEtat('idle'); setValeurs(null)
+      if (onMaj) onMaj(r)
+    } catch (e) {
+      setEtat('erreur')
+      setMessage(e?.message || 'Correction impossible. Réessayez.')
+    }
+  }
+
+  return (
+    <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid var(--filet)' }}>
+      <div className="mono c-graphite" style={{ fontSize: 11, letterSpacing: '.04em' }}>
+        KILOMÉTRAGES RELEVÉS AUX CONTRÔLES
+      </div>
+      {km.recul && (
+        <p className="c-rouge" style={{ fontSize: 14, lineHeight: 1.7, marginTop: 6, fontWeight: 700 }}>
+          {jour(km.recul.avant.date)} : {km.recul.avant.km.toLocaleString('fr-FR')} km →{' '}
+          {jour(km.recul.apres.date)} : {km.recul.apres.km.toLocaleString('fr-FR')} km
+        </p>
+      )}
+      <div style={{ marginTop: 8 }}>
+        {serie.map((e, i) => (
+          <div key={i} className="ctrl" style={{ alignItems: 'baseline', gap: 8 }}>
+            <span className="mono" style={{ fontSize: 12 }}>{jour(e.date)}</span>
+            <span style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+              <input
+                className="input" inputMode="numeric" value={courantes[i]}
+                onChange={(ev) => {
+                  const v = ev.target.value.replace(/\D/g, '').slice(0, 7)
+                  const copie = [...courantes]; copie[i] = v; setValeurs(copie)
+                }}
+                aria-label={`Kilométrage relevé le ${jour(e.date)}`}
+                style={{ width: 110, textAlign: 'right' }}
+              />
+              <span className="mono c-graphite" style={{ fontSize: 11 }}>km</span>
+            </span>
+          </div>
+        ))}
+      </div>
+      <p className="mono c-graphite" style={{ fontSize: 11, marginTop: 8, lineHeight: 1.6 }}>
+        Vérifiez ces chiffres sur votre PV. Ils ont été lus automatiquement sur la photo : si l'un
+        d'eux est inexact, corrigez-le et le verdict est recalculé.
+      </p>
+      {modifie && (
+        <button type="button" className="btn btn-auto" style={{ width: 'auto', marginTop: 8 }}
+          disabled={etat === 'envoi'} onClick={envoyer}>
+          {etat === 'envoi' ? 'Recalcul…' : 'Corriger et recalculer'}
+        </button>
+      )}
+      {message && <div className="c-rouge" style={{ fontSize: 13, marginTop: 8 }}>{message}</div>}
+    </div>
+  )
+}
+
+function LectureAffichee({ lecture, analysisId, onMaj }) {
   if (!lecture) return null
   const dateFr = lecture.date_ct ? lecture.date_ct.split('-').reverse().join('/') : null
   return (
@@ -32,6 +108,7 @@ function LectureAffichee({ lecture }) {
         {lecture.centre ? ` · ${lecture.centre.toUpperCase()}` : ''}
         {lecture.km_releve ? ` · ${lecture.km_releve.toLocaleString('fr-FR')} KM RELEVÉS` : ''}
       </div>
+      <SerieKm analysisId={analysisId} km={lecture.km} onMaj={onMaj} />
       {lecture.resultat && (
         <p style={{ fontSize: 14, fontWeight: 700, marginTop: 6 }}
           className={lecture.resultat === 'favorable' ? 'c-vert' : 'c-rouge'}>
@@ -124,7 +201,7 @@ export default function LectureCtBloc({ analysisId, result, onMaj }) {
       <p className="eyebrow">PV de contrôle technique</p>
 
       {lecture ? (
-        <LectureAffichee lecture={lecture} />
+        <LectureAffichee lecture={lecture} analysisId={analysisId} onMaj={onMaj} />
       ) : (
         <p style={{ fontSize: 14, lineHeight: 1.7, marginTop: 8 }}>
           Photographiez le procès-verbal remis par le vendeur : date, kilométrage relevé,
