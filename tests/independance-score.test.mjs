@@ -251,6 +251,32 @@ titre('3. Le drapeau de quota API n’ouvre pas le service gratuit')
   // Et le contraire : score ne lit jamais le contrat du client.
   ok(!/prix_partages/.test(src),
     'score ne lit pas le contrat du client : il reçoit un booléen, c’est api-analyses qui lit')
+
+  // ── SPRINT 15 — le drapeau ADMIN, même traitement ────────────────────────
+  // Le compte admin échappe au plafond de 5 analyses / 24 h pour constituer
+  // le jeu de test de /fiabilite. Un drapeau de plus sur le chemin de la
+  // notation, c'est une occasion de plus de se tromper : il est énuméré comme
+  // `isApi`, et pour la même raison.
+  ok(/const adminIllimite = await estAdminUserId\(admin, appelantId\)/.test(src),
+    'le rôle admin est lu EN BASE, pas déduit d’un email ni d’un en-tête')
+  ok(!/ADMIN_EMAILS|email\s*===\s*["'][^"']*@/.test(src),
+    'aucune liste d’emails admin codée en dur dans score')
+  const USAGES_ADMIN = [
+    { quoi: 'définition du drapeau', re: /const adminIllimite = await estAdminUserId/ },
+    { quoi: 'trace dans les events', re: /\.\.\.\(adminIllimite \? \{ admin: true \}/ },
+    { quoi: 'porte du plafond de débit', re: /!isEval && !passActif && !isApi && !adminIllimite/ },
+  ]
+  const lignesAdmin = src.split('\n').filter((l) => /\badminIllimite\b/.test(l))
+  const inconnuesAdmin = lignesAdmin.filter((l) => !USAGES_ADMIN.some((u) => u.re.test(l)))
+  ok(lignesAdmin.length > 0 && inconnuesAdmin.length === 0,
+    `les ${lignesAdmin.length} usages du drapeau admin sont tous énumérés${
+      inconnuesAdmin.length ? ` — inconnu : ${inconnuesAdmin[0].trim().slice(0, 70)}` : ''}`)
+  ok(!lignesAdmin.some((l) => /\bscore\b|verdict|axes|bareme|panne|gravite|catalogue|critique/i.test(l)),
+    'aucune ligne portant le drapeau admin ne touche au score, au verdict ni aux pannes')
+  // Le captcha reste DANS la porte : un admin ne le voit pas non plus, mais
+  // personne d'autre ne peut y échapper par ce chemin.
+  ok(src.indexOf('captcha_required') > src.indexOf('!isApi && !adminIllimite'),
+    'le captcha reste à l’intérieur de la porte du plafond')
 }
 
 titre('4. Version du barème')

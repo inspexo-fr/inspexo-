@@ -33,3 +33,25 @@ export async function verifierAdmin(req: Request): Promise<AccesAdmin> {
 
   return { ok: true, user: { id: user.id, email: user.email ?? null } };
 }
+
+/** L'utilisateur déjà résolu est-il administrateur ?
+ *
+ * Variante de `verifierAdmin` pour les fonctions qui ont DÉJÀ un client
+ * service role et l'identifiant de l'appelant (score, qui l'obtient de
+ * `passDepuisReq`) : elle évite un second aller-retour `getUser`.
+ * Le rôle reste lu en base — jamais déduit d'un email ni d'un en-tête. */
+// deno-lint-ignore no-explicit-any
+export async function estAdminUserId(admin: any, userId: string | null): Promise<boolean> {
+  if (!userId) return false;
+  try {
+    const { count } = await admin
+      .from("admins")
+      .select("user_id", { count: "exact", head: true })
+      .eq("user_id", userId);
+    return (count ?? 0) > 0;
+  } catch (err) {
+    // Un échec de lecture ne doit JAMAIS ouvrir un passe-droit.
+    console.error("estAdminUserId:", err);
+    return false;
+  }
+}

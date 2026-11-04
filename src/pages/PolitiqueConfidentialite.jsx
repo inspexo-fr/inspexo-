@@ -71,6 +71,19 @@ export default function PolitiqueConfidentialite() {
             servent qu'à vous répondre et à établir une proposition. Voir la section 6 octies.
           </p>
 
+          <h3 className="legal-h3">f bis) Liste d'attente « Abonnement pro »</h3>
+          <ul className="legal-ul">
+            <li>Adresse email professionnelle (obligatoire)</li>
+            <li>Nature de votre activité, choisie dans une liste (obligatoire)</li>
+            <li>Tranche d'annonces analysées par mois, choisie dans une liste (obligatoire)</li>
+          </ul>
+          <p className="legal-p">
+            Ce second formulaire de la page <a href="/pro">/pro</a> sert à savoir si une formule
+            d'abonnement professionnel a sa place, et laquelle. Aucun champ libre n'y figure :
+            l'activité et le volume sont des tranches, jamais une description de votre entreprise.
+            Voir la section 6 octies.
+          </p>
+
           <h2 className="legal-h2">3. Finalités du traitement</h2>
           <ul className="legal-ul">
             <li>Fournir le service d'analyse de véhicules <em>(base légale : exécution du contrat)</em></li>
@@ -341,17 +354,28 @@ export default function PolitiqueConfidentialite() {
             Les clés sont stockées sous forme d'empreinte salée, jamais en clair.
           </p>
 
-          <h2 className="legal-h2">6 octies. Formulaire de contact professionnel</h2>
+          <h2 className="legal-h2">6 octies. Formulaires professionnels</h2>
           <p className="legal-p">
-            Le formulaire de la page <a href="/pro">/pro</a> enregistre l'adresse email que vous
-            indiquez et, s'ils sont renseignés, le nom de votre société, le volume que vous
-            estimez et le message libre décrivant votre besoin.
+            La page <a href="/pro">/pro</a> porte deux formulaires distincts, enregistrés dans la
+            même table avec une mention de leur origine.
+          </p>
+          <p className="legal-p">
+            Le <strong>formulaire de devis</strong> enregistre l'adresse email que vous indiquez
+            et, s'ils sont renseignés, le nom de votre société, le volume que vous estimez et le
+            message libre décrivant votre besoin.
+          </p>
+          <p className="legal-p">
+            La <strong>liste d'attente « Abonnement pro »</strong> enregistre votre adresse email,
+            la nature de votre activité et la tranche d'annonces que vous analysez par mois.
+            S'y inscrire ne réserve rien et ne vous engage à rien. Dans l'écran d'administration,
+            ces réponses ne sont affichées qu'en nombre — jamais à côté d'une adresse email.
           </p>
           <ul className="legal-ul">
             <li>
-              <strong>Finalité unique :</strong> vous recontacter et établir une proposition
-              commerciale. Ces données ne servent à rien d'autre, ne sont pas transmises à un
-              tiers et ne nourrissent aucune mesure d'audience.
+              <strong>Finalité unique :</strong> vous recontacter, établir une proposition
+              commerciale ou vous prévenir de l'ouverture de l'abonnement. Ces données ne servent
+              à rien d'autre, ne sont pas transmises à un tiers et ne nourrissent aucune mesure
+              d'audience.
             </li>
             <li>
               <strong>Base légale :</strong> mesures précontractuelles prises à votre demande.

@@ -29,7 +29,11 @@ serve(async (req: Request) => {
     const semaines = Number(new URL(req.url).searchParams.get("semaines") ?? 12);
     const { data, error } = await admin.rpc("get_parcours", { p_semaines: semaines });
     if (error) throw error;
-    return json(data ?? {});
+    // SPRINT 15 — Compteur de la liste d'attente pro, rendu avec le tunnel :
+    // c'est une mesure de demande, elle vit au même endroit. Le compteur est
+    // AGRÉGÉ — aucune adresse email ne remonte ici.
+    const { data: pro } = await admin.rpc("get_leads_pro_compteur");
+    return json({ ...(data ?? {}), leads_pro: pro ?? null });
   } catch (e) {
     console.error("admin-parcours:", e);
     return json({ error: "server_error" }, 500);

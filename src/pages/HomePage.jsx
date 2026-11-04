@@ -156,7 +156,7 @@ export default function HomePage() {
               <div className="proof"><div className="k">2 <small>LECTURES</small></div><p>Une première écrit le dossier. Une seconde le relit contre l'annonce et les sources, et retire ce qui ne tient pas. Le compte des retraits est affiché.</p></div>
               <div className="proof"><div className="k">0 <small>CHIFFRE INVENTÉ</small></div><p>Pas de « juste prix » sans assez d'annonces comparables. Pas de coût de réparation sans source. On écrit « non évalué » plutôt qu'un nombre.</p></div>
             </div>
-            <p style={{ marginTop: 28 }}><Link to="/fiabilite">Notre taux d'erreur sera publié dès 50 dossiers relus à la main.</Link></p>
+            <p style={{ marginTop: 28 }}><Link to="/fiabilite">Notre taux d'erreur, publié dès trente analyses vérifiées.</Link></p>
           </div>
         </section>
 
@@ -211,7 +211,7 @@ export default function HomePage() {
               <details><summary>Pourquoi le prix est-il parfois « non évalué » ?<span className="pm" aria-hidden="true">+</span></summary><div className="a">Parce que nous refusons d'afficher un « juste prix » sorti de nulle part. Une fourchette n'apparaît qu'avec au moins quinze annonces comparables récentes, et elle est présentée comme des prix demandés, pas des prix de vente. Avec l'extension, les annonces que vous consultez servent de comparables.</div></details>
               <details><summary>Vous remplacez un professionnel sur place ?<span className="pm" aria-hidden="true">+</span></summary><div className="a">Non. Nous lisons l'annonce et les documents, et nous vous guidons pendant la visite. Nous ne montons pas sous la voiture. Pour un véhicule cher ou un doute sérieux, un contrôle sur pont reste la bonne décision ; nous préparons un réseau de garages et d'inspecteurs indépendants, sur liste d'attente.</div></details>
               <details><summary>Que faites-vous de mes photos et de l'annonce ?<span className="pm" aria-hidden="true">+</span></summary><div className="a">Les photos sont analysées puis supprimées immédiatement, elles ne sont jamais stockées. Le texte de l'annonce est conservé avec le dossier pour que vous puissiez le rouvrir et le partager. Les prix et kilométrages alimentent des statistiques agrégées par modèle, jamais republiées annonce par annonce.</div></details>
-              <details><summary>Et le taux d'erreur ?<span className="pm" aria-hidden="true">+</span></summary><div className="a">Des dossiers sont tirés au hasard et relus phrase par phrase par un humain. Chaque affirmation est marquée juste, fausse ou discutable. Les taux seront publiés dès cinquante dossiers relus, par type d'affirmation, et mis à jour automatiquement ensuite.</div></details>
+              <details><summary>Et le taux d'erreur ?<span className="pm" aria-hidden="true">+</span></summary><div className="a">Chaque affirmation d'une analyse est relue contre la page qu'elle cite, par une vérification qui n'a vu ni le score, ni le verdict, ni le raisonnement — sans quoi elle ne vérifierait pas, elle confirmerait. Trois réponses : soutenue, non soutenue, ou source parlant d'un autre moteur. Le doute compte contre nous. Les taux sont publiés dès trente analyses vérifiées, par type d'affirmation, et mis à jour automatiquement. Les affirmations qui ne citent aucune page publique sont comptées à part, jamais mélangées au taux.</div></details>
             </div>
           </div>
         </section>

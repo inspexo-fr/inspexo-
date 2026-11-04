@@ -185,10 +185,13 @@ export const marquerClicPass = (analysisId) => marquerEtape('pass_clicked', anal
 export const marquerClicInspection = (analysisId) => marquerEtape('inspection_clicked', analysisId)
 
 /** Demande de contact professionnel (page /pro). */
-export async function submitLeadPro({ email, societe, volume, message }) {
+export async function submitLeadPro({ email, societe, volume, message, type, activite, annoncesParMois }) {
   const { error } = await supabase.rpc('submit_lead_pro', {
     p_email: email, p_societe: societe ?? null,
     p_volume: volume ?? null, p_message: message ?? null,
+    p_type: type === 'abonnement' ? 'abonnement' : 'api',
+    p_activite: activite ?? null,
+    p_annonces_par_mois: annoncesParMois ?? null,
   })
   if (error) throw error
 }

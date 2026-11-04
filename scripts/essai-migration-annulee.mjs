@@ -283,6 +283,50 @@ select pg_temp.essai_verifie('prestation_bareme : visio 2000 / 0 h, inspection 4
   -- un type inconnu ne doit jamais tomber sur le bareme le moins cher
   and (public.prestation_bareme(null)->>'retenue_cents')::int = 4000);
 
+-- ── SPRINT 15 : liste d attente pro et verification independante ──────────
+
+-- La signature a QUATRE arguments doit avoir disparu : la laisser vivre
+-- permettrait d inserer un lead sans que l appelant ait choisi son type.
+select pg_temp.essai_verifie('submit_lead_pro : l ancienne signature a 4 arguments est supprimee',
+  (select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'submit_lead_pro' and p.pronargs = 4) = 0
+  and (select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'submit_lead_pro' and p.pronargs = 7) = 1);
+
+-- Un lead sans type ne doit pas pouvoir exister.
+select pg_temp.essai_verifie('leads_pro.type : defaut api, contrainte aux deux valeurs',
+  (select column_default like '%api%' and is_nullable = 'NO'
+     from information_schema.columns
+    where table_schema = 'public' and table_name = 'leads_pro' and column_name = 'type')
+  and (select count(*) from pg_constraint where conname = 'leads_pro_type_check') = 1);
+
+-- Le seuil de publication est celui qui a ete decide : 30.
+select pg_temp.essai_verifie('get_fiabilite : rien n est publie avant 30 analyses verifiees',
+  (public.get_fiabilite()->>'publie')::boolean = false
+  and (public.get_fiabilite()->>'seuil')::int = 30);
+
+-- Les invérifiables ne gonflent pas le taux publie : le denominateur existe
+-- et il est distinct du total.
+select pg_temp.essai_verifie('get_fiabilite : le denominateur verifiable est declare',
+  position('''verifiables''' in pg_get_functiondef(p.oid)) > 0
+  and position('''sans_source''' in pg_get_functiondef(p.oid)) > 0)
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'get_fiabilite';
+
+-- Les outils de l exploitant ne sont pas des surfaces publiques.
+select pg_temp.essai_verifie('verification : outils reserves au service role',
+  not has_function_privilege('anon', 'public.get_leads_pro_compteur()', 'execute')
+  and not has_function_privilege('authenticated', 'public.get_leads_pro_compteur()', 'execute')
+  and not has_function_privilege('anon', 'public.analyses_a_verifier(integer)', 'execute')
+  and not has_function_privilege('authenticated', 'public.analyses_a_verifier(integer)', 'execute')
+  and has_function_privilege('anon', 'public.get_fiabilite()', 'execute'));
+
+-- Une affirmation ne peut etre verifiee deux fois pour la meme analyse.
+select pg_temp.essai_verifie('verifications : unicite (analysis_id, claim_hash)',
+  (select count(*) from pg_constraint c
+     join pg_class t on t.oid = c.conrelid
+    where t.relname = 'verifications' and c.contype = 'u') = 1);
+
 -- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
 -- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On
 -- assère donc sur TOUT le schéma public, tables et vues comprises, pour les
