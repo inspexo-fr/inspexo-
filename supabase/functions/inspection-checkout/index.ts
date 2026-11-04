@@ -132,10 +132,14 @@ serve(async (req: Request) => {
   }
 
   try {
+    // Ce contrôle précède la lecture du corps, donc le type de prestation
+    // n'est pas encore connu : le message doit valoir pour les deux. Nommer
+    // « l'inspection » ici répondait « l'inspection n'est pas ouverte » à une
+    // demande de visio.
     if (!STRIPE_SECRET_KEY || MEDIATEUR_NOM.length === 0) {
       return json({
         error: "inspection_indisponible",
-        message: "L'inspection n'est pas encore ouverte. Laissez votre email pour être prévenu.",
+        message: "Ce service n'est pas encore ouvert. Laissez votre email pour être prévenu.",
       }, 409);
     }
 
