@@ -1207,6 +1207,91 @@ pièges rencontrés, tous deux visibles seulement sur l'image :
 - ⚠️ un `iframe` en `height:100%` dans un parent à `minHeight` ne remplit rien :
   une bande noire sous la vidéo. Hauteur **définie** désormais.
 
+## Sprint 15 — Abonnement pro et fiabilité mesurée (nov. 2026)
+
+### Liste d'attente « Abonnement pro »
+Seconde section de `/pro` : email, **activité** et **tranche d'annonces par
+mois**, toutes deux en listes fermées — aucun champ libre, donc aucune
+description d'entreprise collectée. **Ni prix ni date** : la formule n'existe
+pas, et une échéance annoncée puis manquée coûte plus cher que le silence.
+- `leads_pro` gagne `type` (`api` | `abonnement`), `activite`,
+  `annonces_par_mois` plutôt qu'une seconde table dont la moitié des colonnes
+  serait identique. ⚠️ `submit_lead_pro` est **DROP puis CREATE** : ajouter des
+  paramètres à valeur par défaut aurait créé une SECONDE fonction, et l'appel à
+  quatre arguments serait resté résoluble — donc une ligne aurait pu entrer
+  sans type. Même raisonnement que pour `agreger_marche` au sprint 12.
+- Compteur dans l'admin, onglet **Parcours** (c'est une mesure de demande) :
+  **agrégé par activité et par volume**, jamais une adresse à côté d'une
+  réponse. Politique de confidentialité : sections 2.f bis et 6 octies.
+
+### ⚠️ La page « taux d'erreur » existait — et n'avait jamais rien mesuré
+`/fiabilite` était en ligne depuis le sprint 3, avec sa promesse reprise sur
+l'accueil : « publié dès 50 dossiers relus à la main ». La table `audits`
+comptait **0 ligne** un mois plus tard. Une mesure qui exige un geste manuel
+par affirmation n'est pas une mesure, c'est une promesse — et elle était
+affichée au public.
+- La méthode publiée devient la **vérification indépendante**, seuil **30**.
+  La relecture humaine est **conservée** (table, écran, RPC) et affichée comme
+  une mesure **distincte** quand elle a des lignes : deux méthodes, deux
+  chiffres, jamais additionnés.
+- `get_fiabilite` est redéfinie **sans retirer une seule clé** : ce qui change
+  est ce que `publie` et `seuil` gouvernent.
+
+### Le dispositif de vérification
+`_shared/affirmations.ts` (PUR, 52 contrôles hors ligne) extrait les
+affirmations et **la source que chacune cite**. La fonction `verification`
+(admin ou `x-eval-secret`) lit la page et la confronte à l'affirmation.
+- ⚠️ **Le passage de vérification ne voit ni le score, ni le verdict, ni les
+  raisons, ni le raisonnement.** Il reçoit l'affirmation, le texte de la page,
+  et **l'identité du véhicule** — un fait de l'annonce, sans lequel
+  « mauvais moteur » serait indécidable. `tests/affirmations.test.mjs` lit le
+  source de la fonction et **interdit dix termes** dans le corps du message
+  envoyé au modèle. Un passage qui verrait l'analyse ne vérifierait pas, il
+  confirmerait.
+- Trois verdicts (`soutenue`, `non_soutenue`, `mauvais_moteur`) plus deux
+  constats (`source_absente`, `source_injoignable`). Le doute tranche **contre**
+  l'affirmation, et le **silence du modèle ne vaut pas accord**.
+- Une page = un appel : les affirmations qui partagent une source sont
+  regroupées. Vérifier la même phrase contre quatre pages multiplierait le coût
+  sans rien apprendre.
+
+### ⚠️ 55 % des affirmations ne citent AUCUNE page publique
+Mesuré en passant le module sur les **505 `result_json`** du dump de
+production : 5,1 affirmations par analyse, **1,62 page distincte à lire**, et
+**55 % d'affirmations sans source publique**. La cause est structurelle : le
+**Defect Atlas ne porte aucune URL** (vérifié : zéro dans
+`src/data/defectAtlas.js`), ses pannes s'affichent « source : base Inspexo ».
+- Elles sont comptées **à part**, jamais fondues dans le taux. Les y verser
+  serait injuste — elles ne sont pas réfutées, elles sont invérifiables ; les
+  taire laisserait croire que tout a été contrôlé. La page donne les deux
+  nombres côte à côte, et le dénominateur publié (`verifiables`) exclut
+  explicitement les invérifiables et les pages illisibles.
+- ⚠️ **Conséquence sur le seuil de 30** : le dénominateur sera d'environ
+  **70 affirmations vérifiables**, donc **une erreur pèse ~1,4 point**. Le taux
+  publié sera bruyant tant que l'échantillon n'aura pas grossi.
+
+### Plafond de 5 analyses/24 h levé pour l'admin
+`adminIllimite` dans `score`, rôle lu **en base** (`estAdminUserId`), jamais
+déduit d'un email ni d'un en-tête. Même construction que `pass` et `isApi` :
+le drapeau décide **quel compteur s'applique**, jamais ce que vaut le verdict.
+`tests/independance-score.test.mjs` **énumère ses 4 usages** et interdit toute
+ligne le portant qui toucherait au score — vérifié que les deux gardes mordent.
+
+### Coût — estimé AVANT de lancer quoi que ce soit
+`node scripts/verifier-analyses.mjs --estimer --combien 50` ne dépense rien.
+Compteur propre `.verification-cout.json`, plafond 6 € par défaut.
+
+| | 30 analyses | 50 analyses |
+|---|---|---|
+| Vérification (0,029 €/analyse, mesuré) | 0,87 € | 1,45 € |
+| Analyses elles-mêmes (≈ 0,12 €) | 3,60 € | 6,00 € |
+| Nouvelles fiches moteur (≈ 0,30 €, ~1 sur 2) | ≈ 4,50 € | ≈ 7,50 € |
+| **Total** | **≈ 9 €** | **≈ 15 €** |
+
+La vérification est la partie **la moins chère** : ce sont les analyses, et
+surtout les fiches moteur à générer pour des familles non couvertes, qui font
+le budget.
+
 ## Outillage local (4 nov. 2026)
 
 **Docker Desktop est installé**, et avec lui la pile Supabase locale. ⚠️ Le

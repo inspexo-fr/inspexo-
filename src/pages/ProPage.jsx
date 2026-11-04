@@ -41,7 +41,7 @@ function FormulaireContact() {
     if (etat === 'envoi') return
     setEtat('envoi')
     try {
-      await submitLeadPro({ email, societe, volume, message })
+      await submitLeadPro({ email, societe, volume, message, type: 'api' })
       setEtat('fait')
     } catch (_) {
       setEtat('erreur')
@@ -72,6 +72,83 @@ function FormulaireContact() {
       <button type="submit" className="btn btn-auto" style={{ marginTop: 12, display: 'inline-flex' }}
         disabled={etat === 'envoi'}>
         {etat === 'envoi' ? 'Envoi…' : 'Demander un devis'}
+      </button>
+      {etat === 'erreur' && (
+        <p className="c-rouge" style={{ fontSize: 14, marginTop: 8 }}>
+          Email invalide ou erreur réseau — réessayez.
+        </p>
+      )}
+      <p className="mono c-graphite" style={{ marginTop: 10, fontSize: 11, lineHeight: 1.6 }}>
+        {CONSENT_TEXT}
+      </p>
+    </form>
+  )
+}
+
+// SPRINT 15 — Liste d'attente « Abonnement pro ».
+// AUCUN PRIX, AUCUNE DATE : la formule n'existe pas encore, et promettre une
+// échéance qu'on ne tient pas coûte plus cher que de ne rien promettre.
+const ACTIVITES = [
+  'Chasseur de voitures',
+  'Mandataire',
+  'Marchand',
+  'Garage / concession',
+  'Autre',
+]
+
+const VOLUMES = [
+  'Moins de 10',
+  '10 à 50',
+  '50 à 200',
+  '200 à 500',
+  'Plus de 500',
+]
+
+function FormulaireAbonnement() {
+  const [email, setEmail] = useState('')
+  const [activite, setActivite] = useState('')
+  const [annonces, setAnnonces] = useState('')
+  const [etat, setEtat] = useState('idle')
+
+  const envoyer = async (e) => {
+    e.preventDefault()
+    if (etat === 'envoi') return
+    setEtat('envoi')
+    try {
+      await submitLeadPro({ email, type: 'abonnement', activite, annoncesParMois: annonces })
+      setEtat('fait')
+    } catch (_) {
+      setEtat('erreur')
+    }
+  }
+
+  if (etat === 'fait') {
+    return (
+      <p className="c-vert" style={{ fontSize: 15, fontWeight: 600, padding: '12px 0' }}>
+        Vous êtes sur la liste. Nous vous écrirons quand la formule ouvrira — pas avant.
+      </p>
+    )
+  }
+
+  return (
+    <form onSubmit={envoyer} id="abonnement">
+      <div style={{ display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))' }}>
+        <input className="input" type="email" required placeholder="votre@email.pro" value={email}
+          onChange={e => setEmail(e.target.value)} aria-label="Votre email professionnel" />
+        <select className="input" required value={activite} onChange={e => setActivite(e.target.value)}
+          aria-label="Votre activité">
+          <option value="">Votre activité…</option>
+          {ACTIVITES.map(a => <option key={a} value={a}>{a}</option>)}
+        </select>
+        <select className="input" required value={annonces} onChange={e => setAnnonces(e.target.value)}
+          aria-label="Annonces analysées par mois">
+          <option value="">Annonces analysées / mois…</option>
+          {VOLUMES.map(v => <option key={v} value={v}>{v}</option>)}
+        </select>
+      </div>
+      <button type="submit" className="btn btn-auto" style={{ marginTop: 12, display: 'inline-flex' }}
+        disabled={etat === 'envoi'}>
+        {etat === 'envoi' ? 'Envoi…' : "M'inscrire sur la liste"}
       </button>
       {etat === 'erreur' && (
         <p className="c-rouge" style={{ fontSize: 14, marginTop: 8 }}>
@@ -157,6 +234,26 @@ export default function ProPage() {
                 exemple de réponse</Link>.
               </p>
             </div>
+          </div>
+        </section>
+
+        <section className="sec">
+          <div className="wrap-doc">
+            <p className="eyebrow">Abonnement pro — liste d'attente</p>
+            <h2 style={{ fontSize: 'clamp(24px,3vw,34px)', marginTop: 10 }}>
+              Vous analysez des annonces toute la journée.
+            </h2>
+            <p className="lead" style={{ marginTop: 12 }}>
+              Chasseurs de voitures, mandataires, marchands : la formule gratuite s'arrête à
+              cinq analyses par jour, ce qui ne tient pas pour un usage professionnel. Nous
+              préparons un abonnement. Dites-nous ce que vous faites et à quel rythme —
+              c'est ce qui décidera de ce que nous construisons.
+            </p>
+            <p className="mono c-graphite" style={{ marginTop: 14, fontSize: 11, lineHeight: 1.7 }}>
+              Ni prix ni date : la formule n'existe pas encore. S'inscrire n'engage à rien et
+              ne réserve rien.
+            </p>
+            <div style={{ marginTop: 20 }}><FormulaireAbonnement /></div>
           </div>
         </section>
 

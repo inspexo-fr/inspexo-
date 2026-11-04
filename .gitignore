@@ -52,3 +52,4 @@ tests/histovec/
 # PV de controle technique publics telecharges pour mise au point locale :
 # ils portent plaque et VIN. Jamais versionnes.
 tests/eval-ct/publics/
+.verification-cout.json

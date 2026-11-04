@@ -425,6 +425,33 @@ function ParcoursTab() {
         </div>
       </div>
 
+      {/* SPRINT 15 — Demandes pro : c'est une mesure de demande, elle vit avec
+          le tunnel. Compteur AGRÉGÉ : aucune adresse email ne remonte ici. */}
+      {data?.leads_pro && (
+        <div style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '18px 20px', marginBottom: 18 }}>
+          <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 8 }}>
+            Demandes pro — {data.leads_pro.total ?? 0} au total
+            {(data.leads_pro.sept_jours ?? 0) > 0 && `, dont ${data.leads_pro.sept_jours} sur 7 jours`}
+          </div>
+          <div style={{ color: '#6B7280', fontSize: '0.8125rem', lineHeight: 1.8 }}>
+            Abonnement&nbsp;: <strong>{data.leads_pro.par_type?.abonnement ?? 0}</strong> ·
+            {' '}API&nbsp;: <strong>{data.leads_pro.par_type?.api ?? 0}</strong>
+            {Object.keys(data.leads_pro.par_activite ?? {}).length > 0 && (
+              <>
+                <br />Activité&nbsp;: {Object.entries(data.leads_pro.par_activite)
+                  .sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} (${n})`).join(' · ')}
+              </>
+            )}
+            {Object.keys(data.leads_pro.par_volume ?? {}).length > 0 && (
+              <>
+                <br />Annonces/mois&nbsp;: {Object.entries(data.leads_pro.par_volume)
+                  .sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} (${n})`).join(' · ')}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       <div style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '18px 20px', marginBottom: 18 }}>
         <div style={{ fontWeight: 800, color: '#0F1B2D', marginBottom: 12 }}>
           Tunnel — {base} analyse{base > 1 ? 's' : ''} sur la période
@@ -1112,6 +1139,156 @@ function InspecteursTab() {
   )
 }
 
+// ─── Onglet Fiabilité (sprint 15) ────────────────────────────────────────────
+//
+// La mesure publiée sur /fiabilite. Chaque affirmation d'une analyse est
+// confrontée à la page qu'elle cite par un passage qui n'a pas vu la
+// génération — lancé ici, une analyse à la fois.
+//
+// ⚠️ CHAQUE LANCEMENT DÉPENSE (≈ 0,06 € par analyse). Le coût réel est rendu
+// par la fonction et cumulé à l'écran : on ne lance pas une campagne sans
+// voir ce qu'elle coûte.
+//
+// ⚠️ « Corrigée » veut dire corrigée À LA SOURCE (panne retirée de la fiche,
+// coût invalidé, source remplacée). Le compteur est PUBLIÉ : cocher sans agir
+// publierait un chiffre faux. C'est pourquoi la note est obligatoire.
+function FiabiliteTab() {
+  const [etat, setEtat] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [enCours, setEnCours] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [coutSession, setCoutSession] = useState(0)
+  const [notes, setNotes] = useState({})
+
+  const charger = useCallback(async () => {
+    setLoading(true)
+    const d = await adminFetch('admin-fiabilite', { method: 'GET' })
+    setEtat(d)
+    setLoading(false)
+  }, [])
+  useEffect(() => { charger() }, [charger])
+
+  const verifier = async (id) => {
+    setEnCours(id); setMessage(null)
+    const d = await adminFetch('verification', { method: 'POST', body: JSON.stringify({ analysis_id: id }) })
+    setEnCours(null)
+    if (d.error) { setMessage(d.message ? `${d.error} — ${d.message}` : d.error); return }
+    setCoutSession(c => c + (d.cout_eur || 0))
+    setMessage(
+      `${d.affirmations} affirmations — ${d.soutenues} soutenues, ${d.non_soutenues} non soutenues, ` +
+      `${d.mauvais_moteur} mauvais moteur, ${d.sans_source} sans source publique. ` +
+      `Coût : ${(d.cout_eur || 0).toFixed(4)} €.`,
+    )
+    charger()
+  }
+
+  const corriger = async (id) => {
+    const note = (notes[id] || '').trim()
+    if (note.length < 8) { setMessage('Dites ce qui a été corrigé (8 caractères minimum).'); return }
+    setEnCours(id); setMessage(null)
+    const d = await adminFetch('admin-fiabilite', { method: 'POST', body: JSON.stringify({ id, note }) })
+    setEnCours(null)
+    if (d.error) { setMessage(d.message ? `${d.error} — ${d.message}` : d.error); return }
+    setNotes(n => ({ ...n, [id]: '' }))
+    charger()
+  }
+
+  if (loading) return <div style={styles.pageSub}>Chargement…</div>
+
+  const st = etat?.stats
+  const v = st?.verification
+  const denom = v?.verifiables ?? 0
+  const carte = { background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '14px 16px', marginBottom: 10 }
+
+  return (
+    <div>
+      <div style={styles.pageTitle}>Fiabilité</div>
+      <div style={styles.pageSub}>
+        {st?.publie
+          ? `Publié : ${st.analyses_verifiees} analyses vérifiées, ${denom} affirmations vérifiables.`
+          : `Pas encore publié : ${st?.analyses_verifiees ?? 0} analyse(s) vérifiée(s) sur ${st?.seuil ?? 30}.`}
+        {' '}Chaque vérification coûte environ 0,06 €.
+      </div>
+      {coutSession > 0 && (
+        <div style={{ ...styles.pageSub, color: '#B45309' }}>
+          Dépensé depuis l’ouverture de cet écran : {coutSession.toFixed(4)} €.
+        </div>
+      )}
+      {message && <div style={{ ...styles.pageSub, color: '#16A34A' }}>{message}</div>}
+
+      {v && (
+        <div style={carte}>
+          <div style={{ fontWeight: 700, fontFamily: 'var(--sans)' }}>Relevé</div>
+          <div style={{ color: '#6B7280', fontSize: '0.8125rem', marginTop: 6, lineHeight: 1.7 }}>
+            {v.soutenues} soutenues · {v.non_soutenues} non soutenues · {v.mauvais_moteur} mauvais
+            moteur · {v.sans_source} sans source publique · {v.injoignables} pages illisibles ·{' '}
+            {v.corrigees} corrigées
+          </div>
+        </div>
+      )}
+
+      <div style={{ ...styles.pageTitle, fontSize: '1rem', marginTop: 18 }}>À vérifier</div>
+      {(etat?.a_verifier ?? []).length === 0 && (
+        <div style={styles.pageSub}>Aucune analyse réelle en attente de vérification.</div>
+      )}
+      {(etat?.a_verifier ?? []).map(a => (
+        <div key={a.id} style={carte}>
+          <div style={{ fontWeight: 700, fontFamily: 'var(--sans)' }}>
+            {[a.marque, a.modele].filter(Boolean).join(' ') || 'Véhicule non identifié'}
+          </div>
+          <div style={{ color: '#6B7280', fontSize: '0.75rem', marginTop: 4 }}>
+            {new Date(a.created_at).toLocaleString('fr-FR')} — {a.id}
+          </div>
+          <button type="button" onClick={() => verifier(a.id)} disabled={enCours === a.id}
+            style={{ marginTop: 10, padding: '8px 14px', borderRadius: 8, border: '1.5px solid #0F1B2D',
+              background: enCours === a.id ? '#E5E7EB' : '#0F1B2D', color: enCours === a.id ? '#6B7280' : '#fff',
+              fontWeight: 700, cursor: enCours === a.id ? 'default' : 'pointer' }}>
+            {enCours === a.id ? 'Vérification…' : 'Vérifier (≈ 0,06 €)'}
+          </button>
+        </div>
+      ))}
+
+      <div style={{ ...styles.pageTitle, fontSize: '1rem', marginTop: 18 }}>Affirmations non soutenues</div>
+      {(etat?.a_traiter ?? []).length === 0 && (
+        <div style={styles.pageSub}>Rien à traiter.</div>
+      )}
+      {(etat?.a_traiter ?? []).map(f => (
+        <div key={f.id} style={{ ...carte, borderColor: f.corrigee_le ? 'rgba(0,0,0,0.07)' : '#FCA5A5' }}>
+          <div style={{ fontSize: '0.75rem', color: '#6B7280' }}>
+            {f.claim_type} — {f.verdict === 'mauvais_moteur' ? 'source parlant d’un autre moteur' : 'non soutenue'}
+          </div>
+          <div style={{ fontWeight: 600, marginTop: 4, lineHeight: 1.5 }}>{f.claim_text}</div>
+          {f.justification && (
+            <div style={{ color: '#6B7280', fontSize: '0.8125rem', marginTop: 6, lineHeight: 1.6 }}>
+              {f.justification}
+            </div>
+          )}
+          {f.source_url && (
+            <a href={f.source_url} target="_blank" rel="noreferrer noopener"
+              style={{ fontSize: '0.75rem', wordBreak: 'break-all' }}>{f.source_url}</a>
+          )}
+          {f.corrigee_le ? (
+            <div style={{ color: '#16A34A', fontSize: '0.8125rem', marginTop: 8 }}>
+              Corrigée le {new Date(f.corrigee_le).toLocaleDateString('fr-FR')} — {f.corrigee_note}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
+              <input value={notes[f.id] || ''} onChange={e => setNotes(n => ({ ...n, [f.id]: e.target.value }))}
+                placeholder="Ce qui a été corrigé à la source" maxLength={500}
+                style={{ flex: '1 1 220px', padding: '8px 10px', borderRadius: 8, border: '1.5px solid rgba(0,0,0,0.12)' }} />
+              <button type="button" onClick={() => corriger(f.id)} disabled={enCours === f.id}
+                style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #0F1B2D',
+                  background: '#fff', fontWeight: 700, cursor: 'pointer' }}>
+                Marquer corrigée
+              </button>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ─── Onglet Fonctionnalités (sprint 13) ──────────────────────────────────────
 //
 // Trois états, et le troisième est celui qui compte : « admin uniquement »
@@ -1262,6 +1439,7 @@ export default function AdminDashboard() {
     { key: 'partenaires',  label: 'Partenaires' },
     { key: 'retours',      label: 'Retours' },
     { key: 'couts',        label: 'Coûts réparation' },
+    { key: 'fiabilite',    label: 'Fiabilité' },
     { key: 'drapeaux',     label: 'Fonctionnalités' },
     { key: 'audit',        label: 'Audit justesse', href: '/admin/audit' },
   ]
@@ -1354,6 +1532,7 @@ export default function AdminDashboard() {
             {tab === 'inspecteurs'  && <InspecteursTab />}
             {tab === 'drapeaux'     && <DrapeauxTab />}
             {tab === 'parcours'     && <ParcoursTab />}
+            {tab === 'fiabilite'    && <FiabiliteTab />}
             {tab === 'api'          && <ApiTab />}
             {tab === 'partenaires'  && <PartenairesTab />}
             {tab === 'retours'      && <RetoursTab />}

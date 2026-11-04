@@ -23,6 +23,7 @@ import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "..
 import { panneCompteDansScore, pannesApplicables, refsManquantes } from "../_shared/pannesApplicables.ts";
 import { calculerNegociation, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
+import { estAdminUserId } from "../_shared/adminAuth.ts";
 import {
   compterCritiquesNonFaites,
   dejaCouvert,
@@ -848,9 +849,19 @@ serve(async (req: Request) => {
     // Pass achat (sprint 7) : un utilisateur connecté avec Pass actif n'est
     // soumis ni à la limite de 5 analyses/24 h ni au captcha, et reçoit la
     // négociation détaillée. Décidé ICI, côté serveur, à partir du JWT.
-    const { passActif } = isInternal
-      ? { passActif: false }
+    const { passActif, userId: appelantId } = isInternal
+      ? { passActif: false, userId: null as string | null }
       : await passDepuisReq(admin, req);
+    // SPRINT 15 — Le compte ADMIN n'est pas plafonné à 5 analyses par 24 h.
+    // Le jeu de test de la page /fiabilite se constitue en lançant des
+    // dizaines d'analyses réelles depuis le site : la limite grand public
+    // l'interdirait. Comme pour le Pass et l'API, le drapeau décide QUEL
+    // compteur s'applique — jamais ce que vaut le verdict.
+    // ⚠️ Le rôle est lu EN BASE (table `admins`), jamais déduit d'un email ni
+    // d'un en-tête : un drapeau que le client pourrait poser ouvrirait le
+    // service gratuit à volonté. Usages énumérés par
+    // tests/independance-score.test.mjs.
+    const adminIllimite = await estAdminUserId(admin, appelantId);
     // La réponse HTTP d'un appelant sans Pass ne porte jamais le détail de
     // négociation (le floutage client du sprint 3 envoyait tout au
     // navigateur) ; la ligne `analyses` reste complète, get_public_analysis
@@ -956,6 +967,7 @@ serve(async (req: Request) => {
         ...(isInternal ? { via: "intake" } : {}),
         ...(isEval ? { eval: true } : {}),
         ...(passActif ? { pass: true } : {}),
+        ...(adminIllimite ? { admin: true } : {}),
         // Trafic API : tracé pour la facturation et pour pouvoir le séparer
         // du public dans les mesures. Aucune empreinte d'IP n'est ajoutée.
         ...(isApi ? { via: "api", api_client: apiClientId } : {}),
@@ -963,7 +975,7 @@ serve(async (req: Request) => {
       },
     });
 
-    if (!isEval && !passActif && !isApi) {
+    if (!isEval && !passActif && !isApi && !adminIllimite) {
       const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
       const { count, error: countError } = await admin
         .from("events")
@@ -2992,6 +3004,7 @@ serve(async (req: Request) => {
         },
         ...(isEval ? { eval: true } : {}),
         ...(passActif ? { pass: true } : {}),
+        ...(adminIllimite ? { admin: true } : {}),
       },
     });
 
