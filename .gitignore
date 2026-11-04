@@ -39,6 +39,10 @@ tests/eval-ct/*/photos/
 captures-sprint9/
 captures-sprint10/
 captures-sprint11/
+captures-sprint8/
+captures-sprint12/
+captures-sprint13/
+captures-sprint14/
 
 # Rapports HistoVec deposes pour mise au point : DONNEES PERSONNELLES
 # (titulaire, plaque, VIN). Jamais versionnes. Les fixtures de test sont
