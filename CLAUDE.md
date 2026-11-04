@@ -1120,6 +1120,34 @@ avec des `FAIL` à l'écran. Elle est désormais la **dernière instruction** de
 `tests/inspection.test.mjs` et **fusionnée avec le message de succès** — on ne
 peut plus afficher « tous les tests passent » sans avoir franchi le contrôle.
 
+### Mise en service — FAITE le 4 nov. 2026
+1. dumps prod hors dépôt (`schema-avant-sprint14-…` 153 Ko + `data-public-avant-sprint14-…`
+   9 Mo, 38 tables) ; 2. `scripts/essai-local.sh` : **34 migrations rejouées
+   depuis une base vide**, 33/33 assertions ; 3. `db push --remote --yes` :
+   `20261114120000` appliquée (une seule en attente) ; 4. 19 suites hors ligne
+   OK ; 5. merge `sprint14` → `main` et push, déploiement Vercel **Ready** ;
+   6. **cinq** fonctions déployées.
+- ⚠️ **`inspection-annuler` était à redéployer sans avoir changé d'une ligne** :
+  elle importe `_shared/inspection.ts`, où `decisionAnnulation` est devenue
+  consciente du type. Non redéployée, elle aurait appliqué à une visio le
+  barème de l'inspection (retenue de 40 € sur une annulation à moins de 24 h,
+  là où la visio s'annule librement). **Un module `_shared` modifié oblige à
+  redéployer TOUS ceux qui l'importent**, pas seulement les fonctions dont le
+  fichier a bougé — `git diff --name-only` ne le dit pas.
+- Vérifié en production : **308 PureTech → orange 55**, sa référence (0,121 €) ;
+  `drapeau_actif` rend **false** pour `visio_guidee` et `lecture_histovec` ;
+  `pass-checkout` `actif:false` ; `inspection-checkout` `ouvert:false` pour les
+  **deux** types et **409** sur un POST visio ; `visio-acces` **401** ;
+  `/cgv-visio` pré-rendue (21 Ko lisibles sans JavaScript) ; espace inspecteur
+  et `/visio/:id` sans erreur JavaScript, **zéro débordement à 390 px** ; sur un
+  vrai dossier, aucun bloc visio ni HistoVec et l'inspection repliée en liste
+  d'attente. Captures `captures-sprint14/prod-*.png`.
+- ⚠️ **Défaut trouvé par cette vérification** : le contrôle `MEDIATEUR_NOM`
+  précède la lecture du corps de la requête, donc le type de prestation n'est
+  pas encore connu — une demande de **visio** recevait « L'inspection n'est pas
+  encore ouverte ». Message rendu neutre (branche
+  `fix-message-prestation-fermee`, non mergée).
+
 ### Captures
 `scripts/captures-visio.mjs` (dossier `captures-sprint14/`, gitignoré). Deux
 pièges rencontrés, tous deux visibles seulement sur l'image :
@@ -1154,6 +1182,18 @@ ou à une commande `supabase` qui en dépend (`db dump`, `db push`, `start`).
   complète des migrations passe depuis zéro, pas seulement les dernières.
 - SQL local : `docker exec supabase_db_inspexo psql -U postgres -d postgres`.
   C'est le `psql` qui manquait depuis le début du projet.
+
+### ⚠️ Le CLI Supabase a encore changé (constaté le 4 nov. 2026)
+- **`--linked` est devenu `--remote`**, et **`--role` n'existe plus** sur
+  `db dump` (il était obligatoire jusqu'ici contre `permission denied for
+  schema auth` — la nouvelle version s'en charge seule). `db push --remote
+  --yes`, `migration list --remote`.
+- **`db dump` passe désormais par Docker** : sans `docker` sur le PATH, il
+  échoue en `DockerRunError`. Le chemin `pg_dump` 17 du scratchpad n'est plus
+  nécessaire — et ses bibliothèques disparaissent de `/tmp` au redémarrage, ne
+  pas compter dessus.
+- Toujours préfixer : `export PATH="$HOME/.docker/bin:$PATH"` et
+  `SUPABASE_ACCESS_TOKEN=$(security find-generic-password -s "Supabase CLI" -w)`.
 
 ## Marques Couvertes
 
