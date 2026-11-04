@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { lectureHistovec } from '../lib/scoreApi'
+import { drapeauActif, lectureHistovec } from '../lib/scoreApi'
 
 // SPRINT 13 — Dépôt et lecture du certificat de situation administrative
 // HistoVec (le PDF produit par le bouton « Imprimer le CSA »).
@@ -43,7 +43,24 @@ export default function HistovecBloc({ analysisId, result, onMaj }) {
   const [etat, setEtat] = useState('idle') // idle | envoi | erreur
   const [message, setMessage] = useState(null)
   const [lecture, setLecture] = useState(result?.histovec ?? null)
+  // Drapeau évalué EN BASE (eteint / admin_uniquement / public). Il ne sert
+  // ici qu'à ne pas afficher un bouton inutile : la fermeture réelle est dans
+  // la fonction `lecture-histovec`, côté serveur.
+  const [ouvert, setOuvert] = useState(null) // null = en cours
   const champ = useRef(null)
+
+  useEffect(() => {
+    let annule = false
+    drapeauActif('lecture_histovec')
+      .then((v) => { if (!annule) setOuvert(v) })
+      .catch(() => { if (!annule) setOuvert(false) })
+    return () => { annule = true }
+  }, [])
+
+  // Fermée et rien à montrer : le bloc n'existe pas. Une lecture déjà faite
+  // reste visible, elle a été produite quand la fonction était ouverte.
+  if (ouvert === false && !lecture) return null
+  if (ouvert === null && !lecture) return null
 
   const deposer = async (fichier) => {
     if (!fichier) return

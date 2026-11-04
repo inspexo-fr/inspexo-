@@ -20,6 +20,7 @@ import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts"
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteServiceIndisponible } from "../_shared/notify.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
+import { pannesApplicables, refsManquantes } from "../_shared/pannesApplicables.ts";
 import { calculerNegociation, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import {
@@ -2000,6 +2001,73 @@ serve(async (req: Request) => {
       }
       pannesJoined.length = 0;
       pannesJoined.push(...pannesKept);
+
+      // ---- FILET DÉTERMINISTE SUR LES PANNES DU CATALOGUE ----------------
+      // Mesuré sur un cas réel : deux analyses du MÊME texte, même fiche,
+      // zéro affirmation écartée — 2 pannes retenues d'un côté, AUCUNE de
+      // l'autre (axe risques 13 vs 16, score 71 vs 77). La cause est que le
+      // modèle CHOISIT quelles entrées citer, et que ce choix varie.
+      //
+      // Les entrées du catalogue sont déjà filtrées pour CE véhicule (famille
+      // moteur, plage d'années) : leur applicabilité ne relève plus d'un
+      // jugement. Le serveur garantit donc la LISTE, et le modèle garde ce
+      // qu'il fait bien — la formulation. Même esprit qu'`entretienDeclare` :
+      // appliqué APRÈS l'audit, pour que ni l'oubli du modèle ni la critique
+      // ne puissent faire disparaître une entrée objectivement applicable.
+      {
+        const vApp = {
+          kilometrage: typeof v.kilometrage === "number" ? v.kilometrage : null,
+          boite_code: typeof v.boite_code === "string" ? v.boite_code : "",
+          boite_automatique: /auto|dsg|s.?tronic|eat|bva|edc|tct|mct/i.test(
+            `${v.boite ?? ""} ${v.boite_code ?? ""}`,
+          ),
+          famille_moteur: typeof v.famille_moteur === "string" ? v.famille_moteur : "",
+          designation: [v.modele, v.generation, v.motorisation].filter(Boolean).join(" "),
+        };
+        const { applicables, ecartees } = pannesApplicables(catalogue, vApp);
+        const manquantes = refsManquantes(applicables, pannesJoined.map((pj) => pj.source_ref));
+        for (const ref of manquantes) {
+          const src = catalogueByRef.get(ref.toUpperCase());
+          if (!src) continue;
+          pannesJoined.push({
+            id: `P${pannesJoined.length + 1}`,
+            titre: src.titre,
+            organe: src.organe,
+            symptome: src.symptome,
+            // Pas de formulation du modèle pour ces entrées : on reprend le
+            // symptôme du catalogue plutôt que d'inventer une pertinence.
+            pertinence: src.symptome ?? "",
+            verification_sur_place: "",
+            gravite: src.gravite,
+            km_typique: src.km_typique,
+            source_statut: src.source_statut,
+            urls: src.urls,
+            sources: src.sources,
+            cout_min_eur: src.cout_min_eur,
+            cout_max_eur: src.cout_max_eur,
+            source_ref: src.ref,
+            rappel_code: src.rappel_code,
+            rappel_date: src.rappel_date,
+            rappel_vehicules: src.rappel_vehicules,
+            rappel_annee_debut: src.rappel_annee_debut,
+            rappel_annee_fin: src.rappel_annee_fin,
+            rappel_hors_periode: rappelHorsPlage(src),
+          });
+        }
+        if (manquantes.length > 0 || ecartees.length > 0) {
+          await admin.from("events").insert({
+            name: "pannes_filet_applicable",
+            // Pas d'analysis_id ici : la ligne n'est pas encore insérée à ce
+            // stade du pipeline (même convention que `panne_boite_ecartee`).
+            props_json: {
+              reinjectees: manquantes.length,
+              ecartees: ecartees.length,
+              motifs: ecartees.map((x) => x.motif),
+              citees_par_modele: pannesJoined.length - manquantes.length,
+            },
+          });
+        }
+      }
 
       checklist = checklist.filter((c, i) => {
         const d = decisions.get(`C${i + 1}`);

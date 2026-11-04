@@ -15,7 +15,13 @@
 // à dire SANS rapport HistoVec, le score est inchangé — vérifié par
 // `tests/bareme.test.mjs`. La version bouge quand même : la surface d'entrée
 // du barème a changé, et les clients d'API suivent ce numéro.
-export const BAREME_VERSION = "11.1";
+// 11.2 — SPRINT 13.1 : filet déterministe sur les pannes du catalogue
+// (`_shared/pannesApplicables.ts`). Le barème lui-même n'a pas changé, mais la
+// LISTE de pannes qu'il reçoit est désormais garantie par le serveur au lieu
+// de dépendre du choix du modèle : à texte d'annonce identique, le score peut
+// donc différer de celui rendu en 11.1. C'est exactement ce que cette version
+// signale aux clients d'API.
+export const BAREME_VERSION = "11.2";
 
 export type FaitsAxes = {
   annee_courante: number;

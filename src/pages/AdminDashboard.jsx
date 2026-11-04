@@ -1092,6 +1092,94 @@ function InspecteursTab() {
   )
 }
 
+// ─── Onglet Fonctionnalités (sprint 13) ──────────────────────────────────────
+//
+// Trois états, et le troisième est celui qui compte : « admin uniquement »
+// permet d'éprouver une fonction EN PRODUCTION, sur de vraies données, sans
+// l'ouvrir au public. Le drapeau est évalué CÔTÉ SERVEUR à chaque appel :
+// l'éteindre ici ferme réellement la fonction, pas seulement son bouton.
+const ETATS = [
+  { v: 'eteint', l: 'Éteint', aide: 'Personne n’y a accès.' },
+  { v: 'admin_uniquement', l: 'Admin uniquement', aide: 'Seuls les comptes administrateurs — pour éprouver en production.' },
+  { v: 'public', l: 'Public', aide: 'Ouvert à tous, selon les règles propres de la fonction.' },
+]
+
+function DrapeauxTab() {
+  const [drapeaux, setDrapeaux] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [message, setMessage] = useState(null)
+  const [enCours, setEnCours] = useState(null)
+
+  const charger = useCallback(async () => {
+    setLoading(true)
+    const d = await adminFetch('admin-drapeaux', { method: 'GET' })
+    setDrapeaux(d.drapeaux || [])
+    setLoading(false)
+  }, [])
+  useEffect(() => { charger() }, [charger])
+
+  const definir = async (cle, etat) => {
+    setEnCours(cle); setMessage(null)
+    const d = await adminFetch('admin-drapeaux', {
+      method: 'POST', body: JSON.stringify({ cle, etat }),
+    })
+    setEnCours(null)
+    if (d.error) { setMessage(d.message ? `${d.error} — ${d.message}` : d.error); return }
+    setMessage(`« ${cle} » est maintenant : ${ETATS.find(e => e.v === etat)?.l ?? etat}.`)
+    charger()
+  }
+
+  if (loading) return <div style={styles.pageSub}>Chargement…</div>
+
+  return (
+    <div>
+      <div style={styles.pageTitle}>Fonctionnalités</div>
+      <div style={styles.pageSub}>
+        Une fonction nouvelle est éteinte par défaut. « Admin uniquement » sert à l’éprouver en
+        production, sur de vraies données, avant de l’ouvrir.
+      </div>
+      {message && <div style={{ ...styles.pageSub, color: '#16A34A' }}>{message}</div>}
+
+      {drapeaux.length === 0 && <div style={styles.pageSub}>Aucun drapeau déclaré.</div>}
+
+      {drapeaux.map(d => (
+        <div key={d.cle} style={{
+          background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', borderRadius: 12,
+          padding: '14px 16px', marginBottom: 10,
+        }}>
+          <div style={{ fontWeight: 700, fontFamily: 'var(--sans)' }}>{d.cle}</div>
+          {d.description && (
+            <div style={{ color: '#6B7280', fontSize: '0.8125rem', marginTop: 4, lineHeight: 1.6 }}>
+              {d.description}
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 10 }}>
+            {ETATS.map(e => (
+              <button
+                key={e.v} type="button" title={e.aide}
+                disabled={enCours === d.cle || d.etat === e.v}
+                onClick={() => definir(d.cle, e.v)}
+                style={{
+                  ...styles.refreshBtn,
+                  background: d.etat === e.v ? '#0F1B2D' : '#fff',
+                  color: d.etat === e.v ? '#fff' : '#0F1B2D',
+                  cursor: d.etat === e.v ? 'default' : 'pointer',
+                }}
+              >
+                {e.l}
+              </button>
+            ))}
+          </div>
+          <div style={{ color: '#6B7280', fontSize: '0.75rem', marginTop: 8 }}>
+            {d.maj_le ? `Modifié le ${formatDate(d.maj_le)}` : ''}
+            {d.maj_par ? ` par ${d.maj_par}` : ''}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function AdminDashboard() {
@@ -1154,6 +1242,7 @@ export default function AdminDashboard() {
     { key: 'partenaires',  label: 'Partenaires' },
     { key: 'retours',      label: 'Retours' },
     { key: 'couts',        label: 'Coûts réparation' },
+    { key: 'drapeaux',     label: 'Fonctionnalités' },
     { key: 'audit',        label: 'Audit justesse', href: '/admin/audit' },
   ]
 
@@ -1243,6 +1332,7 @@ export default function AdminDashboard() {
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
             {tab === 'passes'       && <PassesTab />}
             {tab === 'inspecteurs'  && <InspecteursTab />}
+            {tab === 'drapeaux'     && <DrapeauxTab />}
             {tab === 'parcours'     && <ParcoursTab />}
             {tab === 'api'          && <ApiTab />}
             {tab === 'partenaires'  && <PartenairesTab />}

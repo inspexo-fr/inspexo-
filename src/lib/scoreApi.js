@@ -303,6 +303,16 @@ export async function getKitSignature(analysisId) {
  *  Photos envoyées au modèle puis oubliées — jamais stockées. */
 /* ---------- Certificat de situation administrative HistoVec (sprint 13) ---------- */
 
+/** Le drapeau est évalué EN BASE avec le jeton de l'appelant : c'est elle qui
+ *  tranche « admin_uniquement », pas le navigateur. Sert uniquement à ne pas
+ *  afficher un bouton inutile — la fermeture réelle est côté fonction. */
+export async function drapeauActif(cle) {
+  const { data, error } = await supabase.rpc('drapeau_actif', { p_cle: cle })
+  if (error) return false
+  return data === true
+}
+
+
 /** Dépose le PDF du CSA. Le fichier n'est JAMAIS stocké : le serveur en extrait
  *  le texte en mémoire, en tire les faits par des règles fixes, et l'oublie.
  *  Un signal ROUGE revient même sans Pass. */

@@ -9,16 +9,31 @@
 // Rien n'est conservé — la transaction finit par ROLLBACK.
 import { readFileSync } from 'node:fs'
 
-const MIGRATION = 'supabase/migrations/20261108120000_sprint12_cua_api.sql'
-const corps = readFileSync(new URL(`../${MIGRATION}`, import.meta.url), 'utf8')
+// Les migrations à éprouver, DANS L'ORDRE D'APPLICATION. L'ordre compte : la
+// 20261110 redéfinit `inspection_annuler` créée par la 20261109, et la
+// 20261111 redéclare `get_public_analysis`. Les jouer en vrac ne prouverait
+// rien de ce qui se passera réellement.
+const MIGRATIONS = [
+  // sprint12-vocabulaire
+  '20261108120000_sprint12_cua_api.sql',
+  '20261109120000_sprint12_inspection_paiement.sql',
+  '20261110120000_sprint12_cgv_consommateur.sql',
+  // sprint13
+  '20261111120000_sprint13_histovec.sql',
+  '20261112120000_sprint13_drapeaux.sql',
+]
 
-if (/^\s*(begin|commit|rollback)\s*;/im.test(corps)) {
-  console.error('La migration contient son propre contrôle de transaction : à vérifier avant.')
-  process.exit(1)
+const corpsDe = (f) => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8')
+
+for (const f of MIGRATIONS) {
+  if (/^\s*(begin|commit|rollback)\s*;/im.test(corpsDe(f))) {
+    console.error(`${f} contient son propre contrôle de transaction : à vérifier avant.`)
+    process.exit(1)
+  }
 }
 
 process.stdout.write(`-- =======================================================================
--- ESSAI EN TRANSACTION ANNULÉE — migration ${MIGRATION.split('/').pop()}
+-- ESSAI EN TRANSACTION ANNULÉE — ${MIGRATIONS.length} migrations, dans l'ordre
 --
 -- Généré par scripts/essai-migration-annulee.mjs (ne pas éditer à la main).
 -- À coller dans l'éditeur SQL du dashboard Supabase : il exécute tout dans
@@ -55,9 +70,15 @@ select 'AVANT' as phase,
            and input_text not like '[texte effacé%')                     as textes_api_encore_presents;
 
 -- -----------------------------------------------------------------------
--- 2. LA MIGRATION, insérée telle quelle depuis le fichier.
+-- 2. LES MIGRATIONS, insérées telles quelles, DANS L'ORDRE.
 -- -----------------------------------------------------------------------
-${corps}
+${MIGRATIONS.map((f, i) => `
+-- ======================================================================
+-- [${i + 1}/${MIGRATIONS.length}] ${f}
+-- ======================================================================
+${corpsDe(f)}
+select '[${i + 1}/${MIGRATIONS.length}] ${f} : appliquee' as etape;
+`).join('\n')}
 -- -----------------------------------------------------------------------
 -- 3. ÉTAT APRÈS, même question.
 -- -----------------------------------------------------------------------
@@ -122,6 +143,62 @@ select 'INVARIANT' as phase,
        (select count(*) from public.analyses
          where via_api and input_text like '[texte effacé%'
            and texte_sha256 is null) as textes_effaces_sans_empreinte_doit_etre_0;
+
+-- -----------------------------------------------------------------------
+-- 4 bis. LES NOUVEAUX OBJETS DU SPRINT 13.
+-- -----------------------------------------------------------------------
+-- Le drapeau doit être ÉTEINT à la création : une fonction nouvelle ne
+-- s'ouvre pas parce qu'on a oublié de la fermer.
+select 'drapeau lecture_histovec' as objet, etat,
+       (etat = 'eteint') as eteint_comme_attendu
+  from public.drapeaux where cle = 'lecture_histovec';
+
+select 'drapeau_actif (eteint)' as objet,
+       public.drapeau_actif('lecture_histovec') as doit_etre_false;
+select 'drapeau_actif (cle inconnue)' as objet,
+       public.drapeau_actif('cle_qui_n_existe_pas') as doit_etre_false;
+
+-- Masquage HistoVec : un signal « toujours visible » passe, l'autre non.
+select 'masquage histovec' as objet,
+       jsonb_array_length(m -> 'signaux') as signaux_rendus_doit_etre_1,
+       (m ->> 'nb_masques')::int as masques_doit_etre_1,
+       (m ->> 'masque') as masque
+from public._histovec_publique(jsonb_build_object(
+  'lu_le', '2026-11-04',
+  'concordance', jsonb_build_object('concorde', true),
+  'signaux', jsonb_build_array(
+    jsonb_build_object('cle','opposition','niveau','rouge','toujours_visible',true,'texte','gage'),
+    jsonb_build_object('cle','location','niveau','orange','toujours_visible',false,'texte','location')
+  )
+)) m;
+
+-- get_public_analysis doit masquer les DEUX : la négociation ET HistoVec.
+select 'get_public_analysis' as objet,
+       position('_negociation_publique' in pg_get_functiondef(p.oid)) > 0 as masque_negociation,
+       position('_histovec_publique' in pg_get_functiondef(p.oid)) > 0 as masque_histovec
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'get_public_analysis';
+
+-- Heure de grâce : la colonne existe et l'annulation la lit.
+select 'confirmee_le' as objet,
+       exists (select 1 from information_schema.columns
+                where table_schema='public' and table_name='inspections'
+                  and column_name='confirmee_le') as colonne_presente,
+       position('confirmee_le' in pg_get_functiondef(p.oid)) > 0 as lue_par_inspection_annuler
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'inspection_annuler';
+
+-- Échéance de confirmation à deux bornes.
+select 'inspections_a_expirer' as objet,
+       position('least(' in pg_get_functiondef(p.oid)) > 0 as deux_bornes
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'inspections_a_expirer';
+
+-- Les tables sensibles restent fermées à anon.
+select 'droits anon' as objet, c.relname,
+       has_table_privilege('anon', c.oid, 'SELECT') as anon_peut_lire_doit_etre_false
+from pg_class c join pg_namespace n on n.oid = c.relnamespace
+where n.nspname = 'public' and c.relname in ('drapeaux','api_appels','marche_agregats');
 
 -- -----------------------------------------------------------------------
 -- 5. ON N'APPLIQUE RIEN.

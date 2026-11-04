@@ -65,6 +65,29 @@ serve(async (req: Request) => {
       return json({ error: "invalid_input", message: "analysis_id requis." }, 400);
     }
 
+    // ---- DRAPEAU, lu CÔTÉ SERVEUR -----------------------------------
+    // Trois états : eteint / admin_uniquement / public. L'évaluation est
+    // faite en base AVEC LE JETON DE L'APPELANT (`drapeau_actif` a besoin de
+    // auth.uid() pour trancher « admin_uniquement »). Un drapeau lu au
+    // navigateur ne ferait que cacher un bouton : la fonction resterait
+    // appelable. L'éval passe outre, comme pour le Pass.
+    if (!isEval) {
+      const authHeader = req.headers.get("Authorization") ?? "";
+      const commeAppelant = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+        global: { headers: authHeader ? { Authorization: authHeader } : {} },
+      });
+      const { data: ouvert, error: drapeauErr } = await commeAppelant
+        .rpc("drapeau_actif", { p_cle: "lecture_histovec" });
+      if (drapeauErr) console.error("drapeau_actif:", drapeauErr);
+      if (ouvert !== true) {
+        return json({
+          error: "fonction_fermee",
+          message:
+            "La lecture du certificat HistoVec n'est pas encore ouverte. Elle le sera après validation sur des certificats réels.",
+        }, 403);
+      }
+    }
+
     const pass = isEval ? { actif: true, email: null } : await passDepuisReq(req, admin);
 
     // Rate limit anti-TOCTOU : la tentative est insérée AVANT le comptage.

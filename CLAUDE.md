@@ -875,7 +875,50 @@ analyseur PDF. `tests/histovec/` (rapports réels) et
   authentification — je n'ai pas cherché à la contourner. Le PV synthétique
   porte désormais la section kilométrique, au format du modèle officiel.
 
-### Mise en service partielle — 3 nov. 2026 (merge EN ATTENTE)
+### Drapeaux de fonctionnalité (migration `20261112120000`)
+Table `drapeaux` (RLS active, zéro policy), trois états : **`eteint`** (défaut),
+**`admin_uniquement`**, `public`. Onglet admin « Fonctionnalités ».
+- ⚠️ Évalué **CÔTÉ SERVEUR** à chaque appel, via `drapeau_actif` appelée **avec
+  le jeton de l'appelant** (elle a besoin de `auth.uid()` pour trancher
+  « admin uniquement »). Un drapeau lu au navigateur ne ferait que cacher un
+  bouton : la fonction resterait appelable.
+- `admin_uniquement` est l'état qui compte : il permet d'éprouver une fonction
+  **en production, sur de vraies données**, avant de l'ouvrir. `lecture_histovec`
+  y est câblé et **éteint**.
+- Clé inconnue ⇒ **éteint**. On n'ouvre pas une fonction par faute de frappe.
+
+### ⚠️ Stabilité : la cause n'était PAS l'entretien — et mon premier correctif était FAUX
+Mercedes 220 d, même texte : **77 puis 71**. Diagnostic (gratuit, en comparant
+les deux analyses déjà produites) : faits d'entretien **identiques**, axe
+entretien **13 dans les deux**, même fiche (`cache: hit`, OM654), zéro
+affirmation écartée. L'écart venait de **`risques_mecaniques` (16 vs 13)** :
+**2 pannes du catalogue retenues d'un côté, AUCUNE de l'autre**. Le modèle
+CHOISIT quelles entrées citer, et ce choix varie.
+- Correctif n° 1 — `_shared/pannesApplicables.ts` garantissant **toutes** les
+  entrées applicables (filtres horizon km + code de boîte). **Déterministe
+  (55/55/55) mais FAUX** : il a attribué à une Mercedes de 2025 des défauts
+  d'**OM651**, de **M272/M273 (V6 essence)**, de boîte **722.9** et de caisses
+  **W203/W211/W210**. Score tombé à **orange 55**. Leçon : *le modèle faisait un
+  vrai travail d'appariement, et le filet l'avait supprimé.*
+- ⚠️ **Le discriminant est la SOURCE de l'entrée.** Les réfs **`F…` viennent de
+  la fiche moteur**, indexée par marque + famille + années : elles sont déjà
+  propres à ce moteur. Les réfs **`A…` viennent de l'atlas de marque**, qui
+  couvre toute la gamme — savoir si « Suspension Airmatic » concerne cette
+  voiture suppose de connaître son équipement. **Le filet ne garantit donc que
+  les entrées de FICHE** ; l'atlas reste au jugement du modèle.
+- Filtres d'appariement généralisés par la même occasion : une entrée qui NOMME
+  un code de **famille moteur**, de **caisse** ou de **boîte** ne s'applique que
+  si c'est celui du véhicule. Si l'entrée nomme et que nous ne savons pas, elle
+  est écartée — on n'affirme pas.
+- **Résultat : variance ramenée de 6 points à 2** (vert 73 / vert 71, référence
+  71). **Pas zéro.** Le résidu vient des entrées d'atlas, laissées au jugement :
+  les rendre déterministes demanderait d'encoder l'équipement et la caisse, ce
+  que nous n'avons pas. `BAREME_VERSION` → **11.2** (la liste reçue par le
+  barème change à texte identique).
+- 29 contrôles hors ligne, dont les **cinq titres réels** qui avaient été
+  injectés à tort.
+
+### Mise en service partielle — 3-4 nov. 2026 (merge EN ATTENTE)
 `score`, `lecture-ct` et `lecture-histovec` déployées pour l'éval. Migration
 `20261111120000` **non appliquée**.
 - **Éval ciblée : S7 rouge 38 et 308 orange 55, identiques à la référence.**
