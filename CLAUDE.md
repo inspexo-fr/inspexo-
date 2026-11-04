@@ -1007,6 +1007,36 @@ Une seule aurait suffi.
   échouer. Sans elle, le succès des RPC serait vrai pour la mauvaise raison —
   la révocation pourrait n'avoir pas pris.
 
+### ⚠️ Cinq fonctions SECURITY INVOKER exécutables par anon (trouvé par l'essai)
+L'assertion générale « toute fonction exécutable par anon est DEFINER » a
+immédiatement trouvé cinq cas — alors que la liste nommée des 33 RPC, elle,
+passait. C'est l'intérêt d'une règle qui se maintient d'elle-même par rapport à
+une énumération.
+- **`essai_verifie`** : mon propre outil de mesure, créé dans `public`, se
+  signalait lui-même. Déplacé dans **`pg_temp`** — l'outil ne doit pas peser
+  sur ce qu'il mesure.
+- **`update_updated_at`** : fonction de trigger. EXECUTE révoqué de `public`,
+  `anon`, `authenticated` — PostgreSQL ne vérifie pas EXECUTE au déclenchement
+  d'un trigger, c'est donc sans risque.
+- **`_departement`, `charte_version_courante`, `part_api_max`** : vérifié,
+  **aucune n'est appelée par le front ni par l'extension** (`p_departements`,
+  dans `inspectionApi.js`, est un nom de paramètre, pas un appel). Elles sont
+  appelées depuis d'autres fonctions SQL, où `current_user` est le
+  propriétaire. EXECUTE révoqué.
+- **Cause racine** : PostgreSQL accorde EXECUTE à `PUBLIC` sur toute fonction
+  nouvelle. Inversé par `alter default privileges for role postgres … revoke
+  execute on functions`, et la migration **vérifie elle-même** que les 33 RPC
+  conservent leur grant — révoquer un défaut ne doit rien retirer à l'existant.
+
+### ⚠️ Droits par défaut : une entrée n'est pas à nous
+Il reste dans `pg_default_acl` une entrée appartenant à **`supabase_admin`**
+(`anon=arwdDxtm/supabase_admin`) que nos migrations, qui tournent en
+`postgres`, **ne peuvent pas modifier**. L'assertion sur les droits par défaut
+est donc restreinte au rôle `postgres`, celui qui crée nos objets.
+- Ce n'est pas un assouplissement : le filet contre une table créée autrement
+  reste l'assertion **globale** « `anon` ne peut lire AUCUN objet de `public` »,
+  qui ne dépend d'aucun propriétaire et attraperait le cas.
+
 ### Mise en service partielle — 3-4 nov. 2026 (merge EN ATTENTE)
 `score`, `lecture-ct` et `lecture-histovec` déployées pour l'éval. Migration
 `20261111120000` **non appliquée**.
@@ -1060,6 +1090,10 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 0. **Agents et prod** : aucun agent (subagent, workflow d'audit, script de test) ne teste JAMAIS contre la base Supabase de production — sonde, injection, lecture ou écriture de table incluses. Tout test de ce type se fait sur `supabase start` en local ou sur une branche de preview Supabase. Seule exception : `npm run eval`, qui passe exclusivement par la whitelist d'éval (header `x-eval-secret`).
 
 0 bis. **Fichiers personnels d'Utku : JAMAIS ouverts.** N'ouvre, ne lis, ne copie et n'envoie aucun fichier situé hors du dépôt — `~/Documents`, `~/Downloads`, `~/Desktop`, iCloud Drive, et tout le reste du disque. Cela vaut aussi pour en relever une simple métadonnée (taille, nombre de pages, nombre de caractères) : « je n'ai pas affiché le contenu » n'est pas une permission de l'avoir lu. Pour éprouver un format ou une bibliothèque, **fabrique le fichier d'essai** (cf. le PDF témoin du sprint 13, `scripts/`-style, généré à la demande) ou utilise **uniquement ce qu'Utku a déposé dans le dépôt**. Un fichier déposé dans le dépôt est une autorisation ; un fichier trouvé sur le disque n'en est pas une. Seule exception : un chemin qu'Utku indique explicitement dans sa demande.
+
+0 ter. **Aucune table ni fonction créée depuis le dashboard Supabase — UNIQUEMENT par migration.** Un objet créé à la main n'est décrit par aucun fichier, échappe à l'essai en transaction annulée, et hérite des droits par défaut sans que personne ne le voie. C'est ainsi que neuf tables (sprints 1, 7 et 8) se sont retrouvées lisibles par `anon` — sans fuite, la RLS tenant, mais sans défense en profondeur.
+
+0 quater. **Toute nouvelle RPC destinée au front porte un `grant execute … to anon` (ou `to authenticated`) EXPLICITE.** Depuis la migration `20261113120000`, les droits par défaut du rôle `postgres` dans `public` ne donnent plus ni SELECT sur les tables ni EXECUTE sur les fonctions. Un accès public est donc une **décision écrite**, jamais un héritage. Une RPC sans grant ne sera pas appelable : c'est le bon sens de l'échec. ⚠️ Corollaire : une fonction qu'on ne destine PAS au front ne reçoit aucun grant — et si elle est appelée depuis une autre fonction, celle-ci doit être `SECURITY DEFINER` (sinon `current_user` est l'appelant, qui n'a plus EXECUTE).
 
 1. **Variables d'environnement** : Clés API dans `.env.local` uniquement, JAMAIS dans le code
 2. **Supabase RLS** : Row Level Security sur TOUTES les tables

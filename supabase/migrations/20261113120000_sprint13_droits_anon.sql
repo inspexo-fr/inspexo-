@@ -99,3 +99,95 @@ begin
     raise exception 'RLS inactive sur : %', v_restants;
   end if;
 end $$;
+
+-- ===========================================================================
+-- MÊME PROBLÈME SUR LES FONCTIONS.
+--
+-- L'essai a trouvé cinq fonctions SECURITY INVOKER exécutables par anon ou
+-- authenticated. Après la révocation des tables, une telle fonction
+-- s'exécuterait avec les droits de l'appelant — donc sans aucun droit.
+--
+-- Vérifié : AUCUNE des quatre ci-dessous n'est appelée par le front ni par
+-- l'extension (`p_departements`, dans `inspectionApi.js`, est un nom de
+-- paramètre, pas un appel). Elles sont toutes appelées DEPUIS d'autres
+-- fonctions SQL, où `current_user` est le propriétaire : leur retirer EXECUTE
+-- ne casse rien.
+--   _departement            — helper de `marche`/`inspection`
+--   charte_version_courante — lue par `inspecteur_signer_charte` (DEFINER)
+--   part_api_max            — lue par `get_prix_segments` (DEFINER)
+--   update_updated_at       — fonction de TRIGGER : PostgreSQL ne vérifie pas
+--                             EXECUTE au déclenchement, la révoquer est sûr
+-- ===========================================================================
+
+do $$
+declare
+  r record;
+  v_n integer := 0;
+begin
+  for r in
+    select p.oid::regprocedure as sig
+    from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public'
+      and p.proname in ('_departement', 'charte_version_courante', 'part_api_max', 'update_updated_at')
+  loop
+    execute format('revoke all on function %s from public, anon, authenticated', r.sig);
+    v_n := v_n + 1;
+  end loop;
+  raise notice 'EXECUTE revoque sur % fonctions internes', v_n;
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- CAUSE RACINE, côté fonctions.
+--
+-- Par défaut, PostgreSQL accorde EXECUTE à PUBLIC sur toute fonction nouvelle.
+-- Résultat : chaque helper interne devient appelable par anon sans que
+-- personne ne l'ait décidé. On inverse le défaut.
+--
+-- ⚠️ CONSÉQUENCE À CONNAÎTRE : désormais, **toute nouvelle RPC destinée au
+-- front devra porter un `grant execute … to anon` ou `to authenticated`
+-- explicite**. C'est le but : un accès public devient une décision écrite, pas
+-- un héritage. Les fonctions existantes conservent leurs grants (un
+-- `create or replace` préserve l'ACL).
+-- ---------------------------------------------------------------------------
+alter default privileges in schema public revoke execute on functions from public, anon, authenticated;
+
+do $$
+begin
+  if exists (select 1 from pg_roles where rolname = 'postgres') then
+    execute 'alter default privileges for role postgres in schema public '
+         || 'revoke execute on functions from public, anon, authenticated';
+  end if;
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- Et on vérifie que les RPC du front ont TOUJOURS leur grant : la révocation
+-- des défauts ne doit rien retirer à l'existant.
+-- ---------------------------------------------------------------------------
+do $$
+declare
+  v_perdues text;
+begin
+  select string_agg(f.nom, ', ') into v_perdues
+  from unnest(array[
+    'dossier_add','dossier_list','dossier_remove','dossier_set_alertes','dossier_set_statut',
+    'drapeau_actif','get_analysis_etape','get_defect_sheet','get_fiabilite','get_kit_signature',
+    'get_mon_pass','get_moteur_public','get_partenaires_actifs','get_prix_segments',
+    'get_public_analysis','inspecteur_candidater','inspecteur_missions','inspecteur_signer_charte',
+    'inspection_zone','list_moteurs_publies','mes_inspections','mon_profil_inspecteur',
+    'submit_demande_zone','submit_lead','submit_lead_pro','submit_outcome',
+    'submit_pending_analysis','track_event','inspection_accepter','inspection_annuler',
+    'inspection_consentement_photos','inspection_constat_absence','inspection_refuser'
+  ]) as f(nom)
+  where exists (
+    select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and p.proname = f.nom)
+    and not exists (
+      select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+       where n.nspname = 'public' and p.proname = f.nom
+         and (has_function_privilege('anon', p.oid, 'EXECUTE')
+           or has_function_privilege('authenticated', p.oid, 'EXECUTE')));
+  if v_perdues is not null then
+    raise exception 'RPC du front sans grant EXECUTE apres revocation : %', v_perdues;
+  end if;
+end $$;
