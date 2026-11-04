@@ -11,6 +11,8 @@ import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { emailInspectionAcceptee, alerteExploitant } from "../_shared/notify.ts";
 import { capturer, executerDecision } from "../_shared/inspectionArgent.ts";
+import { absenceConstatable, prestation } from "../_shared/inspection.ts";
+import { creerSalle } from "../_shared/whereby.ts";
 
 const STRIPE_SECRET_KEY = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
 
@@ -119,6 +121,38 @@ serve(async (req: Request) => {
         }
       }
 
+      // ---- Salle vidéo, pour une visio seulement -------------------------
+      // Créée APRÈS la capture : une mission que personne n'a payée n'a pas de
+      // salle. Un échec ici ne défait pas l'acceptation — l'inspecteur a pris
+      // la mission, l'argent est encaissé — mais il est signalé, et la salle
+      // peut être recréée. Se taire laisserait un rendez-vous sans lien.
+      {
+        const { data: m } = await admin
+          .from("inspections")
+          .select("type, creneau_confirme, visio_salle")
+          .eq("id", inspectionId)
+          .maybeSingle();
+        if (m?.type === "visio" && !m.visio_salle && m.creneau_confirme) {
+          const r = await creerSalle(new Date(m.creneau_confirme));
+          if (r.ok) {
+            await admin.from("inspections").update({
+              visio_salle: r.salle.salle,
+              visio_url_acheteur: r.salle.url_acheteur,
+              visio_url_inspecteur: r.salle.url_inspecteur,
+              maj_le: new Date().toISOString(),
+            }).eq("id", inspectionId);
+          } else {
+            console.error("creerSalle:", r.raison);
+            await alerteExploitant(
+              "Inspexo — salle vidéo non créée",
+              `<p>Une visio a été confirmée mais la salle n'a pas pu être créée.</p>
+               <p>Mission : ${inspectionId}<br />Raison : ${r.raison}</p>
+               <p>L'acheteur n'a pas de lien. À recréer avant le créneau.</p>`,
+            );
+          }
+        }
+      }
+
       // L'acheteur reçoit le nom et le téléphone de son inspecteur.
       const { data: insp } = await admin
         .from("inspections")
@@ -153,6 +187,34 @@ serve(async (req: Request) => {
       // La photo arrive en data-URL et c'est le SERVEUR qui la dépose : une
       // décision d'accès ne se délègue pas à une policy storage, qui devrait
       // lire des tables volontairement fermées (leçon de l'audit du 2 nov.).
+      // Pour une VISIO, aucune photo n'est demandée : l'inspecteur ne voit pas
+      // la voiture. La preuve est le délai d'attente, vérifié juste au-dessus.
+      const { data: typeM } = await admin
+        .from("inspections").select("type").eq("id", inspectionId).maybeSingle();
+      if (typeM?.type === "visio") {
+        const { data, error } = await commeUtilisateur.rpc("inspection_constat_absence", {
+          p_inspection_id: inspectionId,
+          p_photo_path: "",
+        });
+        if (error) return json({ error: "rpc", message: error.message }, 400);
+        if (!data?.ok) return json({ ok: false, raison: data?.raison ?? "refuse" }, 409);
+        const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
+        const res = await executerDecision(stripe, admin, inspectionId, data);
+        if (!res.ok) {
+          await alerteExploitant(
+            "Inspexo — indemnité de visio non versée",
+            `<p>Absence constatée sur une visio, mais l'argent n'a pas suivi.</p>
+             <p>Mission : ${inspectionId}<br />Erreur : ${res.erreur ?? "inconnue"}</p>`,
+          );
+        }
+        return json({
+          ok: true,
+          indemnite_cents: data.retenue_cents,
+          rembourse_cents: data.rembourse_cents,
+          versee: res.ok && !res.erreur,
+        });
+      }
+
       const brut = typeof body?.photo === "string" ? body.photo : "";
       const m = brut.match(/^data:image\/(jpeg|jpg|png|webp);base64,(.+)$/s);
       const b64 = m ? m[2].replace(/\s/g, "") : "";
@@ -183,6 +245,30 @@ serve(async (req: Request) => {
         console.error("upload photo d'absence:", upErr);
         return json({ error: "upload", message: "Dépôt de la photo impossible. Réessayez." }, 500);
       }
+      // ⚠️ Pour une visio, la retenue n'indemnise pas un déplacement mais un
+      // CRÉNEAU BLOQUÉ : elle ne se justifie qu'après une attente réelle.
+      // Quinze minutes après l'heure du rendez-vous, pas avant.
+      {
+        const { data: m } = await admin
+          .from("inspections").select("type, creneau_confirme, creneau_souhaite")
+          .eq("id", inspectionId).maybeSingle();
+        const creneau = m?.creneau_confirme ?? m?.creneau_souhaite ?? null;
+        const att = absenceConstatable(
+          m?.type === "visio" ? "visio" : "inspection",
+          creneau ? new Date(creneau) : null,
+          new Date(),
+        );
+        if (!att.ok) {
+          const p = prestation(m?.type === "visio" ? "visio" : "inspection");
+          return json({
+            error: "attente_insuffisante",
+            message: att.raison === "creneau_inconnu"
+              ? "Créneau inconnu : l'absence ne peut pas être constatée."
+              : `Attendez encore ${att.minutes_restantes} minute(s) : une absence ne se constate qu'après ${p.attente_absence_minutes} minutes.`,
+          }, 409);
+        }
+      }
+
       const { data, error } = await commeUtilisateur.rpc("inspection_constat_absence", {
         p_inspection_id: inspectionId,
         p_photo_path: photo,

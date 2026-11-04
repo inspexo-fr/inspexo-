@@ -19,10 +19,9 @@ import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
   departementDeCp,
-  partInspecteurCents,
-  PRIX_INSPECTION_CENTS,
+  prestation,
+  type TypePrestation,
   validerCreneau,
-  ZONE_LIBELLE,
 } from "../_shared/inspection.ts";
 
 const corsHeaders = {
@@ -58,14 +57,37 @@ function clientIp(req: Request): string {
   return first || req.headers.get("x-real-ip") || "unknown";
 }
 
-/** Y a-t-il au moins un inspecteur opérationnel ? (condition d'ouverture) */
+/** Y a-t-il au moins un inspecteur opérationnel ? (condition d'ouverture)
+ *
+ *  ⚠️ PAR TYPE DE PRESTATION. Une inspection exige un inspecteur couvrant LE
+ *  DÉPARTEMENT ; une visio exige un inspecteur ayant ACTIVÉ l'option, sans
+ *  aucune contrainte géographique. Appliquer le filtre de département à une
+ *  visio fermerait un service qui n'a pourtant pas de zone. */
 // deno-lint-ignore no-explicit-any
-async function inspecteurOperationnel(admin: any, dept: string | null): Promise<boolean> {
+async function inspecteurOperationnel(
+  admin: any,
+  dept: string | null,
+  type: TypePrestation = "inspection",
+): Promise<boolean> {
   let q = admin.from("inspecteurs").select("id", { count: "exact", head: true })
     .eq("statut", "valide").eq("stripe_paiements_actifs", true);
-  if (dept) q = q.contains("departements", [dept]);
+  if (type === "visio") q = q.eq("visio", true);
+  else if (dept) q = q.contains("departements", [dept]);
   const { count } = await q;
   return (count ?? 0) > 0;
+}
+
+/** Le drapeau de la prestation est-il allumé pour cet appelant ? */
+// deno-lint-ignore no-explicit-any
+async function drapeauOuvert(req: Request, type: TypePrestation): Promise<boolean> {
+  if (type !== "visio") return true; // l'inspection n'a pas de drapeau
+  const commeAppelant = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } },
+  );
+  const { data } = await commeAppelant.rpc("drapeau_actif", { p_cle: "visio_guidee" });
+  return data === true;
 }
 
 serve(async (req: Request) => {
@@ -78,17 +100,30 @@ serve(async (req: Request) => {
 
   // ---------------- Configuration publique ----------------
   if (req.method === "GET") {
-    const cp = new URL(req.url).searchParams.get("cp");
+    const url = new URL(req.url);
+    const type: TypePrestation = url.searchParams.get("type") === "visio" ? "visio" : "inspection";
+    const p = prestation(type);
+    const cp = url.searchParams.get("cp");
     const dept = cp ? departementDeCp(cp) : null;
-    // Le service n'existe pour le public que si un inspecteur peut
-    // réellement y répondre ET que le cadre légal est en place.
-    const base = MEDIATEUR_NOM.length > 0 && !!STRIPE_SECRET_KEY;
-    const auMoinsUn = base ? await inspecteurOperationnel(admin, null) : false;
-    const dansZone = base && dept ? await inspecteurOperationnel(admin, dept) : false;
+    // Le service n'existe pour le public que si un inspecteur peut réellement
+    // y répondre ET que le cadre légal est en place. Pour la visio s'ajoute le
+    // drapeau, éteint par défaut.
+    const base = MEDIATEUR_NOM.length > 0 && !!STRIPE_SECRET_KEY
+      && await drapeauOuvert(req, type);
+    const auMoinsUn = base ? await inspecteurOperationnel(admin, null, type) : false;
+    const dansZone = base && dept
+      ? await inspecteurOperationnel(admin, dept, type)
+      : false;
     return json({
+      type,
       ouvert: base && auMoinsUn,
-      zone_libelle: ZONE_LIBELLE,
-      prix_cents: PRIX_INSPECTION_CENTS,
+      zone_libelle: p.zone_libelle,
+      prix_cents: p.prix_cents,
+      part_inspecteur_cents: p.part_inspecteur_cents,
+      retenue_cents: p.retenue_cents,
+      attente_absence_minutes: p.attente_absence_minutes,
+      rapport_heures: p.rapport_heures,
+      annulation_gratuite_heures: p.annulation_gratuite_heures,
       delai_heures: 48,
       mediateur: base ? MEDIATEUR_NOM : null,
       cgv_version: CGV_VERSION,
@@ -122,14 +157,29 @@ serve(async (req: Request) => {
       : null;
     if (!analysisId) return json({ error: "invalid_input", message: "Analyse introuvable." }, 400);
 
+    const type: TypePrestation = body?.type === "visio" ? "visio" : "inspection";
+    const p = prestation(type);
+
+    // Drapeau : la visio reste fermée tant qu'il n'est pas allumé.
+    if (!(await drapeauOuvert(req, type))) {
+      return json({
+        error: "fonction_fermee",
+        message: "La visio guidée n'est pas encore ouverte. Elle le sera après un premier appel réel de bout en bout.",
+      }, 403);
+    }
+
     const cp = String(body?.code_postal ?? "").replace(/\s/g, "");
     const dept = departementDeCp(cp);
+    // Un code postal VALIDE est exigé même pour la visio : on ne commande pas
+    // un rendez-vous sans savoir où se trouve la voiture.
     if (!dept) return json({ error: "invalid_input", message: "Code postal invalide." }, 400);
 
-    if (!(await inspecteurOperationnel(admin, dept))) {
+    if (!(await inspecteurOperationnel(admin, dept, type))) {
       return json({
         error: "zone_non_couverte",
-        message: `Aucun inspecteur disponible sur ce secteur pour l'instant (${ZONE_LIBELLE} au lancement).`,
+        message: type === "visio"
+          ? "Aucun inspecteur disponible en visio pour l'instant. Réessayez un peu plus tard."
+          : `Aucun inspecteur disponible sur ce secteur pour l'instant (${p.zone_libelle} au lancement).`,
       }, 409);
     }
 
@@ -195,8 +245,11 @@ serve(async (req: Request) => {
         vendeur_telephone: vendeurTel,
         vendeur_adresse: vendeurAdresse,
         creneau_souhaite: creneau.date.toISOString(),
-        prix_cents: PRIX_INSPECTION_CENTS,
-        part_inspecteur_cents: partInspecteurCents(),
+        // Montants FIGÉS à la commande, par type de prestation. Une
+        // évolution de tarif ne doit jamais réécrire le passé.
+        type,
+        prix_cents: p.prix_cents,
+        part_inspecteur_cents: p.part_inspecteur_cents,
         statut: "a_payer",
       })
       .select("id")
@@ -222,18 +275,19 @@ serve(async (req: Request) => {
         quantity: 1,
         price_data: {
           currency: "eur",
-          unit_amount: PRIX_INSPECTION_CENTS,
+          unit_amount: p.prix_cents,
           product_data: {
-            name: `Inspection sur place — ${vehicule}`,
-            description:
-              `Inspection par un professionnel indépendant, sur place, sous 48 heures. Rapport photo remis dans votre dossier Inspexo. Prix TTC. Montant autorisé maintenant, débité seulement quand un inspecteur confirme.`,
+            name: `${p.libelle} — ${vehicule}`,
+            description: type === "visio"
+              ? "Appel vidéo de 30 à 40 minutes avec un inspecteur indépendant, qui vous guide point par point depuis votre téléphone. Compte rendu écrit sous 2 heures. Appel jamais enregistré. Prix TTC. Montant autorisé maintenant, débité seulement quand un inspecteur confirme."
+              : "Inspection par un professionnel indépendant, sur place, sous 48 heures. Rapport photo remis dans votre dossier Inspexo. Prix TTC. Montant autorisé maintenant, débité seulement quand un inspecteur confirme.",
           },
         },
       }],
-      success_url: `${ORIGINE}/a/${analysisId}?inspection=ok`,
-      cancel_url: `${ORIGINE}/a/${analysisId}?inspection=annule`,
+      success_url: `${ORIGINE}/a/${analysisId}?${type}=ok`,
+      cancel_url: `${ORIGINE}/a/${analysisId}?${type}=annule`,
       payment_intent_data: {
-        description: `Inspexo — inspection ${vehicule}`,
+        description: `Inspexo — ${p.libelle.toLowerCase()} ${vehicule}`,
         // PAIEMENT EN DEUX TEMPS. À la commande, le montant est seulement
         // AUTORISÉ ; il n'est débité qu'au moment où un inspecteur confirme
         // (capture dans `inspecteur-mission`). Personne ne paie pour une
@@ -247,6 +301,9 @@ serve(async (req: Request) => {
       },
       metadata: {
         produit: "inspection",
+        // Le webhook n'a pas accès à notre table avant de retrouver la ligne :
+        // le type voyage avec la session.
+        type,
         inspection_id: insp.id,
         analysis_id: analysisId,
         departement: dept,

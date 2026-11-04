@@ -30,6 +30,11 @@ import {
   MARGE_AVANT_CRENEAU_HEURES,
   echeanceConfirmation,
   RETENUE_DEPLACEMENT_CENTS,
+  PRESTATIONS,
+  absenceConstatable,
+  dansZone,
+  partsPrestation,
+  prestation,
 } from '../supabase/functions/_shared/inspection.ts'
 
 let ko = 0
@@ -363,9 +368,151 @@ ok(/perdre ce droit/.test(DEMANDE_EXECUTION_IMMEDIATE),
 }
 
 
+
+
+// ---------------------------------------------------------------------------
+titre('SPRINT 14 — l’inspection n’a PAS bougé après la factorisation')
+// ---------------------------------------------------------------------------
+// Une factorisation qui déplace un montant au passage serait une régression
+// silencieuse sur un produit déjà vendable. On fige donc les valeurs
+// d'AVANT le sprint 14, écrites en dur ici : si la table des prestations
+// change, c'est ce test qui le dit.
+{
+  const i = PRESTATIONS.inspection
+  eq(i.prix_cents, 17_900, 'inspection : 179,00 € inchangé')
+  eq(i.part_inspecteur_cents, 10_740, 'inspection : part inspecteur 107,40 € inchangée')
+  eq(i.zone, ['31'], 'inspection : zone Haute-Garonne inchangée')
+  eq(i.zone_libelle, 'Toulouse et Haute-Garonne', 'inspection : libellé de zone inchangé')
+  eq(i.annulation_gratuite_heures, 24, 'inspection : gratuité à 24 h inchangée')
+  eq(i.retenue_cents, 4_000, 'inspection : retenue 40,00 € inchangée')
+  eq(i.rapport_heures, 24, 'inspection : compte rendu sous 24 h inchangé')
+
+  // Les anciennes fonctions rendent exactement les mêmes nombres.
+  eq(partInspecteurCents(), 10_740, 'partInspecteurCents() inchangée')
+  eq(partPlateformeCents(), 7_160, 'partPlateformeCents() inchangée')
+  eq(PRIX_INSPECTION_CENTS, 17_900, 'PRIX_INSPECTION_CENTS inchangée')
+  // Et la nouvelle voie donne le même résultat que l'ancienne.
+  eq(partsPrestation('inspection'),
+    { inspecteur: partInspecteurCents(), plateforme: partPlateformeCents() },
+    'partsPrestation(inspection) ≡ les anciennes fonctions')
+
+  // Le barème d'annulation de l'inspection, sans type passé, est identique.
+  const ctxI = (p) => ({ statut: 'acceptee', creneau: new Date('2026-11-12T10:00:00Z'),
+    maintenant: new Date('2026-11-10T10:00:00Z'), prix_cents: 17_900, ...p })
+  const sansType = decisionAnnulation(ctxI({}))
+  const avecType = decisionAnnulation(ctxI({ type: 'inspection' }))
+  eq(sansType.action, avecType.action, 'sans type ≡ type inspection (action)')
+  eq(sansType.retenue_cents, avecType.retenue_cents, 'sans type ≡ type inspection (retenue)')
+  eq(decisionAnnulation(ctxI({ maintenant: new Date('2026-11-11T20:00:00Z') })).retenue_cents,
+    4_000, 'inspection à moins de 24 h : toujours 40 €')
+}
+
+// ---------------------------------------------------------------------------
+titre('SPRINT 14 — visio : 59 €, 40 € à l’inspecteur, France entière')
+// ---------------------------------------------------------------------------
+{
+  const v = PRESTATIONS.visio
+  eq(v.prix_cents, 5_900, 'visio : 59,00 € TTC')
+  eq(partsPrestation('visio'), { inspecteur: 4_000, plateforme: 1_900 },
+    'visio : 40,00 € à l’inspecteur, 19,00 € à la plateforme')
+  // ⚠️ La part de l'inspecteur est un MONTANT, pas un ratio : 40/59 vaut
+  // 67,796 %, qu'aucun arrondi ne rendrait rond.
+  // Le ratio réel n'est pas un pourcentage rond : 4000/5900 = 67,7966…
+  const ratio = (v.part_inspecteur_cents / v.prix_cents) * 100
+  ok(Math.abs(ratio - Math.round(ratio)) > 0.1,
+    `la part visio n’est pas un pourcentage rond (${ratio.toFixed(4)} %) — d’où un montant fixe`)
+  eq(v.zone, '*', 'visio : France entière')
+  eq(v.rapport_heures, 2, 'visio : compte rendu sous 2 h')
+
+  // Zone : la visio couvre tout, mais exige un code postal VALIDE — on ne
+  // commande pas une visio sans savoir où est la voiture.
+  ok(dansZone('75001', 'visio'), 'Paris couvert en visio')
+  ok(dansZone('97400', 'visio'), 'La Réunion couverte en visio')
+  ok(!dansZone('abcde', 'visio'), 'code postal invalide refusé même en visio')
+  ok(!dansZone('75001', 'inspection'), 'Paris NON couvert en inspection')
+  ok(dansZone('31400', 'inspection'), 'Toulouse couvert en inspection')
+}
+
+// ---------------------------------------------------------------------------
+titre('SPRINT 14 — annulation visio : gratuite avant le créneau, toujours')
+// ---------------------------------------------------------------------------
+{
+  const creneau = new Date('2026-11-12T10:00:00Z')
+  const ctxV = (p) => ({ type: 'visio', statut: 'acceptee', creneau,
+    prix_cents: 5_900, ...p })
+
+  // Aucun déplacement engagé : gratuit jusqu'au créneau, même à 1 minute.
+  for (const [quand, libelle] of [
+    ['2026-11-10T10:00:00Z', 'deux jours avant'],
+    ['2026-11-12T08:00:00Z', 'deux heures avant'],
+    ['2026-11-12T09:59:00Z', 'une minute avant'],
+  ]) {
+    const d = decisionAnnulation(ctxV({ maintenant: new Date(quand) }))
+    eq(d.action, 'rembourser_integral', `visio annulée ${libelle} → remboursement intégral`)
+    eq(d.retenue_cents, 0, `visio annulée ${libelle} → rien retenu`)
+  }
+  // Et c'est justement là que la visio diffère de l'inspection.
+  eq(decisionAnnulation({ ...ctxV({ maintenant: new Date('2026-11-12T08:00:00Z') }), type: 'inspection', prix_cents: 17_900 }).action,
+    'retenue_deplacement', 'la même heure, en inspection, déclenche la retenue')
+
+  // Passé le créneau, ce n'est plus une annulation.
+  const apres = decisionAnnulation(ctxV({ maintenant: new Date('2026-11-12T10:30:00Z') }))
+  eq(apres.retenue_cents, 2_000, 'créneau dépassé → 20 € retenus')
+  eq(apres.rembourse_cents, 3_900, 'et 39 € remboursés')
+}
+
+// ---------------------------------------------------------------------------
+titre('SPRINT 14 — absence de l’acheteur : pas avant 15 minutes d’attente')
+// ---------------------------------------------------------------------------
+// La retenue de 20 € n'indemnise pas un déplacement mais un CRÉNEAU BLOQUÉ :
+// elle ne se justifie qu'après une attente réelle.
+{
+  const creneau = new Date('2026-11-12T10:00:00Z')
+  const a = (min) => absenceConstatable('visio', creneau, new Date(creneau.getTime() + min * 60_000))
+  ok(!a(-10).ok, 'avant le créneau : aucune absence constatable')
+  ok(!a(0).ok, 'à l’heure pile : pas encore')
+  ok(!a(14).ok, 'à 14 minutes : pas encore')
+  eq(a(14).minutes_restantes, 1, 'et il reste 1 minute à attendre')
+  ok(a(15).ok, 'à 15 minutes : constatable')
+  ok(a(45).ok, 'bien après : constatable')
+  ok(!absenceConstatable('visio', null, new Date()).ok,
+    'créneau inconnu → non constatable, on ne retient rien sur une donnée absente')
+  // L'inspection, elle, se constate sur place : aucune attente codifiée.
+  ok(absenceConstatable('inspection', null, new Date()).ok,
+    'inspection : constat sur place, pas d’attente imposée')
+}
+
+// INVARIANT MONÉTAIRE étendu aux DEUX prestations.
+{
+  let fuites = 0
+  const T0 = new Date('2026-11-12T10:00:00Z')
+  for (let i = 0; i < 20_000; i++) {
+    const type = i % 2 === 0 ? 'inspection' : 'visio'
+    const prix = prestation(type).prix_cents
+    const heures = ((i * 7) % 120) - 40
+    const d = decisionAnnulation({
+      type,
+      statut: i % 9 === 0 ? 'a_attribuer' : 'acceptee',
+      creneau: new Date(T0.getTime() + heures * 3_600_000),
+      maintenant: T0,
+      prix_cents: prix,
+      absence_vendeur: i % 5 === 0,
+    })
+    const total = d.rembourse_cents + d.retenue_cents
+    if (d.rembourse_cents < 0 || d.retenue_cents < 0) fuites++
+    else if (d.action === 'annuler_autorisation' && total !== 0) fuites++
+    else if (d.action !== 'annuler_autorisation' && total !== prix) fuites++
+  }
+  eq(fuites, 0, '20 000 annulations sur les DEUX prestations : remboursé + retenu = encaissé')
+}
+
+// ⚠️ PORTE DE SORTIE — DOIT RESTER LA DERNIÈRE INSTRUCTION DU FICHIER.
+// Elle a déjà été dépassée trois fois : des tests ajoutés après elle
+// s'exécutaient, affichaient « FAIL », et la suite sortait quand même en 0.
+// Le message de succès est maintenant DANS le même bloc : on ne peut plus
+// afficher « tous les tests passent » sans avoir franchi le contrôle.
 if (ko > 0) {
   console.error(`\n${ko} échec(s).`)
   process.exit(1)
 }
-
 console.log('\nTous les tests inspection passent.')
