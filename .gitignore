@@ -54,3 +54,4 @@ tests/histovec/
 tests/eval-ct/publics/
 .verification-cout.json
 .atlas-cout.json
+captures-sprint18/

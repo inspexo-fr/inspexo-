@@ -1,2 +1,0 @@
-"use strict";(globalThis.webpackChunkinspexo=globalThis.webpackChunkinspexo||[]).push([[205],{205(e,p,n){n.d(p,{App:()=>s});const s=(0,n(403).F3)("App",{web:()=>n.e(551).then(n.bind(n,551)).then(e=>new e.AppWeb)})}}]);
-//# sourceMappingURL=205.26b57a43.chunk.js.map

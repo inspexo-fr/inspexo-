@@ -34,7 +34,11 @@ p{margin:0}
 .c-ink2{color:var(--ink-2)}
 
 /* Nav */
-.nav{position:sticky;top:0;z-index:9;background:var(--nav-bg);color:var(--nav-fg);border-bottom:1px solid var(--nav-line)}
+/* ⚠️ Zone sûre : dans l appli (WebView plein écran), la barre passait SOUS
+   l horloge et la batterie — mesuré sur simulateur iPhone 17e, le logo et
+   l heure se chevauchaient. env() vaut 0 partout ailleurs, donc le site web
+   n est pas touché ; il faut viewport-fit=cover pour que la valeur existe. */
+.nav{padding-top:env(safe-area-inset-top,0px);position:sticky;top:0;z-index:9;background:var(--nav-bg);color:var(--nav-fg);border-bottom:1px solid var(--nav-line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
 .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--nav-fg);font-weight:800;font-size:21px;letter-spacing:-0.035em;line-height:1}
 .brand svg{width:30px;height:30px;flex:none}

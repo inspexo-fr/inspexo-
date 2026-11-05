@@ -1662,6 +1662,75 @@ faire »**.
   sprint 15 gardera son filtre fautif — c'est l'histoire de ce qui a tourné.
   Ce qui compte est la DERNIÈRE définition, vérifiée séparément.
 
+## Sprint 18 — Application mobile (nov. 2026)
+
+⚠️ **`sprint4b` ne sera JAMAIS mergée** : 97 commits de retard, un diff à
+**−47 552 lignes**. La merger effacerait les sprints 5 à 17. La couche mobile
+a été **portée sur main**, pas l'inverse.
+
+### Ce qui tourne
+Capacitor 8, `io.inspexo.app`, nom « Inspexo ». Android et iOS construits,
+installés et testés (émulateur Medium_Phone_API_37, simulateurs iPhone 17e et
+17 Pro Max). Chaîne de partage vérifiée de bout en bout sur Android : menu
+Partager → Inspexo → `/partage` → WebView sur l'annonce.
+- ⚠️ **Le serveur local de Capacitor sert des FICHIERS** : il n'a pas le repli
+  SPA de Vercel. `window.location.href = '/partage?…'` finissait sur
+  `about:blank`. La navigation passe par le routeur React, qui ne touche
+  jamais le serveur.
+- ⚠️ **Zone sûre iOS** : la barre de navigation passait sous l'horloge.
+  `viewport-fit=cover` + `env(safe-area-inset-top)`, qui vaut 0 ailleurs —
+  le site web n'est pas touché.
+- ⚠️ **Aucun JDK utilisable sur le poste** : celui d'Android Studio est en
+  version 25, que Gradle 8.14 refuse (« class file major version 69 »).
+  Temurin 21 installé dans `~/outils-jdk`, hors dépôt. `JAVA_HOME` est à
+  poser pour tout appel à `gradlew`.
+- Icônes et écrans de lancement dérivés de la charte, **156 déclinaisons**.
+  L'icône n'a ni texte fin ni transparence : iOS refuse l'alpha, et un texte
+  de 11 px disparaît à 40×40.
+
+### La promesse « lue par l'appareil », prouvée des DEUX côtés
+- **Par le code** : `tests/pas-de-scraping.test.mjs`. ⚠️ Sa première version
+  interdisait le MOT « leboncoin » dans le code serveur — elle a aussitôt
+  signalé `intake` et `marche`, qui portent une **liste blanche de
+  validation**. Interdire le mot, c'était interdire la validation elle-même.
+  Le test traque désormais les **fetch**, pas les mots.
+- ⚠️ **Trou bouché au passage** : `texteDeLaPage` récupère une URL QUELCONQUE
+  — celle que cite une fiche moteur. Rien n'empêchait une source d'être une
+  annonce Leboncoin, auquel cas **notre serveur serait allé la chercher**.
+  `estSiteDAnnonces` refuse ces domaines **avant toute requête** : la
+  promesse tient désormais par construction, pas par chance.
+- **Par la mesure** : `scripts/capture-reseau-partage.mjs` écoute la WebView
+  pendant un partage réel. Relevé du 5/11/2026 : **105 requêtes, 73 vers
+  leboncoin.fr — toutes depuis l'appareil — 0 vers nos serveurs.**
+  ⚠️ Une observation faite depuis le téléphone ne voit pas ce que fait un
+  serveur : les deux preuves sont nécessaires, aucune ne suffit seule.
+
+### Déclarations des stores — `docs/stores-declarations.md`
+Dérivées du **code**, pas de la page de confidentialité.
+- ⚠️ **Photos déclarées COLLECTÉES** (décision d'Utku). Nous n'en conservons
+  aucune, mais elles transitent par Anthropic, qui **supprime les entrées de
+  son API sous 30 jours** et les conserve **jusqu'à 2 ans** si un contenu est
+  signalé (vérifié le 5/11/2026 sur privacy.claude.com). **Trente jours, ce
+  n'est pas du temps réel. En cas de doute on déclare plus, jamais moins.**
+  Mêmes réglages que le texte de l'annonce : non liées à l'identité, aucun
+  suivi. Pas d'IDFA, donc pas d'invite ATT.
+- Politique corrigée : **Vercel ajouté**, **Cal.com retiré** — il y figurait
+  alors que rien ne lui est envoyé, ce qui est aussi inexact qu'une omission —
+  **section « Application mobile »**, **durée de conservation chez Anthropic
+  publiée**. Cloudflare le jour des clés seulement.
+
+### Captures de vente
+⚠️ La première série ouvrait les pages par une URL `https://`, que
+`simctl openurl` transmet à **Safari** : les images montraient le site dans un
+navigateur, barre d'adresse comprise, et non l'application. Corrigé par un
+lien profond `inspexo://aller?p=/chemin`, qui a par ailleurs son utilité.
+⚠️ **Sur iOS, seul l'accueil est capturable sans intervention** : iOS 27
+affiche toujours « Ouvrir dans « Inspexo » ? » sur un lien profond externe, et
+aucun outil disponible ici ne sait toucher l'écran du simulateur. Deux écrans
+restent à prendre à la main dans Xcode — non bloquant, Apple accepte une seule
+capture pour soumettre.
+
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |
