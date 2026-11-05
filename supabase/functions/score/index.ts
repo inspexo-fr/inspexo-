@@ -45,6 +45,7 @@ import {
 } from "../_shared/revendeur.ts";
 import { critair, libelleCritair, sourceZfe, verdictZfe, ZFE_SOCLE } from "../_shared/critair.ts";
 import { concordanceVin, decoderVin, incoherenceConstructeur, trouverVin } from "../_shared/vin.ts";
+import { resoudreFamille } from "../_shared/familleMoteur.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
 import {
@@ -1261,13 +1262,49 @@ serve(async (req: Request) => {
     const statutVendeur: string = ident.statut_vendeur ?? "particulier";
     const prixAffiche = v.prix_texte_eur ?? v.prix_visuel_eur ?? null;
 
+    // ---------------- Famille moteur : DÉTERMINISTE (sprint 20.1) ----------
+    // ⚠️ Mesuré le 5 nov. 2026 : sur quatre analyses du MÊME texte (Classe C
+    // 220 d de 2025), le modèle a déduit « OM654 » trois fois et rien la
+    // quatrième. Sans famille, pas de fiche, donc axe risques exclu du score,
+    // donc verdict à 75 au lieu de 71. Le même texte donnait deux verdicts.
+    //
+    // ⚠️ Le résolveur NE SECOND-DEVINE PAS le modèle : un code qu'il propose
+    // et que la table atteste pour cette marque est conservé tel quel. Il ne
+    // COMPLÈTE qu'une réponse manquante. Remplacer une réponse correcte était
+    // l'erreur du premier filet du sprint 13, qui avait attribué à cette même
+    // Mercedes des défauts d'OM651 et de V6 essence.
+    const familleResolue = resoudreFamille({
+      marque: v.marque,
+      modele: v.modele,
+      motorisation: moteur.label,
+      carburant: moteur.carburant,
+      annee: v.annee_modele,
+      propose: moteur.code_famille,
+    });
+    if (familleResolue.origine !== "modele") {
+      await admin.from("events").insert({
+        name: "famille_resolue_serveur",
+        props_json: {
+          origine: familleResolue.origine,
+          famille: familleResolue.famille,
+          propose: moteur.code_famille ?? null,
+          motif: familleResolue.motif.slice(0, 140),
+          candidats: familleResolue.candidats.slice(0, 6),
+        },
+      });
+    }
+
     const vehiculePublic = {
       marque: v.marque ?? null,
       modele: v.modele ?? null,
       generation: v.generation_code ?? null,
       motorisation: moteur.label ?? null,
-      famille_moteur: moteur.code_famille ?? null,
+      famille_moteur: familleResolue.famille,
       famille_incertitude: moteur.incertitude_raison ?? null,
+      // Comment la famille a été obtenue : « modele » (le modèle l'a déduite),
+      // « table » / « table_apres_derniere_attestee » (le serveur l'a
+      // complétée), « aucune ». Sert les journaux et le dossier.
+      famille_origine: familleResolue.origine,
       carburant: moteur.carburant ?? null,
       boite: v.boite ?? null,
       boite_code: typeof v.boite_code === "string" && v.boite_code.trim() ? v.boite_code.trim().toUpperCase() : null,
@@ -1421,10 +1458,10 @@ serve(async (req: Request) => {
     // Si la fiche n'est pas prête à temps, l'analyse continue sans elle et le
     // prochain appel la trouvera en cache.
     let sheetResult: SheetResult = { sheet: null, cacheStatus: "none", usage: null, searches: 0 };
-    if (v.marque && moteur.code_famille) {
+    if (v.marque && familleResolue.famille) {
       const sheetParams = {
         marque: v.marque,
-        famille_moteur: moteur.code_famille,
+        famille_moteur: familleResolue.famille,
         annee: v.annee_modele ?? null,
       };
       let found = await lookupDefectSheet(admin, sheetParams);
@@ -1461,9 +1498,15 @@ serve(async (req: Request) => {
     }
     const sheet = sheetResult.sheet;
     // Sans famille moteur identifiée, aucune panne moteur ne peut être
-    // rattachée à CE véhicule : le catalogue reste vide et l'axe risques est
-    // « non évalué » (plutôt que d'attribuer au hasard des pannes de la marque).
-    let catalogue = moteur.code_famille
+    // rattachée à CE véhicule : le catalogue reste vide — plutôt que
+    // d'attribuer au hasard des pannes de la marque.
+    //
+    // ⚠️ L'axe risques n'est plus « non évalué » pour autant : depuis le
+    // 5 nov. 2026 il vaut 10/20 et le verdict plafonne en orange
+    // (`famille_identifiee` dans le barème). Avant ce correctif, l'axe sortait
+    // du score et le verdict MONTAIT — un véhicule dont on ne savait pas
+    // identifier le moteur était mieux noté qu'un véhicule documenté.
+    let catalogue = familleResolue.famille
       ? buildCatalogue(v.marque ?? null, sheet)
       : [];
 
@@ -1502,7 +1545,7 @@ serve(async (req: Request) => {
         catalogue = gardees;
         await admin.from("events").insert({
           name: "catalogue_dedupliquee",
-          props_json: { fusions, restant: catalogue.length, famille: moteur.code_famille },
+          props_json: { fusions, restant: catalogue.length, famille: familleResolue.famille },
         });
       }
     }
@@ -2854,6 +2897,12 @@ serve(async (req: Request) => {
         contradictions_entretien: contradictionsEntretien.length,
         operations_critiques_non_faites: opsCritiques,
         catalogue_vide: catalogue.length === 0,
+        // ⚠️ SPRINT 20.1 — à distinguer de `catalogue_vide`. Sans famille
+        // moteur, nous ne savons même pas QUOI chercher : l'axe risques est
+        // compté 10/20 (neutre) et le verdict plafonne en orange, au lieu
+        // d'être exclu du score — ce qui faisait MONTER le verdict de 4 points
+        // sur la Classe C 220 d quand l'OM654 n'était pas déduit.
+        famille_identifiee: Boolean(vehiculePublic.famille_moteur),
         pannes: pannesQuiPesent.map((p) => ({
           gravite: p.gravite,
           rappel_officiel: Boolean(p.rappel_code) && !p.rappel_hors_periode,

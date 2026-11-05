@@ -118,6 +118,10 @@ export default function PolitiqueConfidentialite() {
               rattachée. <strong>Le PDF lui-même n'est jamais conservé</strong>
             </li>
             <li>
+              Empreinte salée du numéro de châssis écrit dans l'annonce : même durée que l'analyse
+              rattachée. <strong>Le numéro lui-même n'est jamais conservé</strong> (section 6 undecies)
+            </li>
+            <li>
               <strong>Photos d'un rapport d'inspection : 2 ans</strong> à compter de l'inspection, puis
               suppression
             </li>
@@ -294,9 +298,11 @@ export default function PolitiqueConfidentialite() {
           </p>
           <p className="legal-p">
             Ce qui n'est <strong>jamais</strong> conservé&nbsp;: le <strong>numéro de série (VIN)</strong> et
-            l'<strong>immatriculation</strong>. Ils sont lus en mémoire le temps de vérifier que le certificat
-            décrit bien le véhicule de l'annonce, puis retirés avant tout enregistrement. Le nom, l'adresse et
-            le code postal du titulaire ne sont ni lus ni conservés.
+            l'<strong>immatriculation</strong> figurant sur le certificat. Ils sont lus en mémoire le temps de
+            vérifier que le certificat décrit bien le véhicule de l'annonce, puis retirés avant tout
+            enregistrement. Le nom, l'adresse et le code postal du titulaire ne sont ni lus ni conservés.
+            Le numéro de châssis écrit dans l'<strong>annonce</strong>, lui, laisse une empreinte&nbsp;:
+            voir la section 6 undecies.
           </p>
           <p className="legal-p">
             Ces faits suivent la durée de conservation de l'analyse à laquelle ils sont rattachés (section 5).
@@ -493,6 +499,73 @@ export default function PolitiqueConfidentialite() {
               <strong>Aucune requête vers un site d'annonces.</strong> La recherche à sauvegarder
               est composée par nos soins : nous vous donnons les filtres à régler, nous n'allons
               pas les appliquer à votre place.
+            </li>
+          </ul>
+
+          <h2 className="legal-h2">6 undecies. Numéro de châssis (VIN) écrit dans l'annonce</h2>
+          <p className="legal-p">
+            Quand une annonce contient un <strong>numéro de châssis</strong> (VIN), notre serveur le
+            repère par une règle d'écriture fixe — jamais par une intelligence artificielle, qui
+            pourrait en inventer un plausible — et en déduit le constructeur, le pays de fabrication
+            et l'année-modèle probable, afin de vérifier que ces éléments concordent avec ce que
+            l'annonce affirme. Une discordance de constructeur est signalée dans le dossier.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>Le numéro n'est jamais conservé</strong>, et il n'apparaît sur aucune page&nbsp;:
+              ni dans votre dossier, ni dans le lien que vous pourriez partager. Seuls les éléments
+              déduits ci-dessus y figurent.
+            </li>
+            <li>
+              Nous en conservons une <strong>empreinte salée</strong> (une suite de caractères
+              calculée à partir du numéro et d'un secret connu de nous seuls). Elle ne permet pas de
+              retrouver le numéro.
+            </li>
+            <li>
+              <strong>Finalité unique :</strong> vérifier qu'un rapport HistoVec que vous déposez
+              décrit bien le véhicule de l'annonce. Comparer deux empreintes évite de conserver les
+              deux numéros. Elle ne sert à rien d'autre&nbsp;: ni à vous reconnaître, ni à rapprocher
+              deux dossiers, ni à aucune mesure.
+            </li>
+            <li>
+              <strong>Conservation :</strong> celle du dossier auquel elle est rattachée
+              (section 5). Le dossier supprimé, l'empreinte disparaît avec lui.
+            </li>
+            <li>
+              <strong>Base légale :</strong> l'exécution du service d'analyse que vous demandez.
+            </li>
+          </ul>
+
+          <h2 className="legal-h2">6 duodecies. Vignette Crit'Air et zones à faibles émissions</h2>
+          <p className="legal-p">
+            Chaque analyse indique la <strong>vignette Crit'Air</strong> du véhicule. Elle est
+            déduite de son énergie et de sa date de première immatriculation par la table de
+            l'arrêté du 21 juin 2016&nbsp;: c'est un calcul réglementaire, pas une estimation, et
+            rien n'est transmis à un tiers pour l'obtenir. Faute de date de première
+            immatriculation dans l'annonce, le dossier le dit et renvoie à la carte grise.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>La commune indiquée dans l'annonce</strong> est lue par notre serveur pour
+              savoir si une zone à faibles émissions y est répertoriée. Elle est lue
+              <strong> en mémoire</strong> et n'est pas enregistrée&nbsp;: seul le nom de la zone
+              concernée, tel qu'il figure dans notre liste publique, est conservé avec l'analyse.
+              Si aucune zone n'est répertoriée, rien n'est conservé.
+            </li>
+            <li>
+              <strong>La ville où vous comptez rouler</strong> est facultative et reste
+              <strong> dans votre navigateur</strong> (stockage local). Elle n'est jamais envoyée à
+              nos serveurs&nbsp;: le calcul se fait sur votre appareil. Vous l'effacez en vidant le
+              champ, ou en effaçant les données du site.
+            </li>
+            <li>
+              La liste des zones et sa <strong>date de relevé</strong> sont affichées sous le
+              résultat. Elle évolue par arrêté local&nbsp;: nous invitons à vérifier auprès de la
+              métropole concernée.
+            </li>
+            <li>
+              Cette information <strong>ne pèse pas sur le verdict</strong>&nbsp;: une vignette est
+              une contrainte d'usage, pas un défaut du véhicule.
             </li>
           </ul>
 

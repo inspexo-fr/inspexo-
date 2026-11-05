@@ -34,7 +34,15 @@
 // dès que six annonces comparables accompagnent l'analyse. À texte d'annonce
 // identique MAIS sans comparables, le score est strictement le même qu'en
 // 11.4 (vérifié par tests/bareme.test.mjs et par les trois cas de référence).
-export const BAREME_VERSION = "11.5";
+// 11.6 — SPRINT 20.1 : un moteur NON IDENTIFIÉ ne sort plus du score.
+// L'axe `risques_mecaniques` vaut 10/20 (neutre) au lieu d'être exclu, et le
+// verdict plafonne à 69 (orange). Mesuré en production le 5 nov. 2026 : sur la
+// même Classe C 220 d, l'échec d'identification faisait MONTER le verdict de
+// 71 à 75, parce qu'un axe pesant ×2 disparaissait. À faits identiques — donc
+// avec une famille moteur identifiée — le score est strictement inchangé par
+// rapport à la 11.5, et le champ est optionnel pour que les anciens appelants
+// ne bougent pas. Vérifié par tests/bareme.test.mjs et sa contre-épreuve.
+export const BAREME_VERSION = "11.6";
 
 export type FaitsAxes = {
   annee_courante: number;
@@ -58,6 +66,16 @@ export type FaitsAxes = {
   operations_critiques_non_faites: number;
   // Risques
   catalogue_vide: boolean;
+  /** SPRINT 20.1 — la FAMILLE MOTEUR a-t-elle été identifiée ?
+   *
+   *  ⚠️ À distinguer de `catalogue_vide`, qui confond deux situations très
+   *  différentes : « on sait quel moteur c'est et on n'a rien trouvé » et
+   *  « on ne sait même pas quel moteur c'est ». La seconde ne doit JAMAIS
+   *  valoir mieux que la première.
+   *
+   *  Champ OPTIONNEL : absent, il vaut « identifiée », donc le score d'un
+   *  appelant qui ne le renseigne pas ne change pas. */
+  famille_identifiee?: boolean;
   // `couverte_garantie` : la panne entre dans une garantie constructeur en
   // cours ou un programme d'extension dont CE véhicule respecte les seuils.
   pannes: Array<{
@@ -233,7 +251,23 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   }
 
   // ---------- RISQUES MÉCANIQUES ----------
-  if (f.catalogue_vide) {
+  // ⚠️ MOTEUR NON IDENTIFIÉ : 10/20, ET L'AXE COMPTE (décision d'Utku du
+  // 5 nov. 2026). Mesuré ce jour-là sur la Classe C 220 d : quand
+  // l'identification ne déduisait pas l'OM654, l'axe sortait du score — et
+  // comme il pèse ×2, le verdict MONTAIT de 4 points. Un véhicule sur lequel
+  // on ne sait rien était donc mieux noté qu'un véhicule documenté.
+  //
+  // 10/20 est délibérément NEUTRE : ni une bonne note (on n'a rien vérifié),
+  // ni une mauvaise (on n'a rien trouvé contre lui). L'honnêteté est dans le
+  // plafond qui l'accompagne, pas dans une pénalité inventée.
+  const familleInconnue = f.famille_identifiee === false;
+  if (familleInconnue) {
+    axes.risques_mecaniques = {
+      note: 10,
+      commentaire: "Moteur non identifié : les pannes connues de cette motorisation n'ont pas pu être " +
+        "vérifiées. Note neutre, et le verdict ne peut pas être vert.",
+    };
+  } else if (f.catalogue_vide) {
     axes.risques_mecaniques = {
       note: null,
       commentaire: "Non évalué — pas encore de données de fiabilité pour ce moteur.",
@@ -323,6 +357,13 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const axesNotes = Object.values(axes).filter((a) => a.note != null).length;
   if (axesNotes <= 2) poser(72, "Annonce trop peu détaillée pour évaluer plus de deux critères.");
 
+  // ⚠️ Moteur non identifié : plafond ORANGE. On ne décerne pas un feu vert à
+  // un véhicule dont on n'a pas pu consulter les points de défaillance connus.
+  // 69 est la borne haute de la bande orange (le vert commence à 70).
+  if (familleInconnue) {
+    poser(69, "Moteur non identifié : pannes connues non vérifiées.");
+  }
+
   if (f.compteur_contredit) {
     poser(35, "Le compteur photographié contredit le kilométrage annoncé : vérifiez l'historique (HistoVec) avant toute discussion.");
   }
@@ -404,6 +445,9 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     if (f.histovec_opposition) plafondC = Math.min(plafondC, 30);
     if (f.histovec_vge_en_cours) plafondC = Math.min(plafondC, 32);
     if (!f.entretien_renseigne && vehiculeUse) plafondC = Math.min(plafondC, 65);
+    // ⚠️ Une garantie ne nous apprend pas quel moteur c'est : ce plafond-là
+    // ne tombe jamais dans le conditionnel.
+    if (familleInconnue) plafondC = Math.min(plafondC, 69);
     if (axesNotes <= 2) plafondC = Math.min(plafondC, 72);
     if (gravites.includes("securite")) plafondC = Math.min(plafondC, 58);
     if (rappelsHorsCouverture >= 1) plafondC = Math.min(plafondC, 48);
