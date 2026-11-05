@@ -2015,6 +2015,28 @@ les endpoints » n'est donc pas exécutable en l'état.
 - Pour voir l'état sans clé : `node scripts/webhooks-stripe-live.mjs --verifier`.
 
 
+### Mise en service — FAITE le 5 nov. 2026 (sprint 20 et 20.1 mergés)
+Dumps prod hors dépôt, migrations `20261121120000` et `20261122120000`
+appliquées, **12 fonctions** déployées au total, merge de `sprint20` dans
+`main` (12 commits) et déploiement Vercel.
+- `essai-local.sh` : **37 migrations rejouées depuis une base vide, 80/80
+  assertions, 12/12 contrôles de comportement**. 35 suites hors ligne.
+- **Vérifié en production** : politique de confidentialité à jour (8 marqueurs
+  contrôlés) ; **16 liens de pied de page tous ≥ 44 px** ; `/cibles` sans
+  aucune erreur de console sur les deux vues, et son refus annoncé ; sur un
+  dossier réel à 390 px, les blocs **Crit'Air**, **VIN** et **Prix** rendus,
+  zéro débordement, zéro erreur JavaScript.
+  - Crit'Air affiche « **Crit'Air 4** » sur la Clio II de 2004 (diesel
+    1997-2000 → 4... non : 2001-2005 → 4, conforme à l'arrêté) **avec la
+    réserve** « déduit de l'année-modèle, faute de date de première
+    immatriculation ».
+  - Prix : « Prix demandés sur **7 annonces comparables de votre recherche**,
+    relevées le 05/11 », P25 2 375 € · médiane 2 625 € · P75 2 875 €,
+    position « dans la moyenne ». Le chemin du sprint 20a de bout en bout.
+- `0` fonction de trigger exposée à anon, `0` SECURITY INVOKER exposée,
+  `visio_disponible` supprimée, `intake` en **403** sans secret de proxy et le
+  proxy qui fonctionne.
+
 ### ⚠️ LE MUR BUDGÉTAIRE MENTAIT SUR CE QU'IL AVAIT FAIT (5 nov. 2026, second tour)
 Deux runs de vérification ont rapporté « 1/3 » puis « 2/3 analyse(s) **en
 erreur** » sur la stabilité de la Mercedes. Il n'y avait **aucune erreur** :
