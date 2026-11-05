@@ -366,7 +366,24 @@ const REPETITIONS = (() => {
   return Number.isFinite(n) && n >= 1 && n <= 10 ? n : 1
 })()
 const COUT_FICHIER = join(EVAL_DIR, '..', '..', '.eval-cout.json')
-const PLAFOND_EUR = 5
+// ⚠️ LE BUDGET ANNONCÉ EST UN MUR, PAS UN REPÈRE (règle du 5 nov. 2026).
+//
+// Le 5 novembre, un correctif annoncé à 0,60 € a coûté 2,31 € : chaque
+// relance se justifiait seule — comprendre un motif d'échec, obtenir un
+// dossier à inspecter, vérifier les autres références — et personne n'a
+// jamais décidé d'y mettre quatre fois la somme. Un plafond de session à 5 €
+// ne protège de rien quand le budget du jour est de 0,60 €.
+//
+// `--budget <eur>` fixe le mur de CE run. Le script s'arrête tout seul en
+// l'atteignant et dit ce qu'il n'a pas joué. Pour aller au-delà, il faut une
+// décision explicite — relancer avec un budget plus haut.
+const PLAFOND_SESSION_EUR = 5
+const BUDGET_RUN_EUR = (() => {
+  const i = process.argv.indexOf('--budget')
+  const v = i >= 0 ? Number(process.argv[i + 1]) : NaN
+  return Number.isFinite(v) && v > 0 ? v : null
+})()
+const PLAFOND_EUR = PLAFOND_SESSION_EUR
 if (process.argv.includes('--reset-cout') && existsSync(COUT_FICHIER)) rmSync(COUT_FICHIER)
 let coutSession = existsSync(COUT_FICHIER)
   ? (JSON.parse(readFileSync(COUT_FICHIER, 'utf8')).total_eur ?? 0)
@@ -379,14 +396,22 @@ const ajouterCout = (eur) => {
   coutSession += eur
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(coutSession * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
 }
-const budgetDepasse = () => coutSession >= PLAFOND_EUR
+// Le run s'arrête au PREMIER des deux murs atteint : le budget annoncé pour
+// ce run, ou le plafond de session.
+const budgetDepasse = () =>
+  coutSession >= PLAFOND_EUR || (BUDGET_RUN_EUR != null && coutRun >= BUDGET_RUN_EUR)
+const motifArret = () =>
+  BUDGET_RUN_EUR != null && coutRun >= BUDGET_RUN_EUR
+    ? `budget annoncé de ce run atteint (${coutRun.toFixed(2)} € ≥ ${BUDGET_RUN_EUR.toFixed(2)} €)`
+    : `plafond de session atteint (${coutSession.toFixed(2)} € ≥ ${PLAFOND_EUR} €)`
 
 let failed = 0
 console.log(`Éval Inspexo — ${cases.length} cas contre ${URL_BASE}${MODELE_SECOURS ? ' — MODÈLE DE SECOURS forcé' : ''}\n`)
 for (const name of STABILITE_SEULE ? [] : cases) {
   if (budgetDepasse()) {
-    console.log(`\n⏸ Budget de tests atteint (${coutSession.toFixed(2)} € ≥ ${PLAFOND_EUR} €). Cas restants non joués.`)
-    console.log('   Relancer avec --reset-cout après validation.')
+    console.log(`\n⏸ ${motifArret()}. Cas restants NON joués.`)
+    console.log('   Pour aller au-delà, c’est une décision explicite :')
+    console.log('   relancer avec --budget <eur> plus haut, ou --reset-cout.')
     break
   }
   process.stdout.write(`▶ ${name}${REPETITIONS > 1 ? ` (${REPETITIONS} passages)` : ''}\n`)
@@ -483,7 +508,9 @@ if ((!SANS_STABILITE && failed === 0) || STABILITE_SEULE) {
   }
   console.log(instables === 0 ? '\n✓ stabilité : tous les cas sont reproductibles' : `\n✗ stabilité : ${instables} cas instable(s)`)
 }
-console.log(`\n— Coût de ce run : ${coutRun.toFixed(3)} € · cumul session : ${coutSession.toFixed(2)} € / ${PLAFOND_EUR} €` +
+console.log(`\n— Coût de ce run : ${coutRun.toFixed(3)} €${
+  BUDGET_RUN_EUR != null ? ` / ${BUDGET_RUN_EUR.toFixed(2)} € annoncés` : ''
+} · cumul session : ${coutSession.toFixed(2)} € / ${PLAFOND_EUR} €` +
   (coutDepart > 0 ? ` (dont ${coutDepart.toFixed(2)} € avant ce run)` : ''))
 
 process.exit(failed === 0 && instables === 0 ? 0 : 1)

@@ -33,6 +33,10 @@ const flag = (n, d = null) => {
   const i = args.indexOf(`--${n}`)
   return i >= 0 && args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : d
 }
+// ⚠️ `--budget` est le mur de CE run (règle du 5 nov. 2026) : il s'ajoute au
+// plafond cumulé, et c'est le PREMIER atteint qui arrête. Aller au-delà est une
+// décision explicite, jamais un glissement.
+const BUDGET_RUN_EUR = (() => { const v = Number(flag('budget', '')); return Number.isFinite(v) && v > 0 ? v : null })()
 const PLAFOND_EUR = Number(flag('plafond', '10'))
 const MARQUE = flag('marque')
 if (args.includes('--reset-cout') && existsSync(COUT_FICHIER)) rmSync(COUT_FICHIER)
@@ -67,6 +71,14 @@ const SECRET = env.EVAL_BYPASS_SECRET
 
 let cout = existsSync(COUT_FICHIER) ? (JSON.parse(readFileSync(COUT_FICHIER, 'utf8')).total_eur ?? 0) : 0
 const coutDepart = cout
+// Le PREMIER des deux murs atteint arrête le run : le budget annoncé
+// pour ce run, ou le plafond cumulé.
+const budgetAtteint = () =>
+  cout >= PLAFOND_EUR || (BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR)
+const motifArret = () =>
+  BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR
+    ? `budget annoncé atteint (${(cout - coutDepart).toFixed(2)} € ≥ ${BUDGET_RUN_EUR.toFixed(2)} €)`
+    : `plafond cumulé atteint (${cout.toFixed(2)} € ≥ ${PLAFOND_EUR} €)`
 const ajouter = (e) => {
   cout += e || 0
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(cout * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
@@ -80,8 +92,8 @@ if (args.includes('--collecter')) {
   for (const e of entrees) {
     const id = `${e.cle}|${e.title}`
     if (faites.has(id)) { console.log(`· ${e.cle} — ${e.title.slice(0, 48)} (déjà fait)`); continue }
-    if (cout >= PLAFOND_EUR) {
-      console.log(`\n⏸ Plafond atteint (${cout.toFixed(2)} € ≥ ${PLAFOND_EUR} €). Reste ${entrees.length - deja.resultats.length} entrée(s).`)
+    if (budgetAtteint()) {
+      console.log(`\n⏸ ${motifArret()}. Reste non traité.`)
       break
     }
     process.stdout.write(`▶ ${e.cle.padEnd(9)} ${e.title.slice(0, 46).padEnd(48)} `)

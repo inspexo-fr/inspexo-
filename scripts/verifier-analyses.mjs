@@ -41,6 +41,10 @@ const flag = (nom, defaut = null) => {
 const ESTIMER = args.includes('--estimer')
 const COMBIEN = Math.max(1, Number(flag('combien', '10')))
 const ANALYSE = flag('analyse')
+// ⚠️ `--budget` est le mur de CE run (règle du 5 nov. 2026) : il s'ajoute au
+// plafond cumulé, et c'est le PREMIER atteint qui arrête. Aller au-delà est une
+// décision explicite, jamais un glissement.
+const BUDGET_RUN_EUR = (() => { const v = Number(flag('budget', '')); return Number.isFinite(v) && v > 0 ? v : null })()
 const PLAFOND_EUR = Number(flag('plafond', '6'))
 
 if (args.includes('--reset-cout') && existsSync(COUT_FICHIER)) rmSync(COUT_FICHIER)
@@ -61,6 +65,14 @@ if (!URL_BASE || !ANON || !EVAL_SECRET) {
 
 let cout = existsSync(COUT_FICHIER) ? (JSON.parse(readFileSync(COUT_FICHIER, 'utf8')).total_eur ?? 0) : 0
 const coutDepart = cout
+// Le PREMIER des deux murs atteint arrête le run : le budget annoncé
+// pour ce run, ou le plafond cumulé.
+const budgetAtteint = () =>
+  cout >= PLAFOND_EUR || (BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR)
+const motifArret = () =>
+  BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR
+    ? `budget annoncé atteint (${(cout - coutDepart).toFixed(2)} € ≥ ${BUDGET_RUN_EUR.toFixed(2)} €)`
+    : `plafond cumulé atteint (${cout.toFixed(2)} € ≥ ${PLAFOND_EUR} €)`
 const ajouter = (eur) => {
   cout += eur || 0
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(cout * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
@@ -113,8 +125,8 @@ if (ANALYSE) {
   process.exit(1)
 }
 
-if (cout >= PLAFOND_EUR) {
-  console.error(`⏸ Plafond atteint (${cout.toFixed(2)} € ≥ ${PLAFOND_EUR} €). Rien n’a été lancé.`)
+if (budgetAtteint()) {
+  console.log(`\n⏸ ${motifArret()}. Reste non traité.`)
   console.error('   Relancer avec --plafond plus haut, ou --reset-cout.')
   process.exit(1)
 }
@@ -122,8 +134,8 @@ if (cout >= PLAFOND_EUR) {
 // ── Exécution ───────────────────────────────────────────────────────────────
 let total = 0
 for (const c of cibles) {
-  if (cout >= PLAFOND_EUR) {
-    console.log(`\n⏸ Plafond atteint (${cout.toFixed(2)} €). Analyses restantes non traitées.`)
+  if (budgetAtteint()) {
+    console.log(`\n⏸ ${motifArret()}. Reste non traité.`)
     break
   }
   process.stdout.write(`▶ ${c.id} … `)

@@ -146,6 +146,22 @@ ZÉRO affirmation technique sans source. Une panne ne peut provenir QUE du catal
 - Rate limit score anti-TOCTOU : insertion de la tentative AVANT comptage. IP_HASH_SALT sans fallback (fail-fast). Clause where RappelConso filtrée (`"`/`\`/`*` interdits).
 - Bypass d'éval : header `x-eval-secret` = secret `EVAL_BYPASS_SECRET` (supabase secrets + .env.local, jamais commité).
 
+### ⚠️ LE BUDGET ANNONCÉ EST UN MUR (règle du 5 nov. 2026)
+**Le compteur s'arrête de lui-même au budget annoncé, et on demande avant
+d'aller au-delà. Sans exception.**
+- Le 5 novembre, un correctif annoncé à **0,60 €** a coûté **2,31 €**. Chaque
+  relance se justifiait seule — comprendre un motif d'échec, obtenir un dossier
+  à inspecter, vérifier les autres références — et **personne n'a jamais décidé
+  d'y mettre quatre fois la somme**. Un budget qu'on dépasse en l'expliquant
+  après coup n'est pas un budget.
+- Tous les scripts qui dépensent acceptent **`--budget <eur>`** : le mur de CE
+  run, en plus du plafond cumulé. Le premier atteint arrête, dit ce qui n'a pas
+  été joué, et demande une décision explicite pour continuer.
+  `scripts/eval.mjs`, `verifier-analyses.mjs`, `sourcer-atlas.mjs`,
+  `rattraper-atlas.mjs`.
+- Dépasser est **une décision d'Utku**, jamais un glissement : on s'arrête, on
+  dit ce qu'il reste à faire et ce que ça coûtera, on attend.
+
 ### Règle de coût des tests (OBLIGATOIRE)
 - **Pendant le développement** : ne rejouer que les cas concernés par la modification (`npm run eval -- <cas>`). L'éval complète ne tourne **qu'une fois, avant le merge**.
 - **Test de stabilité** (3 passages) : uniquement sur 3 cas fixes — `audi-s7-intermediaire`, `308-puretech-complete`, `mercedes-2025-societe`.
@@ -1608,6 +1624,23 @@ ou à une commande `supabase` qui en dépend (`db dump`, `db push`, `start`).
   pas compter dessus.
 - Toujours préfixer : `export PATH="$HOME/.docker/bin:$PATH"` et
   `SUPABASE_ACCESS_TOKEN=$(security find-generic-password -s "Supabase CLI" -w)`.
+
+## ⚠️ Verdicts de référence de l'éval (état COURANT)
+
+| Cas | Verdict | Depuis |
+|---|---|---|
+| `audi-s7-intermediaire` | **rouge 39** | 5 nov. 2026 (sprint 17.1) |
+| `308-puretech-complete` | **orange 55** | 28 oct. 2026 |
+| `mercedes-2025-societe` | **vert 71** | 4 nov. 2026 (sprint 13) |
+
+⚠️ **Les relevés datés dans les sections de sprint ci-dessus disent ce qui a
+été mesuré CE JOUR-LÀ** : la S7 y figure à 38 avant le sprint 17.1, et c'est
+exact. On ne réécrit pas un relevé passé pour le faire coïncider avec le
+présent — c'est ce tableau qui fait foi pour l'état courant.
+
+⚠️ **La S7 est à un point de l'orange** (seuil à 40). C'est le cas le plus
+près d'une bascule de couleur : toute modification du barème ou des filtres
+doit le rejouer.
 
 ## Marques Couvertes
 

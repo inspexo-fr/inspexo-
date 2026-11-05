@@ -28,6 +28,10 @@ const flag = (n, d = null) => {
   const i = args.indexOf(`--${n}`)
   return i >= 0 && args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : d
 }
+// ⚠️ `--budget` est le mur de CE run (règle du 5 nov. 2026) : il s'ajoute au
+// plafond cumulé, et c'est le PREMIER atteint qui arrête. Aller au-delà est une
+// décision explicite, jamais un glissement.
+const BUDGET_RUN_EUR = (() => { const v = Number(flag('budget', '')); return Number.isFinite(v) && v > 0 ? v : null })()
 const PLAFOND_EUR = Number(flag('plafond', '10'))
 
 const { resultats } = JSON.parse(readFileSync(RELEVE, 'utf8'))
@@ -54,10 +58,18 @@ for (const l of readFileSync(join(RACINE, '.env.local'), 'utf8').split('\n')) {
 }
 let cout = existsSync(COUT_FICHIER) ? (JSON.parse(readFileSync(COUT_FICHIER, 'utf8')).total_eur ?? 0) : 0
 const coutDepart = cout
+// Le PREMIER des deux murs atteint arrête le run : le budget annoncé
+// pour ce run, ou le plafond cumulé.
+const budgetAtteint = () =>
+  cout >= PLAFOND_EUR || (BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR)
+const motifArret = () =>
+  BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR
+    ? `budget annoncé atteint (${(cout - coutDepart).toFixed(2)} € ≥ ${BUDGET_RUN_EUR.toFixed(2)} €)`
+    : `plafond cumulé atteint (${cout.toFixed(2)} € ≥ ${PLAFOND_EUR} €)`
 
 let rattrapees = 0
 for (const { r, urls } of cibles) {
-  if (cout >= PLAFOND_EUR) { console.log(`\n⏸ Plafond atteint (${cout.toFixed(2)} €).`); break }
+  if (budgetAtteint()) { console.log(`\n⏸ Plafond atteint (${cout.toFixed(2)} €).`); break }
   process.stdout.write(`▶ ${r.cle.padEnd(9)} ${r.title.slice(0, 44).padEnd(46)} `)
   let d = null
   try {
