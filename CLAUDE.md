@@ -1533,6 +1533,44 @@ données structurées. Deux pages sur le même sujet se concurrencent.
 une étiquette hors format est **refusée en base**, le visiteur arrive,
 l'analyse se fait, et la provenance est perdue **sans message d'erreur**.
 
+### Sprint 17.1 — Une « incohérence » oppose deux éléments, ou n'en est pas une
+L'annonce de la S7 écrit « MOTEUR A CHAINE », et l'EA824 **est** à chaîne : la
+mention est exacte. Le modèle la signalait pourtant comme une contradiction,
+**deux passages sur quatre** — l'éval échouait par intermittence, et surtout
+l'acheteur lisait une contradiction qui n'existe pas. **Un dossier qui invente
+une contradiction est pire qu'un dossier muet : il envoie poser une question
+sans objet.**
+- `_shared/incoherences.ts` (pur, 30 contrôles) : une incohérence du MODÈLE
+  n'est retenue que si elle oppose l'annonce à un **élément nommé** — fiche
+  moteur, rappel, document (CT, carte grise, facture, carnet, HistoVec), ou
+  une autre affirmation de la même annonce. Opposer l'annonce à une
+  connaissance générale non citée n'est pas une contradiction, c'est une
+  opinion.
+- ⚠️ **Les incohérences POSÉES PAR LE SERVEUR sont exemptes.** La constante
+  juridique de l'intermédiaire **ne passerait pas** le filtre linguistique (le
+  test le vérifie explicitement) : sans exemption, une expression régulière
+  effacerait une règle de droit. Même chose pour le compteur contredit par une
+  photo ou par un PV.
+- Le filtre s'applique **avant le barème** : une incohérence écartée ne pèse ni
+  sur l'axe vendeur, ni sur la suspicion de fraude. Les écartées sont **tracées**
+  (`incoherence_sans_opposition`), jamais effacées en silence.
+- ⚠️ **La corroboration par la fiche ne règle PAS ce cas** : la fiche EA824 ne
+  contient pas le mot « chaîne ». `corroboreeParLeCatalogue` existe pour le cas
+  symétrique (fiche « courroie en bain d'huile » contre annonce « courroie »),
+  et le test fige cette portée limitée — l'annoncer plus large serait faux.
+- **Résultat : S7 rouge 39 / 39 / 39**, une seule incohérence (la juridique).
+  308 orange 55 et Mercedes vert 71 inchangés.
+  ⚠️ **Le score de référence de la S7 passe de 38 à 39** : la fausse
+  incohérence pesait sur l'axe vendeur. Et **39 est à un point de l'orange** —
+  ce cas est désormais le plus près d'une bascule de couleur.
+
+### ⚠️ L'éval n'imprimait l'URL du dossier qu'en cas de SUCCÈS
+Sur un échec, il fallait relancer une analyse **payante** pour pouvoir aller
+voir ce qui n'allait pas. C'est exactement au moment où ça rate qu'on a besoin
+du dossier. Corrigé — et c'est la deuxième fois que la sortie de l'éval me
+coûte un run : la première en la filtrant sur `PASS|FAIL`, ce qui a jeté la
+ligne donnant le motif.
+
 ## Outillage local (4 nov. 2026)
 
 **Docker Desktop est installé**, et avec lui la pile Supabase locale. ⚠️ Le

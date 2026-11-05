@@ -403,7 +403,11 @@ for (const name of STABILITE_SEULE ? [] : cases) {
         console.log(`  PASS (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})${id ? ` — /a/${id}` : ''}`)
       } else {
         failed++
-        console.log(`  FAIL (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})`)
+        // ⚠️ L'URL SURTOUT EN CAS D'ÉCHEC. Elle n'était imprimée qu'au
+        // succès : sur un échec, il fallait relancer une analyse PAYANTE pour
+        // pouvoir regarder le dossier. C'est exactement au moment où ça rate
+        // qu'on a besoin d'aller voir.
+        console.log(`  FAIL (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})${id ? ` — /a/${id}` : ''}`)
         for (const f of failures) console.log(`    ✗ ${f}`)
       }
     } catch (e) {

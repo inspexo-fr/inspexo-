@@ -20,6 +20,7 @@ import { lookupDefectSheet, type SheetResult } from "../_shared/defectSheets.ts"
 import { programmesPourFamille, vehiculeEligible, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerteExploitant, alerteServiceIndisponible } from "../_shared/notify.ts";
 import { alerterUneFoisParHeure, estCreditOuCle } from "../_shared/alerting.ts";
+import { filtrerIncoherences } from "../_shared/incoherences.ts";
 import { calculerAxes, panneDansHorizon, seuilKmPanne, type FaitsAxes } from "../_shared/bareme.ts";
 import {
   codeEtranger,
@@ -1956,6 +1957,9 @@ serve(async (req: Request) => {
     }
 
     let incoherences: string[] = (analyse.incoherences ?? []).map((i: unknown) => scrubRefs(String(i))).slice(0, 8);
+    // Textes que le SERVEUR insère lui-même : jamais soumis au filtre
+    // linguistique, ils portent leur preuve ailleurs.
+    const incoherencesServeur: string[] = [];
     let pointsRassurants: string[] = (analyse.points_rassurants ?? []).map((x: unknown) => scrubRefs(String(x))).slice(0, 3);
     // Défauts que l'annonce admet elle-même (arguments de négociation).
     // deno-lint-ignore no-explicit-any
@@ -2013,6 +2017,7 @@ serve(async (req: Request) => {
         `Le compteur photographié (photo n°${constatsPhoto.find((c) => c.organe === "compteur")?.photo_index ?? "?"}) affiche ${kmCompteur.toLocaleString("fr-FR")} km alors que l'annonce indique ${kmAnnonce.toLocaleString("fr-FR")} km.`;
       const dejaLa = incoherences.some((i) => /compteur/i.test(i) && /km/i.test(i));
       incoherences = [kmIncoherence, ...(dejaLa ? incoherences.filter((i) => !(/compteur/i.test(i) && /km/i.test(i))) : incoherences)].slice(0, 8);
+      incoherencesServeur.push(kmIncoherence);
     }
     let questions: string[] = (analyse.questions_vendeur ?? []).map((q: unknown) => scrubRefs(String(q))).slice(0, 8);
     // deno-lint-ignore no-explicit-any
@@ -2287,6 +2292,7 @@ serve(async (req: Request) => {
         /garantie\s+l[ée]gale[^.]{0,80}ne\s+s'applique\s+pas|vente\s+entre\s+particuliers/i.test(text);
       if (hadGlcIncoherence || annonceExclutGlc) {
         incoherences = [INTERMEDIAIRE_INCOHERENCE, ...incoherences].slice(0, 8);
+        incoherencesServeur.push(INTERMEDIAIRE_INCOHERENCE);
       }
       const statutQRe = /mandataire|statut\s+juridique|interm[ée]diaire|d[ée]p[oô]t[- ]vente|propri[ée]taire\s+du\s+v[ée]hicule/i;
       questions = questions.filter((q) => !statutQRe.test(q));
@@ -2312,6 +2318,35 @@ serve(async (req: Request) => {
       const MANQUE_RE =
         /\bn'?est\s+pas\s+(?:indiqu|pr[ée]cis|mentionn|renseign|fourni|document|communiqu)|\b(?:n'?indique|ne\s+pr[ée]cise|ne\s+mentionne|ne\s+donne|ne\s+fournit)\s+pas\b|\baucune?\s+(?:indication|pr[ée]cision|mention)\b/i;
       incoherences = incoherences.filter((i) => !MANQUE_RE.test(i) && !IMPOSSIBLE_RE.test(i));
+    }
+
+    // SPRINT 17.1 — Une incohérence oppose l'annonce à un élément NOMMÉ.
+    //
+    // L'annonce de la S7 écrit « MOTEUR A CHAINE », et l'EA824 est bien à
+    // chaîne : la mention est exacte. Le modèle la signalait pourtant comme
+    // une contradiction, par intermittence. Un dossier qui invente une
+    // contradiction est pire qu'un dossier muet — il envoie poser une
+    // question sans objet.
+    //
+    // ⚠️ Les incohérences POSÉES PAR LE SERVEUR sont exemptes : cadre
+    // juridique de l'intermédiaire, compteur contredit par une photo ou par
+    // un PV. Elles portent leur preuve ailleurs, et les soumettre à un filtre
+    // linguistique laisserait une expression régulière effacer une règle de
+    // droit. Le filtre s'applique AVANT le barème : une incohérence écartée ne
+    // pèse ni sur l'axe vendeur, ni sur la suspicion de fraude.
+    {
+      const tri = filtrerIncoherences(incoherences, incoherencesServeur);
+      if (tri.ecartees.length > 0) {
+        await admin.from("events").insert({
+          name: "incoherence_sans_opposition",
+          props_json: {
+            nb: tri.ecartees.length,
+            motifs: tri.ecartees.map((e) => e.motif),
+            extraits: tri.ecartees.map((e) => e.texte.slice(0, 120)),
+          },
+        });
+      }
+      incoherences = tri.gardees;
     }
 
     // Garde-fou : une analyse publiée sans aucune raison principale n'est pas
