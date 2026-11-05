@@ -1901,17 +1901,25 @@ MONTAIT. Mesuré sur la même Classe C 220 d : **75 au lieu de 71**.
   le conditionnel de garantie : une garantie ne nous apprend pas quel moteur
   c'est. **`BAREME_VERSION` → 11.6**, champ **optionnel** pour qu'aucun ancien
   appelant ne bouge.
-- ⚠️ **LIMITE ÉPINGLÉE, en attente d'arbitrage.** 10/20 est au-dessus de la
-  note d'un moteur dont une source documente un défaut **majeur** (9), une
-  **casse** (5) ou un défaut de **sécurité** (4). Sur 6 profils de test,
-  l'ignorance paie encore **3 fois** : **+2**, **+10** et **+16** points. Les
-  deux consignes — « jamais mieux noté » et « 10/20 neutre » — sont
-  inconciliables en l'état : descendre l'inconnu plus bas reviendrait à
-  **affirmer un défaut qu'on n'a pas trouvé**, ce que le projet refuse depuis
-  le sprint 2. Ce qui est garanti sans réserve : **le verdict n'est jamais
-  vert**. Le résidu est épinglé à 3 dans `tests/bareme.test.mjs` : s'il bouge,
-  le test échoue et force une décision. On n'enfouit pas une limite connue
-  derrière un contrôle qui ne mord pas.
+- ⚠️ **LA NOTE NEUTRE NE SUFFISAIT PAS, et le plafond a été abaissé.** 10/20
+  est au-dessus de la note d'un moteur dont une source documente un défaut
+  **majeur** (9), une **casse** (5) ou un défaut de **sécurité** (4) : à
+  plafond 69, l'ignorance payait encore sur **3 profils sur 6** (+2, +10, +16).
+  Arbitrage d'Utku le 5 nov. : **borner plus bas plutôt qu'inventer une note**.
+  Plafond **69 → 55**, le rang déjà retenu pour « une opération critique
+  déclarée non faite ». **`BAREME_VERSION` → 11.7.**
+  - Effet mesuré : défaut majeur **refermé** (62 contre 55), casse **+10 → +5**,
+    sécurité **+16 → +11**. Les deux derniers subsistent, et les refermer
+    demanderait un plafond **sous 44** — plus sévère qu'un défaut de sécurité
+    DOCUMENTÉ, c'est-à-dire une pénalité déguisée en plafond. Le projet refuse
+    d'affirmer un défaut qu'il n'a pas trouvé (règle du sprint 2).
+  - Garanti sans réserve : **jamais vert, jamais au-dessus de 55**. Le résidu
+    est épinglé à **2** dans `tests/bareme.test.mjs` : s'il bouge, dans un sens
+    ou dans l'autre, le test échoue et force une décision. On n'enfouit pas une
+    limite connue derrière un contrôle qui ne mord pas.
+  - ⚠️ La **11.6** n'a jamais été servie à une analyse réelle : elle n'a vécu
+    que le temps d'un run d'éval. On incrémente quand même — un numéro de
+    version doit désigner UN comportement.
 
 ### La cause de la dérive : `_shared/familleMoteur.ts`
 Le code famille était déduit par le MODÈLE, à partir d'exemples qui citent

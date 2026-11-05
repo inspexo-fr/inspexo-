@@ -34,6 +34,13 @@
 // dès que six annonces comparables accompagnent l'analyse. À texte d'annonce
 // identique MAIS sans comparables, le score est strictement le même qu'en
 // 11.4 (vérifié par tests/bareme.test.mjs et par les trois cas de référence).
+// 11.7 — SPRINT 20.1, second tour : le plafond d'un moteur non identifié
+// descend de 69 (orange haut) à 55 (le rang d'une opération critique non
+// faite). À 69, l'ignorance payait encore face à un véhicule documenté : +2
+// points contre un défaut majeur, +10 contre une casse, +16 contre un défaut
+// de sécurité. ⚠️ La 11.6 n'a jamais été servie à une analyse réelle — elle
+// n'a vécu que le temps d'un run d'éval. On incrémente quand même : un numéro
+// de version doit désigner UN comportement.
 // 11.6 — SPRINT 20.1 : un moteur NON IDENTIFIÉ ne sort plus du score.
 // L'axe `risques_mecaniques` vaut 10/20 (neutre) au lieu d'être exclu, et le
 // verdict plafonne à 69 (orange). Mesuré en production le 5 nov. 2026 : sur la
@@ -42,7 +49,7 @@
 // avec une famille moteur identifiée — le score est strictement inchangé par
 // rapport à la 11.5, et le champ est optionnel pour que les anciens appelants
 // ne bougent pas. Vérifié par tests/bareme.test.mjs et sa contre-épreuve.
-export const BAREME_VERSION = "11.6";
+export const BAREME_VERSION = "11.7";
 
 export type FaitsAxes = {
   annee_courante: number;
@@ -357,11 +364,23 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const axesNotes = Object.values(axes).filter((a) => a.note != null).length;
   if (axesNotes <= 2) poser(72, "Annonce trop peu détaillée pour évaluer plus de deux critères.");
 
-  // ⚠️ Moteur non identifié : plafond ORANGE. On ne décerne pas un feu vert à
-  // un véhicule dont on n'a pas pu consulter les points de défaillance connus.
-  // 69 est la borne haute de la bande orange (le vert commence à 70).
+  // ⚠️ Moteur non identifié : plafond ORANGE BAS (décision d'Utku du
+  // 5 nov. 2026, après mesure). Le premier correctif plafonnait à 69, la borne
+  // haute de l'orange — ce qui garantissait bien qu'un moteur non identifié
+  // ne soit jamais vert, mais laissait l'ignorance PAYER face à un véhicule
+  // documenté : +2 points contre un défaut majeur, +10 contre une casse,
+  // +16 contre un défaut de sécurité avec rappel.
+  //
+  // 55 est le niveau déjà retenu pour « une opération d'entretien critique
+  // déclarée non faite » : un fait qui coûte cher et dont on est sûr. Ne pas
+  // savoir quel moteur on achète se situe au même rang.
+  //
+  // ⚠️ On BORNE plus bas, on n'invente aucune note. Descendre l'AXE à 4/20
+  // (le rang d'un défaut de sécurité) reviendrait à affirmer un danger qu'on
+  // n'a pas trouvé — ce que le projet refuse depuis le sprint 2. La note reste
+  // neutre à 10/20 ; c'est le plafond qui porte l'honnêteté.
   if (familleInconnue) {
-    poser(69, "Moteur non identifié : pannes connues non vérifiées.");
+    poser(55, "Moteur non identifié : pannes connues non vérifiées.");
   }
 
   if (f.compteur_contredit) {
@@ -447,7 +466,7 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     if (!f.entretien_renseigne && vehiculeUse) plafondC = Math.min(plafondC, 65);
     // ⚠️ Une garantie ne nous apprend pas quel moteur c'est : ce plafond-là
     // ne tombe jamais dans le conditionnel.
-    if (familleInconnue) plafondC = Math.min(plafondC, 69);
+    if (familleInconnue) plafondC = Math.min(plafondC, 55);
     if (axesNotes <= 2) plafondC = Math.min(plafondC, 72);
     if (gravites.includes("securite")) plafondC = Math.min(plafondC, 58);
     if (rappelsHorsCouverture >= 1) plafondC = Math.min(plafondC, 48);

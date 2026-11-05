@@ -115,8 +115,8 @@ const verifiePrix = (titre, cond, detail = '') => {
     inconnu.axes.risques_mecaniques.note === 10, JSON.stringify(inconnu.axes.risques_mecaniques))
   affirme('et son commentaire nomme la cause',
     /non identifié/i.test(inconnu.axes.risques_mecaniques.commentaire))
-  affirme('le verdict est plafonné à ORANGE',
-    inconnu.verdict === 'orange' && inconnu.score <= 69, `${inconnu.verdict} ${inconnu.score}`)
+  affirme('le verdict est plafonné à ORANGE BAS (55)',
+    inconnu.verdict === 'orange' && inconnu.score <= 55, `${inconnu.verdict} ${inconnu.score}`)
   affirme('le motif du plafond est celui demandé',
     /moteur non identifié/i.test(inconnu.plafond_raison ?? ''), inconnu.plafond_raison)
   // ⚠️ L'INVARIANT QUI COMPTE, ET IL PORTE SUR LE MÊME VÉHICULE : ne pas
@@ -154,28 +154,34 @@ const verifiePrix = (titre, cond, detail = '') => {
       }
       if (sans.verdict === 'vert') vertsInterdits++
     }
-    // ⚠️ LIMITE CONNUE, MESURÉE, ET ÉPINGLÉE — en attente d'arbitrage.
+    // ⚠️ LIMITE CONNUE, MESURÉE, ÉPINGLÉE — et ARBITRÉE le 5 nov. 2026.
     //
-    // La note neutre de 10/20 ne suffit PAS à tenir la règle sur tous les
-    // profils : quand le catalogue aurait trouvé un défaut majeur (9/20), une
-    // casse (5/20) ou un défaut de sécurité (4/20), ne pas identifier le
-    // moteur fait encore monter le score du MÊME véhicule — mesuré le
-    // 5 nov. 2026 : +2 sur un défaut majeur, +10 sur une casse, +16 sur un
-    // défaut de sécurité avec rappel.
-    //
-    // Les deux consignes sont inconciliables en l'état : « 10/20 neutre » est
+    // La note neutre de 10/20 ne peut pas, à elle seule, tenir la règle « un
+    // véhicule sur lequel on ne sait rien n'est jamais mieux noté » : elle est
     // au-dessus de la note d'un moteur dont une source documente un défaut
-    // grave. Descendre l'inconnu plus bas reviendrait à AFFIRMER un défaut
-    // qu'on n'a pas trouvé — ce que le projet refuse depuis le sprint 2.
+    // majeur (9/20), une casse (5/20) ou un défaut de sécurité (4/20).
     //
-    // Ce qui est garanti sans réserve : le verdict n'est JAMAIS vert.
-    // Le résidu est épinglé à 3 profils : s'il bouge, dans un sens ou dans
+    // Arbitrage d'Utku : BORNER PLUS BAS plutôt qu'inventer une note. Le
+    // plafond est passé de 69 (orange haut) à 55 — le rang déjà retenu pour
+    // « une opération d'entretien critique déclarée non faite ».
+    //
+    // Effet mesuré de ce choix, sur les six profils :
+    //   · défaut majeur   : +2  →  l'écart est REFERMÉ (62 contre 55)
+    //   · casse           : +10 →  +5  (50 contre 55)
+    //   · défaut sécurité : +16 →  +11 (44 contre 55)
+    // Les deux derniers subsistent : les refermer demanderait un plafond sous
+    // 44, c'est-à-dire plus sévère qu'un défaut de sécurité DOCUMENTÉ — une
+    // pénalité déguisée en plafond. Le projet refuse d'affirmer un défaut
+    // qu'il n'a pas trouvé (règle du sprint 2).
+    //
+    // Garanti sans réserve : le verdict n'est JAMAIS vert, et jamais au-dessus
+    // de 55. Le résidu est épinglé à 2 : s'il bouge, dans un sens ou dans
     // l'autre, ce test échoue et force une décision. On n'enfouit pas une
     // limite connue derrière un contrôle qui ne mord pas.
     affirme('aucun véhicule au moteur non identifié n’obtient un verdict vert',
       vertsInterdits === 0, `${vertsInterdits} verdict(s) vert`)
-    affirme('⚠️ limite épinglée : 3 profils sur 6 où l’ignorance paie encore (arbitrage en attente)',
-      scoresQuiMontent === 3, `${scoresQuiMontent} profil(s) — la limite a bougé, décision requise`)
+    affirme('⚠️ limite épinglée : 2 profils sur 6 où l’ignorance paie encore (casse et sécurité)',
+      scoresQuiMontent === 2, `${scoresQuiMontent} profil(s) — la limite a bougé, décision requise`)
   }
   // Et une garantie ne nous apprend pas quel moteur c'est : le plafond tient
   // aussi dans le conditionnel.
@@ -184,7 +190,7 @@ const verifiePrix = (titre, cond, detail = '') => {
     condition_garantie: 'garantie constructeur en cours',
   })
   affirme('le conditionnel de garantie ne lève pas ce plafond',
-    (avecGarantie.verdict_conditionnel?.score ?? 0) <= 69,
+    (avecGarantie.verdict_conditionnel?.score ?? 0) <= 55,
     JSON.stringify(avecGarantie.verdict_conditionnel))
 
   // ⚠️ CONTRE-ÉPREUVE : sans le champ, RIEN ne change. Le drapeau est
@@ -211,7 +217,7 @@ const verifiePrix = (titre, cond, detail = '') => {
   // faisait dès 15 : un dossier dont l'axe prix était « non évalué », donc
   // exclu du score, est désormais noté. Le barème lui-même n'a pas changé,
   // mais ce qu'il reçoit oui — et les clients d'API suivent ce numéro.
-  affirme('BAREME_VERSION passée à 11.6', BAREME_VERSION === '11.6', BAREME_VERSION)
+  affirme('BAREME_VERSION passée à 11.7', BAREME_VERSION === '11.7', BAREME_VERSION)
 }
 {
   // ⚠️ L'INVARIANT DU SPRINT 20 : le barème est AVEUGLE à la source de la
