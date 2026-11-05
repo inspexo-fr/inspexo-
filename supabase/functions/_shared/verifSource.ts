@@ -63,7 +63,28 @@ export const MAX_TEXTE_SOURCE = 14_000;
  *  sources de rang 1. Refuser le format le plus fiable au motif qu'il n'est
  *  pas du HTML biaisait la mesure contre les meilleures preuves.
  *  `unpdf` est déjà utilisé par `lecture-histovec`, sans dépendance. */
+/** Sites d'annonces : nos serveurs ne les contactent JAMAIS.
+ *
+ * ⚠️ Ce garde-fou n'est pas théorique. `texteDeLaPage` récupère une URL
+ * QUELCONQUE — celle que cite une fiche moteur ou une entrée d'atlas. Rien
+ * n'empêchait une source d'être une annonce Leboncoin : le jour où cela
+ * arriverait, notre serveur irait chercher une page d'annonce, et la promesse
+ * publique « l'annonce est lue par votre appareil, jamais par nos serveurs »
+ * deviendrait fausse sans que personne ne s'en aperçoive.
+ *
+ * La promesse est donc tenue par CONSTRUCTION, pas par chance. */
+const SITES_ANNONCES = /(^|\.)(leboncoin\.fr|lacentrale\.fr|autoscout24\.[a-z.]+|paruvendu\.fr|ouestfrance-auto\.com)$/i
+
+export function estSiteDAnnonces(url: string): boolean {
+  try {
+    return SITES_ANNONCES.test(new URL(url).hostname)
+  } catch (_) {
+    return false
+  }
+}
+
 export async function texteDeLaPage(url: string, minCaracteres = 400): Promise<string | null> {
+  if (estSiteDAnnonces(url)) return null
   try {
     const res = await fetch(url, {
       signal: AbortSignal.timeout(15_000),

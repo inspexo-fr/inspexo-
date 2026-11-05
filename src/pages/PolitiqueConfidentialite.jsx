@@ -103,6 +103,13 @@ export default function PolitiqueConfidentialite() {
           <ul className="legal-ul">
             <li>Données de compte : conservées tant que le compte est actif, puis 3 ans après la dernière connexion</li>
             <li>Données de conversation IA : 2 ans après la dernière interaction</li>
+            <li>
+              <strong>Chez Anthropic</strong>, qui lit pour nous le texte de l'annonce et les
+              photos jointes : <strong>suppression automatique sous 30 jours</strong>, et
+              jusqu'à 2 ans si un contenu est signalé comme contraire à sa politique d'usage.
+              Cette durée n'est pas la nôtre : nous la publions parce que c'est celle qui
+              s'applique réellement à ces données une fois transmises.
+            </li>
             <li>Données de paiement : durée légale de conservation des documents comptables (10 ans)</li>
             <li>Données anonymisées de prix : conservées indéfiniment (aucun lien avec l'utilisateur)</li>
             <li>Logs techniques : 12 mois</li>
@@ -132,12 +139,26 @@ export default function PolitiqueConfidentialite() {
           <h2 className="legal-h2">6. Partage des données</h2>
           <p className="legal-p">Vos données sont partagées avec :</p>
           <ul className="legal-ul">
-            <li><strong>Supabase</strong> — hébergement base de données (UE)</li>
+            <li><strong>Supabase</strong> — hébergement de la base de données et des fonctions serveur (UE)</li>
+            <li><strong>Vercel</strong> — hébergement du site et des fonctions <code>/api</code></li>
             <li><strong>Stripe</strong> — paiement (certifié PCI-DSS)</li>
-            <li><strong>Anthropic</strong> — API IA (les conversations sont envoyées pour traitement, politique de confidentialité Anthropic applicable)</li>
-            <li><strong>Resend</strong> — envoi d'emails transactionnels</li>
-            <li><strong>Cal.com</strong> — réservation de créneaux</li>
+            <li>
+              <strong>Anthropic</strong> — analyse par intelligence artificielle. Le texte de
+              l'annonce et, le cas échéant, les photos que vous joignez lui sont transmis pour
+              être lus. <strong>Anthropic supprime automatiquement les entrées et les sorties
+              de son API sous 30 jours</strong>, et les conserve jusqu'à 2 ans si un contenu est
+              signalé comme contraire à sa politique d'usage. Les serveurs d'Anthropic sont
+              situés <strong>hors de l'Union européenne</strong>.
+            </li>
+            <li><strong>Resend</strong> — envoi des emails transactionnels</li>
+            <li><strong>Whereby</strong> — visioconférence, pour la visio guidée uniquement</li>
           </ul>
+          <p className="legal-p">
+            Chacun agit comme sous-traitant, sur nos instructions et pour notre compte
+            uniquement. <strong>Cal.com ne figure plus dans cette liste</strong> : l'outil n'est
+            pas utilisé et ne reçoit aucune donnée. Nous n'annonçons que des destinataires
+            réels — citer un prestataire qui ne reçoit rien est aussi inexact qu'en oublier un.
+          </p>
           <p className="legal-p">Nous ne vendons jamais vos données personnelles à des tiers.</p>
 
           <h2 className="legal-h2">6 bis. Liens vers des partenaires (assurance, financement)</h2>
@@ -388,6 +409,43 @@ export default function PolitiqueConfidentialite() {
             <li>
               Le formulaire porte la même mention de consentement que nos autres champs email, et
               chaque message que nous vous enverrons comportera un lien de désinscription.
+            </li>
+          </ul>
+
+          <h2 className="legal-h2">6 nonies. Application mobile</h2>
+          <p className="legal-p">
+            L'application Inspexo (iOS et Android) affiche le même service que le site. Elle
+            ajoute un seul chemin : partager une annonce depuis Leboncoin, La Centrale ou
+            AutoScout24 vers Inspexo.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>L'annonce est lue par votre appareil, jamais par nos serveurs.</strong>
+              Le partage nous transmet une adresse ; l'application ouvre cette page dans une
+              fenêtre visible, sur votre téléphone, avec votre propre session. Un script y lit
+              le texte et la liste des photos. <strong>Aucune requête ne part de nos serveurs
+              vers le site d'annonces</strong> — nous ne recevons que le résultat de cette
+              lecture.
+            </li>
+            <li>
+              Si le site d'annonces affiche une vérification anti-robot, <strong>c'est vous qui
+              la passez</strong>, dans cette fenêtre. Rien ne la contourne.
+            </li>
+            <li>
+              <strong>Les photos sont réduites à 1 600 pixels et ré-encodées sur l'appareil
+              avant tout envoi</strong>, ce qui supprime les métadonnées EXIF — donc la date de
+              prise de vue et les coordonnées GPS éventuelles. Elles sont ensuite transmises à
+              Anthropic pour être lues (voir la section 6), puis oubliées : <strong>nous n'en
+              conservons aucune</strong>, seul leur nombre est enregistré.
+            </li>
+            <li>
+              L'application ne demande ni votre position, ni vos contacts, ni de notifications.
+              L'accès à l'appareil photo et à la photothèque n'est demandé qu'au moment où vous
+              choisissez d'ajouter une photo.
+            </li>
+            <li>
+              Aucun outil de mesure d'audience, aucun traceur publicitaire, aucun identifiant
+              publicitaire n'est présent dans l'application.
             </li>
           </ul>
 

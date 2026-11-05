@@ -79,7 +79,7 @@ réel de la requête**. Ce critère change la réponse pour les photos.
 | **Identifiant utilisateur** | Oui, **si compte créé** | Oui | Non | Fonctionnement de l'app | `auth.users`, dossier d'achat |
 | **Historique d'achat** | Oui, si achat | Oui | Non | Fonctionnement de l'app | `passes`, `inspections` (Stripe) |
 | **Autre contenu utilisateur** (texte de l'annonce) | **Oui** | Non | Non | Fonctionnement de l'app | `analyses.input_text` |
-| **Photos** | **NON** | — | — | — | envoyées au modèle puis oubliées ; seul `images_count` persiste |
+| **Photos** | **Oui** | Non | Non | Fonctionnement de l'app | transmises au modèle ; nous n'en gardons aucune, Anthropic jusqu'à 30 jours |
 | **Interactions produit** | Oui | **Non** | Non | Fonctionnement + Analytics | `events`, reliés à `analysis_id` |
 | **Données de diagnostic / plantage** | **NON** | — | — | — | aucun SDK de télémétrie dans le projet |
 | **Localisation** | **NON** | — | — | — | jamais demandée |
@@ -89,12 +89,27 @@ réel de la requête**. Ce critère change la réponse pour les photos.
 fins publicitaires ni croisée avec des données tierces. Pas de SDK publicitaire,
 pas d'IDFA : l'app n'aura pas à afficher l'invite ATT.
 
-⚠️ **Les photos sont déclarées NON collectées, et c'est à justifier si Apple le
-demande** : elles sont transmises au modèle pour produire l'analyse, puis
-oubliées — aucune n'est écrite en base ni en stockage. Seul le NOMBRE de photos
-persiste. Les photos d'une inspection payée, elles, SONT conservées (2 ans) —
-mais elles sont prises par l'inspecteur, pas par l'utilisateur de l'app, et ce
-parcours n'existe pas encore dans l'app.
+⚠️ **LES PHOTOS SONT DÉCLARÉES COLLECTÉES, ET C'EST UN CHOIX.**
+
+Le critère d'Apple est « transmettre hors de l'appareil **et y accéder
+au-delà du temps nécessaire au traitement en temps réel** ». Nous n'en
+conservons aucune — seul le NOMBRE de photos persiste. Mais elles transitent
+par **Anthropic**, qui **supprime automatiquement les entrées et les sorties
+de son API sous 30 jours** et peut les conserver **jusqu'à 2 ans** si un
+contenu est signalé comme contraire à sa politique d'usage — vérifié le
+5 novembre 2026 sur `privacy.claude.com/en/articles/7996866`.
+
+**Trente jours, ce n'est pas du temps réel.** En cas de doute on déclare
+plus, jamais moins : une déclaration trop large ne coûte rien, une
+déclaration trop étroite est un motif de rejet et, surtout, une affirmation
+fausse faite à l'utilisateur.
+
+Elles portent **exactement les mêmes réglages que le texte de l'annonce** :
+fonctionnement de l'app, **non liées à l'identité**, **aucun suivi**.
+
+ℹ️ Les photos d'une inspection payée sont, elles, bien conservées (2 ans) —
+mais elles sont prises par l'inspecteur, et ce parcours n'existe pas encore
+dans l'app.
 
 ### Permissions système demandées
 | Permission | Demandée ? | Texte d'usage |
@@ -113,7 +128,7 @@ parcours n'existe pas encore dans l'app.
 | Identifiants utilisateur | Oui | Non | Facultatif | Fonctionnalités de l'app |
 | Informations de paiement | **Non** (traitées par Stripe, jamais vues par nous) | — | — | — |
 | Historique d'achat | Oui | Non | Facultatif | Fonctionnalités de l'app |
-| Photos | **Non collectées** | — | — | traitées en temps réel, jamais conservées |
+| Photos et vidéos | **Oui** | Non | **Facultatif** | Fonctionnalités de l'app |
 | Autres actions dans l'app | Oui | Non | Obligatoire | Analyses, fonctionnalités de l'app |
 | Autre contenu généré (texte de l'annonce) | Oui | Non | Obligatoire | Fonctionnalités de l'app |
 | Fichiers, contacts, position, santé, SMS, agenda | **Non** | — | — | — |
@@ -135,19 +150,23 @@ Whereby (visio).
 
 ---
 
-## 5. ⚠️ Ce que le code dit et que la politique ne dit pas (à corriger AVANT de soumettre)
+## 5. Écarts de la politique — corrigés
 
-1. **Vercel n'est pas listé** parmi les sous-traitants de
-   `/politique-de-confidentialite`, alors qu'il héberge le site et les
-   fonctions `/api/*`. À ajouter.
-2. **Cloudflare (Turnstile)** est câblé mais dormant. Tant qu'il n'est pas
-   activé, ne pas le citer — le citer laisserait croire qu'il voit déjà du
-   trafic. À ajouter **le jour où** les clés sont posées.
-3. La politique ne mentionne pas encore **l'application mobile** ni le fait que
-   l'annonce est lue **par l'appareil**. Une section dédiée est nécessaire :
-   c'est précisément la promesse que les stores vont lire.
-
----
+1. ✅ **Vercel ajouté** aux sous-traitants (hébergement du site et des
+   fonctions `/api`).
+2. ✅ **Cal.com retiré** : il y figurait alors que rien ne lui est envoyé.
+   Citer un prestataire qui ne reçoit rien est aussi inexact qu'en oublier
+   un — et c'est le même défaut que l'omission de Vercel, dans l'autre sens.
+3. ✅ **Section « Application mobile » ajoutée** : annonce lue par
+   l'appareil, aucune requête de nos serveurs vers le site d'annonces,
+   photos réduites à 1 600 px et ré-encodées (EXIF supprimé), aucune
+   permission superflue, aucun traceur.
+4. ✅ **Durée de conservation chez Anthropic publiée** : 30 jours, jusqu'à
+   2 ans si signalé. Ce n'est pas notre durée, mais c'est celle qui
+   s'applique réellement une fois les données transmises.
+5. ⬜ **Cloudflare (Turnstile)** : câblé mais dormant. À ajouter **le jour
+   où les clés sont posées**, pas avant — le citer aujourd'hui laisserait
+   croire qu'il voit déjà passer du trafic.
 
 ## 6. ⚠️ La promesse technique de l'app, et comment la prouver
 
@@ -171,16 +190,37 @@ genre (vérifié par lecture), mais une lecture n'est pas une mesure.
 
 ## 7. Captures pour les stores
 
-Produites : `captures-sprint18/` — accueil iOS, accueil Android, menu de
-partage Android, WebView d'annonce.
+Produites par `node scripts/captures-stores.mjs`, sur l'**application
+réellement installée** et un **vrai dossier** (IX-2026-00621, Peugeot 308,
+PRUDENCE 55/100) — pas sur une maquette.
 
-⚠️ **Formats exigés, non encore produits** : iPhone 6,7″ (1290×2796) et
-iPad 13″ si l'app est publiée universelle ; Google Play demande 2 captures
-minimum, 1080×1920 ou plus, plus une **image mise en avant 1024×500**. Les
-captures actuelles viennent d'un iPhone 17e et d'un téléphone Android moyen :
-elles servent de preuve de fonctionnement, pas de visuels de vente.
+| Fichier | Taille | Plateforme |
+|---|---|---|
+| `ios-1320x2868-1-accueil.png` | 1320×2868 | iPhone 6,9″ — **format exigé** |
+| `ios-1290x2796-1-accueil.png` | 1290×2796 | second format accepté |
+| `android-1-accueil.png` | 1080×2400 | ≥ 1080×1920 exigé |
+| `android-2-dossier.png` | 1080×2400 | le dossier, avec le tampon |
+| `android-3-takata.png` | 1080×2400 | recherche Takata |
+| `google-banniere-1024x500.png` | 1024×500 | image mise en avant |
 
----
+⚠️ **Sur iOS, seul l'accueil est capturé, et c'est une limite de l'outillage,
+pas un oubli.** iOS 27 affiche systématiquement « Ouvrir dans « Inspexo » ? »
+quand un lien profond vient de l'extérieur — application fermée comprise — et
+la boîte de dialogue se retrouve sur l'image. Aucun moyen de toucher l'écran
+du simulateur n'est disponible ici : AppleScript est bloqué par les
+autorisations d'accessibilité, `simctl` n'a pas de commande de tap, `idb`
+n'est pas installé.
+
+Les deux écrans manquants se prennent en **trente secondes** dans Xcode, à la
+main : lancer le simulateur, toucher l'écran, ⌘S. À faire au moment où vous
+ouvrirez Xcode pour créer la Share Extension. Apple accepte une seule capture
+pour soumettre — ce n'est donc pas bloquant.
+
+⚠️ **Une capture ratée a failli partir** : la première série ouvrait les pages
+avec une URL `https://`, ce que `simctl openurl` transmet à **Safari**. Les
+images montraient le site dans un navigateur, barre d'adresse comprise, et
+non l'application. Corrigé par un lien profond `inspexo://aller?p=/chemin`
+ajouté à l'app — qui a par ailleurs son utilité propre.
 
 ## 8. Ce qu'il reste à faire, et qui demande vos comptes
 

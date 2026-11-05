@@ -77,6 +77,17 @@ function EcouteurPartage() {
               const cible = u.searchParams.get('url')
               if (cible) navigate(`/partage?u=${encodeURIComponent(cible)}`)
             }
+            // inspexo://aller?p=/a/<id> — ouvrir une page DANS l'appli.
+            // ⚠️ Ajouté après une capture ratée : `simctl openurl` avec une URL
+            // https ouvrait SAFARI, et les captures de store montraient donc le
+            // site dans un navigateur, pas l'application. Une capture qui ne
+            // montre pas l'app est un motif de rejet — et un mensonge.
+            // Le chemin est validé : il doit commencer par un seul '/', sinon
+            // '//ailleurs.example' serait une adresse absolue déguisée.
+            if (u.protocol === 'inspexo:' && u.host === 'aller') {
+              const chemin = u.searchParams.get('p') || ''
+              if (/^\/[^/]/.test(chemin)) navigate(chemin)
+            }
           } catch (_) { /* lien profond illisible : ignoré */ }
         })
       })
