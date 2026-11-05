@@ -459,6 +459,98 @@ begin
 end
 \$pref\$;
 
+-- Le verrou Pass du mode revendeur : masquage SERVEUR, éprouvé par le
+-- COMPORTEMENT. On soumet un bloc complet et on exige que les deux chiffres
+-- réservés n'en sortent pas.
+--
+-- ⚠️ Ne pas se contenter de \`achat_max is null\` : le vrai risque est qu'un
+-- montant subsiste AILLEURS dans la charge utile (dans un libellé, dans le
+-- message vendeur). On cherche donc les nombres dans le TEXTE du résultat.
+do $rev$
+declare
+  v_in jsonb := jsonb_build_object(
+    'comparables', jsonb_build_object('retenus', 8, 'recus', 14, 'ecartes', '[]'::jsonb),
+    'revente', jsonb_build_object('valeur', 3200),
+    'achat_max', jsonb_build_object('valeur', 1911, 'lignes', jsonb_build_array(
+      jsonb_build_object('cle', 'distribution', 'montant_eur', 877),
+      jsonb_build_object('cle', 'marge_voulue', 'montant_eur', 500))),
+    'offre', 1622,
+    'parametres', jsonb_build_object('marge_voulue_eur', 500),
+    'carte_grise', jsonb_build_object('montant_eur', 311.26),
+    'critair', '4',
+    'zfe', 'null'::jsonb,
+    'arguments', jsonb_build_array(
+      jsonb_build_object('poste', 'Distribution', 'montant_eur', 877),
+      jsonb_build_object('poste', 'Pneus', 'montant_eur', 180)),
+    'message_vendeur', 'je vous propose 1 622 EUR',
+    'mention', 'Calcul a partir de prix observes'
+  );
+  v_out jsonb := public._revendeur_publique(v_in);
+  v_txt text := v_out::text;
+begin
+  perform pg_temp.essai_verifie(
+    '_revendeur_publique : le prix de revente realiste reste gratuit',
+    (v_out -> 'revente' ->> 'valeur')::int = 3200
+    and v_out -> 'comparables' is not null
+    and v_out ->> 'mention' = 'Calcul a partir de prix observes');
+
+  perform pg_temp.essai_verifie(
+    '_revendeur_publique : prix d achat maximum, offre et message NE SORTENT PAS',
+    jsonb_typeof(v_out -> 'achat_max') = 'null'
+    and jsonb_typeof(v_out -> 'offre') = 'null'
+    and v_out ->> 'message_vendeur' = ''
+    and jsonb_array_length(v_out -> 'arguments') = 0
+    and jsonb_typeof(v_out -> 'carte_grise') = 'null',
+    v_txt);
+
+  -- Les trois montants reserves, cherches dans le TEXTE du resultat.
+  perform pg_temp.essai_verifie(
+    '_revendeur_publique : aucun des montants reserves ne subsiste dans la charge utile',
+    position('1911' in v_txt) = 0
+    and position('1622' in v_txt) = 0
+    and position('877' in v_txt) = 0
+    and position('311.26' in v_txt) = 0,
+    v_txt);
+
+  perform pg_temp.essai_verifie(
+    '_revendeur_publique : l ecran sait COMBIEN il ne voit pas',
+    (v_out ->> 'masque')::boolean is true
+    and (v_out ->> 'nb_lignes_masquees')::int = 2
+    and (v_out ->> 'nb_arguments_masques')::int = 2);
+
+  -- Et la fonction est reservee au service role : anon ne doit pas pouvoir
+  -- l appeler, ne serait-ce que pour en deduire la forme.
+  perform pg_temp.essai_verifie(
+    '_revendeur_publique : refusee a anon et authenticated',
+    not has_function_privilege('anon', 'public._revendeur_publique(jsonb)', 'execute')
+    and not has_function_privilege('authenticated', 'public._revendeur_publique(jsonb)', 'execute'));
+end
+$rev$;
+
+-- get_public_analysis a bien gagne le masque, et n a RIEN perdu : les dix
+-- marqueurs verifies a la generation doivent se retrouver dans la definition
+-- reellement installee.
+select pg_temp.essai_verifie('get_public_analysis : masque revendeur ajoute, rien perdu',
+  (select bool_and(position(m in pg_get_functiondef(p.oid)) > 0)
+     from unnest(array['_revendeur_publique', '_negociation_publique', '_histovec_publique',
+                       'ref_num', 'claims_dropped', '_request_ip_hash', '_pass_actif',
+                       'result_viewed', 'share_views', 'claim_dropped', 'injection']) m))
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'get_public_analysis';
+
+-- Le cout du controle technique est source : sans fourchette publiee, le mode
+-- revendeur ne peut pas compter ce poste (regle du sprint 3, pas de cout sans
+-- source) et l ecran n afficherait rien.
+select pg_temp.essai_verifie('repair_costs : le controle technique a une fourchette sourcee',
+  (select cout_min_eur = 45 and cout_max_eur = 150
+     and url_source::text like '%groupama%'
+     -- les deux montants figurent LITTERALEMENT dans l extrait cite
+     and position('45' in extrait_source) > 0
+     and position('150' in extrait_source) > 0
+     from public.repair_costs
+    where marque_norm = '' and famille_norm = ''
+      and operation_norm = 'controle technique (voiture legere)'));
+
 -- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
 -- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On
 -- assère donc sur TOUT le schéma public, tables et vues comprises, pour les

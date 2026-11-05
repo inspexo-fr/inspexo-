@@ -6,7 +6,10 @@ import {
   memeEnergie, offreOuverture, PARAMETRES_DEFAUT, penteKm, prixAchatMax,
   prixRevente, SEUIL_COMPARABLES,
 } from '../supabase/functions/_shared/revendeur.ts'
-import { coutCarteGrise } from '../supabase/functions/_shared/revendeur.ts'
+import {
+  comparablesDepuisStructures, coutCarteGrise, energieDeStructure,
+  messageVendeurRevendeur, revendeurPublique,
+} from '../supabase/functions/_shared/revendeur.ts'
 import { critair, libelleCritair, verdictZfe, ZFE, ZFE_RELEVE_LE } from '../supabase/functions/_shared/critair.ts'
 // Les miroirs CLIENT, generes par scripts/generer-miroir-revendeur.mjs.
 import * as miroirRevendeur from '../src/data/revendeur.gen.js'
@@ -205,6 +208,127 @@ eq(libelleCritair('non_classe'), 'non classé', 'le libellé d’un non classé 
   eq(coutCarteGrise(0, 'Occitanie', bareme).motif, 'cv_inconnus', '0 CV : aucun chiffre')
   eq(coutCarteGrise(5, 'Occitanie', null).motif, 'bareme_absent',
     'barème absent (config non lue) : aucun chiffre, jamais de valeur en dur')
+}
+
+// ── Comparables venus d'une page de résultats ──────────────────────────────
+//
+// ⚠️ LE MODÈLE EST DÉDUIT DU TITRE PAR LE SERVEUR. Si le client l'envoyait, il
+// choisirait dans quel segment ses prix atterrissent — c'est la règle posée au
+// sprint 9 pour le relevé agrégé, et elle vaut ici aussi.
+{
+  // Le « modèle déduit » est injecté : côté serveur c'est `modeleCanonique`
+  // de _shared/marche.ts. Ici, une version minimale suffit à éprouver le
+  // branchement.
+  const modeleDe = (t) => (/clio/i.test(t) ? 'clio' : /308/.test(t) ? '308' : '')
+  const opts = { modele_cible: 'clio', modele_de: modeleDe }
+  const v = { modele: 'ignoré', energie: 'Diesel', annee: 2004, km: 180000 }
+
+  const recues = [
+    { titre: 'Renault Clio II 1.5 dCi 65', annee: 2004, km: 175000, prix: 2100 },
+    { titre: 'Renault Clio 1.5 dCi 70', annee: 2005, km: 190000, prix: 2400, carburant: 'Diesel' },
+    { titre: 'Renault Clio III 1.5 dCi', annee: 2006, km: 160000, prix: 2900 },
+    { titre: 'Renault Clio 1.2 16v', annee: 2004, km: 175000, prix: 1900, carburant: 'Essence' },
+    { titre: 'Peugeot 308 1.6 HDi', annee: 2005, km: 180000, prix: 3200 },
+    { titre: 'Renault Clio dCi', annee: 2004, km: 178000, prix: 2200 },
+  ]
+  const r = comparablesDepuisStructures(recues, v, opts)
+  eq(r.recus, 6, 'les 6 structures reçues sont comptées')
+  eq(r.retenus.length, 4, '4 retenues : même modèle ET même énergie')
+  ok(r.ecartes.some((e) => e.raison === 'energie'), 'la Clio essence est écartée pour énergie')
+  ok(r.ecartes.some((e) => e.raison === 'modele'), 'la 308 est écartée pour modèle')
+
+  // ⚠️ L'énergie se lit dans le TITRE quand le champ manque : « dCi » suffit.
+  // Sans cette lecture, une page de résultats qui n'affiche pas le carburant
+  // ferait écarter toutes les annonces, et l'écran dirait « pas assez de
+  // comparables » alors qu'il en a six sous les yeux.
+  eq(energieDeStructure({ titre: 'Clio 1.5 dCi 90' }), 'diesel', '« dCi » dans le titre : diesel')
+  eq(energieDeStructure({ titre: 'Golf 1.4 TSI' }), 'essence', '« TSI » : essence')
+  eq(energieDeStructure({ titre: 'Zoe R110' }), '', 'titre muet : aucune énergie devinée')
+  eq(energieDeStructure({ titre: 'Clio dCi', carburant: 'Essence' }), 'Essence',
+    'le champ du site gagne sur le titre')
+
+  // Le décompte des écartés sert l'écran : il doit pouvoir dire POURQUOI il
+  // n'a pas six comparables, pas seulement qu'il n'en a pas six.
+  eq(comparablesDepuisStructures([], v, opts).retenus.length, 0, 'aucune structure : aucun retenu')
+  eq(prixRevente(r.retenus, v, PARAMETRES_DEFAUT), null,
+    '4 retenues sur 6 reçues : toujours AUCUN chiffre (le seuil porte sur les RETENUES)')
+}
+
+// L espace des milliers est une INSÉCABLE (U+00A0), posée par le formateur
+// maison de `messageVendeurRevendeur` — pas par toLocaleString, dont le
+// résultat varierait avec la version d ICU entre Deno et le navigateur.
+const NB = '\u00a0'
+
+// ── Message au vendeur ─────────────────────────────────────────────────────
+{
+  const args = [
+    { poste: 'Courroie de distribution à refaire', montant_eur: 800, source: 'https://x' },
+    { poste: 'Pneus arrière', montant_eur: 180 },
+    { poste: 'Contrôle technique à repasser', montant_eur: 150 },
+    { poste: 'Embrayage', montant_eur: 1200 },
+    { poste: 'Vidange', montant_eur: 120 },
+    { poste: 'Argument sans montant', montant_eur: 0 },
+  ]
+  const m = messageVendeurRevendeur(args, 2450, 3500)
+  ok(m.includes(`2${NB}450${NB}€`), 'le message porte l’offre d’ouverture')
+  ok(m.includes(`3${NB}500${NB}€`), 'et rappelle le prix demandé')
+  eq(m.split('\n').filter((l) => l.startsWith('- ')).length, 4, 'quatre arguments au plus')
+  ok(m.includes('Embrayage') && m.includes(`1${NB}200${NB}€`), 'les postes les plus chers d’abord')
+  ok(!m.includes('Argument sans montant'),
+    'un argument SANS montant n’entre pas dans le message : négocier sans chiffre, le vendeur le voit')
+  ok(!m.includes('Vidange'), 'le cinquième poste, le moins cher, est laissé de côté')
+
+  eq(messageVendeurRevendeur([], 2450, 3500), '', 'aucun argument chiffré : aucun message')
+  eq(messageVendeurRevendeur(args, null, 3500), '', 'aucune offre : aucun message')
+
+  // Vocabulaire : jamais « valeur », « cote » ni « expertise » dans ce qui
+  // part chez le vendeur.
+  for (const mot of ['valeur', 'cote', 'expertise', 'estimation']) {
+    ok(!new RegExp(mot, 'i').test(m), `le message vendeur n’emploie pas « ${mot} »`)
+  }
+}
+
+// ── Verrou Pass ────────────────────────────────────────────────────────────
+//
+// ⚠️ MASQUAGE SERVEUR, pas un flou CSS. Le sprint 7 l'avait appris pour la
+// négociation : floutée côté client, la donnée partait quand même au
+// navigateur. Ici, le prix d'achat maximum ne doit PAS quitter le serveur.
+{
+  const bloc = {
+    comparables: { retenus: 8, recus: 14, ecartes: [] },
+    revente: { valeur: 3200, mediane_observee: 3500, nb_comparables: 8, ajustement_km_eur: 0,
+      retrait_negociation_eur: 280, decote_zfe_eur: 0, pente_eur_par_km: null },
+    achat_max: { valeur: 1900, revente_eur: 3200, incomplet: false, manquants: [],
+      lignes: [
+        { cle: 'distribution', libelle: 'Distribution', montant_eur: 800, modifiable: true },
+        { cle: 'marge_voulue', libelle: 'Marge visée', montant_eur: 500, modifiable: true },
+      ] },
+    offre: 1600,
+    parametres: PARAMETRES_DEFAUT,
+    carte_grise: { connu: true, montant_eur: 311.26, cv: 5, tarif_cv: 59.5, region: 'Occitanie', maj: '2026-11-05' },
+    critair: '4',
+    zfe: null,
+    arguments: [{ poste: 'Distribution', montant_eur: 800 }, { poste: 'Pneus', montant_eur: 180 }],
+    message_vendeur: 'Bonjour, …',
+    mention: MENTION_REVENDEUR,
+  }
+  const pub = revendeurPublique(bloc)
+  const texte = JSON.stringify(pub)
+
+  ok(pub.revente && pub.revente.valeur === 3200, 'gratuit : le prix de revente réaliste reste')
+  eq(pub.achat_max, null, 'gratuit : le prix d’achat maximum ne part PAS au navigateur')
+  eq(pub.offre, null, 'gratuit : ni l’offre d’ouverture')
+  eq(pub.message_vendeur, '', 'ni le message vendeur')
+  eq(pub.arguments.length, 0, 'ni les arguments')
+  eq(pub.carte_grise, null, 'ni le détail du coût de carte grise')
+  ok(!texte.includes('1900') && !texte.includes('1600'),
+    'aucun des deux chiffres masqués ne se retrouve dans la charge utile')
+  eq(pub.masque, true, 'le masquage est annoncé')
+  eq(pub.nb_lignes_masquees, 2, 'et l’écran sait COMBIEN de lignes il ne voit pas')
+  eq(pub.nb_arguments_masques, 2, 'idem pour les arguments')
+  ok(pub.mention === MENTION_REVENDEUR, 'la mention obligatoire reste, Pass ou pas')
+
+  eq(revendeurPublique(null), null, 'un bloc absent reste absent')
 }
 
 // ── PARITÉ SERVEUR / CLIENT ────────────────────────────────────────────────

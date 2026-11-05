@@ -325,3 +325,153 @@ export function coutCarteGrise(
   const montant = Math.round((n * Number(tarif) + Number(bareme.frais_fixes_eur || 0)) * 100) / 100;
   return { connu: true, montant_eur: montant, cv: n, tarif_cv: Number(tarif), region: nomRegion, maj: bareme.maj };
 }
+
+// ── Comparables venus d'une page de résultats ──────────────────────────────
+//
+// L'extension et l'appli envoient, AU CLIC, les annonces affichées sur la
+// page de recherche de l'utilisateur : titre, année, km, prix, carburant,
+// boîte. Il n'y a NI seuil de 15, NI relevé agrégé ici — ce sont ses propres
+// annonces, lues dans son navigateur, utilisées immédiatement.
+//
+// ⚠️ LE MODÈLE EST DÉDUIT DU TITRE PAR LE SERVEUR, jamais envoyé par le
+// client (même règle qu'au sprint 9 pour le relevé de prix) : sinon le client
+// choisirait dans quel segment ses prix atterrissent.
+
+export type StructureRecue = {
+  titre?: string | null;
+  annee?: number | null;
+  km?: number | null;
+  prix?: number | null;
+  carburant?: string | null;
+  boite?: string | null;
+};
+
+/** L'énergie d'un comparable : le champ s'il est là, sinon les marqueurs du
+ *  titre (« 1.5 dCi », « TDI », « HDi »…). Rien d'inventé : un titre muet
+ *  rend "" et le comparable sera écarté pour énergie. */
+export function energieDeStructure(s: StructureRecue): string {
+  const champ = String(s?.carburant ?? "").trim();
+  if (champ) return champ;
+  const t = norm(s?.titre);
+  if (/\b(dci|hdi|tdi|cdi|crdi|bluehdi|jtd|d4d|cdti|tdci|hdi)\b/.test(t)) return "diesel";
+  if (/\belectrique\b|\bev\b/.test(t)) return "electrique";
+  if (/\bhybride\b|\bhev\b|\bphev\b/.test(t)) return "hybride";
+  if (/\b(tsi|tfsi|vti|thp|puretech|ecoboost|mpi|gti|vvt|tce)\b/.test(t)) return "essence";
+  return "";
+}
+
+export type ComparablesPretsOpts = {
+  /** Modèle canonique du véhicule analysé (déduit serveur). */
+  modele_cible: string;
+  /** Modèle canonique déduit du titre, fourni par l'appelant (serveur). */
+  modele_de: (titre: string) => string;
+};
+
+/** Normalise les structures reçues en comparables comparables, puis filtre.
+ *  Rend aussi le décompte des écartés par raison : l'écran doit pouvoir dire
+ *  POURQUOI il n'a pas assez de comparables, et pas seulement qu'il n'en a
+ *  pas assez. */
+export function comparablesDepuisStructures(
+  structures: readonly StructureRecue[],
+  v: VehiculeRevendeur,
+  opts: ComparablesPretsOpts,
+): { retenus: ComparableRevendeur[]; ecartes: Ecarte[]; recus: number } {
+  const liste: ComparableRevendeur[] = (structures ?? []).map((s) => ({
+    prix: nombre(s?.prix) ?? 0,
+    annee: nombre(s?.annee),
+    km: nombre(s?.km),
+    modele: opts.modele_de(String(s?.titre ?? "")),
+    energie: energieDeStructure(s),
+    boite: s?.boite ?? null,
+    titre: String(s?.titre ?? "").slice(0, 160),
+  }));
+  const r = filtrerComparables(liste, { ...v, modele: opts.modele_cible });
+  return { ...r, recus: liste.length };
+}
+
+// ── Message au vendeur ─────────────────────────────────────────────────────
+
+/** Message court, prêt à copier : trois ou quatre arguments CHIFFRÉS et
+ *  l'offre d'ouverture.
+ *
+ *  ⚠️ Un argument sans montant n'entre PAS dans le message. Dire « la
+ *  distribution est à prévoir » sans savoir ce qu'elle coûte, c'est annoncer
+ *  qu'on négocie sans savoir sur quoi — et le vendeur le voit. */
+export function messageVendeurRevendeur(
+  arguments_: readonly { poste: string; montant_eur: number; source?: string | null }[],
+  offre: number | null,
+  prixDemande: number | null,
+): string {
+  const chiffres = (arguments_ ?? [])
+    .filter((a) => Number.isFinite(Number(a?.montant_eur)) && Number(a.montant_eur) > 0)
+    .sort((a, b) => Number(b.montant_eur) - Number(a.montant_eur))
+    .slice(0, 4);
+  if (chiffres.length === 0 || offre == null) return "";
+
+  // ⚠️ PAS de toLocaleString : son résultat dépend de la version d'ICU du
+  // moteur. Deno et le navigateur n'ont aucune raison de porter la même, et ce
+  // module est justement dupliqué entre les deux — le test de parité serait
+  // alors vrai ou faux selon la machine. On groupe les milliers nous-mêmes,
+  // avec une espace insécable, ce qui est aussi ce qu'attend un message collé
+  // dans une messagerie.
+  const euros = (n: number) =>
+    `${String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} €`;
+  const lignes = chiffres.map((a) => `- ${a.poste} : environ ${euros(Number(a.montant_eur))}`);
+  const entete = prixDemande != null && prixDemande > 0
+    ? `Bonjour, votre annonce m'intéresse. À ${euros(prixDemande)}, voici ce que j'ai relevé :`
+    : `Bonjour, votre annonce m'intéresse. Voici ce que j'ai relevé :`;
+
+  return [
+    entete,
+    ...lignes,
+    "",
+    `Compte tenu de ces postes, je vous propose ${euros(offre)}.`,
+    "Je peux me déplacer rapidement et payer sans condition de financement.",
+  ].join("\n");
+}
+
+// ── Verrou Pass ────────────────────────────────────────────────────────────
+
+export type BlocRevendeur = {
+  comparables: { retenus: number; recus: number; ecartes: Ecarte[] };
+  revente: PrixRevente | null;
+  achat_max: PrixAchatMax | null;
+  offre: number | null;
+  parametres: ParametresRevendeur;
+  carte_grise: CoutCarteGrise | null;
+  critair: string | null;
+  zfe: unknown | null;
+  arguments: { poste: string; montant_eur: number; source?: string | null }[];
+  message_vendeur: string;
+  mention: string;
+  masque?: boolean;
+  nb_lignes_masquees?: number;
+  nb_arguments_masques?: number;
+};
+
+/** Ce qu'un visiteur SANS Pass reçoit : le prix de revente réaliste, et rien
+ *  de plus.
+ *
+ *  ⚠️ MASQUAGE SERVEUR, pas un flou CSS. La correction du sprint 7 l'avait
+ *  déjà appris pour la négociation : floutée côté client, la donnée partait
+ *  quand même au navigateur. Ici le prix d'achat maximum, les lignes de coût,
+ *  les arguments et le message vendeur ne QUITTENT PAS le serveur. */
+export function revendeurPublique(b: BlocRevendeur | null): BlocRevendeur | null {
+  if (!b) return null;
+  return {
+    comparables: b.comparables,
+    revente: b.revente,
+    achat_max: null,
+    offre: null,
+    parametres: b.parametres,
+    carte_grise: null,
+    critair: b.critair,
+    zfe: b.zfe,
+    arguments: [],
+    message_vendeur: "",
+    mention: b.mention,
+    masque: true,
+    nb_lignes_masquees: b.achat_max?.lignes.length ?? 0,
+    nb_arguments_masques: (b.arguments ?? []).length,
+  };
+}

@@ -325,6 +325,94 @@ async function runCase(name) {
     if (!expected.photos_bloc && n > 0) failures.push(`photos_bloc interdit mais ${n} constat(s) photo`)
   }
 
+  // ── Mode revendeur (sprint 19) ───────────────────────────────────────────
+  //
+  // ⚠️ `revendeur_comparables_min: 0` est un cas À PART ENTIÈRE, pas un cas
+  // vide : il exige qu'AUCUN chiffre ne sorte sous le seuil de six. C'est la
+  // moitié de la règle, et c'est celle qui protège l'utilisateur.
+  if ('revendeur_comparables_min' in expected) {
+    const rv = r.revendeur
+    if (!rv) failures.push('bloc revendeur absent')
+    else {
+      const n = rv.comparables?.retenus ?? 0
+      if (n < expected.revendeur_comparables_min) {
+        failures.push(`revendeur : ${n} comparables retenus < ${expected.revendeur_comparables_min} ` +
+          `(reçus ${rv.comparables?.recus ?? 0}, écartés : ${JSON.stringify(rv.comparables?.ecartes || [])})`)
+      }
+      if (expected.revendeur_comparables_min < 6 && rv.revente != null) {
+        failures.push('revendeur : un prix de revente est sorti SOUS le seuil de 6 comparables')
+      }
+    }
+  }
+
+  // revendeur_revente : fourchette attendue du prix de revente réaliste.
+  if (expected.revendeur_revente_min != null || expected.revendeur_revente_max != null) {
+    const v = r.revendeur?.revente?.valeur
+    if (v == null) failures.push('revendeur : aucun prix de revente alors qu’il en était attendu un')
+    else {
+      if (expected.revendeur_revente_min != null && v < expected.revendeur_revente_min) {
+        failures.push(`revendeur : revente ${v} € < min ${expected.revendeur_revente_min} €`)
+      }
+      if (expected.revendeur_revente_max != null && v > expected.revendeur_revente_max) {
+        failures.push(`revendeur : revente ${v} € > max ${expected.revendeur_revente_max} €`)
+      }
+    }
+  }
+
+  // revendeur_ordre : les trois chiffres doivent rester ordonnés. Une offre
+  // d'ouverture supérieure au prix d'achat maximum, ou un prix d'achat
+  // supérieur au prix de revente, ne serait pas une imprécision : ce serait
+  // une consigne de perdre de l'argent.
+  if (expected.revendeur_ordre) {
+    const rv = r.revendeur
+    const re = rv?.revente?.valeur, am = rv?.achat_max?.valeur, of = rv?.offre
+    if (re == null || am == null || of == null) {
+      failures.push(`revendeur_ordre : un des trois chiffres manque (revente ${re}, achat ${am}, offre ${of})`)
+    } else {
+      if (!(am <= re)) failures.push(`revendeur : achat max ${am} € > revente ${re} €`)
+      if (!(of <= am)) failures.push(`revendeur : offre ${of} € > achat max ${am} €`)
+      if (of % 50 !== 0) failures.push(`revendeur : offre ${of} € non arrondie à la cinquantaine`)
+    }
+  }
+
+  // revendeur_mention : la phrase obligatoire doit être là, mot pour mot.
+  if (expected.revendeur_mention) {
+    const m = r.revendeur?.mention || ''
+    if (!m.includes('ni une valeur du véhicule ni une garantie de revente')) {
+      failures.push(`revendeur : mention obligatoire absente ou modifiée ("${m.slice(0, 80)}")`)
+    }
+  }
+
+  // revendeur_vocabulaire_interdit : « valeur », « cote », « expertise » ne
+  // doivent apparaître NI dans le message vendeur NI dans les libellés de
+  // coût. Déterminer la valeur d'un véhicule est réservé aux experts en
+  // automobile inscrits (art. L326-4 I-2° du code de la route).
+  if (expected.revendeur_vocabulaire_interdit) {
+    const rv = r.revendeur || {}
+    const aControler = [
+      rv.message_vendeur || '',
+      JSON.stringify(rv.achat_max?.lignes || []),
+      JSON.stringify(rv.arguments || []),
+    ].join(' ')
+    for (const mot of ['cote du vehicule', 'expertise', 'valeur du vehicule', 'estimation']) {
+      if (norm(aControler).includes(norm(mot))) {
+        failures.push(`revendeur : vocabulaire interdit « ${mot} » dans ce qui est restitué`)
+      }
+    }
+  }
+
+  // revendeur_message_doit_chiffrer : chaque ligne d'argument du message
+  // vendeur porte un montant. Un argument sans chiffre annonce au vendeur
+  // qu'on négocie sans savoir sur quoi.
+  if (expected.revendeur_message_doit_chiffrer) {
+    const msg = r.revendeur?.message_vendeur || ''
+    const lignes = msg.split('\n').filter((l) => l.startsWith('- '))
+    if (lignes.length < 1) failures.push('revendeur : message vendeur sans aucun argument chiffré')
+    for (const l of lignes) {
+      if (!/\d/.test(l)) failures.push(`revendeur : argument sans montant dans le message : "${l.slice(0, 60)}"`)
+    }
+  }
+
   // must_include / must_not_include (une entrée tableau = alternatives, OU logique)
   for (const needle of expected.must_include || []) {
     const alts = Array.isArray(needle) ? needle : [needle]

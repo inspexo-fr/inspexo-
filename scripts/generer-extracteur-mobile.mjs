@@ -17,22 +17,39 @@ const sources = ['common.js', 'leboncoin.js', 'lacentrale.js', 'autoscout24.js']
 
 const pilote = `
 ;(function () {
+  function envoyer (charge) {
+    window.mobileApp && window.mobileApp.postMessage({
+      detail: { inspexo_extraction: JSON.stringify(charge) },
+    })
+  }
   try {
-    var site = (globalThis.INSPEXO_SITES || []).find(function (s) {
+    var sites = globalThis.INSPEXO_SITES || []
+    var site = sites.find(function (s) {
       try { return s.match(window.location) } catch (e) { return false }
     })
-    var data = site ? site.extract(document) : null
-    window.mobileApp && window.mobileApp.postMessage({
-      detail: { inspexo_extraction: JSON.stringify({ ok: !!data, site: site ? site.nom : null, data: data }) },
+    if (site) {
+      var data = site.extract(document)
+      envoyer({ ok: !!data, type: 'annonce', site: site.nom, data: data })
+      return
+    }
+    // SPRINT 19 — page de RECHERCHE partagée : les annonces affichées
+    // deviennent les comparables de la prochaine analyse. Même geste que le
+    // bouton « Ajouter ces annonces comme comparables » de l'extension, et
+    // même règle : rien n'est lu avant que l'utilisateur ait partagé la page.
+    var serp = sites.find(function (s) {
+      try { return s.matchSerp && s.matchSerp(window.location) } catch (e) { return false }
     })
+    if (serp) {
+      var annonces = serp.extractSerp(document) || []
+      envoyer({ ok: annonces.length > 0, type: 'recherche', site: serp.nom, annonces: annonces })
+      return
+    }
+    envoyer({ ok: false, type: null, site: null, data: null })
   } catch (e) {
-    window.mobileApp && window.mobileApp.postMessage({
-      detail: { inspexo_extraction: JSON.stringify({ ok: false, site: null, erreur: String(e).slice(0, 200) }) },
-    })
+    envoyer({ ok: false, type: null, site: null, erreur: String(e).slice(0, 200) })
   }
 })();
 `
-
 const bundle = `${sources}\n${pilote}`
 
 const sortie = `// GÉNÉRÉ par scripts/generer-extracteur-mobile.mjs — NE PAS ÉDITER À LA MAIN.

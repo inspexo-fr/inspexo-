@@ -1,0 +1,14 @@
+{
+  "verdict_min": "rouge",
+  "verdict_max": "orange",
+  "statut_vendeur": "particulier",
+  "famille_moteur": "K9K",
+  "revendeur_comparables_min": 7,
+  "revendeur_revente_min": 1700,
+  "revendeur_revente_max": 2700,
+  "revendeur_ordre": true,
+  "revendeur_mention": true,
+  "revendeur_vocabulaire_interdit": true,
+  "revendeur_message_doit_chiffrer": true,
+  "must_not_include": ["confiance basse"]
+}

@@ -10,6 +10,7 @@ import Stamp from '../components/Stamp'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
 import LectureCtBloc from '../components/LectureCtBloc'
+import RevendeurBloc from '../components/RevendeurBloc'
 import HistovecBloc from '../components/HistovecBloc'
 import VisioBloc from '../components/VisioBloc'
 import VinBloc from '../components/VinBloc'
@@ -1320,6 +1321,14 @@ export default function ResultPage() {
                   Constats automatiques sur les photos jointes à l'analyse. Les photos ne sont jamais conservées.
                 </p>
               </div>
+            )}
+
+            {/* Mode revendeur (sprint 19) — trois chiffres. Le prix de revente
+                réaliste est gratuit ; le prix d'achat maximum, les lignes de
+                coût et le message vendeur sont RETENUS côté serveur sans Pass
+                (revendeur.masque), jamais masqués à l'écran. */}
+            {!enCours && r.type === 'vehicule' && r.revendeur && (
+              <RevendeurBloc analyse={r} />
             )}
 
             {/* PV de contrôle technique (sprint 7 — fonction du Pass, démo annoncée) */}
