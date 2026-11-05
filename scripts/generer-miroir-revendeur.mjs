@@ -28,6 +28,7 @@ const VERIFIER = process.argv.includes('--verifier')
 const MODULES = [
   { ts: 'revendeur.ts', js: 'revendeur.gen.js' },
   { ts: 'critair.ts', js: 'critair.gen.js' },
+  { ts: 'cibles.ts', js: 'cibles.gen.js' },
 ]
 
 const ENTETE = (source) => `// GÉNÉRÉ par scripts/generer-miroir-revendeur.mjs — NE PAS ÉDITER À LA MAIN.

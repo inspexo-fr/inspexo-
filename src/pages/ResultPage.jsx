@@ -1328,7 +1328,7 @@ export default function ResultPage() {
                 coût et le message vendeur sont RETENUS côté serveur sans Pass
                 (revendeur.masque), jamais masqués à l'écran. */}
             {!enCours && r.type === 'vehicule' && r.revendeur && (
-              <RevendeurBloc analyse={r} />
+              <RevendeurBloc analyse={r} analysisId={id} />
             )}
 
             {/* PV de contrôle technique (sprint 7 — fonction du Pass, démo annoncée) */}

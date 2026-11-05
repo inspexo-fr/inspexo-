@@ -23,7 +23,7 @@ const MIGRATIONS = [
   // En local, c'est `supabase db reset` qui rejoue TOUTE l'histoire depuis
   // une base vide — épreuve plus forte — puis `--assertions` vérifie l'état
   // atteint.
-  '20261119120000_sprint19_revendeur.sql',
+  '20261120120000_sprint19_cibles.sql',
 ]
 
 const corpsDe = (f) => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8')
@@ -439,8 +439,8 @@ end
 select pg_temp.essai_verifie('preferences_revendeur : reservees aux comptes connectes',
   not has_function_privilege('anon', 'public.preferences_revendeur_lire()', 'execute')
   and has_function_privilege('authenticated', 'public.preferences_revendeur_lire()', 'execute')
-  and not has_function_privilege('anon', 'public.preferences_revendeur_ecrire(text, jsonb)', 'execute')
-  and has_function_privilege('authenticated', 'public.preferences_revendeur_ecrire(text, jsonb)', 'execute'));
+  and not has_function_privilege('anon', 'public.preferences_revendeur_ecrire(text, jsonb, text)', 'execute')
+  and has_function_privilege('authenticated', 'public.preferences_revendeur_ecrire(text, jsonb, text)', 'execute'));
 
 -- Et sans session, l'écriture LÈVE au lieu d'écrire une ligne orpheline.
 do \$pref\$
@@ -550,6 +550,94 @@ select pg_temp.essai_verifie('repair_costs : le controle technique a une fourche
      from public.repair_costs
     where marque_norm = '' and famille_norm = ''
       and operation_norm = 'controle technique (voiture legere)'));
+
+-- ── SPRINT 19.1 : alertes rentables ───────────────────────────────────────
+
+-- Le carnet est PRIVÉ : table sans aucun droit direct, RPC reservees aux
+-- comptes connectes.
+select pg_temp.essai_verifie('revendeur_cibles : aucun acces direct, RPC reservees aux comptes',
+  not has_table_privilege('anon', 'public.revendeur_cibles', 'select')
+  and not has_table_privilege('authenticated', 'public.revendeur_cibles', 'select')
+  and (select relrowsecurity from pg_class where oid = 'public.revendeur_cibles'::regclass)
+  and not has_function_privilege('anon', 'public.revendeur_cibles_lire()', 'execute')
+  and has_function_privilege('authenticated', 'public.revendeur_cibles_lire()', 'execute')
+  and not has_function_privilege('anon', 'public.revendeur_cible_maj(uuid)', 'execute')
+  and has_function_privilege('authenticated', 'public.revendeur_cible_maj(uuid)', 'execute'));
+
+-- ⚠️ LA SIGNATURE A DEUX ARGUMENTS DOIT AVOIR DISPARU. La laisser vivre
+-- permettrait d ecrire des preferences SANS ville de revente, en silence —
+-- meme defaut que \`agreger_marche\` au sprint 12 et \`submit_lead_pro\` au
+-- sprint 15.
+select pg_temp.essai_verifie('preferences_revendeur_ecrire : l ancienne signature a 2 arguments est supprimee',
+  (select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'preferences_revendeur_ecrire' and p.pronargs = 2) = 0
+  and (select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'preferences_revendeur_ecrire' and p.pronargs = 3) = 1);
+
+-- Les deux RPC du carnet exigent un Pass ACTIF — pas seulement un compte.
+select pg_temp.essai_verifie('le carnet exige un Pass actif, pas seulement un compte',
+  (select bool_and(position('_pass_actif' in pg_get_functiondef(p.oid)) > 0)
+     from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public'
+      and p.proname in ('revendeur_cible_maj', 'revendeur_cibles_lire')));
+
+-- ⚠️ L APPELANT NE FOURNIT QU UN IDENTIFIANT D ANALYSE. Le segment et les
+-- prix sont relus dans result_json, ecrit par le serveur : le client ne
+-- choisit pas dans quel segment ses prix atterrissent.
+select pg_temp.essai_verifie('revendeur_cible_maj ne prend QUE un identifiant d analyse',
+  (select p.pronargs = 1 and pg_catalog.format_type(p.proargtypes[0], null) = 'uuid'
+     from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'revendeur_cible_maj')
+  -- et elle lit bien le segment ecrit par le serveur
+  and (select position('''segment''' in pg_get_functiondef(p.oid)) > 0
+         and position('is_eval' in pg_get_functiondef(p.oid)) > 0
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'public' and p.proname = 'revendeur_cible_maj'));
+
+-- ⚠️ AUCUN QUANTILE EN SQL. Il n en existe qu une implementation dans le
+-- projet (\`quantileHisto\`, _shared/marche.ts) : la lecture rend l histogramme
+-- REPLIE. Meme regle qu au sprint 9 pour get_prix_segments.
+select pg_temp.essai_verifie('revendeur_cibles_lire rend l histogramme, jamais des quantiles',
+  (select position('prix_tranches' in pg_get_functiondef(p.oid)) > 0
+     and position('percentile_cont' in pg_get_functiondef(p.oid)) = 0
+     and position('p25' in pg_get_functiondef(p.oid)) = 0
+     from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'revendeur_cibles_lire'));
+
+-- La fusion des histogrammes se fait par SOMME : decouper les releves ne doit
+-- rien changer. On l eprouve sur le COMPORTEMENT, dans la transaction annulee.
+do $cib$
+declare
+  v_a jsonb := '{"2000": 2, "2250": 1}'::jsonb;
+  v_b jsonb := '{"2250": 3, "2500": 1}'::jsonb;
+  v_fusion jsonb;
+begin
+  select coalesce(jsonb_object_agg(cle, total), '{}'::jsonb) into v_fusion
+  from (
+    select cle, sum(valeur) as total
+    from (
+      select key as cle, value::text::int as valeur from jsonb_each(v_a)
+      union all
+      select key as cle, value::text::int as valeur from jsonb_each(v_b)
+    ) u group by cle
+  ) f;
+  perform pg_temp.essai_verifie(
+    'fusion d histogrammes : somme tranche par tranche',
+    (v_fusion ->> '2000')::int = 2
+    and (v_fusion ->> '2250')::int = 4
+    and (v_fusion ->> '2500')::int = 1,
+    v_fusion::text);
+end
+$cib$;
+
+-- La ville de revente est une colonne, et elle ressort a la lecture.
+select pg_temp.essai_verifie('preferences_revendeur : la ville de revente est stockee et relue',
+  (select count(*) from information_schema.columns
+    where table_schema = 'public' and table_name = 'preferences_revendeur'
+      and column_name = 'ville_revente') = 1
+  and (select position('ville_revente' in pg_get_functiondef(p.oid)) > 0
+         from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'public' and p.proname = 'preferences_revendeur_lire'));
 
 -- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
 -- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On

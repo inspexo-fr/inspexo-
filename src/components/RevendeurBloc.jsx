@@ -5,7 +5,12 @@ import {
   prixAchatMax, prixRevente, MENTION_REVENDEUR,
 } from '../data/revendeur.gen'
 import { critair, libelleCritair, verdictZfe, ZFE, ZFE_RELEVE_LE } from '../data/critair.gen'
-import { getConfigPublique, preferencesRevendeurEcrire, preferencesRevendeurLire } from '../lib/scoreApi'
+import {
+  getConfigPublique, preferencesRevendeurEcrire, preferencesRevendeurLire, revendeurCibleMaj,
+} from '../lib/scoreApi'
+import {
+  parametresDepuisProfil, profilValide, rechercheSauvegardee,
+} from '../data/cibles.gen'
 import { supabase } from '../lib/supabaseClient'
 
 // SPRINT 19 — Mode revendeur : trois chiffres, et seulement trois.
@@ -21,6 +26,7 @@ import { supabase } from '../lib/supabaseClient'
 
 const CLE_REGION = 'inspexo_region'
 const CLE_CV = 'inspexo_cv'
+const CLE_VILLE = 'inspexo_ville_revente'
 
 const euros = (n) =>
   `${String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} €`
@@ -33,14 +39,14 @@ const RAISONS = {
   prix: 'prix illisible',
 }
 
-export default function RevendeurBloc({ analyse }) {
+export default function RevendeurBloc({ analyse, analysisId }) {
   const bloc = analyse?.revendeur || null
   const masque = bloc?.masque === true
 
   const [config, setConfig] = useState(null)
   const [region, setRegion] = useState(() => localStorage.getItem(CLE_REGION) || '')
   const [cv, setCv] = useState(() => localStorage.getItem(CLE_CV) || '')
-  const [villeRevente, setVilleRevente] = useState('')
+  const [villeRevente, setVilleRevente] = useState(() => localStorage.getItem(CLE_VILLE) || '')
   const [params, setParams] = useState(bloc?.parametres || PARAMETRES_DEFAUT)
   // ⚠️ NE GARDER QUE LES VRAIS TRAVAUX. Les lignes « imprévus », « carte
   // grise » et « marge visée » sont CALCULÉES par prixAchatMax à partir des
@@ -59,12 +65,23 @@ export default function RevendeurBloc({ analyse }) {
     () => (bloc?.achat_max?.lignes || []).find((l) => l.cle === 'controle_technique')?.montant_eur ?? 0,
   )
   const [copie, setCopie] = useState(false)
+  const [copieFiltres, setCopieFiltres] = useState(false)
+  const [carnet, setCarnet] = useState(null)
 
   useEffect(() => {
     getConfigPublique().then(setConfig).catch(() => setConfig({}))
   }, [])
 
-  // La région suit le COMPTE quand il y en a un, le navigateur sinon.
+  // ── Profil revendeur mémorisé (sprint 19.1) ───────────────────────────────
+  //
+  // ⚠️ L'OBJECTIF EST QU'AUCUNE QUESTION NE SOIT POSÉE DEUX FOIS. Région,
+  // puissance fiscale, ville de revente et paramètres sont relus au premier
+  // rendu : sur un partage depuis l'appli, les trois chiffres et le message
+  // vendeur s'affichent tout de suite.
+  //
+  // Le profil suit le COMPTE quand il y en a un, le navigateur sinon — une
+  // préférence d'affichage ne justifie pas de créer une ligne en base pour un
+  // anonyme.
   useEffect(() => {
     let vivant = true
     supabase.auth.getSession().then(({ data }) => {
@@ -72,21 +89,27 @@ export default function RevendeurBloc({ analyse }) {
       preferencesRevendeurLire()
         .then((p) => {
           if (!vivant) return
-          if (p.region) { setRegion(p.region); localStorage.setItem(CLE_REGION, p.region) }
-          if (p.parametres && Object.keys(p.parametres).length) {
-            setParams((v) => ({ ...v, ...p.parametres }))
-          }
+          const profil = profilValide({ ...(p.parametres || {}), region: p.region, ville_revente: p.ville_revente })
+          if (profil.region) { setRegion(profil.region); localStorage.setItem(CLE_REGION, profil.region) }
+          if (profil.cv != null) { setCv(String(profil.cv)); localStorage.setItem(CLE_CV, String(profil.cv)) }
+          if (profil.ville_revente) { setVilleRevente(profil.ville_revente); localStorage.setItem(CLE_VILLE, profil.ville_revente) }
+          setParams((v) => parametresDepuisProfil(v, profil))
         })
         .catch(() => {})
     })
     return () => { vivant = false }
   }, [])
 
-  const memoriserRegion = (valeur) => {
-    setRegion(valeur)
-    localStorage.setItem(CLE_REGION, valeur)
+  // Enregistre un champ du profil : localStorage toujours, compte si connecté.
+  const memoriser = (champ, valeur) => {
+    const cles = { region: CLE_REGION, cv: CLE_CV, ville_revente: CLE_VILLE }
+    if (cles[champ]) localStorage.setItem(cles[champ], String(valeur ?? ''))
     supabase.auth.getSession().then(({ data }) => {
-      if (data?.session) preferencesRevendeurEcrire({ region: valeur }).catch(() => {})
+      if (!data?.session) return
+      const charge = champ === 'region' ? { region: String(valeur || '') }
+        : champ === 'ville_revente' ? { villeRevente: String(valeur || '') }
+        : { parametres: profilValide({ ...params, cv: champ === 'cv' ? valeur : cv }) }
+      preferencesRevendeurEcrire(charge).catch(() => {})
     })
   }
 
@@ -137,6 +160,20 @@ export default function RevendeurBloc({ analyse }) {
     ]
     return messageVendeurRevendeur(args, offre, analyse?.vehicule?.prix_affiche ?? null)
   }, [masque, offre, lignes, bloc, analyse])
+
+  // La recherche à sauvegarder : le plafond de prix est le prix d achat
+  // maximum, arrondi à la centaine SUPÉRIEURE — un plafond arrondi vers le bas
+  // cacherait une annonce qui se négocie de cinquante euros.
+  const recherche = useMemo(() => {
+    if (masque || !achat || !bloc?.segment) return null
+    return rechercheSauvegardee({
+      marque: bloc.segment.marque,
+      modele: bloc.segment.modele,
+      energie: bloc.segment.energie,
+      annee_mediane: analyse?.vehicule?.annee ?? null,
+      km_median: analyse?.vehicule?.kilometrage ?? null,
+    }, achat.valeur)
+  }, [masque, achat, bloc, analyse])
 
   if (!bloc) return null
 
@@ -304,7 +341,7 @@ export default function RevendeurBloc({ analyse }) {
                   </span>
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
-                  <select value={region} onChange={(e) => memoriserRegion(e.target.value)}
+                  <select value={region} onChange={(e) => { setRegion(e.target.value); memoriser('region', e.target.value) }}
                     aria-label="Votre région"
                     style={{ ...champ, width: 'auto', textAlign: 'left', maxWidth: '100%' }}>
                     <option value="">Votre région…</option>
@@ -313,7 +350,7 @@ export default function RevendeurBloc({ analyse }) {
                   <input type="number" min="1" max="99" inputMode="numeric" placeholder="CV"
                     aria-label="Puissance fiscale en chevaux (champ P.6 de la carte grise)"
                     value={cv} style={{ ...champ, width: 72 }}
-                    onChange={(e) => { setCv(e.target.value); localStorage.setItem(CLE_CV, e.target.value) }} />
+                    onChange={(e) => { setCv(e.target.value); memoriser('cv', Number(e.target.value) || null) }} />
                 </div>
                 <p className="mono c-graphite" style={{ fontSize: 10, lineHeight: 1.6, marginTop: 6 }}>
                   Puissance fiscale : champ P.6 de la carte grise.
@@ -335,7 +372,11 @@ export default function RevendeurBloc({ analyse }) {
                 <input type="number" min="0" max="100" step="5" inputMode="numeric" style={champ}
                   aria-label="Imprévus, en pourcentage des travaux"
                   value={params.imprevus_pct_travaux}
-                  onChange={(e) => setParams((p) => ({ ...p, imprevus_pct_travaux: Math.max(0, Number(e.target.value) || 0) }))} />
+                  onChange={(e) => {
+                  const v = Math.max(0, Number(e.target.value) || 0)
+                  setParams((p) => ({ ...p, imprevus_pct_travaux: v }))
+                  memoriser('parametres', v)
+                }} />
               </label>
 
               <label style={{
@@ -346,7 +387,11 @@ export default function RevendeurBloc({ analyse }) {
                 <input type="number" min="0" step="50" inputMode="numeric" style={champ}
                   aria-label="Marge visée, en euros"
                   value={params.marge_voulue_eur}
-                  onChange={(e) => setParams((p) => ({ ...p, marge_voulue_eur: Math.max(0, Number(e.target.value) || 0) }))} />
+                  onChange={(e) => {
+                  const v = Math.max(0, Number(e.target.value) || 0)
+                  setParams((p) => ({ ...p, marge_voulue_eur: v }))
+                  memoriser('parametres', v)
+                }} />
               </label>
 
               <label style={{
@@ -359,7 +404,11 @@ export default function RevendeurBloc({ analyse }) {
                 <input type="number" min="0" max="40" step="1" inputMode="numeric" style={champ}
                   aria-label="Marge de négociation de l'acheteur final, en pourcentage"
                   value={params.marge_negociation_pct}
-                  onChange={(e) => setParams((p) => ({ ...p, marge_negociation_pct: Math.max(0, Number(e.target.value) || 0) }))} />
+                  onChange={(e) => {
+                  const v = Math.max(0, Number(e.target.value) || 0)
+                  setParams((p) => ({ ...p, marge_negociation_pct: v }))
+                  memoriser('parametres', v)
+                }} />
               </label>
 
               {achat?.incomplet && (
@@ -376,7 +425,7 @@ export default function RevendeurBloc({ analyse }) {
             <p style={etiquette}>Crit'Air et zone à faibles émissions</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8, flexWrap: 'wrap' }}>
               <span className="mono num" style={{ fontSize: 14 }}>{libelleCritair(classe)}</span>
-              <select value={villeRevente} onChange={(e) => setVilleRevente(e.target.value)}
+              <select value={villeRevente} onChange={(e) => { setVilleRevente(e.target.value); memoriser('ville_revente', e.target.value) }}
                 aria-label="Ville où vous comptez revendre"
                 style={{ ...champ, width: 'auto', textAlign: 'left' }}>
                 <option value="">Ville de revente…</option>
@@ -401,6 +450,90 @@ export default function RevendeurBloc({ analyse }) {
               avoir changé depuis, à confirmer auprès de la métropole.
             </p>
           </div>
+
+          {/* ── La recherche à sauvegarder ───────────────────────────────────
+              Le prix d'achat maximum devient un plafond de recherche : c'est
+              ce qui transforme une analyse en méthode. Réservé au Pass, comme
+              le reste du détail. */}
+          {!masque && achat && recherche && (
+            <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid var(--rule)' }}>
+              <p style={etiquette}>Recherche à sauvegarder sur Leboncoin</p>
+              <div style={{ marginTop: 8 }}>
+                {recherche.filtres.map((f) => (
+                  <div key={f.champ} style={{
+                    display: 'flex', justifyContent: 'space-between', gap: 12,
+                    padding: '6px 0', borderBottom: '1px solid var(--rule)',
+                  }}>
+                    <span className="mono c-graphite" style={{ fontSize: 11, letterSpacing: '.04em', textTransform: 'uppercase' }}>
+                      {f.champ}
+                    </span>
+                    <span className="mono num" style={{ fontSize: 13, textAlign: 'right' }}>{f.valeur}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="mono c-graphite" style={{ fontSize: 10, lineHeight: 1.6, marginTop: 8 }}>
+                {recherche.note}
+              </p>
+              <div style={{ display: 'flex', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
+                <button type="button" className="btn-ghost" style={{ maxWidth: 240 }}
+                  onClick={() => {
+                    const texte = recherche.filtres.map((f) => `${f.champ} : ${f.valeur}`).join('\n')
+                    navigator.clipboard?.writeText(texte)
+                      .then(() => { setCopieFiltres(true); setTimeout(() => setCopieFiltres(false), 3000) })
+                      .catch(() => {})
+                  }}>
+                  {copieFiltres ? 'Copié' : 'Copier les filtres'}
+                </button>
+                {recherche.url && (
+                  <a className="btn-ghost" style={{ maxWidth: 240 }} href={recherche.url}
+                    target="_blank" rel="noopener noreferrer nofollow">
+                    Ouvrir la recherche
+                  </a>
+                )}
+              </div>
+              {!achat.possible && (
+                <p className="mono" style={{ fontSize: 11, lineHeight: 1.7, marginTop: 8, color: 'var(--ambre)' }}>
+                  À ces conditions le plafond tombe à {euros(recherche.prix_max)} : autant dire que
+                  ce modèle, dans cet état, n'est pas une cible. Corrigez un coût ou votre marge
+                  pour voir ce qu'il faudrait.
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* ── Le carnet de cibles ──────────────────────────────────────────
+              Un segment où l'utilisateur a assez de relevés devient une
+              CIBLE : un modèle qu'il peut chercher activement. Le carnet est
+              privé, réservé au Pass, et ne contient aucune annonce. */}
+          {!masque && nbRetenus >= 6 && (
+            <div style={{ marginTop: 12 }}>
+              <button type="button" className="btn-ghost" style={{ maxWidth: 300 }}
+                disabled={carnet === 'en_cours' || carnet === 'fait'}
+                onClick={() => {
+                  setCarnet('en_cours')
+                  revendeurCibleMaj(analysisId)
+                    .then((r) => setCarnet(r?.enregistre ? 'fait' : 'refus'))
+                    .catch(() => setCarnet('refus'))
+                }}>
+                {carnet === 'fait' ? 'Ajouté à mes cibles'
+                  : carnet === 'en_cours' ? 'Enregistrement…'
+                  : carnet === 'refus' ? 'Non enregistré'
+                  : 'Ajouter ce modèle à mes cibles'}
+              </button>
+              {carnet === 'fait' && (
+                <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.7, marginTop: 8 }}>
+                  Retrouvez-le sur <Link to="/cibles">Mes cibles</Link>, avec la marge estimée des
+                  autres modèles où vous avez assez de relevés.
+                </p>
+              )}
+              {carnet === 'refus' && (
+                <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.7, marginTop: 8 }}>
+                  Enregistrement impossible : les cibles sont une fonction du Pass achat, et
+                  demandent d'être connecté.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* ── Message vendeur ── */}
           {!masque && messageVendeur && (

@@ -432,7 +432,7 @@ export type Fourchette = {
   region: string | null;
 };
 
-type Histo = Map<number, number>;
+export type Histo = Map<number, number>;
 
 function histogramme(lignes: LigneAgregat[], prixBruts: number[]): { histo: Histo; total: number } {
   const histo: Histo = new Map();
@@ -451,8 +451,12 @@ function histogramme(lignes: LigneAgregat[], prixBruts: number[]): { histo: Hist
   return { histo, total };
 }
 
-/** Quantile lu sur un histogramme de tranches (point médian de la tranche). */
-function quantileHisto(histo: Histo, total: number, q: number): number {
+/** Quantile lu sur un histogramme de tranches (point médian de la tranche).
+ *
+ *  ⚠️ EXPORTÉE, et c est voulu : le mode « Mes cibles » (sprint 19.1) lit des
+ *  quantiles sur l histogramme PRIVÉ d un utilisateur. En écrire une seconde
+ *  implémentation ferait diverger deux chiffres qui doivent être le même. */
+export function quantileHisto(histo: Histo, total: number, q: number): number {
   const tranches = [...histo.entries()].sort((a, b) => a[0] - b[0]);
   const cible = q * (total - 1) + 1;
   let cumul = 0;
