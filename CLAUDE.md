@@ -1916,6 +1916,90 @@ Dump prod hors dépôt, migration `20261119120000` appliquée, `score` déployé
 (deux fois : la seconde après la correction « aucune marge »). **`sprint19-revendeur`
 n'est pas mergée** — le bloc n'est donc en ligne que côté fonction, pas côté site.
 
+## Sprint 19.1 — Alertes rentables (nov. 2026)
+
+Réservé au Pass, vérifié SERVEUR dans les deux RPC et dans la fonction edge.
+**Coût IA : nul** — rien ne touche le chemin de notation.
+
+### La recherche à sauvegarder
+Le prix d'achat maximum devient un plafond de recherche Leboncoin : modèle,
+carburant, années ± 2, kilométrage, prix maximum.
+- ⚠️ **LE PLAFOND EST CELUI D'UN EXEMPLAIRE SANS DÉFAUT CONNU.** Première
+  version : il reprenait le prix d'achat maximum de l'annonce ouverte, travaux
+  compris — un embrayage et une courroie le faisaient tomber à **300 €**, et le
+  revendeur aurait sauvegardé une recherche calibrée sur une épave. Une
+  recherche porte sur un MODÈLE, pas sur la voiture qu'on regarde. (Vu sur la
+  capture : 300 € devenus 1 700 €.)
+- **Arrondi à la centaine SUPÉRIEURE**, à l'inverse de l'offre d'ouverture
+  (arrondie vers le bas). Ce n'est pas une incohérence : un plafond arrondi
+  vers le bas cacherait une annonce qui se négocie de cinquante euros, une
+  offre arrondie vers le haut proposerait plus que le calcul ne permet. Les
+  deux arrondis vont dans le sens de l'utilisateur.
+- ⚠️ **LE LIEN NE PORTE QUE LA RECHERCHE TEXTE.** Nous ne pouvons pas vérifier
+  le nom des paramètres d'URL de Leboncoin sans l'interroger, ce que nous ne
+  faisons jamais. **Un lien qui appliquerait un mauvais filtre de prix serait
+  PIRE que pas de lien** : il écarterait en silence les annonces qui comptent,
+  et l'utilisateur nous croirait. Les filtres sont donnés en clair, à régler
+  sur place, et le test interdit `price`, `mileage`, `regdate` et `fuel` dans
+  l'URL.
+
+### Profil revendeur mémorisé
+Région, puissance fiscale, ville de revente, marge visée, imprévus. Sans
+compte : le navigateur. Avec compte : `preferences_revendeur`, d'un appareil à
+l'autre. Sur un partage depuis l'appli, les trois chiffres et le message
+vendeur sortent **sans question**.
+- ⚠️ `preferences_revendeur_ecrire` est **DROP puis CREATE** : une surcharge
+  aurait laissé résoluble l'appel à deux arguments, donc une écriture sans
+  ville de revente, en silence. Même raisonnement qu'au sprint 12 pour
+  `agreger_marche` et au sprint 15 pour `submit_lead_pro`.
+
+### « Mes cibles » (`/cibles`)
+Carnet **privé** par compte : pour chaque segment, un **histogramme de prix**
+(tranches de 250 €), la somme et le compte des années et des kilométrages.
+Jamais une annonce, jamais une URL, jamais un lien vers une analyse.
+- ⚠️ **SANS RAPPORT AVEC `marche_agregats`**, qui est le relevé COLLECTIF et
+  sans attribution. Les mélanger reviendrait à attribuer le relevé public à des
+  personnes.
+- ⚠️ **L'appelant ne fournit QU'UN IDENTIFIANT d'analyse** : le segment et les
+  prix sont relus dans `result_json`, écrit par le serveur. Le client ne décide
+  pas dans quel segment ses prix atterrissent — règle du sprint 9, valable
+  aussi pour un carnet privé : un segment faux rend le conseil faux.
+- ⚠️ **LES QUANTILES RESTENT L'UNIQUE IMPLÉMENTATION DU PROJET.**
+  `quantileHisto` est exportée de `_shared/marche.ts` ; la base rend
+  l'histogramme **replié**, la fonction edge `revendeur-cibles` calcule. Un
+  quantile en SQL ferait diverger deux chiffres qui doivent être le même.
+- **Marge estimée** = revente réaliste − coûts fixes − P25 observé : ce qui
+  reste en achetant au quart le moins cher, AVANT la marge visée. C'est le
+  critère de tri. Un modèle qui ne paie pas reste **affiché**, en bas : le
+  savoir évite d'y passer du temps.
+- Aucun coût de réparation n'entre dans une cible : elle décrit un véhicule
+  qu'on n'a pas encore vu.
+
+### ⚠️ Deux défauts trouvés par une épreuve de COMPORTEMENT
+`tests/sql/essai-cibles.sql` fabrique un utilisateur, un Pass et deux analyses
+en transaction annulée, puis appelle les RPC comme le ferait le navigateur.
+Dès sa première exécution :
+- **`RETURNING` voit la ligne APRÈS l'insertion** : `c.effectif + v_n` comptait
+  le lot **deux fois** (8 relevés annoncés pour 4 versés). Le stockage était
+  juste, le nombre montré à l'utilisateur ne l'était pas.
+- **Une médiane ne se fusionne pas.** On stockait la médiane du LOT, et chaque
+  versement écrasait la précédente : le carnet décrivait le dernier relevé, pas
+  l'ensemble. Remplacée par **somme + compte**, dont on rend la **moyenne** —
+  exactement calculable d'un lot à l'autre. Et le mot « médiane » a disparu de
+  l'écran : l'y laisser aurait été le mensonge qu'on venait de retirer du
+  schéma.
+- Les assertions de `essai-migration-annulee.mjs` portent sur la **forme** du
+  schéma ; celles-ci portent sur le **comportement**. Les deux sont nécessaires,
+  aucune ne remplace l'autre. `scripts/essai-local.sh` enchaîne désormais tout
+  `tests/sql/*.sql`.
+
+### Divers
+- Politique de confidentialité : section **6 decies**.
+- ⚠️ Rappel Playwright, rencontré une fois de plus : **la route enregistrée en
+  dernier gagne**. Le fourre-tout `functions/v1/**` posé après la route précise
+  l'interceptait, et `/cibles` affichait « Chargement impossible ».
+- Captures 390 px : `captures-sprint19/cibles-*.png`.
+
 ## Marques Couvertes
 
 **Lancement : 6-8 marques prioritaires** (80% du volume VO Toulouse)

@@ -2984,6 +2984,15 @@ serve(async (req: Request) => {
         }));
 
       revendeur = {
+        // Le segment, tel que le SERVEUR l a établi. C est lui que lit
+        // `revendeur_cible_maj` pour verser ces prix dans le carnet privé du
+        // revendeur : l appelant ne fournit qu un identifiant d analyse, il ne
+        // choisit pas dans quel segment ses prix atterrissent.
+        segment: {
+          marque: marqueCanonique(vehiculePublic.marque ?? ""),
+          modele: modeleCible,
+          energie: vRevendeur.energie,
+        },
         comparables: { retenus: comps.retenus.length, recus: comps.recus, ecartes: comps.ecartes.slice(0, 20) },
         // Les comparables RETENUS sont renvoyés pour que le navigateur puisse
         // recalculer le prix de revente quand l'utilisateur change un

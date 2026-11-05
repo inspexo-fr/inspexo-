@@ -46,3 +46,22 @@ else
   exit 1
 fi
 rm -f "$SQL" "$SQL.out"
+
+# ── Épreuves de COMPORTEMENT, en transaction annulée ───────────────────────
+#
+# ⚠️ Les assertions ci-dessus portent sur la FORME du schéma (droits,
+# signatures, texte des fonctions). Celles-ci fabriquent des données et
+# appellent les RPC comme le ferait le navigateur. La première exécution de
+# tests/sql/essai-cibles.sql a trouvé deux vrais défauts : un effectif compté
+# deux fois au retour, et une médiane de lot qui écrasait la précédente à
+# chaque versement.
+for EPREUVE in tests/sql/*.sql; do
+  [ -e "$EPREUVE" ] || continue
+  if docker exec -i "$CONTENEUR" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f - < "$EPREUVE" > /tmp/epreuve.out 2>&1; then
+    grep -E "CONCLUANT" /tmp/epreuve.out | head -1
+  else
+    echo "✗ $EPREUVE EN ÉCHEC :"
+    grep -E "ERREUR|ERROR|ECHOUE" -A 10 /tmp/epreuve.out | head -20
+    exit 1
+  fi
+done

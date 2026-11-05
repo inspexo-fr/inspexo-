@@ -373,10 +373,36 @@ export async function preferencesRevendeurLire() {
   return data || {}
 }
 
-export async function preferencesRevendeurEcrire({ region = null, parametres = null } = {}) {
+export async function preferencesRevendeurEcrire(
+  { region = null, parametres = null, villeRevente = null } = {},
+) {
   const { error } = await supabase.rpc('preferences_revendeur_ecrire', {
     p_region: region,
     p_parametres: parametres,
+    p_ville_revente: villeRevente,
   })
   if (error) throw error
 }
+
+// SPRINT 19.1 — Carnet privé du revendeur (Pass).
+//
+// ⚠️ On n envoie QU UN IDENTIFIANT d analyse : le segment et les prix sont
+// relus côté serveur dans `result_json`. Le client ne choisit pas dans quel
+// segment ses prix atterrissent.
+export async function revendeurCibleMaj(analysisId) {
+  const { data, error } = await supabase.rpc('revendeur_cible_maj', { p_analysis_id: analysisId })
+  if (error) throw error
+  return data || {}
+}
+
+export async function revendeurCibleRetirer({ marque, modele, energie }) {
+  const { error } = await supabase.rpc('revendeur_cible_retirer', {
+    p_marque: marque, p_modele: modele, p_energie: energie,
+  })
+  if (error) throw error
+}
+
+/** Les cibles, marges estimées et recherches à sauvegarder. Les quantiles
+ *  sont calculés par la fonction edge, avec l unique implémentation du
+ *  projet. */
+export const revendeurCibles = () => callFunction('revendeur-cibles', {})

@@ -449,6 +449,53 @@ export default function PolitiqueConfidentialite() {
             </li>
           </ul>
 
+          <h2 className="legal-h2">6 decies. Mode revendeur : profil et cibles</h2>
+          <p className="legal-p">
+            Le mode revendeur, réservé au Pass achat, calcule trois chiffres à partir des annonces
+            comparables que <strong>vous</strong> avez relevées et de vos paramètres. Deux
+            informations sont conservées pour ne pas vous les redemander à chaque annonce.
+          </p>
+          <p className="legal-p">
+            Votre <strong>profil</strong> : la région et la puissance fiscale qui servent à
+            chiffrer la carte grise, la ville où vous comptez revendre (uniquement pour savoir si
+            sa zone à faibles émissions interdit le véhicule), votre marge visée et votre taux
+            d'imprévus. Sans compte, ces réglages restent dans votre navigateur et ne nous sont
+            jamais envoyés. Avec un compte, ils suivent votre compte d'un appareil à l'autre.
+          </p>
+          <p className="legal-p">
+            Vos <strong>cibles</strong> : pour chaque modèle sur lequel vous avez assez de relevés,
+            nous conservons un <strong>histogramme de prix</strong> — le nombre d'annonces par
+            tranche de 250 €, l'année et le kilométrage médians. Aucun titre d'annonce, aucune
+            adresse web, aucun lien vers une analyse : cet histogramme ne permet de retrouver
+            aucune annonce particulière.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>Finalité unique :</strong> vous montrer, d'une session à l'autre, les
+              modèles où vos relevés sont assez nombreux et la marge que vos paramètres y
+              laissent. Ces données ne servent à rien d'autre.
+            </li>
+            <li>
+              <strong>Elles ne rejoignent jamais le relevé de prix public</strong> décrit à la
+              section 4. Celui-ci est collectif et sans attribution ; votre carnet est privé
+              et attaché à votre compte. Les mélanger reviendrait à attribuer le relevé public à
+              des personnes.
+            </li>
+            <li>
+              <strong>Base légale :</strong> l'exécution du contrat (le Pass achat).
+            </li>
+            <li>
+              <strong>Conservation :</strong> tant que votre compte existe. Vous pouvez retirer
+              une cible depuis la page « Mes cibles », et demander la suppression de l'ensemble
+              à tout moment (section 7).
+            </li>
+            <li>
+              <strong>Aucune requête vers un site d'annonces.</strong> La recherche à sauvegarder
+              est composée par nos soins : nous vous donnons les filtres à régler, nous n'allons
+              pas les appliquer à votre place.
+            </li>
+          </ul>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">
