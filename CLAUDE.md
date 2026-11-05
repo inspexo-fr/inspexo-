@@ -2015,6 +2015,35 @@ les endpoints » n'est donc pas exécutable en l'état.
 - Pour voir l'état sans clé : `node scripts/webhooks-stripe-live.mjs --verifier`.
 
 
+### ⚠️ LE MUR BUDGÉTAIRE MENTAIT SUR CE QU'IL AVAIT FAIT (5 nov. 2026, second tour)
+Deux runs de vérification ont rapporté « 1/3 » puis « 2/3 analyse(s) **en
+erreur** » sur la stabilité de la Mercedes. Il n'y avait **aucune erreur** :
+c'était le mur budgétaire qui tronquait la phase, et l'éval étiquetait les
+passages non joués comme des échecs d'analyse.
+- **Cause** : `murAtteint` réserve le coût de la prochaine unité en divisant le
+  coût du run par le nombre d'unités jouées. Or **l'unité change de phase en
+  phase** : un CAS pendant la première, un PASSAGE pendant la stabilité — trois
+  fois moins cher. Le mur réservait donc un coût de cas avant chaque passage.
+  Mesuré : un run annoncé à **1,20 € arrêté à 1,024 €**, un run à **0,30 €
+  arrêté à 0,185 €**.
+- **Correctif** : `coutUnites` dans `scripts/budget.mjs` (module pur) — la
+  réserve se calcule sur la dépense de la PHASE, les deux murs continuent de
+  porter sur le coût TOTAL. Par défaut `coutUnites` vaut `coutRun` : aucun
+  appelant existant ne change de comportement. 20 contrôles hors ligne, dont
+  le cas réel de ce jour-là et la compatibilité.
+- **Et l'éval ne confond plus** : « INCOMPLET — N passage(s) NON joué(s) »
+  (avec le motif et les scores des passages joués) est distinct de « instable ».
+  Les deux font sortir en **1** : on ne déclare pas une stabilité qu'on n'a pas
+  fini de mesurer. ⚠️ Avant, le `.catch(() => null)` **avalait** aussi le motif
+  des vraies erreurs — corrigé : code HTTP, code d'erreur et message imprimés
+  par passage. Troisième fois que la sortie de l'éval coûte un run.
+- ⚠️ **Ce qui a été réellement mesuré sur la Mercedes** : 5 analyses complètes
+  dans la journée — **73, 71, 71** puis **73, 71**. Écart maximal **2 points**,
+  **toujours vert**. Le critère de stabilité (écart ≤ 5, verdict unique) est
+  donc tenu sur les cinq mesures ; c'est la comptabilité « 3 passages dans un
+  même run » qui n'a jamais abouti, faute de budget.
+
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |
