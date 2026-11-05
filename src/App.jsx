@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import React, { Suspense, lazy, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import CookieBanner from './components/CookieBanner'
 import { capterSource } from './lib/source'
 
@@ -37,6 +37,7 @@ const MentionsLegales = lazy(() => import('./pages/MentionsLegales'))
 const PolitiqueConfidentialite = lazy(() => import('./pages/PolitiqueConfidentialite'))
 const CGU = lazy(() => import('./pages/CGU'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const PartagePage = lazy(() => import('./pages/PartagePage'))
 
 // L'attente est volontairement muette : la page pré-rendue est déjà à l'écran
 // et le fragment est préchargé, donc ce repli ne dure que quelques images.
@@ -48,13 +49,57 @@ const Attente = <div style={{ minHeight: '100vh' }} aria-busy="true" />
 // même si l'utilisateur va ensuite analyser une annonce.
 capterSource()
 
+// SPRINT 18 — Réception d'un partage dans l'appli mobile.
+//
+// ⚠️ MONTÉ À L'INTÉRIEUR DU ROUTEUR, ET LA NAVIGATION PASSE PAR LUI.
+// Première version : `window.location.href = '/partage?u=…'`. Mesuré sur
+// l'émulateur — la WebView finissait sur `about:blank`. Le serveur local de
+// Capacitor sert des FICHIERS : il n'a pas le repli SPA de Vercel, donc
+// `/partage` n'existe pas sur le disque et la navigation meurt en silence.
+// Un `navigate()` de React Router ne touche jamais le serveur : il change
+// l'URL et rend le composant.
+//
+// L'import de Capacitor reste DYNAMIQUE et conditionné au natif : sur le web,
+// le paquet ne doit être ni chargé ni exécuté — il serait payé par chaque
+// visiteur pour une fonction qu'aucun navigateur n'utilise.
+function EcouteurPartage() {
+  const navigate = useNavigate()
+  useEffect(() => {
+    let poignee = null
+    let annule = false
+    import('@capacitor/core').then(({ Capacitor }) => {
+      if (annule || !Capacitor.isNativePlatform()) return undefined
+      return import('@capacitor/app').then(({ App: CapApp }) => {
+        poignee = CapApp.addListener('appUrlOpen', ({ url }) => {
+          try {
+            const u = new URL(url)
+            if (u.protocol === 'inspexo:' && (u.host === 'partage' || u.pathname.includes('partage'))) {
+              const cible = u.searchParams.get('url')
+              if (cible) navigate(`/partage?u=${encodeURIComponent(cible)}`)
+            }
+          } catch (_) { /* lien profond illisible : ignoré */ }
+        })
+      })
+    }).catch(() => { /* web : Capacitor absent, c'est le cas normal */ })
+    return () => {
+      annule = true
+      Promise.resolve(poignee).then((h) => h?.remove?.()).catch(() => {})
+    }
+  }, [navigate])
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <EcouteurPartage />
       <Suspense fallback={Attente}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/score" element={<ScorePage />} />
+          {/* Réception d'un partage depuis l'appli mobile. Inoffensive sur le
+              web : sans paramètre ?u=, la page renvoie vers /score. */}
+          <Route path="/partage" element={<PartagePage />} />
           <Route path="/pass" element={<PassPage />} />
           <Route path="/moteur" element={<MoteursIndexPage />} />
           <Route path="/moteur/:slug" element={<MoteurPage />} />

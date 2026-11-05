@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.6.0",
+    "@capgo/inappbrowser": "^8.6.14",
     "@stripe/react-stripe-js": "^5.6.1",
     "@stripe/stripe-js": "^8.11.0",
     "@supabase/supabase-js": "^2.99.3",
@@ -19,7 +22,7 @@
     "test": "react-scripts test",
     "eval": "node tests/api-clients.test.mjs && node tests/partenaires.test.mjs && node tests/independance-score.test.mjs && node tests/marche.test.mjs && node tests/purge-api.test.mjs && node tests/bareme.test.mjs && node tests/negociation.test.mjs && node tests/rappels-cache.test.mjs && node tests/entretien-declare.test.mjs && node tests/dedup-pannes.test.mjs && node tests/gravite-remede.test.mjs && node tests/lecture-ct.test.mjs && node tests/vin.test.mjs && node tests/identite.test.mjs && node tests/inspection.test.mjs && node tests/histovec.test.mjs && node tests/pannes-applicables.test.mjs && node tests/fonctions-redefinies.test.mjs && node tests/visio.test.mjs && node tests/affirmations.test.mjs && node tests/intervalle.test.mjs && node tests/atlas-source.test.mjs && node tests/alerting.test.mjs && node tests/takata-recherche.test.mjs && node tests/incoherences.test.mjs && node tests/apercus.test.mjs && node scripts/eval.mjs",
     "eject": "react-scripts eject",
-    "prebuild": "node scripts/photos-disponibles.mjs && node scripts/generer-segments-modeles.mjs",
+    "prebuild": "node scripts/photos-disponibles.mjs && node scripts/generer-segments-modeles.mjs && node scripts/generer-extracteur-mobile.mjs",
     "postbuild": "node scripts/prerendu.mjs",
     "eval:ct": "node tests/eval-ct/run.mjs"
   },
@@ -41,6 +44,9 @@
     ]
   },
   "devDependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/cli": "^8.6.0",
+    "@capacitor/ios": "^8.6.0",
     "@sparticuz/chromium": "^153.0.0",
     "playwright": "^1.64.1",
     "playwright-core": "^1.64.1"
