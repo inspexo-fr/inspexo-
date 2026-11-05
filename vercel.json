@@ -30,7 +30,7 @@
     {
       "source": "/takata",
       "destination": "/airbags-takata",
-      "permanent": true
+      "statusCode": 301
     }
   ]
 }

@@ -15,8 +15,6 @@
 // chaque rendu ajouterait un aller-retour réseau dans un chemin que les
 // robots d'aperçu coupent vite. La mise en page, les couleurs et le tampon
 // suivent la charte ; la fonte, non. C'est le compromis assumé.
-import { ImageResponse } from '@vercel/og'
-
 // ⚠️ PAS DE `runtime: 'edge'` ICI, ET C'EST UNE CORRECTION, PAS UN OUBLI.
 // Avec ce drapeau, le déploiement échoue : « The Edge Function "api/og-image"
 // is referencing unsupported modules: @vercel ». La chaîne de build de ce
@@ -38,6 +36,24 @@ const GRAPHITE = '#5B6270'
 const RULE = '#CFC9BC'
 const COULEUR = { vert: '#1E6B3A', orange: '#8F4D00', rouge: '#B3122E' }
 const TAMPON = { vert: 'FEU VERT', orange: 'PRUDENCE', rouge: 'SIGNAUX ROUGES' }
+
+// ⚠️ IMPORT DYNAMIQUE, ET LE SPÉCIFICATEUR PASSE PAR UNE VARIABLE.
+//
+// Deux échecs de déploiement successifs avant d'arriver ici :
+//  1. avec `runtime: 'edge'` → « The Edge Function is referencing unsupported
+//     modules: @vercel » ;
+//  2. en runtime Node avec un `import` statique → à l'exécution,
+//     « ERR_REQUIRE_ESM: require() of ES Module index.node.js not supported ».
+//
+// La cause est la même : la chaîne de build compile les fichiers de `api/`
+// d'ESM en CommonJS (« Compiling "og-image.js" from ESM to CommonJS »), et un
+// `require()` ne peut pas charger un module ESM. Node sait le faire avec
+// `import()`, qui reste disponible depuis CommonJS.
+//
+// Le spécificateur passe par une VARIABLE pour que le compilateur ne puisse
+// pas le résoudre statiquement et le réécrire en `require()` : c'est ce qui
+// garantit qu'un vrai import dynamique survit à la compilation.
+const PAQUET_OG = '@vercel/og'
 
 export default async function handler(req) {
   const { searchParams } = new URL(req.url)
@@ -66,6 +82,7 @@ export default async function handler(req) {
   const couleur = verdict ? (COULEUR[verdict] || ENCRE) : GRAPHITE
   const tampon = verdict ? TAMPON[verdict] : 'ANALYSE EN COURS'
 
+  const { ImageResponse } = await import(PAQUET_OG)
   const image = new ImageResponse(
     {
       type: 'div',
