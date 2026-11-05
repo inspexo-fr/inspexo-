@@ -16,6 +16,7 @@
 import { readFileSync, readdirSync, existsSync, writeFileSync, rmSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { coutProchainCas, murAtteint } from './budget.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const EVAL_DIR = join(ROOT, 'tests', 'eval')
@@ -366,7 +367,14 @@ async function runCase(name) {
   if (expected.revendeur_ordre) {
     const rv = r.revendeur
     const re = rv?.revente?.valeur, am = rv?.achat_max?.valeur, of = rv?.offre
-    if (re == null || am == null || of == null) {
+    // ⚠️ Une affaire qui NE PASSE PAS est un résultat valide, pas un trou :
+    // les coûts peuvent dépasser le prix de revente. Dans ce cas il n y a ni
+    // offre d ouverture ni message vendeur, et c est ce qu on exige.
+    if (rv?.achat_max && rv.achat_max.possible === false) {
+      if (of != null) failures.push(`revendeur : offre ${of} € alors qu il n y a aucune marge`)
+      if ((rv.message_vendeur || "") !== "") failures.push("revendeur : message vendeur alors qu il n y a aucune marge")
+      if (!(rv.achat_max.manque_eur > 0)) failures.push("revendeur : aucune marge mais le manque n est pas chiffré")
+    } else if (re == null || am == null || of == null) {
       failures.push(`revendeur_ordre : un des trois chiffres manque (revente ${re}, achat ${am}, offre ${of})`)
     } else {
       if (!(am <= re)) failures.push(`revendeur : achat max ${am} € > revente ${re} €`)
@@ -404,7 +412,7 @@ async function runCase(name) {
   // revendeur_message_doit_chiffrer : chaque ligne d'argument du message
   // vendeur porte un montant. Un argument sans chiffre annonce au vendeur
   // qu'on négocie sans savoir sur quoi.
-  if (expected.revendeur_message_doit_chiffrer) {
+  if (expected.revendeur_message_doit_chiffrer && r.revendeur?.achat_max?.possible !== false) {
     const msg = r.revendeur?.message_vendeur || ''
     const lignes = msg.split('\n').filter((l) => l.startsWith('- '))
     if (lignes.length < 1) failures.push('revendeur : message vendeur sans aucun argument chiffré')
@@ -429,12 +437,33 @@ async function runCase(name) {
 }
 
 // ---------- main ----------
+// Un nom seul : ce cas-là. Plusieurs noms (`--cas a,b,c`) : CES cas, DANS CET
+// ORDRE, en UN SEUL run.
+//
+// ⚠️ Pourquoi c'est important : le mur budgétaire (`--budget`) vit dans un
+// run. Jouer cinq cas par cinq invocations remettrait le compteur du run à
+// zéro cinq fois, et le mur ne protégerait plus de rien. L'ordre compte
+// aussi : on place d'abord ce qu'on ne veut surtout pas perdre si le budget
+// s'épuise.
 const only = process.argv.slice(2).find((a) => !a.startsWith('--'))
-const cases = readdirSync(EVAL_DIR, { withFileTypes: true })
+const LISTE = (() => {
+  const i = process.argv.indexOf('--cas')
+  if (i < 0) return null
+  return String(process.argv[i + 1] || '').split(',').map((s) => s.trim()).filter(Boolean)
+})()
+const tousLesCas = readdirSync(EVAL_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory())
   .map((d) => d.name)
-  .filter((n) => !only || n === only)
-  .sort()
+if (LISTE) {
+  const inconnus = LISTE.filter((n) => !tousLesCas.includes(n))
+  if (inconnus.length) {
+    console.error(`Cas inconnu(s) : ${inconnus.join(', ')}`)
+    process.exit(1)
+  }
+}
+const cases = LISTE
+  ? LISTE // l'ordre demandé, pas l'ordre alphabétique
+  : tousLesCas.filter((n) => !only || n === only).sort()
 
 // ---------------------------------------------------------------------------
 // Compteur de coût : chaque analyse renvoie son coût réel (cout_eur).
@@ -485,13 +514,21 @@ const ajouterCout = (eur) => {
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(coutSession * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
 }
 // Le run s'arrête au PREMIER des deux murs atteint : le budget annoncé pour
-// ce run, ou le plafond de session.
-const budgetDepasse = () =>
-  coutSession >= PLAFOND_EUR || (BUDGET_RUN_EUR != null && coutRun >= BUDGET_RUN_EUR)
+// ce run, ou le plafond de session. La décision est prise par le module PUR
+// `scripts/budget.mjs`, testé hors ligne — elle réserve le coût du PROCHAIN
+// cas, sans quoi le mur serait toujours franchi d'un cas (constaté le 5 nov. :
+// 0,447 € pour un run annoncé à 0,40 €).
+let casJoues = 0
+const coutProchain = () => coutProchainCas(coutRun, casJoues)
+const murDuRun = () => murAtteint({
+  coutRun, casJoues, coutSession, budgetRun: BUDGET_RUN_EUR, plafondSession: PLAFOND_EUR,
+})
+const budgetDepasse = () => murDuRun() !== null
 const motifArret = () =>
-  BUDGET_RUN_EUR != null && coutRun >= BUDGET_RUN_EUR
-    ? `budget annoncé de ce run atteint (${coutRun.toFixed(2)} € ≥ ${BUDGET_RUN_EUR.toFixed(2)} €)`
-    : `plafond de session atteint (${coutSession.toFixed(2)} € ≥ ${PLAFOND_EUR} €)`
+  murDuRun() === 'run'
+    ? `budget annoncé de ce run atteint (${coutRun.toFixed(3)} € dépensés, ` +
+      `${coutProchain().toFixed(3)} € à réserver pour le cas suivant, mur à ${BUDGET_RUN_EUR.toFixed(2)} €)`
+    : `plafond de session atteint (${coutSession.toFixed(2)} € + ${coutProchain().toFixed(3)} € > ${PLAFOND_EUR} €)`
 
 let failed = 0
 console.log(`Éval Inspexo — ${cases.length} cas contre ${URL_BASE}${MODELE_SECOURS ? ' — MODÈLE DE SECOURS forcé' : ''}\n`)
@@ -511,6 +548,7 @@ for (const name of STABILITE_SEULE ? [] : cases) {
     }
     try {
       const { failures, ms, verdict, score, id } = await runCase(name)
+      casJoues += 1
       passages.push({ verdict, score })
       if (failures.length === 0) {
         console.log(`  PASS (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})${id ? ` — /a/${id}` : ''}`)

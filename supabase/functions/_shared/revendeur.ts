@@ -206,7 +206,15 @@ export type LigneCout = {
 };
 
 export type PrixAchatMax = {
+  /** Le prix d'achat maximum, jamais négatif (affichage). */
   valeur: number;
+  /** Le résultat BRUT de la soustraction, qui peut être négatif. */
+  brut: number;
+  /** Faux quand les coûts dépassent le prix de revente : il n'existe aucun
+   *  prix d'achat permettant la marge visée. */
+  possible: boolean;
+  /** De combien on est court, quand ce n'est pas possible. */
+  manque_eur: number;
   revente_eur: number;
   lignes: LigneCout[];
   /** Vrai si un coût manque faute de donnée (région inconnue, par exemple). */
@@ -218,7 +226,15 @@ export type PrixAchatMax = {
  *
  *  ⚠️ Ce n'est pas un conseil d'achat : c'est le résultat d'une soustraction
  *  dont chaque terme est affiché et modifiable. Si l'utilisateur change sa
- *  marge visée, le chiffre change — c'est tout ce qu'il signifie. */
+ *  marge visée, le chiffre change — c'est tout ce qu'il signifie.
+ *
+ *  ⚠️ ET QUAND LES COÛTS DÉPASSENT LE PRIX DE REVENTE, ON NE REND PAS 0 €.
+ *  Premier jet : `Math.max(0, …)`, et la Clio II du jeu d'essai sortait
+ *  « prix d'achat maximum : 0 € », avec un message vendeur proposant « 0 € ».
+ *  Un zéro a l'air d'un chiffre ; ce cas n'en a pas. La bonne réponse est
+ *  « cette voiture ne laisse pas de marge à ces conditions » — et c'est une
+ *  réponse UTILE : savoir en deux minutes qu'une affaire ne passe pas, c'est
+ *  exactement ce qu'on demande à cet écran. */
 export function prixAchatMax(
   revente: number,
   travaux: readonly LigneCout[],
@@ -235,6 +251,9 @@ export function prixAchatMax(
 
   const totalTravaux = travaux.reduce((s, l) => s + (Number(l.montant_eur) || 0), 0);
 
+  // Contrôle technique : le VENDEUR doit en fournir un de moins de six mois
+  // (art. R323-22 du code de la route). Un contrôle encore valide mais plus
+  // ancien que six mois est donc bien un coût à prévoir pour revendre.
   if (opts.ct_a_refaire_eur != null && opts.ct_a_refaire_eur > 0) {
     lignes.push({ cle: "controle_technique", libelle: "Contrôle technique à refaire", montant_eur: opts.ct_a_refaire_eur, modifiable: true });
   }
@@ -263,8 +282,12 @@ export function prixAchatMax(
   lignes.push({ cle: "marge_voulue", libelle: "Marge visée", montant_eur: p.marge_voulue_eur, modifiable: true });
 
   const total = lignes.reduce((s, l) => s + (Number(l.montant_eur) || 0), 0);
+  const brut = Math.round(revente - total);
   return {
-    valeur: Math.max(0, Math.round(revente - total)),
+    valeur: Math.max(0, brut),
+    brut,
+    possible: brut > 0,
+    manque_eur: brut < 0 ? -brut : 0,
     revente_eur: revente,
     lignes,
     incomplet: manquants.length > 0,
@@ -274,10 +297,16 @@ export function prixAchatMax(
 
 /** OFFRE D'OUVERTURE : prix d'achat maximum moins le retrait, arrondie à la
  *  cinquantaine INFÉRIEURE. Arrondir vers le haut ferait proposer plus que le
- *  calcul ne permet. */
-export function offreOuverture(prixMax: number, p: ParametresRevendeur): number {
+ *  calcul ne permet.
+ *
+ *  ⚠️ `null` quand il n'y a pas de prix d'achat maximum positif : sans cela le
+ *  message vendeur proposait « 0 € » au vendeur, ce qui n'est pas une offre
+ *  basse mais une absurdité. */
+export function offreOuverture(prixMax: number, p: ParametresRevendeur): number | null {
+  if (!(prixMax > 0)) return null;
   const brut = prixMax * (1 - p.offre_retrait_pct / 100);
-  return Math.max(0, Math.floor(brut / 50) * 50);
+  const arrondie = Math.floor(brut / 50) * 50;
+  return arrondie > 0 ? arrondie : null;
 }
 
 // ── Carte grise ────────────────────────────────────────────────────────────

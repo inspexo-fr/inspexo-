@@ -15,6 +15,7 @@
 import { readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { murAtteint } from './budget.mjs'
 import { FAMILLES_MOTEUR } from '../src/data/famillesMoteur.js'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -42,10 +43,14 @@ const UNE_FAMILLE = arg('--famille')
 const COUT_FICHIER = join(ROOT, '.couverture-cout.json')
 if (process.argv.includes('--reset-cout') && existsSync(COUT_FICHIER)) rmSync(COUT_FICHIER)
 
+// Estimation prudente du coût d une fiche avant d en avoir mesuré une.
+const COUT_FICHE_ESTIME_EUR = 0.15
+let fichesFaites = 0
 let cumul = existsSync(COUT_FICHIER) ? (JSON.parse(readFileSync(COUT_FICHIER, 'utf8')).total_eur ?? 0) : 0
 const depart = cumul
 const ajouterCout = (eur) => {
   if (typeof eur !== 'number' || !Number.isFinite(eur)) return
+  fichesFaites += 1
   cumul += eur
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(cumul * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
 }
@@ -109,7 +114,14 @@ for (const f of familles) {
     console.log(`  ·  ${f.marque} ${f.famille} — déjà ${e.pannes} pannes, ignorée`)
     continue
   }
-  if (cumul >= PLAFOND) {
+  // ⚠️ Le mur RÉSERVE le coût de la fiche suivante. Sans cela il est toujours
+  // franchi d une fiche — même défaut que l éval, constaté le 5 nov. 2026
+  // (0,447 € pour un run annoncé à 0,40 €). Décision prise par le module
+  // PUR scripts/budget.mjs, testé hors ligne.
+  if (murAtteint({
+    coutRun: cumul, casJoues: fichesFaites, coutSession: cumul,
+    budgetRun: PLAFOND, plafondSession: Infinity, estime: COUT_FICHE_ESTIME_EUR,
+  })) {
     arrete = f
     break
   }

@@ -18,6 +18,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { coutProchainCas, murAtteint } from './budget.mjs'
 
 const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..')
 const COUT_FICHIER = join(RACINE, '.atlas-cout.json')
@@ -58,15 +59,28 @@ for (const l of readFileSync(join(RACINE, '.env.local'), 'utf8').split('\n')) {
 }
 let cout = existsSync(COUT_FICHIER) ? (JSON.parse(readFileSync(COUT_FICHIER, 'utf8')).total_eur ?? 0) : 0
 const coutDepart = cout
-// Le PREMIER des deux murs atteint arrête le run : le budget annoncé
-// pour ce run, ou le plafond cumulé.
-const budgetAtteint = () =>
-  cout >= PLAFOND_EUR || (BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR)
+// Estimation prudente du coût d une unité avant d en avoir mesuré une.
+const COUT_UNITE_ESTIME_EUR = 0.1
+// Le PREMIER des deux murs atteint arrête le run : le budget annoncé pour ce
+// run, ou le plafond cumulé. La décision vient du module PUR
+// `scripts/budget.mjs`, testé hors ligne.
+//
+// ⚠️ Le mur RÉSERVE le coût de l'unité suivante. Sans cela il est toujours
+// franchi d'une unité : constaté le 5 nov. 2026, un run d'éval annoncé à
+// 0,40 € a coûté 0,447 €. La règle d'Utku ne souffre pas d'exception.
+let unitesFaites = 0
+const coutDuRun = () => cout - coutDepart
+const murDuRun = () => murAtteint({
+  coutRun: coutDuRun(), casJoues: unitesFaites, coutSession: cout,
+  budgetRun: BUDGET_RUN_EUR, plafondSession: PLAFOND_EUR, estime: COUT_UNITE_ESTIME_EUR,
+})
+const budgetAtteint = () => murDuRun() !== null
 const motifArret = () =>
-  BUDGET_RUN_EUR != null && cout - coutDepart >= BUDGET_RUN_EUR
-    ? `budget annoncé atteint (${(cout - coutDepart).toFixed(2)} € ≥ ${BUDGET_RUN_EUR.toFixed(2)} €)`
-    : `plafond cumulé atteint (${cout.toFixed(2)} € ≥ ${PLAFOND_EUR} €)`
-
+  murDuRun() === 'run'
+    ? `budget annoncé atteint (${coutDuRun().toFixed(3)} € dépensés, ` +
+      `${coutProchainCas(coutDuRun(), unitesFaites, COUT_UNITE_ESTIME_EUR).toFixed(3)} € à réserver, ` +
+      `mur à ${BUDGET_RUN_EUR.toFixed(2)} €)`
+    : `plafond cumulé atteint (${cout.toFixed(2)} € + réserve > ${PLAFOND_EUR} €)`
 let rattrapees = 0
 for (const { r, urls } of cibles) {
   if (budgetAtteint()) { console.log(`\n⏸ Plafond atteint (${cout.toFixed(2)} €).`); break }
@@ -93,6 +107,7 @@ for (const { r, urls } of cibles) {
     if (!res.ok) { console.log(`ÉCHEC ${res.status}`); continue }
   } catch (e) { console.log('ÉCHEC réseau'); continue }
 
+  unitesFaites += 1
   cout += d.cout_eur ?? 0
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(cout * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
 

@@ -42,7 +42,22 @@ export default function RevendeurBloc({ analyse }) {
   const [cv, setCv] = useState(() => localStorage.getItem(CLE_CV) || '')
   const [villeRevente, setVilleRevente] = useState('')
   const [params, setParams] = useState(bloc?.parametres || PARAMETRES_DEFAUT)
-  const [lignes, setLignes] = useState(() => (bloc?.achat_max?.lignes || []).filter((l) => l.cle !== 'marge_voulue'))
+  // ⚠️ NE GARDER QUE LES VRAIS TRAVAUX. Les lignes « imprévus », « carte
+  // grise » et « marge visée » sont CALCULÉES par prixAchatMax à partir des
+  // travaux et des paramètres : les lui repasser en entrée les compterait
+  // DEUX FOIS. Défaut vu sur la capture — la Clio annonçait 2 017 € de manque
+  // là où le serveur en calculait 1 391 €, soit exactement un second forfait
+  // d'imprévus (626 €).
+  const CALCULEES = new Set(['imprevus', 'carte_grise', 'marge_voulue', 'controle_technique'])
+  const [lignes, setLignes] = useState(
+    () => (bloc?.achat_max?.lignes || []).filter((l) => !CALCULEES.has(l.cle)),
+  )
+  // Le contrôle technique vient du serveur (coût SOURCÉ, et seulement si le
+  // dernier a plus de six mois : l'art. R323-22 impose au vendeur d'en
+  // fournir un de moins de six mois). Il reste modifiable à part.
+  const [ctEur, setCtEur] = useState(
+    () => (bloc?.achat_max?.lignes || []).find((l) => l.cle === 'controle_technique')?.montant_eur ?? 0,
+  )
   const [copie, setCopie] = useState(false)
 
   useEffect(() => {
@@ -104,11 +119,12 @@ export default function RevendeurBloc({ analyse }) {
     if (masque || !revente) return null
     const age = analyse?.vehicule?.annee ? new Date().getFullYear() - analyse.vehicule.annee : null
     return prixAchatMax(revente.valeur, lignes, params, {
+      ct_a_refaire_eur: ctEur > 0 ? ctEur : null,
       carte_grise_eur: carte.connu ? carte.montant_eur : null,
       region_connue: carte.connu,
       age_vehicule_ans: age,
     })
-  }, [masque, revente, lignes, params, carte, analyse])
+  }, [masque, revente, lignes, params, carte, analyse, ctEur])
 
   const offre = achat ? offreOuverture(achat.valeur, params) : null
   const messageVendeur = useMemo(() => {
@@ -181,16 +197,27 @@ export default function RevendeurBloc({ analyse }) {
             <div>
               <p style={etiquette}>Prix d'achat maximum pour ta marge visée</p>
               <p style={chiffre} data-testid="revendeur-achat-max">
-                {masque ? '—' : achat ? euros(achat.valeur) : '—'}
+                {masque ? <span style={{ fontSize: 15, fontWeight: 500 }}>réservé au Pass</span>
+                  : achat ? (achat.possible ? euros(achat.valeur) : 'aucune marge') : '—'}
               </p>
             </div>
             <div>
               <p style={etiquette}>Offre d'ouverture</p>
               <p style={chiffre} data-testid="revendeur-offre">
-                {masque ? '—' : offre != null ? euros(offre) : '—'}
+                {masque ? <span style={{ fontSize: 15, fontWeight: 500 }}>réservé au Pass</span>
+                  : offre != null ? euros(offre)
+                  : achat && !achat.possible ? 'rien à proposer' : '—'}
               </p>
             </div>
           </div>
+
+              {!masque && achat && !achat.possible && (
+                <p style={{ fontSize: 15, lineHeight: 1.6, marginTop: 10, color: 'var(--rouge)' }}>
+                  À ces conditions, cette voiture ne laisse aucune marge : les coûts dépassent le prix
+                  de revente réaliste de {euros(achat.manque_eur)}. Il n'existe pas de prix d'achat qui
+                  tienne votre marge visée — à moins de revoir un coût ou la marge ci-dessous.
+                </p>
+              )}
 
           <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.7, marginTop: 10 }}>
             {bloc.mention || MENTION_REVENDEUR}
@@ -250,6 +277,22 @@ export default function RevendeurBloc({ analyse }) {
                 </label>
               ))}
 
+              {/* Contrôle technique : compté quand le dernier a plus de six
+                  mois, parce que le VENDEUR doit en fournir un de moins de six
+                  mois (art. R323-22 du code de la route). Coût SOURCÉ, sinon
+                  aucune ligne — jamais de montant inventé. */}
+              {ctEur > 0 && (
+                <label style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  gap: 12, padding: '7px 0', borderBottom: '1px solid var(--rule)',
+                }}>
+                  <span style={{ fontSize: 14, lineHeight: 1.5 }}>Contrôle technique à refaire</span>
+                  <input type="number" min="0" step="10" inputMode="numeric" style={champ}
+                    aria-label="Coût du contrôle technique" value={ctEur}
+                    onChange={(e) => setCtEur(Math.max(0, Number(e.target.value) || 0))} />
+                </label>
+              )}
+
               {/* Carte grise : AUCUN chiffre sans région. Un tarif national
                   moyen fausserait le prix d'achat maximum sans que personne ne
                   sache d'où vient l'erreur. */}
@@ -284,8 +327,10 @@ export default function RevendeurBloc({ analyse }) {
                 gap: 12, padding: '7px 0', borderBottom: '1px solid var(--rule)',
               }}>
                 <span style={{ fontSize: 14, lineHeight: 1.5 }}>
-                  Imprévus ({params.imprevus_pct_travaux} % des travaux
-                  {(achat?.lignes || []).some((l) => l.cle === 'imprevus') ? ', forfait inclus' : ''})
+                  Imprévus — part des travaux (%)
+                  {(achat?.lignes || []).find((l) => l.cle === 'imprevus')
+                    ? ` → ${euros((achat.lignes.find((l) => l.cle === 'imprevus') || {}).montant_eur)}`
+                    : ''}
                 </span>
                 <input type="number" min="0" max="100" step="5" inputMode="numeric" style={champ}
                   aria-label="Imprévus, en pourcentage des travaux"

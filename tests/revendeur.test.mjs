@@ -129,7 +129,11 @@ eq(prixAchatMax(500, [{ cle: 'x', libelle: 'X', montant_eur: 5000, modifiable: t
 // ── L'offre d'ouverture ────────────────────────────────────────────────────
 eq(offreOuverture(2000, P), 1700, 'offre = −15 %, arrondie à la cinquantaine')
 eq(offreOuverture(2037, P), 1700, 'arrondie vers le BAS : proposer plus que le calcul serait faux')
-eq(offreOuverture(0, P), 0, 'un prix nul donne une offre nulle')
+// ⚠️ Cette ligne exigeait `offreOuverture(0, P) === 0`. Elle figeait donc le
+// défaut : un prix d'achat maximum nul produisait une « offre » de 0 €, que le
+// message vendeur allait proposer telle quelle. Zéro n'est pas une offre.
+eq(offreOuverture(0, P), null, 'un prix d’achat nul ne donne AUCUNE offre, pas une offre de 0 €')
+eq(offreOuverture(-500, P), null, 'un prix d’achat négatif non plus')
 ok(offreOuverture(10000, P) % 50 === 0, 'toujours un multiple de 50')
 
 // ── Crit'Air ───────────────────────────────────────────────────────────────
@@ -258,6 +262,50 @@ eq(libelleCritair('non_classe'), 'non classé', 'le libellé d’un non classé 
 // maison de `messageVendeurRevendeur` — pas par toLocaleString, dont le
 // résultat varierait avec la version d ICU entre Deno et le navigateur.
 const NB = '\u00a0'
+
+// ── Une affaire qui ne passe pas DOIT se dire ──────────────────────────────
+//
+// ⚠️ DÉFAUT TROUVÉ EN LISANT LA SORTIE RÉELLE DU JEU D'ESSAI. La Clio II de
+// l'éval : revente 2 284 €, embrayage 1 700 €, distribution 800 €, CT 150 €,
+// imprévus 525 €, marge 500 € — soit 3 675 € de coûts. Le premier jet rendait
+// « prix d'achat maximum : 0 € » et un message vendeur proposant « 0 € ».
+//
+// Un zéro a l'air d'un chiffre. Ce cas n'en a pas : il n'existe AUCUN prix
+// d'achat permettant la marge visée. Et c'est une réponse utile — savoir en
+// deux minutes qu'une affaire ne passe pas, c'est exactement ce qu'on demande
+// à cet écran.
+{
+  const P = PARAMETRES_DEFAUT
+  const chers = [
+    { cle: 'e', libelle: 'Embrayage', montant_eur: 1700, modifiable: true },
+    { cle: 'd', libelle: 'Distribution', montant_eur: 800, modifiable: true },
+  ]
+  const a = prixAchatMax(2284, chers, P, {
+    ct_a_refaire_eur: 150, carte_grise_eur: null, region_connue: false, age_vehicule_ans: 22,
+  })
+  eq(a.possible, false, 'coûts > revente : le calcul dit que ce n’est PAS possible')
+  eq(a.brut, -1391, 'et le brut reste négatif, il n’est pas écrasé')
+  eq(a.manque_eur, 1391, 'et il dit de combien on est court')
+  eq(a.valeur, 0, 'la valeur d’affichage reste bornée à 0, mais elle n’est plus le message')
+  eq(offreOuverture(a.valeur, P), null, 'aucune offre d’ouverture : il n’y a rien à proposer')
+  eq(messageVendeurRevendeur([{ poste: 'Embrayage', montant_eur: 1700 }], offreOuverture(a.valeur, P), 2450), '',
+    'et AUCUN message vendeur — on ne propose pas « 0 € » à quelqu’un')
+
+  // Le cas qui passe, pour vérifier que le garde-fou ne mord pas à tort.
+  const b = prixAchatMax(9000, [{ cle: 'd', libelle: 'Distribution', montant_eur: 800, modifiable: true }], P, {
+    carte_grise_eur: 311, region_connue: true, age_vehicule_ans: 8,
+  })
+  eq(b.possible, true, 'une affaire qui passe est bien marquée possible')
+  eq(b.manque_eur, 0, 'et ne manque de rien')
+  ok(offreOuverture(b.valeur, P) > 0, 'et porte une offre d’ouverture')
+
+  // ⚠️ Juste au-dessus de zéro : 1 € de marge est une affaire qui passe, mais
+  // une offre d'ouverture arrondie à la cinquantaine INFÉRIEURE y tombe à 0.
+  // On ne propose pas 0 € — c'est le même défaut, un cran plus loin.
+  const c = prixAchatMax(1001, [], { ...P, marge_voulue_eur: 1000, imprevus_vehicule_ancien_eur: 0 }, {})
+  eq(c.possible, true, '1 € de marge : possible')
+  eq(offreOuverture(c.valeur, P), null, 'mais l’offre arrondie tomberait à 0 € : aucune offre')
+}
 
 // ── Message au vendeur ─────────────────────────────────────────────────────
 {
