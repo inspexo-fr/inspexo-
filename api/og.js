@@ -19,6 +19,32 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;')
 }
 
+const IMAGE_STATIQUE = 'https://www.inspexo.io/og-image.png'
+
+/** L'aperçu propre à ce dossier existe-t-il DÉJÀ dans le bucket public ?
+ *
+ *  ⚠️ On vérifie le fichier, on ne le suppose pas. La version précédente
+ *  faisait pointer `og:image` sur une génération à la volée : elle rendait
+ *  500, et tous les aperçus de partage du site ont été cassés jusqu'à ce que
+ *  je m'en aperçoive. Une balise ne doit désigner qu'une URL dont on vient de
+ *  constater qu'elle répond.
+ *
+ *  Le délai est court (2,5 s) et l'échec retombe sur l'image statique : un
+ *  robot d'aperçu n'attend pas, et mieux vaut l'image générique que pas
+ *  d'image du tout. */
+async function imageDuDossier(id) {
+  if (!SUPABASE_URL) return IMAGE_STATIQUE
+  const url = `${SUPABASE_URL}/storage/v1/object/public/apercus/${id}.png`
+  try {
+    const ctrl = new AbortController()
+    const t = setTimeout(() => ctrl.abort(), 2500)
+    const res = await fetch(url, { method: 'HEAD', signal: ctrl.signal })
+    clearTimeout(t)
+    if (res.ok && (res.headers.get('content-type') || '').includes('image/png')) return url
+  } catch (_) { /* repli */ }
+  return IMAGE_STATIQUE
+}
+
 export default async function handler(req, res) {
   const id = req.query.id
   if (!id || !UUID_RE.test(id)) {
@@ -57,6 +83,9 @@ export default async function handler(req, res) {
     }
   }
 
+  // Aperçu propre au dossier s'il existe DÉJÀ, image statique sinon.
+  const image = await imageDuDossier(id)
+
   const html = `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -67,7 +96,7 @@ export default async function handler(req, res) {
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${escapeHtml(url)}">
-<meta property="og:image" content="https://www.inspexo.io/og-image.png">
+<meta property="og:image" content="${image}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${escapeHtml(title)}">
