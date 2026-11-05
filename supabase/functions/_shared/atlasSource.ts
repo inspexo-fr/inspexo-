@@ -56,3 +56,106 @@ export function pageParleDeLEntree(textePage: string, marqueurs: string[]): bool
   for (const m of marqueurs) if (t.includes(m)) touches += 1;
   return touches >= 2;
 }
+
+// ---------------------------------------------------------------------------
+// SPRINT 21 — LE RANG D'UNE SOURCE SE DÉDUIT DE SON HÔTE, PAS D'UNE ÉTIQUETTE
+// QUE LE MODÈLE S'ATTRIBUE.
+// ---------------------------------------------------------------------------
+// ⚠️ LE DÉFAUT MESURÉ LE 5 NOVEMBRE 2026. Le sprint 16 avait posé la règle
+// « un forum ne porte jamais une entrée seul », et le garde-fou côté serveur
+// la faisait respecter : `retenues.filter(r => r.type !== "forum_marque")`.
+// Mais `type` est choisi par le MODÈLE, c'est-à-dire par l'étape même qu'on
+// prétend contrôler. Résultat, sur la campagne hors moteur :
+//   · `autoliva.com` (réparateur de boîtes) classé « presse_auto » ;
+//   · `ecutesting.com` (réparateur de mécatroniques) classé « presse_auto » ;
+//   · `caroom.fr` (guide d'achat commercial) classé « constructeur_ou_rappel » ;
+//   · `la-boite-automatique.com` et `specialiste-bmw.fr` portant les COÛTS,
+//     donc la gravité — et un coût de réparateur poussait quatre entrées en
+//     « casse », qui plafonne le score.
+// Et la même famille de sites était citée, ailleurs dans la même campagne,
+// comme MOTIF DE RETRAIT. Le jugement n'était donc pas reproductible.
+//
+// C'est la leçon du sprint 11 (`estAppelApi` exige les DEUX facteurs) : un
+// garde-fou ne peut pas reposer sur une valeur que l'appelant choisit.
+//
+// ⚠️ LE DÉFAUT EST « COMMERCIAL ». Un hôte inconnu ne porte pas une entrée.
+// La liste blanche est donc la chose à maintenir à la main — comme
+// `brandAliases` et `famillesMoteur`, et pour la même raison : on ne déclare
+// pas une source de rang 1 ou 2 qui n'est pas attestée.
+
+/** Hôtes officiels : constructeurs, autorités, bases de rappels. */
+const HOTES_OFFICIELS = [
+  "nhtsa.gov", "static.nhtsa.gov", "europa.eu", "rappel.conso.gouv.fr",
+  "economie.gouv.fr", "securite-routiere.gouv.fr", "ecologie.gouv.fr",
+  "service-public.fr", "service-public.gouv.fr", "utac.com", "ademe.fr",
+  "vehicle-recalls.service.gov.uk", "kba.de", "transportstyrelsen.se",
+];
+
+/** Presse automobile et consumériste RECONNUE. Liste curée, à enrichir à la
+ *  main : chaque ajout est une décision, pas un héritage. */
+const HOTES_PRESSE = [
+  "largus.fr", "caradisiac.com", "autoplus.fr", "auto-moto.com",
+  "lautomobile-magazine.fr", "automobile-magazine.fr", "turbo.fr",
+  "challenges.fr", "lesnumeriques.com", "quechoisir.org", "ufcquechoisir.org",
+  "60millions-mag.com", "autonews.fr", "moniteurautomobile.be",
+  "lavoixdunord.fr", "lemonde.fr", "lesechos.fr", "francetvinfo.fr",
+  "autocar.co.uk", "whatcar.com", "honestjohn.co.uk", "drive.com.au",
+  "motor1.com", "autoexpress.co.uk", "autobild.de", "adac.de",
+  "consumerreports.org", "jdpower.com",
+];
+
+/** Forums et agrégateurs de discussion : EN APPUI SEULEMENT (sprint 16). */
+const MOTIFS_FORUM = [
+  /forum/i, /\bplanete-/i, /forumactif/i, /reddit\.com/i, /discord/i,
+  /\bclub\b/i, /\.proboards\./i, /vbulletin/i, /quora\.com/i,
+];
+
+export type RangSource = "officiel" | "presse" | "forum" | "commercial";
+
+/** Le rang d'une source, déduit de son hôte.
+ *
+ *  ⚠️ « commercial » est le DÉFAUT, et c'est volontaire : un hôte inconnu ne
+ *  peut pas porter une entrée. Un garage, un vendeur de pièces ou un site de
+ *  contenu référencé ont tout intérêt à décrire un défaut — leur page n'est
+ *  pas une attestation, c'est une offre. */
+export function rangSource(url: unknown): RangSource {
+  let hote = "";
+  try {
+    hote = new URL(String(url)).hostname.toLowerCase().replace(/^www\./, "");
+  } catch {
+    return "commercial";
+  }
+  const correspond = (liste: string[]) =>
+    liste.some((h) => hote === h || hote.endsWith(`.${h}`));
+  if (correspond(HOTES_OFFICIELS)) return "officiel";
+  // ⚠️ L'ordre compte : `forum-auto.caradisiac.com` est un FORUM, pas la
+  // presse, même si le domaine racine est un titre reconnu.
+  if (MOTIFS_FORUM.some((re) => re.test(hote))) return "forum";
+  if (correspond(HOTES_PRESSE)) return "presse";
+  return "commercial";
+}
+
+/** Une entrée tient-elle sur ses sources ?
+ *
+ *  Il lui faut au moins UNE source de rang officiel ou presse. Forums et sites
+ *  commerciaux ne viennent qu'en appui — ils peuvent préciser, jamais porter. */
+export function sourcesPortentLEntree(urls: readonly unknown[]): boolean {
+  return urls.some((u) => {
+    const r = rangSource(u);
+    return r === "officiel" || r === "presse";
+  });
+}
+
+/** Un COÛT publié par un site commercial ne fixe pas la gravité.
+ *
+ *  ⚠️ Quatre entrées de la campagne hors moteur ont été portées en « casse »
+ *  par des fourchettes affichées sur des pages de réparateurs. Or « casse »
+ *  plafonne le score : le tarif d'un garage aurait poussé un verdict vers le
+ *  rouge. Un prix sur une page qui vend la réparation est une offre, pas un
+ *  relevé. */
+export function coutUtilisable(urls: readonly unknown[]): boolean {
+  return urls.some((u) => {
+    const r = rangSource(u);
+    return r === "officiel" || r === "presse";
+  });
+}

@@ -220,12 +220,28 @@ if (args.includes('--appliquer')) {
   const { resultats } = JSON.parse(readFileSync(RELEVE, 'utf8'))
   const gardees = resultats.filter((r) => r.garde)
 
+  // ⚠️ LE FILTRE PAR HÔTE S'APPLIQUE AUSSI À LA FUSION, et pas seulement à la
+  // collecte : un relevé déjà collecté avec l'ancien garde-fou ne doit pas
+  // entrer dans l'atlas sous prétexte qu'il a été payé. Appliqué aux 9 entrées
+  // gardées le 5 nov. 2026, il n'en laisse passer que 2.
+  const { coutUtilisable, rangSource, sourcesPortentLEntree } =
+    await import('../supabase/functions/_shared/atlasSource.ts')
   const sortie = JSON.parse(JSON.stringify(defectAtlas))
   const journal = []
   let ajoutees = 0, doublons = 0
   const RANG = { mineure: 0, majeure: 1, casse: 2, securite: 3 }
 
+  let sansSourcePortante = 0
   for (const r of gardees) {
+    const urls = (r.sources ?? []).map((s2) => s2.url)
+    if (!sourcesPortentLEntree(urls)) {
+      sansSourcePortante++
+      journal.push({
+        cle: r.cle, title: r.title, action: 'refusee_source_commerciale',
+        rangs: urls.map(rangSource),
+      })
+      continue
+    }
     const bloc = sortie[r.cle] ?? (sortie[r.cle] = {
       label: r.candidat.label ?? r.cle.charAt(0) + r.cle.slice(1).toLowerCase(),
       // ⚠️ PAS de champ `logo` pour un nouveau bloc : `public/logos/` n'existe
@@ -253,7 +269,8 @@ if (args.includes('--appliquer')) {
     // 3 000 €) sans qu'aucune page ne donne de prix serait affirmer une
     // fourchette qu'on n'a pas lue. L'entrée reste affichée avec ses sources
     // et son remède — c'est la NOTE qu'on refuse de fonder sur rien.
-    const coutSource = (r.cout_max_eur || 0) > 0
+    // Un coût publié par un site commercial ne fixe pas la gravité.
+    const coutSource = (r.cout_max_eur || 0) > 0 && coutUtilisable(urls)
     const gravite = coutSource ? r.gravite : (r.gravite === 'securite' ? 'securite' : 'mineure')
     if (!coutSource && RANG[r.gravite] > RANG[gravite]) {
       journal.push({ cle: r.cle, title: r.title, action: 'gravite_abaissee', de: r.gravite, vers: gravite, motif: 'aucun coût publié' })
@@ -298,6 +315,7 @@ if (args.includes('--appliquer')) {
   const total = Object.values(sortie).reduce((n, b) => n + (b.defects?.length ?? 0), 0)
   const abaissees = journal.filter((j) => j.action === 'gravite_abaissee').length
   console.log(`Atlas fusionné : ${ajoutees} entrée(s) ajoutée(s), ${doublons} doublon(s) ignoré(s).`)
+  console.log(`  ${sansSourcePortante} refusée(s) : aucune source officielle ni de presse reconnue.`)
   console.log(`  ${abaissees} gravité(s) abaissée(s) faute de coût publié.`)
   console.log(`  ${Object.keys(sortie).length} marques, ${total} entrées au total.`)
   console.log(`Journal : ${JOURNAL.replace(RACINE + '/', '')}`)

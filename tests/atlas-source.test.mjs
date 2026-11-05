@@ -3,8 +3,11 @@
 import { readFileSync } from 'node:fs'
 import {
   affirmationSansCout,
+  coutUtilisable,
   marqueursEntree,
   pageParleDeLEntree,
+  rangSource,
+  sourcesPortentLEntree,
 } from '../supabase/functions/_shared/atlasSource.ts'
 
 let ok_ = 0, ko = 0
@@ -130,4 +133,79 @@ ok(affirmationSansCout('T', 'x'.repeat(900)).length <= 500, 'l’affirmation est
 
 console.log(`\n${ok_} contrôles passés, ${ko} échec(s).`)
 if (ko > 0) process.exit(1)
+// ---------------------------------------------------------------------------
+// ⚠️ LE RANG D'UNE SOURCE VIENT DE SON HÔTE, PAS D'UNE ÉTIQUETTE DU MODÈLE.
+//
+// Défaut mesuré le 5 novembre 2026 sur la campagne hors moteur. Le garde-fou
+// du sprint 16 lisait `r.type !== "forum_marque"` — un champ que le MODÈLE
+// remplit. Résultat : `autoliva.com` (réparateur de boîtes) et
+// `ecutesting.com` (réparateur de mécatroniques) classés « presse_auto »,
+// `caroom.fr` (guide d'achat) classé « constructeur_ou_rappel ». Sept entrées
+// sur neuf ne tenaient que sur des pages commerciales — et la même famille de
+// sites était citée ailleurs dans la MÊME campagne comme motif de retrait.
+// C'est la leçon d'`estAppelApi` : un garde-fou ne peut pas reposer sur une
+// valeur que l'appelant choisit.
+// ---------------------------------------------------------------------------
+console.log('\n▶ Rang déterministe des sources')
+eq(rangSource('https://static.nhtsa.gov/odi/tsbs/2016/SB-10092372-5448.pdf'), 'officiel',
+  'une note technique NHTSA est officielle')
+eq(rangSource('https://rappel.conso.gouv.fr/fiche/1234'), 'officiel', 'RappelConso est officiel')
+eq(rangSource('https://www.largus.fr/actualite-automobile/x.html'), 'presse', 'L’Argus est de la presse')
+eq(rangSource('https://www.drive.com.au/news/y'), 'presse', 'Drive.com.au est de la presse')
+eq(rangSource('https://www.quechoisir.org/actualite-z'), 'presse', 'Que Choisir est de la presse')
+// ⚠️ L'ORDRE COMPTE : un sous-domaine de forum sur un titre reconnu reste un
+// forum. Sans ce test, `forum-auto.caradisiac.com` passerait pour de la presse.
+eq(rangSource('https://forum-auto.caradisiac.com/topic/123'), 'forum',
+  'un forum hébergé sous un titre de presse reste un forum')
+eq(rangSource('https://www.reddit.com/r/cars/x'), 'forum', 'Reddit est un forum')
+eq(rangSource('https://www.planete-citroen.com/forum/x'), 'forum', 'Planète-Citroën est un forum')
+// Les hôtes réellement rencontrés dans la campagne, et mal classés par le modèle.
+for (const h of ['autoliva.com', 'ecutesting.com', 'caroom.fr', 'la-boite-automatique.com',
+                 'automotohebdo.fr', 'findservicehistory.com', 'kangoo-pro.fr',
+                 'superbaroudeur.com', 'specialiste-bmw.fr', 'oscaro.com']) {
+  eq(rangSource(`https://www.${h}/page`), 'commercial', `${h} est commercial`)
+}
+// ⚠️ « commercial » est le DÉFAUT : un hôte inconnu ne porte pas une entrée.
+eq(rangSource('https://exemple-inconnu-xyz.fr/page'), 'commercial', 'un hôte inconnu est commercial')
+eq(rangSource('pas-une-url'), 'commercial', 'une URL illisible est commerciale')
+eq(rangSource(null), 'commercial', 'null est commercial')
+
+console.log('\n▶ Ce qui PORTE une entrée')
+ok(sourcesPortentLEntree(['https://static.nhtsa.gov/a.pdf', 'https://autoliva.com/b']),
+  'une source officielle porte l’entrée, même accompagnée de commercial')
+ok(sourcesPortentLEntree(['https://www.largus.fr/a']), 'une source de presse porte l’entrée')
+ok(!sourcesPortentLEntree(['https://autoliva.com/a', 'https://la-boite-automatique.com/b']),
+  '⚠️ deux sources commerciales ne portent PAS une entrée')
+ok(!sourcesPortentLEntree(['https://forum-auto.caradisiac.com/a', 'https://autoliva.com/b']),
+  'un forum et un commercial ne portent pas une entrée')
+ok(!sourcesPortentLEntree([]), 'aucune source ne porte rien')
+
+console.log('\n▶ Un coût de réparateur ne fixe pas la gravité')
+ok(!coutUtilisable(['https://la-boite-automatique.com/tarifs']),
+  '⚠️ un prix affiché par celui qui vend la réparation est une offre, pas un relevé')
+ok(coutUtilisable(['https://www.largus.fr/budget-entretien']),
+  'un coût publié par la presse est utilisable')
+ok(coutUtilisable(['https://static.nhtsa.gov/a.pdf', 'https://specialiste-bmw.fr/b']),
+  'une source officielle suffit à rendre le coût utilisable')
+
+console.log('\n▶ Les garde-fous sont bien CÂBLÉS, pas seulement écrits')
+{
+  const builder = readFileSync(new URL('../supabase/functions/atlas-builder/index.ts', import.meta.url), 'utf8')
+  ok(/sourcesPortentLEntree\(retenues/.test(builder),
+    'atlas-builder décide de garder avec le filtre par hôte')
+  // ⚠️ Chercher la chaîne ne suffit pas : le commentaire qui EXPLIQUE le
+  // défaut la contient. On ne regarde donc que les lignes de CODE.
+  {
+    const codeSeul = builder.split('\n').filter((l) => !l.trim().startsWith('//'))
+    ok(!codeSeul.some((l) => /r\.type !== "forum_marque"/.test(l)),
+      '⚠️ le code ne lit PLUS l’étiquette que le modèle s’attribue')
+    ok(builder.includes('r.type !== "forum_marque"'),
+      'le test mord : la chaîne existe bien, dans le commentaire qui explique le défaut')
+  }
+  ok(/coutUtilisable\(retenues/.test(builder), 'et il refuse un coût non utilisable')
+  const script = readFileSync(new URL('../scripts/etendre-atlas.mjs', import.meta.url), 'utf8')
+  ok(/sourcesPortentLEntree\(urls\)/.test(script),
+    'la fusion refuse aussi une entrée sans source portante — un relevé déjà payé n’entre pas pour autant')
+}
+
 console.log('Tous les tests atlas-source passent.')
