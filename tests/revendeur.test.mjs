@@ -6,7 +6,11 @@ import {
   memeEnergie, offreOuverture, PARAMETRES_DEFAUT, penteKm, prixAchatMax,
   prixRevente, SEUIL_COMPARABLES,
 } from '../supabase/functions/_shared/revendeur.ts'
+import { coutCarteGrise } from '../supabase/functions/_shared/revendeur.ts'
 import { critair, libelleCritair, verdictZfe, ZFE, ZFE_RELEVE_LE } from '../supabase/functions/_shared/critair.ts'
+// Les miroirs CLIENT, generes par scripts/generer-miroir-revendeur.mjs.
+import * as miroirRevendeur from '../src/data/revendeur.gen.js'
+import * as miroirCritair from '../src/data/critair.gen.js'
 
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) { ok_++; console.log(`PASS — ${l}`) } else { ko++; console.log(`FAIL — ${l}`) } }
@@ -172,6 +176,191 @@ eq(libelleCritair('non_classe'), 'non classé', 'le libellé d’un non classé 
     'la mention obligatoire dit ce que le calcul n’est PAS')
   ok(MENTION_REVENDEUR.includes('prix observés') && MENTION_REVENDEUR.includes('tes paramètres'),
     'et d’où viennent les chiffres')
+}
+
+// ── Carte grise ────────────────────────────────────────────────────────────
+//
+// ⚠️ Sans région ou sans puissance fiscale : AUCUN chiffre. Une carte grise va
+// de la gratuité à plus de 1 000 € selon la région, les chevaux fiscaux et
+// l'énergie — une moyenne nationale silencieuse fausserait le prix d'achat
+// maximum sans que l'utilisateur sache d'où vient l'erreur.
+{
+  const bareme = {
+    maj: '2026-11-05', source: 'essai', frais_fixes_eur: 13.76,
+    regions: { 'Île-de-France': 68.95, Occitanie: 59.5, 'Pays de la Loire': 51 },
+  }
+  const r = coutCarteGrise(5, 'Occitanie', bareme)
+  ok(r.connu && r.montant_eur === 311.26, `5 CV en Occitanie : 311,26 € (obtenu ${JSON.stringify(r)})`)
+  ok(r.connu && r.maj === '2026-11-05', 'le coût porte la date du barème')
+
+  // L'accent et la casse ne doivent pas faire perdre une région :
+  // « Ile-de-France » saisi sans accent est la même région qu'« Île-de-France ».
+  ok(coutCarteGrise(7, 'ile de france', bareme).connu, 'la région est reconnue sans accent ni tiret')
+
+  eq(coutCarteGrise(5, null, bareme).motif, 'region_inconnue', 'sans région : aucun chiffre')
+  eq(coutCarteGrise(5, '  ', bareme).motif, 'region_inconnue', 'région vide : aucun chiffre')
+  eq(coutCarteGrise(5, 'Bretagne', bareme).motif, 'region_absente_du_bareme',
+    'région hors barème : aucun chiffre, et le motif le dit')
+  eq(coutCarteGrise(null, 'Occitanie', bareme).motif, 'cv_inconnus', 'sans CV : aucun chiffre')
+  eq(coutCarteGrise(0, 'Occitanie', bareme).motif, 'cv_inconnus', '0 CV : aucun chiffre')
+  eq(coutCarteGrise(5, 'Occitanie', null).motif, 'bareme_absent',
+    'barème absent (config non lue) : aucun chiffre, jamais de valeur en dur')
+}
+
+// ── PARITÉ SERVEUR / CLIENT ────────────────────────────────────────────────
+//
+// ⚠️ CE QUE CETTE SECTION PROUVE, ET POURQUOI ELLE EXISTE QUAND MÊME.
+//
+// Les miroirs `src/data/*.gen.js` ne sont pas écrits à la main : ils sont
+// produits par le compilateur TypeScript à partir des modules serveur
+// (scripts/generer-miroir-revendeur.mjs). La parité est donc acquise par
+// CONSTRUCTION — contrairement à `src/data/marche.js`, recopié à la main au
+// sprint 9, où le test de parité était le seul filet.
+//
+// Ce test garde deux rôles, qui valent tous les deux leur place :
+//   1. il échoue si le fichier généré est PÉRIMÉ (module serveur modifié sans
+//      relancer le script) — c'est le cas réaliste ;
+//   2. il échoue si quelqu'un a retouché le fichier généré à la main.
+//
+// Et il porte sur le COMPORTEMENT, pas sur le texte : `--verifier` compare les
+// octets, celui-ci compare les résultats. Les deux peuvent tomber séparément.
+{
+  // Générateur déterministe : un échec doit se rejouer à l'identique. Pas de
+  // Math.random — un test qui ne se reproduit pas ne se corrige pas.
+  let graine = 19111905
+  const alea = () => { graine = (graine * 1103515245 + 12345) & 0x7fffffff; return graine / 0x7fffffff }
+  const entre = (a, b) => a + Math.floor(alea() * (b - a + 1))
+  const parmi = (xs) => xs[entre(0, xs.length - 1)]
+
+  const MODELES = ['Clio II', 'Clio IV', '308', 'Golf VII', 'Série 3']
+  const ENERGIES = ['Diesel', 'Essence', 'essence sans plomb', 'Hybride', 'Électrique', 'GPL', '']
+  const REGIONS = ['Occitanie', 'Île-de-France', 'ile de france', 'Bretagne', null, '']
+  const VILLES = ['Toulouse', 'Paris', 'Lyon', 'Castres', 'Rennes', '']
+  const baremeCg = {
+    maj: '2026-11-05', source: 'essai', frais_fixes_eur: 13.76,
+    regions: { 'Île-de-France': 68.95, Occitanie: 59.5, 'Pays de la Loire': 51 },
+  }
+  const SERVEUR = { filtrerComparables, prixRevente, coutCarteGrise, prixAchatMax, offreOuverture, penteKm, mediane }
+
+  let divergences = 0, avecChiffre = 0, sansChiffre = 0, interditsZfe = 0
+  let premierEcart = null
+
+  for (let cas = 0; cas < 500; cas++) {
+    const v = {
+      modele: parmi(MODELES),
+      energie: parmi(ENERGIES),
+      annee: alea() < 0.1 ? null : entre(1995, 2026),
+      km: alea() < 0.1 ? null : entre(5000, 320000),
+    }
+    // ⚠️ LE TIRAGE DOIT FRANCHIR LE SEUIL. Première version : modèle,
+    // énergie, année et kilométrage tirés indépendamment pour chaque
+    // comparable — résultat, AUCUN des 500 cas n'atteignait 6 comparables
+    // retenus, et la parité comparait 500 fois « null contre null ». C'est
+    // exactement ce que les compteurs ci-dessous servent à voir.
+    //
+    // On tire donc des annonces PROCHES du véhicule (même modèle, même
+    // énergie, année et kilométrage voisins), avec une part d'intrus pour que
+    // le filtre ait aussi quelque chose à écarter.
+    const comparables = Array.from({ length: entre(0, 20) }, () => {
+      const intrus = alea() < 0.2
+      return {
+        prix: entre(500, 45000),
+        annee: alea() < 0.08 ? null
+          : intrus ? entre(1995, 2026)
+          : (v.annee ?? 2010) + entre(-3, 3),
+        km: alea() < 0.08 ? null
+          : intrus ? entre(5000, 320000)
+          : Math.max(0, (v.km ?? 150000) + entre(-60000, 60000)),
+        energie: intrus ? parmi(ENERGIES) : v.energie,
+        modele: intrus ? parmi(MODELES) : v.modele,
+        titre: 'annonce',
+      }
+    })
+    const parametres = {
+      marge_negociation_pct: entre(0, 25),
+      marge_voulue_eur: entre(0, 3000),
+      imprevus_pct_travaux: entre(0, 40),
+      imprevus_vehicule_ancien_eur: entre(0, 400),
+      decote_zfe_pct: entre(0, 30),
+      offre_retrait_pct: entre(0, 40),
+    }
+    const travaux = Array.from({ length: entre(0, 4) }, (_, i) => ({
+      cle: `t${i}`, libelle: `travail ${i}`, montant_eur: entre(0, 2500), modifiable: true,
+    }))
+    const region = parmi(REGIONS)
+    const ville = parmi(VILLES)
+    const cv = alea() < 0.15 ? null : entre(1, 40)
+    const ctARefaire = entre(0, 1) ? 180 : null
+
+    const classeServeur = critair(v.energie, v.annee)
+    const classeClient = miroirCritair.critair(v.energie, v.annee)
+    const zfeServeur = verdictZfe(ville, classeServeur)
+    const zfeClient = miroirCritair.verdictZfe(ville, classeClient)
+    if (zfeServeur && zfeServeur.interdit) interditsZfe++
+
+    // ⚠️ AUCUN tirage ici : les deux implémentations doivent recevoir
+    // exactement les mêmes entrées. Un `entre(0, 1)` dans cette fonction
+    // consommerait la graine et ferait comparer deux cas différents — la
+    // parité serait alors vraie ou fausse par hasard.
+    const resultat = (R, classe, zfe) => {
+      const filtres = R.filtrerComparables(comparables, v)
+      const revente = R.prixRevente(filtres.retenus, v, parametres, !!(zfe && zfe.interdit))
+      const carte = R.coutCarteGrise(cv, region, baremeCg)
+      const max = revente
+        ? R.prixAchatMax(revente.valeur, travaux, parametres, {
+            ct_a_refaire_eur: ctARefaire,
+            carte_grise_eur: carte.connu ? carte.montant_eur : null,
+            region_connue: carte.connu,
+            age_vehicule_ans: v.annee ? 2026 - v.annee : null,
+          })
+        : null
+      return {
+        classe, zfe, filtres, revente, carte, max,
+        offre: max ? R.offreOuverture(max.valeur, parametres) : null,
+        pente: R.penteKm(filtres.retenus),
+        mediane: R.mediane(filtres.retenus.map((c) => c.prix)),
+      }
+    }
+
+    const a = resultat(SERVEUR, classeServeur, zfeServeur)
+    const b = resultat(miroirRevendeur, classeClient, zfeClient)
+    if (a.revente) avecChiffre++
+    else sansChiffre++
+    if (JSON.stringify(a) !== JSON.stringify(b)) {
+      divergences++
+      if (!premierEcart) premierEcart = { cas, serveur: a, client: b }
+    }
+  }
+
+  eq(divergences, 0, `500 cas tirés au hasard : aucune divergence serveur/client${
+    premierEcart ? ` — premier écart : ${JSON.stringify(premierEcart).slice(0, 400)}` : ''}`)
+
+  // ⚠️ Sans ces trois compteurs, « aucune divergence » pourrait être vrai pour
+  // la mauvaise raison : un tirage qui ne franchirait jamais le seuil de
+  // 6 comparables comparerait 500 fois « null contre null ».
+  ok(avecChiffre > 40, `le tirage franchit le seuil (${avecChiffre}/500 avec un chiffre)`)
+  ok(sansChiffre > 40, `et reste aussi en dessous (${sansChiffre}/500 sans chiffre)`)
+  ok(interditsZfe > 10, `et la décote ZFE mord (${interditsZfe}/500 interdits en ZFE)`)
+}
+
+// ── Le miroir généré est-il à jour ? ───────────────────────────────────────
+//
+// La parité de comportement ci-dessus ne dit pas que le fichier sur disque est
+// celui que le générateur produirait : un miroir périmé peut se comporter à
+// l'identique sur les 500 cas tirés et différer ailleurs. On compare donc
+// aussi les octets.
+{
+  const { execFileSync } = await import('node:child_process')
+  const { fileURLToPath } = await import('node:url')
+  let aJour = true, sortie = ''
+  try {
+    execFileSync('node', ['scripts/generer-miroir-revendeur.mjs', '--verifier'],
+      { cwd: fileURLToPath(new URL('..', import.meta.url)), encoding: 'utf8' })
+  } catch (e) {
+    aJour = false
+    sortie = String(e.stdout || '') + String(e.stderr || '')
+  }
+  ok(aJour, `les miroirs src/data/*.gen.js sont à jour${aJour ? '' : ` — ${sortie.trim().split('\n').find((l) => l.startsWith('✗')) || ''}`}`)
 }
 
 console.log(`\n${ok_} contrôles passés, ${ko} échec(s).`)

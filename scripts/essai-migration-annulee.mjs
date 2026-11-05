@@ -14,14 +14,16 @@ import { readFileSync } from 'node:fs'
 // 20261111 redéclare `get_public_analysis`. Les jouer en vrac ne prouverait
 // rien de ce qui se passera réellement.
 const MIGRATIONS = [
-  // sprint12-vocabulaire
-  '20261108120000_sprint12_cua_api.sql',
-  '20261109120000_sprint12_inspection_paiement.sql',
-  '20261110120000_sprint12_cgv_consommateur.sql',
-  // sprint13
-  '20261111120000_sprint13_histovec.sql',
-  '20261112120000_sprint13_drapeaux.sql',
-  '20261113120000_sprint13_droits_anon.sql',
+  // ⚠️ CETTE LISTE NE CONTIENT QUE LES MIGRATIONS NON ENCORE APPLIQUÉES EN
+  // PROD. Elle sert à la forme COMPLÈTE du script (celle qu'on colle dans
+  // l'éditeur SQL quand on n'a pas la pile locale). Les sprints 12 à 17 ont
+  // été appliqués : les rejouer ici ne prouverait rien et échouerait, une
+  // migration n'étant pas idempotente.
+  //
+  // En local, c'est `supabase db reset` qui rejoue TOUTE l'histoire depuis
+  // une base vide — épreuve plus forte — puis `--assertions` vérifie l'état
+  // atteint.
+  '20261119120000_sprint19_revendeur.sql',
 ]
 
 const corpsDe = (f) => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8')
@@ -374,6 +376,88 @@ select pg_temp.essai_verifie('echecs_recents : zero a vide, fenetre bornee',
   public.echecs_recents(15) = 0
   and public.echecs_recents(999999) = 0
   and public.echecs_recents(null) = 0);
+
+-- ── SPRINT 19 : mode revendeur ────────────────────────────────────────────
+
+-- Les six paramètres sont semés, et avec LES VALEURS DU MODULE TypeScript.
+-- ⚠️ Les nombres ci-dessous ne sont pas recopiés à la main : le générateur
+-- les LIT dans \`PARAMETRES_DEFAUT\` (_shared/revendeur.ts). Si l'un change
+-- d'un côté sans l'autre, cette assertion tombe. Une concordance recopiée
+-- n'est pas une concordance : c'est deux copies qui dérivent.
+select pg_temp.essai_verifie('revendeur : les 6 parametres semes concordent avec PARAMETRES_DEFAUT',
+  public.config_lire('revendeur_marge_negociation_pct', -1) = 8
+  and public.config_lire('revendeur_marge_voulue_eur', -1) = 500
+  and public.config_lire('revendeur_imprevus_pct_travaux', -1) = 15
+  and public.config_lire('revendeur_imprevus_vehicule_ancien_eur', -1) = 150
+  and public.config_lire('revendeur_decote_zfe_pct', -1) = 10
+  and public.config_lire('revendeur_offre_retrait_pct', -1) = 15);
+
+-- Les tarifs de carte grise sont DATÉS et SOURCÉS. Sans date, l'écran ne peut
+-- pas dire de quand vient le chiffre — et un tarif de cheval fiscal se vote
+-- chaque année.
+select pg_temp.essai_verifie('carte_grise_tarifs : date, source, frais fixes, 18 regions',
+  (select valeur ? 'maj' and valeur ? 'source' and valeur ? 'frais_fixes_eur' and valeur ? 'regions'
+     and (valeur->>'maj') ~ '^\\d{4}-\\d{2}-\\d{2}$'
+     and (valeur->>'frais_fixes_eur')::numeric > 0
+     and (select count(*) from jsonb_each(valeur->'regions')) = 18
+     -- toute valeur de cheval fiscal doit rester plausible : un zero ou un
+     -- millier ferait un cout de carte grise absurde sans rien lever.
+     and (select bool_and((v.value #>> '{}')::numeric between 20 and 120)
+            from jsonb_each(valeur->'regions') v)
+     from public.config where cle = 'carte_grise_tarifs'));
+
+-- ⚠️ LE POINT QUI COMPTE : \`get_config_publique\` est ouverte à anon. Si sa
+-- clause devenait trop large, elle publierait les seuils d'alerte et le
+-- plafond de coût IA. L'assertion ne lit donc pas la clause, elle éprouve le
+-- COMPORTEMENT : on sème une clé de test dans la transaction (annulée comme
+-- le reste) et on exige qu'elle ne sorte pas.
+do \$cfg\$
+declare
+  v_res jsonb;
+begin
+  insert into public.config (cle, valeur, description)
+  values ('essai_cle_qui_ne_doit_pas_sortir', '"secret"'::jsonb, 'essai')
+  on conflict (cle) do nothing;
+
+  v_res := public.get_config_publique();
+
+  perform pg_temp.essai_verifie(
+    'get_config_publique : liste fermee, rien d autre ne sort',
+    has_function_privilege('anon', 'public.get_config_publique()', 'execute')
+    and v_res ? 'carte_grise_tarifs'
+    and v_res ? 'revendeur_marge_voulue_eur'
+    and not v_res ? 'essai_cle_qui_ne_doit_pas_sortir'
+    and not v_res ? 'cout_ia_seuil_jour_eur'
+    and not v_res ? 'echecs_seuil'
+    and (select count(*) from jsonb_object_keys(v_res)) = 7,
+    (select string_agg(k, ', ') from jsonb_object_keys(v_res) k));
+end
+\$cfg\$;
+
+-- Les préférences suivent un COMPTE, jamais un anonyme : écrire exigerait
+-- d'inventer un identifiant pour quelqu'un qui n'en a pas.
+select pg_temp.essai_verifie('preferences_revendeur : reservees aux comptes connectes',
+  not has_function_privilege('anon', 'public.preferences_revendeur_lire()', 'execute')
+  and has_function_privilege('authenticated', 'public.preferences_revendeur_lire()', 'execute')
+  and not has_function_privilege('anon', 'public.preferences_revendeur_ecrire(text, jsonb)', 'execute')
+  and has_function_privilege('authenticated', 'public.preferences_revendeur_ecrire(text, jsonb)', 'execute'));
+
+-- Et sans session, l'écriture LÈVE au lieu d'écrire une ligne orpheline.
+do \$pref\$
+declare
+  v_leve boolean := false;
+begin
+  begin
+    perform public.preferences_revendeur_ecrire('Occitanie', '{}'::jsonb);
+  exception when others then
+    v_leve := true;
+  end;
+  perform pg_temp.essai_verifie(
+    'preferences_revendeur_ecrire : refuse sans session (auth.uid() null)',
+    v_leve,
+    case when not v_leve then 'une ligne a ete ecrite sans utilisateur' end);
+end
+\$pref\$;
 
 -- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
 -- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On

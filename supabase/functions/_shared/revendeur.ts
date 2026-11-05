@@ -1,6 +1,6 @@
 // SPRINT 19 — Mode revendeur : trois chiffres, et seulement trois.
 //
-// Module PUR, testé hors ligne, miroir côté client (`src/data/revendeur.js`)
+// Module PUR, testé hors ligne, miroir côté client GÉNÉRÉ (`src/data/revendeur.gen.js`)
 // pour que l'utilisateur puisse corriger un coût et tout voir se recalculer
 // sans aller-retour serveur.
 //
@@ -278,4 +278,50 @@ export function prixAchatMax(
 export function offreOuverture(prixMax: number, p: ParametresRevendeur): number {
   const brut = prixMax * (1 - p.offre_retrait_pct / 100);
   return Math.max(0, Math.floor(brut / 50) * 50);
+}
+
+// ── Carte grise ────────────────────────────────────────────────────────────
+//
+// ⚠️ Le tarif vient de la CONFIG, jamais du code : le prix du cheval fiscal
+// est voté chaque année par chaque région. Figé dans un déploiement, il
+// deviendrait faux au 1er janvier sans que personne ne le voie.
+
+export type TarifsCarteGrise = {
+  maj: string;
+  source: string;
+  frais_fixes_eur: number;
+  regions: Record<string, number>;
+};
+
+export type CoutCarteGrise =
+  | { connu: true; montant_eur: number; cv: number; tarif_cv: number; region: string; maj: string }
+  | { connu: false; motif: "region_inconnue" | "region_absente_du_bareme" | "cv_inconnus" | "bareme_absent" };
+
+/** Coût de la carte grise : CV × tarif régional + frais fixes.
+ *
+ *  ⚠️ CE QUE CE CALCUL NE FAIT PAS : appliquer une exonération « véhicule
+ *  propre ». Elle vaut 0 %, 50 % ou 100 % selon la région, et plusieurs l'ont
+ *  supprimée depuis 2025. L'appliquer d'office donnerait un coût faux dans un
+ *  sens, l'ignorer dans l'autre. La ligne reste MODIFIABLE à l'écran et
+ *  renvoie au simulateur officiel : mieux vaut un chiffre que l'utilisateur
+ *  corrige qu'un chiffre qu'il croit exact.
+ *
+ *  Et surtout : sans région ou sans puissance fiscale, AUCUN chiffre. */
+export function coutCarteGrise(
+  cv: number | null,
+  region: string | null,
+  bareme: TarifsCarteGrise | null,
+): CoutCarteGrise {
+  if (!bareme || !bareme.regions) return { connu: false, motif: "bareme_absent" };
+  if (!region || !String(region).trim()) return { connu: false, motif: "region_inconnue" };
+  const n = typeof cv === "number" ? cv : Number(cv);
+  if (!Number.isFinite(n) || n <= 0 || n > 99) return { connu: false, motif: "cv_inconnus" };
+
+  const cible = norm(region);
+  const entree = Object.entries(bareme.regions).find(([r]) => norm(r) === cible);
+  if (!entree) return { connu: false, motif: "region_absente_du_bareme" };
+
+  const [nomRegion, tarif] = entree;
+  const montant = Math.round((n * Number(tarif) + Number(bareme.frais_fixes_eur || 0)) * 100) / 100;
+  return { connu: true, montant_eur: montant, cv: n, tarif_cv: Number(tarif), region: nomRegion, maj: bareme.maj };
 }
