@@ -708,15 +708,19 @@ export default function ResultPage() {
         <meta property="og:description" content={(r.raisons_principales || []).join(' · ')} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={pageUrl} />
-        {/* L'image porte le verdict du dossier, comme la réécriture serveur
-            pour les robots (api/og.js). Les deux doivent dire la même chose :
-            un aperçu qui diffère selon le chemin est un aperçu qu'on ne peut
-            pas vérifier. */}
-        <meta property="og:image" content={`https://www.inspexo.io/api/og-image?id=${id}`} />
+        {/* ⚠️ Image STATIQUE, repli assumé. L'image générée par dossier
+            (api/og-image) ne tourne pas sur la chaîne de build de ce projet :
+            quatre corrections ont chacune levé un obstacle sans faire aboutir
+            le rendu (runtime edge refusé, ERR_REQUIRE_ESM, signature Node,
+            traçage des .wasm), le processus meurt en 128. On pointe donc
+            l'image qui MARCHE — un aperçu générique vaut infiniment mieux
+            qu'un aperçu cassé. Les deux chemins (ici et api/og.js) doivent
+            toujours dire la même chose. */}
+        <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content={`https://www.inspexo.io/api/og-image?id=${id}`} />
+        <meta name="twitter:image" content="https://www.inspexo.io/og-image.png" />
       </Helmet>
 
       <Navbar />
