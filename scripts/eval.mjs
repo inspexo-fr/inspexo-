@@ -519,9 +519,25 @@ const ajouterCout = (eur) => {
 // cas, sans quoi le mur serait toujours franchi d'un cas (constaté le 5 nov. :
 // 0,447 € pour un run annoncé à 0,40 €).
 let casJoues = 0
-const coutProchain = () => coutProchainCas(coutRun, casJoues)
+// ⚠️ L'UNITÉ DU MUR CHANGE DE PHASE EN PHASE, et s'en apercevoir a coûté deux
+// runs le 5 nov. 2026. Pendant les cas, une unité est UN CAS ; pendant la
+// stabilité, c'est UN PASSAGE — trois fois moins cher. En réservant un coût de
+// cas avant chaque passage, le mur s'est déclenché beaucoup trop tôt : un run
+// annoncé à 1,20 € s'est arrêté à 1,024 € et un run à 0,30 € à 0,185 €, et les
+// passages non joués ont été rapportés comme « analyses en erreur ». Le mur
+// protégeait, mais il mentait sur ce qu'il avait fait.
+let passagesJoues = 0
+let enStabilite = false
+let coutAvantStabilite = 0
+const unitesJouees = () => (enStabilite ? passagesJoues : casJoues)
+// Le coût ATTRIBUABLE aux unités comptées : le run entier pendant les cas, la
+// seule phase de stabilité ensuite. Les deux murs, eux, portent toujours sur
+// le coût total.
+const coutDesUnites = () => (enStabilite ? coutRun - coutAvantStabilite : coutRun)
+const coutProchain = () => coutProchainCas(coutRun, unitesJouees(), undefined, coutDesUnites())
 const murDuRun = () => murAtteint({
-  coutRun, casJoues, coutSession, budgetRun: BUDGET_RUN_EUR, plafondSession: PLAFOND_EUR,
+  coutRun, casJoues: unitesJouees(), coutSession, budgetRun: BUDGET_RUN_EUR,
+  plafondSession: PLAFOND_EUR, coutUnites: coutDesUnites(),
 })
 const budgetDepasse = () => murDuRun() !== null
 const motifArret = () =>
@@ -593,12 +609,17 @@ if (!STABILITE_SEULE) {
 const RUNS = 3
 const ECART_MAX = 5
 let instables = 0
+let incomplets = 0
 
 if ((!SANS_STABILITE && failed === 0) || STABILITE_SEULE) {
   // Trois cas fixes suffisent : un rouge chargé, un orange avec rappel, un vert.
   const CAS_STABILITE = ['audi-s7-intermediaire', '308-puretech-complete', 'mercedes-2025-societe']
   const analysables = cases.filter((n) => CAS_STABILITE.includes(n))
   console.log(`\nStabilité — ${analysables.length} cas × ${RUNS} analyses (sans cache)\n`)
+  // À partir d'ici, l'unité du mur budgétaire est le PASSAGE, pas le cas — et
+  // la moyenne se calcule sur la seule dépense de cette phase.
+  coutAvantStabilite = coutRun
+  enStabilite = true
   for (const name of analysables) {
     const dir = join(EVAL_DIR, name)
     const annonce = readFileSync(join(dir, 'annonce.txt'), 'utf8').trim()
@@ -614,17 +635,60 @@ if ((!SANS_STABILITE && failed === 0) || STABILITE_SEULE) {
     // En série : trois analyses simultanées (4 appels modèle chacune) saturent
     // l'API et produisent des faux négatifs par timeout.
     const runs = []
+    let tronque = false
     for (let i = 0; i < RUNS; i++) {
-      if (budgetDepasse()) break
-      const r = await post('score', { text: annonce, no_cache: true, ...input }).catch(() => null)
+      if (budgetDepasse()) { tronque = true; break }
+      // ⚠️ L'ERREUR EST CONSERVÉE, PAS AVALÉE. Le `.catch(() => null)` d'avant
+      // perdait le motif : le 5 nov. 2026, une analyse de stabilité a échoué
+      // et le rapport disait seulement « 1/3 analyse(s) en erreur » — il a
+      // fallu compter les events `score_started` en base pour comprendre que
+      // l'appel n'avait jamais atteint la fonction. C'est la troisième fois
+      // que la sortie de l'éval coûte un run : masquer le motif d'un échec,
+      // c'est obliger à repayer pour le retrouver.
+      const r = await post('score', { text: annonce, no_cache: true, ...input })
+        .catch((e) => ({ status: 0, json: null, erreur: String(e?.message ?? e).slice(0, 160) }))
       if (r?.json?.cout_eur) ajouterCout(r.json.cout_eur)
+      passagesJoues++
       runs.push(r)
     }
     const scores = runs.filter((r) => r?.status === 200).map((r) => r.json.result.score)
     const verdicts = [...new Set(runs.filter((r) => r?.status === 200).map((r) => r.json.result.verdict))]
+    // ⚠️ UNE MESURE TRONQUÉE N'EST PAS UNE INSTABILITÉ. Les deux se rapportent
+    // séparément : « incomplet » dit qu'on n'a pas fini de mesurer, « instable »
+    // dit qu'on a mesuré et que ça bouge. Les confondre a fait croire deux fois
+    // à une erreur d'analyse là où le mur budgétaire faisait simplement son
+    // travail.
+    if (tronque) {
+      incomplets++
+      const nonJoues = RUNS - runs.length
+      console.log(`▶ ${name}\n  INCOMPLET — ${nonJoues}/${RUNS} passage(s) NON joué(s) : ${motifArret()}`)
+      scores.forEach((sc, i) => console.log(`     passage ${i + 1} : ${verdicts.length === 1 ? verdicts[0] : '?'} ${sc}`))
+      if (scores.length >= 2) {
+        const e = Math.max(...scores) - Math.min(...scores)
+        console.log(`     écart sur les ${scores.length} passages joués : ${e} point(s)`)
+      }
+      console.log('     Pour mesurer complètement : relancer avec --budget plus haut.')
+      continue
+    }
     if (scores.length < RUNS) {
       instables++
       console.log(`▶ ${name}\n  FAIL — ${RUNS - scores.length}/${RUNS} analyse(s) en erreur`)
+      // Le MOTIF de chaque échec, passage par passage : code HTTP, code
+      // d'erreur de la fonction, message. Et les scores obtenus par les
+      // passages qui ONT abouti — un 71/71 avec un troisième appel perdu en
+      // route n'est pas la même chose qu'une divergence de score.
+      runs.forEach((r, i) => {
+        if (r?.status === 200) {
+          console.log(`     passage ${i + 1} : ${r.json.result.verdict} ${r.json.result.score}`)
+        } else {
+          const motif = r?.erreur ?? `${r?.json?.error ?? '?'}${r?.json?.message ? ` — ${String(r.json.message).slice(0, 90)}` : ''}`
+          console.log(`     passage ${i + 1} : ÉCHEC HTTP ${r?.status ?? '—'} · ${motif}`)
+        }
+      })
+      if (scores.length >= 2) {
+        const e = Math.max(...scores) - Math.min(...scores)
+        console.log(`     écart sur les ${scores.length} passages aboutis : ${e} point(s) (${scores.join(', ')})`)
+      }
       continue
     }
     const ecart = Math.max(...scores) - Math.min(...scores)
@@ -632,11 +696,18 @@ if ((!SANS_STABILITE && failed === 0) || STABILITE_SEULE) {
     if (!ok) instables++
     console.log(`▶ ${name}\n  ${ok ? 'PASS' : 'FAIL'} — scores ${scores.join(', ')} (écart ${ecart} ≤ ${ECART_MAX}), verdict${verdicts.length > 1 ? 's' : ''} ${verdicts.join('/')}`)
   }
-  console.log(instables === 0 ? '\n✓ stabilité : tous les cas sont reproductibles' : `\n✗ stabilité : ${instables} cas instable(s)`)
+  console.log(
+    instables === 0 && incomplets === 0
+      ? '\n✓ stabilité : tous les cas sont reproductibles'
+      : `\n✗ stabilité : ${instables} cas instable(s)` +
+        (incomplets > 0 ? `, ${incomplets} cas NON mesuré(s) entièrement (budget)` : ''),
+  )
 }
 console.log(`\n— Coût de ce run : ${coutRun.toFixed(3)} €${
   BUDGET_RUN_EUR != null ? ` / ${BUDGET_RUN_EUR.toFixed(2)} € annoncés` : ''
 } · cumul session : ${coutSession.toFixed(2)} € / ${PLAFOND_EUR} €` +
   (coutDepart > 0 ? ` (dont ${coutDepart.toFixed(2)} € avant ce run)` : ''))
 
-process.exit(failed === 0 && instables === 0 ? 0 : 1)
+// ⚠️ Une mesure incomplète fait AUSSI sortir en 1 : on ne déclare pas une
+// stabilité qu'on n'a pas finie de mesurer.
+process.exit(failed === 0 && instables === 0 && incomplets === 0 ? 0 : 1)

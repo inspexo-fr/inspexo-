@@ -91,10 +91,171 @@ const verifiePrix = (titre, cond, detail = '') => {
     (avecOpposition.verdict_conditionnel?.score ?? 0) <= 30)
 }
 {
-  // 11.4 — une entrée de catalogue sans source publique ne pèse plus du tout,
-  // même quand l'annonce mentionne ce qu'elle vise. La liste des défauts qui
-  // comptent change : la version DOIT bouger, les clients d'API la suivent.
-  affirme('BAREME_VERSION passée à 11.4', BAREME_VERSION === '11.4', BAREME_VERSION)
+  // ⚠️ MOTEUR NON IDENTIFIÉ — le défaut mesuré le 5 nov. 2026 en production.
+  // Sur la Classe C 220 d, quand l'identification ne déduisait pas l'OM654,
+  // `catalogue_vide` passait à true, l'axe risques sortait du score — et comme
+  // il pèse ×2, le verdict MONTAIT de 71 à 75. Un véhicule sur lequel on ne
+  // sait rien était mieux noté qu'un véhicule documenté.
+  const sain = {
+    annee_courante: 2026, statut_vendeur: 'particulier', annee: 2025, kilometrage: 36606,
+    prix_affiche: 41490, fourchette: null, comparables_count: 0,
+    entretien_renseigne: true, signaux_entretien: 2, contradictions_entretien: 0,
+    operations_critiques_non_faites: 0, incoherences: 0,
+  }
+  // Référence : moteur identifié, deux défauts majeurs documentés.
+  const documente = calculerAxes({
+    ...sain, catalogue_vide: false, famille_identifiee: true,
+    pannes: [{ gravite: 'majeure', rappel_officiel: false, rappel_confirme_effectue: false },
+             { gravite: 'majeure', rappel_officiel: false, rappel_confirme_effectue: false }],
+  })
+  // Le cas fautif : AUCUNE famille identifiée.
+  const inconnu = calculerAxes({ ...sain, catalogue_vide: true, famille_identifiee: false, pannes: [] })
+
+  affirme('moteur non identifié : l’axe risques est COMPTÉ, pas exclu',
+    inconnu.axes.risques_mecaniques.note === 10, JSON.stringify(inconnu.axes.risques_mecaniques))
+  affirme('et son commentaire nomme la cause',
+    /non identifié/i.test(inconnu.axes.risques_mecaniques.commentaire))
+  affirme('le verdict est plafonné à ORANGE BAS (55)',
+    inconnu.verdict === 'orange' && inconnu.score <= 55, `${inconnu.verdict} ${inconnu.score}`)
+  affirme('le motif du plafond est celui demandé',
+    /moteur non identifié/i.test(inconnu.plafond_raison ?? ''), inconnu.plafond_raison)
+  // ⚠️ L'INVARIANT QUI COMPTE, ET IL PORTE SUR LE MÊME VÉHICULE : ne pas
+  // identifier le moteur ne doit JAMAIS faire monter le score de CE véhicule.
+  // C'est la forme exacte du défaut mesuré (la même Mercedes à 75 puis 71), et
+  // c'est la seule formulation qui se tienne.
+  //
+  // ⚠️ Une lecture plus large — « jamais mieux noté qu'un AUTRE véhicule
+  // documenté » — n'est PAS satisfaisable sans inventer une pénalité : un
+  // moteur dont une source documente un défaut majeur vaut 9/20, donc moins
+  // que la note neutre de 10. Descendre l'inconnu sous 9 reviendrait à
+  // affirmer un défaut qu'on n'a pas trouvé, ce que ce projet refuse depuis le
+  // sprint 2 (« l'absence d'information n'est JAMAIS pénalisée »). Le garde-fou
+  // est le PLAFOND : l'inconnu ne peut pas être vert, quoi qu'il arrive.
+  {
+    let scoresQuiMontent = 0
+    let vertsInterdits = 0
+    const profils = [
+      { annee: 2025, kilometrage: 36606, prix_affiche: 41490, pannes: [] },
+      { annee: 2019, kilometrage: 120000, prix_affiche: 9000, pannes: [{ gravite: 'mineure', rappel_officiel: false, rappel_confirme_effectue: false }] },
+      { annee: 2016, kilometrage: 84500, prix_affiche: 9400, pannes: [{ gravite: 'majeure', rappel_officiel: false, rappel_confirme_effectue: false }] },
+      { annee: 2012, kilometrage: 142000, prix_affiche: 11900, pannes: [{ gravite: 'casse', rappel_officiel: false, rappel_confirme_effectue: false }] },
+      { annee: 2015, kilometrage: 159000, prix_affiche: 31990, pannes: [{ gravite: 'securite', rappel_officiel: true, rappel_confirme_effectue: false }] },
+      { annee: 2022, kilometrage: 40000, prix_affiche: 18000, pannes: [], fourchette: { p25: 17000, mediane: 18500, p75: 20000 }, comparables_count: 20, fourchette_n: 20 },
+    ]
+    for (const prof of profils) {
+      const base = { ...sain, ...prof }
+      const avec = calculerAxes({ ...base, catalogue_vide: prof.pannes.length === 0, famille_identifiee: true })
+      // Le MÊME véhicule, moteur non identifié : plus de catalogue, donc plus
+      // de pannes — c'est précisément ce que l'échec d'identification produit.
+      const sans = calculerAxes({ ...base, pannes: [], catalogue_vide: true, famille_identifiee: false })
+      if (sans.score > avec.score) {
+        scoresQuiMontent++
+        console.log(`   · limite : profil ${prof.annee}/${prof.kilometrage} km — identifié ${avec.score}, non identifié ${sans.score} (+${sans.score - avec.score})`)
+      }
+      if (sans.verdict === 'vert') vertsInterdits++
+    }
+    // ⚠️ LIMITE CONNUE, MESURÉE, ÉPINGLÉE — et ARBITRÉE le 5 nov. 2026.
+    //
+    // La note neutre de 10/20 ne peut pas, à elle seule, tenir la règle « un
+    // véhicule sur lequel on ne sait rien n'est jamais mieux noté » : elle est
+    // au-dessus de la note d'un moteur dont une source documente un défaut
+    // majeur (9/20), une casse (5/20) ou un défaut de sécurité (4/20).
+    //
+    // Arbitrage d'Utku : BORNER PLUS BAS plutôt qu'inventer une note. Le
+    // plafond est passé de 69 (orange haut) à 55 — le rang déjà retenu pour
+    // « une opération d'entretien critique déclarée non faite ».
+    //
+    // Effet mesuré de ce choix, sur les six profils :
+    //   · défaut majeur   : +2  →  l'écart est REFERMÉ (62 contre 55)
+    //   · casse           : +10 →  +5  (50 contre 55)
+    //   · défaut sécurité : +16 →  +11 (44 contre 55)
+    // Les deux derniers subsistent : les refermer demanderait un plafond sous
+    // 44, c'est-à-dire plus sévère qu'un défaut de sécurité DOCUMENTÉ — une
+    // pénalité déguisée en plafond. Le projet refuse d'affirmer un défaut
+    // qu'il n'a pas trouvé (règle du sprint 2).
+    //
+    // Garanti sans réserve : le verdict n'est JAMAIS vert, et jamais au-dessus
+    // de 55. Le résidu est épinglé à 2 : s'il bouge, dans un sens ou dans
+    // l'autre, ce test échoue et force une décision. On n'enfouit pas une
+    // limite connue derrière un contrôle qui ne mord pas.
+    affirme('aucun véhicule au moteur non identifié n’obtient un verdict vert',
+      vertsInterdits === 0, `${vertsInterdits} verdict(s) vert`)
+    affirme('⚠️ limite épinglée : 2 profils sur 6 où l’ignorance paie encore (casse et sécurité)',
+      scoresQuiMontent === 2, `${scoresQuiMontent} profil(s) — la limite a bougé, décision requise`)
+  }
+  // Et une garantie ne nous apprend pas quel moteur c'est : le plafond tient
+  // aussi dans le conditionnel.
+  const avecGarantie = calculerAxes({
+    ...sain, catalogue_vide: true, famille_identifiee: false, pannes: [],
+    condition_garantie: 'garantie constructeur en cours',
+  })
+  affirme('le conditionnel de garantie ne lève pas ce plafond',
+    (avecGarantie.verdict_conditionnel?.score ?? 0) <= 55,
+    JSON.stringify(avecGarantie.verdict_conditionnel))
+
+  // ⚠️ CONTRE-ÉPREUVE : sans le champ, RIEN ne change. Le drapeau est
+  // optionnel exprès — un appelant qui ne le renseigne pas (ancien client,
+  // recalcul d'un dossier produit avant ce correctif) doit obtenir exactement
+  // le score d'avant.
+  const absent = calculerAxes({ ...sain, catalogue_vide: true, pannes: [] })
+  const ancien = calculerAxes({ ...sain, catalogue_vide: true, famille_identifiee: true, pannes: [] })
+  affirme('champ absent ≡ famille identifiée : aucun score ne bouge',
+    absent.score === ancien.score && absent.axes.risques_mecaniques.note === null,
+    `${absent.score} contre ${ancien.score}`)
+  affirme('le test MORD : avec le drapeau à false, le score diffère',
+    inconnu.score !== absent.score, `${inconnu.score} contre ${absent.score}`)
+  // Et le cas « famille connue, aucune donnée » garde son « non évalué » :
+  // c'est une situation DIFFÉRENTE, et elle n'a pas été arbitrée.
+  affirme('famille connue mais catalogue vide : toujours « non évalué »',
+    ancien.axes.risques_mecaniques.note === null)
+}
+{
+  // 11.6 — SPRINT 20.1 : un moteur non identifié vaut 10/20 et plafonne le
+  // verdict en orange, au lieu de sortir du score (ce qui le faisait monter).
+  // 11.5 — SPRINT 20. Les comparables de la recherche de l'utilisateur
+  // alimentent l'axe prix dès 6 retenus, là où seul le relevé agrégé le
+  // faisait dès 15 : un dossier dont l'axe prix était « non évalué », donc
+  // exclu du score, est désormais noté. Le barème lui-même n'a pas changé,
+  // mais ce qu'il reçoit oui — et les clients d'API suivent ce numéro.
+  affirme('BAREME_VERSION passée à 11.7', BAREME_VERSION === '11.7', BAREME_VERSION)
+}
+{
+  // ⚠️ L'INVARIANT DU SPRINT 20 : le barème est AVEUGLE à la source de la
+  // fourchette. Il ne reçoit que des nombres — p25, médiane, p75, effectif,
+  // décalage kilométrique — et doit rendre exactement le même axe qu'ils
+  // viennent de six annonces vues par l'utilisateur ou de quinze relevés
+  // collectifs. Sans cela, la même annonce aurait deux notes selon le chemin,
+  // et il n'y aurait plus de verdict reproductible.
+  const commun = {
+    annee_courante: 2026, statut_vendeur: 'particulier', annee: 2018, kilometrage: 95000,
+    prix_affiche: 11000, entretien_renseigne: true, signaux_entretien: 2,
+    contradictions_entretien: 0, operations_critiques_non_faites: 0,
+    catalogue_vide: false, pannes: [], incoherences: 0,
+    fourchette: { p25: 9500, mediane: 10500, p75: 11500 }, fourchette_decalage_km: -250,
+  }
+  // Seul l'effectif diffère : 6 (recherche) contre 20 (relevé). L'axe prix ne
+  // doit pas dépendre de l'effectif, qui ne sert qu'au LIBELLÉ.
+  const recherche = calculerAxes({ ...commun, fourchette_n: 6, comparables_count: 6 })
+  const releve = calculerAxes({ ...commun, fourchette_n: 20, comparables_count: 20 })
+  affirme('axe prix identique quelle que soit la source de la fourchette',
+    recherche.axes.prix.note === releve.axes.prix.note,
+    `${recherche.axes.prix.note} contre ${releve.axes.prix.note}`)
+  affirme('score identique quelle que soit la source de la fourchette',
+    recherche.score === releve.score, `${recherche.score} contre ${releve.score}`)
+
+  // Et la contre-épreuve, sans laquelle le test serait vrai pour la mauvaise
+  // raison : SANS fourchette, l'axe prix sort du score, donc le score CHANGE.
+  // C'est précisément l'effet que le sprint 20 produit sur les dossiers
+  // accompagnés de six comparables.
+  const sans = calculerAxes({ ...commun, fourchette: null, fourchette_n: 0, comparables_count: 0, fourchette_decalage_km: 0 })
+  affirme('sans fourchette, l’axe prix n’est pas évalué',
+    sans.axes.prix.note === null && /Non évalué/.test(sans.axes.prix.commentaire),
+    JSON.stringify(sans.axes.prix))
+  affirme('le message de « non évalué » nomme les DEUX chemins réels (6 ou 15), plus « collez 3 »',
+    /6 annonces comparables/.test(sans.axes.prix.commentaire) && !/collez 3/.test(sans.axes.prix.commentaire),
+    sans.axes.prix.commentaire)
+  affirme('le test mord : le score diffère entre « avec fourchette » et « sans »',
+    sans.score !== recherche.score, `${sans.score} contre ${recherche.score}`)
 }
 
 console.log('CALIBRATION\n')

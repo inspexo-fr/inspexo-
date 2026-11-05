@@ -4,7 +4,7 @@ import {
   coutCarteGrise, messageVendeurRevendeur, offreOuverture, PARAMETRES_DEFAUT,
   prixAchatMax, prixRevente, MENTION_REVENDEUR,
 } from '../data/revendeur.gen'
-import { critair, libelleCritair, verdictZfe, ZFE, ZFE_RELEVE_LE } from '../data/critair.gen'
+import { critair, libelleCritair, sourceZfe, verdictZfe, ZFE_SOCLE } from '../data/critair.gen'
 import {
   getConfigPublique, preferencesRevendeurEcrire, preferencesRevendeurLire, revendeurCibleMaj,
 } from '../lib/scoreApi'
@@ -114,13 +114,20 @@ export default function RevendeurBloc({ analyse, analysisId }) {
   }
 
   const tarifs = config?.carte_grise_tarifs || null
+  // SPRINT 20 — la liste des ZFE vient de la MÊME config datée que les tarifs
+  // de carte grise. Avant, elle était figée dans le miroir généré : une zone
+  // créée par arrêté exigeait un redéploiement pour être prise en compte.
+  const zones = useMemo(() => (config?.zfe ? sourceZfe(config.zfe) : ZFE_SOCLE), [config])
   const carte = useMemo(
     () => coutCarteGrise(cv ? Number(cv) : null, region || null, tarifs),
     [cv, region, tarifs],
   )
 
   const classe = bloc?.critair || critair(analyse?.vehicule?.carburant || '', analyse?.vehicule?.annee ?? null)
-  const zfe = useMemo(() => (villeRevente ? verdictZfe(villeRevente, classe) : null), [villeRevente, classe])
+  const zfe = useMemo(
+    () => (villeRevente ? verdictZfe(villeRevente, classe, zones) : null),
+    [villeRevente, classe, zones],
+  )
   const interdit = !!(zfe && zfe.interdit)
 
   // Prix de revente : recalculé localement dès qu'un paramètre bouge (la
@@ -443,7 +450,7 @@ export default function RevendeurBloc({ analyse, analysisId }) {
                 aria-label="Ville où vous comptez revendre"
                 style={{ ...champ, width: 'auto', textAlign: 'left' }}>
                 <option value="">Ville de revente…</option>
-                {ZFE.map((z) => <option key={z.ville} value={z.ville}>{z.ville}</option>)}
+                {zones.zones.map((z) => <option key={z.ville} value={z.ville}>{z.ville}</option>)}
               </select>
             </div>
             {zfe && (
@@ -460,7 +467,7 @@ export default function RevendeurBloc({ analyse, analysisId }) {
               </p>
             )}
             <p className="mono c-graphite" style={{ fontSize: 10, lineHeight: 1.6, marginTop: 6 }}>
-              Liste des ZFE relevée le {ZFE_RELEVE_LE.split('-').reverse().join('/')} — un seuil local peut
+              Liste des ZFE relevée le {zones.maj.split('-').reverse().join('/')} — un seuil local peut
               avoir changé depuis, à confirmer auprès de la métropole.
             </p>
           </div>

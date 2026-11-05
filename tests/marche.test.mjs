@@ -10,7 +10,8 @@
 //  4. la région dérivée du seul code postal.
 import {
   ANNEE_INCONNUE, KM_INCONNU, PART_API_MAX, SEUIL_FOURCHETTE, TRANCHE_PRIX,
-  ajustementKm, boiteDe, departementDe, fondreReleves, fourchetteDepuisAgregats,
+  ajustementKm, ajustementKmListe, boiteDe, departementDe, fondreReleves,
+  fourchetteDepuisAgregats, fourchetteDepuisComparables, referenceDepuisFourchette,
   partApiAcceptable, partApiDominante,
   generationDe, ligneCompatible, marqueCanonique, milieuTrancheKm, moisRecents,
   modeleCanonique, normaliserNom, positionPrix, referencePrix, regionDe,
@@ -640,6 +641,105 @@ titre('Copie CLIENT ≡ source SERVEUR')
   // parité ne prouverait rien à son sujet : on recompte les cas où il mord.
   ok(bloquesParPartApi > 0,
     `le tirage exerce bien le verrou des 20 % (${bloquesParPartApi} cas bloqués par lui seul)`)
+}
+
+// ---------------------------------------------------------------------------
+titre('SPRINT 20 — fourchette bâtie sur les comparables de LA RECHERCHE')
+
+// Le seuil n'est PAS écrit ici : il vient de revendeur.ts. Si les deux
+// divergeaient un jour, le mode revendeur et l'axe prix ne parleraient plus du
+// même « assez de comparables ».
+const { SEUIL_COMPARABLES, penteKm, filtrerComparables } =
+  await import('../supabase/functions/_shared/revendeur.ts')
+
+eq(SEUIL_COMPARABLES, 6, 'le seuil des comparables propres vaut 6')
+ok(SEUIL_COMPARABLES < SEUIL_FOURCHETTE,
+  'le seuil de la recherche est plus bas que celui du relevé collectif (annonces vues contre contributions de tiers)')
+
+// Sous le seuil : RIEN. Pas de fourchette « faute de mieux ».
+eq(fourchetteDepuisComparables([9000, 9500, 10000, 10500, 11000], SEUIL_COMPARABLES), null,
+  '5 comparables : aucune fourchette')
+ok(fourchetteDepuisComparables([9000, 9500, 10000, 10500, 11000, 11500], SEUIL_COMPARABLES) !== null,
+  '6 comparables : fourchette publiée')
+
+// Les prix hors bornes ne comptent PAS dans l'effectif : six annonces dont une
+// à 1 € n'en font que cinq.
+eq(fourchetteDepuisComparables([1, 9000, 9500, 10000, 10500, 11000], SEUIL_COMPARABLES), null,
+  'un prix aberrant ne complète pas le seuil (5 valides sur 6)')
+
+{
+  const prix = [8000, 8500, 9000, 9500, 10000, 10500, 11000]
+  const f = fourchetteDepuisComparables(prix, SEUIL_COMPARABLES)
+  eq(f.n, 7, 'effectif = nombre de prix retenus')
+  eq(f.portee, 'national', 'une page de résultats n’a pas de région')
+  eq(f.region, null, 'aucune région inventée')
+  ok(f.p25 <= f.mediane && f.mediane <= f.p75, 'quantiles ordonnés')
+  // Lu sur l'histogramme de tranches de 250 € : la médiane tombe au milieu de
+  // la tranche de 9 500 €, soit 9 625 €. C'est la MÊME précision que celle avec
+  // laquelle le relevé agrégé est déjà publié.
+  eq(f.mediane, 9625, 'médiane au milieu de sa tranche de 250 €')
+  ok(Math.abs(f.mediane - 9500) <= TRANCHE_PRIX / 2,
+    'la médiane publiée reste dans la demi-tranche du prix observé')
+}
+
+// ⚠️ L'invariant qui compte : la MÊME fourchette, quelle que soit la source,
+// doit produire la MÊME position et le MÊME écart. Sans la queue commune
+// (`referenceDepuisFourchette`), la même annonce aurait pu être « dans la
+// moyenne » par un chemin et « plus chère que 75 % » par l'autre.
+{
+  const f = { p25: 9000, mediane: 10000, p75: 11000, n: 8, portee: 'national', region: null }
+  for (const prix of [8000, 9000, 9500, 10000, 11000, 12500]) {
+    const r = referenceDepuisFourchette(f, null, prix)
+    eq(r.position.cle, positionPrix(prix, f).cle, `position cohérente avec positionPrix à ${prix} €`)
+    eq(r.ecart_au_dessus_eur, Math.max(0, prix - 10000), `écart au-dessus exact à ${prix} €`)
+  }
+  eq(referenceDepuisFourchette(f, null, null).position, null, 'sans prix affiché, aucune position')
+}
+
+// Ajustement kilométrique : mesuré, ou absent. Jamais barémé.
+{
+  // Pente franche : 7 points, 7 tranches de km, −0,05 €/km.
+  const comps = [
+    { prix: 12000, km: 40000 }, { prix: 11500, km: 50000 }, { prix: 11000, km: 60000 },
+    { prix: 10500, km: 70000 }, { prix: 10000, km: 80000 }, { prix: 9500, km: 90000 },
+    { prix: 9000, km: 100000 },
+  ]
+  const pente = penteKm(comps)
+  ok(pente != null && pente < 0, 'pente mesurable et négative sur une série franche')
+  const a = ajustementKmListe(comps, 120000, pente)
+  eq(a.km_median_segment, 70000, 'kilométrage médian des comparables')
+  ok(a.ecart_eur < 0, 'un véhicule plus kilométré que la médiane tire la référence vers le bas')
+  eq(a.n_tranches, 7, 'tranches de 10 000 km comptées')
+  eq(a.decote_eur_10000km, 500, 'décote exprimée par 10 000 km, positive')
+
+  // Les trois portes de sortie : pas de pente, pas de km véhicule, pas de km.
+  eq(ajustementKmListe(comps, 120000, null), null, 'sans pente, aucun ajustement')
+  eq(ajustementKmListe(comps, null, pente), null, 'sans kilométrage du véhicule, aucun ajustement')
+  eq(ajustementKmListe([{ prix: 10000 }], 120000, pente), null, 'sans kilométrage des comparables, aucun ajustement')
+
+  // Série plate : aucune pente, donc aucun ajustement — on ne décote pas « au
+  // barème » parce qu'un véhicule est plus kilométré.
+  const plats = Array.from({ length: 8 }, (_, i) => ({ prix: 10000, km: 40000 + i * 10000 }))
+  eq(penteKm(plats), null, 'série plate : aucune pente')
+  eq(ajustementKmListe(plats, 150000, penteKm(plats)), null, 'série plate : aucun ajustement')
+}
+
+// Le filtre est bien celui du mode revendeur : même modèle, même énergie,
+// ± 2 ans, ± 40 000 km. C'est ce qui garantit qu'« axe prix » et « prix de
+// revente » parlent du même panier.
+{
+  const cible = { modele: 'clio', energie: 'diesel', annee: 2016, km: 120000 }
+  const liste = [
+    { prix: 9000, annee: 2016, km: 120000, modele: 'clio', energie: 'diesel', titre: 'Clio dCi' },
+    { prix: 9500, annee: 2016, km: 125000, modele: 'clio', energie: 'essence', titre: 'Clio TCe' },
+    { prix: 9200, annee: 2010, km: 120000, modele: 'clio', energie: 'diesel', titre: 'Clio III' },
+    { prix: 9300, annee: 2016, km: 300000, modele: 'clio', energie: 'diesel', titre: 'Clio taxi' },
+    { prix: 9400, annee: 2016, km: 120000, modele: 'megane', energie: 'diesel', titre: 'Mégane' },
+  ]
+  const r = filtrerComparables(liste, cible)
+  eq(r.retenus.length, 1, 'un seul comparable réellement comparable')
+  eq(r.ecartes.map((e) => e.raison).sort(), ['annee', 'energie', 'km', 'modele'],
+    'chaque écart est motivé — c’est ce que l’écran affiche')
 }
 
 // ---------------------------------------------------------------------------

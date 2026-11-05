@@ -25,14 +25,19 @@ import { coutProchainCas, murAtteint } from './budget.mjs'
 const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..')
 const COUT_FICHIER = join(RACINE, '.verification-cout.json')
 
-// MESURÉ, pas supposé : le module d'extraction a été passé sur les 505
-// `result_json` réellement produits (dump de production du 4 novembre 2026).
-//   · 5,1 affirmations par analyse réelle (médiane 4, max 10)
-//   · 1,62 page distincte à lire par analyse (médiane 2, max 4)
-//   · 55 % des affirmations ne citent AUCUNE page publique (catalogue interne)
-// Un appel ≈ 5 000 jetons d'entrée + 300 de sortie = 0,0195 $.
-// 1,62 × 0,0195 $ × 0,92 ≈ 0,029 € par analyse vérifiée.
-const COUT_ESTIME_PAR_ANALYSE_EUR = 0.029
+// MESURÉ, pas supposé. Un appel ≈ 5 000 jetons d'entrée + 300 de sortie
+// = 0,0195 $, et il y a UN appel par page citée (`parSource` : une page, un
+// appel). Le coût d'une analyse vérifiée est donc celui de ses pages.
+//
+// ⚠️ CE CHIFFRE A ÉTÉ CORRIGÉ LE 5 NOVEMBRE 2026, il valait 0,029 €. Il avait
+// été mesuré sur le dump du 4 novembre, c'est-à-dire sur des analyses
+// produites AVANT le sourcing de l'atlas (sprint 16) : 1,62 page par analyse
+// et 55 % d'affirmations sans aucune page publique. Depuis que l'atlas cite
+// ses sources, les analyses portent 2 à 4 pages — relevé sur la base : 3 pages
+// pour la 308 du 4/11, 4 pour la S7, contre 0 pour les analyses d'octobre.
+// Une estimation périmée vers le bas fait franchir le mur budgétaire sans
+// prévenir : c'est exactement ce que le mur existe pour empêcher.
+const COUT_ESTIME_PAR_ANALYSE_EUR = 0.05
 
 const args = process.argv.slice(2)
 const flag = (nom, defaut = null) => {
@@ -109,8 +114,8 @@ if (ESTIMER) {
   console.log('Estimation du budget — AUCUN appel payant n’est fait.\n')
   const lignes = [
     ['Analyses à vérifier', COMBIEN],
-    ['Pages lues par analyse (mesuré sur 505 analyses)', '1,62'],
-    ['Affirmations par analyse (mesuré)', '5,1 dont 55 % sans source publique'],
+    ['Pages lues par analyse (1 appel par page)', '2 à 4 depuis le sprint 16'],
+    ['Affirmations par analyse (mesuré)', '4,1 dont 11 % sans source publique'],
     ['Coût d’un appel (≈5 000 jetons entrée, 300 sortie)', '0,0195 $'],
     ['Coût estimé par analyse', `${COUT_ESTIME_PAR_ANALYSE_EUR.toFixed(3)} €`],
   ]
@@ -156,6 +161,13 @@ for (const c of cibles) {
   process.stdout.write(`▶ ${c.id} … `)
   const res = await appel('verification', { method: 'POST', body: JSON.stringify({ analysis_id: c.id }) })
   const json = await res.json().catch(() => null)
+  if (res.status === 409 && json?.error === 'analyse_eval') {
+    // ⚠️ La fonction refuse les analyses d'éval AVANT de dépenser : elles sont
+    // exclues de /fiabilite, donc les vérifier serait payer pour rien. Les
+    // 9 vérifications déjà en base le 5 nov. 2026 étaient toutes dans ce cas.
+    console.log('IGNORÉE — analyse marquée is_eval, aucun jeton dépensé')
+    continue
+  }
   if (!res.ok || !json) {
     console.log(`ÉCHEC (${res.status}) ${json?.message ?? ''}`)
     continue

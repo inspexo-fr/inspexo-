@@ -1742,18 +1742,329 @@ restent à prendre à la main dans Xcode — non bloquant, Apple accepte une seu
 capture pour soumettre.
 
 
+## Sprint 20 — Comparables, Crit'Air et VIN (5 nov. 2026)
+
+### a. Les comparables de SA recherche notent l'axe prix
+Deux sources, deux seuils, **une seule queue de calcul**. Les comparables
+relevés sur la page de résultats (extension et appli) alimentent l'axe prix et
+la négociation à partir de **6 retenus**, là où seul le relevé agrégé le
+faisait à partir de 15. Le plus spécifique passe devant — ce sont des annonces
+en ligne aujourd'hui, même modèle, même énergie, ± 2 ans, ± 40 000 km.
+- ⚠️ **Les deux sources ne se mélangent JAMAIS** : quand la recherche suffit,
+  les agrégats ne sont même pas interrogés. Additionner six annonces vues et
+  quatorze relevés d'inconnus donnerait un effectif qui ne mesure plus rien.
+- `fourchetteDepuisComparables` passe par **`quantileHisto`** : il n'existe
+  toujours qu'UNE implémentation des quantiles dans le projet. Le prix est donc
+  arrondi au milieu de sa tranche de 250 €, exactement la précision avec
+  laquelle le relevé agrégé est déjà publié.
+- ⚠️ `referenceDepuisFourchette` est la queue commune, **EXTRAITE et non
+  recopiée** : sans elle, la même annonce aurait pu être « dans la moyenne »
+  par un chemin et « plus chère que 75 % » par l'autre.
+- Le seuil de 6 n'est pas recopié : c'est **`SEUIL_COMPARABLES` de
+  `revendeur.ts`** qui est passé en argument, et le filtrage est **hissé** en
+  amont du bloc prix pour servir l'axe prix ET le mode revendeur une seule
+  fois. Deux appels au même filtre auraient fini par diverger.
+- « Non évalué » dit enfin **POURQUOI** : annonces reçues, retenues, et le
+  motif de chaque écart. Un « non évalué » affiché devant dix annonces qu'on
+  vient d'envoyer ressemblait à une panne.
+- ⚠️ Le message du barème disait « collez **3** annonces comparables » : trois
+  n'ont jamais suffi à rien, et celui qui en collait trois voyait toujours
+  « non évalué » sans comprendre. Corrigé : 6 de sa recherche, ou 15 relevés.
+- **`BAREME_VERSION` → 11.5.** Le barème est **AVEUGLE à la source** (même
+  fourchette → même axe, même score), prouvé par test **avec sa contre-épreuve**
+  (sans fourchette, le score diffère).
+
+### b. Crit'Air et ZFE dans TOUTES les analyses
+- La classe se déduit de la **PREMIÈRE IMMATRICULATION**, nouvellement
+  extraite. Sans elle le calcul se fait quand même, mais l'écran **le dit** et
+  renvoie à la carte grise : aux bornes de 2006 et 2011, un an change la
+  vignette. Classement inconnu ⇒ **aucun avertissement**.
+- La liste des ZFE passe en **config datée, avec la source de chaque zone**
+  (migration `20261121120000`), comme les tarifs du cheval fiscal : un seuil
+  figé dans un déploiement devient faux en silence. ⚠️ Le **socle du code
+  reste le filet** — sans lui, une config muette ferait disparaître TOUS les
+  avertissements sans produire la moindre erreur. Une zone malformée est
+  écartée **seule**, elle n'emporte pas les treize autres.
+- ⚠️ **Seule la ville de NOTRE liste est publiée**, jamais celle lue dans
+  l'annonce : `/a/:id` est public et n'a pas à redire où habite le vendeur.
+- La ville de l'utilisateur reste dans son **navigateur**, rien n'est envoyé.
+- **AUCUN effet sur le score** : le test lit le source du barème et exige qu'il
+  ne mentionne ni Crit'Air ni ZFE, avec la contre-épreuve qui vérifie que le
+  motif mord là où il existe.
+
+### c. VIN sans fournisseur
+- Le VIN est **TROUVÉ dans l'annonce par une expression régulière serveur**,
+  jamais par le modèle : un modèle qui « extrait » un identifiant de 17
+  caractères peut en halluciner un plausible, et une erreur d'un caractère
+  désignerait une autre voiture — le dossier affirmerait une discordance qui
+  n'existe pas.
+- `trouverVin` est **méfiant** sur un jeton isolé : WMI reconnu ou clé de
+  contrôle juste exigée, 17 chiffres refusés. Sans cela
+  « REF2024ABCDE12345 » passait pour un VIN.
+- **Seule la discordance de CONSTRUCTEUR** devient une incohérence (posée
+  serveur, donc exempte du filtre du sprint 17.1). L'année (position 10) et la
+  clé (position 9) ne sont pas obligatoires hors Amérique du Nord : les faire
+  peser sanctionnerait une voiture pour une convention que son constructeur
+  n'était pas tenu d'appliquer.
+- ⚠️ **LE VIN NE VA JAMAIS DANS `result_json`** : la page est publique et un
+  VIN est rattachable à son titulaire par le SIV. Les faits décodés sortent, le
+  numéro non. Un test vérifie que le numéro n'est lu **que** par `decoderVin`
+  et par le calcul d'empreinte.
+- `analyses.vin_empreinte` (colonne, exposée par **aucune** RPC) : sha256
+  **salé** avec `IP_HASH_SALT`. Un sha256 nu ne conviendrait pas — connaissant
+  marque, usine et année, le numéro de série se réduit à quelques millions de
+  possibilités. Rien à voir avec l'empreinte de TEXTE du sprint 12, non salée
+  à dessein pour que le client puisse la recalculer.
+- ⚠️ **Ce que ça débloque** : la règle 0 d'HistoVec comparait le VIN du
+  certificat à celui de l'annonce **depuis le sprint 13**, et ce second terme
+  était **TOUJOURS nul** — rien ne l'extrayait. Le contrôle existait et ne
+  contrôlait rien. Quatrième occurrence de ce motif dans le projet.
+- Implémentation **unique** : `_shared/vin.ts` est la source, `src/data/vin.gen.js`
+  le miroir généré, `src/lib/vin.js` un simple ré-export. La comparaison
+  (`concordanceVin`) vivait dans le composant : le serveur et l'écran pouvaient
+  conclure différemment sur le même VIN.
+
+### Mise en service — FAITE le 5 nov. 2026
+Dumps prod hors dépôt, migration `20261121120000` appliquée (1 seule en
+attente, 42/42), **7 fonctions** déployées (`fonctions-a-redeployer.mjs` en
+nomme 5 qu'aucun `git diff` ne cite). `essai-local.sh` : **36 migrations
+rejouées depuis une base vide, 78/78 assertions, 12/12 contrôles de
+comportement**. 32 suites hors ligne, build CRA vert.
+- Vérifié en production sur le dossier de l'éval : fourchette
+  `source: "recherche"`, **7 retenus sur 10 reçus** (3 écartés : année, modèle,
+  énergie), axe prix **15/20**, provenance « comparables de votre recherche
+  (7 annonces sur 10 relevées) ». Crit'Air **2** déduit de la première
+  immatriculation. `vin: {present: false}` sur une annonce sans VIN.
+- ⚠️ **Trois pièges rencontrés et notés** : `pg_get_functiondef` **lève** sur un
+  agrégat (`prokind = 'f'` obligatoire) ; un **backtick** dans un commentaire
+  SQL casse le littéral de gabarit JS qui le porte ; et `\_` y devient `_`,
+  donc un joker `LIKE`.
+- ⚠️ `tests/pannes-applicables.test.mjs` épinglait `BAREME_VERSION` à **11.4 à
+  l'identique** : il cassait à chaque sprint pour une raison étrangère à ce
+  qu'il surveille. Devenu un **plancher** ; l'épinglage exact vit à UN seul
+  endroit, `tests/bareme.test.mjs`.
+
+### ⚠️ Éval du 5 nov. — la Mercedes dérive, et ce n'est PAS le sprint 20
+Run de 4 cas + stabilité, **1,132 € sur un mur annoncé à 1,60 €**.
+
+| Cas | Résultat | Stabilité | Lecture |
+|---|---|---|---|
+| `audi-s7-intermediaire` | **rouge 39** | 39 / 39 / 39 | référence tenue |
+| `308-puretech-complete` | **orange 55** | 55 / 55 / 55 | référence tenue |
+| `mercedes-2025-societe` | **vert 75** puis 71 / 73 / 71 | écart 2 sur la phase | voir ci-dessous |
+| `revendeur-clio2-dci` | **orange 51** (était 46) | — | effet VOULU de 20a |
+
+**Diagnostic de la Mercedes, fait gratuitement en comparant les 4 analyses
+produites** : au passage à 75, `result_json.fiche` vaut
+`{cache: "none", statut: "absente", famille: null}` — **l'identification n'a pas
+déduit `code_famille`**. Sans famille : pas de fiche, pas de catalogue, **axe
+`risques_mecaniques` non évalué**, donc exclu du score, qui MONTE de 4 points.
+Au passage à 73, c'est l'axe `historique_entretien` qui sort.
+- ⚠️ **La conséquence est perverse et mérite d'être corrigée** : un véhicule
+  dont on ne parvient pas à identifier le moteur obtient un **meilleur** score
+  qu'un véhicule documenté. L'axe pèse ×2 et disparaît en silence.
+- Ce n'est pas une régression du sprint 20 : 20a ne touche que le prix (ce cas
+  n'a aucun comparable), 20b ne touche pas le score (prouvé par test), et 20c
+  n'a rien trouvé (`vin: {present: false}`). C'est la variance d'identification
+  déjà relevée au sprint 13 (77/71) et que le sprint 13.1 croyait avoir réglée.
+
+## Sprint 20.1 — Correctifs de l'audit d'avant-vente (5 nov. 2026)
+
+Six décisions d'Utku après l'audit. Les cinq premières sont faites ; la
+sixième est bloquée sur une clé que le poste ne peut pas lire.
+
+### 1. La politique de confidentialité disait plus que ce que le code tenait
+Elle affirmait « ce qui n'est **jamais** conservé : le numéro de série (VIN) »
+— or le sprint 20c conserve une **empreinte salée** du VIN de l'annonce. Nous
+ne gardons pas le numéro, mais nous gardons une donnée dérivée :
+pseudonymisée, pas anonyme.
+- La phrase est désormais rattachée au **CERTIFICAT** (où elle reste vraie) et
+  renvoie à la nouvelle section **6 undecies**, qui décrit l'empreinte :
+  finalité unique (vérifier qu'un rapport HistoVec décrit bien le véhicule de
+  l'annonce), salage, jamais le numéro, **durée = celle du dossier**.
+- Nouvelle section **6 duodecies** : Crit'Air (calcul réglementaire, rien
+  transmis), la **commune de l'annonce** lue en mémoire et jamais enregistrée —
+  seul le nom de la zone de NOTRE liste est conservé —, et la **ville de
+  l'acheteur** qui ne quitte pas son navigateur.
+- ⚠️ `tests/confidentialite.test.mjs` lie le document au code : **si le code
+  porte la collecte, le document doit en parler**. C'est la leçon du sprint 15
+  appliquée au juridique — une promesse figée dans un fichier ne se dément
+  jamais toute seule. Le test refuse aussi le retour de la phrase sans réserve.
+
+### 2. ⚠️ Un véhicule sur lequel on ne sait rien était MIEUX noté
+Sans famille moteur, `catalogue_vide` passait à `true`, l'axe
+`risques_mecaniques` sortait du score — et comme il **pèse ×2**, le verdict
+MONTAIT. Mesuré sur la même Classe C 220 d : **75 au lieu de 71**.
+- L'axe vaut maintenant **10/20 et il COMPTE** (`famille_identifiee` dans
+  `_shared/bareme.ts`), et le verdict **plafonne à 69** avec le motif « moteur
+  non identifié : pannes connues non vérifiées ». Le plafond ne tombe pas dans
+  le conditionnel de garantie : une garantie ne nous apprend pas quel moteur
+  c'est. **`BAREME_VERSION` → 11.6**, champ **optionnel** pour qu'aucun ancien
+  appelant ne bouge.
+- ⚠️ **LA NOTE NEUTRE NE SUFFISAIT PAS, et le plafond a été abaissé.** 10/20
+  est au-dessus de la note d'un moteur dont une source documente un défaut
+  **majeur** (9), une **casse** (5) ou un défaut de **sécurité** (4) : à
+  plafond 69, l'ignorance payait encore sur **3 profils sur 6** (+2, +10, +16).
+  Arbitrage d'Utku le 5 nov. : **borner plus bas plutôt qu'inventer une note**.
+  Plafond **69 → 55**, le rang déjà retenu pour « une opération critique
+  déclarée non faite ». **`BAREME_VERSION` → 11.7.**
+  - Effet mesuré : défaut majeur **refermé** (62 contre 55), casse **+10 → +5**,
+    sécurité **+16 → +11**. Les deux derniers subsistent, et les refermer
+    demanderait un plafond **sous 44** — plus sévère qu'un défaut de sécurité
+    DOCUMENTÉ, c'est-à-dire une pénalité déguisée en plafond. Le projet refuse
+    d'affirmer un défaut qu'il n'a pas trouvé (règle du sprint 2).
+  - Garanti sans réserve : **jamais vert, jamais au-dessus de 55**. Le résidu
+    est épinglé à **2** dans `tests/bareme.test.mjs` : s'il bouge, dans un sens
+    ou dans l'autre, le test échoue et force une décision. On n'enfouit pas une
+    limite connue derrière un contrôle qui ne mord pas.
+  - ⚠️ La **11.6** n'a jamais été servie à une analyse réelle : elle n'a vécu
+    que le temps d'un run d'éval. On incrémente quand même — un numéro de
+    version doit désigner UN comportement.
+
+### La cause de la dérive : `_shared/familleMoteur.ts`
+Le code famille était déduit par le MODÈLE, à partir d'exemples qui citent
+l'OM651 (2008-2019) et **pas** l'OM654 — et rien côté serveur ne complétait sa
+réponse. D'où 3 réponses sur 4.
+- Résolution **déterministe** depuis la table des 48 familles, figée en
+  `_shared/famillesMoteur.json` par `scripts/generer-familles-moteur.mjs`
+  (`--verifier` chaîné au prebuild et à l'éval) : **on fige le résultat, on ne
+  réécrit pas la logique**.
+- ⚠️ **Il ne second-devine JAMAIS le modèle** : un code proposé et attesté pour
+  cette marque est conservé tel quel. C'était l'erreur du premier filet du
+  sprint 13, qui avait attribué à cette même Mercedes des défauts d'OM651, de
+  V6 essence et de caisses W203. Il ne **complète** qu'une réponse manquante —
+  les quatre cas de référence sont donc intacts par construction, ce qu'un test
+  vérifie explicitement.
+- ⚠️ **La table s'arrête à 2022** parce que c'est la date du relevé du sprint 6,
+  pas une fin de production : aucune plage ne couvre 2025. Règle posée : une
+  année postérieure à **TOUTES** les plages retient la famille **la plus
+  récente** du modèle, faute de successeur attesté. Elle ne s'applique jamais
+  *avant* la première année attestée, et jamais sur une ambiguïté réelle (une
+  Classe C de 2018 reste `null` : l'OM651 et l'OM654 se chevauchent vraiment).
+- 500 résolutions du même cas, un seul résultat.
+
+### 3. `intake` n'était pas un point d'entrée authentifié
+Le secret de proxy ne décidait que de la **provenance de l'IP**. N'importe qui
+pouvait obtenir une analyse avec la clé anon — publiée dans le bundle du site —
+en contournant la porte Turnstile (5 analyses au lieu de 2 avant captcha).
+- Le secret est **exigé**, et **avant la lecture du corps**. Vérifié avant de
+  l'imposer : l'extension (`extension/background.js`) ET l'application
+  (`src/lib/mobile.js`) passent toutes deux par `www.inspexo.io/api/intake`,
+  qui porte le secret. Aucun client légitime n'appelle la fonction en direct.
+- `tests/points-d-entree.test.mjs` balaie les **50 fonctions** et exige que le
+  justificatif précède la lecture du corps. ⚠️ Les **deux webhooks Stripe** sont
+  traités à part, et ce n'est pas une exemption de complaisance : vérifier une
+  signature **exige** le corps brut. Leur invariant propre est contrôlé —
+  **aucun effet de bord avant la signature**.
+
+### 4. Neuf vérifications de fiabilité payées pour rien
+Les 9 lignes de `verifications` pointaient **toutes** vers des analyses
+`is_eval`, que `get_fiabilite` exclut par jointure. La fonction `verification`
+refuse désormais ces analyses par un **409**, avant d'extraire les affirmations
+et avant le premier appel au modèle.
+- ⚠️ Le garde-fou est dans la **FONCTION**, pas dans un script : un garde-fou
+  qui vit dans un script se contourne en n'utilisant pas le script.
+- ⚠️ Et **pas** de pré-contrôle dans la campagne : la réponse de `score` ne
+  porte pas `is_eval` (vérifié). Un `if (json.result?.is_eval)` n'aurait jamais
+  été vrai — **un contrôle qui ne se déclenche jamais ressemble à un contrôle
+  qui passe**. Les scripts traitent le refus réel.
+
+### 5. Les mineurs
+- `handle_new_user` et `rls_auto_enable` n'étaient plus exécutables par `anon`
+  (migration `20261122120000`). Non exploitables — ce sont des fonctions de
+  trigger, qui lèvent hors contexte — mais c'est la même défense en profondeur
+  que la migration `20261113120000`, qui les avait **laissées** parce qu'elles
+  n'appartiennent à aucune migration : créées depuis le **dashboard** aux
+  premières sessions (règle 0 ter). PostgreSQL ne vérifie pas EXECUTE au
+  déclenchement d'un trigger : révoquer ne casse rien.
+- `visio_disponible` **supprimée** : ouverte à `anon`, appelée par personne, et
+  elle rendait publiquement l'état de notre réseau d'inspecteurs. Supprimée
+  plutôt que seulement révoquée — du code mort qui donne l'illusion d'une
+  fonctionnalité.
+- **Pied de page à 44 px** (il était à 33). La navbar était déjà à 52 px :
+  c'est pourquoi le contrôle du sprint 5 ne l'avait pas vu. ⚠️ Mon premier
+  relevé annonçait 22 écarts sur l'accueil — **100 % de faux positifs**, je
+  mesurais aussi les liens à l'intérieur des phrases.
+- `/cibles` n'émet plus une requête dont le refus est certain : sans session le
+  401 est garanti et le navigateur le journalise en erreur. ⚠️ Un `catch` ne la
+  supprime pas — elle vient de la couche réseau.
+- Secret orphelin `STRIPE_WEBHOOK_SECRET` supprimé (18 secrets restants).
+
+### 6. 🔒 Webhooks Stripe live — BLOQUÉ sur la clé
+⚠️ **La clé live n'est pas récupérable depuis le poste** : l'API de gestion
+Supabase ne rend qu'un **condensé** de ses secrets (64 caractères, préfixe
+`e83aea1…`), pas leur valeur. La consigne « avec la clé live déjà posée, crée
+les endpoints » n'est donc pas exécutable en l'état.
+- `ops?webhooks=1` (lecture seule, secret d'éval) a été ajouté pour poser la
+  question depuis le poste — la clé ne vivant que dans les secrets de la
+  fonction. **Ce qu'il apprend change le plan** : un endpoint **LIVE** subsiste
+  vers **`stripe-webhook`**, fonction **retirée en 410** au sprint 8. Stripe lui
+  livre `payment_intent.succeeded`, `payment_intent.payment_failed` et
+  `account.updated`, qui échouent tous. Et **aucun** endpoint n'existe pour
+  `pass-webhook` ni `inspection-webhook`.
+- `scripts/webhooks-stripe-live.mjs` fait **exactement** ce qui a été demandé :
+  les deux endpoints avec les événements que le **code** traite, les deux
+  secrets posés nommément. **Ni `MEDIATEUR_NOM`, ni `PASS_MODE`, ni la clé** —
+  contrairement à `configurer-stripe-pass.mjs`, qui poserait `MEDIATEUR_NOM`
+  s'il le trouvait, c'est-à-dire **ouvrirait la vente**.
+- Garde-fous : refus si la clé n'est pas `sk_live_` (une clé de test poserait
+  des secrets de test sous les noms de la production, qui ne valideraient
+  rien) ; un endpoint déjà présent n'est **jamais** supprimé de notre
+  initiative, Stripe ne redonnant pas son secret ; l'orphelin n'est supprimé
+  que sur `--supprimer-orphelin`.
+- Pour voir l'état sans clé : `node scripts/webhooks-stripe-live.mjs --verifier`.
+
+
+### ⚠️ LE MUR BUDGÉTAIRE MENTAIT SUR CE QU'IL AVAIT FAIT (5 nov. 2026, second tour)
+Deux runs de vérification ont rapporté « 1/3 » puis « 2/3 analyse(s) **en
+erreur** » sur la stabilité de la Mercedes. Il n'y avait **aucune erreur** :
+c'était le mur budgétaire qui tronquait la phase, et l'éval étiquetait les
+passages non joués comme des échecs d'analyse.
+- **Cause** : `murAtteint` réserve le coût de la prochaine unité en divisant le
+  coût du run par le nombre d'unités jouées. Or **l'unité change de phase en
+  phase** : un CAS pendant la première, un PASSAGE pendant la stabilité — trois
+  fois moins cher. Le mur réservait donc un coût de cas avant chaque passage.
+  Mesuré : un run annoncé à **1,20 € arrêté à 1,024 €**, un run à **0,30 €
+  arrêté à 0,185 €**.
+- **Correctif** : `coutUnites` dans `scripts/budget.mjs` (module pur) — la
+  réserve se calcule sur la dépense de la PHASE, les deux murs continuent de
+  porter sur le coût TOTAL. Par défaut `coutUnites` vaut `coutRun` : aucun
+  appelant existant ne change de comportement. 20 contrôles hors ligne, dont
+  le cas réel de ce jour-là et la compatibilité.
+- **Et l'éval ne confond plus** : « INCOMPLET — N passage(s) NON joué(s) »
+  (avec le motif et les scores des passages joués) est distinct de « instable ».
+  Les deux font sortir en **1** : on ne déclare pas une stabilité qu'on n'a pas
+  fini de mesurer. ⚠️ Avant, le `.catch(() => null)` **avalait** aussi le motif
+  des vraies erreurs — corrigé : code HTTP, code d'erreur et message imprimés
+  par passage. Troisième fois que la sortie de l'éval coûte un run.
+- ⚠️ **Ce qui a été réellement mesuré sur la Mercedes** : 5 analyses complètes
+  dans la journée — **73, 71, 71** puis **73, 71**. Écart maximal **2 points**,
+  **toujours vert**. Le critère de stabilité (écart ≤ 5, verdict unique) est
+  donc tenu sur les cinq mesures ; c'est la comptabilité « 3 passages dans un
+  même run » qui n'a jamais abouti, faute de budget.
+
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |
 |---|---|---|
 | `audi-s7-intermediaire` | **rouge 39** | 5 nov. 2026 (sprint 17.1) |
 | `308-puretech-complete` | **orange 55** | 28 oct. 2026 |
-| `mercedes-2025-societe` | **vert 71** | 4 nov. 2026 (sprint 13) |
+| `mercedes-2025-societe` | **vert 71** (dérive mesurée 71-75) | 4 nov. 2026 (sprint 13) |
+| `revendeur-clio2-dci` | **orange 51** | 5 nov. 2026 (sprint 20a) |
 
 ⚠️ **Les relevés datés dans les sections de sprint ci-dessus disent ce qui a
 été mesuré CE JOUR-LÀ** : la S7 y figure à 38 avant le sprint 17.1, et c'est
 exact. On ne réécrit pas un relevé passé pour le faire coïncider avec le
 présent — c'est ce tableau qui fait foi pour l'état courant.
+
+⚠️ **La Clio II passe de 46 à 51** : le sprint 20a lui donne un axe prix
+(7 comparables retenus sur 10) là où il était « non évalué », donc exclu du
+score. C'est l'effet voulu, mesuré, pas une dérive.
+
+⚠️ **La Mercedes dérive entre 71 et 75** selon que l'identification déduit ou
+non `code_famille` : sans famille, l'axe risques sort du score et le verdict
+monte. Cause établie le 5 nov. 2026, correctif NON fait.
 
 ⚠️ **La S7 est à un point de l'orange** (seuil à 40). C'est le cas le plus
 près d'une bascule de couleur : toute modification du barème ou des filtres

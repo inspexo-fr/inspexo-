@@ -15,17 +15,37 @@
 /** Estimation prudente du coût d'un cas, AVANT d'en avoir mesuré un. */
 export const COUT_CAS_ESTIME_EUR = 0.12
 
-/** Coût à réserver pour le prochain cas : la moyenne observée sur ce run,
- *  l'estimation prudente avant le premier. */
-export function coutProchainCas(coutRun, casJoues, estime = COUT_CAS_ESTIME_EUR) {
-  return casJoues > 0 ? coutRun / casJoues : estime
+/** Coût à réserver pour la prochaine unité : la moyenne observée sur ce run,
+ *  l'estimation prudente avant la première.
+ *
+ *  ⚠️ `coutUnites` existe parce que « ce qui a été dépensé » et « ce qui a été
+ *  dépensé PAR LES UNITÉS COMPTÉES » ne sont pas toujours la même somme. Dans
+ *  l'éval, une unité est un CAS pendant la première phase, puis un PASSAGE
+ *  pendant la phase de stabilité — trois fois moins cher. En divisant le coût
+ *  TOTAL du run par un nombre de passages, la réserve devenait énorme et le mur
+ *  se déclenchait beaucoup trop tôt : le 5 nov. 2026, un run annoncé à 1,20 €
+ *  s'est arrêté à 1,024 € et un run à 0,30 € à 0,185 €, en rapportant les
+ *  passages non joués comme « analyses en erreur ». Le mur protégeait, mais il
+ *  mentait sur ce qu'il avait fait.
+ *
+ *  Par défaut `coutUnites` vaut `coutRun` : aucun appelant existant ne change
+ *  de comportement. */
+export function coutProchainCas(coutRun, casJoues, estime = COUT_CAS_ESTIME_EUR, coutUnites = null) {
+  const numerateur = coutUnites == null ? coutRun : coutUnites
+  return casJoues > 0 ? numerateur / casJoues : estime
 }
 
-/** Faut-il s'arrêter AVANT de jouer le cas suivant ? */
+/** Faut-il s'arrêter AVANT de jouer l'unité suivante ?
+ *
+ *  La RÉSERVE se calcule sur `coutUnites` (le coût des unités comptées), mais
+ *  les deux murs se comparent bien au coût TOTAL : on ne s'autorise pas à
+ *  dépasser le budget annoncé sous prétexte qu'une partie de la dépense n'est
+ *  pas comptée dans la moyenne. */
 export function murAtteint({
-  coutRun, casJoues, coutSession, budgetRun, plafondSession, estime = COUT_CAS_ESTIME_EUR,
+  coutRun, casJoues, coutSession, budgetRun, plafondSession,
+  estime = COUT_CAS_ESTIME_EUR, coutUnites = null,
 }) {
-  const reserve = coutProchainCas(coutRun, casJoues, estime)
+  const reserve = coutProchainCas(coutRun, casJoues, estime, coutUnites)
   if (coutSession + reserve > plafondSession) return 'session'
   if (budgetRun != null && coutRun + reserve > budgetRun) return 'run'
   return null

@@ -55,6 +55,64 @@ eq(murAtteint({ coutRun: 1, casJoues: 10, coutSession: 1, budgetRun: null, plafo
 eq(murAtteint({ coutRun: 0, casJoues: 0, coutSession: 0, budgetRun: 0.01, plafondSession: 5 }), 'run',
   'budget plus petit que le coût d’un cas : AUCUN cas joué')
 
+// ---------------------------------------------------------------------------
+// ⚠️ L'UNITÉ DU MUR — le défaut du 5 novembre 2026, second tour.
+//
+// Dans l'éval, une unité est un CAS pendant la première phase, puis un PASSAGE
+// pendant la phase de stabilité : trois fois moins cher. Le mur divisait le
+// coût TOTAL du run par un nombre de PASSAGES, donc réservait un coût de cas
+// avant chaque passage — et s'arrêtait beaucoup trop tôt. Mesuré : un run
+// annoncé à 1,20 € arrêté à 1,024 €, un run à 0,30 € arrêté à 0,185 €. Les
+// passages non joués étaient rapportés comme « analyses en erreur ».
+// ---------------------------------------------------------------------------
+{
+  // Le cas RÉEL de ce jour-là : 4 cas joués pour 0,94 €, puis la phase de
+  // stabilité où un passage coûte 0,08 €. Mur à 1,20 €.
+  const coutCas = 0.94
+  const parPassage = 0.08
+
+  // AVANT (le défaut) : la réserve valait coutRun / passages, soit presque le
+  // coût d'un cas entier. Reproduit en ne passant PAS coutUnites.
+  const avant = murAtteint({
+    coutRun: coutCas + 2 * parPassage, casJoues: 2, coutSession: coutCas + 2 * parPassage,
+    budgetRun: 1.2, plafondSession: 5,
+  })
+  ok(avant === 'run', 'AVANT : le mur se déclenchait après deux passages seulement')
+
+  // APRÈS : la réserve se calcule sur la dépense de la PHASE.
+  const apres = murAtteint({
+    coutRun: coutCas + 2 * parPassage, casJoues: 2, coutSession: coutCas + 2 * parPassage,
+    budgetRun: 1.2, plafondSession: 5, coutUnites: 2 * parPassage,
+  })
+  ok(apres === null, 'APRÈS : les trois passages tiennent dans le budget annoncé')
+
+  // ⚠️ Et le mur PROTÈGE TOUJOURS : la comparaison porte sur le coût TOTAL,
+  // pas sur celui de la phase. On ne s'autorise pas à dépasser le budget sous
+  // prétexte qu'une partie de la dépense n'entre pas dans la moyenne.
+  const auBord = murAtteint({
+    coutRun: 1.15, casJoues: 2, coutSession: 1.15,
+    budgetRun: 1.2, plafondSession: 5, coutUnites: 2 * parPassage,
+  })
+  ok(auBord === 'run', 'le mur mord encore quand le TOTAL approche le budget')
+
+  // Le plafond de session reste évalué de la même façon.
+  const session = murAtteint({
+    coutRun: 0.5, casJoues: 2, coutSession: 4.97,
+    budgetRun: 10, plafondSession: 5, coutUnites: 2 * parPassage,
+  })
+  ok(session === 'session', 'le plafond de session mord indépendamment du budget du run')
+
+  // Compatibilité : sans coutUnites, le comportement est EXACTEMENT l'ancien.
+  for (const [cr, cj] of [[0.4, 4], [1.0, 3], [0.12, 1], [0, 0]]) {
+    ok(coutProchainCas(cr, cj) === coutProchainCas(cr, cj, undefined, null),
+      `sans coutUnites, la réserve est inchangée (${cr}/${cj})`)
+  }
+  ok(Math.abs(coutProchainCas(1.1, 2, undefined, 0.16) - 0.08) < 1e-9,
+    'avec coutUnites, la réserve est celle de la phase')
+  ok(coutProchainCas(1.1, 0, 0.09, 0.0) === 0.09, 'avant la première unité, l’estimation prudente s’applique quand même')
+}
+
+
 console.log(`\n${ok_} contrôles passés, ${ko} échec(s).`)
 if (ko > 0) process.exit(1)
 console.log('Mur budgétaire : conforme.')

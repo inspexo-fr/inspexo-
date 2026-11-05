@@ -14,15 +14,28 @@ import RevendeurBloc from '../components/RevendeurBloc'
 import HistovecBloc from '../components/HistovecBloc'
 import VisioBloc from '../components/VisioBloc'
 import VinBloc from '../components/VinBloc'
+import CritairBloc from '../components/CritairBloc'
 import EtMaintenant from '../components/EtMaintenant'
 import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
 import { LIBELLES_REGION, SEUIL_FOURCHETTE } from '../data/marche'
+import { SEUIL_COMPARABLES } from '../data/revendeur.gen'
+
 import {
   getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
   trackEvent, dossierAdd, envoyerLienMagique, marquerClicPass,
 } from '../lib/scoreApi'
+
+// SPRINT 20 — pourquoi un comparable a été écarté, en français.
+// Les clés sont celles de `filtrerComparables` (_shared/revendeur.ts).
+const LIBELLES_ECART = {
+  modele: 'autre modèle',
+  energie: 'autre énergie',
+  annee: 'année trop éloignée',
+  km: 'kilométrage trop éloigné',
+  prix: 'prix inutilisable',
+}
 
 const VERDICT_LABELS = { vert: 'Feu vert', orange: 'Prudence', rouge: 'Signaux rouges' }
 
@@ -1042,6 +1055,13 @@ export default function ResultPage() {
               </div>
             )}
 
+            {/* Crit'Air et ZFE (sprint 20) — après le cadre juridique, parce que
+                c'est une contrainte réglementaire d'usage, et avant le message
+                au vendeur, dont elle peut nourrir une question. */}
+            {!enCours && r.type === 'vehicule' && (
+              <CritairBloc critair={r.critair} vehicule={vh} />
+            )}
+
             {/* Message vendeur */}
             {r.message_vendeur && (
               <div className="doc-sec">
@@ -1357,7 +1377,7 @@ export default function ResultPage() {
             )}
 
             {/* Numéro de châssis (sprint 7 — décodage normatif gratuit, local) */}
-            {!enCours && r.type === 'vehicule' && <VinBloc vehicule={vh} />}
+            {!enCours && r.type === 'vehicule' && <VinBloc vehicule={vh} vin={r.vin} />}
 
             {/* Rapport d'inspection déjà remis (sprint 8) : il passe AVANT
                 le bloc de commande, c'est le livrable que l'acheteur a payé. */}
@@ -1429,11 +1449,33 @@ export default function ResultPage() {
                 {r.prix?.commentaire ? (
                   <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>{r.prix.commentaire}</p>
                 ) : !r.prix?.fourchette ? (
-                  <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
-                    Non évalué : il faut au moins {SEUIL_FOURCHETTE} annonces comparables récentes
-                    (même motorisation, année et kilométrage proches) pour situer ce prix sans l'inventer.
-                    Collez des annonces comparables lors de l'analyse pour y contribuer.
-                  </p>
+                  <>
+                    <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
+                      Non évalué. Deux chemins le rendent évaluable : au moins{' '}
+                      {SEUIL_COMPARABLES} annonces comparables tirées de votre propre recherche
+                      (bouton « Ajouter ces annonces comme comparables » de l'extension, ou partage
+                      de la page de résultats depuis l'application), ou au moins{' '}
+                      {SEUIL_FOURCHETTE} relevés récents dans le relevé Inspexo pour ce modèle.
+                      Rien n'est estimé en dessous : un prix calculé sur quatre annonces a l'air
+                      sérieux, et c'est précisément ce qui le rend dangereux.
+                    </p>
+                    {/* SPRINT 20 — POURQUOI, et pas seulement « pas assez ». Un
+                        « non évalué » affiché devant dix annonces que
+                        l'utilisateur vient d'envoyer ressemble à une panne. */}
+                    {r.prix?.comparables?.recus > 0 && (
+                      <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginTop: 8 }}>
+                        {r.prix.comparables.recus} annonce{r.prix.comparables.recus > 1 ? 's' : ''} reçue
+                        {r.prix.comparables.recus > 1 ? 's' : ''} de votre recherche,{' '}
+                        {r.prix.comparables.retenus} retenue{r.prix.comparables.retenus > 1 ? 's' : ''}
+                        {' '}(seuil : {r.prix.comparables.seuil}).
+                        {Object.keys(r.prix.comparables.ecartes_par_raison || {}).length > 0 && (
+                          <> Écartées : {Object.entries(r.prix.comparables.ecartes_par_raison)
+                            .map(([raison, n]) => `${n} ${LIBELLES_ECART[raison] ?? raison}`)
+                            .join(', ')}.</>
+                        )}
+                      </p>
+                    )}
+                  </>
                 ) : null}
               </div>
             )}

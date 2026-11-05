@@ -1,16 +1,41 @@
 import React, { useState } from 'react'
-import { decoderVin } from '../lib/vin'
+import { concordanceVin, decoderVin } from '../lib/vin'
 
-// SPRINT 7 — Bloc « Numéro de châssis (VIN) » de /a/:id.
+// SPRINT 7 / SPRINT 20 — Bloc « Numéro de châssis (VIN) » de /a/:id.
+//
 // Étape 1, GRATUITE et locale (rien n'est envoyé nulle part) : structure,
 // constructeur (WMI), pays, année-modèle probable, clé de contrôle — et
 // recoupement avec l'annonce (un VIN d'une autre marque se voit immédiatement).
 // Étape 2 (moteur exact, finition, équipements d'origine) : fournisseur payant
 // à valider — docs/vin-fournisseurs.md — volontairement non activé.
+//
+// SPRINT 20 — DEUX sources, et la différence se dit :
+//  · le VIN écrit DANS L'ANNONCE, trouvé par le serveur (expression régulière,
+//    jamais par le modèle) et déjà décodé : `vin` ;
+//  · le VIN que l'acheteur obtient du vendeur et saisit ici.
+//
+// ⚠️ Le serveur ne transmet JAMAIS le numéro, seulement ce qu'il en a déduit :
+// /a/:id est une page publique, et un VIN est rattachable à son titulaire par
+// le SIV. C'est pourquoi ce bloc n'affiche pas le VIN de l'annonce — il le
+// commente. L'acheteur, lui, a l'annonce sous les yeux.
+//
+// ⚠️ La comparaison vit dans `concordanceVin` (module partagé) : avant le
+// sprint 20 elle était écrite ici, et le serveur pouvait conclure autrement
+// que l'écran sur le même VIN.
 
-const normalise = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+function Constats({ constats }) {
+  return constats.map((c, i) => (
+    <p
+      key={i}
+      className={c.ok === false ? 'c-rouge' : c.ok ? 'c-vert' : 'c-graphite'}
+      style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6, fontWeight: c.ok === false ? 600 : 400 }}
+    >
+      {c.texte}
+    </p>
+  ))
+}
 
-export default function VinBloc({ vehicule }) {
+export default function VinBloc({ vehicule, vin }) {
   const [saisie, setSaisie] = useState('')
   const [resultat, setResultat] = useState(null)
 
@@ -20,39 +45,80 @@ export default function VinBloc({ vehicule }) {
     setResultat(decoderVin(saisie))
   }
 
-  const marqueAnnonce = vehicule?.marque || null
-  const anneeAnnonce = typeof vehicule?.annee === 'number' ? vehicule.annee : null
-
-  const concordances = []
-  if (resultat?.valide) {
-    if (resultat.constructeur && marqueAnnonce) {
-      const ok = normalise(resultat.constructeur).includes(normalise(marqueAnnonce)) ||
-        normalise(marqueAnnonce).includes(normalise(resultat.constructeur).split(' ')[0])
-      concordances.push(ok
-        ? { ok, texte: `Constructeur du VIN (${resultat.constructeur}) cohérent avec l'annonce (${marqueAnnonce}).` }
-        : { ok, texte: `Le VIN désigne un véhicule ${resultat.constructeur} alors que l'annonce dit ${marqueAnnonce} : faites-vous expliquer cette différence avant toute visite.` })
-    }
-    if (anneeAnnonce && resultat.annees_possibles.length > 0) {
-      const ok = resultat.annees_possibles.some(a => Math.abs(a - anneeAnnonce) <= 1)
-      concordances.push(ok
-        ? { ok, texte: `Année-modèle du VIN (${resultat.annees_possibles.join(' ou ')}) compatible avec l'annonce (${anneeAnnonce}).` }
-        : { ok, texte: `L'année-modèle codée dans le VIN (${resultat.annees_possibles.join(' ou ')}) ne correspond pas à l'annonce (${anneeAnnonce}) — ce code n'est pas obligatoire en Europe, mais posez la question.` })
-    }
-    if (!resultat.cle.obligatoire && !resultat.cle.concorde) {
-      concordances.push({
-        ok: null,
-        texte: 'Clé de contrôle non concordante : fréquent sur les VIN européens (elle n\'y est pas obligatoire) — vérifiez simplement votre saisie contre le champ E de la carte grise.',
-      })
-    }
+  const constatsSaisie = resultat?.valide ? concordanceVin(resultat, vehicule).constats : []
+  if (resultat?.valide && !resultat.cle.obligatoire && !resultat.cle.concorde) {
+    constatsSaisie.push({
+      ok: null,
+      texte: 'Clé de contrôle non concordante : fréquent sur les VIN européens (elle n\'y est pas '
+        + 'obligatoire) — vérifiez simplement votre saisie contre le champ E de la carte grise.',
+    })
   }
 
+  const annonce = vin?.present ? vin : null
+
   return (
-    <div className="doc-sec">
+    <div className="doc-sec" id="vin">
       <p className="eyebrow">Numéro de châssis (VIN)</p>
+
+      {/* ── Le VIN que l'annonce contient déjà ───────────────────────────── */}
+      {annonce && (
+        <div style={{ marginBottom: 14 }}>
+          <p style={{ fontSize: 14, lineHeight: 1.7, marginTop: 8 }}>
+            {annonce.etiquette
+              ? 'L\'annonce donne le numéro de châssis. Il a été décodé ici, et le numéro lui-même n\'est pas repris sur cette page.'
+              : 'Une suite de 17 caractères reconnue comme un numéro de châssis figure dans l\'annonce. Décodée ci-dessous, sous réserve que ce soit bien le VIN de ce véhicule.'}
+          </p>
+          {annonce.valide ? (
+            <>
+              <dl className="specs">
+                <div>
+                  <dt>Constructeur (WMI)</dt>
+                  <dd>{annonce.constructeur || 'Non reconnu — ce WMI n\'est pas dans notre liste'}</dd>
+                </div>
+                {annonce.pays && <div><dt>Pays de fabrication</dt><dd>{annonce.pays}</dd></div>}
+                {!annonce.pays && annonce.region && (
+                  <div><dt>Région de fabrication</dt><dd>{annonce.region}</dd></div>
+                )}
+                {annonce.annees_possibles?.length > 0 && (
+                  <div>
+                    <dt>Année-modèle probable</dt>
+                    <dd className="num">{annonce.annees_possibles.join(' ou ')}</dd>
+                  </div>
+                )}
+              </dl>
+              <Constats constats={annonce.concordance?.constats || []} />
+              {/* ⚠️ La clé de contrôle n'est obligatoire qu'en Amérique du
+                  Nord : une discordance est un signal de relecture, jamais une
+                  preuve que le VIN est faux. Elle ne pèse pas sur le verdict. */}
+              {annonce.cle_concorde === false && !annonce.cle_obligatoire && (
+                <p className="c-graphite" style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>
+                  Clé de contrôle non concordante. Elle n'est pas obligatoire sur
+                  les VIN européens : à relire contre le champ E de la carte
+                  grise, sans en conclure quoi que ce soit.
+                </p>
+              )}
+              {annonce.cle_concorde === false && annonce.cle_obligatoire && (
+                <p className="c-rouge" style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6, fontWeight: 600 }}>
+                  Clé de contrôle non concordante sur un VIN d'Amérique du Nord,
+                  où elle est <strong>obligatoire</strong> : ce numéro est mal
+                  recopié, ou il n'est pas authentique. À faire expliquer.
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="c-graphite" style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>
+              La suite trouvée ne respecte pas la structure d'un VIN : rien n'en
+              est déduit.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* ── Le VIN que l'acheteur demande au vendeur ─────────────────────── */}
       <p style={{ fontSize: 14, lineHeight: 1.7, marginTop: 8 }}>
-        Demandez-le au vendeur (champ E de la carte grise, 17 caractères) : il sert au rapport
-        HistoVec, à la campagne Takata et aux rappels constructeur. Vérification de structure
-        et de cohérence ici même, sur votre appareil — rien n'est transmis.
+        {annonce
+          ? 'Vérifiez-le sur place contre la carte grise (champ E) et le numéro frappé sur le véhicule : c\'est la seule façon de voir qu\'un numéro a été substitué.'
+          : 'Demandez-le au vendeur (champ E de la carte grise, 17 caractères) : il sert au rapport HistoVec, à la campagne Takata et aux rappels constructeur. Vérification de structure et de cohérence ici même, sur votre appareil — rien n\'est transmis.'}
       </p>
       <form onSubmit={decoder} style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
         <input
@@ -80,18 +146,14 @@ export default function VinBloc({ vehicule }) {
               <div><dt>Année-modèle probable</dt><dd className="num">{resultat.annees_possibles.join(' ou ')}</dd></div>
             )}
           </dl>
-          {concordances.map((c, i) => (
-            <p key={i} className={c.ok === false ? 'c-rouge' : c.ok ? 'c-vert' : 'c-graphite'}
-              style={{ fontSize: 13, marginTop: 8, lineHeight: 1.6, fontWeight: c.ok === false ? 600 : 400 }}>
-              {c.texte}
-            </p>
-          ))}
-          <p className="mono c-graphite" style={{ marginTop: 10, fontSize: 11, lineHeight: 1.6 }}>
-            Décodage normatif (ISO 3779) : structure, constructeur, année probable. Le moteur exact
-            et les équipements d'origine exigent une base constructeur — en préparation pour le Pass achat.
-          </p>
+          <Constats constats={constatsSaisie} />
         </div>
       )}
+
+      <p className="mono c-graphite" style={{ marginTop: 10, fontSize: 11, lineHeight: 1.6 }}>
+        Décodage normatif (ISO 3779) : structure, constructeur, année probable. Le moteur exact
+        et les équipements d'origine exigent une base constructeur — en préparation pour le Pass achat.
+      </p>
     </div>
   )
 }

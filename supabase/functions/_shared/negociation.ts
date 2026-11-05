@@ -197,14 +197,20 @@ type EntreeNegociation = {
   // jamais faite ») — déjà auditées par la critique.
   operations_non_faites: string[];
   // SPRINT 9 — position du prix demandé dans le relevé d'annonces comparables.
-  // Renseigné SEULEMENT quand la fourchette existe (≥ 15 relevés) et que
-  // l'annonce est au-dessus de la médiane de référence.
+  // Renseigné SEULEMENT quand la fourchette existe et que l'annonce est
+  // au-dessus de la médiane de référence.
   prix_marche?: {
     ecart_eur: number; // prix demandé − médiane de référence (> 0)
     mediane: number;
     n: number;
     date: string; // 'JJ/MM' du relevé
     ajuste_km: boolean; // la médiane a-t-elle été corrigée du kilométrage ?
+    // SPRINT 20 — laquelle des deux sources a fourni la médiane. L'argument
+    // s'adresse à un vendeur : « vos 7 annonces » se vérifie en trois clics,
+    // « notre relevé » demande de nous croire. Les deux sont honnêtes, mais
+    // ce ne sont pas les mêmes arguments, et les confondre serait prêter au
+    // relevé collectif une précision qu'il n'a pas sur SON modèle.
+    source?: "recherche" | "releve";
   } | null;
   plan_entretien: Array<{
     operation: string;
@@ -366,7 +372,8 @@ export function calculerNegociation(e: EntreeNegociation): Negociation {
       poste: "Prix demandé au-dessus de la médiane des annonces comparables",
       argument:
         `Le prix demandé dépasse de ${fr(m.ecart_eur)} € la médiane de ${fr(m.mediane)} € ` +
-        `relevée sur ${m.n} annonces comparables le ${m.date}` +
+        `relevée sur ${m.n} annonces comparables ` +
+        `${m.source === "recherche" ? "de votre recherche " : ""}le ${m.date}` +
         `${m.ajuste_km ? ", à kilométrage comparable" : ""} — ce sont des prix demandés, ` +
         `pas des prix de vente : les transactions se concluent souvent en dessous.`,
       cout_direct_min: m.ecart_eur,

@@ -63,6 +63,26 @@ serve(async (req: Request) => {
     });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
+  // ⚠️ LE SECRET DE PROXY EST EXIGÉ, ET AVANT DE LIRE LE CORPS (audit du
+  // 5 nov. 2026). Jusqu'ici il ne décidait que de la PROVENANCE de l'IP :
+  // n'importe qui pouvait appeler cette fonction avec la clé anon — publiée
+  // dans le bundle du site — et obtenir une analyse en CONTOURNANT le captcha,
+  // puisque `score` exempte l'appel interne de la porte Turnstile (5 analyses
+  // au lieu de 2 avant captcha). Sans conséquence tant que Turnstile dort,
+  // mais c'est précisément la mesure qu'on activerait sous attaque.
+  //
+  // ⚠️ Vérifié avant de poser cette exigence : l'extension
+  // (`extension/background.js`) ET l'application (`src/lib/mobile.js`)
+  // passent TOUTES DEUX par https://www.inspexo.io/api/intake, le proxy
+  // Vercel qui porte le secret. Aucun client légitime n'appelle cette
+  // fonction en direct — l'exigence ne casse donc rien.
+  //
+  // Le refus précède la lecture du corps : un appelant sans justificatif n'a
+  // pas à faire tourner notre validation, ni à apprendre ce qu'elle attend.
+  if (!(await proxySecretMatches(req))) {
+    return json({ error: "forbidden", message: "Appel réservé au proxy Inspexo." }, 403);
+  }
+
   try {
     const body = await req.json().catch(() => null);
     if (!body) return json({ error: "invalid_input", message: "Corps JSON requis." }, 400);
@@ -118,12 +138,11 @@ serve(async (req: Request) => {
 
     // Forward service→service : score applique SON rate limit sur l'ip_hash
     // du client final (transmis), pas sur l'IP interne de cette fonction.
-    // Derrière le proxy inspexo.io/api/intake (secret signé), l'IP réelle du
-    // client est dans x-proxy-client-ip ; sinon, IP directe de la requête.
-    const viaProxy = await proxySecretMatches(req);
-    const ip = viaProxy
-      ? (req.headers.get("x-proxy-client-ip") ?? "unknown").trim()
-      : clientIp(req);
+    // Le secret ayant été vérifié en tête, l'IP réelle du client est celle que
+    // le proxy transmet. ⚠️ Repli sur l'IP directe si l'en-tête manque : on
+    // ne veut pas d'un seau de rate limit partagé par tout le monde sous la
+    // clé « unknown », ce qui bloquerait le premier utilisateur venu.
+    const ip = (req.headers.get("x-proxy-client-ip") ?? "").trim() || clientIp(req);
     const ipHash = await sha256Hex(IP_HASH_SALT + ip);
     const res = await fetch(`${SUPABASE_URL}/functions/v1/score`, {
       method: "POST",

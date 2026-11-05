@@ -1,0 +1,626 @@
+{
+  "familles": [
+    {
+      "marque": "Renault",
+      "famille": "K9K",
+      "nom_commercial": "1.5 dCi",
+      "modeles": [
+        "Renault Clio III/IV",
+        "Renault Mégane III/IV",
+        "Dacia Duster I/II",
+        "Nissan Qashqai I/II",
+        "Renault Scénic III"
+      ],
+      "debut": 2001,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Renault",
+      "famille": "H5FT",
+      "nom_commercial": "1.2 TCe",
+      "modeles": [
+        "Renault Clio IV",
+        "Renault Captur I",
+        "Renault Kadjar",
+        "Nissan Qashqai II"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2019
+    },
+    {
+      "marque": "Renault",
+      "famille": "H4BT",
+      "nom_commercial": "0.9 TCe",
+      "modeles": [
+        "Renault Clio IV",
+        "Renault Twingo III",
+        "Dacia Sandero II",
+        "Dacia Duster II"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2021
+    },
+    {
+      "marque": "Renault",
+      "famille": "H5HT",
+      "nom_commercial": "1.3 TCe",
+      "modeles": [
+        "Renault Clio V",
+        "Renault Captur II",
+        "Renault Mégane IV",
+        "Mercedes Classe A W177"
+      ],
+      "debut": 2018,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Renault",
+      "famille": "H4D",
+      "nom_commercial": "1.0 SCe",
+      "modeles": [
+        "Renault Twingo III",
+        "Renault Clio V",
+        "Dacia Sandero III"
+      ],
+      "debut": 2014,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Renault",
+      "famille": "H4DT",
+      "nom_commercial": "1.0 TCe",
+      "modeles": [
+        "Renault Clio V",
+        "Renault Captur II",
+        "Dacia Sandero III"
+      ],
+      "debut": 2019,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Renault",
+      "famille": "H4M",
+      "nom_commercial": "1.6 SCe",
+      "modeles": [
+        "Renault Captur",
+        "Renault Mégane IV",
+        "Dacia Duster II",
+        "Nissan Qashqai"
+      ],
+      "debut": 2004,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Renault",
+      "famille": "K4M",
+      "nom_commercial": "1.6 16V",
+      "modeles": [
+        "Renault Mégane II/III",
+        "Dacia Duster I",
+        "Renault Kangoo II",
+        "Dacia Logan"
+      ],
+      "debut": 1999,
+      "derniere_attestee": 2016
+    },
+    {
+      "marque": "Dacia",
+      "famille": "K7M",
+      "nom_commercial": "1.6 8V",
+      "modeles": [
+        "Dacia Sandero I/II",
+        "Dacia Logan",
+        "Dacia Lodgy"
+      ],
+      "debut": 2004,
+      "derniere_attestee": 2014
+    },
+    {
+      "marque": "Nissan",
+      "famille": "MR20DE",
+      "nom_commercial": "2.0 essence",
+      "modeles": [
+        "Nissan Qashqai I/II",
+        "Nissan X-Trail",
+        "Renault Scénic III"
+      ],
+      "debut": 2005,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Nissan",
+      "famille": "MR16DDT",
+      "nom_commercial": "1.6 DIG-T",
+      "modeles": [
+        "Nissan Juke I",
+        "Nissan Qashqai II",
+        "Renault Clio RS",
+        "Renault Kadjar"
+      ],
+      "debut": 2010,
+      "derniere_attestee": 2019
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "DV6",
+      "nom_commercial": "1.6 HDi",
+      "modeles": [
+        "Peugeot 207/208",
+        "Peugeot 308 I/II",
+        "Peugeot 3008 I",
+        "Citroën C3/C4",
+        "Citroën Berlingo",
+        "Ford Fiesta/Focus"
+      ],
+      "debut": 2004,
+      "derniere_attestee": 2018
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "DV5",
+      "nom_commercial": "1.5 BlueHDi",
+      "modeles": [
+        "Peugeot 208 II",
+        "Peugeot 308 II/III",
+        "Peugeot 3008 II",
+        "Citroën C3/C4",
+        "Citroën C5 Aircross",
+        "Opel Astra/Grandland"
+      ],
+      "debut": 2017,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "EB2DT",
+      "nom_commercial": "1.2 PureTech 110",
+      "modeles": [
+        "Peugeot 208 I/II",
+        "Peugeot 2008",
+        "Peugeot 308 II",
+        "Citroën C3 III",
+        "Opel Corsa F"
+      ],
+      "debut": 2014,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "EB2DTS",
+      "nom_commercial": "1.2 PureTech 130",
+      "modeles": [
+        "Peugeot 3008 II",
+        "Peugeot 308 II/III",
+        "Citroën C4 III",
+        "DS 7 Crossback"
+      ],
+      "debut": 2015,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "EB2ADTS",
+      "nom_commercial": "1.2 PureTech 100",
+      "modeles": [
+        "Peugeot 208 II",
+        "Peugeot 2008 II",
+        "Opel Corsa F",
+        "Citroën C3 III"
+      ],
+      "debut": 2018,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "EB2F",
+      "nom_commercial": "1.2 PureTech 82 atmosphérique",
+      "modeles": [
+        "Citroën C3 II/III",
+        "Peugeot 208 I",
+        "Peugeot 2008 I",
+        "Citroën C-Elysée"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2018
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "EP6",
+      "nom_commercial": "1.6 THP",
+      "modeles": [
+        "Peugeot 308 GT",
+        "Peugeot 3008 I",
+        "Citroën DS3",
+        "Mini Cooper S R56"
+      ],
+      "debut": 2006,
+      "derniere_attestee": 2017
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "DW10",
+      "nom_commercial": "2.0 BlueHDi",
+      "modeles": [
+        "Peugeot 308 II",
+        "Peugeot 3008 II",
+        "Peugeot 508 I/II",
+        "Citroën C5 Aircross"
+      ],
+      "debut": 2014,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Peugeot",
+      "famille": "DW12",
+      "nom_commercial": "2.2 BlueHDi",
+      "modeles": [
+        "Peugeot Expert",
+        "Citroën Jumpy",
+        "Peugeot 508 I",
+        "Citroën SpaceTourer"
+      ],
+      "debut": 2006,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Fiat",
+      "famille": "SDE",
+      "nom_commercial": "1.3 Multijet",
+      "modeles": [
+        "Fiat 500",
+        "Fiat Panda III",
+        "Opel Corsa D/E",
+        "Fiat Punto Evo"
+      ],
+      "debut": 2003,
+      "derniere_attestee": 2020
+    },
+    {
+      "marque": "Fiat",
+      "famille": "TWINAIR",
+      "nom_commercial": "0.9 TwinAir",
+      "modeles": [
+        "Fiat 500",
+        "Fiat Panda III",
+        "Fiat 500L"
+      ],
+      "debut": 2010,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Fiat",
+      "famille": "FIREFLY",
+      "nom_commercial": "1.0 FireFly",
+      "modeles": [
+        "Fiat 500 Hybrid",
+        "Fiat Panda Hybrid",
+        "Lancia Ypsilon"
+      ],
+      "debut": 2020,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Volkswagen",
+      "famille": "EA288",
+      "nom_commercial": "2.0 TDI (EA288)",
+      "modeles": [
+        "VW Golf VII",
+        "VW Passat B8",
+        "VW Tiguan II",
+        "Skoda Octavia III",
+        "Seat Leon III"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2020
+    },
+    {
+      "marque": "Audi",
+      "famille": "EA288",
+      "nom_commercial": "2.0 TDI (EA288)",
+      "modeles": [
+        "Audi A3 8V",
+        "Audi A4 B9",
+        "Audi Q3 I/II",
+        "Audi A1 GB"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2020
+    },
+    {
+      "marque": "Volkswagen",
+      "famille": "CRBC",
+      "nom_commercial": "1.6 TDI (CRBC)",
+      "modeles": [
+        "VW Golf VII",
+        "VW Caddy IV",
+        "Skoda Octavia III",
+        "Seat Leon III"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2020
+    },
+    {
+      "marque": "Volkswagen",
+      "famille": "EA189",
+      "nom_commercial": "1.6 et 2.0 TDI (EA189)",
+      "modeles": [
+        "VW Golf VI",
+        "VW Passat B7",
+        "Audi A3 8P",
+        "Skoda Octavia II",
+        "Seat Ibiza IV"
+      ],
+      "debut": 2008,
+      "derniere_attestee": 2015
+    },
+    {
+      "marque": "Audi",
+      "famille": "EA824",
+      "nom_commercial": "4.0 V8 TFSI",
+      "modeles": [
+        "Audi S6 C7",
+        "Audi S7 C7",
+        "Audi S8 D4",
+        "Audi RS6 C7"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2018
+    },
+    {
+      "marque": "BMW",
+      "famille": "B47",
+      "nom_commercial": "2.0 diesel (B47)",
+      "modeles": [
+        "BMW Série 1 F20/F40",
+        "BMW Série 3 F30/G20",
+        "BMW X1 F48",
+        "BMW Série 5 G30"
+      ],
+      "debut": 2014,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "BMW",
+      "famille": "N47",
+      "nom_commercial": "2.0 diesel (N47)",
+      "modeles": [
+        "BMW Série 1 E87/F20",
+        "BMW Série 3 E90/F30",
+        "BMW X1 E84",
+        "BMW Série 5 F10"
+      ],
+      "debut": 2007,
+      "derniere_attestee": 2015
+    },
+    {
+      "marque": "BMW",
+      "famille": "N13",
+      "nom_commercial": "1.6 essence (N13)",
+      "modeles": [
+        "BMW Série 1 F20",
+        "BMW Série 3 F30",
+        "BMW X1 E84"
+      ],
+      "debut": 2011,
+      "derniere_attestee": 2016
+    },
+    {
+      "marque": "Mini",
+      "famille": "N18",
+      "nom_commercial": "1.6 Cooper S (Prince)",
+      "modeles": [
+        "Mini Cooper S R56",
+        "Mini Countryman R60",
+        "Mini Clubman R55"
+      ],
+      "debut": 2006,
+      "derniere_attestee": 2016
+    },
+    {
+      "marque": "Mercedes",
+      "famille": "OM651",
+      "nom_commercial": "2.1 CDI (OM651)",
+      "modeles": [
+        "Mercedes Classe C W204/W205",
+        "Mercedes Classe E W212",
+        "Mercedes Vito",
+        "Mercedes Sprinter"
+      ],
+      "debut": 2008,
+      "derniere_attestee": 2019
+    },
+    {
+      "marque": "Mercedes",
+      "famille": "OM654",
+      "nom_commercial": "2.0 diesel (OM654)",
+      "modeles": [
+        "Mercedes Classe C W205",
+        "Mercedes Classe E W213",
+        "Mercedes GLC X253",
+        "Mercedes Classe A W177"
+      ],
+      "debut": 2016,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Mercedes",
+      "famille": "OM607",
+      "nom_commercial": "1.5 CDI (OM607)",
+      "modeles": [
+        "Mercedes Classe A W176",
+        "Mercedes Classe B W246",
+        "Mercedes CLA C117"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2019
+    },
+    {
+      "marque": "Mercedes",
+      "famille": "M282",
+      "nom_commercial": "1.3 essence (M282)",
+      "modeles": [
+        "Mercedes Classe A W177",
+        "Mercedes Classe B W247",
+        "Mercedes CLA C118",
+        "Mercedes GLA H247"
+      ],
+      "debut": 2018,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Toyota",
+      "famille": "2ZR-FXE",
+      "nom_commercial": "1.8 Hybride",
+      "modeles": [
+        "Toyota Prius XW30/XW50",
+        "Toyota Auris HSD",
+        "Toyota Corolla E210",
+        "Toyota C-HR"
+      ],
+      "debut": 2009,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Toyota",
+      "famille": "2ZR-FE",
+      "nom_commercial": "1.8 essence",
+      "modeles": [
+        "Toyota Auris I/II",
+        "Toyota Avensis III",
+        "Toyota Verso"
+      ],
+      "debut": 2007,
+      "derniere_attestee": 2018
+    },
+    {
+      "marque": "Ford",
+      "famille": "FOX",
+      "nom_commercial": "1.0 EcoBoost",
+      "modeles": [
+        "Ford Fiesta VII",
+        "Ford Focus III/IV",
+        "Ford Puma",
+        "Ford EcoSport"
+      ],
+      "debut": 2012,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Ford",
+      "famille": "DRAGON",
+      "nom_commercial": "1.5 EcoBoost (Dragon)",
+      "modeles": [
+        "Ford Focus Mk4",
+        "Ford Kuga Mk3",
+        "Ford Puma ST",
+        "Ford Fiesta ST"
+      ],
+      "debut": 2017,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Ford",
+      "famille": "SIGMA",
+      "nom_commercial": "1.6 EcoBoost (Sigma)",
+      "modeles": [
+        "Ford Focus III",
+        "Ford Mondeo IV",
+        "Ford C-Max",
+        "Ford Kuga I"
+      ],
+      "debut": 2010,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Hyundai",
+      "famille": "G3LC",
+      "nom_commercial": "1.0 T-GDI",
+      "modeles": [
+        "Hyundai i20",
+        "Hyundai i30",
+        "Hyundai Kona",
+        "Kia Ceed",
+        "Kia Stonic"
+      ],
+      "debut": 2014,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Hyundai",
+      "famille": "G4LD",
+      "nom_commercial": "1.4 T-GDI",
+      "modeles": [
+        "Hyundai i30",
+        "Hyundai Kona",
+        "Kia Ceed",
+        "Kia Sportage"
+      ],
+      "debut": 2015,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Hyundai",
+      "famille": "D4FB",
+      "nom_commercial": "1.6 CRDi",
+      "modeles": [
+        "Hyundai i30",
+        "Hyundai Tucson",
+        "Kia Ceed",
+        "Kia Sportage"
+      ],
+      "debut": 2004,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Hyundai",
+      "famille": "G4FD",
+      "nom_commercial": "1.6 GDI",
+      "modeles": [
+        "Hyundai i30",
+        "Hyundai Tucson",
+        "Kia Ceed",
+        "Kia Sportage"
+      ],
+      "debut": 2010,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Hyundai",
+      "famille": "G4KD",
+      "nom_commercial": "2.0 essence (Theta II)",
+      "modeles": [
+        "Hyundai Tucson/ix35",
+        "Kia Sportage",
+        "Hyundai Santa Fe"
+      ],
+      "debut": 2007,
+      "derniere_attestee": 2020
+    },
+    {
+      "marque": "Volvo",
+      "famille": "D4204T",
+      "nom_commercial": "2.0 diesel (VEA)",
+      "modeles": [
+        "Volvo V40",
+        "Volvo V60",
+        "Volvo XC60",
+        "Volvo XC40"
+      ],
+      "debut": 2013,
+      "derniere_attestee": 2022
+    },
+    {
+      "marque": "Volvo",
+      "famille": "B4204T",
+      "nom_commercial": "2.0 essence (VEA)",
+      "modeles": [
+        "Volvo V40",
+        "Volvo V60",
+        "Volvo XC60",
+        "Volvo XC40"
+      ],
+      "debut": 2014,
+      "derniere_attestee": 2022
+    }
+  ]
+}

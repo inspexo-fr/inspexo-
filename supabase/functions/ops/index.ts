@@ -41,6 +41,49 @@ serve(async (req: Request) => {
       { headers: { "Content-Type": "application/json" } },
     );
   }
+  // ?webhooks=1 : les endpoints de webhook déclarés sur la clé Stripe posée.
+  // LECTURE SEULE, et rien de sensible n'en sort : Stripe ne rend le secret de
+  // signature QU'À LA CRÉATION d'un endpoint, jamais au listage.
+  //
+  // ⚠️ Pourquoi ce point existe. Le 5 nov. 2026, l'audit a trouvé que
+  // PASS_WEBHOOK_SECRET et INSPECTION_WEBHOOK_SECRET étaient absents alors que
+  // la clé posée est une clé LIVE. Avant d'en créer, il faut savoir si des
+  // endpoints existent déjà : en recréer par-dessus doublerait les livraisons,
+  // et un endpoint existant ne redonnera JAMAIS son secret — il faudrait le
+  // supprimer puis le recréer. Cette question ne peut pas se poser depuis le
+  // poste : la clé ne vit que dans les secrets de la fonction.
+  if (new URL(req.url).searchParams.get("webhooks") === "1") {
+    const sk = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!sk) {
+      return new Response(JSON.stringify({ webhooks: null, motif: "STRIPE_SECRET_KEY absente" }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const res = await fetch("https://api.stripe.com/v1/webhook_endpoints?limit=100", {
+      headers: { Authorization: `Bearer ${sk}` },
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      return new Response(JSON.stringify({ webhooks: { erreur: res.status } }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    // deno-lint-ignore no-explicit-any
+    const liste = (data?.data ?? []).map((e: any) => ({
+      id: e.id,
+      url: e.url,
+      status: e.status,
+      livemode: e.livemode === true,
+      enabled_events: e.enabled_events,
+      description: e.description ?? null,
+      // ⚠️ `e.secret` n'est volontairement PAS repris : il n'est de toute façon
+      // présent qu'à la création, et un diagnostic n'a pas à le véhiculer.
+    }));
+    return new Response(JSON.stringify({ webhooks: liste }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   // ?compte=<rpc> : COMBIEN de lignes une RPC d'exploitation rend-elle.
   // Lecture seule, liste fermée, et seul le NOMBRE sort — jamais les lignes.
   //

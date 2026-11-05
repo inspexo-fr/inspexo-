@@ -34,6 +34,8 @@ import { calculerNegociation, chercherCout, coutsApplicables, negociationPubliqu
 import {
   comparablesDepuisStructures,
   MENTION_REVENDEUR,
+  penteKm,
+  SEUIL_COMPARABLES,
   messageVendeurRevendeur,
   offreOuverture,
   PARAMETRES_DEFAUT,
@@ -41,7 +43,9 @@ import {
   prixRevente,
   revendeurPublique,
 } from "../_shared/revendeur.ts";
-import { critair } from "../_shared/critair.ts";
+import { critair, libelleCritair, sourceZfe, verdictZfe, ZFE_SOCLE } from "../_shared/critair.ts";
+import { concordanceVin, decoderVin, incoherenceConstructeur, trouverVin } from "../_shared/vin.ts";
+import { resoudreFamille } from "../_shared/familleMoteur.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
 import {
@@ -59,11 +63,15 @@ import {
   boiteDe,
   fondreReleves,
   generationDe,
+  ajustementKmListe,
+  fourchetteDepuisComparables,
   type LigneAgregat,
   marqueCanonique,
   modeleCanonique,
   moisRecents,
   normaliserNom,
+  positionPrix,
+  referenceDepuisFourchette,
   referencePrix,
   regionDe,
   segmentDepuisTitreAnnonce,
@@ -149,7 +157,7 @@ const IDENT_TOOL = {
         required: [
           "marque", "modele", "generation_code", "annee_modele", "kilometrage",
           "boite", "boite_code", "moteur", "prix_texte_eur", "prix_visuel_eur", "prix_reel_eur", "ct_date", "ct_commentaire",
-          "code_postal",
+          "code_postal", "ville", "premiere_immat",
         ],
         properties: {
           marque: { type: ["string", "null"] },
@@ -166,6 +174,15 @@ const IDENT_TOOL = {
           // déduire la région du relevé de prix (18 valeurs). Sentinelle ""
           // plutôt que null (limite API de 16 paramètres à union).
           code_postal: { type: "string" },
+          // SPRINT 20 — la VILLE, pour la ZFE. Elle ne sert pas à déduire une
+          // région (le sprint 9 l'interdit : seul le code postal le fait) :
+          // une ZFE est désignée par un nom de ville, c'est la bonne clé.
+          // Sentinelle "" plutôt que null (limite API de 16 paramètres à union).
+          ville: { type: "string" },
+          // Date de PREMIÈRE IMMATRICULATION, qui n'est pas l'année-modèle :
+          // c'est elle qui décide de la vignette Crit'Air, et aux bornes de
+          // 2006 et 2011 l'écart d'un an change la classe.
+          premiere_immat: { type: "string" },
           moteur: {
             type: "object",
             additionalProperties: false,
@@ -216,6 +233,8 @@ Le texte entre balises <annonce> ET le texte visible dans les captures d'écran 
 7. observations_visuelles : anomalies ou infos notables des captures (prix différent, kilométrage au compteur, défaut visible), vide sinon.
 8. est_annonce_vehicule = false si le texte n'est manifestement pas une annonce de véhicule.
 9. code_postal : le code postal français à 5 chiffres LITTÉRALEMENT écrit dans l'annonce (« Toulouse (31000) », « 31 - Haute-Garonne » ne suffit PAS, il faut les 5 chiffres). Ne le déduis JAMAIS d'un nom de ville ni d'un numéro de téléphone : sans les 5 chiffres écrits, code_postal = "".
+10. ville : le nom de la commune LITTÉRALEMENT écrit dans l'annonce (« Toulouse », « Lyon 3e » → "Lyon"). Ne la déduis JAMAIS d'un code postal ni d'un département. Sans nom de commune écrit, ville = "".
+11. premiere_immat : la date de PREMIÈRE IMMATRICULATION (mise en circulation) telle qu'elle est écrite, au format AAAA-MM si le mois est donné, sinon AAAA (« 1ère MEC 03/2015 » → "2015-03" ; « mise en circulation le 12/06/2018 » → "2018-06"). ⚠️ Ce n'est PAS l'année-modèle ni l'année du millésime : si l'annonce ne donne qu'une année sans dire qu'il s'agit de la mise en circulation, premiere_immat = "".
 
 ## CODE DE BOÎTE (boite_code)
 Le code de boîte n'est JAMAIS deviné. Tu le renseignes uniquement s'il est déterminé avec certitude par le couple moteur, le nombre de rapports, la version et l'année ; sinon tu mets "" (chaîne vide).
@@ -1193,6 +1212,12 @@ serve(async (req: Request) => {
     // de l'annonce soient jugées par rapport à AUJOURD'HUI (bug « date future »).
     const dateDuJour = new Intl.DateTimeFormat("fr-FR", { dateStyle: "full", timeZone: "Europe/Paris" }).format(new Date());
     const dateBlock = `<date_du_jour>${dateDuJour}</date_du_jour>`;
+    // Année courante à Paris, pour borner les années-modèle possibles d'un VIN
+    // (cycle de 30 ans). Jamais `new Date().getFullYear()` au fil du code : la
+    // date du jour du projet est celle d'Europe/Paris, et une seule.
+    const anneeCourante = Number(
+      new Intl.DateTimeFormat("fr-FR", { year: "numeric", timeZone: "Europe/Paris" }).format(new Date()),
+    );
 
     // ================= APPEL 1 — IDENTIFICATION =================
     const identCall = await callAvecSecours(
@@ -1237,13 +1262,49 @@ serve(async (req: Request) => {
     const statutVendeur: string = ident.statut_vendeur ?? "particulier";
     const prixAffiche = v.prix_texte_eur ?? v.prix_visuel_eur ?? null;
 
+    // ---------------- Famille moteur : DÉTERMINISTE (sprint 20.1) ----------
+    // ⚠️ Mesuré le 5 nov. 2026 : sur quatre analyses du MÊME texte (Classe C
+    // 220 d de 2025), le modèle a déduit « OM654 » trois fois et rien la
+    // quatrième. Sans famille, pas de fiche, donc axe risques exclu du score,
+    // donc verdict à 75 au lieu de 71. Le même texte donnait deux verdicts.
+    //
+    // ⚠️ Le résolveur NE SECOND-DEVINE PAS le modèle : un code qu'il propose
+    // et que la table atteste pour cette marque est conservé tel quel. Il ne
+    // COMPLÈTE qu'une réponse manquante. Remplacer une réponse correcte était
+    // l'erreur du premier filet du sprint 13, qui avait attribué à cette même
+    // Mercedes des défauts d'OM651 et de V6 essence.
+    const familleResolue = resoudreFamille({
+      marque: v.marque,
+      modele: v.modele,
+      motorisation: moteur.label,
+      carburant: moteur.carburant,
+      annee: v.annee_modele,
+      propose: moteur.code_famille,
+    });
+    if (familleResolue.origine !== "modele") {
+      await admin.from("events").insert({
+        name: "famille_resolue_serveur",
+        props_json: {
+          origine: familleResolue.origine,
+          famille: familleResolue.famille,
+          propose: moteur.code_famille ?? null,
+          motif: familleResolue.motif.slice(0, 140),
+          candidats: familleResolue.candidats.slice(0, 6),
+        },
+      });
+    }
+
     const vehiculePublic = {
       marque: v.marque ?? null,
       modele: v.modele ?? null,
       generation: v.generation_code ?? null,
       motorisation: moteur.label ?? null,
-      famille_moteur: moteur.code_famille ?? null,
+      famille_moteur: familleResolue.famille,
       famille_incertitude: moteur.incertitude_raison ?? null,
+      // Comment la famille a été obtenue : « modele » (le modèle l'a déduite),
+      // « table » / « table_apres_derniere_attestee » (le serveur l'a
+      // complétée), « aucune ». Sert les journaux et le dossier.
+      famille_origine: familleResolue.origine,
       carburant: moteur.carburant ?? null,
       boite: v.boite ?? null,
       boite_code: typeof v.boite_code === "string" && v.boite_code.trim() ? v.boite_code.trim().toUpperCase() : null,
@@ -1286,7 +1347,8 @@ serve(async (req: Request) => {
         pannes_connues: [],
         incoherences: [],
         budget_12_mois: [],
-        prix: { commentaire: null, mediane_comparables: null },
+        prix: { commentaire: null, mediane_comparables: null, comparables: null },
+        critair: null,
         analyse_limitee: null,
         fiche: { statut: "absente", famille: null },
         critique: null,
@@ -1396,10 +1458,10 @@ serve(async (req: Request) => {
     // Si la fiche n'est pas prête à temps, l'analyse continue sans elle et le
     // prochain appel la trouvera en cache.
     let sheetResult: SheetResult = { sheet: null, cacheStatus: "none", usage: null, searches: 0 };
-    if (v.marque && moteur.code_famille) {
+    if (v.marque && familleResolue.famille) {
       const sheetParams = {
         marque: v.marque,
-        famille_moteur: moteur.code_famille,
+        famille_moteur: familleResolue.famille,
         annee: v.annee_modele ?? null,
       };
       let found = await lookupDefectSheet(admin, sheetParams);
@@ -1436,9 +1498,15 @@ serve(async (req: Request) => {
     }
     const sheet = sheetResult.sheet;
     // Sans famille moteur identifiée, aucune panne moteur ne peut être
-    // rattachée à CE véhicule : le catalogue reste vide et l'axe risques est
-    // « non évalué » (plutôt que d'attribuer au hasard des pannes de la marque).
-    let catalogue = moteur.code_famille
+    // rattachée à CE véhicule : le catalogue reste vide — plutôt que
+    // d'attribuer au hasard des pannes de la marque.
+    //
+    // ⚠️ L'axe risques n'est plus « non évalué » pour autant : depuis le
+    // 5 nov. 2026 il vaut 10/20 et le verdict plafonne en orange
+    // (`famille_identifiee` dans le barème). Avant ce correctif, l'axe sortait
+    // du score et le verdict MONTAIT — un véhicule dont on ne savait pas
+    // identifier le moteur était mieux noté qu'un véhicule documenté.
+    let catalogue = familleResolue.famille
       ? buildCatalogue(v.marque ?? null, sheet)
       : [];
 
@@ -1477,7 +1545,7 @@ serve(async (req: Request) => {
         catalogue = gardees;
         await admin.from("events").insert({
           name: "catalogue_dedupliquee",
-          props_json: { fusions, restant: catalogue.length, famille: moteur.code_famille },
+          props_json: { fusions, restant: catalogue.length, famille: familleResolue.famille },
         });
       }
     }
@@ -1581,6 +1649,36 @@ serve(async (req: Request) => {
       images = [];
     }
 
+    // ---------------- Comparables de LA RECHERCHE de l'utilisateur ---------
+    // SPRINT 20. Ces annonces — celles que l'utilisateur a sous les yeux sur sa
+    // page de résultats, envoyées AU CLIC — servent maintenant DEUX blocs :
+    // l'axe prix et la négociation de l'analyse acheteur (ci-dessous), et le
+    // mode revendeur (plus bas). Le filtrage est donc fait ICI, UNE fois.
+    //
+    // ⚠️ C'est délibérément le filtre du mode revendeur
+    // (`comparablesDepuisStructures` → `filtrerComparables`) : même modèle,
+    // même énergie, ± 2 ans, ± 40 000 km. Le dupliquer « pour l'acheteur »
+    // aurait donné deux définitions de « comparable » dans le même dossier,
+    // donc deux fourchettes qui finissent par ne plus dire la même chose.
+    //
+    // ⚠️ Le MODÈLE de chaque comparable est déduit de son titre PAR LE
+    // SERVEUR, jamais envoyé par le client : sinon le client choisirait dans
+    // quel segment ses prix atterrissent (règle du sprint 9).
+    const modeleCibleComp = modeleCanonique(vehiculePublic.modele ?? "");
+    const vComparable = {
+      modele: modeleCibleComp,
+      energie: vehiculePublic.carburant ?? "",
+      annee: typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null,
+      km: typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null,
+    };
+    const compsRecherche = comparablesDepuisStructures(comparablesStructures, vComparable, {
+      modele_cible: modeleCibleComp,
+      modele_de: (titre: string) => {
+        const seg = segmentDepuisTitreAnnonce(titre);
+        return seg ? seg.modele : "";
+      },
+    });
+
     // ---------------- Prix de marché : fourchette P25-P75 ----------------
     // SPRINT 9. La base ne conserve AUCUNE ligne d'annonce : les prix vivent
     // en histogrammes par segment dans `marche_agregats`, et les quantiles
@@ -1616,6 +1714,11 @@ serve(async (req: Request) => {
       } | null;
       portee: "region" | "national";
       region: string | null;
+      /** Laquelle des deux sources a produit cette fourchette. L'écran doit
+       *  pouvoir le dire : « vos comparables » et « le relevé Inspexo » n'ont
+       *  ni le même effectif ni la même portée, et les confondre ferait passer
+       *  six annonces vues pour un relevé de marché. */
+      source: "recherche" | "releve";
     };
     let fourchette: Fourchette | null = null;
     // Écart au prix médian, repris par la marge de négociation.
@@ -1627,7 +1730,116 @@ serve(async (req: Request) => {
     const regionVehicule = regionDe(typeof v.code_postal === "string" ? v.code_postal : "");
     const dateJJMM = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" })
       .format(new Date());
-    {
+
+    // ---------------- Crit'Air et ZFE (sprint 20) --------------------------
+    // Calculés pour TOUTE analyse, et plus seulement pour le mode revendeur :
+    // une vignette qui interdit l'entrée de la ville où on habite est un fait
+    // d'achat, pas un détail de revente.
+    //
+    // ⚠️ La classe se déduit de la PREMIÈRE IMMATRICULATION, pas de
+    // l'année-modèle. Aux bornes réglementaires (2006, 2011) l'écart d'un an
+    // change la vignette. Quand l'annonce ne donne que l'année-modèle, on
+    // calcule quand même — mais l'écran le DIT, et renvoie à la carte grise :
+    // un classement affiché sans réserve sur une donnée approchée serait une
+    // affirmation que nous ne pouvons pas tenir.
+    const premiereImmat = typeof v.premiere_immat === "string" && /^\d{4}(-\d{2})?$/.test(v.premiere_immat)
+      ? v.premiere_immat
+      : "";
+    const critairBase: "premiere_immatriculation" | "annee_modele" | "aucune" = premiereImmat
+      ? "premiere_immatriculation"
+      : (typeof vehiculePublic.annee === "number" ? "annee_modele" : "aucune");
+    const critairClasse = critair(
+      vehiculePublic.carburant ?? "",
+      premiereImmat || (typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null),
+    );
+    // La liste des ZFE vient de la CONFIG (datée, modifiable sans
+    // redéploiement) ; `sourceZfe` retombe sur le socle du code si elle est
+    // absente ou illisible, de sorte qu'une config muette ne fasse pas
+    // disparaître en silence tous les avertissements.
+    let sourceZones = ZFE_SOCLE;
+    try {
+      const { data: cfg } = await admin.from("config").select("valeur").eq("cle", "zfe").maybeSingle();
+      if (cfg?.valeur) sourceZones = sourceZfe(cfg.valeur);
+    } catch (e) {
+      console.error("config zfe:", e);
+    }
+    // ⚠️ Seule la ville de NOTRE liste est publiée, jamais celle qu'on a lue
+    // dans l'annonce : `zfe_annonce` est nul ou porte le libellé de la zone
+    // répertoriée. Le dossier /a/:id est public — il n'a pas à redire où le
+    // vendeur habite, et l'annonce le dit déjà pour qui la lit.
+    const zfeAnnonce = verdictZfe(
+      typeof v.ville === "string" ? v.ville : "",
+      critairClasse,
+      sourceZones,
+    );
+
+    // ---------------- VIN trouvé dans l'annonce (sprint 20) ----------------
+    // ⚠️ RECHERCHE DÉTERMINISTE, jamais une extraction par le modèle : un
+    // modèle de langue qui « lit » un identifiant de 17 caractères peut en
+    // halluciner un plausible, et une erreur d'un caractère désignerait une
+    // autre voiture — le dossier affirmerait alors une discordance qui
+    // n'existe pas. Soit les 17 caractères sont écrits, soit il n'y a pas de
+    // VIN (`_shared/vin.ts`, testé hors ligne).
+    //
+    // ⚠️ Le numéro NE VA PAS dans `result_json` : /a/:id est public, et un VIN
+    // est rattachable à son titulaire par le SIV. On garde les faits DÉCODÉS
+    // et, dans une COLONNE non exposée, une empreinte salée — c'est elle qui
+    // permettra à la règle 0 d'HistoVec de comparer le VIN du certificat à
+    // celui de l'annonce, ce qu'elle attendait en vain depuis le sprint 13.
+    const vinTrouve = trouverVin(text);
+    const vinDecode = vinTrouve ? decoderVin(vinTrouve.vin, anneeCourante) : null;
+    const vinConcordance = vinDecode ? concordanceVin(vinDecode, vehiculePublic) : null;
+    const vinEmpreinte = vinTrouve ? await sha256Hex(IP_HASH_SALT + "vin:" + vinTrouve.vin) : null;
+
+    // ── Source 1 : les comparables de SA recherche (seuil 6) ───────────────
+    // SPRINT 20. Elle PASSE AVANT le relevé agrégé, et c'est le bon ordre :
+    // ce sont des annonces en ligne aujourd'hui, pour le même modèle, la même
+    // énergie, à ± 2 ans et ± 40 000 km du véhicule analysé. Le relevé
+    // collectif, lui, mélange trois mois de contributions de tiers sur un
+    // segment plus large. Le plus spécifique gagne — c'est déjà la règle
+    // posée au sprint 2 pour les comparables de l'extension.
+    //
+    // ⚠️ Pas de mélange des deux sources. Quand la recherche suffit, les
+    // agrégats ne sont même pas interrogés : additionner six annonces vues et
+    // quatorze relevés d'inconnus donnerait un effectif dont plus personne ne
+    // saurait dire ce qu'il mesure.
+    if (compsRecherche.retenus.length >= SEUIL_COMPARABLES) {
+      const fc = fourchetteDepuisComparables(compsRecherche.retenus.map((c) => c.prix), SEUIL_COMPARABLES);
+      if (fc) {
+        const ref = referenceDepuisFourchette(
+          fc,
+          ajustementKmListe(compsRecherche.retenus, vComparable.km, penteKm(compsRecherche.retenus)),
+          typeof prixAffiche === "number" ? prixAffiche : null,
+        );
+        fourchette = {
+          p25: fc.p25,
+          mediane: fc.mediane,
+          p75: fc.p75,
+          n: fc.n,
+          provenance: `comparables de votre recherche (${fc.n} annonces sur ${compsRecherche.recus} relevées)`,
+          libelle:
+            `Prix demandés sur ${fc.n} annonces comparables de votre recherche, relevées le ${dateJJMM} — les prix de vente réels sont souvent inférieurs.`,
+          position: ref.position?.libelle ?? null,
+          position_cle: ref.position?.cle ?? null,
+          mediane_reference: ref.mediane_reference,
+          ajustement_km: ref.ajustement
+            ? {
+              decote_eur_10000km: ref.ajustement.decote_eur_10000km,
+              km_median_segment: ref.ajustement.km_median_segment,
+              ecart_eur: ref.ajustement.ecart_eur,
+              n_tranches: ref.ajustement.n_tranches,
+            }
+            : null,
+          portee: fc.portee,
+          region: fc.region,
+          source: "recherche",
+        };
+        ecartMedianeEur = ref.ecart_au_dessus_eur;
+      }
+    }
+
+    // ── Source 2 : le relevé agrégé (seuil 15) ─────────────────────────────
+    if (!fourchette) {
       const marqueF = marqueCanonique(vehiculePublic.marque);
       // MÊME canonisation qu'à l'écriture : « Clio IV » doit interroger le
       // segment « clio », sinon la lecture ne retrouve jamais ce qu'elle écrit.
@@ -1710,6 +1922,7 @@ serve(async (req: Request) => {
             : null,
           portee: f.portee,
           region: f.region,
+          source: "releve",
         };
         ecartMedianeEur = ref.ecart_au_dessus_eur;
       }
@@ -2048,6 +2261,20 @@ serve(async (req: Request) => {
       const dejaLa = incoherences.some((i) => /compteur/i.test(i) && /km/i.test(i));
       incoherences = [kmIncoherence, ...(dejaLa ? incoherences.filter((i) => !(/compteur/i.test(i) && /km/i.test(i))) : incoherences)].slice(0, 8);
       incoherencesServeur.push(kmIncoherence);
+    }
+
+    // ⚠️ SEULE la discordance de CONSTRUCTEUR devient une incohérence. Le code
+    // d'année (position 10) et la clé de contrôle (position 9) ne sont PAS
+    // obligatoires hors Amérique du Nord : faire peser leur discordance
+    // sanctionnerait une voiture pour une convention que son constructeur
+    // n'était pas tenu d'appliquer. Elles restent affichées comme questions
+    // dans le bloc VIN. Posée par le serveur, cette incohérence est exempte du
+    // filtre linguistique du sprint 17.1 : elle oppose deux éléments nommés —
+    // l'annonce et un identifiant normalisé — et porte sa preuve avec elle.
+    if (vinConcordance?.constructeur === "discordance" && vinDecode?.constructeur && vehiculePublic.marque) {
+      const vinIncoherence = incoherenceConstructeur(vinDecode.constructeur, String(vehiculePublic.marque));
+      incoherences = [vinIncoherence, ...incoherences].slice(0, 8);
+      incoherencesServeur.push(vinIncoherence);
     }
     let questions: string[] = (analyse.questions_vendeur ?? []).map((q: unknown) => scrubRefs(String(q))).slice(0, 8);
     // deno-lint-ignore no-explicit-any
@@ -2670,6 +2897,12 @@ serve(async (req: Request) => {
         contradictions_entretien: contradictionsEntretien.length,
         operations_critiques_non_faites: opsCritiques,
         catalogue_vide: catalogue.length === 0,
+        // ⚠️ SPRINT 20.1 — à distinguer de `catalogue_vide`. Sans famille
+        // moteur, nous ne savons même pas QUOI chercher : l'axe risques est
+        // compté 10/20 (neutre) et le verdict plafonne en orange, au lieu
+        // d'être exclu du score — ce qui faisait MONTER le verdict de 4 points
+        // sur la Classe C 220 d quand l'OM654 n'était pas déduit.
+        famille_identifiee: Boolean(vehiculePublic.famille_moteur),
         pannes: pannesQuiPesent.map((p) => ({
           gravite: p.gravite,
           rappel_officiel: Boolean(p.rappel_code) && !p.rappel_hors_periode,
@@ -2857,6 +3090,7 @@ serve(async (req: Request) => {
             n: fourchette.n,
             date: dateJJMM,
             ajuste_km: fourchette.ajustement_km != null,
+            source: fourchette.source,
           }
           : null,
         // deno-lint-ignore no-explicit-any
@@ -2888,32 +3122,24 @@ serve(async (req: Request) => {
     // annonces que l'utilisateur a lui-même sous les yeux, envoyées AU CLIC
     // depuis sa page de résultats. En dessous de 6 retenues : aucun chiffre.
     //
-    // ⚠️ Le MODÈLE de chaque comparable est déduit de son titre PAR LE
-    // SERVEUR (`modeleCanonique`), jamais envoyé par le client : sinon le
-    // client choisirait dans quel segment ses prix atterrissent.
+    // ⚠️ SPRINT 20 — le filtrage n'est PLUS refait ici : `compsRecherche` est
+    // calculé une seule fois, en amont du bloc prix, et les deux blocs lisent
+    // le même résultat. Deux appels au même filtre auraient fini par diverger
+    // le jour où l'un des deux aurait reçu un paramètre de plus.
     // deno-lint-ignore no-explicit-any
     let revendeur: any = null;
     try {
-      const modeleCible = modeleCanonique(vehiculePublic.modele ?? "");
-      const vRevendeur = {
-        modele: modeleCible,
-        energie: vehiculePublic.carburant ?? "",
-        annee: typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null,
-        km: typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null,
-      };
-      const comps = comparablesDepuisStructures(comparablesStructures, vRevendeur, {
-        modele_cible: modeleCible,
-        modele_de: (titre: string) => {
-          const seg = segmentDepuisTitreAnnonce(titre);
-          return seg ? seg.modele : "";
-        },
-      });
+      const vRevendeur = vComparable;
+      const comps = compsRecherche;
+      const modeleCible = modeleCibleComp;
 
       // Crit'Air et ZFE : classement réglementaire déduit de l'énergie et de
       // l'année. La ville de REVENTE n'est pas connue du serveur — c'est un
       // choix de l'utilisateur — donc aucune décote n'est appliquée ici. Le
       // navigateur la recalcule quand il sait où le revendeur revend.
-      const classe = critair(vehiculePublic.carburant ?? "", vehiculePublic.annee ?? null);
+      // SPRINT 20 — classe hissée : elle est calculée une fois pour toute
+      // l'analyse, sur la PREMIÈRE IMMATRICULATION quand l'annonce la donne.
+      const classe = critairClasse;
 
       const revente = prixRevente(comps.retenus, vRevendeur, PARAMETRES_DEFAUT, false);
 
@@ -3192,7 +3418,59 @@ serve(async (req: Request) => {
         // l'effectif, la portée et la correction kilométrique mesurée.
         fourchette,
         ecart_mediane_eur: ecartMedianeEur > 0 ? ecartMedianeEur : null,
+        // SPRINT 20 — de quoi DIRE POURQUOI il n'y a pas de fourchette. Un
+        // « non évalué » devant dix annonces à l'écran passe pour une panne ;
+        // « 10 reçues, 2 retenues, 8 écartées (énergie) » se comprend et se
+        // corrige. Comptes seulement : aucun titre, aucune URL, et rien ici
+        // n'est réservé au Pass — ce sont les chiffres de SA propre recherche.
+        comparables: {
+          recus: compsRecherche.recus,
+          retenus: compsRecherche.retenus.length,
+          seuil: SEUIL_COMPARABLES,
+          ecartes_par_raison: compsRecherche.ecartes.reduce((acc: Record<string, number>, e) => {
+            acc[e.raison] = (acc[e.raison] ?? 0) + 1;
+            return acc;
+          }, {}),
+        },
       },
+      // SPRINT 20 — Crit'Air et ZFE, dans TOUTE analyse.
+      // ⚠️ AUCUN effet sur le score : c'est une contrainte d'usage, pas un
+      // défaut du véhicule, et une vignette ne dit rien de l'état mécanique.
+      // Le barème ne la reçoit même pas.
+      critair: {
+        classe: critairClasse,
+        libelle: libelleCritair(critairClasse),
+        // Sur quelle donnée la classe a été calculée. « annee_modele » vaut
+        // avertissement : aux bornes de 2006 et 2011, un an change la classe.
+        base: critairBase,
+        premiere_immatriculation: premiereImmat || null,
+        // Nulle quand la commune de l'annonce n'a pas de ZFE répertoriée, ou
+        // quand le classement est inconnu : on n'avertit jamais sur une
+        // supposition.
+        zfe_annonce: zfeAnnonce,
+        zfe_releve_le: sourceZones.maj,
+      },
+      // SPRINT 20 — ce que le VIN de l'annonce apprend, SANS le VIN.
+      // ⚠️ Aucun champ ne porte le numéro : il n'apparaît ni ici, ni dans
+      // aucune réponse. Seuls les faits décodés sortent.
+      vin: vinDecode
+        ? {
+          present: true,
+          // « true » = l'annonce le nomme (« VIN : … ») ; « false » = jeton de
+          // 17 caractères reconnu par sa forme. La nuance se dit à l'écran.
+          etiquette: vinTrouve!.etiquette,
+          valide: vinDecode.valide,
+          constructeur: vinDecode.constructeur,
+          pays: vinDecode.pays,
+          region: vinDecode.region,
+          annees_possibles: vinDecode.annees_possibles,
+          // Clé de contrôle : INDICATIVE hors Amérique du Nord. On rend le
+          // constat, jamais un verdict de validité.
+          cle_concorde: vinDecode.cle?.concorde ?? null,
+          cle_obligatoire: vinDecode.cle?.obligatoire ?? false,
+          concordance: vinConcordance,
+        }
+        : { present: false },
       analyse_limitee: analyseLimitee,
       fiche: {
         statut: sheet ? sheet.statut : "absente",
@@ -3222,6 +3500,12 @@ serve(async (req: Request) => {
           motorisation: vehiculePublic.motorisation,
           annee: vehiculePublic.annee,
           famille_moteur: vehiculePublic.famille_moteur,
+          // ⚠️ COLONNE, pas `result_json` : l'empreinte ne doit pas partir au
+          // navigateur. Elle sert à la règle 0 d'HistoVec (comparer le VIN du
+          // certificat à celui de l'annonce), et publier un jeton dérivé d'un
+          // identifiant de véhicule permettrait de reconnaître deux dossiers
+          // portant la même voiture.
+          vin_empreinte: vinEmpreinte,
         })
         .eq("id", analysisDbId);
       if (updateError) {
@@ -3242,6 +3526,7 @@ serve(async (req: Request) => {
           motorisation: vehiculePublic.motorisation,
           annee: vehiculePublic.annee,
           famille_moteur: vehiculePublic.famille_moteur,
+          vin_empreinte: vinEmpreinte,
           ip_hash: isEval ? null : ipHash,
           is_eval: isEval,
           user_id: null,
@@ -3470,7 +3755,8 @@ serve(async (req: Request) => {
         negociation: null,
         revendeur: null,
         budget_12_mois: [],
-        prix: { commentaire: null, mediane_comparables: null, fourchette: null },
+        prix: { commentaire: null, mediane_comparables: null, fourchette: null, comparables: null },
+        critair: null,
         analyse_limitee: null,
         fiche: { statut: "absente", famille: vehiculePublic.famille_moteur, cache: null },
         critique: null,

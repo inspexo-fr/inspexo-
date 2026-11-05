@@ -354,6 +354,17 @@ export type VehiculeAnnonce = {
   /** VIN et plaque UNIQUEMENT si l'annonce les montre. */
   vin?: string | null;
   immatriculation?: string | null;
+  /** SPRINT 20 — verdict de comparaison des VIN, DÉJÀ CALCULÉ par l'appelant.
+   *
+   *  ⚠️ Pourquoi un booléen et pas le VIN de l'annonce : celui-ci n'est jamais
+   *  conservé en clair (le dossier est public), seulement sous forme
+   *  d'empreinte salée. Comparer deux empreintes exige le sel, donc un secret
+   *  et un appel asynchrone — ce module doit rester PUR et synchrone pour être
+   *  testable hors ligne. L'appelant compare, ce module conclut.
+   *
+   *  ⚠️ Depuis le sprint 13, `vin` était TOUJOURS nul : rien n'extrayait le VIN
+   *  d'une annonce. La comparaison existait et ne comparait rien. */
+  vin_concorde?: boolean | null;
 };
 
 export type Concordance = {
@@ -392,7 +403,12 @@ export function verifierConcordance(f: FaitsCsa, v: VehiculeAnnonce): Concordanc
       );
     }
   }
-  if (f.vin && v.vin) {
+  if (typeof v.vin_concorde === "boolean") {
+    // Verdict calculé en amont sur des empreintes salées : il fait foi, et il
+    // n'exige pas que le VIN de l'annonce ait traversé le dossier en clair.
+    compares.push("vin");
+    if (!v.vin_concorde) discordances.push("le VIN du certificat n'est pas celui de l'annonce");
+  } else if (f.vin && v.vin) {
     compares.push("vin");
     if (f.vin.toUpperCase() !== String(v.vin).toUpperCase().replace(/\s/g, "")) {
       discordances.push("le VIN du certificat n'est pas celui de l'annonce");

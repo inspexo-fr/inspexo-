@@ -266,9 +266,19 @@ ok(!atlasConfirme(e({ ref: 'A7', titre: 'Suspension Airmatic' }), ''),
   ok(iRetrait < iBareme, 'le retrait précède le calcul du barème')
   ok(iRetrait < iNego, 'le retrait précède le calcul de la marge de négociation')
   ok(iRetrait < iResultat, 'le retrait précède la composition du dossier')
-  ok(/BAREME_VERSION = "11\.4"/.test(
-    readFileSync(new URL('../supabase/functions/_shared/bareme.ts', import.meta.url), 'utf8')),
-    'la version du barème est incrémentée : la liste des défauts qui pèsent a changé')
+  // ⚠️ PLANCHER, et non égalité. Ce contrôle garantit que la règle du sprint
+  // 15.1 est bien arrivée AVEC une incrémentation de version (11.4) — pas que
+  // le projet reste à 11.4 pour toujours. Épinglé à l'identique, il cassait à
+  // chaque sprint suivant pour une raison qui n'a rien à voir avec ce qu'il
+  // surveille, et un test qui crie à tort finit désactivé. L'épinglage EXACT
+  // de la version courante vit à UN seul endroit : tests/bareme.test.mjs.
+  {
+    const v = readFileSync(new URL('../supabase/functions/_shared/bareme.ts', import.meta.url), 'utf8')
+      .match(/BAREME_VERSION = "(\d+)\.(\d+)"/)
+    const rang = v ? Number(v[1]) * 1000 + Number(v[2]) : 0
+    ok(rang >= 11 * 1000 + 4,
+      `la version du barème est au moins 11.4 : la liste des défauts qui pèsent a changé (lu ${v ? `${v[1]}.${v[2]}` : 'rien'})`)
+  }
 }
 
 // ── SPRINT 16 — un code étranger sort du CATALOGUE, pas de l'affichage ─────
