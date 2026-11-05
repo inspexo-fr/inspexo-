@@ -336,7 +336,15 @@ fieldset{margin:0;padding:0;border:0;min-width:0}
 .footer .cols{display:grid;gap:22px}
 @media (min-width:760px){.footer .cols{grid-template-columns:2fr 1fr 1fr}}
 .footer .col p{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--band-muted);margin-bottom:10px}
-.footer .col a{display:block;text-decoration:none;color:var(--nav-fg);font-size:15px;padding:5px 0}
+/* ⚠️ 44 px de haut MINIMUM — audit du 5 nov. 2026. Ces liens faisaient 33 px
+   (15 px de texte + 2×5 px de marge interne) : sous la cible tactile de 44 px
+   que ce projet s'impose depuis le sprint 5, et qui avait été vérifiée sur les
+   boutons et la navigation (52 px) mais pas sur le pied de page.
+   min-height + centrage plutôt qu'une marge calculée : le résultat tient quoi
+   qu'il arrive à la taille du texte. */
+.footer .col a{display:flex;align-items:center;min-height:44px;text-decoration:none;color:var(--nav-fg);font-size:15px}
 .footer .col a:hover{text-decoration:underline;text-underline-offset:4px}
 .footer .legal{border-top:1px solid var(--nav-line);padding-top:18px;font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--band-muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px}
+/* Même règle pour les liens de la ligne légale, en 11 px mono. */
+.footer .legal a{display:inline-flex;align-items:center;min-height:44px}
 .footer .col p.baseline{text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:15px;color:var(--band-muted)}

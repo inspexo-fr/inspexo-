@@ -161,6 +161,13 @@ for (const c of cibles) {
   process.stdout.write(`▶ ${c.id} … `)
   const res = await appel('verification', { method: 'POST', body: JSON.stringify({ analysis_id: c.id }) })
   const json = await res.json().catch(() => null)
+  if (res.status === 409 && json?.error === 'analyse_eval') {
+    // ⚠️ La fonction refuse les analyses d'éval AVANT de dépenser : elles sont
+    // exclues de /fiabilite, donc les vérifier serait payer pour rien. Les
+    // 9 vérifications déjà en base le 5 nov. 2026 étaient toutes dans ce cas.
+    console.log('IGNORÉE — analyse marquée is_eval, aucun jeton dépensé')
+    continue
+  }
   if (!res.ok || !json) {
     console.log(`ÉCHEC (${res.status}) ${json?.message ?? ''}`)
     continue

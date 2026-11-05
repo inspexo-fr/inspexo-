@@ -300,10 +300,25 @@ for (const u of unites) {
   ajouter(eurAnalyse)
 
   // 2. vérification indépendante
+  // ⚠️ La fonction `verification` refuse d'elle-même une analyse `is_eval`
+  // (409 `analyse_eval`), AVANT de dépenser : c'est elle qui fait autorité,
+  // et c'est le bon endroit — un garde-fou qui vit dans un script est un
+  // garde-fou qu'on peut contourner en n'utilisant pas le script.
+  //
+  // ⚠️ Pas de pré-contrôle ici : la réponse de `score` ne porte PAS `is_eval`
+  // (vérifié). Un `if (json.result?.is_eval)` n'aurait jamais été vrai — un
+  // contrôle qui ne se déclenche jamais ressemble à un contrôle qui passe.
+  // On traite donc le refus de la fonction, qui lui est réel.
   const resV = await appel('verification', { analysis_id: json.id })
   const v = await resV.json().catch(() => null)
+  if (resV.status === 409 && v?.error === 'analyse_eval') {
+    console.log('IGNORÉE — analyse marquée is_eval, elle ne compterait jamais')
+    journal.push({ ...u, etat: 'is_eval', id: json.id, eur: eurAnalyse })
+    unitesFaites++
+    continue
+  }
   if (!resV.ok || !v) {
-    console.log(`verif ÉCHOUÉE (${resV.status})`)
+    console.log(`verif ÉCHOUÉE (${resV.status}) ${String(v?.message ?? '').slice(0, 60)}`)
     journal.push({ ...u, etat: 'verif_echouee', id: json.id, eur: eurAnalyse })
     unitesFaites++
     continue
@@ -343,6 +358,11 @@ if (verifiables > 0) {
 }
 const echecs = journal.filter((j) => j.etat !== 'ok')
 if (echecs.length > 0) console.log(`\n${echecs.length} unité(s) en échec : ${echecs.map((e) => `${e.quoi} (${e.etat})`).join(' · ')}`)
+const evals = journal.filter((j) => j.etat === 'is_eval')
+if (evals.length > 0) {
+  console.log(`⚠️ ${evals.length} analyse(s) marquée(s) is_eval et donc ignorée(s) : la campagne a bien`)
+  console.log('   tourné avec le jeton admin ? Sans lui, rien ne comptera pour /fiabilite.')
+}
 console.log(`\n— Coût de ce run : ${coutDuRun().toFixed(4)} € · cumul campagne : ${cout.toFixed(2)} € / mur ${BUDGET_RUN_EUR.toFixed(2)} € / plafond ${PLAFOND_EUR} €`)
 const f = await compteVerifiees()
 if (f) {

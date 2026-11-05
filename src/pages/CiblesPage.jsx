@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { revendeurCibleRetirer, revendeurCibles } from '../lib/scoreApi'
+import { supabase } from '../lib/supabaseClient'
 
 // SPRINT 19.1 — « Mes cibles » : les modèles où l'utilisateur a assez de
 // relevés, avec la marge estimée de chacun, triés par marge.
@@ -22,11 +23,21 @@ export default function CiblesPage() {
   const [data, setData] = useState(null)
   const [copie, setCopie] = useState(null)
 
+  // ⚠️ On ne lance PAS la requête sans session. `revendeur-cibles` exige un
+  // jeton d'utilisateur : sans session, le 401 est certain, et le navigateur le
+  // journalise en erreur de console — l'écran affichait correctement « connexion
+  // requise », mais laissait une erreur rouge dans la console (relevé par
+  // l'audit du 5 nov. 2026). Un `catch` ne la supprime pas : elle vient de la
+  // couche réseau, pas de notre code. La seule façon de ne pas l'avoir est de
+  // ne pas émettre un appel dont on sait qu'il sera refusé.
   const charger = () => {
     setEtat('chargement')
-    revendeurCibles()
-      .then((d) => { setData(d); setEtat('ok') })
-      .catch((e) => setEtat(e?.code === 'pass_requis' ? 'pass' : e?.code === 'connexion_requise' ? 'connexion' : 'erreur'))
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) { setEtat('connexion'); return }
+      revendeurCibles()
+        .then((d) => { setData(d); setEtat('ok') })
+        .catch((e) => setEtat(e?.code === 'pass_requis' ? 'pass' : e?.code === 'connexion_requise' ? 'connexion' : 'erreur'))
+    }).catch(() => setEtat('connexion'))
   }
   useEffect(charger, []) // eslint-disable-line react-hooks/exhaustive-deps
 

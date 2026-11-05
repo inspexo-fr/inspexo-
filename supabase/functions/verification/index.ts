@@ -163,6 +163,24 @@ serve(async (req: Request) => {
       return jsonResponse({ error: "introuvable", message: "Analyse inconnue ou sans résultat." }, 404);
     }
 
+    // ⚠️ REFUS D'EMBLÉE D'UNE ANALYSE D'ÉVAL, AVANT TOUTE DÉPENSE.
+    // `get_fiabilite` joint sur `is_eval = false` : une vérification lancée
+    // sur une analyse d'éval coûte des jetons et ne sera JAMAIS publiée.
+    // Constaté le 5 nov. 2026 par l'audit : les 9 lignes de `verifications`
+    // déjà en base pointaient TOUTES vers des analyses d'éval, donc comptaient
+    // pour rien. Le refus est ici, avant l'extraction des affirmations et
+    // avant le premier appel au modèle — pas dans un script, qu'on peut
+    // oublier d'utiliser.
+    if (analyse.is_eval === true) {
+      return jsonResponse({
+        error: "analyse_eval",
+        message: "Cette analyse est marquée `is_eval` : la page fiabilité l'exclut, " +
+          "la vérifier coûterait des jetons sans jamais rien publier. " +
+          "Rejouez l'annonce avec un jeton d'administrateur (is_eval = false), " +
+          "puis vérifiez la nouvelle analyse.",
+      }, 409);
+    }
+
     const identite = identiteVehicule(analyse.result_json);
     const affirmations = affirmationsDeAnalyse(analyse.result_json, MAX_AFFIRMATIONS);
     if (affirmations.length === 0) {

@@ -958,6 +958,34 @@ select pg_temp.essai_verifie(
     where p.prokind = 'f' and pg_get_functiondef(p.oid) like '%ref_num%') > 0);
 
 -- -----------------------------------------------------------------------
+-- 4 quinquies. SPRINT 20.1 — correctifs de l'audit
+-- -----------------------------------------------------------------------
+select pg_temp.essai_verifie(
+  'visio_disponible a bien ete SUPPRIMEE (personne ne l appelait)',
+  (select count(*) from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    where p.proname = 'visio_disponible') = 0);
+
+-- ⚠️ handle_new_user et rls_auto_enable n'existent pas en local : elles ont
+-- ete creees depuis le DASHBOARD aux premieres sessions, donc aucune migration
+-- ne les pose (regle 0 ter). L'assertion ci-dessous est donc VIDE en local et
+-- MORD en production — et c'est pour cela qu'elle est formulee sur une absence
+-- de droit plutot que sur une existence : si l'objet est la, il doit etre
+-- revoque ; s'il n'est pas la, il n'y a rien a verifier.
+select pg_temp.essai_verifie(
+  'aucune fonction de trigger n est executable par anon ou authenticated',
+  (select count(*) from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    cross join (values ('anon'), ('authenticated')) as r(nom)
+    where p.proname in ('handle_new_user', 'rls_auto_enable', 'update_updated_at')
+      and has_function_privilege(r.nom, p.oid, 'EXECUTE')) = 0,
+  (select string_agg(distinct p.proname, ', ') from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    cross join (values ('anon'), ('authenticated')) as r(nom)
+    where p.proname in ('handle_new_user', 'rls_auto_enable', 'update_updated_at')
+      and has_function_privilege(r.nom, p.oid, 'EXECUTE')));
+
+-- -----------------------------------------------------------------------
 -- 4 ter. LE VERDICT. C'est le SEUL résultat que l'éditeur affichera, et il
 --        lève une erreur si quoi que ce soit a échoué.
 -- -----------------------------------------------------------------------
