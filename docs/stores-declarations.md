@@ -168,25 +168,55 @@ Whereby (visio).
    où les clés sont posées**, pas avant — le citer aujourd'hui laisserait
    croire qu'il voit déjà passer du trafic.
 
-## 6. ⚠️ La promesse technique de l'app, et comment la prouver
+## 6. La promesse technique, MESURÉE
 
 > **Aucune requête de nos serveurs vers Leboncoin, La Centrale ou AutoScout24.**
 
-Ce que fait l'app : le partage transmet une **URL**. L'app ouvre cette URL dans
-une **WebView visible**, sur l'appareil, avec la session de l'utilisateur.
-L'extraction est un script injecté dans cette page. Les photos sont
-téléchargées **par le téléphone**, redimensionnées à 1 600 px et ré-encodées
-(EXIF supprimé). Seul le résultat — texte et photos — part vers nos serveurs.
+Prouvée des deux côtés, parce qu'aucune des deux preuves ne suffit seule.
 
-Si une vérification anti-robot s'affiche, **c'est l'utilisateur qui la passe**,
-dans la WebView. Rien ne la contourne.
+### Par le code — `tests/pas-de-scraping.test.mjs`
+Aucun `fetch` du code serveur ne vise un site d'annonces ni ne porte l'URL
+d'une annonce. Et `texteDeLaPage`, qui récupère les pages citées par les
+fiches, **refuse ces domaines avant toute requête** : la promesse tient par
+construction.
 
-⚠️ **À vérifier avant soumission, et je ne l'ai pas encore fait** : observer le
-trafic sortant de nos fonctions pendant un partage réel, pour prouver qu'aucune
-requête ne part vers le site d'annonces. Le code ne contient aucun appel de ce
-genre (vérifié par lecture), mais une lecture n'est pas une mesure.
+⚠️ La première version du test interdisait le MOT « leboncoin ». Elle a
+aussitôt signalé `intake` et `marche`, qui portent une **liste blanche de
+validation**. Interdire le mot, c'était interdire la validation elle-même.
 
----
+### Par la mesure — `scripts/capture-reseau-partage.mjs`
+Partage réel d'une **annonce vivante** (Peugeot 3008 Hybrid, 26 990 €),
+émulateur Android, 5 novembre 2026 :
+
+| | |
+|---|---|
+| Requêtes observées depuis l'appareil | **128** |
+| Vers `leboncoin.fr` | **98**, toutes depuis la WebView du téléphone |
+| Vers nos serveurs, **pendant la lecture** | **0** |
+
+Puis, une fois la lecture terminée, **un seul envoi** vers nous :
+
+```
+POST https://www.inspexo.io/api/intake   336 437 octets
+champs : titre (33 car.) · prix (7) · annee (4) · kilometrage (8) ·
+         carburant (6) · boite (9) · description (4 403 car.) ·
+         type_vendeur (13) · url (47) · images[6] · comparables_structures[0]
+```
+
+**Nos serveurs ne reçoivent que le résultat de la lecture** : des champs déjà
+extraits, une description déjà lue, six photos déjà téléchargées, réduites et
+ré-encodées **par le téléphone**. Le champ `url` est une provenance, pas une
+consigne : rien, côté serveur, ne va la chercher — c'est ce que le test
+ci-dessus interdit.
+
+L'analyse s'est conclue normalement : `/a/7e103f2b-e3cf-4379-9eee-97e1888718a5`.
+
+Relevés bruts : `captures-sprint18/preuve-reseau-partage.json` et
+`captures-sprint18/preuve-envoi-intake.json`.
+
+⚠️ **Ce que la mesure ne peut pas montrer** : ce que fait un serveur. Une
+observation prise depuis le téléphone ne voit que le téléphone. C'est le test
+de code qui couvre ce versant — et c'est pour cela qu'il existe.
 
 ## 7. Captures pour les stores
 
