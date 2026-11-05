@@ -56,3 +56,6 @@ tests/eval-ct/publics/
 .atlas-cout.json
 captures-sprint18/
 captures-sprint19/
+
+# Annonces réelles de la campagne de fiabilité (peuvent porter un téléphone vendeur)
+tests/fiabilite/annonces/
