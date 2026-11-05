@@ -17,7 +17,14 @@
 // suivent la charte ; la fonte, non. C'est le compromis assumé.
 import { ImageResponse } from '@vercel/og'
 
-export const config = { runtime: 'edge' }
+// ⚠️ PAS DE `runtime: 'edge'` ICI, ET C'EST UNE CORRECTION, PAS UN OUBLI.
+// Avec ce drapeau, le déploiement échoue : « The Edge Function "api/og-image"
+// is referencing unsupported modules: @vercel ». La chaîne de build de ce
+// projet (CRA + fonctions dans `api/`) compile les fichiers ESM en CommonJS —
+// le journal le dit : « Compiling "og-image.js" from ESM to CommonJS » — et un
+// bundle CommonJS ne peut pas être servi comme fonction edge.
+// `@vercel/og` fonctionne sur le runtime Node, qui est celui des autres
+// fonctions du dossier `api/`. On garde donc le runtime par défaut.
 
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || process.env.SUPABASE_URL
 const ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
