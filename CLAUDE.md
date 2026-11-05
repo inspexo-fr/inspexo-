@@ -1954,9 +1954,27 @@ vendeur sortent **sans question**.
   `agreger_marche` et au sprint 15 pour `submit_lead_pro`.
 
 ### « Mes cibles » (`/cibles`)
-Carnet **privé** par compte : pour chaque segment, un **histogramme de prix**
-(tranches de 250 €), la somme et le compte des années et des kilométrages.
-Jamais une annonce, jamais une URL, jamais un lien vers une analyse.
+Carnet **privé** par compte : pour chaque segment, **trois histogrammes** —
+prix (tranches de 250 €), années (1 an), kilométrages (10 000 km). Jamais une
+annonce, jamais une URL, jamais un lien vers une analyse.
+- ⚠️ **AUCUNE MOYENNE, NULLE PART.** Médiane et fourchette **p25–p75** lues
+  sur l'histogramme **fusionné**, avec le nombre de relevés à côté. Une
+  moyenne se fait emporter par une seule annonce à 50 000 € ; une médiane lue
+  sur l'ensemble ne bouge pas. Le stockage INTERDIT la moyenne, il ne se
+  contente pas de ne pas l'afficher (aucune colonne `*_somme`, aucune
+  `*_moyenne` — l'essai de migration le vérifie).
+- `quantileHisto` gagne un paramètre `largeur` (défaut : la tranche de prix)
+  pour servir aussi aux années et aux kilométrages. **Généraliser plutôt que
+  recopier une variante** : il n'existe toujours qu'UNE implémentation des
+  quantiles dans le projet.
+- `_fusionner_histogrammes` est une fonction SQL, pas trois copies dans
+  l'UPDATE : recopiée par série, elle aurait eu trois occasions de diverger.
+- ⚠️ **Test de valeur aberrante** (1 € et 50 000 €). Sur vingt relevés : p25,
+  médiane, prix de revente, prix d'achat maximum et marge estimée
+  **strictement inchangés** ; le 1 € n'entre même pas dans l'histogramme. Et
+  la contre-épreuve, sans laquelle le test ne prouverait rien : une **moyenne**
+  bondirait de **2 258 €** sur le même jeu. Sur sept relevés, la médiane se
+  déplace d'une tranche au plus.
 - ⚠️ **SANS RAPPORT AVEC `marche_agregats`**, qui est le relevé COLLECTIF et
   sans attribution. Les mélanger reviendrait à attribuer le relevé public à des
   personnes.
@@ -1982,16 +2000,31 @@ Dès sa première exécution :
 - **`RETURNING` voit la ligne APRÈS l'insertion** : `c.effectif + v_n` comptait
   le lot **deux fois** (8 relevés annoncés pour 4 versés). Le stockage était
   juste, le nombre montré à l'utilisateur ne l'était pas.
-- **Une médiane ne se fusionne pas.** On stockait la médiane du LOT, et chaque
-  versement écrasait la précédente : le carnet décrivait le dernier relevé, pas
-  l'ensemble. Remplacée par **somme + compte**, dont on rend la **moyenne** —
-  exactement calculable d'un lot à l'autre. Et le mot « médiane » a disparu de
-  l'écran : l'y laisser aurait été le mensonge qu'on venait de retirer du
-  schéma.
+- **Une médiane de LOT ne se fusionne pas.** On stockait celle du dernier lot,
+  et chaque versement écrasait la précédente : le carnet décrivait le dernier
+  relevé, pas l'ensemble. Corrigé en deux temps — d'abord somme + compte,
+  donc une **moyenne**, écartée à son tour (une annonce aberrante l'emporte) ;
+  puis des **histogrammes**, qui se fusionnent par somme ET se lisent par
+  quantiles. La bonne structure donnait les deux propriétés d'un coup.
 - Les assertions de `essai-migration-annulee.mjs` portent sur la **forme** du
   schéma ; celles-ci portent sur le **comportement**. Les deux sont nécessaires,
   aucune ne remplace l'autre. `scripts/essai-local.sh` enchaîne désormais tout
   `tests/sql/*.sql`.
+
+### Mise en service — FAITE le 5 nov. 2026
+Dump prod hors dépôt, migration `20261120120000` appliquée, quatre fonctions
+déployées (`revendeur-cibles` nouvelle, plus `score`, `marche` et
+`lecture-histovec` que `fonctions-a-redeployer.mjs` a nommées parce qu'elles
+importent `_shared/marche.ts` — aucun `git diff` ne les cite). Merge et push.
+- Contrôles de surface en production : `revendeur-cibles` rend **401** sans
+  jeton d'utilisateur et **405** en GET ; `revendeur_cibles_lire`,
+  `revendeur_cible_maj` et `preferences_revendeur_lire` rendent **401** à
+  anon ; la table `revendeur_cibles` **401** ; `get_config_publique` rend
+  bien ses **7 clés** et rien d'autre.
+- Vérifié sur un vrai dossier à 390 px : bloc revendeur présent, détail
+  annoncé « réservé au Pass », **ni la recherche à sauvegarder ni le bouton
+  de carnet visibles sans Pass**. `/cibles` annonce son refus. Zéro erreur
+  JavaScript, zéro débordement. `scripts/verifier-cibles-prod.mjs`.
 
 ### Divers
 - Politique de confidentialité : section **6 decies**.
