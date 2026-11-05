@@ -22,6 +22,11 @@ import { familleParCode } from '../data/famillesMoteur'
 import { LIBELLES_REGION, SEUIL_FOURCHETTE } from '../data/marche'
 import { SEUIL_COMPARABLES } from '../data/revendeur.gen'
 
+import {
+  getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
+  trackEvent, dossierAdd, envoyerLienMagique, marquerClicPass,
+} from '../lib/scoreApi'
+
 // SPRINT 20 — pourquoi un comparable a été écarté, en français.
 // Les clés sont celles de `filtrerComparables` (_shared/revendeur.ts).
 const LIBELLES_ECART = {
@@ -31,10 +36,6 @@ const LIBELLES_ECART = {
   km: 'kilométrage trop éloigné',
   prix: 'prix inutilisable',
 }
-import {
-  getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
-  trackEvent, dossierAdd, envoyerLienMagique, marquerClicPass,
-} from '../lib/scoreApi'
 
 const VERDICT_LABELS = { vert: 'Feu vert', orange: 'Prudence', rouge: 'Signaux rouges' }
 

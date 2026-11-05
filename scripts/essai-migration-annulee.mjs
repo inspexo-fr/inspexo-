@@ -429,7 +429,11 @@ begin
     and not v_res ? 'essai_cle_qui_ne_doit_pas_sortir'
     and not v_res ? 'cout_ia_seuil_jour_eur'
     and not v_res ? 'echecs_seuil'
-    and (select count(*) from jsonb_object_keys(v_res)) = 7,
+    -- SPRINT 20 : + 'zfe' (liste des zones à faibles émissions). 7 -> 8.
+    -- ⚠️ Ce décompte EXACT est volontaire : ouvrir la liste publique doit
+    -- casser un test, pour que ce soit un acte décidé et pas un glissement.
+    and v_res ? 'zfe'
+    and (select count(*) from jsonb_object_keys(v_res)) = 8,
     (select string_agg(k, ', ') from jsonb_object_keys(v_res) k));
 end
 \$cfg\$;
@@ -866,6 +870,92 @@ begin
     case when v_lecture_directe then 'la lecture directe a REUSSI : revocation non prise' end);
 end
 $anon$;
+
+-- -----------------------------------------------------------------------
+-- 4 quater. SPRINT 20 — ZFE en config, et empreinte du VIN
+-- -----------------------------------------------------------------------
+-- ⚠️ Assertions de COMPORTEMENT autant que de forme : ce qui compte n'est pas
+-- que la clé « zfe » existe, c'est que get_config_publique la rende ET
+-- qu'elle ne rende rien d'autre. Une liste fermée qui s'ouvre d'un cran est
+-- exactement le genre de changement qui laisse passer un réglage interne.
+select pg_temp.essai_verifie(
+  'la liste des ZFE est semee en config, datee',
+  (select valeur ? 'maj' and valeur ? 'zones'
+     and jsonb_array_length(valeur->'zones') >= 10
+   from public.config where cle = 'zfe'),
+  (select (valeur->>'maj') from public.config where cle = 'zfe'));
+
+select pg_temp.essai_verifie(
+  'chaque zone porte sa ville, ses interdits et SA SOURCE',
+  (select count(*) from public.config c,
+     jsonb_array_elements(c.valeur->'zones') z
+    where c.cle = 'zfe'
+      and not (z ? 'ville' and z ? 'interdits' and z ? 'source'
+               and z->>'source' like 'http%'
+               and jsonb_array_length(z->'interdits') >= 1)) = 0);
+
+select pg_temp.essai_verifie(
+  'get_config_publique rend bien « zfe »',
+  public.get_config_publique() ? 'zfe');
+
+select pg_temp.essai_verifie(
+  'get_config_publique rend bien les tarifs de carte grise',
+  public.get_config_publique() ? 'carte_grise_tarifs');
+
+-- ⚠️ LE CONTRÔLE QUI COMPTE : la liste reste FERMÉE. Les seuils d'alerte et le
+-- plafond de coût IA sont des réglages d'exploitation ; les publier dirait à
+-- qui veut l'entendre à partir de combien nous nous inquiétons.
+select pg_temp.essai_verifie(
+  'get_config_publique ne rend AUCUN reglage interne',
+  (select count(*) from jsonb_object_keys(public.get_config_publique()) as t(k)
+    where t.k not in ('carte_grise_tarifs', 'zfe') and t.k not like 'revendeur\\_%') = 0,
+  (select string_agg(t.k, ', ') from jsonb_object_keys(public.get_config_publique()) as t(k)
+    where t.k not in ('carte_grise_tarifs', 'zfe') and t.k not like 'revendeur\\_%'));
+
+-- Épreuve de comportement : une clé semée dans CETTE transaction et qui n'est
+-- ni « zfe », ni un tarif, ni un réglage revendeur ne doit PAS sortir.
+do $cfg$
+declare v_sort boolean;
+begin
+  insert into public.config (cle, valeur, description)
+  values ('essai_secret_sprint20', '"ne doit jamais sortir"'::jsonb, 'temoin d essai')
+  on conflict (cle) do nothing;
+  v_sort := public.get_config_publique() ? 'essai_secret_sprint20';
+  perform pg_temp.essai_verifie(
+    'une cle de config inconnue ne sort PAS de la liste fermee',
+    v_sort is false,
+    case when v_sort then 'la cle temoin est sortie : la liste n est plus fermee' end);
+end
+$cfg$;
+
+select pg_temp.essai_verifie(
+  'analyses.vin_empreinte existe',
+  (select count(*) from information_schema.columns
+    where table_schema = 'public' and table_name = 'analyses' and column_name = 'vin_empreinte') = 1);
+
+-- ⚠️ L'INVARIANT DU SPRINT 20c : l'empreinte du VIN ne doit SORTIR PAR AUCUNE
+-- RPC. /a/:id est public ; publier un jeton dérivé d'un identifiant de
+-- véhicule permettrait de reconnaître deux dossiers portant la même voiture.
+select pg_temp.essai_verifie(
+  'aucune fonction de public ne renvoie vin_empreinte',
+  -- ⚠️ prokind = 'f' : pg_get_functiondef LÈVE sur un agrégat, et le schéma
+  -- public en contient (array_agg surchargé). Sans ce filtre l'essai échoue
+  -- pour une raison qui n'a rien à voir avec ce qu'il surveille.
+  (select count(*) from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    where p.prokind = 'f' and pg_get_functiondef(p.oid) like '%vin_empreinte%') = 0,
+  (select string_agg(p.proname, ', ') from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    where p.prokind = 'f' and pg_get_functiondef(p.oid) like '%vin_empreinte%'));
+
+-- Et la contre-épreuve, sans laquelle l'assertion précédente serait vraie pour
+-- la mauvaise raison : la recherche par pg_get_functiondef doit bien trouver
+-- une colonne qui, elle, EST rendue.
+select pg_temp.essai_verifie(
+  'le controle mord : « ref_num », lui, est bien trouve dans une fonction',
+  (select count(*) from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace and n.nspname = 'public'
+    where p.prokind = 'f' and pg_get_functiondef(p.oid) like '%ref_num%') > 0);
 
 -- -----------------------------------------------------------------------
 -- 4 ter. LE VERDICT. C'est le SEUL résultat que l'éditeur affichera, et il
