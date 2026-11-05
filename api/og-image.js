@@ -55,10 +55,17 @@ const TAMPON = { vert: 'FEU VERT', orange: 'PRUDENCE', rouge: 'SIGNAUX ROUGES' }
 // garantit qu'un vrai import dynamique survit à la compilation.
 const PAQUET_OG = '@vercel/og'
 
-export default async function handler(req) {
-  const { searchParams } = new URL(req.url)
-  const id = searchParams.get('id') || ''
-  if (!UUID_RE.test(id)) return new Response('Not found', { status: 404 })
+// ⚠️ SIGNATURE NODE, PAS EDGE. Troisième correction du même déploiement :
+// écrite pour le runtime edge, la fonction recevait un `Request` dont l'URL
+// est absolue. En Node, `req` est un `IncomingMessage` et `req.url` ne porte
+// que le chemin — d'où « TypeError: Invalid URL ». On lit donc la requête
+// comme les autres fonctions du dossier `api/`, et on écrit dans `res`.
+export default async function handler(req, res) {
+  const id = String(req.query?.id ?? new URL(req.url, 'http://local').searchParams.get('id') ?? '')
+  if (!UUID_RE.test(id)) {
+    res.status(404).send('Not found')
+    return
+  }
 
   let r = null
   try {
@@ -164,17 +171,18 @@ export default async function handler(req) {
     { width: 1200, height: 630 },
   )
 
-  // ⚠️ LE CACHE SE RÉÉCRIT, IL NE S'AJOUTE PAS.
-  // `ImageResponse` pose son propre `Cache-Control: public, immutable,
+  // ⚠️ LE CACHE EST POSÉ ICI, PAS DANS LES OPTIONS D'`ImageResponse`.
+  // Celle-ci pose son propre `Cache-Control: public, immutable,
   // max-age=31536000`, et l'en-tête passé en option s'AJOUTE au lieu de le
   // remplacer : la réponse sortait avec deux directives, et c'est la première
-  // qui gagne chez les caches. Une image d'analyse EN COURS serait alors figée
-  // un an sur « ANALYSE EN COURS » — l'aperçu ne montrerait jamais le verdict.
+  // qui gagne chez les caches. Une image d'analyse EN COURS aurait été figée
+  // un an sur « ANALYSE EN COURS », l'aperçu ne montrant jamais le verdict.
   // Trouvé en rendant l'image en local avant de déployer.
-  const entetes = new Headers(image.headers)
-  entetes.set(
+  const octets = Buffer.from(await image.arrayBuffer())
+  res.setHeader('Content-Type', 'image/png')
+  res.setHeader(
     'Cache-Control',
     enCours ? 'public, max-age=60' : 'public, max-age=86400, stale-while-revalidate=604800',
   )
-  return new Response(image.body, { status: image.status, headers: entetes })
+  res.status(200).send(octets)
 }
