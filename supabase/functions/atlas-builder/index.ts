@@ -24,7 +24,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 import { appliquerGraviteRemede } from "../_shared/graviteRemede.ts";
-import { affirmationSansCout, marqueursEntree, pageParleDeLEntree } from "../_shared/atlasSource.ts";
+import {
+  affirmationSansCout,
+  coutUtilisable,
+  marqueursEntree,
+  pageParleDeLEntree,
+  rangSource,
+  sourcesPortentLEntree,
+} from "../_shared/atlasSource.ts";
 import {
   messageVerification,
   neutraliser,
@@ -314,9 +321,23 @@ serve(async (req: Request) => {
       });
     }
 
-    // Un forum ne porte jamais une entrée seul (décision du sprint 16).
-    const nonForum = retenues.filter((r) => r.type !== "forum_marque");
-    const garde = retenues.length > 0 && nonForum.length > 0;
+    // ⚠️ LE RANG VIENT DE L'HÔTE, PLUS DE L'ÉTIQUETTE DU MODÈLE.
+    //
+    // Le sprint 16 avait posé « un forum ne porte jamais une entrée seul », et
+    // ce garde-fou lisait `r.type !== "forum_marque"` — un champ que le MODÈLE
+    // remplit, c'est-à-dire l'étape même qu'on prétend contrôler. Mesuré sur
+    // la campagne hors moteur du 5 nov. 2026 : `autoliva.com` (réparateur de
+    // boîtes) et `ecutesting.com` (réparateur de mécatroniques) classés
+    // « presse_auto », `caroom.fr` (guide d'achat) classé
+    // « constructeur_ou_rappel ». Sept entrées sur neuf ne tenaient que sur
+    // des pages commerciales — et la même famille de sites était citée
+    // ailleurs dans la campagne comme MOTIF DE RETRAIT. Le jugement n'était
+    // pas reproductible.
+    //
+    // C'est la leçon de `estAppelApi` (sprint 11) : un garde-fou ne peut pas
+    // reposer sur une valeur que l'appelant choisit.
+    const rangs = retenues.map((r) => rangSource(r.url));
+    const garde = retenues.length > 0 && sourcesPortentLEntree(retenues.map((r) => r.url));
 
     // Gravité rejugée sur le REMÈDE, à partir de ce que les pages en disent.
     const remede = String(recherche.input?.remede ?? "").slice(0, 300);
@@ -328,14 +349,22 @@ serve(async (req: Request) => {
     // redoutée (casse moteur) plutôt qu'un remède coûteux — c'est l'arbitrage
     // du 28/10/2026, resté inappliqué à l'atlas.
     // Sans coût publié, on ne promeut pas : « majeure » par défaut.
-    const graviteCout = coutMax >= 3000 ? "casse" : (coutMax > 0 && coutMax < 500 ? "mineure" : "majeure");
+    // ⚠️ UN COÛT PUBLIÉ PAR UN SITE COMMERCIAL NE FIXE PAS LA GRAVITÉ.
+    // Quatre entrées de la campagne hors moteur ont été portées en « casse »
+    // par des fourchettes affichées sur des pages de réparateurs — or
+    // « casse » plafonne le score. Un prix sur une page qui VEND la réparation
+    // est une offre, pas un relevé. Sans coût utilisable, on ne promeut pas.
+    const coutRetenu = coutUtilisable(retenues.map((r) => r.url));
+    const coutMinOk = coutRetenu ? coutMin : 0;
+    const coutMaxOk = coutRetenu ? coutMax : 0;
+    const graviteCout = coutMaxOk >= 3000 ? "casse" : (coutMaxOk > 0 && coutMaxOk < 500 ? "mineure" : "majeure");
     const gravite = garde
       ? appliquerGraviteRemede([{
         titre: String(entree.title),
         organe: remede || String(entree.description ?? "").slice(0, 200),
         gravite: graviteCout,
-        cout_indicatif_eur_min: coutMin || null,
-        cout_indicatif_eur_max: coutMax || null,
+        cout_indicatif_eur_min: coutMinOk || null,
+        cout_indicatif_eur_max: coutMaxOk || null,
       }]).pannes[0].gravite
       : null;
 
@@ -344,8 +373,14 @@ serve(async (req: Request) => {
       title: entree.title,
       rattrapage,
       garde,
-      motif: garde ? "" : (retenues.length > 0 ? "forum_seul" : (String(recherche.input?.motif_rejet ?? "") || "aucune_source_retenue")),
-      sources: retenues,
+      motif: garde
+        ? ""
+        : (retenues.length > 0
+          ? `aucune_source_portante (rangs : ${rangs.join(", ")})`
+          : (String(recherche.input?.motif_rejet ?? "") || "aucune_source_retenue")),
+      // Le rang DÉTERMINISTE de chaque source accompagne le relevé : il est
+      // relisible, contrairement à l'étiquette que le modèle s'attribuait.
+      sources: retenues.map((r, i) => ({ ...r, rang: rangs[i] })),
       ecartees,
       remede,
       cout_min_eur: coutMin,

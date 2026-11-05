@@ -28,6 +28,21 @@ export type EntreeCatalogue = {
   km_typique: string | null;
   gravite: string;
   rappel_code?: string | null;
+  /** SPRINT 21 — ce que l'entrée VISE, DÉCLARÉ au lieu d'être déduit du texte.
+   *
+   *  ⚠️ Mesuré avant la campagne hors moteur : la déduction par la prose
+   *  produit deux sortes de bruit. D'abord des NOMS DE MODÈLE (« MÉGANE »,
+   *  « KANGOO », « CLIO ») — or le modèle est déjà apparié en amont, donc
+   *  confirmer sur lui rend la règle du sprint 13 vide de sens. Ensuite des
+   *  MOTS FRANÇAIS ORDINAIRES capitalisés parce qu'ils ouvrent la phrase
+   *  (« Perçage du condenseur… » visait « PERÇAGE », « Rupture du faisceau… »
+   *  visait « RUPTURE ») : n'importe quelle annonce employant ce mot
+   *  confirmait l'entrée.
+   *
+   *  Une liste vide (`[]`) est une DÉCLARATION : cette entrée ne vise rien de
+   *  distinctif, elle restera une question au vendeur. `undefined` conserve
+   *  la déduction d'origine, pour les entrées qui n'ont pas été reprises. */
+  cibles?: string[];
 };
 
 export type MotifNonApplicable =
@@ -226,6 +241,27 @@ const MOTS_NON_CIBLES = new Set([
   "coussins", "structurelle", "electrique", "electronique", "premieres",
   "premiers", "motorisations", "motorisation", "versions", "version", "modeles",
   "modele", "sur", "les", "des", "une", "aux", "avec", "sans", "pour", "dans",
+  // ⚠️ SPRINT 21 — mots d'ORGANE que la campagne hors moteur allait rendre
+  // ciblables. Mesuré avant de lancer : une entrée « Climatisation :
+  // compresseur qui lâche » visait le mot « CLIMATISATION », et une annonce
+  // écrivant « climatisation automatique bizone » la CONFIRMAIT — donc elle
+  // aurait pesé sur le score de presque toute annonce bien rédigée, sans
+  // qu'aucun fait propre à ce véhicule ne l'appuie.
+  //
+  // Un mot d'organe ne distingue rien : tous les véhicules ont une
+  // climatisation, des amortisseurs et un calculateur. Ce qui distingue, c'est
+  // un NOM PROPRE (Airmatic, Hydractive, PowerShift, Multitronic, Jatco) ou un
+  // CODE (DQ200, W203, DPS6). Ces entrées restent affichées et deviennent des
+  // questions au vendeur — conservateur à dessein : mieux vaut une question de
+  // trop qu'un point de score pris sur une supposition.
+  "climatisation", "clim", "climatiseur", "condenseur", "evaporateur",
+  "amortisseur", "amortisseurs", "ressort", "ressorts", "silentblocs",
+  "rotules", "rotule", "triangles", "triangle", "roulement", "roulements",
+  "calculateur", "calculateurs", "boitier", "boitiers", "faisceau", "faisceaux",
+  "alternateur", "demarreur", "batterie", "transmission", "mecatronique",
+  "differentiel", "cardan", "cardans", "radiateur", "durite", "durites",
+  "echappement", "catalyseur", "filtre", "filtres", "soufflet", "soufflets",
+  "unite", "unit", "module", "modules", "bas", "caisse", "passages", "planchers",
 ]);
 
 const sansAccents = (t: string) =>
@@ -233,6 +269,9 @@ const sansAccents = (t: string) =>
 
 /** Ce qu'une entrée d'atlas VISE : codes et noms d'équipement distinctifs. */
 export function ciblesAtlas(e: EntreeCatalogue): string[] {
+  // ⚠️ UNE LISTE DÉCLARÉE FAIT FOI, Y COMPRIS VIDE. Déclarer ce qu'une entrée
+  // vise est vérifiable et relisible ; le déduire de la prose ne l'est pas.
+  if (Array.isArray(e.cibles)) return e.cibles.map((c) => nettoie(String(c))).filter(Boolean);
   const texte = `${e.titre} ${e.symptome ?? ""}`;
   const cibles = new Set<string>();
 

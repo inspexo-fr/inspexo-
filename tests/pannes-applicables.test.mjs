@@ -310,5 +310,100 @@ ok(!atlasConfirme(e({ ref: 'A7', titre: 'Suspension Airmatic' }), ''),
     'le filtre s’applique au catalogue avant sa présentation au modèle')
 }
 
+// ---------------------------------------------------------------------------
+titre('⚠️ Un MOT D’ORGANE ne cible rien (sprint 21, avant la campagne)')
+// ---------------------------------------------------------------------------
+// Mesuré AVANT de lancer la campagne hors moteur : une entrée « Climatisation :
+// compresseur qui lâche » visait le mot « CLIMATISATION », et une annonce
+// écrivant « climatisation automatique bizone » la CONFIRMAIT. Elle aurait donc
+// pesé sur le score de presque toute annonce bien rédigée, sans qu'aucun fait
+// propre à ce véhicule ne l'appuie.
+//
+// Ce qui distingue un véhicule, c'est un NOM PROPRE ou un CODE — pas le nom
+// d'un organe que tous les véhicules possèdent.
+for (const [titreEntree, annonce] of [
+  ['Climatisation : compresseur qui lâche', 'climatisation automatique bizone, cuir'],
+  ['Amortisseurs arrière affaissés', 'amortisseurs neufs à l’arrière'],
+  ['Boîtier BSI : défaillances électriques', 'BSI remplacé en 2019'],
+  ['Calculateur moteur : pannes aléatoires', 'calculateur reprogrammé'],
+  ['Corrosion des bas de caisse', 'bas de caisse sains'],
+  ['Transmission : à-coups', 'transmission automatique'],
+]) {
+  const entree = e({ ref: 'A9', titre: titreEntree })
+  eq(ciblesAtlas(entree), [], `« ${titreEntree.slice(0, 38)} » ne cible aucun mot d’organe`)
+  ok(!atlasConfirme(entree, annonce),
+    `et n’est donc JAMAIS confirmée par « ${annonce.slice(0, 32)} »`)
+}
+
+// ⚠️ ET LA CONTRE-ÉPREUVE, sans laquelle le filtre serait simplement devenu
+// aveugle : un NOM PROPRE et un CODE doivent continuer à cibler, sinon la
+// campagne hors moteur ne produirait plus que des questions.
+for (const [titreEntree, annonce, cible] of [
+  ['Boîte PowerShift DPS6 : à-coups et broutement', 'Fiesta 1.0 PowerShift', 'POWERSHIFT'],
+  ['Suspension Hydractive III : sphères et régulateur', 'C5 Hydractive III', 'HYDRACTIVE'],
+  ['Suspension Airmatic : compresseur et coussins', 'Airmatic de série', 'AIRMATIC'],
+  ['Boîte Multitronic : variateur et chaîne', 'A6 Multitronic', 'MULTITRONIC'],
+  ['CVT Jatco : surchauffe du variateur', 'Qashqai CVT Jatco', 'JATCO'],
+  ['Corrosion structurelle (W203, W211)', 'Classe C W203', 'W203'],
+  ['Boîte DSG DQ200 : mécatronique', 'Golf 7 DSG 7 rapports', 'DQ200'],
+]) {
+  const entree = e({ ref: 'A9', titre: titreEntree })
+  ok(ciblesAtlas(entree).includes(cible),
+    `« ${titreEntree.slice(0, 34)} » cible bien ${cible}`, JSON.stringify(ciblesAtlas(entree)))
+  ok(atlasConfirme(entree, annonce),
+    `et l’annonce « ${annonce.slice(0, 26)} » la confirme`)
+}
+
+// ---------------------------------------------------------------------------
+titre('⚠️ Les cibles d’une entrée d’atlas sont DÉCLARÉES, pas déduites')
+// ---------------------------------------------------------------------------
+// Mesuré avant la campagne hors moteur du sprint 21 : déduire les cibles de la
+// prose produit deux sortes de bruit.
+//   · des NOMS DE MODÈLE — « Unité centrale habitacle Mégane II » visait
+//     « MÉGANE » et « SCÉNIC », donc toute Mégane confirmait l'entrée. Or le
+//     modèle est déjà apparié en amont : confirmer sur lui rend la règle du
+//     sprint 13 vide de sens.
+//   · des MOTS FRANÇAIS ORDINAIRES capitalisés parce qu'ils ouvrent la phrase —
+//     « Perçage du condenseur… » visait « PERÇAGE », « Rupture du faisceau… »
+//     visait « RUPTURE ». N'importe quelle annonce employant le mot confirmait.
+{
+  const avecDeduction = e({ ref: 'A9', titre: 'Unité centrale habitacle Mégane II', symptome: 'Perçage et rupture du boîtier' })
+  const deduites = ciblesAtlas(avecDeduction)
+  ok(deduites.includes('MÉGANE') || deduites.includes('MEGANE') || deduites.length > 0,
+    'la déduction par la prose produit bien du bruit (c’est le défaut constaté)', JSON.stringify(deduites))
+
+  // Une liste déclarée NON vide fait foi, et elle seule.
+  const declaree = { ...avecDeduction, cibles: ['HYDRACTIVE'] }
+  eq(ciblesAtlas(declaree), ['HYDRACTIVE'], 'une liste déclarée remplace la déduction')
+  ok(!atlasConfirme(declaree, 'Mégane II avec perçage'),
+    'et les mots de la prose ne confirment plus rien')
+  ok(atlasConfirme(declaree, 'C5 Hydractive III'), 'seule la cible déclarée confirme')
+
+  // ⚠️ UNE LISTE VIDE EST UNE DÉCLARATION, PAS UNE ABSENCE. Elle dit : cette
+  // entrée ne vise rien de distinctif, elle restera une question au vendeur.
+  const vide = { ...avecDeduction, cibles: [] }
+  eq(ciblesAtlas(vide), [], 'une liste déclarée VIDE est respectée')
+  ok(!atlasConfirme(vide, 'Mégane II, perçage du condenseur, rupture du faisceau'),
+    'une entrée sans cible déclarée n’est JAMAIS confirmée')
+  eq(panneCompteDansScore({ ...vide, ref: 'A9' }, 'Mégane II').motif, 'atlas_non_confirme',
+    'et elle ne pèse donc pas sur le score')
+
+  // ⚠️ `undefined` conserve la déduction : les entrées héritées, qui n'ont pas
+  // été reprises une par une, ne changent pas de comportement.
+  const heritee = e({ ref: 'A9', titre: 'Corrosion structurelle (W203, W211, W210)' })
+  ok(ciblesAtlas(heritee).includes('W203'), 'sans champ `cibles`, la déduction d’origine s’applique')
+  ok(atlasConfirme(heritee, 'Classe C W203'), 'et confirme comme avant')
+
+  // Normalisation : points et tirets sont ignorés des deux côtés.
+  ok(atlasConfirme({ ...avecDeduction, cibles: ['722.9'] }, 'boîte 7229 révisée'),
+    'un code à point est apparié malgré la ponctuation')
+  ok(atlasConfirme({ ...avecDeduction, cibles: ['EASY-R'] }, 'boîte EasyR'),
+    'un code à tiret aussi')
+  // Et une cible trop courte ne confirme jamais — sinon « ZF » ou « ABS »
+  // apparieraient la moitié des annonces.
+  ok(!atlasConfirme({ ...avecDeduction, cibles: ['ZF'] }, 'boîte ZF 6 rapports'),
+    'une cible de moins de 3 caractères normalisés ne confirme pas')
+}
+
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${total - ko}/${total} contrôles passés`)
 process.exit(ko === 0 ? 0 : 1)

@@ -46,6 +46,7 @@ import {
 import { critair, libelleCritair, sourceZfe, verdictZfe, ZFE_SOCLE } from "../_shared/critair.ts";
 import { concordanceVin, decoderVin, incoherenceConstructeur, trouverVin } from "../_shared/vin.ts";
 import { resoudreFamille } from "../_shared/familleMoteur.ts";
+import { fourchettePayes, SEUIL_PRIX_PAYES } from "../_shared/prixPayes.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
 import {
@@ -831,6 +832,11 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
           organe: null,
           symptome: d.description,
           km_typique: null,
+          // SPRINT 21 — ce que l'entrée vise, DÉCLARÉ dans l'atlas. Absent :
+          // `ciblesAtlas` retombe sur sa déduction d'origine (entrées
+          // héritées). Présent et vide : l'entrée ne vise rien de distinctif
+          // et restera une question.
+          ...(Array.isArray(dd.cibles) ? { cibles: dd.cibles } : {}),
           // `gravite` (barème) si le sourcing l'a rejugée, sinon l'ancienne
           // étiquette. On ne PROMEUT jamais : pas de « casse » sans coût sourcé.
           gravite: typeof dd.gravite === "string" && dd.gravite
@@ -1347,7 +1353,7 @@ serve(async (req: Request) => {
         pannes_connues: [],
         incoherences: [],
         budget_12_mois: [],
-        prix: { commentaire: null, mediane_comparables: null, comparables: null },
+        prix: { commentaire: null, mediane_comparables: null, comparables: null, payes: null },
         critair: null,
         analyse_limitee: null,
         fiche: { statut: "absente", famille: null },
@@ -1730,6 +1736,36 @@ serve(async (req: Request) => {
     const regionVehicule = regionDe(typeof v.code_postal === "string" ? v.code_postal : "");
     const dateJJMM = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" })
       .format(new Date());
+
+    // ---------------- Prix PAYÉS déclarés (sprint 21) ----------------------
+    // ⚠️ RELEVÉ SÉPARÉ, LECTURE SÉPARÉE, AFFICHAGE SÉPARÉ. Les prix de
+    // `marche_agregats` sont des prix DEMANDÉS — c'est ce que le libellé dit
+    // depuis le sprint 9 (« les prix de vente réels sont souvent inférieurs »).
+    // Ceux-ci sont ce que des acheteurs déclarent avoir payé. Les fondre
+    // ensemble rendrait ce libellé faux sans que rien ne le signale.
+    //
+    // ⚠️ ET CE RELEVÉ N'ENTRE PAS DANS LE SCORE : `faitsBareme` ne le reçoit
+    // pas, la négociation non plus. L'axe prix continue de porter sur les prix
+    // demandés, parce qu'une annonce en ligne se relit — une déclaration, non.
+    // Vérifié statiquement par tests/prix-payes.test.mjs.
+    let prixPayes: ReturnType<typeof fourchettePayes> = null;
+    try {
+      const segMarque = marqueCanonique(vehiculePublic.marque ?? "");
+      const segModele = modeleCibleComp;
+      const segEnergie = (vehiculePublic.carburant ?? "").trim();
+      if (segMarque && segModele && segEnergie) {
+        const { data: ligne } = await admin
+          .from("marche_payes")
+          .select("prix_histo, annee_histo, effectif")
+          .eq("marque_norm", segMarque.toLowerCase())
+          .eq("modele_norm", segModele.toLowerCase())
+          .eq("energie", segEnergie.toLowerCase())
+          .maybeSingle();
+        prixPayes = fourchettePayes(ligne, SEUIL_PRIX_PAYES);
+      }
+    } catch (e) {
+      console.error("prix payes:", e);
+    }
 
     // ---------------- Crit'Air et ZFE (sprint 20) --------------------------
     // Calculés pour TOUTE analyse, et plus seulement pour le mode revendeur :
@@ -3418,6 +3454,10 @@ serve(async (req: Request) => {
         // l'effectif, la portée et la correction kilométrique mesurée.
         fourchette,
         ecart_mediane_eur: ecartMedianeEur > 0 ? ecartMedianeEur : null,
+        // SPRINT 21 — PRIX PAYÉS DÉCLARÉS. Clé DISTINCTE de `fourchette` :
+        // l'écran les affiche à part, et aucun calcul ne les additionne.
+        // `null` sous six déclarations, et rien n'est publié alors.
+        payes: prixPayes,
         // SPRINT 20 — de quoi DIRE POURQUOI il n'y a pas de fourchette. Un
         // « non évalué » devant dix annonces à l'écran passe pour une panne ;
         // « 10 reçues, 2 retenues, 8 écartées (énergie) » se comprend et se
@@ -3755,7 +3795,7 @@ serve(async (req: Request) => {
         negociation: null,
         revendeur: null,
         budget_12_mois: [],
-        prix: { commentaire: null, mediane_comparables: null, fourchette: null, comparables: null },
+        prix: { commentaire: null, mediane_comparables: null, fourchette: null, comparables: null, payes: null },
         critair: null,
         analyse_limitee: null,
         fiche: { statut: "absente", famille: vehiculePublic.famille_moteur, cache: null },

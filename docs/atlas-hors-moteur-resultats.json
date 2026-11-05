@@ -1,0 +1,1718 @@
+{
+  "resultats": [
+    {
+      "cle": "RENAULT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "boite",
+        "title": "Boîte EDC (DC4) : à-coups et mécatronique",
+        "description": "Boîte à double embrayage EDC de type DC4 : à-coups à basse vitesse, broutement au démarrage en côte, défaillance du bloc mécatronique.",
+        "models": "Clio IV, Captur I, Mégane III, Scénic III",
+        "years": "2012-2019",
+        "cibles": [
+          "EDC",
+          "DC4"
+        ],
+        "repere": true
+      },
+      "marque": "RENAULT",
+      "title": "Boîte EDC (DC4) : à-coups et mécatronique",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des blogs commerciaux SEO (pièces détachées, réparation calculateur) et des forums techniques évoquent ces symptômes sur Clio IV/Captur/Mégane III/Scénic III ; aucun document constructeur, rappel officiel, ni article de presse automobile reconnue n'attribue nommément ce défaut (à-coups, broutement en côte, panne mécatronique) à ces modèles précis, et un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2124
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "boite",
+        "title": "Boîte automatique DP0 (AL4) : glissements et passages durs",
+        "description": "Boîte automatique à quatre rapports DP0, dérivée de l'AL4 PSA : glissements, passages durs, montée en température du convertisseur.",
+        "models": "Mégane II, Scénic II, Laguna II",
+        "years": "2002-2010",
+        "cibles": [
+          "DP0",
+          "AL4"
+        ],
+        "repere": true
+      },
+      "marque": "RENAULT",
+      "title": "Boîte automatique DP0 (AL4) : glissements et passages durs",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums techniques et des blogs commerciaux non reconnus mentionnent ce défaut pour la Mégane II/Scénic II/Laguna II ; aucune note technique constructeur publique ni presse automobile reconnue ne l'atteste nommément, et un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1957
+    },
+    {
+      "cle": "FORD",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "FORD",
+        "categorie": "boite",
+        "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+        "description": "Boîte à double embrayage sec PowerShift DPS6 : broutement au démarrage, à-coups, usure prématurée des embrayages et du module de commande.",
+        "models": "Fiesta VI, Focus III, B-Max, EcoSport",
+        "years": "2011-2018",
+        "cibles": [
+          "POWERSHIFT",
+          "DPS6"
+        ],
+        "repere": true
+      },
+      "marque": "FORD",
+      "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092372-5448.pdf",
+          "titre": "FORD: 2011-2015 Fiesta 2012-2016 Focus - TSB DPS6 Clutch Shudder",
+          "type": "constructeur_ou_rappel",
+          "nomme_cible": true,
+          "justification": "La page confirme pour la boîte DPS6 (Fiesta/Focus) un 'excessive transmission clutch shudder on light acceleration' et prévoit le remplacement de l'embrayage, ce qui correspond au broutement et à l'usure prématurée des embrayages mentionnés."
+        },
+        {
+          "url": "https://carbuzz.com/2018-ford-focus-transmission-problems-smart-buy/",
+          "titre": "The Last Of Ford's Excellent Small Cars Makes A Bargain Used Buy - But Is It A Smart One?",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la boîte PowerShift DPS6 à double embrayage sec sur Ford Focus présente des à-coups/broutement à basse vitesse dus aux embrayages secs qui surchauffent et s'usent prématurément, ainsi que des problèmes du module de commande de transmission (TCM)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092576-5448.pdf",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092575-5448.pdf",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Remplacement du module d'embrayage double sec (clutch pack) et reprogrammation du module de commande TCM/PCM (apprentissage adaptatif de l'embrayage), parfois avec remplacement du joint d'arbre d'entrée en cas de fuite.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": "majeure",
+      "gravite_avant": null,
+      "cout_eur": 0.1748
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "boite",
+        "title": "Boîte automatique AL4 : glissements et passages durs",
+        "description": "Boîte automatique à quatre rapports AL4 : glissements, à-coups au passage des rapports, surchauffe du convertisseur.",
+        "models": "206, 307, 406, 407, 807",
+        "years": "2000-2011",
+        "cibles": [
+          "AL4"
+        ],
+        "repere": true
+      },
+      "marque": "PEUGEOT",
+      "title": "Boîte automatique AL4 : glissements et passages durs",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Les seules pages trouvées confirmant nommément ce défaut sur les 206/307/406/407/807 sont des fils de forums (forum-auto.caradisiac.com, forum-peugeot.com, feline207.net) et des blogs commerciaux de garages/vendeurs de pièces (oscaro, casse-compare, la-boite-automatique.com, moninspection.fr, etc.) ; aucun document constructeur, rappel officiel ou article de presse automobile reconnue n'atteste ce défaut, et un forum seul ne peut porter l'entrée selon la hiérarchie demandée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2021
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "boite",
+        "title": "Boîte EAT6 : à-coups à froid",
+        "description": "Boîte automatique EAT6 d'origine Aisin : à-coups au passage des premiers rapports à froid, apprentissage à réinitialiser.",
+        "models": "308 II, 3008 II, 508 I",
+        "years": "2014-2020",
+        "cibles": [
+          "EAT6"
+        ],
+        "repere": true
+      },
+      "marque": "PEUGEOT",
+      "title": "Boîte EAT6 : à-coups à froid",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2165
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "boite",
+        "title": "Boîte automatique AL4 : glissements et passages durs",
+        "description": "Boîte automatique à quatre rapports AL4 : glissements, à-coups, surchauffe du convertisseur.",
+        "models": "Xsara Picasso, C4 I, C5 I, C8",
+        "years": "2000-2011",
+        "cibles": [
+          "AL4"
+        ],
+        "repere": true
+      },
+      "marque": "CITROEN",
+      "title": "Boîte automatique AL4 : glissements et passages durs",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums (Forum-Auto/Caradisiac, Planète-Citroën) et des sites commerciaux de devis/réparation (mecano.ovh, goodmecano.com, rpf-automobiles.fr, moninspection.fr) évoquent ces symptômes sur l'AL4 ; aucune note constructeur/rappel officiel ni article de presse automobile reconnue traitant nommément ce défaut sur Xsara Picasso, C4 I, C5 I ou C8 n'a été trouvé, et un forum seul ne peut pas porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1831
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "boite",
+        "title": "Boîte SensoDrive : actionneur et embrayage",
+        "description": "Boîte manuelle pilotée SensoDrive : défaillance de l'actionneur d'embrayage, à-coups marqués et refus de passer les rapports.",
+        "models": "C2, C3 I",
+        "years": "2003-2010",
+        "cibles": [
+          "SENSODRIVE"
+        ],
+        "repere": true
+      },
+      "marque": "CITROEN",
+      "title": "Boîte SensoDrive : actionneur et embrayage",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums (Caradisiac, Planète-Citroën, forumpro) attestent ce défaut sur C2/C3 SensoDrive ; aucun document constructeur, base de rappel officielle ni article de presse automobile reconnue n'a été trouvé pour le confirmer, et un forum ne peut porter une entrée à lui seul.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1866
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "suspension",
+      "repere": true,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "suspension",
+        "title": "Suspension Hydractive III : sphères, régulateur et fuites",
+        "description": "Suspension hydropneumatique Hydractive III : perte de hauteur, fuites de LDS au niveau du régulateur et des sphères, voyant de suspension.",
+        "models": "C5 I, C5 II, C6",
+        "years": "2001-2017",
+        "cibles": [
+          "HYDRACTIVE"
+        ],
+        "repere": true
+      },
+      "marque": "CITROEN",
+      "title": "Suspension Hydractive III : sphères, régulateur et fuites",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "forum_seul",
+      "sources": [
+        {
+          "url": "https://citroen.c5x7.fr/fuite-lds-zone-regulateur-arriere",
+          "titre": "Fuite hydraulique – Train arrière – Zone régulateur de suspension",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "La page confirme une fuite de LDS au niveau de la zone du régulateur de suspension arrière sur la suspension Hydractive (C5 X7 et C6), via le flexible de canalisation basse pression."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.fiches-auto.fr/fiabilite-citroen/fiabilite-267-pannes-citroen-c6.php",
+          "motif": "non_soutenue",
+          "justification": "La page mentionne des fuites, défauts d'assiette et pertes de confort sur la suspension Hydractive de la C6, mais ne parle pas spécifiquement de 'LDS', ni de perte de hauteur précisément liée au régulateur et aux sphères avec voyant dédié, et surtout ne concerne que la C6 sans mention de C5 I/II ni d'Hydractive III."
+        },
+        {
+          "url": "https://www.planete-citroen.com/topic/142861-fuite-hydraulique/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.auto-doc.fr/s/prix-changement-sphere-c5",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la ou des sphère(s) de suspension défectueuse(s) (joint de soucoupe ou sphère complète), et/ou du flexible/raccord de la zone régulateur de raideur arrière en cas de fuite localisée à cet endroit.",
+      "cout_min_eur": 120,
+      "cout_max_eur": 450,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2122
+    },
+    {
+      "cle": "VW",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "VW",
+        "categorie": "boite",
+        "title": "Boîte DSG DQ200 : mécatronique et embrayages secs",
+        "description": "Boîte à double embrayage sec DQ200 à sept rapports : défaillance du bloc mécatronique, à-coups, perte de rapports et passage en mode secours.",
+        "models": "Golf VI, Golf VII, Polo V, Passat B7",
+        "years": "2008-2019",
+        "cibles": [
+          "DQ200"
+        ],
+        "repere": true
+      },
+      "marque": "VW",
+      "title": "Boîte DSG DQ200 : mécatronique et embrayages secs",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.drive.com.au/news/new-recall-of-80-000-volkswagen-audi-and-skoda-cars-with-dsg-gearboxes-some-for-the-second-time-in-six-years/",
+          "titre": "New recall of 80,000 Volkswagen, Audi and Skoda cars with DSG gearboxes - some for the second time in six years",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la DSG DQ200 (boîte à double embrayage sec) équipant notamment les Golf et Polo 2009-2015 a connu des rappels pour défaillance du bloc mécatronique et passage en mode 'limp home' (mode secours)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.team-bhp.com/news/understanding-vw-skoda-dsg-dq200-failures-detail",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://tssgp.com/en/blog/vw-dsg-transmission-problems/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://enginescope.gr/engine/vw-dsg-dq200/",
+          "motif": "hors_sujet"
+        }
+      ],
+      "remede": "Remplacement (ou reconditionnement) du bloc mécatronique DQ200 défaillant (logement de l'accumulateur de pression fissuré, électronique de contrôle), avec remplacement du kit d'embrayage sec si celui-ci est également usé ou affecté par la pression hydraulique instable.",
+      "cout_min_eur": 1200,
+      "cout_max_eur": 3500,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.2198
+    },
+    {
+      "cle": "VW",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "VW",
+        "categorie": "boite",
+        "title": "Boîte DSG DQ250 : embrayages et bain d'huile",
+        "description": "Boîte à double embrayage humide DQ250 à six rapports : usure des embrayages, à-coups et défaillance de la mécatronique.",
+        "models": "Golf V, Golf VI, Passat B6, Touran I",
+        "years": "2003-2014",
+        "cibles": [
+          "DQ250"
+        ],
+        "repere": true
+      },
+      "marque": "VW",
+      "title": "Boîte DSG DQ250 : embrayages et bain d'huile",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://autoliva.com/blog/quelle-boite-dsg-equipe-ma-voiture-dq200-dq250-dq381-dq500",
+          "titre": "Quelle boîte DSG : DQ200, DQ250, DQ381 ou DQ500",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la DQ250 est une DSG6 à 6 rapports, embrayage humide (multidisque) baignant dans l'huile, et mentionne les à-coups ainsi que les pannes de mécatronique comme symptômes typiques des DSG, dont la DQ250."
+        },
+        {
+          "url": "https://autoliva.com/blog/mecatronique-dsg6-dq250-diagnostic-prix-remplacement",
+          "titre": "Mécatronique DSG6 DQ250 : diagnostic, prix et remplacement",
+          "type": "cout_publie",
+          "nomme_cible": true,
+          "justification": "La page confirme que la DQ250 est une boîte à double embrayage humide 6 rapports équipant la Golf V/VI et la Passat B6 (ainsi que le Touran) sur 2003-2014, et décrit l'usure des embrayages (particules métalliques après 150 000 km), les à-coups lors des passages de rapports et la défaillance de la mécatronique comme symptômes documentés."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-de-la-boite-dsg-6348384.html",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://vag-perf.fr/faq/problemes-connus-boite-de-vitesses-dsg-6-dq250/",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de l'embrayage multidisque humide usé et/ou remplacement du bloc mécatronique (module électro-hydraulique) de la boîte DQ250, parfois accompagné d'une mise à jour logicielle du calculateur.",
+      "cout_min_eur": 1000,
+      "cout_max_eur": 6000,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.1752
+    },
+    {
+      "cle": "DACIA",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "DACIA",
+        "categorie": "boite",
+        "title": "Boîte automatisée Easy-R : à-coups et actionneur",
+        "description": "Boîte manuelle robotisée Easy-R : à-coups au passage des rapports et défaillance de l'actionneur.",
+        "models": "Sandero II, Logan II, Duster I",
+        "years": "2015-2021",
+        "cibles": [
+          "EASYR"
+        ],
+        "repere": true
+      },
+      "marque": "DACIA",
+      "title": "Boîte automatisée Easy-R : à-coups et actionneur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "forum_seul",
+      "sources": [
+        {
+          "url": "https://communaute.dacia.fr/forum/DACIA/SANDERO/PROBLEME-BOITE-ROBOTISEE-SUR-UNE-SANDERO-STEPWAY-DE-9-MOIS/2809171/23633",
+          "titre": "Forum DACIA : Problème boite robotisée sur une Sandéro Stepway de 9 mois",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "Le forum décrit des problèmes récurrents de broutage/vibrations (à-coups) sur la boîte robotisée Easy-R et mentionne le changement de l'actuateur d'embrayage, ce qui correspond à l'affirmation sur l'actionneur et les à-coups."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/essai-dacia-sandero-stepway-tce-90-easy-r-pas-vraiment-un-progres-7242384.html",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.largus.fr/actualite-automobile/essai-dacia-sandero-dci-90-easy-r-2016-pas-la-meilleure-du-lot-8149394.html",
+          "motif": "non_soutenue",
+          "justification": "La page décrit des à-coups lors des montées de rapport de la boîte Easy-R, mais ne mentionne aucune défaillance de l'actionneur."
+        },
+        {
+          "url": "https://www.auto-doc.fr/info/embrayage-dacia-sandero-stepway-duree-de-vie-prix-et-symptomes-d-usure",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement du kit d'embrayage (disque, mécanisme, butée) et/ou de l'actionneur électrique de la boîte Easy-R, avec recalibrage obligatoire à la valise de diagnostic OBD après intervention.",
+      "cout_min_eur": 480,
+      "cout_max_eur": 720,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2304
+    },
+    {
+      "cle": "TOYOTA",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "TOYOTA",
+        "categorie": "boite",
+        "title": "Boîte Multidrive S : broutement du variateur",
+        "description": "Boîte à variation continue Multidrive S : broutement, montée en régime sans accélération et usure de la courroie du variateur.",
+        "models": "Auris II, Avensis III, Verso",
+        "years": "2009-2018",
+        "cibles": [
+          "MULTIDRIVE"
+        ],
+        "repere": true
+      },
+      "marque": "TOYOTA",
+      "title": "Boîte Multidrive S : broutement du variateur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Les recherches ne renvoient que des forums (non recevables seuls), des fiches techniques génériques sur le fonctionnement de la boîte CVT Multidrive S, et des pages commerciales sur la courroie d'accessoire/distribution (pièce différente, sans rapport avec la courroie du variateur) ; aucune source constructeur, rappel officiel ou presse auto reconnue n'atteste spécifiquement un broutement du variateur avec usure de la courroie sur Auris II, Avensis III ou Verso.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1723
+    },
+    {
+      "cle": "OPEL",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "OPEL",
+        "categorie": "boite",
+        "title": "Boîte Easytronic : actionneur d'embrayage",
+        "description": "Boîte manuelle pilotée Easytronic : défaillance de l'actionneur d'embrayage, à-coups et refus de passer les rapports.",
+        "models": "Corsa C, Corsa D, Meriva A, Astra H",
+        "years": "2000-2014",
+        "cibles": [
+          "EASYTRONIC"
+        ],
+        "repere": true
+      },
+      "marque": "OPEL",
+      "title": "Boîte Easytronic : actionneur d'embrayage",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.auto-doc.fr/info/opel-corsa-problemes-connus-et-fiabilite",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.aurel-automobile.fr/fr/tout-savoir-sur-l-opel-easytronic-diagnostic-et-reparation-de-la-tcu-et-de-l-embrayage/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "http://www.forum-opel.fr/forum/index.php?topic=29210.0",
+          "motif": "url_invalide"
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/pole-technique/mecanique-electronique/sujet369723-70.htm",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement (ou reconditionnement/réparation spécialisée) du module actionneur d'embrayage Easytronic, avec purge du liquide hydraulique et réapprentissage/recalibrage électronique via outil de diagnostic (Tech2) après intervention ; dans certains cas le kit d'embrayage complet est changé en complé",
+      "cout_min_eur": 200,
+      "cout_max_eur": 500,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1184
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "FIAT",
+        "categorie": "boite",
+        "title": "Boîte Dualogic : actionneur et embrayage",
+        "description": "Boîte manuelle robotisée Dualogic : défaillance de l'actionneur, à-coups marqués et perte de la marche arrière.",
+        "models": "Punto Evo, 500, Panda III",
+        "years": "2005-2018",
+        "cibles": [
+          "DUALOGIC"
+        ],
+        "repere": true
+      },
+      "marque": "FIAT",
+      "title": "Boîte Dualogic : actionneur et embrayage",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.caroom.fr/guide/voiture-neuve/comment-choisir/boite-de-vitesses/automatique/a-eviter",
+          "titre": "Quelles sont les boîtes de vitesses automatiques à éviter ? (rappel Fiat Dualogic, actionneur d'embrayage)",
+          "type": "constructeur_ou_rappel",
+          "nomme_cible": false,
+          "justification": "La page confirme que la Dualogic manque de fiabilité et cite le rappel Fiat au Brésil pour contrôler/remplacer l'actionneur d'embrayage dont la défaillance pouvait gêner le démarrage et les changements de rapports, voire empêcher de rouler, ce qui correspond à l'actionneur défaillant et aux à-coups évoqués (la perte de marche arrière n'est pas mentionnée mais le défaut d'actionneur/embrayage est s"
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://cars-one.fr/2025/04/02/probleme-boite-robotisee-dualogic-fiat-500-moteur-1-2/",
+          "motif": "non_soutenue",
+          "justification": "La page décrit bien la défaillance de l'actionneur d'embrayage et les à-coups marqués, mais elle mentionne un blocage en 2ème ou 3ème vitesse ou un refus de passer un rapport, sans jamais évoquer une perte spécifique de la marche arrière."
+        },
+        {
+          "url": "https://www.fiches-auto.fr/fiabilite-fiat/fiabilite-188-pannes-fiat-500.php",
+          "motif": "non_soutenue",
+          "justification": "La page mentionne que sur la Dualogic l'actionneur, le capteur de position ou la pression de commande peuvent faire repasser la boîte au neutre ou refuser certains rapports, mais elle ne parle ni d'à-coups marqués ni de perte spécifique de la marche arrière."
+        },
+        {
+          "url": "https://www.largus.fr/forum-auto/panne-auto-mecanique-et-entretien/fiat/punto-2/defaillance-boite-sequentielle-marche-arriere-et-point-n/334821-665-boite-de-vitesse.html",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement ou recalibration de l'actionneur d'embrayage de la boîte Dualogic (et des actionneurs de sélection associés), avec remplacement du kit d'embrayage si celui-ci est usé ; dans les cas les plus avancés, remplacement complet du robot électrohydraulique (pompe, accumulateur, actionneur).",
+      "cout_min_eur": 800,
+      "cout_max_eur": 1800,
+      "gravite": "majeure",
+      "gravite_avant": null,
+      "cout_eur": 0.3613
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "electronique",
+      "repere": true,
+      "candidat": {
+        "cle": "FIAT",
+        "categorie": "electronique",
+        "title": "Direction assistée Dualdrive Punto : perte d'assistance",
+        "description": "Défaillance de la direction assistée électrique Dualdrive sur Punto : perte d'assistance, ayant fait l'objet de campagnes du constructeur.",
+        "models": "Punto II, Punto III, Grande Punto",
+        "years": "1999-2012",
+        "cibles": [
+          "DUALDRIVE"
+        ],
+        "repere": true
+      },
+      "marque": "FIAT",
+      "title": "Direction assistée Dualdrive Punto : perte d'assistance",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums techniques (Caradisiac, Largus) attestent de nombreux cas de perte d'assistance sur la direction électrique Dualdrive de la Punto II, mais ces mêmes forums précisent explicitement qu'aucun rappel officiel n'a jamais été émis par Fiat pour ce défaut électrique précis ; le seul rappel constructeur réellement documenté par la presse auto (Largus, Caradisiac) concerne un défaut mécanique différent, sans rapport avec le système Dualdrive : un couple de serrage non conforme du boulon de la fourchette du cardan de la colonne de direction sur les Grande Punto produites entre juillet 2006 et avril 2008. Un forum ne pouvant jamais porter une entrée à lui seul, le défaut Dualdrive/perte d'assistance électrique tel que décrit ne peut pas être validé par des sources publiques suffisantes.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1933
+    },
+    {
+      "cle": "NISSAN",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "NISSAN",
+        "categorie": "boite",
+        "title": "Boîte CVT Jatco : surchauffe et broutement du variateur",
+        "description": "Boîte à variation continue d'origine Jatco : surchauffe, broutement, montée en régime sans accélération et passage en mode secours.",
+        "models": "Qashqai I, Qashqai II, X-Trail II, Juke",
+        "years": "2007-2019",
+        "cibles": [
+          "JATCO"
+        ],
+        "repere": true
+      },
+      "marque": "NISSAN",
+      "title": "Boîte CVT Jatco : surchauffe et broutement du variateur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/nissan-qashqai-et-x-trail-2014-soucis-sur-la-boite-automatique-6349384-7817916-photos.html",
+          "motif": "hors_sujet"
+        },
+        {
+          "url": "https://faultycar.co.uk/faults/nissan-juke-qashqai-cvt-gearbox",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.qashqai-passion.fr/viewtopic.php?t=1727",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Le constructeur a mis en place une reprogrammation du calculateur de la boîte CVT (action corrective en atelier) pour corriger les dysfonctionnements signalés ; en cas d'usure avancée du variateur, le remède évoqué ailleurs est l'échange standard de la boîte CVT.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1107
+    },
+    {
+      "cle": "BMW",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "BMW",
+        "categorie": "boite",
+        "title": "Mécatronique ZF 6HP : plaque conductrice et fuites",
+        "description": "Boîte automatique ZF 6HP : défaillance de la plaque conductrice de la mécatronique, fuites au connecteur, à-coups et perte de rapports.",
+        "models": "Série 3 E90, Série 5 E60, X3 E83, X5 E70",
+        "years": "2004-2013",
+        "cibles": [
+          "6HP"
+        ],
+        "repere": true
+      },
+      "marque": "BMW",
+      "title": "Mécatronique ZF 6HP : plaque conductrice et fuites",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://gearboxinsider.com/blog/zf6hp-bmw-5-series-common-problems",
+          "motif": "hors_sujet"
+        },
+        {
+          "url": "https://www.bmw-serie3.com/phpbb3/viewtopic.php?t=27760",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://docteur-bva.com/produit/douille-detancheite-pour-boite-zf-6hp-pour-bmw/",
+          "motif": "non_soutenue",
+          "justification": "La page propose une douille d'étanchéité pour le connecteur mécatronique des boîtes ZF 6HP19/26 mais ne mentionne ni défaillance de plaque conductrice, ni fuites au connecteur, ni à-coups ou perte de rapports."
+        },
+        {
+          "url": "https://atstservices.com/fr/blog/boite-zf-6hp-pannes-diagnostic",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la douille/joint d'étanchéité du connecteur électrique de la mécatronique (et des joints internes associés) lors d'une vidange de boîte ; si la fuite a dégradé l'huile et provoqué des défaillances internes (court-circuits, usure des solénoïdes), remplacement de la mécatronique complè",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2129
+    },
+    {
+      "cle": "AUDI",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "AUDI",
+        "categorie": "boite",
+        "title": "Boîte Multitronic : variateur et chaîne",
+        "description": "Boîte à variation continue Multitronic : broutement, à-coups, usure de la chaîne du variateur et défaillance du calculateur de boîte.",
+        "models": "A4 B6, A4 B7, A4 B8, A6 C6",
+        "years": "2000-2015",
+        "cibles": [
+          "MULTITRONIC"
+        ],
+        "repere": true
+      },
+      "marque": "AUDI",
+      "title": "Boîte Multitronic : variateur et chaîne",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://la-boite-automatique.com/entretien-boite-automatique-audi-multitronic-0aw/",
+          "titre": "Boîte automatique Audi Multitronic vidange, chaîne, capteurs, TCU",
+          "type": "cout_publie",
+          "nomme_cible": true,
+          "justification": "La page décrit bien la Multitronic 0AW (montée sur A4/A5/A6) avec symptômes de glissements/vibrations liés à l'usure de la chaîne et des pannes fréquentes du calculateur de boîte (TCU)."
+        },
+        {
+          "url": "https://automotohebdo.fr/symptome-boite-multitronic-hs-panne-broutage-calculateur-audi-cvt/",
+          "titre": "Symptôme boîte Multitronic HS : Diagnostiquer les pannes Audi",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page décrit explicitement pour la boîte Multitronic Audi (A4, A5, A6) le broutement/à-coups au démarrage, l'usure de la chaîne qui glisse sur les cônes, ainsi que la défaillance du calculateur TCU (soudures cassées, PRNDS clignotant)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://auto-radar.fr/audi-a4/fiabilite",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.forum-audi.com/topic-5117-les-problemes-de-boite-multitronic-sur-audi-a4-b6.html",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la chaîne de traction du variateur (poulies/guides associés) en cas d'usure mécanique, et remplacement ou réparation du calculateur de boîte (TCU) en cas de défaillance électronique ; sur les premières A4 B6 d'avant juin 2004, Audi a remplacé sous garantie la boîte défectueuse par un",
+      "cout_min_eur": 1500,
+      "cout_max_eur": 5000,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.1434
+    },
+    {
+      "cle": "AUDI",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "AUDI",
+        "categorie": "boite",
+        "title": "Boîte S tronic DL501 : mécatronique et embrayages",
+        "description": "Boîte à double embrayage longitudinale DL501 à sept rapports : défaillance de la mécatronique et usure des embrayages.",
+        "models": "A4 B8, A5, A6 C7, Q5",
+        "years": "2008-2016",
+        "cibles": [
+          "DL501"
+        ],
+        "repere": true
+      },
+      "marque": "AUDI",
+      "title": "Boîte S tronic DL501 : mécatronique et embrayages",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.findservicehistory.com/common-faults-check/dsg-gearbox-problems",
+          "titre": "DSG Gearbox Problems: DQ200 and S tronic Faults",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page décrit explicitement le 'Audi 7-speed S tronic (DL501): mechatronic and clutch faults' pour A4, A5, A6, A7 et Q5, mentionnant des défaillances de la mécatronique et une usure des pochettes d'embrayage."
+        },
+        {
+          "url": "https://www.ecutesting.com/common-faults/audi/audi-s-tronic-0b5-gearbox-mechatronic-problem/",
+          "titre": "S-Tronic 0B5 mechatronic failure",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page décrit explicitement la défaillance de la mécatronique de la boîte S-Tronic DL501/0B5 à sept rapports sur A4 (B8), A5, A6 (C7) et Q5 des années correspondantes, mais ne mentionne pas d'usure des embrayages comme cause de panne, seulement un code lié à la surveillance de température d'embrayage et des capteurs de pression."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://eco-torque.co.uk/blogs/news/audi-0b5-dl501-dsg-s-tronic-gearbox-common-problems-fixes",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://autoliva.com/blog/codes-defaut-dsg-s-tronic-guide-complet-par-boite",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de l'unité mécatronique (neuve ou reconditionnée, avec ou sans TCU) et, en cas d'usure avérée, remplacement du pack d'embrayages à bain d'huile de la DL501 ; un kit de réparation (solénoïdes, carte électronique, capteur G676) peut suffire si le défaut est localisé.",
+      "cout_min_eur": 1200,
+      "cout_max_eur": 4360,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.2361
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "MERCEDES",
+        "categorie": "boite",
+        "title": "Boîte 7G-Tronic 722.9 : plaque conductrice",
+        "description": "Boîte automatique 7G-Tronic 722.9 : défaillance de la plaque conductrice, fuites au connecteur et passage en mode secours.",
+        "models": "Classe C W204, Classe E W212, Classe S W221",
+        "years": "2004-2016",
+        "cibles": [
+          "7229"
+        ],
+        "repere": true
+      },
+      "marque": "MERCEDES",
+      "title": "Boîte 7G-Tronic 722.9 : plaque conductrice",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Le défaut de la plaque conductrice (722.9) n'est attesté que par des forums (mbworld, slkworld, benzworld, forum-auto.caradisiac.com) et des blogs commerciaux/SEO (autocopilot.fr, becquet-voiture.com, euroracingparts.fr, kfz-dietrich.com, gearboxinsider.com...), sans aucun document constructeur, base de rappel officielle ni article de presse automobile reconnue traitant nommément ce défaut sur W204/W212/W221 ; faute d'une source de rang 1 ou 2, et un forum seul ne pouvant porter l'entrée, le défaut n'est pas suffisamment sourcé.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1887
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "electronique",
+      "repere": true,
+      "candidat": {
+        "cle": "MERCEDES",
+        "categorie": "electronique",
+        "title": "Freinage électro-hydraulique SBC : défaillance de l'accumulateur",
+        "description": "Système de freinage électro-hydraulique Sensotronic Brake Control : défaillance de la pompe et de l'accumulateur, ayant fait l'objet de campagnes du constructeur.",
+        "models": "Classe E W211, CLS C219, SL R230",
+        "years": "2002-2009",
+        "cibles": [
+          "SENSOTRONIC"
+        ],
+        "repere": true
+      },
+      "marque": "MERCEDES",
+      "title": "Freinage électro-hydraulique SBC : défaillance de l'accumulateur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.mbusa.com/content/dam/mb-nafta/us/customer-letters/2005110001.pdf",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Sensotronic_Brake_Control",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://ecu.fr/t/mercedes/calculateurs-abs-esp-asr/abs-sbc-avec-accumulateur-de-pression-3503",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://mbworld.org/forums/e-class-w211/899369-06-e350-sbc-recall-what-s-covered.html",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la pompe/unité hydraulique SBC et de l'accumulateur (réservoir) de pression, avec remise à zéro du système ; le premier rappel constructeur a consisté à installer un fil de masse et un support de fixation renforcés sur la pompe SBC, assorti d'une extension de garantie (10 puis 25 ans",
+      "cout_min_eur": 380,
+      "cout_max_eur": 452,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1479
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "suspension",
+      "repere": true,
+      "candidat": {
+        "cle": "MERCEDES",
+        "categorie": "suspension",
+        "title": "Suspension Airmatic : compresseur et coussins",
+        "description": "Suspension pneumatique Airmatic : perte de hauteur, fuites des coussins et défaillance du compresseur.",
+        "models": "Classe E W211, Classe S W220, Classe S W221",
+        "years": "2000-2013",
+        "cibles": [
+          "AIRMATIC"
+        ],
+        "repere": true
+      },
+      "marque": "MERCEDES",
+      "title": "Suspension Airmatic : compresseur et coussins",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seules des sources de forums de marque (BenzWorld, MBWorld, PeachParts) et des blogs commerciaux de pièces détachées/SEO (sans ligne éditoriale de presse auto reconnue) attestent ce défaut ; aucune note constructeur, base de rappel officielle (NHTSA/RappelConso) ni article de presse automobile reconnue n'a été trouvée, et un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1794
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "electronique",
+        "title": "Unité centrale habitacle (UCH) Mégane II : condamnation et non-démarrage",
+        "description": "Défaillance de l'unité centrale habitacle sur Mégane II et Scénic II : condamnation des portes, essuie-glaces, et non-démarrage par perte de reconnaissance de la carte.",
+        "models": "Mégane II, Scénic II",
+        "years": "2002-2009",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "RENAULT",
+      "title": "Unité centrale habitacle (UCH) Mégane II : condamnation et non-démarrage",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seules des discussions de forums techniques (Forum Auto/Caradisiac, Planète Renault, superforum Mégane 2, Le Monde du Diag Auto, Aide Technique Auto, Tlemcen Electronic) et des sites de contenu générique/SEO évoquent ces symptômes ; aucun document constructeur, aucune base de rappel officielle (RappelConso, NHTSA) ni article de presse automobile reconnue n'atteste nommément ce défaut UCH sur Mégane II/Scénic II, donc selon la règle un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.0908
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "electronique",
+        "title": "Lecteur de carte mains libres : non-démarrage",
+        "description": "Défaillance du lecteur de carte mains libres : le véhicule ne reconnaît plus la carte et refuse de démarrer.",
+        "models": "Laguna III, Espace IV, Mégane III",
+        "years": "2007-2015",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "RENAULT",
+      "title": "Lecteur de carte mains libres : non-démarrage",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "forum_seul",
+      "sources": [
+        {
+          "url": "https://www.passion-espace-club.com/viewtopic.php?t=36068",
+          "titre": "détection carte main libre - Passion Espace Club",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "Le forum décrit un Espace IV dont la carte mains libres n'est plus détectée, le lecteur ne reconnaissant plus la carte et la voiture ne démarrant plus normalement, ce qui correspond à la panne décrite."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/622588-laguna-iii-carte-mains-libres-ne-fonctionne-plus/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.planeterenault.com/forum/espace-iv-probleme-demarrage-carte-lecteur-hs-t45192.html",
+          "motif": "non_soutenue",
+          "justification": "La page est un message de forum rapportant un témoignage isolé sur un Espace IV dont la carte n'est plus détectée, sans confirmer qu'il s'agit d'une défaillance générique du lecteur de carte mains libres ni fournir de validation ou diagnostic établi."
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/93401-espace-4-carte-pas-reconnue/",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2153
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "corrosion",
+        "title": "Corrosion du berceau et des bas de caisse Kangoo I",
+        "description": "Corrosion du berceau moteur et des bas de caisse sur Kangoo première génération, pouvant motiver un refus au contrôle technique.",
+        "models": "Kangoo I",
+        "years": "1997-2008",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "RENAULT",
+      "title": "Corrosion du berceau et des bas de caisse Kangoo I",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.kangoo-pro.fr/auto/kangoo-rouille-points-faibles-carrosserie/",
+          "titre": "Rouille Kangoo : checklist à imprimer des 7 points faibles",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page indique que le Kangoo 1 (1997-2007) présente un risque élevé de corrosion sur bas de caisse, ailes et passages de roue, et évoque explicitement un contrôle technique refusé pour corrosion perforante, bien que le berceau moteur ne soit pas nommé spécifiquement mais les points d'ancrage et longerons sont mentionnés comme zones à risque."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://forum-auto.caradisiac.com/topic/15502-kangoo-souci-de-rouille-et-moteur/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.autos-discount.fr/entretien/rouille-bas-caisse-berceau/",
+          "motif": "non_soutenue",
+          "justification": "La page traite de manière générique de la corrosion du bas de caisse et du berceau moteur et de son risque de contre-visite, mais elle ne mentionne jamais le RENAULT Kangoo I ni aucun véhicule précis."
+        }
+      ],
+      "remede": "Traitement antirouille ciblé ou, en cas de corrosion perforante avancée, remplacement partiel/complet du bas de caisse et/ou du berceau moteur (soudure de tôle neuve) avant repassage du contrôle technique.",
+      "cout_min_eur": 500,
+      "cout_max_eur": 2500,
+      "gravite": "majeure",
+      "gravite_avant": null,
+      "cout_eur": 0.1387
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "suspension",
+      "repere": false,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "suspension",
+        "title": "Train arrière Mégane II : silentblocs et bras",
+        "description": "Usure prématurée des silentblocs et des bras du train arrière sur Mégane II et Scénic II, avec jeu et bruits de roulement.",
+        "models": "Mégane II, Scénic II",
+        "years": "2002-2009",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "RENAULT",
+      "title": "Train arrière Mégane II : silentblocs et bras",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seules des pages de forums (Largus, PlanèteRenault, Caradisiac) et des boutiques de pièces détachées évoquent ce sujet ; aucun document constructeur/rappel ni article de presse auto reconnu n'atteste spécifiquement une usure prématurée des silentblocs et bras du train arrière sur Mégane II/Scénic II, et un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1652
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "climatisation",
+      "repere": false,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "climatisation",
+        "title": "Compresseur de climatisation Clio III",
+        "description": "Défaillance du compresseur de climatisation sur Clio III, avec perte de froid et bruit à l'enclenchement.",
+        "models": "Clio III",
+        "years": "2005-2012",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "RENAULT",
+      "title": "Compresseur de climatisation Clio III",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Aucun document constructeur, base de rappel officielle ni article de presse automobile reconnue n'atteste nommément une défaillance récurrente du compresseur de climatisation sur la Clio III : les seules occurrences trouvées proviennent de forums (Largus, Caradisiac) et de sites commerciaux de pièces/réparation (Autodoc, GoodMecano, fiches-auto.fr, compar-auto.fr), qui ne peuvent à eux seuls établir le défaut selon la hiérarchie de sources requise.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.0906
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "electronique",
+        "title": "Boîtier de servitude intelligent (BSI) : pannes électriques aléatoires",
+        "description": "Défaillance du boîtier de servitude intelligent : pannes électriques aléatoires, décharge de batterie, véhicule qui ne se réveille pas.",
+        "models": "207, 308 I, 3008 I",
+        "years": "2006-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "PEUGEOT",
+      "title": "Boîtier de servitude intelligent (BSI) : pannes électriques aléatoires",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "\"",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/rappels-de-la-semaine-peugeot-207-307-308-407-et-partner-tepee-153841.html",
+          "motif": "non_soutenue",
+          "justification": "La page confirme une défaillance du BSI provoquant la dégradation d'équipements comme l'éclairage ou les essuie-glaces, mais ne mentionne ni pannes électriques aléatoires, ni décharge de batterie, ni véhicule qui ne se réveille pas, et concerne de plus les 207, 307, 308, 407 et Partner Tepee produits entre fin février et mi-juin 2008, pas la 3008."
+        },
+        {
+          "url": "https://careco.fr/actu/problemes-frequents-peugeot-207-surveiller-150-000-km/",
+          "motif": "mauvais_moteur",
+          "justification": "La page décrit bien des pannes du BSI (infiltration d'eau, oxydation, comportements électriques erratoires), mais elle concerne la Peugeot 207 (2006-2014) et non le véhicule visé qui inclut aussi 308 I et 3008 I, modèles non traités par la page."
+        },
+        {
+          "url": "https://garagefrancais.com/probleme-boitier-bsi-peugeot-207-symptomes-a-surveiller/",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Vérification du numéro de série du boîtier BSI, puis remplacement du boîtier défaillant (échange sous garantie dans le cadre de la campagne constructeur, ou remplacement/reprogrammation en atelier hors garantie).",
+      "cout_min_eur": 300,
+      "cout_max_eur": 800,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.3426
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "corrosion",
+        "title": "Corrosion des passages de roue et bas de caisse 206",
+        "description": "Corrosion des passages de roue arrière et des bas de caisse sur 206, en particulier sur les premières années de production.",
+        "models": "206",
+        "years": "1998-2009",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "PEUGEOT",
+      "title": "Corrosion des passages de roue et bas de caisse 206",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums (forum-auto.caradisiac.com, forum-peugeot.com, forum Largus) évoquent la rouille sur les passages de roue et bas de caisse de la 206 ; aucune source constructeur, base de rappel officielle ou presse automobile reconnue ne confirme ce défaut nommément pour ce modèle, et un forum seul ne peut porter une entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.0798
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "suspension",
+      "repere": false,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "suspension",
+        "title": "Coupelles et amortisseurs arrière 207",
+        "description": "Usure prématurée des coupelles et des amortisseurs arrière sur 207, avec bruits de butée et tenue de route dégradée.",
+        "models": "207",
+        "years": "2006-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "PEUGEOT",
+      "title": "Coupelles et amortisseurs arrière 207",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums (forum-peugeot.com, feline207.net, forum-auto) évoquent des bruits d'amortisseurs/coupelles arrière sur 207, mais aucune note constructeur, aucun rappel officiel (RappelConso/NHTSA) ni aucun article de presse auto reconnue n'attestent nommément ce défaut précis pour la 207 ; or un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.171
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "climatisation",
+      "repere": false,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "climatisation",
+        "title": "Condenseur de climatisation 308 I",
+        "description": "Perçage du condenseur de climatisation par corrosion sur 308 première génération, entraînant une fuite de fluide.",
+        "models": "308 I",
+        "years": "2007-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "PEUGEOT",
+      "title": "Condenseur de climatisation 308 I",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.fiches-auto.fr/fiabilite-peugeot/fiabilite-185-pannes-peugeot-308.php",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.goodmecano.com/reparation-automobile-par-marque/peugeot/308/remplacement-condenseur-climatisation-53",
+          "motif": "non_soutenue",
+          "justification": "La page liste uniquement une prestation 'Remplacement condenseur climatisation' sans mentionner de panne par perçage/corrosion ni de fuite de fluide spécifique à la 308 I."
+        },
+        {
+          "url": "https://www.forum-peugeot.com/Forum/threads/pb-clim-evaporateur.27699/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "http://www.forum308.com/viewtopic.php?t=4118",
+          "motif": "url_invalide"
+        }
+      ],
+      "remede": "Remplacement du condenseur de climatisation (bloc complet), suivi d'une recharge du circuit en fluide frigorigène.",
+      "cout_min_eur": 74,
+      "cout_max_eur": 357,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1554
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "electronique",
+        "title": "Boîtier de servitude intelligent (BSI) : pannes électriques aléatoires",
+        "description": "Défaillance du boîtier de servitude intelligent : pannes électriques aléatoires, décharge de batterie, démarrage impossible.",
+        "models": "C4 I, C5 II, Berlingo II",
+        "years": "2004-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "CITROEN",
+      "title": "Boîtier de servitude intelligent (BSI) : pannes électriques aléatoires",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Aucun document constructeur, base de rappel officielle (RappelConso/NHTSA) ni presse automobile reconnue n'atteste nommément une panne de BSI sur les C4 I, C5 II ou Berlingo II (2004-2013) ; seules des pages commerciales de réparation génériques (diagcompteur, val-meca, jaquauto, cotrolia, pistonnerie, voyant-moteur.fr) et un fil de forum non concluant évoquent le BSI PSA en général, ce qui est insuffisant selon la hiérarchie des sources exigée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1772
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "corrosion",
+        "title": "Corrosion des bas de caisse Berlingo I",
+        "description": "Corrosion des bas de caisse et des longerons sur Berlingo première génération.",
+        "models": "Berlingo I",
+        "years": "1996-2008",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "CITROEN",
+      "title": "Corrosion des bas de caisse Berlingo I",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://superbaroudeur.com/berlingo-dangel",
+          "titre": "Berlingo Dangel 4x4 : fiabilité, prix et aménagement (2026)",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page mentionne explicitement 'Rouille de caisse : les Berlingos de cette génération rouillent. Inspecter sous le plancher, les soubassements et les bas de portes', ce qui correspond à la corrosion des bas de caisse sur le Berlingo I."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.planete-citroen.com/topic/142528-rouille-perforante-bas-de-caisse/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.autos-discount.fr/entretien/rouille-bas-caisse-berceau/",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Découpe de la tôle corrodée et pose de tôles de réparation (ou remplacement complet) des bas de caisse par un carrossier, suivie de soudure, traitement anti-rouille, mastic et peinture.",
+      "cout_min_eur": 500,
+      "cout_max_eur": 1200,
+      "gravite": "majeure",
+      "gravite_avant": null,
+      "cout_eur": 0.1325
+    },
+    {
+      "cle": "VW",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "VW",
+        "categorie": "electronique",
+        "title": "Faisceau de porte et module de confort : lève-vitres et condamnation",
+        "description": "Rupture du faisceau dans le passage de porte et défaillance du module de confort : lève-vitres, condamnation centralisée et rétroviseurs inopérants.",
+        "models": "Golf V, Golf VI, Passat B6",
+        "years": "2003-2012",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "VW",
+      "title": "Faisceau de porte et module de confort : lève-vitres et condamnation",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seules des pages de forums (golfiv.fr, forum-auto.caradisiac.com, forumpassat.fr, vwpassat.eu, techniconnexion.com) évoquent ce défaut ; aucun document constructeur/rappel officiel ni presse automobile reconnue ne l'atteste nommément pour Golf V, Golf VI ou Passat B6, et un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1869
+    },
+    {
+      "cle": "DACIA",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "DACIA",
+        "categorie": "corrosion",
+        "title": "Corrosion du berceau et des bas de caisse Logan I",
+        "description": "Corrosion du berceau moteur et des bas de caisse sur Logan première génération.",
+        "models": "Logan I, Sandero I",
+        "years": "2004-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "DACIA",
+      "title": "Corrosion du berceau et des bas de caisse Logan I",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.caradisiac.com/La-qualite-de-finition-de-fabrication-et-les-rappels-40407.htm",
+          "motif": "hors_sujet"
+        },
+        {
+          "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Dacia-Logan-en-occasion-89871.htm",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.caradisiac.com/commentaires/Dacia-Logan-un-rappel-qui-ne-veut-pas-dire-son-nom-21995.htm",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://logan.forumactif.com/t1020p25-corrosion",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Action technique (non officiellement qualifiée de rappel) consistant en une injection de cire dans les corps creux de la carrosserie et une mise à niveau du traitement anticorrosion (châssis, trains roulants, passages de roue arrière) sur les Logan I produites jusqu'à fin 2006 en Roumanie et en Russ",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2531
+    },
+    {
+      "cle": "TOYOTA",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "TOYOTA",
+        "categorie": "corrosion",
+        "title": "Corrosion du châssis Hilux",
+        "description": "Corrosion perforante du châssis sur Hilux, ayant fait l'objet de campagnes du constructeur.",
+        "models": "Hilux",
+        "years": "2005-2016",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "TOYOTA",
+      "title": "Corrosion du châssis Hilux",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "forum_seul",
+      "sources": [
+        {
+          "url": "https://www.toyotaownersclub.com/forums/topic/229865-hilux-gen-7-gen-8-customer-satisfaction-campaign/",
+          "titre": "Hilux gen 7 & gen 8 customer satisfaction campaign",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "La page confirme une campagne de satisfaction client Toyota pour les Hilux génération 7 et 8 liée à des problèmes de corrosion/rouille perforante du châssis, pouvant aller jusqu'au remplacement complet du châssis."
+        },
+        {
+          "url": "https://wildcamping.co.uk/threads/toyota-hilux-subject-to-recall-re-chassis-issues.102325/",
+          "titre": "Toyota Hilux subject to recall re chassis issues",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "La page décrit un rappel Toyota pour corrosion du châssis sur Hilux (Mk7 et début Mk8), avec remplacement complet du châssis dans de nombreux cas, confirmant une campagne constructeur liée à la corrosion perforante du châssis."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.toyota.co.uk/help-centre/hilux-customer-satisfaction-campaign",
+          "motif": "hors_sujet"
+        },
+        {
+          "url": "https://www.farmersjournal.ie/machinery/motors/toyota-to-replace-corroded-hilux-chassis-894923",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Inspection du châssis en concession Toyota puis, selon le degré de corrosion constaté, traitement/scellement anticorrosion localisé ou remplacement complet du châssis (frame) du Hilux, pris en charge par le constructeur dans le cadre de la campagne de satisfaction client.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2046
+    },
+    {
+      "cle": "FORD",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "FORD",
+        "categorie": "corrosion",
+        "title": "Corrosion des passages de roue Focus II",
+        "description": "Corrosion des passages de roue arrière et des bas de caisse sur Focus deuxième génération.",
+        "models": "Focus II",
+        "years": "2004-2011",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "FORD",
+      "title": "Corrosion des passages de roue Focus II",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Aucun document constructeur, rappel officiel (les rappels/TSB de corrosion Ford Focus trouvés concernent la Focus Mk1 2000-2005 pour les serrures de portes arrière, les bras de suspension ou les roulements, pas le passage de roue/bas de caisse de la Focus II) ni presse automobile reconnue n'attestent nommément ce défaut précis sur la Focus II ; seules des pages de blog SEO génériques et des forums (non recevables seuls) en parlent.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1714
+    },
+    {
+      "cle": "OPEL",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "OPEL",
+        "categorie": "electronique",
+        "title": "Direction assistée électrique Corsa D : perte d'assistance",
+        "description": "Défaillance de la direction assistée électrique sur Corsa D : perte d'assistance en roulant, ayant fait l'objet de campagnes du constructeur.",
+        "models": "Corsa D",
+        "years": "2006-2014",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "OPEL",
+      "title": "Direction assistée électrique Corsa D : perte d'assistance",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Les seules campagnes constructeur retrouvées concernant une 'Corsa' et la direction visent soit un autre défaut sur la Corsa D elle-même (rappel 2008 pour fracture du tube télescopique de l'arbre intermédiaire de direction, un défaut mécanique distinct de la perte d'assistance électrique), soit des générations différentes (Corsa E livrée depuis mai 2014, Corsa produite fin 2019, ou Corsa F produite en 2024) ; aucune source presse ou constructeur n'atteste nommément une campagne de rappel pour perte d'assistance de la direction assistée électrique sur la Corsa D (2006-2014), le phénomène n'étant documenté que par des forums et des pages commerciales de réparation, insuffisants seuls selon la hiérarchie des sources.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1903
+    },
+    {
+      "cle": "OPEL",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "OPEL",
+        "categorie": "corrosion",
+        "title": "Corrosion des bas de caisse Astra G",
+        "description": "Corrosion des bas de caisse, des passages de roue et des points d'ancrage sur Astra G.",
+        "models": "Astra G, Zafira A",
+        "years": "1998-2009",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "OPEL",
+      "title": "Corrosion des bas de caisse Astra G",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Les sources fiables trouvées (Largus, forums Opel, RappelConso) attestent un défaut différent et bien documenté sur Astra G/Zafira A (1999-2005 diesel) : la corrosion du berceau moteur, pas celle des bas de caisse/passages de roue/points d'ancrage ; les seules pages évoquant « bas de caisse » pour l'Astra G sont des fiches génériques de vente de pièces (auto-doc.fr) au texte interchangeable d'un modèle à l'autre, qui ne constituent pas une preuve d'un défaut spécifique connu de ce modèle.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.0846
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "corrosion",
+      "repere": false,
+      "candidat": {
+        "cle": "FIAT",
+        "categorie": "corrosion",
+        "title": "Corrosion des planchers et bas de caisse Punto II",
+        "description": "Corrosion des planchers, des bas de caisse et des points d'ancrage de ceinture sur Punto deuxième génération.",
+        "models": "Punto II",
+        "years": "1999-2011",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "FIAT",
+      "title": "Corrosion des planchers et bas de caisse Punto II",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "forum_seul",
+      "sources": [
+        {
+          "url": "https://www.fiatforum.com/threads/sills-and-mot.255676/",
+          "titre": "Sills and mot???",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "La page confirme que la corrosion des seuils (sills), qui sont structurels et supportent les ceintures de sécurité, ainsi que du plancher, constitue un échec au MOT sur Punto Mk2, ce qui correspond à la corrosion des planchers, bas de caisse et points d'ancrage de ceinture mentionnée."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://carreliabilityreport.com/fr/fiabilite/fiat-punto-1999-2006-essence",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.carchecker.pro/reports/fiat_punto_mk2_1.2.html",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.fiatforum.com/threads/failed-mot-excessive-corrosion-on-floor-worth-repairing.455526/",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Découpe des tôles rouillées (bas de caisse, plancher, points d'ancrage de ceinture) et soudure de tôle/panneaux de réparation neufs, avec traitement anticorrosion (zinc primer) et resellage.",
+      "cout_min_eur": 200,
+      "cout_max_eur": 2000,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1216
+    },
+    {
+      "cle": "NISSAN",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "NISSAN",
+        "categorie": "electronique",
+        "title": "Faisceau de hayon et éclairage Qashqai I",
+        "description": "Rupture du faisceau dans le passage de hayon sur Qashqai première génération : éclairage arrière et essuie-glace inopérants.",
+        "models": "Qashqai I",
+        "years": "2007-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "NISSAN",
+      "title": "Faisceau de hayon et éclairage Qashqai I",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Aucune source constructeur, presse auto ou même forum dédié n'atteste précisément une rupture du faisceau électrique dans le passage de hayon du Qashqai I (2007-2013) entraînant la panne combinée éclairage arrière + essuie-glace ; les résultats trouvés concernent soit des pannes isolées d'ampoules/relais traitées génériquement par des sites de devis (sans lien avec un défaut de conception du faisceau de hayon), soit des faisceaux d'attelage mal montés par des garages tiers, soit d'autres générations (Qashqai II/J11) ou d'autres marques (BMW E39), ce qui ne permet pas de corroborer le défaut tel que décrit.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1741
+    },
+    {
+      "cle": "BMW",
+      "categorie": "electronique",
+      "repere": false,
+      "candidat": {
+        "cle": "BMW",
+        "categorie": "electronique",
+        "title": "Module FRM : éclairage et lève-vitres inopérants",
+        "description": "Défaillance du module FRM (Footwell Module) : perte de l'éclairage, des lève-vitres et des clignotants, souvent après une coupure de batterie.",
+        "models": "Série 1 E87, Série 3 E90, X1 E84",
+        "years": "2004-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "BMW",
+      "title": "Module FRM : éclairage et lève-vitres inopérants",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://specialiste-bmw.fr/reparation-module-frm-bmw/",
+          "titre": "Réparation module FRM BMW — Diagnostic & Codage",
+          "type": "cout_publie",
+          "nomme_cible": true,
+          "justification": "La page confirme que le FRM équipe notamment les E87, E90 et X1 E84, et que sa défaillance cause des vitres électriques inopérantes, des clignotants HS et une perte d'éclairage intérieur, souvent liée à une surtension/coupure de batterie."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.go-parts.com/garage/body-control-module-bmw-328i-bmw-x1-bmw-325xi-2006-2015",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://beemerpros.com/your-bmws-lights-and-windows-quit-after-a-jump-start-the-footwell-module-took-the-hit/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.ecutesting.com/common-faults/bmw/bmw-and-mini-footwell-module-fault/",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Réparation (reflow/remplacement de la puce EEPROM défaillante) du module FRM existant ou, si la carte est endommagée, remplacement du module FRM par un neuf/reconditionné suivi d'un recodage au VIN du véhicule via l'outil BMW ISTA.",
+      "cout_min_eur": 99,
+      "cout_max_eur": 800,
+      "gravite": "majeure",
+      "gravite_avant": null,
+      "cout_eur": 0.2344
+    },
+    {
+      "cle": "BMW",
+      "categorie": "suspension",
+      "repere": false,
+      "candidat": {
+        "cle": "BMW",
+        "categorie": "suspension",
+        "title": "Suspension pneumatique arrière : compresseur et coussins",
+        "description": "Suspension pneumatique arrière : perte de hauteur à l'arrêt, fuites des coussins et défaillance du compresseur.",
+        "models": "X5 E70, Série 5 Touring E61",
+        "years": "2003-2013",
+        "cibles": [],
+        "repere": false
+      },
+      "marque": "BMW",
+      "title": "Suspension pneumatique arrière : compresseur et coussins",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.fiches-auto.fr/fiabilite-bmw/fiabilite-316-pannes-bmw-x5.php",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://automotohebdo.fr/correcteur-assiette-bmw-panne-suspension-pneumatique-compresseur-boudin/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.oscaro.com/compresseur-de-suspension-pneumatique-bmw-serie-5-10840-68-gf",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.etoilecollections.fr/bmw-x5-modeles-a-eviter/",
+          "motif": "non_soutenue",
+          "justification": "La page mentionne des problèmes de compresseur et de coussins pneumatiques fragiles principalement pour l'E53 3.0d (2000-2003), et donne des coûts génériques pour la suspension pneumatique sans préciser que c'est l'arrière ni que cela concerne spécifiquement le X5 E70 ou la Série 5 Touring E61."
+        }
+      ],
+      "remede": "Remplacement des coussins (boudins/ressorts) pneumatiques arrière et, si nécessaire, du compresseur de suspension, selon l'origine de la fuite identifiée au diagnostic.",
+      "cout_min_eur": 750,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2721
+    }
+  ]
+}

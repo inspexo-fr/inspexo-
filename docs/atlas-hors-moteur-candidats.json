@@ -1,0 +1,447 @@
+{
+  "_lecture": "SPRINT 21 — Candidats HORS MOTEUR pour l'extension du Defect Atlas. ⚠️ CHAQUE ENTRÉE EST UNE HYPOTHÈSE À ÉPROUVER, PAS UNE AFFIRMATION : elle est soumise à atlas-builder (recherche web, filtre déterministe à 2 marqueurs, vérification indépendante par le juge de /fiabilite) et RETIRÉE si rien ne tient. C'est la méthode du sprint 16, où 20 des 30 entrées d'origine ont été retirées. Aucune description ne porte de montant : au sprint 16, un coût glissé dans l'affirmation la faisait juger « non soutenue » par paquet (corrigé par affirmationSansCout, mais autant ne pas en mettre).",
+  "_categories": [
+    "boite",
+    "electronique",
+    "corrosion",
+    "suspension",
+    "climatisation"
+  ],
+  "candidats": [
+    {
+      "cle": "RENAULT",
+      "categorie": "boite",
+      "title": "Boîte EDC (DC4) : à-coups et mécatronique",
+      "description": "Boîte à double embrayage EDC de type DC4 : à-coups à basse vitesse, broutement au démarrage en côte, défaillance du bloc mécatronique.",
+      "models": "Clio IV, Captur I, Mégane III, Scénic III",
+      "years": "2012-2019",
+      "cibles": [
+        "EDC",
+        "DC4"
+      ]
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "boite",
+      "title": "Boîte automatique DP0 (AL4) : glissements et passages durs",
+      "description": "Boîte automatique à quatre rapports DP0, dérivée de l'AL4 PSA : glissements, passages durs, montée en température du convertisseur.",
+      "models": "Mégane II, Scénic II, Laguna II",
+      "years": "2002-2010",
+      "cibles": [
+        "DP0",
+        "AL4"
+      ]
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "electronique",
+      "title": "Unité centrale habitacle (UCH) Mégane II : condamnation et non-démarrage",
+      "description": "Défaillance de l'unité centrale habitacle sur Mégane II et Scénic II : condamnation des portes, essuie-glaces, et non-démarrage par perte de reconnaissance de la carte.",
+      "models": "Mégane II, Scénic II",
+      "years": "2002-2009",
+      "cibles": []
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "electronique",
+      "title": "Lecteur de carte mains libres : non-démarrage",
+      "description": "Défaillance du lecteur de carte mains libres : le véhicule ne reconnaît plus la carte et refuse de démarrer.",
+      "models": "Laguna III, Espace IV, Mégane III",
+      "years": "2007-2015",
+      "cibles": []
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "corrosion",
+      "title": "Corrosion du berceau et des bas de caisse Kangoo I",
+      "description": "Corrosion du berceau moteur et des bas de caisse sur Kangoo première génération, pouvant motiver un refus au contrôle technique.",
+      "models": "Kangoo I",
+      "years": "1997-2008",
+      "cibles": []
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "suspension",
+      "title": "Train arrière Mégane II : silentblocs et bras",
+      "description": "Usure prématurée des silentblocs et des bras du train arrière sur Mégane II et Scénic II, avec jeu et bruits de roulement.",
+      "models": "Mégane II, Scénic II",
+      "years": "2002-2009",
+      "cibles": []
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "climatisation",
+      "title": "Compresseur de climatisation Clio III",
+      "description": "Défaillance du compresseur de climatisation sur Clio III, avec perte de froid et bruit à l'enclenchement.",
+      "models": "Clio III",
+      "years": "2005-2012",
+      "cibles": []
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "boite",
+      "title": "Boîte automatique AL4 : glissements et passages durs",
+      "description": "Boîte automatique à quatre rapports AL4 : glissements, à-coups au passage des rapports, surchauffe du convertisseur.",
+      "models": "206, 307, 406, 407, 807",
+      "years": "2000-2011",
+      "cibles": [
+        "AL4"
+      ]
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "boite",
+      "title": "Boîte EAT6 : à-coups à froid",
+      "description": "Boîte automatique EAT6 d'origine Aisin : à-coups au passage des premiers rapports à froid, apprentissage à réinitialiser.",
+      "models": "308 II, 3008 II, 508 I",
+      "years": "2014-2020",
+      "cibles": [
+        "EAT6"
+      ]
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "electronique",
+      "title": "Boîtier de servitude intelligent (BSI) : pannes électriques aléatoires",
+      "description": "Défaillance du boîtier de servitude intelligent : pannes électriques aléatoires, décharge de batterie, véhicule qui ne se réveille pas.",
+      "models": "207, 308 I, 3008 I",
+      "years": "2006-2013",
+      "cibles": []
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "corrosion",
+      "title": "Corrosion des passages de roue et bas de caisse 206",
+      "description": "Corrosion des passages de roue arrière et des bas de caisse sur 206, en particulier sur les premières années de production.",
+      "models": "206",
+      "years": "1998-2009",
+      "cibles": []
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "suspension",
+      "title": "Coupelles et amortisseurs arrière 207",
+      "description": "Usure prématurée des coupelles et des amortisseurs arrière sur 207, avec bruits de butée et tenue de route dégradée.",
+      "models": "207",
+      "years": "2006-2013",
+      "cibles": []
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "climatisation",
+      "title": "Condenseur de climatisation 308 I",
+      "description": "Perçage du condenseur de climatisation par corrosion sur 308 première génération, entraînant une fuite de fluide.",
+      "models": "308 I",
+      "years": "2007-2013",
+      "cibles": []
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "boite",
+      "title": "Boîte automatique AL4 : glissements et passages durs",
+      "description": "Boîte automatique à quatre rapports AL4 : glissements, à-coups, surchauffe du convertisseur.",
+      "models": "Xsara Picasso, C4 I, C5 I, C8",
+      "years": "2000-2011",
+      "cibles": [
+        "AL4"
+      ]
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "boite",
+      "title": "Boîte SensoDrive : actionneur et embrayage",
+      "description": "Boîte manuelle pilotée SensoDrive : défaillance de l'actionneur d'embrayage, à-coups marqués et refus de passer les rapports.",
+      "models": "C2, C3 I",
+      "years": "2003-2010",
+      "cibles": [
+        "SENSODRIVE"
+      ]
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "electronique",
+      "title": "Boîtier de servitude intelligent (BSI) : pannes électriques aléatoires",
+      "description": "Défaillance du boîtier de servitude intelligent : pannes électriques aléatoires, décharge de batterie, démarrage impossible.",
+      "models": "C4 I, C5 II, Berlingo II",
+      "years": "2004-2013",
+      "cibles": []
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "suspension",
+      "title": "Suspension Hydractive III : sphères, régulateur et fuites",
+      "description": "Suspension hydropneumatique Hydractive III : perte de hauteur, fuites de LDS au niveau du régulateur et des sphères, voyant de suspension.",
+      "models": "C5 I, C5 II, C6",
+      "years": "2001-2017",
+      "cibles": [
+        "HYDRACTIVE"
+      ]
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "corrosion",
+      "title": "Corrosion des bas de caisse Berlingo I",
+      "description": "Corrosion des bas de caisse et des longerons sur Berlingo première génération.",
+      "models": "Berlingo I",
+      "years": "1996-2008",
+      "cibles": []
+    },
+    {
+      "cle": "VW",
+      "categorie": "boite",
+      "title": "Boîte DSG DQ200 : mécatronique et embrayages secs",
+      "description": "Boîte à double embrayage sec DQ200 à sept rapports : défaillance du bloc mécatronique, à-coups, perte de rapports et passage en mode secours.",
+      "models": "Golf VI, Golf VII, Polo V, Passat B7",
+      "years": "2008-2019",
+      "cibles": [
+        "DQ200"
+      ]
+    },
+    {
+      "cle": "VW",
+      "categorie": "boite",
+      "title": "Boîte DSG DQ250 : embrayages et bain d'huile",
+      "description": "Boîte à double embrayage humide DQ250 à six rapports : usure des embrayages, à-coups et défaillance de la mécatronique.",
+      "models": "Golf V, Golf VI, Passat B6, Touran I",
+      "years": "2003-2014",
+      "cibles": [
+        "DQ250"
+      ]
+    },
+    {
+      "cle": "VW",
+      "categorie": "electronique",
+      "title": "Faisceau de porte et module de confort : lève-vitres et condamnation",
+      "description": "Rupture du faisceau dans le passage de porte et défaillance du module de confort : lève-vitres, condamnation centralisée et rétroviseurs inopérants.",
+      "models": "Golf V, Golf VI, Passat B6",
+      "years": "2003-2012",
+      "cibles": []
+    },
+    {
+      "cle": "DACIA",
+      "categorie": "boite",
+      "title": "Boîte automatisée Easy-R : à-coups et actionneur",
+      "description": "Boîte manuelle robotisée Easy-R : à-coups au passage des rapports et défaillance de l'actionneur.",
+      "models": "Sandero II, Logan II, Duster I",
+      "years": "2015-2021",
+      "cibles": [
+        "EASY-R"
+      ]
+    },
+    {
+      "cle": "DACIA",
+      "categorie": "corrosion",
+      "title": "Corrosion du berceau et des bas de caisse Logan I",
+      "description": "Corrosion du berceau moteur et des bas de caisse sur Logan première génération.",
+      "models": "Logan I, Sandero I",
+      "years": "2004-2013",
+      "cibles": []
+    },
+    {
+      "cle": "TOYOTA",
+      "categorie": "corrosion",
+      "title": "Corrosion du châssis Hilux",
+      "description": "Corrosion perforante du châssis sur Hilux, ayant fait l'objet de campagnes du constructeur.",
+      "models": "Hilux",
+      "years": "2005-2016",
+      "cibles": []
+    },
+    {
+      "cle": "TOYOTA",
+      "categorie": "boite",
+      "title": "Boîte Multidrive S : broutement du variateur",
+      "description": "Boîte à variation continue Multidrive S : broutement, montée en régime sans accélération et usure de la courroie du variateur.",
+      "models": "Auris II, Avensis III, Verso",
+      "years": "2009-2018",
+      "cibles": [
+        "MULTIDRIVE"
+      ]
+    },
+    {
+      "cle": "FORD",
+      "categorie": "boite",
+      "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+      "description": "Boîte à double embrayage sec PowerShift DPS6 : broutement au démarrage, à-coups, usure prématurée des embrayages et du module de commande.",
+      "models": "Fiesta VI, Focus III, B-Max, EcoSport",
+      "years": "2011-2018",
+      "cibles": [
+        "POWERSHIFT",
+        "DPS6"
+      ]
+    },
+    {
+      "cle": "FORD",
+      "categorie": "corrosion",
+      "title": "Corrosion des passages de roue Focus II",
+      "description": "Corrosion des passages de roue arrière et des bas de caisse sur Focus deuxième génération.",
+      "models": "Focus II",
+      "years": "2004-2011",
+      "cibles": []
+    },
+    {
+      "cle": "OPEL",
+      "categorie": "boite",
+      "title": "Boîte Easytronic : actionneur d'embrayage",
+      "description": "Boîte manuelle pilotée Easytronic : défaillance de l'actionneur d'embrayage, à-coups et refus de passer les rapports.",
+      "models": "Corsa C, Corsa D, Meriva A, Astra H",
+      "years": "2000-2014",
+      "cibles": [
+        "EASYTRONIC"
+      ]
+    },
+    {
+      "cle": "OPEL",
+      "categorie": "electronique",
+      "title": "Direction assistée électrique Corsa D : perte d'assistance",
+      "description": "Défaillance de la direction assistée électrique sur Corsa D : perte d'assistance en roulant, ayant fait l'objet de campagnes du constructeur.",
+      "models": "Corsa D",
+      "years": "2006-2014",
+      "cibles": []
+    },
+    {
+      "cle": "OPEL",
+      "categorie": "corrosion",
+      "title": "Corrosion des bas de caisse Astra G",
+      "description": "Corrosion des bas de caisse, des passages de roue et des points d'ancrage sur Astra G.",
+      "models": "Astra G, Zafira A",
+      "years": "1998-2009",
+      "cibles": []
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "boite",
+      "title": "Boîte Dualogic : actionneur et embrayage",
+      "description": "Boîte manuelle robotisée Dualogic : défaillance de l'actionneur, à-coups marqués et perte de la marche arrière.",
+      "models": "Punto Evo, 500, Panda III",
+      "years": "2005-2018",
+      "cibles": [
+        "DUALOGIC"
+      ]
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "electronique",
+      "title": "Direction assistée Dualdrive Punto : perte d'assistance",
+      "description": "Défaillance de la direction assistée électrique Dualdrive sur Punto : perte d'assistance, ayant fait l'objet de campagnes du constructeur.",
+      "models": "Punto II, Punto III, Grande Punto",
+      "years": "1999-2012",
+      "cibles": [
+        "DUALDRIVE"
+      ]
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "corrosion",
+      "title": "Corrosion des planchers et bas de caisse Punto II",
+      "description": "Corrosion des planchers, des bas de caisse et des points d'ancrage de ceinture sur Punto deuxième génération.",
+      "models": "Punto II",
+      "years": "1999-2011",
+      "cibles": []
+    },
+    {
+      "cle": "NISSAN",
+      "categorie": "boite",
+      "title": "Boîte CVT Jatco : surchauffe et broutement du variateur",
+      "description": "Boîte à variation continue d'origine Jatco : surchauffe, broutement, montée en régime sans accélération et passage en mode secours.",
+      "models": "Qashqai I, Qashqai II, X-Trail II, Juke",
+      "years": "2007-2019",
+      "cibles": [
+        "JATCO"
+      ]
+    },
+    {
+      "cle": "NISSAN",
+      "categorie": "electronique",
+      "title": "Faisceau de hayon et éclairage Qashqai I",
+      "description": "Rupture du faisceau dans le passage de hayon sur Qashqai première génération : éclairage arrière et essuie-glace inopérants.",
+      "models": "Qashqai I",
+      "years": "2007-2013",
+      "cibles": []
+    },
+    {
+      "cle": "BMW",
+      "categorie": "boite",
+      "title": "Mécatronique ZF 6HP : plaque conductrice et fuites",
+      "description": "Boîte automatique ZF 6HP : défaillance de la plaque conductrice de la mécatronique, fuites au connecteur, à-coups et perte de rapports.",
+      "models": "Série 3 E90, Série 5 E60, X3 E83, X5 E70",
+      "years": "2004-2013",
+      "cibles": [
+        "6HP"
+      ]
+    },
+    {
+      "cle": "BMW",
+      "categorie": "electronique",
+      "title": "Module FRM : éclairage et lève-vitres inopérants",
+      "description": "Défaillance du module FRM (Footwell Module) : perte de l'éclairage, des lève-vitres et des clignotants, souvent après une coupure de batterie.",
+      "models": "Série 1 E87, Série 3 E90, X1 E84",
+      "years": "2004-2013",
+      "cibles": []
+    },
+    {
+      "cle": "BMW",
+      "categorie": "suspension",
+      "title": "Suspension pneumatique arrière : compresseur et coussins",
+      "description": "Suspension pneumatique arrière : perte de hauteur à l'arrêt, fuites des coussins et défaillance du compresseur.",
+      "models": "X5 E70, Série 5 Touring E61",
+      "years": "2003-2013",
+      "cibles": []
+    },
+    {
+      "cle": "AUDI",
+      "categorie": "boite",
+      "title": "Boîte Multitronic : variateur et chaîne",
+      "description": "Boîte à variation continue Multitronic : broutement, à-coups, usure de la chaîne du variateur et défaillance du calculateur de boîte.",
+      "models": "A4 B6, A4 B7, A4 B8, A6 C6",
+      "years": "2000-2015",
+      "cibles": [
+        "MULTITRONIC"
+      ]
+    },
+    {
+      "cle": "AUDI",
+      "categorie": "boite",
+      "title": "Boîte S tronic DL501 : mécatronique et embrayages",
+      "description": "Boîte à double embrayage longitudinale DL501 à sept rapports : défaillance de la mécatronique et usure des embrayages.",
+      "models": "A4 B8, A5, A6 C7, Q5",
+      "years": "2008-2016",
+      "cibles": [
+        "DL501"
+      ]
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "boite",
+      "title": "Boîte 7G-Tronic 722.9 : plaque conductrice",
+      "description": "Boîte automatique 7G-Tronic 722.9 : défaillance de la plaque conductrice, fuites au connecteur et passage en mode secours.",
+      "models": "Classe C W204, Classe E W212, Classe S W221",
+      "years": "2004-2016",
+      "cibles": [
+        "722.9"
+      ]
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "electronique",
+      "title": "Freinage électro-hydraulique SBC : défaillance de l'accumulateur",
+      "description": "Système de freinage électro-hydraulique Sensotronic Brake Control : défaillance de la pompe et de l'accumulateur, ayant fait l'objet de campagnes du constructeur.",
+      "models": "Classe E W211, CLS C219, SL R230",
+      "years": "2002-2009",
+      "cibles": [
+        "SENSOTRONIC"
+      ]
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "suspension",
+      "title": "Suspension Airmatic : compresseur et coussins",
+      "description": "Suspension pneumatique Airmatic : perte de hauteur, fuites des coussins et défaillance du compresseur.",
+      "models": "Classe E W211, Classe S W220, Classe S W221",
+      "years": "2000-2013",
+      "cibles": [
+        "AIRMATIC"
+      ]
+    }
+  ],
+  "_cibles": "⚠️ `cibles` est DÉCLARÉ, pas déduit de la prose. Un nom de MODÈLE n'y figure jamais (le modèle est déjà apparié en amont, confirmer sur lui rendrait la règle du sprint 13 vide de sens), ni un sigle de moins de 3 caractères normalisés (BSI, UCH, FRM, SBC, ZF : ils apparaissent dans trop de textes pour discriminer). Une liste VIDE est une déclaration : l'entrée restera une question au vendeur, jamais notée."
+}
