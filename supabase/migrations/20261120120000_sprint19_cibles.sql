@@ -25,12 +25,12 @@ create table if not exists public.revendeur_cibles (
   -- Histogramme {tranche_de_250_euros: effectif}. Jamais de prix individuel.
   prix_tranches jsonb not null default '{}'::jsonb,
   effectif integer not null default 0,
-  -- ⚠️ SOMME et COMPTE, pas une médiane : une médiane ne se fusionne pas
-  -- d un lot à l autre, une somme si. On en rend la MOYENNE.
-  annee_somme integer not null default 0,
-  annee_n integer not null default 0,
-  km_somme bigint not null default 0,
-  km_n integer not null default 0,
+  -- ⚠️ DES HISTOGRAMMES, PAS DES MOYENNES. Années par tranche de 1 an,
+  -- kilométrages par tranche de 10 000 km. Ils se fusionnent par somme comme
+  -- les prix, et se lisent par quantiles : une annonce aberrante déplace la
+  -- médiane d une tranche au plus, là où elle emporterait une moyenne.
+  annee_tranches jsonb not null default '{}'::jsonb,
+  km_tranches jsonb not null default '{}'::jsonb,
   maj_le timestamptz not null default now(),
   primary key (user_id, marque, modele, energie)
 );
@@ -42,6 +42,33 @@ comment on table public.revendeur_cibles is
   'Carnet PRIVÉ du revendeur : histogramme de prix par segment, par compte. '
   'Aucune annonce, aucune URL, aucun lien vers une analyse. Sans rapport avec '
   'marche_agregats, qui est le relevé collectif et anonyme.';
+
+-- Fusion de deux histogrammes, par somme tranche à tranche.
+--
+-- ⚠️ EXTRAITE EN FONCTION parce qu'elle sert pour les trois séries (prix,
+-- années, kilométrages). Recopiée trois fois dans l'UPDATE, elle aurait eu
+-- trois occasions de diverger. Miroir de `fusionnerHistogrammes` côté TS.
+create or replace function public._fusionner_histogrammes(a jsonb, b jsonb)
+returns jsonb
+language sql
+immutable
+set search_path = public
+as $$
+  select coalesce(jsonb_object_agg(cle, total), '{}'::jsonb)
+  from (
+    select cle, sum(valeur) as total
+    from (
+      select key as cle, value::text::int as valeur from jsonb_each(coalesce(a, '{}'::jsonb))
+      union all
+      select key as cle, value::text::int as valeur from jsonb_each(coalesce(b, '{}'::jsonb))
+    ) u
+    where valeur > 0
+    group by cle
+  ) f;
+$$;
+
+revoke all on function public._fusionner_histogrammes(jsonb, jsonb) from public, anon, authenticated;
+grant execute on function public._fusionner_histogrammes(jsonb, jsonb) to service_role;
 
 -- ---------------------------------------------------------------------------
 -- 2. ALIMENTATION — depuis une analyse, et RIEN d'autre
@@ -67,10 +94,8 @@ declare
   v_prix numeric[];
   v_histo jsonb := '{}'::jsonb;
   v_n integer := 0;
-  v_annee_somme integer;
-  v_annee_n integer;
-  v_km_somme integer;
-  v_km_n integer;
+  v_annees jsonb;
+  v_kms jsonb;
 begin
   if v_uid is null then
     raise exception 'connexion requise';
@@ -108,7 +133,13 @@ begin
     return jsonb_build_object('enregistre', false, 'motif', 'aucun_prix_retenu');
   end if;
 
-  -- Histogramme par tranches de 250 €, miroir de `histogrammeDePrix` côté TS.
+  -- ⚠️ TROIS HISTOGRAMMES, ET AUCUNE MOYENNE. Première version : on stockait
+  -- la médiane du LOT, écrasée à chaque versement ; deuxième : une somme et
+  -- un compte, donc une MOYENNE — qu'une seule annonce à 50 000 € suffit à
+  -- faire mentir. Un histogramme se fusionne par somme ET se lit par
+  -- quantiles : la médiane et les quartiles se calculent sur l'ensemble des
+  -- relevés, pas sur le dernier lot, et une valeur aberrante ne les déplace
+  -- que d'une tranche.
   select coalesce(jsonb_object_agg(t, n), '{}'::jsonb), coalesce(sum(n)::int, 0)
     into v_histo, v_n
   from (
@@ -117,48 +148,37 @@ begin
     group by 1
   ) h;
 
-  -- ⚠️ SOMME ET COMPTE, PAS UNE MÉDIANE. Première version : on stockait la
-  -- médiane du LOT, et chaque nouveau versement l'écrasait — le carnet
-  -- décrivait donc le dernier relevé, pas l'ensemble. Une médiane ne se
-  -- fusionne pas ; une somme, si. On conserve donc la somme et le compte, et
-  -- on en rend la MOYENNE, qui est exactement calculable d'un lot à l'autre.
-  select coalesce(sum((e ->> 'annee')::numeric), 0)::int, count(*)::int
-    into v_annee_somme, v_annee_n
-  from jsonb_array_elements(coalesce(v_rev -> 'retenus', '[]'::jsonb)) e
-  where (e ->> 'annee') ~ '^[0-9]+$';
+  -- Années : tranches de 1 an.
+  select coalesce(jsonb_object_agg(t, n), '{}'::jsonb) into v_annees
+  from (
+    select (e ->> 'annee')::int::text as t, count(*)::int as n
+    from jsonb_array_elements(coalesce(v_rev -> 'retenus', '[]'::jsonb)) e
+    where (e ->> 'annee') ~ '^[0-9]{4}$'
+      and (e ->> 'annee')::int between 1950 and 2100
+    group by 1
+  ) a;
 
-  select coalesce(sum((e ->> 'km')::numeric), 0)::int, count(*)::int
-    into v_km_somme, v_km_n
-  from jsonb_array_elements(coalesce(v_rev -> 'retenus', '[]'::jsonb)) e
-  where (e ->> 'km') ~ '^[0-9]+$';
+  -- Kilométrages : tranches de 10 000 km.
+  select coalesce(jsonb_object_agg(t, n), '{}'::jsonb) into v_kms
+  from (
+    select (floor((e ->> 'km')::numeric / 10000) * 10000)::int::text as t, count(*)::int as n
+    from jsonb_array_elements(coalesce(v_rev -> 'retenus', '[]'::jsonb)) e
+    where (e ->> 'km') ~ '^[0-9]+$'
+      and (e ->> 'km')::numeric between 0 and 2000000
+    group by 1
+  ) k;
 
   insert into public.revendeur_cibles as c
-    (user_id, marque, modele, energie, prix_tranches, effectif,
-     annee_somme, annee_n, km_somme, km_n, maj_le)
-  values (v_uid, v_marque, v_modele, v_energie, v_histo, v_n,
-          v_annee_somme, v_annee_n, v_km_somme, v_km_n, now())
+    (user_id, marque, modele, energie, prix_tranches, annee_tranches, km_tranches, effectif, maj_le)
+  values (v_uid, v_marque, v_modele, v_energie, v_histo, v_annees, v_kms, v_n, now())
   on conflict (user_id, marque, modele, energie) do update
-    set prix_tranches = (
-          -- Fusion par SOMME, miroir de `fusionnerHistogrammes` côté TS.
-          select coalesce(jsonb_object_agg(cle, total), '{}'::jsonb)
-          from (
-            select cle, sum(valeur) as total
-            from (
-              select key as cle, value::text::int as valeur from jsonb_each(c.prix_tranches)
-              union all
-              select key as cle, value::text::int as valeur from jsonb_each(excluded.prix_tranches)
-            ) u
-            group by cle
-          ) f
-        ),
+    set prix_tranches = public._fusionner_histogrammes(c.prix_tranches, excluded.prix_tranches),
+        annee_tranches = public._fusionner_histogrammes(c.annee_tranches, excluded.annee_tranches),
+        km_tranches = public._fusionner_histogrammes(c.km_tranches, excluded.km_tranches),
         effectif = c.effectif + excluded.effectif,
-        annee_somme = c.annee_somme + excluded.annee_somme,
-        annee_n = c.annee_n + excluded.annee_n,
-        km_somme = c.km_somme + excluded.km_somme,
-        km_n = c.km_n + excluded.km_n,
         maj_le = now()
-  -- ⚠️ RETURNING voit la ligne APRÈS l insertion ou la mise à jour :
-  -- `c.effectif + v_n` comptait donc le lot deux fois. L essai local a rendu
+  -- ⚠️ RETURNING voit la ligne APRÈS l'insertion ou la mise à jour :
+  -- `c.effectif + v_n` comptait donc le lot deux fois. L'essai local a rendu
   -- 8 là où il y avait 4 relevés.
   returning jsonb_build_object('enregistre', true, 'effectif', c.effectif) into v_rev;
 
@@ -202,8 +222,7 @@ begin
     select jsonb_agg(jsonb_build_object(
              'marque', marque, 'modele', modele, 'energie', energie,
              'prix_tranches', prix_tranches, 'effectif', effectif,
-             'annee_moyenne', case when annee_n > 0 then round(annee_somme::numeric / annee_n)::int end,
-             'km_moyen', case when km_n > 0 then round(km_somme::numeric / km_n)::int end,
+             'annee_tranches', annee_tranches, 'km_tranches', km_tranches,
              'maj', to_char(maj_le, 'YYYY-MM-DD'))
            order by effectif desc)
     from public.revendeur_cibles

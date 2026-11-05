@@ -114,9 +114,9 @@ export default function CiblesPage() {
                         {c.marque} {c.modele}
                       </p>
                       <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.7, marginTop: 2 }}>
-                        {c.energie} · {c.n} relevé{c.n > 1 ? 's' : ''}
-                        {c.annee_moyenne ? ` · année moyenne ${c.annee_moyenne}` : ''}
-                        {c.km_moyen != null ? ` · ${Math.round(c.km_moyen / 1000)} 000 km` : ''}
+                        {c.energie}
+                        {c.annee_mediane ? ` · année médiane ${c.annee_mediane}` : ''}
+                        {c.km_median != null ? ` · ${Math.round(c.km_median / 1000)} 000 km` : ''}
                         {c.maj ? ` · mis à jour le ${c.maj.split('-').reverse().join('/')}` : ''}
                       </p>
                     </div>
@@ -137,8 +137,18 @@ export default function CiblesPage() {
                     display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
                     gap: 10, marginTop: 12, overflowWrap: 'anywhere',
                   }}>
+                    <div>
+                      <p className="mono c-graphite" style={{ fontSize: 10, letterSpacing: '.06em', textTransform: 'uppercase' }}>
+                        Prix observés · {c.n} relevé{c.n > 1 ? 's' : ''}
+                      </p>
+                      <p className="mono num" style={{ fontSize: 14 }}>
+                        médiane {euros(c.p50)}
+                      </p>
+                      <p className="mono c-graphite" style={{ fontSize: 11 }}>
+                        {euros(c.p25)}{' '}– {euros(c.p75)} (p25–p75)
+                      </p>
+                    </div>
                     {[
-                      ['Prix observés', `${euros(c.p25)}\u00a0– ${euros(c.p50)}`],
                       ['Revente réaliste', euros(c.revente)],
                       ['Achat maximum', c.achat_max > 0 ? euros(c.achat_max) : 'aucun'],
                     ].map(([k, v]) => (

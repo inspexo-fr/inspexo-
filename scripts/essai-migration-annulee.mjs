@@ -604,32 +604,6 @@ select pg_temp.essai_verifie('revendeur_cibles_lire rend l histogramme, jamais d
      from pg_proc p join pg_namespace n on n.oid = p.pronamespace
     where n.nspname = 'public' and p.proname = 'revendeur_cibles_lire'));
 
--- La fusion des histogrammes se fait par SOMME : decouper les releves ne doit
--- rien changer. On l eprouve sur le COMPORTEMENT, dans la transaction annulee.
-do $cib$
-declare
-  v_a jsonb := '{"2000": 2, "2250": 1}'::jsonb;
-  v_b jsonb := '{"2250": 3, "2500": 1}'::jsonb;
-  v_fusion jsonb;
-begin
-  select coalesce(jsonb_object_agg(cle, total), '{}'::jsonb) into v_fusion
-  from (
-    select cle, sum(valeur) as total
-    from (
-      select key as cle, value::text::int as valeur from jsonb_each(v_a)
-      union all
-      select key as cle, value::text::int as valeur from jsonb_each(v_b)
-    ) u group by cle
-  ) f;
-  perform pg_temp.essai_verifie(
-    'fusion d histogrammes : somme tranche par tranche',
-    (v_fusion ->> '2000')::int = 2
-    and (v_fusion ->> '2250')::int = 4
-    and (v_fusion ->> '2500')::int = 1,
-    v_fusion::text);
-end
-$cib$;
-
 -- La ville de revente est une colonne, et elle ressort a la lecture.
 select pg_temp.essai_verifie('preferences_revendeur : la ville de revente est stockee et relue',
   (select count(*) from information_schema.columns
@@ -638,6 +612,38 @@ select pg_temp.essai_verifie('preferences_revendeur : la ville de revente est st
   and (select position('ville_revente' in pg_get_functiondef(p.oid)) > 0
          from pg_proc p join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'public' and p.proname = 'preferences_revendeur_lire'));
+
+-- ⚠️ AUCUNE MOYENNE EN BASE. Trois histogrammes (prix, annees, kilometrages),
+-- fusionnes par somme et lus par quantiles. Une moyenne se fait emporter par
+-- une seule annonce a 50 000 EUR ; une mediane lue sur l histogramme fusionne
+-- ne bouge pas. Le stockage interdit donc la moyenne, il ne se contente pas
+-- de ne pas l afficher.
+select pg_temp.essai_verifie('revendeur_cibles : trois histogrammes, aucune colonne de moyenne',
+  (select count(*) from information_schema.columns
+    where table_schema = 'public' and table_name = 'revendeur_cibles'
+      and column_name in ('prix_tranches', 'annee_tranches', 'km_tranches')) = 3
+  and (select count(*) from information_schema.columns
+    where table_schema = 'public' and table_name = 'revendeur_cibles'
+      and (column_name like '%moyenne%' or column_name like '%somme%')) = 0);
+
+-- La fusion est UNE fonction, pas trois copies : recopiee par serie, elle
+-- aurait eu trois occasions de diverger.
+do $fus$
+declare v jsonb;
+begin
+  v := public._fusionner_histogrammes('{"2000": 2, "2250": 1}'::jsonb, '{"2250": 3, "2500": 1}'::jsonb);
+  perform pg_temp.essai_verifie('_fusionner_histogrammes : somme tranche a tranche',
+    (v->>'2000')::int = 2 and (v->>'2250')::int = 4 and (v->>'2500')::int = 1, v::text);
+  perform pg_temp.essai_verifie('_fusionner_histogrammes : un histogramme absent ne leve pas',
+    public._fusionner_histogrammes(null, null) = '{}'::jsonb);
+  perform pg_temp.essai_verifie('_fusionner_histogrammes : un effectif negatif est ignore',
+    not (public._fusionner_histogrammes('{"2000": 2}'::jsonb, '{"2000": -5}'::jsonb) ? '2000')
+    or (public._fusionner_histogrammes('{"2000": 2}'::jsonb, '{"2000": -5}'::jsonb)->>'2000')::int = 2);
+  perform pg_temp.essai_verifie('_fusionner_histogrammes : reservee au service role',
+    not has_function_privilege('anon', 'public._fusionner_histogrammes(jsonb, jsonb)', 'execute')
+    and not has_function_privilege('authenticated', 'public._fusionner_histogrammes(jsonb, jsonb)', 'execute'));
+end
+$fus$;
 
 -- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
 -- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On

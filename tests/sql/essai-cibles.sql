@@ -75,16 +75,19 @@ begin
 
   -- 3. Lecture : histogramme replié, jamais de quantile.
   v_lu := public.revendeur_cibles_lire();
-  -- ⚠️ MOYENNE sur les SEPT releves, pas la mediane du dernier lot. Premiere
-  -- version : on stockait la mediane du lot et chaque versement l ecrasait —
-  -- le carnet decrivait le dernier relevé, pas l ensemble. Annees :
-  -- 2004+2005+2003+2004+2006+2005+2004 = 14031 / 7 = 2004,43 → 2004.
-  perform pg_temp.v('lecture : une ligne, moyenne calculee sur TOUS les releves',
+  -- ⚠️ TROIS HISTOGRAMMES, AUCUNE MOYENNE. La base rend les tranches
+  -- REPLIEES ; medianes et quartiles sont lus par l unique implementation du
+  -- projet, dans la fonction edge. Annees relevees : 2003, 2004x3, 2005x2,
+  -- 2006 → sept tranches, dont 2004 a trois.
+  perform pg_temp.v('lecture : trois histogrammes fusionnes, aucune moyenne',
     jsonb_array_length(v_lu) = 1
     and (v_lu->0->>'effectif')::int = 7
-    and (v_lu->0->>'annee_moyenne')::int = 2004
-    and (v_lu->0->>'km_moyen')::int = round((178000+195000+168000+201000+155000+188000+172000)/7.0)
-    and (v_lu->0->'prix_tranches') is not null, v_lu::text);
+    and (v_lu->0->'annee_tranches'->>'2004')::int = 3
+    and (v_lu->0->'annee_tranches'->>'2005')::int = 2
+    and (v_lu->0->'km_tranches'->>'170000')::int = 2
+    and (select sum(value::text::int) from jsonb_each(v_lu->0->'km_tranches')) = 7
+    and not (v_lu->0 ? 'annee_moyenne')
+    and not (v_lu->0 ? 'km_moyen'), v_lu::text);
   perform pg_temp.v('lecture : AUCUN quantile rendu par la base',
     not (v_lu->0 ? 'p25') and not (v_lu->0 ? 'p50'), v_lu::text);
 

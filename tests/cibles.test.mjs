@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 import {
   cibleDepuisQuantiles, ECART_KM_CIBLE, effectifHistogramme, fusionnerHistogrammes,
   histogrammeDePrix, MENTION_CIBLES, parametresDepuisProfil, plafondRecherche,
+  TRANCHE_PRIX_CIBLE,
   profilComplet, profilValide, PROFIL_VIDE, rechercheSauvegardee, SEUIL_CIBLE, trierCibles,
 } from '../supabase/functions/_shared/cibles.ts'
 import { quantileHisto } from '../supabase/functions/_shared/marche.ts'
@@ -60,7 +61,7 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
   const seg = {
     marque: 'renault', modele: 'clio', energie: 'diesel', n,
     p25: quantileHisto(map, n, 0.25), p50: quantileHisto(map, n, 0.5),
-    annee_moyenne: 2004, km_moyen: 180000, maj: '2026-11-05',
+    annee_mediane: 2004, km_median: 180000, maj: '2026-11-05',
   }
   const c = cibleDepuisQuantiles(seg, P, { carte_grise_eur: 311, annee_courante: 2026 })
   ok(c !== null, 'sept relevés : une cible sort')
@@ -83,14 +84,88 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
   eq(sansCg.achat_max, c.achat_max + 311, 'sans région, la carte grise ne pèse pas')
 
   // Un véhicule récent n’a pas le forfait « plus de 10 ans ».
-  const recent = cibleDepuisQuantiles({ ...seg, annee_moyenne: 2022 }, P, { annee_courante: 2026 })
+  const recent = cibleDepuisQuantiles({ ...seg, annee_mediane: 2022 }, P, { annee_courante: 2026 })
   eq(recent.achat_max, recent.revente - 500, 'moins de 10 ans : ni forfait ni carte grise inconnue')
+}
+
+// ── UNE VALEUR ABERRANTE NE DOIT PAS DÉPLACER LA CIBLE ────────────────────
+//
+// ⚠️ C'EST LA RAISON D'ÊTRE DU STOCKAGE EN HISTOGRAMME, et la raison pour
+// laquelle on ne montre AUCUNE moyenne. Une annonce à 50 000 € (erreur de
+// saisie, véhicule de collection mal rangé) emporterait une moyenne ; elle ne
+// déplace pas une médiane lue sur l'ensemble des relevés.
+//
+// On éprouve les deux régimes : un petit échantillon, où l'ajout d'un point
+// déplace mécaniquement les quantiles d'une tranche au plus, et un
+// échantillon réaliste, où ils ne bougent PAS DU TOUT.
+{
+  const quantiles = (prix) => {
+    const h = histogrammeDePrix(prix)
+    const map = new Map(Object.entries(h).map(([t, n]) => [Number(t), n]))
+    const n = effectifHistogramme(h)
+    return {
+      n,
+      p25: quantileHisto(map, n, 0.25),
+      p50: quantileHisto(map, n, 0.5),
+      p75: quantileHisto(map, n, 0.75),
+    }
+  }
+  const cibleDe = (prix) => {
+    const q = quantiles(prix)
+    return cibleDepuisQuantiles(
+      { marque: 'renault', modele: 'clio', energie: 'diesel', ...q, annee_mediane: 2004, km_median: 180000 },
+      P, { carte_grise_eur: 311, annee_courante: 2026 },
+    )
+  }
+  const moyenne = (xs) => Math.round(xs.reduce((s, x) => s + x, 0) / xs.length)
+
+  // ── Le 1 € n'entre même pas dans l'histogramme ────────────────────────
+  eq(effectifHistogramme(histogrammeDePrix([1])), 0,
+    'un prix à 1 € est écarté à l’entrée : il ne compte pas comme un relevé')
+  eq(effectifHistogramme(histogrammeDePrix([2600, 1, 2200])), 2,
+    'et il ne gonfle pas l’effectif des autres')
+
+  // ── Échantillon réaliste : les quantiles NE BOUGENT PAS ───────────────
+  const base = [
+    2600, 2200, 2900, 1950, 3200, 2450, 2750, 2300, 2850, 2050,
+    2700, 2400, 3050, 2150, 2950, 2500, 2650, 2250, 3100, 2350,
+  ]
+  const avec = [...base, 1, 50_000]
+
+  const sain = cibleDe(base)
+  const pollue = cibleDe(avec)
+
+  eq(pollue.n, sain.n + 1, 'le 50 000 € compte pour un relevé, le 1 € pour aucun')
+  eq(pollue.p25, sain.p25, 'p25 INCHANGÉ malgré 1 € et 50 000 €')
+  eq(pollue.p50, sain.p50, 'médiane INCHANGÉE')
+  eq(pollue.revente, sain.revente, 'donc le prix de revente réaliste ne bouge pas')
+  eq(pollue.achat_max, sain.achat_max, 'ni le prix d’achat maximum')
+  eq(pollue.marge_estimee, sain.marge_estimee, 'ni la marge estimée : LA CIBLE NE BOUGE PAS')
+
+  // ⚠️ Et la contre-épreuve, sans laquelle le test précédent ne prouverait
+  // rien : une MOYENNE, elle, est emportée. C'est tout le propos.
+  const degatMoyenne = moyenne(avec.filter((p) => p >= 200)) - moyenne(base)
+  ok(degatMoyenne > 2000,
+    `une moyenne, elle, bondirait de ${degatMoyenne} € sur le même jeu — ` +
+    'c’est pourquoi aucune moyenne n’est affichée')
+
+  // Seul le p75 suit le haut de la distribution, et c’est NORMAL : c’est son
+  // rôle. On vérifie qu’il monte sans emporter le reste.
+  ok(pollue.p75 >= sain.p75, 'le troisième quartile suit le haut de la distribution, lui')
+
+  // ── Petit échantillon : au plus UNE tranche de déplacement ────────────
+  const petit = [2600, 2200, 2900, 1950, 3200, 2450, 2750]
+  const petitPollue = [...petit, 1, 50_000]
+  const a = cibleDe(petit), b = cibleDe(petitPollue)
+  ok(Math.abs(b.p50 - a.p50) <= TRANCHE_PRIX_CIBLE,
+    `sur sept relevés, la médiane se déplace d’une tranche au plus (${a.p50} → ${b.p50})`)
+  eq(b.p25, a.p25, 'et le premier quartile ne bouge pas non plus')
 }
 
 // ── Tri : où il y a de l’argent, et ce qui n’en a pas ─────────────────────
 {
   const faire = (modele, p25, p50) => cibleDepuisQuantiles(
-    { marque: 'x', modele, energie: 'diesel', n: 8, p25, p50, annee_moyenne: 2015, km_moyen: 120000 },
+    { marque: 'x', modele, energie: 'diesel', n: 8, p25, p50, annee_mediane: 2015, km_median: 120000 },
     P, { annee_courante: 2026 },
   )
   const liste = [faire('a', 5000, 5400), faire('b', 4000, 6000), faire('c', 7000, 7100)]
@@ -105,7 +180,7 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
 // ── La recherche à sauvegarder ─────────────────────────────────────────────
 {
   const r = rechercheSauvegardee(
-    { marque: 'Renault', modele: 'Clio', energie: 'Diesel', annee_moyenne: 2004, km_moyen: 180000 },
+    { marque: 'Renault', modele: 'Clio', energie: 'Diesel', annee_mediane: 2004, km_median: 180000 },
     2284,
   )
   eq(r.prix_max, 2300, 'plafond arrondi à la centaine SUPÉRIEURE')
@@ -191,8 +266,8 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
     const seg = {
       marque: 'm', modele: 'x', energie: 'diesel', n: effectifHistogramme(h),
       p25: entre(500, 20000), p50: entre(500, 40000),
-      annee_moyenne: alea() < 0.2 ? null : entre(1998, 2025),
-      km_moyen: alea() < 0.2 ? null : entre(10000, 300000),
+      annee_mediane: alea() < 0.2 ? null : entre(1998, 2025),
+      km_median: alea() < 0.2 ? null : entre(10000, 300000),
     }
     const par = { marge_negociation_pct: entre(0, 20), marge_voulue_eur: entre(0, 3000), imprevus_vehicule_ancien_eur: entre(0, 400) }
     const opts = { carte_grise_eur: alea() < 0.5 ? entre(50, 900) : null, annee_courante: 2026 }

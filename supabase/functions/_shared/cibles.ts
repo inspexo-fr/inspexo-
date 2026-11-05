@@ -65,11 +65,13 @@ export type Cible = {
   modele: string;
   energie: string;
   n: number;
-  /** Prix observés, en euros. */
+  /** Prix observés, en euros : premier quartile, médiane, troisième
+   *  quartile. Lus sur l histogramme FUSIONNÉ de tous les relevés. */
   p25: number;
   p50: number;
-  annee_moyenne: number | null;
-  km_moyen: number | null;
+  p75: number;
+  annee_mediane: number | null;
+  km_median: number | null;
   /** Prix de revente réaliste pour un exemplaire type du segment. */
   revente: number;
   /** Prix d'achat maximum type : revente − coûts fixes − marge visée.
@@ -106,8 +108,9 @@ export function cibleDepuisQuantiles(
     n: number;
     p25: number;
     p50: number;
-    annee_moyenne?: number | null;
-    km_moyen?: number | null;
+    p75: number;
+    annee_mediane?: number | null;
+    km_median?: number | null;
     maj?: string | null;
   },
   p: ParametresCible,
@@ -116,12 +119,13 @@ export function cibleDepuisQuantiles(
   if (!seg || seg.n < SEUIL_CIBLE) return null;
   const p25 = Math.round(seg.p25);
   const p50 = Math.round(seg.p50);
+  const p75 = Math.round(seg.p75);
   if (!(p50 > 0) || !(p25 > 0)) return null;
 
   const revente = Math.round(p50 * (1 - p.marge_negociation_pct / 100));
 
   const anneeCourante = opts.annee_courante ?? new Date().getUTCFullYear();
-  const age = seg.annee_moyenne ? anneeCourante - seg.annee_moyenne : 0;
+  const age = seg.annee_mediane ? anneeCourante - seg.annee_mediane : 0;
   const forfaitAge = age > 10 ? p.imprevus_vehicule_ancien_eur : 0;
   const carteGrise = opts.carte_grise_eur != null && opts.carte_grise_eur >= 0
     ? Math.round(opts.carte_grise_eur)
@@ -140,8 +144,9 @@ export function cibleDepuisQuantiles(
     n: seg.n,
     p25,
     p50,
-    annee_moyenne: seg.annee_moyenne ?? null,
-    km_moyen: seg.km_moyen ?? null,
+    p75,
+    annee_mediane: seg.annee_mediane ?? null,
+    km_median: seg.km_median ?? null,
     revente,
     achat_max: achatMax,
     marge_estimee: margeEstimee,
@@ -210,7 +215,7 @@ export const plafondRecherche = (achatMax: number): number =>
  *  en silence les annonces qui comptent, et l'utilisateur nous croirait.
  *  Les filtres sont donc donnés en clair, à régler sur place. */
 export function rechercheSauvegardee(
-  seg: { marque: string; modele: string; energie: string; annee_moyenne?: number | null; km_moyen?: number | null },
+  seg: { marque: string; modele: string; energie: string; annee_mediane?: number | null; km_median?: number | null },
   achatMax: number,
 ): RechercheSauvegardee {
   const prixMax = plafondRecherche(achatMax);
@@ -226,16 +231,16 @@ export function rechercheSauvegardee(
   const e = normEnergie(seg.energie);
   if (e) filtres.push({ champ: "Carburant", valeur: ENERGIES_LBC[e] });
 
-  if (seg.annee_moyenne) {
+  if (seg.annee_mediane) {
     filtres.push({
       champ: "Année",
-      valeur: `de ${seg.annee_moyenne - ECART_ANNEES_CIBLE} à ${seg.annee_moyenne + ECART_ANNEES_CIBLE}`,
+      valeur: `de ${seg.annee_mediane - ECART_ANNEES_CIBLE} à ${seg.annee_mediane + ECART_ANNEES_CIBLE}`,
     });
   }
-  if (seg.km_moyen != null) {
+  if (seg.km_median != null) {
     filtres.push({
       champ: "Kilométrage",
-      valeur: `jusqu'à ${nombre(seg.km_moyen + ECART_KM_CIBLE)} km`,
+      valeur: `jusqu'à ${nombre(seg.km_median + ECART_KM_CIBLE)} km`,
     });
   }
   filtres.push({ champ: "Prix maximum", valeur: `${nombre(prixMax)} €` });

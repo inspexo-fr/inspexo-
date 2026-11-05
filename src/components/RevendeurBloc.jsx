@@ -184,8 +184,8 @@ export default function RevendeurBloc({ analyse, analysisId }) {
       marque: bloc.segment.marque,
       modele: bloc.segment.modele,
       energie: bloc.segment.energie,
-      annee_moyenne: analyse?.vehicule?.annee ?? null,
-      km_moyen: analyse?.vehicule?.kilometrage ?? null,
+      annee_mediane: analyse?.vehicule?.annee ?? null,
+      km_median: analyse?.vehicule?.kilometrage ?? null,
     }, achatType.valeur)
   }, [masque, achatType, bloc, analyse])
 
