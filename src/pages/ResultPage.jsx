@@ -1446,6 +1446,37 @@ export default function ResultPage() {
                     {r.prix?.mediane_comparables != null && <div><dt>Médiane comparables</dt><dd className="num">{euros1(r.prix.mediane_comparables)}</dd></div>}
                   </dl>
                 ) : null}
+                {/* ── Prix PAYÉS déclarés (sprint 21) ─────────────────────
+                    ⚠️ BLOC SÉPARÉ, sous un filet, avec son propre effectif et
+                    son propre libellé. Les prix demandés ci-dessus et les prix
+                    payés ici ne sont jamais additionnés, jamais moyennés
+                    ensemble, et jamais présentés comme une seule fourchette :
+                    l'un se relit en ligne, l'autre est une déclaration. */}
+                {r.prix?.payes && (
+                  <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid var(--bordure)' }}>
+                    <p className="eyebrow" style={{ marginBottom: 8 }}>
+                      Prix payés déclarés · {r.prix.payes.n} vente{r.prix.payes.n > 1 ? 's' : ''}
+                    </p>
+                    <dl className="specs">
+                      <div><dt>P25</dt><dd className="num">{euros1(r.prix.payes.p25)}</dd></div>
+                      <div><dt>Médiane</dt><dd className="num">{euros1(r.prix.payes.mediane)}</dd></div>
+                      <div><dt>P75</dt><dd className="num">{euros1(r.prix.payes.p75)}</dd></div>
+                    </dl>
+                    {r.prix.payes.annee_min != null && (
+                      <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
+                        {r.prix.payes.annee_min === r.prix.payes.annee_max
+                          ? `Véhicules de ${r.prix.payes.annee_min}.`
+                          : `Véhicules de ${r.prix.payes.annee_min} à ${r.prix.payes.annee_max} — la médiane mélange donc plusieurs millésimes.`}
+                      </p>
+                    )}
+                    <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginTop: 10 }}>
+                      {r.prix.payes.libelle}
+                      <br />Ce relevé est distinct de celui des prix demandés : les deux ne sont
+                      jamais additionnés. Il ne pèse pas sur le verdict.
+                    </p>
+                  </div>
+                )}
+
                 {r.prix?.commentaire ? (
                   <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>{r.prix.commentaire}</p>
                 ) : !r.prix?.fourchette ? (

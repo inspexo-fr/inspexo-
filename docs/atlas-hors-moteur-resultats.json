@@ -1,0 +1,897 @@
+{
+  "resultats": [
+    {
+      "cle": "RENAULT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "boite",
+        "title": "Boîte EDC (DC4) : à-coups et mécatronique",
+        "description": "Boîte à double embrayage EDC de type DC4 : à-coups à basse vitesse, broutement au démarrage en côte, défaillance du bloc mécatronique.",
+        "models": "Clio IV, Captur I, Mégane III, Scénic III",
+        "years": "2012-2019",
+        "cibles": [
+          "EDC",
+          "DC4"
+        ],
+        "repere": true
+      },
+      "marque": "RENAULT",
+      "title": "Boîte EDC (DC4) : à-coups et mécatronique",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des blogs commerciaux SEO (pièces détachées, réparation calculateur) et des forums techniques évoquent ces symptômes sur Clio IV/Captur/Mégane III/Scénic III ; aucun document constructeur, rappel officiel, ni article de presse automobile reconnue n'attribue nommément ce défaut (à-coups, broutement en côte, panne mécatronique) à ces modèles précis, et un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2124
+    },
+    {
+      "cle": "RENAULT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "RENAULT",
+        "categorie": "boite",
+        "title": "Boîte automatique DP0 (AL4) : glissements et passages durs",
+        "description": "Boîte automatique à quatre rapports DP0, dérivée de l'AL4 PSA : glissements, passages durs, montée en température du convertisseur.",
+        "models": "Mégane II, Scénic II, Laguna II",
+        "years": "2002-2010",
+        "cibles": [
+          "DP0",
+          "AL4"
+        ],
+        "repere": true
+      },
+      "marque": "RENAULT",
+      "title": "Boîte automatique DP0 (AL4) : glissements et passages durs",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums techniques et des blogs commerciaux non reconnus mentionnent ce défaut pour la Mégane II/Scénic II/Laguna II ; aucune note technique constructeur publique ni presse automobile reconnue ne l'atteste nommément, et un forum seul ne peut porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1957
+    },
+    {
+      "cle": "FORD",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "FORD",
+        "categorie": "boite",
+        "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+        "description": "Boîte à double embrayage sec PowerShift DPS6 : broutement au démarrage, à-coups, usure prématurée des embrayages et du module de commande.",
+        "models": "Fiesta VI, Focus III, B-Max, EcoSport",
+        "years": "2011-2018",
+        "cibles": [
+          "POWERSHIFT",
+          "DPS6"
+        ],
+        "repere": true
+      },
+      "marque": "FORD",
+      "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092372-5448.pdf",
+          "titre": "FORD: 2011-2015 Fiesta 2012-2016 Focus - TSB DPS6 Clutch Shudder",
+          "type": "constructeur_ou_rappel",
+          "nomme_cible": true,
+          "justification": "La page confirme pour la boîte DPS6 (Fiesta/Focus) un 'excessive transmission clutch shudder on light acceleration' et prévoit le remplacement de l'embrayage, ce qui correspond au broutement et à l'usure prématurée des embrayages mentionnés."
+        },
+        {
+          "url": "https://carbuzz.com/2018-ford-focus-transmission-problems-smart-buy/",
+          "titre": "The Last Of Ford's Excellent Small Cars Makes A Bargain Used Buy - But Is It A Smart One?",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la boîte PowerShift DPS6 à double embrayage sec sur Ford Focus présente des à-coups/broutement à basse vitesse dus aux embrayages secs qui surchauffent et s'usent prématurément, ainsi que des problèmes du module de commande de transmission (TCM)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092576-5448.pdf",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092575-5448.pdf",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Remplacement du module d'embrayage double sec (clutch pack) et reprogrammation du module de commande TCM/PCM (apprentissage adaptatif de l'embrayage), parfois avec remplacement du joint d'arbre d'entrée en cas de fuite.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": "majeure",
+      "gravite_avant": null,
+      "cout_eur": 0.1748
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "boite",
+        "title": "Boîte automatique AL4 : glissements et passages durs",
+        "description": "Boîte automatique à quatre rapports AL4 : glissements, à-coups au passage des rapports, surchauffe du convertisseur.",
+        "models": "206, 307, 406, 407, 807",
+        "years": "2000-2011",
+        "cibles": [
+          "AL4"
+        ],
+        "repere": true
+      },
+      "marque": "PEUGEOT",
+      "title": "Boîte automatique AL4 : glissements et passages durs",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Les seules pages trouvées confirmant nommément ce défaut sur les 206/307/406/407/807 sont des fils de forums (forum-auto.caradisiac.com, forum-peugeot.com, feline207.net) et des blogs commerciaux de garages/vendeurs de pièces (oscaro, casse-compare, la-boite-automatique.com, moninspection.fr, etc.) ; aucun document constructeur, rappel officiel ou article de presse automobile reconnue n'atteste ce défaut, et un forum seul ne peut porter l'entrée selon la hiérarchie demandée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2021
+    },
+    {
+      "cle": "PEUGEOT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "PEUGEOT",
+        "categorie": "boite",
+        "title": "Boîte EAT6 : à-coups à froid",
+        "description": "Boîte automatique EAT6 d'origine Aisin : à-coups au passage des premiers rapports à froid, apprentissage à réinitialiser.",
+        "models": "308 II, 3008 II, 508 I",
+        "years": "2014-2020",
+        "cibles": [
+          "EAT6"
+        ],
+        "repere": true
+      },
+      "marque": "PEUGEOT",
+      "title": "Boîte EAT6 : à-coups à froid",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [],
+      "remede": "",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2165
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "boite",
+        "title": "Boîte automatique AL4 : glissements et passages durs",
+        "description": "Boîte automatique à quatre rapports AL4 : glissements, à-coups, surchauffe du convertisseur.",
+        "models": "Xsara Picasso, C4 I, C5 I, C8",
+        "years": "2000-2011",
+        "cibles": [
+          "AL4"
+        ],
+        "repere": true
+      },
+      "marque": "CITROEN",
+      "title": "Boîte automatique AL4 : glissements et passages durs",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums (Forum-Auto/Caradisiac, Planète-Citroën) et des sites commerciaux de devis/réparation (mecano.ovh, goodmecano.com, rpf-automobiles.fr, moninspection.fr) évoquent ces symptômes sur l'AL4 ; aucune note constructeur/rappel officiel ni article de presse automobile reconnue traitant nommément ce défaut sur Xsara Picasso, C4 I, C5 I ou C8 n'a été trouvé, et un forum seul ne peut pas porter l'entrée.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1831
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "boite",
+        "title": "Boîte SensoDrive : actionneur et embrayage",
+        "description": "Boîte manuelle pilotée SensoDrive : défaillance de l'actionneur d'embrayage, à-coups marqués et refus de passer les rapports.",
+        "models": "C2, C3 I",
+        "years": "2003-2010",
+        "cibles": [
+          "SENSODRIVE"
+        ],
+        "repere": true
+      },
+      "marque": "CITROEN",
+      "title": "Boîte SensoDrive : actionneur et embrayage",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums (Caradisiac, Planète-Citroën, forumpro) attestent ce défaut sur C2/C3 SensoDrive ; aucun document constructeur, base de rappel officielle ni article de presse automobile reconnue n'a été trouvé pour le confirmer, et un forum ne peut porter une entrée à lui seul.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1866
+    },
+    {
+      "cle": "CITROEN",
+      "categorie": "suspension",
+      "repere": true,
+      "candidat": {
+        "cle": "CITROEN",
+        "categorie": "suspension",
+        "title": "Suspension Hydractive III : sphères, régulateur et fuites",
+        "description": "Suspension hydropneumatique Hydractive III : perte de hauteur, fuites de LDS au niveau du régulateur et des sphères, voyant de suspension.",
+        "models": "C5 I, C5 II, C6",
+        "years": "2001-2017",
+        "cibles": [
+          "HYDRACTIVE"
+        ],
+        "repere": true
+      },
+      "marque": "CITROEN",
+      "title": "Suspension Hydractive III : sphères, régulateur et fuites",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "forum_seul",
+      "sources": [
+        {
+          "url": "https://citroen.c5x7.fr/fuite-lds-zone-regulateur-arriere",
+          "titre": "Fuite hydraulique – Train arrière – Zone régulateur de suspension",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "La page confirme une fuite de LDS au niveau de la zone du régulateur de suspension arrière sur la suspension Hydractive (C5 X7 et C6), via le flexible de canalisation basse pression."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.fiches-auto.fr/fiabilite-citroen/fiabilite-267-pannes-citroen-c6.php",
+          "motif": "non_soutenue",
+          "justification": "La page mentionne des fuites, défauts d'assiette et pertes de confort sur la suspension Hydractive de la C6, mais ne parle pas spécifiquement de 'LDS', ni de perte de hauteur précisément liée au régulateur et aux sphères avec voyant dédié, et surtout ne concerne que la C6 sans mention de C5 I/II ni d'Hydractive III."
+        },
+        {
+          "url": "https://www.planete-citroen.com/topic/142861-fuite-hydraulique/",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.auto-doc.fr/s/prix-changement-sphere-c5",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la ou des sphère(s) de suspension défectueuse(s) (joint de soucoupe ou sphère complète), et/ou du flexible/raccord de la zone régulateur de raideur arrière en cas de fuite localisée à cet endroit.",
+      "cout_min_eur": 120,
+      "cout_max_eur": 450,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2122
+    },
+    {
+      "cle": "VW",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "VW",
+        "categorie": "boite",
+        "title": "Boîte DSG DQ200 : mécatronique et embrayages secs",
+        "description": "Boîte à double embrayage sec DQ200 à sept rapports : défaillance du bloc mécatronique, à-coups, perte de rapports et passage en mode secours.",
+        "models": "Golf VI, Golf VII, Polo V, Passat B7",
+        "years": "2008-2019",
+        "cibles": [
+          "DQ200"
+        ],
+        "repere": true
+      },
+      "marque": "VW",
+      "title": "Boîte DSG DQ200 : mécatronique et embrayages secs",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.drive.com.au/news/new-recall-of-80-000-volkswagen-audi-and-skoda-cars-with-dsg-gearboxes-some-for-the-second-time-in-six-years/",
+          "titre": "New recall of 80,000 Volkswagen, Audi and Skoda cars with DSG gearboxes - some for the second time in six years",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la DSG DQ200 (boîte à double embrayage sec) équipant notamment les Golf et Polo 2009-2015 a connu des rappels pour défaillance du bloc mécatronique et passage en mode 'limp home' (mode secours)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.team-bhp.com/news/understanding-vw-skoda-dsg-dq200-failures-detail",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://tssgp.com/en/blog/vw-dsg-transmission-problems/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://enginescope.gr/engine/vw-dsg-dq200/",
+          "motif": "hors_sujet"
+        }
+      ],
+      "remede": "Remplacement (ou reconditionnement) du bloc mécatronique DQ200 défaillant (logement de l'accumulateur de pression fissuré, électronique de contrôle), avec remplacement du kit d'embrayage sec si celui-ci est également usé ou affecté par la pression hydraulique instable.",
+      "cout_min_eur": 1200,
+      "cout_max_eur": 3500,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.2198
+    },
+    {
+      "cle": "VW",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "VW",
+        "categorie": "boite",
+        "title": "Boîte DSG DQ250 : embrayages et bain d'huile",
+        "description": "Boîte à double embrayage humide DQ250 à six rapports : usure des embrayages, à-coups et défaillance de la mécatronique.",
+        "models": "Golf V, Golf VI, Passat B6, Touran I",
+        "years": "2003-2014",
+        "cibles": [
+          "DQ250"
+        ],
+        "repere": true
+      },
+      "marque": "VW",
+      "title": "Boîte DSG DQ250 : embrayages et bain d'huile",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://autoliva.com/blog/quelle-boite-dsg-equipe-ma-voiture-dq200-dq250-dq381-dq500",
+          "titre": "Quelle boîte DSG : DQ200, DQ250, DQ381 ou DQ500",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page confirme que la DQ250 est une DSG6 à 6 rapports, embrayage humide (multidisque) baignant dans l'huile, et mentionne les à-coups ainsi que les pannes de mécatronique comme symptômes typiques des DSG, dont la DQ250."
+        },
+        {
+          "url": "https://autoliva.com/blog/mecatronique-dsg6-dq250-diagnostic-prix-remplacement",
+          "titre": "Mécatronique DSG6 DQ250 : diagnostic, prix et remplacement",
+          "type": "cout_publie",
+          "nomme_cible": true,
+          "justification": "La page confirme que la DQ250 est une boîte à double embrayage humide 6 rapports équipant la Golf V/VI et la Passat B6 (ainsi que le Touran) sur 2003-2014, et décrit l'usure des embrayages (particules métalliques après 150 000 km), les à-coups lors des passages de rapports et la défaillance de la mécatronique comme symptômes documentés."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-de-la-boite-dsg-6348384.html",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://vag-perf.fr/faq/problemes-connus-boite-de-vitesses-dsg-6-dq250/",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de l'embrayage multidisque humide usé et/ou remplacement du bloc mécatronique (module électro-hydraulique) de la boîte DQ250, parfois accompagné d'une mise à jour logicielle du calculateur.",
+      "cout_min_eur": 1000,
+      "cout_max_eur": 6000,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.1752
+    },
+    {
+      "cle": "DACIA",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "DACIA",
+        "categorie": "boite",
+        "title": "Boîte automatisée Easy-R : à-coups et actionneur",
+        "description": "Boîte manuelle robotisée Easy-R : à-coups au passage des rapports et défaillance de l'actionneur.",
+        "models": "Sandero II, Logan II, Duster I",
+        "years": "2015-2021",
+        "cibles": [
+          "EASYR"
+        ],
+        "repere": true
+      },
+      "marque": "DACIA",
+      "title": "Boîte automatisée Easy-R : à-coups et actionneur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "forum_seul",
+      "sources": [
+        {
+          "url": "https://communaute.dacia.fr/forum/DACIA/SANDERO/PROBLEME-BOITE-ROBOTISEE-SUR-UNE-SANDERO-STEPWAY-DE-9-MOIS/2809171/23633",
+          "titre": "Forum DACIA : Problème boite robotisée sur une Sandéro Stepway de 9 mois",
+          "type": "forum_marque",
+          "nomme_cible": true,
+          "justification": "Le forum décrit des problèmes récurrents de broutage/vibrations (à-coups) sur la boîte robotisée Easy-R et mentionne le changement de l'actuateur d'embrayage, ce qui correspond à l'affirmation sur l'actionneur et les à-coups."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/essai-dacia-sandero-stepway-tce-90-easy-r-pas-vraiment-un-progres-7242384.html",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://www.largus.fr/actualite-automobile/essai-dacia-sandero-dci-90-easy-r-2016-pas-la-meilleure-du-lot-8149394.html",
+          "motif": "non_soutenue",
+          "justification": "La page décrit des à-coups lors des montées de rapport de la boîte Easy-R, mais ne mentionne aucune défaillance de l'actionneur."
+        },
+        {
+          "url": "https://www.auto-doc.fr/info/embrayage-dacia-sandero-stepway-duree-de-vie-prix-et-symptomes-d-usure",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement du kit d'embrayage (disque, mécanisme, butée) et/ou de l'actionneur électrique de la boîte Easy-R, avec recalibrage obligatoire à la valise de diagnostic OBD après intervention.",
+      "cout_min_eur": 480,
+      "cout_max_eur": 720,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2304
+    },
+    {
+      "cle": "TOYOTA",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "TOYOTA",
+        "categorie": "boite",
+        "title": "Boîte Multidrive S : broutement du variateur",
+        "description": "Boîte à variation continue Multidrive S : broutement, montée en régime sans accélération et usure de la courroie du variateur.",
+        "models": "Auris II, Avensis III, Verso",
+        "years": "2009-2018",
+        "cibles": [
+          "MULTIDRIVE"
+        ],
+        "repere": true
+      },
+      "marque": "TOYOTA",
+      "title": "Boîte Multidrive S : broutement du variateur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Les recherches ne renvoient que des forums (non recevables seuls), des fiches techniques génériques sur le fonctionnement de la boîte CVT Multidrive S, et des pages commerciales sur la courroie d'accessoire/distribution (pièce différente, sans rapport avec la courroie du variateur) ; aucune source constructeur, rappel officiel ou presse auto reconnue n'atteste spécifiquement un broutement du variateur avec usure de la courroie sur Auris II, Avensis III ou Verso.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1723
+    },
+    {
+      "cle": "OPEL",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "OPEL",
+        "categorie": "boite",
+        "title": "Boîte Easytronic : actionneur d'embrayage",
+        "description": "Boîte manuelle pilotée Easytronic : défaillance de l'actionneur d'embrayage, à-coups et refus de passer les rapports.",
+        "models": "Corsa C, Corsa D, Meriva A, Astra H",
+        "years": "2000-2014",
+        "cibles": [
+          "EASYTRONIC"
+        ],
+        "repere": true
+      },
+      "marque": "OPEL",
+      "title": "Boîte Easytronic : actionneur d'embrayage",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.auto-doc.fr/info/opel-corsa-problemes-connus-et-fiabilite",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.aurel-automobile.fr/fr/tout-savoir-sur-l-opel-easytronic-diagnostic-et-reparation-de-la-tcu-et-de-l-embrayage/",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "http://www.forum-opel.fr/forum/index.php?topic=29210.0",
+          "motif": "url_invalide"
+        },
+        {
+          "url": "https://forum-auto.caradisiac.com/pole-technique/mecanique-electronique/sujet369723-70.htm",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement (ou reconditionnement/réparation spécialisée) du module actionneur d'embrayage Easytronic, avec purge du liquide hydraulique et réapprentissage/recalibrage électronique via outil de diagnostic (Tech2) après intervention ; dans certains cas le kit d'embrayage complet est changé en complé",
+      "cout_min_eur": 200,
+      "cout_max_eur": 500,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1184
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "FIAT",
+        "categorie": "boite",
+        "title": "Boîte Dualogic : actionneur et embrayage",
+        "description": "Boîte manuelle robotisée Dualogic : défaillance de l'actionneur, à-coups marqués et perte de la marche arrière.",
+        "models": "Punto Evo, 500, Panda III",
+        "years": "2005-2018",
+        "cibles": [
+          "DUALOGIC"
+        ],
+        "repere": true
+      },
+      "marque": "FIAT",
+      "title": "Boîte Dualogic : actionneur et embrayage",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.caroom.fr/guide/voiture-neuve/comment-choisir/boite-de-vitesses/automatique/a-eviter",
+          "titre": "Quelles sont les boîtes de vitesses automatiques à éviter ? (rappel Fiat Dualogic, actionneur d'embrayage)",
+          "type": "constructeur_ou_rappel",
+          "nomme_cible": false,
+          "justification": "La page confirme que la Dualogic manque de fiabilité et cite le rappel Fiat au Brésil pour contrôler/remplacer l'actionneur d'embrayage dont la défaillance pouvait gêner le démarrage et les changements de rapports, voire empêcher de rouler, ce qui correspond à l'actionneur défaillant et aux à-coups évoqués (la perte de marche arrière n'est pas mentionnée mais le défaut d'actionneur/embrayage est s"
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://cars-one.fr/2025/04/02/probleme-boite-robotisee-dualogic-fiat-500-moteur-1-2/",
+          "motif": "non_soutenue",
+          "justification": "La page décrit bien la défaillance de l'actionneur d'embrayage et les à-coups marqués, mais elle mentionne un blocage en 2ème ou 3ème vitesse ou un refus de passer un rapport, sans jamais évoquer une perte spécifique de la marche arrière."
+        },
+        {
+          "url": "https://www.fiches-auto.fr/fiabilite-fiat/fiabilite-188-pannes-fiat-500.php",
+          "motif": "non_soutenue",
+          "justification": "La page mentionne que sur la Dualogic l'actionneur, le capteur de position ou la pression de commande peuvent faire repasser la boîte au neutre ou refuser certains rapports, mais elle ne parle ni d'à-coups marqués ni de perte spécifique de la marche arrière."
+        },
+        {
+          "url": "https://www.largus.fr/forum-auto/panne-auto-mecanique-et-entretien/fiat/punto-2/defaillance-boite-sequentielle-marche-arriere-et-point-n/334821-665-boite-de-vitesse.html",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement ou recalibration de l'actionneur d'embrayage de la boîte Dualogic (et des actionneurs de sélection associés), avec remplacement du kit d'embrayage si celui-ci est usé ; dans les cas les plus avancés, remplacement complet du robot électrohydraulique (pompe, accumulateur, actionneur).",
+      "cout_min_eur": 800,
+      "cout_max_eur": 1800,
+      "gravite": "majeure",
+      "gravite_avant": null,
+      "cout_eur": 0.3613
+    },
+    {
+      "cle": "FIAT",
+      "categorie": "electronique",
+      "repere": true,
+      "candidat": {
+        "cle": "FIAT",
+        "categorie": "electronique",
+        "title": "Direction assistée Dualdrive Punto : perte d'assistance",
+        "description": "Défaillance de la direction assistée électrique Dualdrive sur Punto : perte d'assistance, ayant fait l'objet de campagnes du constructeur.",
+        "models": "Punto II, Punto III, Grande Punto",
+        "years": "1999-2012",
+        "cibles": [
+          "DUALDRIVE"
+        ],
+        "repere": true
+      },
+      "marque": "FIAT",
+      "title": "Direction assistée Dualdrive Punto : perte d'assistance",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Seuls des forums techniques (Caradisiac, Largus) attestent de nombreux cas de perte d'assistance sur la direction électrique Dualdrive de la Punto II, mais ces mêmes forums précisent explicitement qu'aucun rappel officiel n'a jamais été émis par Fiat pour ce défaut électrique précis ; le seul rappel constructeur réellement documenté par la presse auto (Largus, Caradisiac) concerne un défaut mécanique différent, sans rapport avec le système Dualdrive : un couple de serrage non conforme du boulon de la fourchette du cardan de la colonne de direction sur les Grande Punto produites entre juillet 2006 et avril 2008. Un forum ne pouvant jamais porter une entrée à lui seul, le défaut Dualdrive/perte d'assistance électrique tel que décrit ne peut pas être validé par des sources publiques suffisantes.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1933
+    },
+    {
+      "cle": "NISSAN",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "NISSAN",
+        "categorie": "boite",
+        "title": "Boîte CVT Jatco : surchauffe et broutement du variateur",
+        "description": "Boîte à variation continue d'origine Jatco : surchauffe, broutement, montée en régime sans accélération et passage en mode secours.",
+        "models": "Qashqai I, Qashqai II, X-Trail II, Juke",
+        "years": "2007-2019",
+        "cibles": [
+          "JATCO"
+        ],
+        "repere": true
+      },
+      "marque": "NISSAN",
+      "title": "Boîte CVT Jatco : surchauffe et broutement du variateur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.largus.fr/actualite-automobile/nissan-qashqai-et-x-trail-2014-soucis-sur-la-boite-automatique-6349384-7817916-photos.html",
+          "motif": "hors_sujet"
+        },
+        {
+          "url": "https://faultycar.co.uk/faults/nissan-juke-qashqai-cvt-gearbox",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.qashqai-passion.fr/viewtopic.php?t=1727",
+          "motif": "non_soutenue",
+          "justification": ""
+        }
+      ],
+      "remede": "Le constructeur a mis en place une reprogrammation du calculateur de la boîte CVT (action corrective en atelier) pour corriger les dysfonctionnements signalés ; en cas d'usure avancée du variateur, le remède évoqué ailleurs est l'échange standard de la boîte CVT.",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1107
+    },
+    {
+      "cle": "BMW",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "BMW",
+        "categorie": "boite",
+        "title": "Mécatronique ZF 6HP : plaque conductrice et fuites",
+        "description": "Boîte automatique ZF 6HP : défaillance de la plaque conductrice de la mécatronique, fuites au connecteur, à-coups et perte de rapports.",
+        "models": "Série 3 E90, Série 5 E60, X3 E83, X5 E70",
+        "years": "2004-2013",
+        "cibles": [
+          "6HP"
+        ],
+        "repere": true
+      },
+      "marque": "BMW",
+      "title": "Mécatronique ZF 6HP : plaque conductrice et fuites",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://gearboxinsider.com/blog/zf6hp-bmw-5-series-common-problems",
+          "motif": "hors_sujet"
+        },
+        {
+          "url": "https://www.bmw-serie3.com/phpbb3/viewtopic.php?t=27760",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://docteur-bva.com/produit/douille-detancheite-pour-boite-zf-6hp-pour-bmw/",
+          "motif": "non_soutenue",
+          "justification": "La page propose une douille d'étanchéité pour le connecteur mécatronique des boîtes ZF 6HP19/26 mais ne mentionne ni défaillance de plaque conductrice, ni fuites au connecteur, ni à-coups ou perte de rapports."
+        },
+        {
+          "url": "https://atstservices.com/fr/blog/boite-zf-6hp-pannes-diagnostic",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la douille/joint d'étanchéité du connecteur électrique de la mécatronique (et des joints internes associés) lors d'une vidange de boîte ; si la fuite a dégradé l'huile et provoqué des défaillances internes (court-circuits, usure des solénoïdes), remplacement de la mécatronique complè",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.2129
+    },
+    {
+      "cle": "AUDI",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "AUDI",
+        "categorie": "boite",
+        "title": "Boîte Multitronic : variateur et chaîne",
+        "description": "Boîte à variation continue Multitronic : broutement, à-coups, usure de la chaîne du variateur et défaillance du calculateur de boîte.",
+        "models": "A4 B6, A4 B7, A4 B8, A6 C6",
+        "years": "2000-2015",
+        "cibles": [
+          "MULTITRONIC"
+        ],
+        "repere": true
+      },
+      "marque": "AUDI",
+      "title": "Boîte Multitronic : variateur et chaîne",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://la-boite-automatique.com/entretien-boite-automatique-audi-multitronic-0aw/",
+          "titre": "Boîte automatique Audi Multitronic vidange, chaîne, capteurs, TCU",
+          "type": "cout_publie",
+          "nomme_cible": true,
+          "justification": "La page décrit bien la Multitronic 0AW (montée sur A4/A5/A6) avec symptômes de glissements/vibrations liés à l'usure de la chaîne et des pannes fréquentes du calculateur de boîte (TCU)."
+        },
+        {
+          "url": "https://automotohebdo.fr/symptome-boite-multitronic-hs-panne-broutage-calculateur-audi-cvt/",
+          "titre": "Symptôme boîte Multitronic HS : Diagnostiquer les pannes Audi",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page décrit explicitement pour la boîte Multitronic Audi (A4, A5, A6) le broutement/à-coups au démarrage, l'usure de la chaîne qui glisse sur les cônes, ainsi que la défaillance du calculateur TCU (soudures cassées, PRNDS clignotant)."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://auto-radar.fr/audi-a4/fiabilite",
+          "motif": "page_illisible"
+        },
+        {
+          "url": "https://www.forum-audi.com/topic-5117-les-problemes-de-boite-multitronic-sur-audi-a4-b6.html",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la chaîne de traction du variateur (poulies/guides associés) en cas d'usure mécanique, et remplacement ou réparation du calculateur de boîte (TCU) en cas de défaillance électronique ; sur les premières A4 B6 d'avant juin 2004, Audi a remplacé sous garantie la boîte défectueuse par un",
+      "cout_min_eur": 1500,
+      "cout_max_eur": 5000,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.1434
+    },
+    {
+      "cle": "AUDI",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "AUDI",
+        "categorie": "boite",
+        "title": "Boîte S tronic DL501 : mécatronique et embrayages",
+        "description": "Boîte à double embrayage longitudinale DL501 à sept rapports : défaillance de la mécatronique et usure des embrayages.",
+        "models": "A4 B8, A5, A6 C7, Q5",
+        "years": "2008-2016",
+        "cibles": [
+          "DL501"
+        ],
+        "repere": true
+      },
+      "marque": "AUDI",
+      "title": "Boîte S tronic DL501 : mécatronique et embrayages",
+      "rattrapage": false,
+      "garde": true,
+      "motif": "",
+      "sources": [
+        {
+          "url": "https://www.findservicehistory.com/common-faults-check/dsg-gearbox-problems",
+          "titre": "DSG Gearbox Problems: DQ200 and S tronic Faults",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page décrit explicitement le 'Audi 7-speed S tronic (DL501): mechatronic and clutch faults' pour A4, A5, A6, A7 et Q5, mentionnant des défaillances de la mécatronique et une usure des pochettes d'embrayage."
+        },
+        {
+          "url": "https://www.ecutesting.com/common-faults/audi/audi-s-tronic-0b5-gearbox-mechatronic-problem/",
+          "titre": "S-Tronic 0B5 mechatronic failure",
+          "type": "presse_auto",
+          "nomme_cible": true,
+          "justification": "La page décrit explicitement la défaillance de la mécatronique de la boîte S-Tronic DL501/0B5 à sept rapports sur A4 (B8), A5, A6 (C7) et Q5 des années correspondantes, mais ne mentionne pas d'usure des embrayages comme cause de panne, seulement un code lié à la surveillance de température d'embrayage et des capteurs de pression."
+        }
+      ],
+      "ecartees": [
+        {
+          "url": "https://eco-torque.co.uk/blogs/news/audi-0b5-dl501-dsg-s-tronic-gearbox-common-problems-fixes",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://autoliva.com/blog/codes-defaut-dsg-s-tronic-guide-complet-par-boite",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de l'unité mécatronique (neuve ou reconditionnée, avec ou sans TCU) et, en cas d'usure avérée, remplacement du pack d'embrayages à bain d'huile de la DL501 ; un kit de réparation (solénoïdes, carte électronique, capteur G676) peut suffire si le défaut est localisé.",
+      "cout_min_eur": 1200,
+      "cout_max_eur": 4360,
+      "gravite": "casse",
+      "gravite_avant": null,
+      "cout_eur": 0.2361
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "boite",
+      "repere": true,
+      "candidat": {
+        "cle": "MERCEDES",
+        "categorie": "boite",
+        "title": "Boîte 7G-Tronic 722.9 : plaque conductrice",
+        "description": "Boîte automatique 7G-Tronic 722.9 : défaillance de la plaque conductrice, fuites au connecteur et passage en mode secours.",
+        "models": "Classe C W204, Classe E W212, Classe S W221",
+        "years": "2004-2016",
+        "cibles": [
+          "7229"
+        ],
+        "repere": true
+      },
+      "marque": "MERCEDES",
+      "title": "Boîte 7G-Tronic 722.9 : plaque conductrice",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "Le défaut de la plaque conductrice (722.9) n'est attesté que par des forums (mbworld, slkworld, benzworld, forum-auto.caradisiac.com) et des blogs commerciaux/SEO (autocopilot.fr, becquet-voiture.com, euroracingparts.fr, kfz-dietrich.com, gearboxinsider.com...), sans aucun document constructeur, base de rappel officielle ni article de presse automobile reconnue traitant nommément ce défaut sur W204/W212/W221 ; faute d'une source de rang 1 ou 2, et un forum seul ne pouvant porter l'entrée, le défaut n'est pas suffisamment sourcé.",
+      "sources": [],
+      "ecartees": [],
+      "remede": "\"\"",
+      "cout_min_eur": 0,
+      "cout_max_eur": 0,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1887
+    },
+    {
+      "cle": "MERCEDES",
+      "categorie": "electronique",
+      "repere": true,
+      "candidat": {
+        "cle": "MERCEDES",
+        "categorie": "electronique",
+        "title": "Freinage électro-hydraulique SBC : défaillance de l'accumulateur",
+        "description": "Système de freinage électro-hydraulique Sensotronic Brake Control : défaillance de la pompe et de l'accumulateur, ayant fait l'objet de campagnes du constructeur.",
+        "models": "Classe E W211, CLS C219, SL R230",
+        "years": "2002-2009",
+        "cibles": [
+          "SENSOTRONIC"
+        ],
+        "repere": true
+      },
+      "marque": "MERCEDES",
+      "title": "Freinage électro-hydraulique SBC : défaillance de l'accumulateur",
+      "rattrapage": false,
+      "garde": false,
+      "motif": "aucune_source_retenue",
+      "sources": [],
+      "ecartees": [
+        {
+          "url": "https://www.mbusa.com/content/dam/mb-nafta/us/customer-letters/2005110001.pdf",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Sensotronic_Brake_Control",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://ecu.fr/t/mercedes/calculateurs-abs-esp-asr/abs-sbc-avec-accumulateur-de-pression-3503",
+          "motif": "non_soutenue",
+          "justification": ""
+        },
+        {
+          "url": "https://mbworld.org/forums/e-class-w211/899369-06-e350-sbc-recall-what-s-covered.html",
+          "motif": "page_illisible"
+        }
+      ],
+      "remede": "Remplacement de la pompe/unité hydraulique SBC et de l'accumulateur (réservoir) de pression, avec remise à zéro du système ; le premier rappel constructeur a consisté à installer un fil de masse et un support de fixation renforcés sur la pompe SBC, assorti d'une extension de garantie (10 puis 25 ans",
+      "cout_min_eur": 380,
+      "cout_max_eur": 452,
+      "gravite": null,
+      "gravite_avant": null,
+      "cout_eur": 0.1479
+    }
+  ]
+}
