@@ -352,3 +352,31 @@ export async function trackEvent(name, analysisId = null, props = null) {
     })
   } catch (_) { /* la mesure ne doit jamais casser l'UX */ }
 }
+
+// SPRINT 19 — Réglages du mode revendeur (tarifs de carte grise datés,
+// paramètres par défaut). Liste FERMÉE côté SQL : rien d'autre de `config`
+// n'en sort.
+export async function getConfigPublique() {
+  const { data, error } = await supabase.rpc('get_config_publique')
+  if (error) throw error
+  return data || {}
+}
+
+/** Région et paramètres mémorisés.
+ *  ⚠️ Pour un visiteur SANS COMPTE, ils restent dans son navigateur : une
+ *  préférence d'affichage ne justifie pas de créer une ligne en base pour un
+ *  anonyme. Pour un utilisateur connecté, ils suivent son compte d'un appareil
+ *  à l'autre. */
+export async function preferencesRevendeurLire() {
+  const { data, error } = await supabase.rpc('preferences_revendeur_lire')
+  if (error) throw error
+  return data || {}
+}
+
+export async function preferencesRevendeurEcrire({ region = null, parametres = null } = {}) {
+  const { error } = await supabase.rpc('preferences_revendeur_ecrire', {
+    p_region: region,
+    p_parametres: parametres,
+  })
+  if (error) throw error
+}

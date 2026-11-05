@@ -1,0 +1,14 @@
+{
+  "comparables_structures": [
+    { "titre": "Renault Clio II 1.5 dCi 65 Expression", "annee": 2004, "km": 178000, "prix": 2600, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Renault Clio 1.5 dCi 65 Campus", "annee": 2005, "km": 195000, "prix": 2200, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Renault Clio II 1.5 dCi 70 Authentique", "annee": 2003, "km": 168000, "prix": 2900, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Renault Clio 1.5 dCi 65 Dynamique", "annee": 2004, "km": 201000, "prix": 1950, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Renault Clio II 1.5 dCi Confort", "annee": 2006, "km": 155000, "prix": 3200, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Renault Clio 1.5 dCi 65 Expression 5p", "annee": 2005, "km": 188000, "prix": 2450, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Renault Clio II 1.5 dCi 80 Initiale", "annee": 2004, "km": 172000, "prix": 2750, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Renault Clio II 1.2 16v Campus", "annee": 2004, "km": 180000, "prix": 2100, "carburant": "Essence", "boite": "Manuelle" },
+    { "titre": "Renault Clio IV 1.5 dCi 90 Business", "annee": 2015, "km": 140000, "prix": 7490, "carburant": "Diesel", "boite": "Manuelle" },
+    { "titre": "Peugeot 206 1.4 HDi Trendy", "annee": 2005, "km": 176000, "prix": 2300, "carburant": "Diesel", "boite": "Manuelle" }
+  ]
+}

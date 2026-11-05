@@ -158,7 +158,18 @@ d'aller au-delà. Sans exception.**
   run, en plus du plafond cumulé. Le premier atteint arrête, dit ce qui n'a pas
   été joué, et demande une décision explicite pour continuer.
   `scripts/eval.mjs`, `verifier-analyses.mjs`, `sourcer-atlas.mjs`,
-  `rattraper-atlas.mjs`.
+  `rattraper-atlas.mjs`, `couverture-moteurs.mjs`.
+- ⚠️ **ET LE MUR RÉSERVE LE COÛT DU PROCHAIN CAS** (corrigé le 5 nov., le jour
+  même) : la première implémentation s'arrêtait quand le cumul avait **déjà**
+  dépassé, donc le dernier cas démarrait sous le mur et le franchissait en
+  finissant — un run annoncé à 0,40 € a coûté **0,447 €**. Un mur qu'on
+  franchit toujours d'un cas n'est pas un mur. La décision vient du module PUR
+  `scripts/budget.mjs`, testé hors ligne (`tests/budget-eval.test.mjs`) sur le
+  cas réel de ce jour-là.
+- **`npm run eval -- --cas a,b,c`** joue plusieurs cas, **dans cet ordre**, en
+  UN SEUL run. Les jouer par invocations séparées remettrait le compteur du run
+  à zéro à chaque fois, et le mur ne protégerait plus de rien. On place en tête
+  ce qu'on ne veut surtout pas perdre si le budget s'épuise.
 - Dépasser est **une décision d'Utku**, jamais un glissement : on s'arrête, on
   dit ce qu'il reste à faire et ce que ça coûtera, on attend.
 
@@ -1747,6 +1758,163 @@ présent — c'est ce tableau qui fait foi pour l'état courant.
 ⚠️ **La S7 est à un point de l'orange** (seuil à 40). C'est le cas le plus
 près d'une bascule de couleur : toute modification du barème ou des filtres
 doit le rejouer.
+
+## Sprint 19 — Mode revendeur (nov. 2026)
+
+### Trois chiffres, et seulement trois
+`_shared/revendeur.ts` (module PUR) : **prix de revente réaliste** (médiane
+observée, ajustée du kilométrage quand la pente est MESURABLE, moins la marge
+que l'acheteur final négociera — 8 % par défaut —, moins la décote ZFE),
+**prix d'achat maximum pour ta marge visée**, **offre d'ouverture** (max −15 %,
+arrondie à la cinquantaine INFÉRIEURE : arrondir vers le haut ferait proposer
+plus que le calcul ne permet).
+- ⚠️ **Jamais « valeur », « cote », « estimation », « expertise »** : déterminer
+  la valeur d'un véhicule est réservé aux experts en automobile inscrits
+  (art. **L326-4 I-2°** du code de la route). Mention obligatoire sous les trois
+  chiffres : « Calcul à partir de prix observés et de tes paramètres. Ce n'est
+  ni une valeur du véhicule ni une garantie de revente. » Un test l'impose, sur
+  le code ET sur ce qui est restitué.
+- **Seuil strict : 6 comparables retenus** (même modèle, même énergie, ±2 ans,
+  ±40 000 km). En dessous, AUCUN chiffre — et l'écran dit **pourquoi**
+  (décompte des écartées par raison). Pas de fourchette élargie « faute de
+  mieux » : un prix calculé sur cinq annonces est plus dangereux que pas de
+  prix, il a l'air sérieux.
+- ⚠️ **UNE AFFAIRE QUI NE PASSE PAS DOIT SE DIRE.** Quand les coûts dépassent
+  le prix de revente, `prixAchatMax` rend `possible: false` et `manque_eur` ;
+  `offreOuverture` rend **null**, donc aucun message vendeur. Premier jet :
+  `Math.max(0, …)` → « prix d'achat maximum : 0 € » et un message proposant
+  « 0 € » au vendeur. **Un zéro a l'air d'un chiffre ; ce cas n'en a pas.**
+  Défaut trouvé en lisant la sortie réelle du jeu d'essai, et une assertion du
+  test le FIGEAIT (`offreOuverture(0) === 0`).
+- ⚠️ **Pas de `toLocaleString`** dans le formatage des montants : son résultat
+  dépend de la version d'ICU, or ce module est dupliqué entre Deno et le
+  navigateur — le test de parité serait vrai ou faux selon la machine.
+  Groupement maison, espace insécable.
+
+### Le miroir client est GÉNÉRÉ, plus recopié
+`scripts/generer-miroir-revendeur.mjs` traduit `_shared/{revendeur,critair}.ts`
+en `src/data/{revendeur,critair}.gen.js` **avec le compilateur TypeScript**.
+Il n'existe qu'une implémentation ; la copie en est la traduction mécanique.
+`--verifier` échoue si le fichier est périmé ou retouché (chaîné au `prebuild`
+et à l'éval).
+- Le test de parité garde sa place : il rejoue **500 cas tirés** dans les deux
+  fichiers. `--verifier` compare les octets, lui compare les **résultats** —
+  les deux peuvent tomber séparément.
+- ⚠️ Première version du tirage : **0/500 cas franchissaient le seuil de 6**,
+  la parité comparait 500 fois « null contre null ». Ce sont les **compteurs de
+  couverture** qui l'ont dit. Sans eux, « aucune divergence » aurait été vrai
+  pour la mauvaise raison. (Désormais 120/500 au-dessus, 380 en dessous,
+  56 interdits en ZFE.)
+- Précédent : `src/data/marche.js` (sprint 9) reste écrit à la main, protégé
+  par son seul test de parité. Les nouveaux miroirs n'ont plus ce risque.
+
+### Comparables : la recherche de l'utilisateur, pas un agrégat
+Aucun seuil de 15, aucun relevé en tâche de fond : ce sont les annonces
+affichées sur SA page de résultats, envoyées **au clic** (extension) ou par
+**partage de la page de recherche** (appli). L'appli les garde 24 h sur
+l'appareil (`src/lib/comparablesLocaux.js`) ; la prochaine analyse les emporte
+et les efface. **Rien ne part à l'étape du relevé.**
+- ⚠️ **Le MODÈLE de chaque comparable est déduit du titre PAR LE SERVEUR**
+  (`segmentDepuisTitreAnnonce`), jamais envoyé par le client — même règle qu'au
+  sprint 9 : sinon le client choisirait dans quel segment ses prix atterrissent.
+- L'ÉNERGIE se lit dans le champ du site, sinon dans le titre (« dCi », « TDI »,
+  « TSI »…). Sans cette lecture, une page de résultats qui n'affiche pas le
+  carburant ferait écarter toutes les annonces, et l'écran dirait « pas assez
+  de comparables » avec dix annonces sous les yeux.
+- `score` conserve désormais `carburant` et `boite` sur `comparables_structures`
+  (il ne gardait que titre/année/km/prix).
+
+### Carte grise, Crit'Air, ZFE — datés, et jamais devinés
+- **Tarifs du cheval fiscal en CONFIG** (migration `20261119120000`, 18 régions,
+  `maj: 2026-11-05`) : un tarif voté chaque année par chaque région, figé dans
+  un déploiement, devient faux au 1er janvier sans que personne ne le voie.
+  `get_config_publique()` est ouverte à anon sur une **liste FERMÉE**
+  (`carte_grise_tarifs` + `revendeur\_%`) : les seuils d'alerte et le plafond de
+  coût IA restent au service role. Éprouvé par le COMPORTEMENT dans l'essai de
+  migration (une clé de test semée dans la transaction ne doit pas sortir).
+- ⚠️ **Aucun chiffre sans région ET sans puissance fiscale.** Une carte grise va
+  de la gratuité à plus de 1 000 € : une moyenne nationale silencieuse
+  fausserait le prix d'achat maximum sans que l'utilisateur sache d'où vient
+  l'erreur. Le poste est alors déclaré **manquant**, et l'écran le dit.
+  Les **exonérations « véhicule propre » ne sont PAS appliquées** (0/50/100 %
+  selon la région, plusieurs supprimées depuis 2025) : la ligne reste
+  modifiable et renvoie au simulateur officiel.
+- La région est demandée **une fois** : `localStorage` pour un anonyme,
+  `preferences_revendeur` (RPC réservées à `authenticated`) pour un compte. Une
+  préférence d'affichage ne justifie pas de créer une ligne en base pour un
+  anonyme.
+- `_shared/critair.ts` : classement d'après l'arrêté du 21 juin 2016, et liste
+  des ZFE **datée** (`ZFE_RELEVE_LE`). Classement inconnu ⇒ **aucun
+  avertissement** : on n'avertit jamais sur une supposition.
+- **Contrôle technique** : compté quand le dernier a plus de six mois, parce que
+  le VENDEUR doit en fournir un de moins de six mois (art. **R323-22** du code
+  de la route). Fourchette publiée **vérifiée** (45–150 €, extrait cité) semée
+  dans `repair_costs` — sans source, pas de coût, donc pas de ligne.
+
+### Verrou Pass — serveur, comme toujours
+`_revendeur_publique` en SQL ≡ `revendeurPublique` en TS, posé dans
+`get_public_analysis` **au même endroit** que la négociation et HistoVec.
+Gratuit = le **prix de revente réaliste**. Le prix d'achat maximum, les lignes
+de coût, les arguments et le message vendeur **ne quittent pas le serveur** —
+vérifié en production : `achat_max: null`, `offre: null`, message vide,
+0 argument, et les compteurs de ce qui est masqué.
+- `get_public_analysis` redéclarée avec son corps **EXTRAIT par script** de la
+  dernière définition, **dix marqueurs vérifiés** avant écriture. Règle
+  0 quinquies, déjà enfreinte trois fois.
+- Côté client, le recalcul n'est pas une faille : sans Pass le navigateur n'a
+  **pas les lignes de coût**, donc rien à recalculer.
+- ⚠️ **Le client ne doit repasser que les VRAIS travaux** à `prixAchatMax` :
+  les lignes `imprevus`, `carte_grise`, `marge_voulue` et `controle_technique`
+  sont CALCULÉES. Les lui redonner en entrée les comptait deux fois — l'écran
+  annonçait 2 017 € de manque là où le serveur en comptait 1 391, soit
+  exactement un second forfait d'imprévus. Vu sur la capture.
+
+### ⚠️ Un ReferenceError silencieux, et le garde-fou qui en sort
+`candidats` (les fourchettes de coût) était un `const` **à l'intérieur du try**
+de la négociation. Le bloc revendeur, placé après, l'appelait : ReferenceError
+attrapé par **son propre try/catch**. Le mode revendeur n'aurait **jamais
+existé en production** — pas d'erreur HTTP, pas de ligne rouge, un champ `null`.
+- **`tests/portee-fonctions.test.mjs`** : le compilateur TypeScript résout les
+  portées de **49 fonctions edge et 31 modules partagés** (`noLib` + `noResolve`,
+  liste **FERMÉE** de primitives du runtime). Vérifié **dans les deux sens** —
+  il signale bien `candidats` quand on remet le défaut, et détecte le motif
+  générique sur un témoin.
+- C'est la pire forme de panne : silencieuse, dans du code qu'aucun test hors
+  ligne ne peut exécuter (il faut la clé Anthropic et la base).
+
+### ⚠️ Le mur budgétaire était franchi d'un cas, systématiquement
+Le run annoncé à **0,40 €** a coûté **0,447 €** : l'arrêt se déclenchait quand
+le cumul avait DÉJÀ dépassé, donc le dernier cas démarrait sous le mur et le
+franchissait en finissant. **Un mur qu'on franchit toujours d'un cas n'est pas
+un mur.**
+- Module PUR **`scripts/budget.mjs`** : le mur **RÉSERVE** le coût du prochain
+  cas (moyenne observée sur le run, estimation prudente avant le premier).
+  Appliqué aux **cinq** scripts qui dépensent (`eval`, `sourcer-atlas`,
+  `rattraper-atlas`, `verifier-analyses`, `couverture-moteurs`).
+- `tests/budget-eval.test.mjs` rejoue le cas réel du jour et exige **quatre**
+  cas joués, pas cinq.
+- `npm run eval -- --cas a,b,c` : plusieurs cas, **dans cet ordre**, en UN run.
+  Jouer cinq cas par cinq invocations remettrait le compteur du run à zéro cinq
+  fois, et le mur ne protégerait plus de rien.
+
+### Éval et captures
+`revendeur-clio2-dci` (10 comparables en fixtures → 7 retenus) et
+`revendeur-sans-comparables` (2 retenus → **aucun chiffre**). Nouvelles
+assertions : seuil, ordre des trois chiffres, mention obligatoire, vocabulaire
+interdit, chaque argument du message vendeur chiffré, et — cas à part entière —
+**aucune offre ni message quand il n'y a aucune marge**.
+- **Verdicts de référence inchangés : S7 rouge 38→39 (référence du 4 nov.),
+  308 orange 55, Mercedes vert 71.** Clio II : orange 46.
+- Captures 390 px : `captures-sprint19/` (gitignoré), gratuit / Pass / affaire
+  qui passe après correction d'un coût à l'écran.
+- `src/pages/PartagePage.jsx` portait encore **Syne et Plus Jakarta Sans**,
+  supprimées au sprint 5 : seule page du site dans la police de repli du
+  système. Reprise des tokens au passage.
+
+### Mise en service partielle — 5 nov. 2026 (merge EN ATTENTE)
+Dump prod hors dépôt, migration `20261119120000` appliquée, `score` déployée
+(deux fois : la seconde après la correction « aucune marge »). **`sprint19-revendeur`
+n'est pas mergée** — le bloc n'est donc en ligne que côté fonction, pas côté site.
 
 ## Marques Couvertes
 

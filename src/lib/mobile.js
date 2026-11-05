@@ -6,6 +6,7 @@
 // supprimé). Aucune requête de nos serveurs vers Leboncoin / La Centrale.
 import { Capacitor, CapacitorHttp } from '@capacitor/core'
 import { EXTRACTEUR_INJECTABLE } from './extracteurInjectable.gen'
+import { consommerComparables } from './comparablesLocaux'
 
 export const estNatif = () => Capacitor.isNativePlatform()
 
@@ -20,10 +21,12 @@ export function urlPartageValide(brut) {
   }
 }
 
-/** Ouvre l'annonce dans une WebView VISIBLE et exécute les extracteurs à chaque
+/** Ouvre la page partagée dans une WebView VISIBLE et exécute les extracteurs à chaque
  *  chargement de page (si l'utilisateur doit passer une vérification anti-robot,
  *  la page suivante relance l'extraction automatiquement).
- *  → résout avec les données extraites, rejette {code: 'ferme'|'timeout'}. */
+ *  → résout avec {type: 'annonce', data} ou {type: 'recherche', annonces}
+ *    (page de résultats : les annonces affichées deviennent les comparables
+ *    de la prochaine analyse), rejette {code: 'ferme'|'timeout'}. */
 export async function ouvrirEtExtraire(urlAnnonce, surEtat = () => {}) {
   const { InAppBrowser } = await import('@capgo/inappbrowser')
   return new Promise((resolve, reject) => {
@@ -47,8 +50,14 @@ export async function ouvrirEtExtraire(urlAnnonce, surEtat = () => {}) {
       if (!brut) return
       let r = null
       try { r = JSON.parse(brut) } catch (_) { return }
-      if (r.ok && r.data && r.data.titre) {
-        terminer(() => resolve(r.data))
+      if (r.ok && r.type === 'annonce' && r.data && r.data.titre) {
+        terminer(() => resolve({ type: 'annonce', data: r.data }))
+      } else if (r.ok && r.type === 'recherche' && Array.isArray(r.annonces) && r.annonces.length) {
+        // SPRINT 19 — page de recherche : les annonces affichées deviennent
+        // les comparables de la prochaine analyse. Elles restent SUR
+        // L'APPAREIL (comparablesLocaux) jusqu'à ce qu'une annonce soit
+        // analysée ; rien ne part maintenant.
+        terminer(() => resolve({ type: 'recherche', annonces: r.annonces }))
       } else {
         // Page non exploitable (vérification anti-robot, page intermédiaire…) :
         // la WebView reste au premier plan, l'utilisateur agit, et le prochain
@@ -130,7 +139,10 @@ export async function envoyerVersIntake(donnees, images) {
       type_vendeur: donnees.type_vendeur,
       url: donnees.url,
       images,
-      comparables_structures: [],
+      // SPRINT 19 — comparables relevés sur la page de recherche de
+      // l'utilisateur (partage d'une page de résultats), gardés sur
+      // l'appareil puis EMPORTÉS par cette analyse, une seule fois.
+      comparables_structures: consommerComparables(),
     }),
     signal: AbortSignal.timeout(170000),
   })

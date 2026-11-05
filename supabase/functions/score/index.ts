@@ -30,7 +30,18 @@ import {
   refsManquantes,
   sansSourcePublique,
 } from "../_shared/pannesApplicables.ts";
-import { calculerNegociation, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
+import { calculerNegociation, chercherCout, coutsApplicables, negociationPublique, nettoyerCitationVendeur, type CoutCandidat } from "../_shared/negociation.ts";
+import {
+  comparablesDepuisStructures,
+  MENTION_REVENDEUR,
+  messageVendeurRevendeur,
+  offreOuverture,
+  PARAMETRES_DEFAUT,
+  prixAchatMax,
+  prixRevente,
+  revendeurPublique,
+} from "../_shared/revendeur.ts";
+import { critair } from "../_shared/critair.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
 import {
@@ -55,6 +66,7 @@ import {
   normaliserNom,
   referencePrix,
   regionDe,
+  segmentDepuisTitreAnnonce,
   SEUIL_FOURCHETTE,
   technoDe,
 } from "../_shared/marche.ts";
@@ -908,7 +920,9 @@ serve(async (req: Request) => {
     // Comparables structurés envoyés par l'extension (page de résultats) :
     // titre/année/km/prix uniquement, rien d'autre n'est collecté.
     // deno-lint-ignore no-explicit-any
-    const comparablesStructures: Array<{ titre: string; annee: number | null; km: number | null; prix: number }> =
+    const comparablesStructures: Array<
+      { titre: string; annee: number | null; km: number | null; prix: number; carburant: string; boite: string }
+    > =
       (Array.isArray(body.comparables_structures) ? body.comparables_structures : [])
         .slice(0, 40)
         // deno-lint-ignore no-explicit-any
@@ -917,6 +931,12 @@ serve(async (req: Request) => {
           annee: typeof c?.annee === "number" && c.annee > 1990 && c.annee < 2100 ? Math.round(c.annee) : null,
           km: typeof c?.km === "number" && c.km >= 0 && c.km < 2_000_000 ? Math.round(c.km) : null,
           prix: typeof c?.prix === "number" && c.prix > 100 && c.prix < 1_000_000 ? Math.round(c.prix) : 0,
+          // SPRINT 19 — carburant et boîte conservés. Le mode revendeur exige
+          // la MÊME énergie que le véhicule analysé : sans ce champ, chaque
+          // comparable serait écarté et l écran dirait « pas assez de
+          // comparables » avec dix annonces sous les yeux.
+          carburant: typeof c?.carburant === "string" ? c.carburant.slice(0, 40) : "",
+          boite: typeof c?.boite === "string" ? c.boite.slice(0, 40) : "",
         }))
         .filter((c: { titre: string; prix: number }) => c.titre && c.prix > 0);
 
@@ -976,9 +996,19 @@ serve(async (req: Request) => {
     // navigateur) ; la ligne `analyses` reste complète, get_public_analysis
     // applique le même masque.
     // deno-lint-ignore no-explicit-any
-    const masquerNegociation = (r: any) => {
-      if (passActif || isEval || !r || typeof r !== "object" || !r.negociation) return r;
-      return { ...r, negociation: negociationPublique(r.negociation) };
+    const masquerSansPass = (r: any) => {
+      if (passActif || isEval || !r || typeof r !== "object") return r;
+      // ⚠️ Le mode revendeur est masqué au MÊME endroit que la négociation, et
+      // pour la même raison : un flou côté client enverrait la donnée au
+      // navigateur (correction du sprint 7). Sans Pass, le prix d achat
+      // maximum, les lignes de coût, les arguments et le message vendeur ne
+      // quittent pas le serveur ; le prix de revente réaliste, lui, est
+      // gratuit.
+      return {
+        ...r,
+        negociation: r.negociation ? negociationPublique(r.negociation) : r.negociation,
+        revendeur: r.revendeur ? revendeurPublique(r.revendeur) : r.revendeur,
+      };
     };
     const sourceUrl = typeof body.source_url === "string" && /^https:\/\/\S{1,500}$/.test(body.source_url)
       ? body.source_url.slice(0, 500)
@@ -1057,7 +1087,7 @@ serve(async (req: Request) => {
         }
         return jsonResponse({
           id: dejaVue.id,
-          result: masquerNegociation(dejaVue.result_json),
+          result: masquerSansPass(dejaVue.result_json),
           cache: true,
           ...(!finie ? { partial: true } : {}),
         });
@@ -2775,12 +2805,18 @@ serve(async (req: Request) => {
     let negociation: any = null;
     // deno-lint-ignore no-explicit-any
     let negEntrees: any = null;
+    // ⚠️ HISSÉE HORS DU TRY, et ce n est pas cosmétique : le mode revendeur,
+    // calculé plus bas, a besoin des fourchettes de coût pour chiffrer le
+    // contrôle technique. Déclarée dans le try, elle y serait restée — le
+    // bloc revendeur aurait levé un ReferenceError attrapé par son propre
+    // catch, donc INVISIBLE, et aurait simplement cessé d exister.
+    let candidatsCouts: CoutCandidat[] = [];
     try {
       const { data: coutRows } = await admin
         .from("repair_costs")
         .select("operation, cout_min_eur, cout_max_eur, url_source, statut, famille_norm")
         .limit(1000);
-      const candidats: CoutCandidat[] = coutsApplicables(
+      const candidats: CoutCandidat[] = candidatsCouts = coutsApplicables(
         // deno-lint-ignore no-explicit-any
         ((coutRows ?? []) as any[]).map((r) => ({
           operation: String(r.operation ?? ""),
@@ -2840,6 +2876,133 @@ serve(async (req: Request) => {
       console.error("negociation:", e);
     }
 
+
+    // ---------------- Mode revendeur (sprint 19) ----------------
+    // Trois chiffres, et seulement trois : prix de revente réaliste, prix
+    // d'achat maximum pour la marge visée, offre d'ouverture. Calculés par le
+    // module PUR `_shared/revendeur.ts`, dont le navigateur a un miroir
+    // GÉNÉRÉ — l'utilisateur corrige un coût, tout se recalcule sans
+    // aller-retour.
+    //
+    // ⚠️ AUCUN AGRÉGAT ICI, et aucun seuil de 15. Les comparables sont les
+    // annonces que l'utilisateur a lui-même sous les yeux, envoyées AU CLIC
+    // depuis sa page de résultats. En dessous de 6 retenues : aucun chiffre.
+    //
+    // ⚠️ Le MODÈLE de chaque comparable est déduit de son titre PAR LE
+    // SERVEUR (`modeleCanonique`), jamais envoyé par le client : sinon le
+    // client choisirait dans quel segment ses prix atterrissent.
+    // deno-lint-ignore no-explicit-any
+    let revendeur: any = null;
+    try {
+      const modeleCible = modeleCanonique(vehiculePublic.modele ?? "");
+      const vRevendeur = {
+        modele: modeleCible,
+        energie: vehiculePublic.carburant ?? "",
+        annee: typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null,
+        km: typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null,
+      };
+      const comps = comparablesDepuisStructures(comparablesStructures, vRevendeur, {
+        modele_cible: modeleCible,
+        modele_de: (titre: string) => {
+          const seg = segmentDepuisTitreAnnonce(titre);
+          return seg ? seg.modele : "";
+        },
+      });
+
+      // Crit'Air et ZFE : classement réglementaire déduit de l'énergie et de
+      // l'année. La ville de REVENTE n'est pas connue du serveur — c'est un
+      // choix de l'utilisateur — donc aucune décote n'est appliquée ici. Le
+      // navigateur la recalcule quand il sait où le revendeur revend.
+      const classe = critair(vehiculePublic.carburant ?? "", vehiculePublic.annee ?? null);
+
+      const revente = prixRevente(comps.retenus, vRevendeur, PARAMETRES_DEFAUT, false);
+
+      // Lignes de coût : les postes CHIFFRÉS de la négociation, borne HAUTE.
+      // ⚠️ La borne haute, et c'est un choix : un « prix d'achat maximum »
+      // calculé sur la borne basse n'est plus un maximum. Chaque ligne reste
+      // modifiable à l'écran.
+      //
+      // ⚠️ Le poste `prix_marche` est EXCLU des coûts : ce n'est pas une
+      // facture mais l'écart au prix médian des annonces comparables. Le
+      // compter ici retrancherait deux fois la négociation, qui est déjà dans
+      // le prix de revente (marge_negociation_pct).
+      // deno-lint-ignore no-explicit-any
+      const postesChiffres: any[] = (negociation?.postes ?? [])
+        // deno-lint-ignore no-explicit-any
+        .filter((p: any) => p.type !== "prix_marche" && (p.cout_max_eur ?? p.cout_min_eur));
+      const travaux = postesChiffres.map((p) => ({
+        cle: `poste_${normaliserNom(String(p.poste ?? "")).slice(0, 40)}`,
+        libelle: String(p.poste ?? ""),
+        montant_eur: Number(p.cout_max_eur ?? p.cout_min_eur ?? 0),
+        source: Array.isArray(p.urls) && p.urls.length ? p.urls[0] : null,
+        modifiable: true,
+      }));
+
+      // Contrôle technique : compté SEULEMENT s'il a plus de six mois et si
+      // une fourchette publiée existe (règle du sprint 3 : pas de coût sans
+      // source). Sans fourchette, pas de ligne — jamais de montant inventé.
+      let ctARefaire: number | null = null;
+      const ctDate = typeof vehiculePublic.ct_date === "string" ? vehiculePublic.ct_date : "";
+      const ctMois = ctDate.match(/(\d{4})-(\d{2})/);
+      if (ctMois) {
+        const ageMois = (new Date().getUTCFullYear() - Number(ctMois[1])) * 12 +
+          (new Date().getUTCMonth() + 1 - Number(ctMois[2]));
+        if (ageMois > 6) {
+          const cout = chercherCout("Contrôle technique (voiture légère)", candidatsCouts);
+          if (cout && (cout.cout_max_eur ?? cout.cout_min_eur)) {
+            ctARefaire = Number(cout.cout_max_eur ?? cout.cout_min_eur);
+          }
+        }
+      }
+
+      // ⚠️ La carte grise n'est PAS calculée ici : elle dépend de la région et
+      // de la puissance fiscale, qui sont des informations de l'UTILISATEUR,
+      // pas de l'annonce. Le serveur déclare donc le poste MANQUANT, et le
+      // navigateur ajoute la ligne dès que l'utilisateur a renseigné sa
+      // région (mémorisée). Pas de moyenne nationale silencieuse.
+      const achatMax = revente
+        ? prixAchatMax(revente.valeur, travaux, PARAMETRES_DEFAUT, {
+          ct_a_refaire_eur: ctARefaire,
+          carte_grise_eur: null,
+          region_connue: false,
+          age_vehicule_ans: vehiculePublic.annee ? new Date().getUTCFullYear() - vehiculePublic.annee : null,
+        })
+        : null;
+      const offre = achatMax ? offreOuverture(achatMax.valeur, PARAMETRES_DEFAUT) : null;
+
+      // Arguments du message vendeur : les postes chiffrés, y compris l'écart
+      // au prix de marché (qui est un argument, même s'il n'est pas un coût).
+      // deno-lint-ignore no-explicit-any
+      const argumentsRevendeur = (negociation?.postes ?? [])
+        // deno-lint-ignore no-explicit-any
+        .filter((p: any) => p.cout_max_eur ?? p.cout_min_eur)
+        // deno-lint-ignore no-explicit-any
+        .map((p: any) => ({
+          poste: String(p.poste ?? ""),
+          montant_eur: Number(p.cout_max_eur ?? p.cout_min_eur ?? 0),
+          source: Array.isArray(p.urls) && p.urls.length ? p.urls[0] : null,
+        }));
+
+      revendeur = {
+        comparables: { retenus: comps.retenus.length, recus: comps.recus, ecartes: comps.ecartes.slice(0, 20) },
+        // Les comparables RETENUS sont renvoyés pour que le navigateur puisse
+        // recalculer le prix de revente quand l'utilisateur change un
+        // paramètre (prix/année/km seulement, aucune URL, aucun titre).
+        retenus: comps.retenus.map((c) => ({ prix: c.prix, annee: c.annee, km: c.km })),
+        revente,
+        achat_max: achatMax,
+        offre,
+        parametres: PARAMETRES_DEFAUT,
+        carte_grise: null,
+        critair: classe,
+        zfe: null,
+        arguments: argumentsRevendeur,
+        message_vendeur: messageVendeurRevendeur(argumentsRevendeur, offre, prixAffiche ?? null),
+        mention: MENTION_REVENDEUR,
+      };
+    } catch (e) {
+      console.error("revendeur:", e);
+    }
     // ---------------- Cohérence des points rassurants (règle serveur) ----------------
     // Un point rassurant ne peut pas contredire un poste de négociation, une
     // opération « doit déjà avoir été fait » non prouvée ou une raison
@@ -2994,6 +3157,7 @@ serve(async (req: Request) => {
       constats_photo: constatsPhoto,
       defauts_annonce: defautsAnnonce,
       negociation,
+      revendeur,
       // Données nécessaires au RECALCUL du verdict pendant le mode visite
       // (nouveaux constats photo) : mêmes règles, aucune donnée personnelle.
       recalcul: faitsBareme
@@ -3295,6 +3459,7 @@ serve(async (req: Request) => {
         constats_photo: [],
         defauts_annonce: [],
         negociation: null,
+        revendeur: null,
         budget_12_mois: [],
         prix: { commentaire: null, mediane_comparables: null, fourchette: null },
         analyse_limitee: null,
@@ -3365,7 +3530,7 @@ serve(async (req: Request) => {
 
     const fin = await finaliser(null);
     if (!fin.ok) return jsonResponse(fin.body, fin.status);
-    return jsonResponse({ id: fin.id, result: masquerNegociation(fin.result), ...(fin.coutEur != null ? { cout_eur: fin.coutEur } : {}) });
+    return jsonResponse({ id: fin.id, result: masquerSansPass(fin.result), ...(fin.coutEur != null ? { cout_eur: fin.coutEur } : {}) });
   } catch (error) {
     console.error("score error:", error);
     return jsonResponse({ error: "internal", message: "Erreur interne. Réessayez." }, 500);

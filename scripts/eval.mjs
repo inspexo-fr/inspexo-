@@ -16,6 +16,7 @@
 import { readFileSync, readdirSync, existsSync, writeFileSync, rmSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { coutProchainCas, murAtteint } from './budget.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const EVAL_DIR = join(ROOT, 'tests', 'eval')
@@ -325,6 +326,101 @@ async function runCase(name) {
     if (!expected.photos_bloc && n > 0) failures.push(`photos_bloc interdit mais ${n} constat(s) photo`)
   }
 
+  // ── Mode revendeur (sprint 19) ───────────────────────────────────────────
+  //
+  // ⚠️ `revendeur_comparables_min: 0` est un cas À PART ENTIÈRE, pas un cas
+  // vide : il exige qu'AUCUN chiffre ne sorte sous le seuil de six. C'est la
+  // moitié de la règle, et c'est celle qui protège l'utilisateur.
+  if ('revendeur_comparables_min' in expected) {
+    const rv = r.revendeur
+    if (!rv) failures.push('bloc revendeur absent')
+    else {
+      const n = rv.comparables?.retenus ?? 0
+      if (n < expected.revendeur_comparables_min) {
+        failures.push(`revendeur : ${n} comparables retenus < ${expected.revendeur_comparables_min} ` +
+          `(reçus ${rv.comparables?.recus ?? 0}, écartés : ${JSON.stringify(rv.comparables?.ecartes || [])})`)
+      }
+      if (expected.revendeur_comparables_min < 6 && rv.revente != null) {
+        failures.push('revendeur : un prix de revente est sorti SOUS le seuil de 6 comparables')
+      }
+    }
+  }
+
+  // revendeur_revente : fourchette attendue du prix de revente réaliste.
+  if (expected.revendeur_revente_min != null || expected.revendeur_revente_max != null) {
+    const v = r.revendeur?.revente?.valeur
+    if (v == null) failures.push('revendeur : aucun prix de revente alors qu’il en était attendu un')
+    else {
+      if (expected.revendeur_revente_min != null && v < expected.revendeur_revente_min) {
+        failures.push(`revendeur : revente ${v} € < min ${expected.revendeur_revente_min} €`)
+      }
+      if (expected.revendeur_revente_max != null && v > expected.revendeur_revente_max) {
+        failures.push(`revendeur : revente ${v} € > max ${expected.revendeur_revente_max} €`)
+      }
+    }
+  }
+
+  // revendeur_ordre : les trois chiffres doivent rester ordonnés. Une offre
+  // d'ouverture supérieure au prix d'achat maximum, ou un prix d'achat
+  // supérieur au prix de revente, ne serait pas une imprécision : ce serait
+  // une consigne de perdre de l'argent.
+  if (expected.revendeur_ordre) {
+    const rv = r.revendeur
+    const re = rv?.revente?.valeur, am = rv?.achat_max?.valeur, of = rv?.offre
+    // ⚠️ Une affaire qui NE PASSE PAS est un résultat valide, pas un trou :
+    // les coûts peuvent dépasser le prix de revente. Dans ce cas il n y a ni
+    // offre d ouverture ni message vendeur, et c est ce qu on exige.
+    if (rv?.achat_max && rv.achat_max.possible === false) {
+      if (of != null) failures.push(`revendeur : offre ${of} € alors qu il n y a aucune marge`)
+      if ((rv.message_vendeur || "") !== "") failures.push("revendeur : message vendeur alors qu il n y a aucune marge")
+      if (!(rv.achat_max.manque_eur > 0)) failures.push("revendeur : aucune marge mais le manque n est pas chiffré")
+    } else if (re == null || am == null || of == null) {
+      failures.push(`revendeur_ordre : un des trois chiffres manque (revente ${re}, achat ${am}, offre ${of})`)
+    } else {
+      if (!(am <= re)) failures.push(`revendeur : achat max ${am} € > revente ${re} €`)
+      if (!(of <= am)) failures.push(`revendeur : offre ${of} € > achat max ${am} €`)
+      if (of % 50 !== 0) failures.push(`revendeur : offre ${of} € non arrondie à la cinquantaine`)
+    }
+  }
+
+  // revendeur_mention : la phrase obligatoire doit être là, mot pour mot.
+  if (expected.revendeur_mention) {
+    const m = r.revendeur?.mention || ''
+    if (!m.includes('ni une valeur du véhicule ni une garantie de revente')) {
+      failures.push(`revendeur : mention obligatoire absente ou modifiée ("${m.slice(0, 80)}")`)
+    }
+  }
+
+  // revendeur_vocabulaire_interdit : « valeur », « cote », « expertise » ne
+  // doivent apparaître NI dans le message vendeur NI dans les libellés de
+  // coût. Déterminer la valeur d'un véhicule est réservé aux experts en
+  // automobile inscrits (art. L326-4 I-2° du code de la route).
+  if (expected.revendeur_vocabulaire_interdit) {
+    const rv = r.revendeur || {}
+    const aControler = [
+      rv.message_vendeur || '',
+      JSON.stringify(rv.achat_max?.lignes || []),
+      JSON.stringify(rv.arguments || []),
+    ].join(' ')
+    for (const mot of ['cote du vehicule', 'expertise', 'valeur du vehicule', 'estimation']) {
+      if (norm(aControler).includes(norm(mot))) {
+        failures.push(`revendeur : vocabulaire interdit « ${mot} » dans ce qui est restitué`)
+      }
+    }
+  }
+
+  // revendeur_message_doit_chiffrer : chaque ligne d'argument du message
+  // vendeur porte un montant. Un argument sans chiffre annonce au vendeur
+  // qu'on négocie sans savoir sur quoi.
+  if (expected.revendeur_message_doit_chiffrer && r.revendeur?.achat_max?.possible !== false) {
+    const msg = r.revendeur?.message_vendeur || ''
+    const lignes = msg.split('\n').filter((l) => l.startsWith('- '))
+    if (lignes.length < 1) failures.push('revendeur : message vendeur sans aucun argument chiffré')
+    for (const l of lignes) {
+      if (!/\d/.test(l)) failures.push(`revendeur : argument sans montant dans le message : "${l.slice(0, 60)}"`)
+    }
+  }
+
   // must_include / must_not_include (une entrée tableau = alternatives, OU logique)
   for (const needle of expected.must_include || []) {
     const alts = Array.isArray(needle) ? needle : [needle]
@@ -341,12 +437,33 @@ async function runCase(name) {
 }
 
 // ---------- main ----------
+// Un nom seul : ce cas-là. Plusieurs noms (`--cas a,b,c`) : CES cas, DANS CET
+// ORDRE, en UN SEUL run.
+//
+// ⚠️ Pourquoi c'est important : le mur budgétaire (`--budget`) vit dans un
+// run. Jouer cinq cas par cinq invocations remettrait le compteur du run à
+// zéro cinq fois, et le mur ne protégerait plus de rien. L'ordre compte
+// aussi : on place d'abord ce qu'on ne veut surtout pas perdre si le budget
+// s'épuise.
 const only = process.argv.slice(2).find((a) => !a.startsWith('--'))
-const cases = readdirSync(EVAL_DIR, { withFileTypes: true })
+const LISTE = (() => {
+  const i = process.argv.indexOf('--cas')
+  if (i < 0) return null
+  return String(process.argv[i + 1] || '').split(',').map((s) => s.trim()).filter(Boolean)
+})()
+const tousLesCas = readdirSync(EVAL_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory())
   .map((d) => d.name)
-  .filter((n) => !only || n === only)
-  .sort()
+if (LISTE) {
+  const inconnus = LISTE.filter((n) => !tousLesCas.includes(n))
+  if (inconnus.length) {
+    console.error(`Cas inconnu(s) : ${inconnus.join(', ')}`)
+    process.exit(1)
+  }
+}
+const cases = LISTE
+  ? LISTE // l'ordre demandé, pas l'ordre alphabétique
+  : tousLesCas.filter((n) => !only || n === only).sort()
 
 // ---------------------------------------------------------------------------
 // Compteur de coût : chaque analyse renvoie son coût réel (cout_eur).
@@ -397,13 +514,21 @@ const ajouterCout = (eur) => {
   writeFileSync(COUT_FICHIER, JSON.stringify({ total_eur: Math.round(coutSession * 10000) / 10000, maj: new Date().toISOString() }, null, 2))
 }
 // Le run s'arrête au PREMIER des deux murs atteint : le budget annoncé pour
-// ce run, ou le plafond de session.
-const budgetDepasse = () =>
-  coutSession >= PLAFOND_EUR || (BUDGET_RUN_EUR != null && coutRun >= BUDGET_RUN_EUR)
+// ce run, ou le plafond de session. La décision est prise par le module PUR
+// `scripts/budget.mjs`, testé hors ligne — elle réserve le coût du PROCHAIN
+// cas, sans quoi le mur serait toujours franchi d'un cas (constaté le 5 nov. :
+// 0,447 € pour un run annoncé à 0,40 €).
+let casJoues = 0
+const coutProchain = () => coutProchainCas(coutRun, casJoues)
+const murDuRun = () => murAtteint({
+  coutRun, casJoues, coutSession, budgetRun: BUDGET_RUN_EUR, plafondSession: PLAFOND_EUR,
+})
+const budgetDepasse = () => murDuRun() !== null
 const motifArret = () =>
-  BUDGET_RUN_EUR != null && coutRun >= BUDGET_RUN_EUR
-    ? `budget annoncé de ce run atteint (${coutRun.toFixed(2)} € ≥ ${BUDGET_RUN_EUR.toFixed(2)} €)`
-    : `plafond de session atteint (${coutSession.toFixed(2)} € ≥ ${PLAFOND_EUR} €)`
+  murDuRun() === 'run'
+    ? `budget annoncé de ce run atteint (${coutRun.toFixed(3)} € dépensés, ` +
+      `${coutProchain().toFixed(3)} € à réserver pour le cas suivant, mur à ${BUDGET_RUN_EUR.toFixed(2)} €)`
+    : `plafond de session atteint (${coutSession.toFixed(2)} € + ${coutProchain().toFixed(3)} € > ${PLAFOND_EUR} €)`
 
 let failed = 0
 console.log(`Éval Inspexo — ${cases.length} cas contre ${URL_BASE}${MODELE_SECOURS ? ' — MODÈLE DE SECOURS forcé' : ''}\n`)
@@ -423,6 +548,7 @@ for (const name of STABILITE_SEULE ? [] : cases) {
     }
     try {
       const { failures, ms, verdict, score, id } = await runCase(name)
+      casJoues += 1
       passages.push({ verdict, score })
       if (failures.length === 0) {
         console.log(`  PASS (${(ms / 1000).toFixed(1)}s${verdict ? ` — ${verdict} ${score}` : ''})${id ? ` — /a/${id}` : ''}`)

@@ -1,0 +1,9 @@
+{
+  "comparables_structures": [
+    { "titre": "Renault Clio II 1.5 dCi 65 Expression", "annee": 2004, "km": 178000, "prix": 2600, "carburant": "Diesel" },
+    { "titre": "Renault Clio 1.5 dCi 65 Campus", "annee": 2005, "km": 195000, "prix": 2200, "carburant": "Diesel" },
+    { "titre": "Renault Clio II 1.2 16v Campus", "annee": 2004, "km": 180000, "prix": 2100, "carburant": "Essence" },
+    { "titre": "Renault Clio IV 1.5 dCi 90 Business", "annee": 2015, "km": 140000, "prix": 7490, "carburant": "Diesel" },
+    { "titre": "Peugeot 206 1.4 HDi Trendy", "annee": 2005, "km": 176000, "prix": 2300, "carburant": "Diesel" }
+  ]
+}
