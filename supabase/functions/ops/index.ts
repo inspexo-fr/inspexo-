@@ -1,6 +1,7 @@
 // Fonction d'exploitation interne (diagnostic). Accès réservé au secret d'éval.
 // Opérations en lecture seule : liste des modèles disponibles sur la clé.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const EVAL_BYPASS_SECRET = Deno.env.get("EVAL_BYPASS_SECRET") ?? null;
@@ -40,6 +41,40 @@ serve(async (req: Request) => {
       { headers: { "Content-Type": "application/json" } },
     );
   }
+  // ?compte=<rpc> : COMBIEN de lignes une RPC d'exploitation rend-elle.
+  // Lecture seule, liste fermée, et seul le NOMBRE sort — jamais les lignes.
+  //
+  // ⚠️ Pourquoi ce point existe : le filtre ` = 'fini'` d'`analyses_a_verifier`
+  // ne rendait jamais rien, et rien ne le signalait — un écran vide ressemble
+  // exactement à « il n'y a rien à faire ». Pouvoir compter les lignes d'une
+  // RPC depuis le harnais, sans jeton admin, c'est ce qui permet de constater
+  // qu'un filtre mord encore.
+  {
+    const compte = new URL(req.url).searchParams.get('compte');
+    const ADMISES: Record<string, string> = {
+      a_verifier: 'analyses_a_verifier',
+      sans_apercu: 'analyses_sans_apercu',
+    };
+    if (compte) {
+      const rpc = ADMISES[compte];
+      if (!rpc) {
+        return new Response(JSON.stringify({ error: 'rpc_inconnue', admises: Object.keys(ADMISES) }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      const admin = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+      );
+      const { data, error } = await admin.rpc(rpc, { p_limite: 100 });
+      return new Response(
+        JSON.stringify(error ? { rpc, erreur: error.message } : { rpc, lignes: (data ?? []).length }),
+        { headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+  }
+
   const res = await fetch("https://api.anthropic.com/v1/models?limit=100", {
     headers: { "x-api-key": ANTHROPIC_API_KEY!, "anthropic-version": "2023-06-01" },
   });
