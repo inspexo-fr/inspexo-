@@ -616,7 +616,15 @@ if ((!SANS_STABILITE && failed === 0) || STABILITE_SEULE) {
     const runs = []
     for (let i = 0; i < RUNS; i++) {
       if (budgetDepasse()) break
-      const r = await post('score', { text: annonce, no_cache: true, ...input }).catch(() => null)
+      // ⚠️ L'ERREUR EST CONSERVÉE, PAS AVALÉE. Le `.catch(() => null)` d'avant
+      // perdait le motif : le 5 nov. 2026, une analyse de stabilité a échoué
+      // et le rapport disait seulement « 1/3 analyse(s) en erreur » — il a
+      // fallu compter les events `score_started` en base pour comprendre que
+      // l'appel n'avait jamais atteint la fonction. C'est la troisième fois
+      // que la sortie de l'éval coûte un run : masquer le motif d'un échec,
+      // c'est obliger à repayer pour le retrouver.
+      const r = await post('score', { text: annonce, no_cache: true, ...input })
+        .catch((e) => ({ status: 0, json: null, erreur: String(e?.message ?? e).slice(0, 160) }))
       if (r?.json?.cout_eur) ajouterCout(r.json.cout_eur)
       runs.push(r)
     }
@@ -625,6 +633,22 @@ if ((!SANS_STABILITE && failed === 0) || STABILITE_SEULE) {
     if (scores.length < RUNS) {
       instables++
       console.log(`▶ ${name}\n  FAIL — ${RUNS - scores.length}/${RUNS} analyse(s) en erreur`)
+      // Le MOTIF de chaque échec, passage par passage : code HTTP, code
+      // d'erreur de la fonction, message. Et les scores obtenus par les
+      // passages qui ONT abouti — un 71/71 avec un troisième appel perdu en
+      // route n'est pas la même chose qu'une divergence de score.
+      runs.forEach((r, i) => {
+        if (r?.status === 200) {
+          console.log(`     passage ${i + 1} : ${r.json.result.verdict} ${r.json.result.score}`)
+        } else {
+          const motif = r?.erreur ?? `${r?.json?.error ?? '?'}${r?.json?.message ? ` — ${String(r.json.message).slice(0, 90)}` : ''}`
+          console.log(`     passage ${i + 1} : ÉCHEC HTTP ${r?.status ?? '—'} · ${motif}`)
+        }
+      })
+      if (scores.length >= 2) {
+        const e = Math.max(...scores) - Math.min(...scores)
+        console.log(`     écart sur les ${scores.length} passages aboutis : ${e} point(s) (${scores.join(', ')})`)
+      }
       continue
     }
     const ecart = Math.max(...scores) - Math.min(...scores)

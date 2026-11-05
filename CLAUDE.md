@@ -1868,6 +1868,145 @@ Au passage à 73, c'est l'axe `historique_entretien` qui sort.
   n'a rien trouvé (`vin: {present: false}`). C'est la variance d'identification
   déjà relevée au sprint 13 (77/71) et que le sprint 13.1 croyait avoir réglée.
 
+## Sprint 20.1 — Correctifs de l'audit d'avant-vente (5 nov. 2026)
+
+Six décisions d'Utku après l'audit. Les cinq premières sont faites ; la
+sixième est bloquée sur une clé que le poste ne peut pas lire.
+
+### 1. La politique de confidentialité disait plus que ce que le code tenait
+Elle affirmait « ce qui n'est **jamais** conservé : le numéro de série (VIN) »
+— or le sprint 20c conserve une **empreinte salée** du VIN de l'annonce. Nous
+ne gardons pas le numéro, mais nous gardons une donnée dérivée :
+pseudonymisée, pas anonyme.
+- La phrase est désormais rattachée au **CERTIFICAT** (où elle reste vraie) et
+  renvoie à la nouvelle section **6 undecies**, qui décrit l'empreinte :
+  finalité unique (vérifier qu'un rapport HistoVec décrit bien le véhicule de
+  l'annonce), salage, jamais le numéro, **durée = celle du dossier**.
+- Nouvelle section **6 duodecies** : Crit'Air (calcul réglementaire, rien
+  transmis), la **commune de l'annonce** lue en mémoire et jamais enregistrée —
+  seul le nom de la zone de NOTRE liste est conservé —, et la **ville de
+  l'acheteur** qui ne quitte pas son navigateur.
+- ⚠️ `tests/confidentialite.test.mjs` lie le document au code : **si le code
+  porte la collecte, le document doit en parler**. C'est la leçon du sprint 15
+  appliquée au juridique — une promesse figée dans un fichier ne se dément
+  jamais toute seule. Le test refuse aussi le retour de la phrase sans réserve.
+
+### 2. ⚠️ Un véhicule sur lequel on ne sait rien était MIEUX noté
+Sans famille moteur, `catalogue_vide` passait à `true`, l'axe
+`risques_mecaniques` sortait du score — et comme il **pèse ×2**, le verdict
+MONTAIT. Mesuré sur la même Classe C 220 d : **75 au lieu de 71**.
+- L'axe vaut maintenant **10/20 et il COMPTE** (`famille_identifiee` dans
+  `_shared/bareme.ts`), et le verdict **plafonne à 69** avec le motif « moteur
+  non identifié : pannes connues non vérifiées ». Le plafond ne tombe pas dans
+  le conditionnel de garantie : une garantie ne nous apprend pas quel moteur
+  c'est. **`BAREME_VERSION` → 11.6**, champ **optionnel** pour qu'aucun ancien
+  appelant ne bouge.
+- ⚠️ **LIMITE ÉPINGLÉE, en attente d'arbitrage.** 10/20 est au-dessus de la
+  note d'un moteur dont une source documente un défaut **majeur** (9), une
+  **casse** (5) ou un défaut de **sécurité** (4). Sur 6 profils de test,
+  l'ignorance paie encore **3 fois** : **+2**, **+10** et **+16** points. Les
+  deux consignes — « jamais mieux noté » et « 10/20 neutre » — sont
+  inconciliables en l'état : descendre l'inconnu plus bas reviendrait à
+  **affirmer un défaut qu'on n'a pas trouvé**, ce que le projet refuse depuis
+  le sprint 2. Ce qui est garanti sans réserve : **le verdict n'est jamais
+  vert**. Le résidu est épinglé à 3 dans `tests/bareme.test.mjs` : s'il bouge,
+  le test échoue et force une décision. On n'enfouit pas une limite connue
+  derrière un contrôle qui ne mord pas.
+
+### La cause de la dérive : `_shared/familleMoteur.ts`
+Le code famille était déduit par le MODÈLE, à partir d'exemples qui citent
+l'OM651 (2008-2019) et **pas** l'OM654 — et rien côté serveur ne complétait sa
+réponse. D'où 3 réponses sur 4.
+- Résolution **déterministe** depuis la table des 48 familles, figée en
+  `_shared/famillesMoteur.json` par `scripts/generer-familles-moteur.mjs`
+  (`--verifier` chaîné au prebuild et à l'éval) : **on fige le résultat, on ne
+  réécrit pas la logique**.
+- ⚠️ **Il ne second-devine JAMAIS le modèle** : un code proposé et attesté pour
+  cette marque est conservé tel quel. C'était l'erreur du premier filet du
+  sprint 13, qui avait attribué à cette même Mercedes des défauts d'OM651, de
+  V6 essence et de caisses W203. Il ne **complète** qu'une réponse manquante —
+  les quatre cas de référence sont donc intacts par construction, ce qu'un test
+  vérifie explicitement.
+- ⚠️ **La table s'arrête à 2022** parce que c'est la date du relevé du sprint 6,
+  pas une fin de production : aucune plage ne couvre 2025. Règle posée : une
+  année postérieure à **TOUTES** les plages retient la famille **la plus
+  récente** du modèle, faute de successeur attesté. Elle ne s'applique jamais
+  *avant* la première année attestée, et jamais sur une ambiguïté réelle (une
+  Classe C de 2018 reste `null` : l'OM651 et l'OM654 se chevauchent vraiment).
+- 500 résolutions du même cas, un seul résultat.
+
+### 3. `intake` n'était pas un point d'entrée authentifié
+Le secret de proxy ne décidait que de la **provenance de l'IP**. N'importe qui
+pouvait obtenir une analyse avec la clé anon — publiée dans le bundle du site —
+en contournant la porte Turnstile (5 analyses au lieu de 2 avant captcha).
+- Le secret est **exigé**, et **avant la lecture du corps**. Vérifié avant de
+  l'imposer : l'extension (`extension/background.js`) ET l'application
+  (`src/lib/mobile.js`) passent toutes deux par `www.inspexo.io/api/intake`,
+  qui porte le secret. Aucun client légitime n'appelle la fonction en direct.
+- `tests/points-d-entree.test.mjs` balaie les **50 fonctions** et exige que le
+  justificatif précède la lecture du corps. ⚠️ Les **deux webhooks Stripe** sont
+  traités à part, et ce n'est pas une exemption de complaisance : vérifier une
+  signature **exige** le corps brut. Leur invariant propre est contrôlé —
+  **aucun effet de bord avant la signature**.
+
+### 4. Neuf vérifications de fiabilité payées pour rien
+Les 9 lignes de `verifications` pointaient **toutes** vers des analyses
+`is_eval`, que `get_fiabilite` exclut par jointure. La fonction `verification`
+refuse désormais ces analyses par un **409**, avant d'extraire les affirmations
+et avant le premier appel au modèle.
+- ⚠️ Le garde-fou est dans la **FONCTION**, pas dans un script : un garde-fou
+  qui vit dans un script se contourne en n'utilisant pas le script.
+- ⚠️ Et **pas** de pré-contrôle dans la campagne : la réponse de `score` ne
+  porte pas `is_eval` (vérifié). Un `if (json.result?.is_eval)` n'aurait jamais
+  été vrai — **un contrôle qui ne se déclenche jamais ressemble à un contrôle
+  qui passe**. Les scripts traitent le refus réel.
+
+### 5. Les mineurs
+- `handle_new_user` et `rls_auto_enable` n'étaient plus exécutables par `anon`
+  (migration `20261122120000`). Non exploitables — ce sont des fonctions de
+  trigger, qui lèvent hors contexte — mais c'est la même défense en profondeur
+  que la migration `20261113120000`, qui les avait **laissées** parce qu'elles
+  n'appartiennent à aucune migration : créées depuis le **dashboard** aux
+  premières sessions (règle 0 ter). PostgreSQL ne vérifie pas EXECUTE au
+  déclenchement d'un trigger : révoquer ne casse rien.
+- `visio_disponible` **supprimée** : ouverte à `anon`, appelée par personne, et
+  elle rendait publiquement l'état de notre réseau d'inspecteurs. Supprimée
+  plutôt que seulement révoquée — du code mort qui donne l'illusion d'une
+  fonctionnalité.
+- **Pied de page à 44 px** (il était à 33). La navbar était déjà à 52 px :
+  c'est pourquoi le contrôle du sprint 5 ne l'avait pas vu. ⚠️ Mon premier
+  relevé annonçait 22 écarts sur l'accueil — **100 % de faux positifs**, je
+  mesurais aussi les liens à l'intérieur des phrases.
+- `/cibles` n'émet plus une requête dont le refus est certain : sans session le
+  401 est garanti et le navigateur le journalise en erreur. ⚠️ Un `catch` ne la
+  supprime pas — elle vient de la couche réseau.
+- Secret orphelin `STRIPE_WEBHOOK_SECRET` supprimé (18 secrets restants).
+
+### 6. 🔒 Webhooks Stripe live — BLOQUÉ sur la clé
+⚠️ **La clé live n'est pas récupérable depuis le poste** : l'API de gestion
+Supabase ne rend qu'un **condensé** de ses secrets (64 caractères, préfixe
+`e83aea1…`), pas leur valeur. La consigne « avec la clé live déjà posée, crée
+les endpoints » n'est donc pas exécutable en l'état.
+- `ops?webhooks=1` (lecture seule, secret d'éval) a été ajouté pour poser la
+  question depuis le poste — la clé ne vivant que dans les secrets de la
+  fonction. **Ce qu'il apprend change le plan** : un endpoint **LIVE** subsiste
+  vers **`stripe-webhook`**, fonction **retirée en 410** au sprint 8. Stripe lui
+  livre `payment_intent.succeeded`, `payment_intent.payment_failed` et
+  `account.updated`, qui échouent tous. Et **aucun** endpoint n'existe pour
+  `pass-webhook` ni `inspection-webhook`.
+- `scripts/webhooks-stripe-live.mjs` fait **exactement** ce qui a été demandé :
+  les deux endpoints avec les événements que le **code** traite, les deux
+  secrets posés nommément. **Ni `MEDIATEUR_NOM`, ni `PASS_MODE`, ni la clé** —
+  contrairement à `configurer-stripe-pass.mjs`, qui poserait `MEDIATEUR_NOM`
+  s'il le trouvait, c'est-à-dire **ouvrirait la vente**.
+- Garde-fous : refus si la clé n'est pas `sk_live_` (une clé de test poserait
+  des secrets de test sous les noms de la production, qui ne valideraient
+  rien) ; un endpoint déjà présent n'est **jamais** supprimé de notre
+  initiative, Stripe ne redonnant pas son secret ; l'orphelin n'est supprimé
+  que sur `--supprimer-orphelin`.
+- Pour voir l'état sans clé : `node scripts/webhooks-stripe-live.mjs --verifier`.
+
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |
