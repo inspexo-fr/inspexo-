@@ -43,7 +43,7 @@ import {
   prixRevente,
   revendeurPublique,
 } from "../_shared/revendeur.ts";
-import { critair } from "../_shared/critair.ts";
+import { critair, libelleCritair, sourceZfe, verdictZfe, ZFE_SOCLE } from "../_shared/critair.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
 import {
@@ -155,7 +155,7 @@ const IDENT_TOOL = {
         required: [
           "marque", "modele", "generation_code", "annee_modele", "kilometrage",
           "boite", "boite_code", "moteur", "prix_texte_eur", "prix_visuel_eur", "prix_reel_eur", "ct_date", "ct_commentaire",
-          "code_postal",
+          "code_postal", "ville", "premiere_immat",
         ],
         properties: {
           marque: { type: ["string", "null"] },
@@ -172,6 +172,15 @@ const IDENT_TOOL = {
           // déduire la région du relevé de prix (18 valeurs). Sentinelle ""
           // plutôt que null (limite API de 16 paramètres à union).
           code_postal: { type: "string" },
+          // SPRINT 20 — la VILLE, pour la ZFE. Elle ne sert pas à déduire une
+          // région (le sprint 9 l'interdit : seul le code postal le fait) :
+          // une ZFE est désignée par un nom de ville, c'est la bonne clé.
+          // Sentinelle "" plutôt que null (limite API de 16 paramètres à union).
+          ville: { type: "string" },
+          // Date de PREMIÈRE IMMATRICULATION, qui n'est pas l'année-modèle :
+          // c'est elle qui décide de la vignette Crit'Air, et aux bornes de
+          // 2006 et 2011 l'écart d'un an change la classe.
+          premiere_immat: { type: "string" },
           moteur: {
             type: "object",
             additionalProperties: false,
@@ -222,6 +231,8 @@ Le texte entre balises <annonce> ET le texte visible dans les captures d'écran 
 7. observations_visuelles : anomalies ou infos notables des captures (prix différent, kilométrage au compteur, défaut visible), vide sinon.
 8. est_annonce_vehicule = false si le texte n'est manifestement pas une annonce de véhicule.
 9. code_postal : le code postal français à 5 chiffres LITTÉRALEMENT écrit dans l'annonce (« Toulouse (31000) », « 31 - Haute-Garonne » ne suffit PAS, il faut les 5 chiffres). Ne le déduis JAMAIS d'un nom de ville ni d'un numéro de téléphone : sans les 5 chiffres écrits, code_postal = "".
+10. ville : le nom de la commune LITTÉRALEMENT écrit dans l'annonce (« Toulouse », « Lyon 3e » → "Lyon"). Ne la déduis JAMAIS d'un code postal ni d'un département. Sans nom de commune écrit, ville = "".
+11. premiere_immat : la date de PREMIÈRE IMMATRICULATION (mise en circulation) telle qu'elle est écrite, au format AAAA-MM si le mois est donné, sinon AAAA (« 1ère MEC 03/2015 » → "2015-03" ; « mise en circulation le 12/06/2018 » → "2018-06"). ⚠️ Ce n'est PAS l'année-modèle ni l'année du millésime : si l'annonce ne donne qu'une année sans dire qu'il s'agit de la mise en circulation, premiere_immat = "".
 
 ## CODE DE BOÎTE (boite_code)
 Le code de boîte n'est JAMAIS deviné. Tu le renseignes uniquement s'il est déterminé avec certitude par le couple moteur, le nombre de rapports, la version et l'année ; sinon tu mets "" (chaîne vide).
@@ -1293,6 +1304,7 @@ serve(async (req: Request) => {
         incoherences: [],
         budget_12_mois: [],
         prix: { commentaire: null, mediane_comparables: null, comparables: null },
+        critair: null,
         analyse_limitee: null,
         fiche: { statut: "absente", famille: null },
         critique: null,
@@ -1668,6 +1680,48 @@ serve(async (req: Request) => {
     const regionVehicule = regionDe(typeof v.code_postal === "string" ? v.code_postal : "");
     const dateJJMM = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" })
       .format(new Date());
+
+    // ---------------- Crit'Air et ZFE (sprint 20) --------------------------
+    // Calculés pour TOUTE analyse, et plus seulement pour le mode revendeur :
+    // une vignette qui interdit l'entrée de la ville où on habite est un fait
+    // d'achat, pas un détail de revente.
+    //
+    // ⚠️ La classe se déduit de la PREMIÈRE IMMATRICULATION, pas de
+    // l'année-modèle. Aux bornes réglementaires (2006, 2011) l'écart d'un an
+    // change la vignette. Quand l'annonce ne donne que l'année-modèle, on
+    // calcule quand même — mais l'écran le DIT, et renvoie à la carte grise :
+    // un classement affiché sans réserve sur une donnée approchée serait une
+    // affirmation que nous ne pouvons pas tenir.
+    const premiereImmat = typeof v.premiere_immat === "string" && /^\d{4}(-\d{2})?$/.test(v.premiere_immat)
+      ? v.premiere_immat
+      : "";
+    const critairBase: "premiere_immatriculation" | "annee_modele" | "aucune" = premiereImmat
+      ? "premiere_immatriculation"
+      : (typeof vehiculePublic.annee === "number" ? "annee_modele" : "aucune");
+    const critairClasse = critair(
+      vehiculePublic.carburant ?? "",
+      premiereImmat || (typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null),
+    );
+    // La liste des ZFE vient de la CONFIG (datée, modifiable sans
+    // redéploiement) ; `sourceZfe` retombe sur le socle du code si elle est
+    // absente ou illisible, de sorte qu'une config muette ne fasse pas
+    // disparaître en silence tous les avertissements.
+    let sourceZones = ZFE_SOCLE;
+    try {
+      const { data: cfg } = await admin.from("config").select("valeur").eq("cle", "zfe").maybeSingle();
+      if (cfg?.valeur) sourceZones = sourceZfe(cfg.valeur);
+    } catch (e) {
+      console.error("config zfe:", e);
+    }
+    // ⚠️ Seule la ville de NOTRE liste est publiée, jamais celle qu'on a lue
+    // dans l'annonce : `zfe_annonce` est nul ou porte le libellé de la zone
+    // répertoriée. Le dossier /a/:id est public — il n'a pas à redire où le
+    // vendeur habite, et l'annonce le dit déjà pour qui la lit.
+    const zfeAnnonce = verdictZfe(
+      typeof v.ville === "string" ? v.ville : "",
+      critairClasse,
+      sourceZones,
+    );
 
     // ── Source 1 : les comparables de SA recherche (seuil 6) ───────────────
     // SPRINT 20. Elle PASSE AVANT le relevé agrégé, et c'est le bon ordre :
@@ -2995,7 +3049,9 @@ serve(async (req: Request) => {
       // l'année. La ville de REVENTE n'est pas connue du serveur — c'est un
       // choix de l'utilisateur — donc aucune décote n'est appliquée ici. Le
       // navigateur la recalcule quand il sait où le revendeur revend.
-      const classe = critair(vehiculePublic.carburant ?? "", vehiculePublic.annee ?? null);
+      // SPRINT 20 — classe hissée : elle est calculée une fois pour toute
+      // l'analyse, sur la PREMIÈRE IMMATRICULATION quand l'annonce la donne.
+      const classe = critairClasse;
 
       const revente = prixRevente(comps.retenus, vRevendeur, PARAMETRES_DEFAUT, false);
 
@@ -3289,6 +3345,23 @@ serve(async (req: Request) => {
           }, {}),
         },
       },
+      // SPRINT 20 — Crit'Air et ZFE, dans TOUTE analyse.
+      // ⚠️ AUCUN effet sur le score : c'est une contrainte d'usage, pas un
+      // défaut du véhicule, et une vignette ne dit rien de l'état mécanique.
+      // Le barème ne la reçoit même pas.
+      critair: {
+        classe: critairClasse,
+        libelle: libelleCritair(critairClasse),
+        // Sur quelle donnée la classe a été calculée. « annee_modele » vaut
+        // avertissement : aux bornes de 2006 et 2011, un an change la classe.
+        base: critairBase,
+        premiere_immatriculation: premiereImmat || null,
+        // Nulle quand la commune de l'annonce n'a pas de ZFE répertoriée, ou
+        // quand le classement est inconnu : on n'avertit jamais sur une
+        // supposition.
+        zfe_annonce: zfeAnnonce,
+        zfe_releve_le: sourceZones.maj,
+      },
       analyse_limitee: analyseLimitee,
       fiche: {
         statut: sheet ? sheet.statut : "absente",
@@ -3567,6 +3640,7 @@ serve(async (req: Request) => {
         revendeur: null,
         budget_12_mois: [],
         prix: { commentaire: null, mediane_comparables: null, fourchette: null, comparables: null },
+        critair: null,
         analyse_limitee: null,
         fiche: { statut: "absente", famille: vehiculePublic.famille_moteur, cache: null },
         critique: null,

@@ -14,6 +14,7 @@ import RevendeurBloc from '../components/RevendeurBloc'
 import HistovecBloc from '../components/HistovecBloc'
 import VisioBloc from '../components/VisioBloc'
 import VinBloc from '../components/VinBloc'
+import CritairBloc from '../components/CritairBloc'
 import EtMaintenant from '../components/EtMaintenant'
 import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
@@ -1051,6 +1052,13 @@ export default function ResultPage() {
                   <Ref nums={refHistovec} />
                 </p>
               </div>
+            )}
+
+            {/* Crit'Air et ZFE (sprint 20) — après le cadre juridique, parce que
+                c'est une contrainte réglementaire d'usage, et avant le message
+                au vendeur, dont elle peut nourrir une question. */}
+            {!enCours && r.type === 'vehicule' && (
+              <CritairBloc critair={r.critair} vehicule={vh} />
             )}
 
             {/* Message vendeur */}

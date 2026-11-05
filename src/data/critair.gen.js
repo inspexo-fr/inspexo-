@@ -106,17 +106,52 @@ export const ZFE = [
     { ville: "Lille", interdits: ["non_classe"], source: "https://www.lillemetropole.fr/zfe" },
 ];
 const sansAccent = (s) => String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+/** Le SOCLE : la liste du code. Elle n'est pas un doublon de la config, c'est
+ *  son filet. Si la config est absente, vide ou illisible, c'est elle qui
+ *  sert — sans quoi une config muette ferait disparaître TOUS les
+ *  avertissements ZFE sans produire la moindre erreur. */
+export const ZFE_SOCLE = { zones: ZFE, maj: ZFE_RELEVE_LE };
+const CLASSES = ["0", "1", "2", "3", "4", "5", "non_classe"];
+/** La liste des ZFE telle que la config la donne, VALIDÉE zone par zone.
+ *
+ *  ⚠️ Une zone malformée est ÉCARTÉE, pas corrigée, et elle n'emporte pas les
+ *  autres : un seuil mal saisi ne doit pas faire dire à un acheteur que sa
+ *  future voiture est interdite là où elle ne l'est pas, et il ne doit pas
+ *  non plus effacer les treize zones justes. Si plus rien n'est valide, on
+ *  retombe sur le socle du code. */
+export function sourceZfe(config) {
+    // deno-lint-ignore no-explicit-any
+    const c = config;
+    const brut = Array.isArray(c?.zones) ? c.zones : [];
+    const zones = [];
+    for (const z of brut) {
+        const ville = typeof z?.ville === "string" ? z.ville.trim() : "";
+        const source = typeof z?.source === "string" ? z.source.trim() : "";
+        const interdits = Array.isArray(z?.interdits)
+            ? z.interdits.filter((x) => typeof x === "string" && CLASSES.includes(x))
+            : [];
+        if (!ville || !/^https?:\/\//i.test(source) || interdits.length === 0)
+            continue;
+        if (interdits.length !== z.interdits.length)
+            continue; // une classe inconnue = saisie douteuse
+        zones.push({ ville, interdits, source });
+    }
+    const maj = typeof c?.maj === "string" && /^\d{4}-\d{2}-\d{2}$/.test(c.maj) ? c.maj : "";
+    if (zones.length === 0 || !maj)
+        return ZFE_SOCLE;
+    return { zones, maj };
+}
 /** Le véhicule est-il interdit dans la ZFE de cette ville ?
  *
  *  Rend `null` si la ville n'a pas de ZFE répertoriée, ou si le classement
  *  est inconnu : on n'avertit JAMAIS sur une supposition. */
-export function verdictZfe(ville, classe) {
+export function verdictZfe(ville, classe, source = ZFE_SOCLE) {
     if (classe === "inconnu")
         return null;
     const v = sansAccent(ville);
     if (!v)
         return null;
-    const z = ZFE.find((x) => sansAccent(x.ville) === v);
+    const z = source.zones.find((x) => sansAccent(x.ville) === v);
     if (!z)
         return null;
     return {
@@ -124,7 +159,7 @@ export function verdictZfe(ville, classe) {
         critair: classe,
         interdit: z.interdits.includes(classe),
         source: z.source,
-        releve_le: ZFE_RELEVE_LE,
+        releve_le: source.maj,
     };
 }
 /** Libellé affichable d'une vignette. */
