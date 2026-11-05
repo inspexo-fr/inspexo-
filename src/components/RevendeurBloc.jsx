@@ -161,19 +161,33 @@ export default function RevendeurBloc({ analyse, analysisId }) {
     return messageVendeurRevendeur(args, offre, analyse?.vehicule?.prix_affiche ?? null)
   }, [masque, offre, lignes, bloc, analyse])
 
-  // La recherche à sauvegarder : le plafond de prix est le prix d achat
-  // maximum, arrondi à la centaine SUPÉRIEURE — un plafond arrondi vers le bas
-  // cacherait une annonce qui se négocie de cinquante euros.
+  // ⚠️ LA RECHERCHE PORTE SUR LE MODÈLE, PAS SUR CETTE VOITURE-CI. Première
+  // version : le plafond reprenait le prix d'achat maximum de l'annonce
+  // ouverte, travaux compris — un embrayage et une courroie faisaient tomber
+  // le plafond à 300 €, et le revendeur aurait sauvegardé une recherche
+  // calibrée sur une épave. Le plafond est donc celui d'un exemplaire SANS
+  // défaut connu : c'est ce qu'on cherche quand on cherche.
+  const achatType = useMemo(() => {
+    if (masque || !revente) return null
+    const age = analyse?.vehicule?.annee ? new Date().getFullYear() - analyse.vehicule.annee : null
+    return prixAchatMax(revente.valeur, [], params, {
+      ct_a_refaire_eur: null,
+      carte_grise_eur: carte.connu ? carte.montant_eur : null,
+      region_connue: carte.connu,
+      age_vehicule_ans: age,
+    })
+  }, [masque, revente, params, carte, analyse])
+
   const recherche = useMemo(() => {
-    if (masque || !achat || !bloc?.segment) return null
+    if (masque || !achatType || !bloc?.segment) return null
     return rechercheSauvegardee({
       marque: bloc.segment.marque,
       modele: bloc.segment.modele,
       energie: bloc.segment.energie,
-      annee_mediane: analyse?.vehicule?.annee ?? null,
-      km_median: analyse?.vehicule?.kilometrage ?? null,
-    }, achat.valeur)
-  }, [masque, achat, bloc, analyse])
+      annee_moyenne: analyse?.vehicule?.annee ?? null,
+      km_moyen: analyse?.vehicule?.kilometrage ?? null,
+    }, achatType.valeur)
+  }, [masque, achatType, bloc, analyse])
 
   if (!bloc) return null
 
@@ -455,7 +469,7 @@ export default function RevendeurBloc({ analyse, analysisId }) {
               Le prix d'achat maximum devient un plafond de recherche : c'est
               ce qui transforme une analyse en méthode. Réservé au Pass, comme
               le reste du détail. */}
-          {!masque && achat && recherche && (
+          {!masque && achatType && recherche && (
             <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid var(--rule)' }}>
               <p style={etiquette}>Recherche à sauvegarder sur Leboncoin</p>
               <div style={{ marginTop: 8 }}>
@@ -491,11 +505,15 @@ export default function RevendeurBloc({ analyse, analysisId }) {
                   </a>
                 )}
               </div>
-              {!achat.possible && (
+              <p className="mono c-graphite" style={{ fontSize: 10, lineHeight: 1.6, marginTop: 6 }}>
+                Ce plafond vaut pour un exemplaire SANS défaut connu : c'est ce qu'on cherche
+                quand on cherche. Les travaux d'une annonce précise se retranchent ensuite,
+                ci-dessus.
+              </p>
+              {!achatType.possible && (
                 <p className="mono" style={{ fontSize: 11, lineHeight: 1.7, marginTop: 8, color: 'var(--ambre)' }}>
-                  À ces conditions le plafond tombe à {euros(recherche.prix_max)} : autant dire que
-                  ce modèle, dans cet état, n'est pas une cible. Corrigez un coût ou votre marge
-                  pour voir ce qu'il faudrait.
+                  Même sans défaut, votre marge visée n'est pas atteignable sur ce modèle aux prix
+                  que vous avez relevés. Baissez la marge, ou cherchez ailleurs.
                 </p>
               )}
             </div>

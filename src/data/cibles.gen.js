@@ -75,7 +75,7 @@ export function cibleDepuisQuantiles(seg, p, opts = {}) {
         return null;
     const revente = Math.round(p50 * (1 - p.marge_negociation_pct / 100));
     const anneeCourante = opts.annee_courante ?? new Date().getUTCFullYear();
-    const age = seg.annee_mediane ? anneeCourante - seg.annee_mediane : 0;
+    const age = seg.annee_moyenne ? anneeCourante - seg.annee_moyenne : 0;
     const forfaitAge = age > 10 ? p.imprevus_vehicule_ancien_eur : 0;
     const carteGrise = opts.carte_grise_eur != null && opts.carte_grise_eur >= 0
         ? Math.round(opts.carte_grise_eur)
@@ -92,8 +92,8 @@ export function cibleDepuisQuantiles(seg, p, opts = {}) {
         n: seg.n,
         p25,
         p50,
-        annee_mediane: seg.annee_mediane ?? null,
-        km_median: seg.km_median ?? null,
+        annee_moyenne: seg.annee_moyenne ?? null,
+        km_moyen: seg.km_moyen ?? null,
         revente,
         achat_max: achatMax,
         marge_estimee: margeEstimee,
@@ -151,25 +151,29 @@ export const plafondRecherche = (achatMax) => Math.max(0, Math.ceil(achatMax / 1
 export function rechercheSauvegardee(seg, achatMax) {
     const prixMax = plafondRecherche(achatMax);
     const filtres = [];
-    const titre = [seg.marque, seg.modele].filter(Boolean).join(" ").trim();
+    // Les clés de segment sont normalisées en minuscules (« renault clio ») :
+    // à l écran, on remet une majuscule par mot. C est un libellé, pas une clé.
+    const capit = (t) => t.replace(/(^|[\s-])([a-zà-ÿ])/g, (_, a, b) => a + b.toUpperCase());
+    const nombre = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
+    const titre = capit([seg.marque, seg.modele].filter(Boolean).join(" ").trim());
     if (titre)
         filtres.push({ champ: "Modèle", valeur: titre });
     const e = normEnergie(seg.energie);
     if (e)
         filtres.push({ champ: "Carburant", valeur: ENERGIES_LBC[e] });
-    if (seg.annee_mediane) {
+    if (seg.annee_moyenne) {
         filtres.push({
             champ: "Année",
-            valeur: `de ${seg.annee_mediane - ECART_ANNEES_CIBLE} à ${seg.annee_mediane + ECART_ANNEES_CIBLE}`,
+            valeur: `de ${seg.annee_moyenne - ECART_ANNEES_CIBLE} à ${seg.annee_moyenne + ECART_ANNEES_CIBLE}`,
         });
     }
-    if (seg.km_median != null) {
+    if (seg.km_moyen != null) {
         filtres.push({
             champ: "Kilométrage",
-            valeur: `jusqu'à ${seg.km_median + ECART_KM_CIBLE} km`,
+            valeur: `jusqu'à ${nombre(seg.km_moyen + ECART_KM_CIBLE)} km`,
         });
     }
-    filtres.push({ champ: "Prix maximum", valeur: `${prixMax} €` });
+    filtres.push({ champ: "Prix maximum", valeur: `${nombre(prixMax)} €` });
     const url = titre
         ? `https://www.leboncoin.fr/recherche?text=${encodeURIComponent([titre, ENERGIES_LBC[e] ?? ""].filter(Boolean).join(" "))}`
         : null;

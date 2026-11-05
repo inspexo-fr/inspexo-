@@ -60,7 +60,7 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
   const seg = {
     marque: 'renault', modele: 'clio', energie: 'diesel', n,
     p25: quantileHisto(map, n, 0.25), p50: quantileHisto(map, n, 0.5),
-    annee_mediane: 2004, km_median: 180000, maj: '2026-11-05',
+    annee_moyenne: 2004, km_moyen: 180000, maj: '2026-11-05',
   }
   const c = cibleDepuisQuantiles(seg, P, { carte_grise_eur: 311, annee_courante: 2026 })
   ok(c !== null, 'sept relevés : une cible sort')
@@ -83,14 +83,14 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
   eq(sansCg.achat_max, c.achat_max + 311, 'sans région, la carte grise ne pèse pas')
 
   // Un véhicule récent n’a pas le forfait « plus de 10 ans ».
-  const recent = cibleDepuisQuantiles({ ...seg, annee_mediane: 2022 }, P, { annee_courante: 2026 })
+  const recent = cibleDepuisQuantiles({ ...seg, annee_moyenne: 2022 }, P, { annee_courante: 2026 })
   eq(recent.achat_max, recent.revente - 500, 'moins de 10 ans : ni forfait ni carte grise inconnue')
 }
 
 // ── Tri : où il y a de l’argent, et ce qui n’en a pas ─────────────────────
 {
   const faire = (modele, p25, p50) => cibleDepuisQuantiles(
-    { marque: 'x', modele, energie: 'diesel', n: 8, p25, p50, annee_mediane: 2015, km_median: 120000 },
+    { marque: 'x', modele, energie: 'diesel', n: 8, p25, p50, annee_moyenne: 2015, km_moyen: 120000 },
     P, { annee_courante: 2026 },
   )
   const liste = [faire('a', 5000, 5400), faire('b', 4000, 6000), faire('c', 7000, 7100)]
@@ -105,7 +105,7 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
 // ── La recherche à sauvegarder ─────────────────────────────────────────────
 {
   const r = rechercheSauvegardee(
-    { marque: 'Renault', modele: 'Clio', energie: 'Diesel', annee_mediane: 2004, km_median: 180000 },
+    { marque: 'Renault', modele: 'Clio', energie: 'Diesel', annee_moyenne: 2004, km_moyen: 180000 },
     2284,
   )
   eq(r.prix_max, 2300, 'plafond arrondi à la centaine SUPÉRIEURE')
@@ -114,13 +114,15 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
     ok(champs.includes(c), `le filtre « ${c} » est donné en clair`)
   }
   eq(r.filtres.find((f) => f.champ === 'Année').valeur, 'de 2002 à 2006', 'années ± 2 autour de la médiane')
-  eq(r.filtres.find((f) => f.champ === 'Kilométrage').valeur, `jusqu'à ${180000 + ECART_KM_CIBLE} km`,
+  eq(r.filtres.find((f) => f.champ === 'Kilométrage').valeur, `jusqu'à 220 000 km`,
     'kilométrage : la médiane plus la fenêtre de comparabilité')
 
   // ⚠️ LE LIEN NE PORTE QUE LA RECHERCHE TEXTE. On ne devine pas les noms de
   // paramètres de Leboncoin, et on ne l’interroge jamais pour les vérifier :
   // un lien qui appliquerait un mauvais filtre de prix écarterait en silence
   // les annonces qui comptent, et l’utilisateur nous croirait.
+  eq(r.filtres.find((f) => f.champ === 'Modèle').valeur, 'Renault Clio',
+    'le libellé est capitalisé : la clé de segment est en minuscules, pas le titre')
   ok(r.url.startsWith('https://www.leboncoin.fr/recherche?text='), 'le lien est une recherche texte')
   for (const interdit of ['price', 'mileage', 'regdate', 'fuel', '2300', '180000']) {
     ok(!r.url.includes(interdit), `le lien ne porte PAS de paramètre « ${interdit} »`)
@@ -189,8 +191,8 @@ const P = { marge_negociation_pct: 8, marge_voulue_eur: 500, imprevus_vehicule_a
     const seg = {
       marque: 'm', modele: 'x', energie: 'diesel', n: effectifHistogramme(h),
       p25: entre(500, 20000), p50: entre(500, 40000),
-      annee_mediane: alea() < 0.2 ? null : entre(1998, 2025),
-      km_median: alea() < 0.2 ? null : entre(10000, 300000),
+      annee_moyenne: alea() < 0.2 ? null : entre(1998, 2025),
+      km_moyen: alea() < 0.2 ? null : entre(10000, 300000),
     }
     const par = { marge_negociation_pct: entre(0, 20), marge_voulue_eur: entre(0, 3000), imprevus_vehicule_ancien_eur: entre(0, 400) }
     const opts = { carte_grise_eur: alea() < 0.5 ? entre(50, 900) : null, annee_courante: 2026 }

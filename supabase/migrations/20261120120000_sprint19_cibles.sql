@@ -25,8 +25,12 @@ create table if not exists public.revendeur_cibles (
   -- Histogramme {tranche_de_250_euros: effectif}. Jamais de prix individuel.
   prix_tranches jsonb not null default '{}'::jsonb,
   effectif integer not null default 0,
-  annee_mediane integer,
-  km_median integer,
+  -- ⚠️ SOMME et COMPTE, pas une médiane : une médiane ne se fusionne pas
+  -- d un lot à l autre, une somme si. On en rend la MOYENNE.
+  annee_somme integer not null default 0,
+  annee_n integer not null default 0,
+  km_somme bigint not null default 0,
+  km_n integer not null default 0,
   maj_le timestamptz not null default now(),
   primary key (user_id, marque, modele, energie)
 );
@@ -63,8 +67,10 @@ declare
   v_prix numeric[];
   v_histo jsonb := '{}'::jsonb;
   v_n integer := 0;
-  v_annee integer;
-  v_km integer;
+  v_annee_somme integer;
+  v_annee_n integer;
+  v_km_somme integer;
+  v_km_n integer;
 begin
   if v_uid is null then
     raise exception 'connexion requise';
@@ -111,19 +117,26 @@ begin
     group by 1
   ) h;
 
-  select (percentile_cont(0.5) within group (order by (e ->> 'annee')::numeric))::int
-    into v_annee
+  -- ⚠️ SOMME ET COMPTE, PAS UNE MÉDIANE. Première version : on stockait la
+  -- médiane du LOT, et chaque nouveau versement l'écrasait — le carnet
+  -- décrivait donc le dernier relevé, pas l'ensemble. Une médiane ne se
+  -- fusionne pas ; une somme, si. On conserve donc la somme et le compte, et
+  -- on en rend la MOYENNE, qui est exactement calculable d'un lot à l'autre.
+  select coalesce(sum((e ->> 'annee')::numeric), 0)::int, count(*)::int
+    into v_annee_somme, v_annee_n
   from jsonb_array_elements(coalesce(v_rev -> 'retenus', '[]'::jsonb)) e
   where (e ->> 'annee') ~ '^[0-9]+$';
 
-  select (percentile_cont(0.5) within group (order by (e ->> 'km')::numeric))::int
-    into v_km
+  select coalesce(sum((e ->> 'km')::numeric), 0)::int, count(*)::int
+    into v_km_somme, v_km_n
   from jsonb_array_elements(coalesce(v_rev -> 'retenus', '[]'::jsonb)) e
   where (e ->> 'km') ~ '^[0-9]+$';
 
   insert into public.revendeur_cibles as c
-    (user_id, marque, modele, energie, prix_tranches, effectif, annee_mediane, km_median, maj_le)
-  values (v_uid, v_marque, v_modele, v_energie, v_histo, v_n, v_annee, v_km, now())
+    (user_id, marque, modele, energie, prix_tranches, effectif,
+     annee_somme, annee_n, km_somme, km_n, maj_le)
+  values (v_uid, v_marque, v_modele, v_energie, v_histo, v_n,
+          v_annee_somme, v_annee_n, v_km_somme, v_km_n, now())
   on conflict (user_id, marque, modele, energie) do update
     set prix_tranches = (
           -- Fusion par SOMME, miroir de `fusionnerHistogrammes` côté TS.
@@ -139,10 +152,15 @@ begin
           ) f
         ),
         effectif = c.effectif + excluded.effectif,
-        annee_mediane = coalesce(excluded.annee_mediane, c.annee_mediane),
-        km_median = coalesce(excluded.km_median, c.km_median),
+        annee_somme = c.annee_somme + excluded.annee_somme,
+        annee_n = c.annee_n + excluded.annee_n,
+        km_somme = c.km_somme + excluded.km_somme,
+        km_n = c.km_n + excluded.km_n,
         maj_le = now()
-  returning jsonb_build_object('enregistre', true, 'effectif', c.effectif + v_n) into v_rev;
+  -- ⚠️ RETURNING voit la ligne APRÈS l insertion ou la mise à jour :
+  -- `c.effectif + v_n` comptait donc le lot deux fois. L essai local a rendu
+  -- 8 là où il y avait 4 relevés.
+  returning jsonb_build_object('enregistre', true, 'effectif', c.effectif) into v_rev;
 
   return coalesce(v_rev, jsonb_build_object('enregistre', true, 'effectif', v_n));
 end;
@@ -184,7 +202,8 @@ begin
     select jsonb_agg(jsonb_build_object(
              'marque', marque, 'modele', modele, 'energie', energie,
              'prix_tranches', prix_tranches, 'effectif', effectif,
-             'annee_mediane', annee_mediane, 'km_median', km_median,
+             'annee_moyenne', case when annee_n > 0 then round(annee_somme::numeric / annee_n)::int end,
+             'km_moyen', case when km_n > 0 then round(km_somme::numeric / km_n)::int end,
              'maj', to_char(maj_le, 'YYYY-MM-DD'))
            order by effectif desc)
     from public.revendeur_cibles

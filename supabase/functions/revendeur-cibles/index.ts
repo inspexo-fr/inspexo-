@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
 
   const { data: lignes, error } = await admin
     .from("revendeur_cibles")
-    .select("marque, modele, energie, prix_tranches, effectif, annee_mediane, km_median, maj_le")
+    .select("marque, modele, energie, prix_tranches, effectif, annee_moyenne, km_moyen, maj_le")
     .eq("user_id", userId);
   if (error) {
     console.error("revendeur_cibles select:", error);
@@ -111,8 +111,8 @@ Deno.serve(async (req) => {
       n: total,
       p25: quantileHisto(histo, total, 0.25),
       p50: quantileHisto(histo, total, 0.5),
-      annee_mediane: l.annee_mediane,
-      km_median: l.km_median,
+      annee_moyenne: l.annee_moyenne,
+      km_moyen: l.km_moyen,
       maj: typeof l.maj_le === "string" ? l.maj_le.slice(0, 10) : null,
     }, params, { carte_grise_eur: cg.connu ? cg.montant_eur : null });
     if (!cible) continue;
@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
     cibles.push({
       ...cible,
       recherche: rechercheSauvegardee(
-        { marque: l.marque, modele: l.modele, energie: l.energie, annee_mediane: l.annee_mediane, km_median: l.km_median },
+        { marque: l.marque, modele: l.modele, energie: l.energie, annee_moyenne: l.annee_moyenne, km_moyen: l.km_moyen },
         cible.achat_max,
       ),
     });
