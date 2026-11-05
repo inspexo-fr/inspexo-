@@ -86,7 +86,8 @@ export default async function handler(req, res) {
 
   const resultat = r?.result_json || r?.result || null
   const v = resultat?.vehicule || {}
-  const enCours = (resultat?.statut_analyse ?? 'fini') !== 'fini'
+  // ⚠️ Les deux seules valeurs sont 'en_cours' et 'terminee'.
+  const enCours = resultat?.statut_analyse === 'en_cours'
   const verdict = enCours ? null : (resultat?.verdict || null)
   const score = enCours ? null : (typeof resultat?.score === 'number' ? resultat.score : null)
 

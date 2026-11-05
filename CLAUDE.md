@@ -1625,6 +1625,43 @@ ou à une commande `supabase` qui en dépend (`db dump`, `db push`, `start`).
 - Toujours préfixer : `export PATH="$HOME/.docker/bin:$PATH"` et
   `SUPABASE_ACCESS_TOKEN=$(security find-generic-password -s "Supabase CLI" -w)`.
 
+### Sprint 17.2 — Aperçus de partage : une image par dossier, générée UNE FOIS
+Branche `apercus-partage`, **non mergée**. Remplace la génération à la volée,
+abandonnée après quatre échecs de déploiement.
+- **Rendue par un NAVIGATEUR** (`scripts/apercus.mjs` + Playwright), pas par un
+  moteur SVG serveur. Un navigateur lit nos fontes **woff2**, que Satori
+  refuse : la typographie de la charte est respectée, ce que l'autre approche
+  ne permettait pas. Aucun coût IA — on relit des dossiers déjà produits.
+- Déposée dans le bucket **public** `apercus`, nom = identifiant du dossier,
+  par la fonction `apercu` (admin ou `x-eval-secret`, service role pour
+  l'écriture). ⚠️ **Aucune policy** : une policy qui interrogerait `analyses`
+  serait toujours fausse (leçon du bucket `rapports`, sprint 8). La signature
+  PNG est vérifiée **octet par octet** — le bucket est public, on ne se fie pas
+  au type déclaré.
+- `api/og.js` **vérifie que le fichier existe** (HEAD, 2,5 s) avant de le
+  désigner ; sinon image statique. ⚠️ C'est la leçon de l'épisode précédent :
+  une balise ne doit désigner qu'une URL dont on vient de constater qu'elle
+  répond. Testé en local contre le stockage : fichier présent → URL du
+  stockage, fichier absent → statique, base injoignable → statique.
+- La page React garde l'image **statique**, délibérément : les robots d'aperçu
+  passent par la réécriture serveur, pas par le rendu React.
+
+### ⚠️ `statut_analyse` ne vaut QUE 'en_cours' ou 'terminee'
+Au sprint 15 j'ai écrit `coalesce(..., 'fini') = 'fini'` dans
+`analyses_a_verifier` : la condition était **toujours fausse**, et la liste
+« à vérifier » de l'onglet Fiabilité restait **vide, sans erreur ni message**.
+Personne ne l'a vu parce qu'aucune campagne n'était encore passée par cet
+écran — **un filtre qui ne rend rien ressemble exactement à « il n'y a rien à
+faire »**.
+- Corrigé par redéfinition dans `20261118120000`. L'idiome du projet existait
+  depuis le sprint 3 : **on exclut l'échec (`<> 'en_cours'`), on n'énumère
+  jamais le succès**.
+- `tests/apercus.test.mjs` balaie `api/`, `scripts/`, `src/pages/` et `score`
+  et refuse toute comparaison à une valeur inventée. ⚠️ Les **migrations** sont
+  hors balayage : une migration appliquée ne se modifie jamais, celle du
+  sprint 15 gardera son filtre fautif — c'est l'histoire de ce qui a tourné.
+  Ce qui compte est la DERNIÈRE définition, vérifiée séparément.
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |
