@@ -1376,7 +1376,7 @@ export default function ResultPage() {
             )}
 
             {/* Numéro de châssis (sprint 7 — décodage normatif gratuit, local) */}
-            {!enCours && r.type === 'vehicule' && <VinBloc vehicule={vh} />}
+            {!enCours && r.type === 'vehicule' && <VinBloc vehicule={vh} vin={r.vin} />}
 
             {/* Rapport d'inspection déjà remis (sprint 8) : il passe AVANT
                 le bloc de commande, c'est le livrable que l'acheteur a payé. */}

@@ -44,6 +44,7 @@ import {
   revendeurPublique,
 } from "../_shared/revendeur.ts";
 import { critair, libelleCritair, sourceZfe, verdictZfe, ZFE_SOCLE } from "../_shared/critair.ts";
+import { concordanceVin, decoderVin, incoherenceConstructeur, trouverVin } from "../_shared/vin.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
 import {
@@ -1210,6 +1211,12 @@ serve(async (req: Request) => {
     // de l'annonce soient jugées par rapport à AUJOURD'HUI (bug « date future »).
     const dateDuJour = new Intl.DateTimeFormat("fr-FR", { dateStyle: "full", timeZone: "Europe/Paris" }).format(new Date());
     const dateBlock = `<date_du_jour>${dateDuJour}</date_du_jour>`;
+    // Année courante à Paris, pour borner les années-modèle possibles d'un VIN
+    // (cycle de 30 ans). Jamais `new Date().getFullYear()` au fil du code : la
+    // date du jour du projet est celle d'Europe/Paris, et une seule.
+    const anneeCourante = Number(
+      new Intl.DateTimeFormat("fr-FR", { year: "numeric", timeZone: "Europe/Paris" }).format(new Date()),
+    );
 
     // ================= APPEL 1 — IDENTIFICATION =================
     const identCall = await callAvecSecours(
@@ -1723,6 +1730,24 @@ serve(async (req: Request) => {
       sourceZones,
     );
 
+    // ---------------- VIN trouvé dans l'annonce (sprint 20) ----------------
+    // ⚠️ RECHERCHE DÉTERMINISTE, jamais une extraction par le modèle : un
+    // modèle de langue qui « lit » un identifiant de 17 caractères peut en
+    // halluciner un plausible, et une erreur d'un caractère désignerait une
+    // autre voiture — le dossier affirmerait alors une discordance qui
+    // n'existe pas. Soit les 17 caractères sont écrits, soit il n'y a pas de
+    // VIN (`_shared/vin.ts`, testé hors ligne).
+    //
+    // ⚠️ Le numéro NE VA PAS dans `result_json` : /a/:id est public, et un VIN
+    // est rattachable à son titulaire par le SIV. On garde les faits DÉCODÉS
+    // et, dans une COLONNE non exposée, une empreinte salée — c'est elle qui
+    // permettra à la règle 0 d'HistoVec de comparer le VIN du certificat à
+    // celui de l'annonce, ce qu'elle attendait en vain depuis le sprint 13.
+    const vinTrouve = trouverVin(text);
+    const vinDecode = vinTrouve ? decoderVin(vinTrouve.vin, anneeCourante) : null;
+    const vinConcordance = vinDecode ? concordanceVin(vinDecode, vehiculePublic) : null;
+    const vinEmpreinte = vinTrouve ? await sha256Hex(IP_HASH_SALT + "vin:" + vinTrouve.vin) : null;
+
     // ── Source 1 : les comparables de SA recherche (seuil 6) ───────────────
     // SPRINT 20. Elle PASSE AVANT le relevé agrégé, et c'est le bon ordre :
     // ce sont des annonces en ligne aujourd'hui, pour le même modèle, la même
@@ -2193,6 +2218,20 @@ serve(async (req: Request) => {
       const dejaLa = incoherences.some((i) => /compteur/i.test(i) && /km/i.test(i));
       incoherences = [kmIncoherence, ...(dejaLa ? incoherences.filter((i) => !(/compteur/i.test(i) && /km/i.test(i))) : incoherences)].slice(0, 8);
       incoherencesServeur.push(kmIncoherence);
+    }
+
+    // ⚠️ SEULE la discordance de CONSTRUCTEUR devient une incohérence. Le code
+    // d'année (position 10) et la clé de contrôle (position 9) ne sont PAS
+    // obligatoires hors Amérique du Nord : faire peser leur discordance
+    // sanctionnerait une voiture pour une convention que son constructeur
+    // n'était pas tenu d'appliquer. Elles restent affichées comme questions
+    // dans le bloc VIN. Posée par le serveur, cette incohérence est exempte du
+    // filtre linguistique du sprint 17.1 : elle oppose deux éléments nommés —
+    // l'annonce et un identifiant normalisé — et porte sa preuve avec elle.
+    if (vinConcordance?.constructeur === "discordance" && vinDecode?.constructeur && vehiculePublic.marque) {
+      const vinIncoherence = incoherenceConstructeur(vinDecode.constructeur, String(vehiculePublic.marque));
+      incoherences = [vinIncoherence, ...incoherences].slice(0, 8);
+      incoherencesServeur.push(vinIncoherence);
     }
     let questions: string[] = (analyse.questions_vendeur ?? []).map((q: unknown) => scrubRefs(String(q))).slice(0, 8);
     // deno-lint-ignore no-explicit-any
@@ -3362,6 +3401,27 @@ serve(async (req: Request) => {
         zfe_annonce: zfeAnnonce,
         zfe_releve_le: sourceZones.maj,
       },
+      // SPRINT 20 — ce que le VIN de l'annonce apprend, SANS le VIN.
+      // ⚠️ Aucun champ ne porte le numéro : il n'apparaît ni ici, ni dans
+      // aucune réponse. Seuls les faits décodés sortent.
+      vin: vinDecode
+        ? {
+          present: true,
+          // « true » = l'annonce le nomme (« VIN : … ») ; « false » = jeton de
+          // 17 caractères reconnu par sa forme. La nuance se dit à l'écran.
+          etiquette: vinTrouve!.etiquette,
+          valide: vinDecode.valide,
+          constructeur: vinDecode.constructeur,
+          pays: vinDecode.pays,
+          region: vinDecode.region,
+          annees_possibles: vinDecode.annees_possibles,
+          // Clé de contrôle : INDICATIVE hors Amérique du Nord. On rend le
+          // constat, jamais un verdict de validité.
+          cle_concorde: vinDecode.cle?.concorde ?? null,
+          cle_obligatoire: vinDecode.cle?.obligatoire ?? false,
+          concordance: vinConcordance,
+        }
+        : { present: false },
       analyse_limitee: analyseLimitee,
       fiche: {
         statut: sheet ? sheet.statut : "absente",
@@ -3391,6 +3451,12 @@ serve(async (req: Request) => {
           motorisation: vehiculePublic.motorisation,
           annee: vehiculePublic.annee,
           famille_moteur: vehiculePublic.famille_moteur,
+          // ⚠️ COLONNE, pas `result_json` : l'empreinte ne doit pas partir au
+          // navigateur. Elle sert à la règle 0 d'HistoVec (comparer le VIN du
+          // certificat à celui de l'annonce), et publier un jeton dérivé d'un
+          // identifiant de véhicule permettrait de reconnaître deux dossiers
+          // portant la même voiture.
+          vin_empreinte: vinEmpreinte,
         })
         .eq("id", analysisDbId);
       if (updateError) {
@@ -3411,6 +3477,7 @@ serve(async (req: Request) => {
           motorisation: vehiculePublic.motorisation,
           annee: vehiculePublic.annee,
           famille_moteur: vehiculePublic.famille_moteur,
+          vin_empreinte: vinEmpreinte,
           ip_hash: isEval ? null : ipHash,
           is_eval: isEval,
           user_id: null,

@@ -66,3 +66,30 @@ grant execute on function public.get_config_publique() to anon, authenticated, s
 
 comment on function public.get_config_publique() is
   'Réglages du mode revendeur et liste des ZFE, lisibles par le navigateur. Liste fermée : rien d''autre de `config` ne sort.';
+
+-- ---------------------------------------------------------------------------
+-- 3. EMPREINTE DU VIN DE L'ANNONCE (sprint 20c)
+-- ---------------------------------------------------------------------------
+-- ⚠️ UNE COLONNE, ET SURTOUT PAS `result_json`. Le dossier /a/:id est public :
+-- y publier un VIN exposerait un identifiant rattachable à son titulaire par
+-- le SIV, et y publier même un jeton dérivé permettrait de reconnaître deux
+-- dossiers portant la même voiture. La colonne n'est exposée par AUCUNE RPC.
+--
+-- L'empreinte est un sha256 SALÉ avec `IP_HASH_SALT` et préfixé « vin: »
+-- (séparateur de domaine, pour qu'elle ne puisse pas être confondue avec une
+-- empreinte d'IP). Un sha256 nu ne conviendrait pas : connaissant la marque,
+-- l'usine et l'année, le numéro de série se réduit à quelques millions de
+-- possibilités — énumérables en quelques secondes. Rien à voir avec
+-- l'empreinte de TEXTE d'annonce du sprint 12, qui est volontairement non
+-- salée parce que sa valeur de preuve vient de ce que le client peut la
+-- recalculer.
+--
+-- À quoi elle sert : la règle 0 d'HistoVec (sprint 13) compare le VIN du
+-- certificat de situation administrative à celui de l'annonce. Ce second
+-- terme était TOUJOURS nul — rien n'extrayait le VIN de l'annonce. Le contrôle
+-- existait et ne contrôlait rien ; c'est exactement la famille de défauts que
+-- ce projet a déjà trouvée trois fois.
+alter table public.analyses add column if not exists vin_empreinte text;
+
+comment on column public.analyses.vin_empreinte is
+  'sha256(IP_HASH_SALT || ''vin:'' || VIN) du VIN écrit dans l''annonce. Jamais exposée par une RPC : sert à comparer le VIN d''un certificat HistoVec à celui de l''annonce.';

@@ -27,6 +27,7 @@ import {
   verifierConcordance,
 } from "../_shared/histovec.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
+import { concordanceVin, decoderVin } from "../_shared/vin.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -140,7 +141,7 @@ serve(async (req: Request) => {
 
     // ---- Faits, concordance, PUIS retrait des identifiants ----------------
     const { data: analyse } = await admin
-      .from("analyses").select("id, result_json").eq("id", analysisId).maybeSingle();
+      .from("analyses").select("id, result_json, vin_empreinte").eq("id", analysisId).maybeSingle();
     if (!analyse?.result_json) {
       return json({ error: "not_found", message: "Analyse introuvable." }, 404);
     }
@@ -160,6 +161,22 @@ serve(async (req: Request) => {
       }, 422);
     }
 
+    // SPRINT 20 — LA RÈGLE 0 PEUT ENFIN COMPARER LES VIN.
+    // Depuis le sprint 13 elle attendait le VIN de l'annonce, que rien
+    // n'extrayait : le contrôle existait et ne contrôlait rien. `score` pose
+    // désormais l'empreinte salée du VIN écrit dans l'annonce
+    // (`analyses.vin_empreinte`) ; on compare empreinte à empreinte, de sorte
+    // qu'aucun des deux numéros n'ait à être conservé en clair.
+    //
+    // ⚠️ `null` quand l'un des deux manque, ou quand le sel est absent :
+    // `verifierConcordance` ne comptera alors PAS le VIN parmi les éléments
+    // comparés, au lieu de conclure à une discordance faute de donnée.
+    let vinConcorde: boolean | null = null;
+    if (faitsBruts.vin && analyse.vin_empreinte) {
+      const emp = await empreinteSalee("vin:" + faitsBruts.vin.toUpperCase());
+      if (emp) vinConcorde = emp === analyse.vin_empreinte;
+    }
+
     const concordance = verifierConcordance(faitsBruts, {
       marque: v.marque ?? null,
       modele: v.modele ?? null,
@@ -167,7 +184,28 @@ serve(async (req: Request) => {
       premiere_immatriculation: v.premiere_immatriculation ?? null,
       vin: v.vin ?? null,
       immatriculation: v.immatriculation ?? null,
+      vin_concorde: vinConcorde,
     });
+
+    // Le VIN du CERTIFICAT est décodé lui aussi : WMI → constructeur et pays,
+    // position 10 → années-modèle possibles, puis recoupement avec l'annonce.
+    // ⚠️ Décodé EN MÉMOIRE, et seuls les faits sortent — jamais le numéro.
+    // Un certificat qui porte un VIN d'un autre constructeur que l'annonce est
+    // le genre de chose qu'un acheteur doit apprendre AVANT de se déplacer.
+    const vinCertificat = faitsBruts.vin
+      ? (() => {
+        const d = decoderVin(faitsBruts.vin!);
+        return {
+          valide: d.valide,
+          constructeur: d.constructeur,
+          pays: d.pays,
+          annees_possibles: d.annees_possibles,
+          cle_concorde: d.cle?.concorde ?? null,
+          cle_obligatoire: d.cle?.obligatoire ?? false,
+          concordance: concordanceVin(d, { marque: v.marque, annee: v.annee }),
+        };
+      })()
+      : null;
     const regles = reglesHistovec(faitsBruts, v, concordance, new Date());
 
     // ⚠️ À PARTIR D'ICI, plus de VIN ni de plaque. Ce retrait est la raison
@@ -176,6 +214,8 @@ serve(async (req: Request) => {
     const lecture = {
       faits: { ...faits, motif_illisible: undefined },
       concordance: { concorde: concordance.concorde, compares: concordance.compares, discordances: concordance.discordances },
+      // SPRINT 20 — faits décodés du VIN du certificat. Jamais le numéro.
+      vin: vinCertificat,
       signaux: regles.signaux,
       lu_le: new Date().toISOString(),
     };
@@ -242,10 +282,18 @@ serve(async (req: Request) => {
 });
 
 async function empreinteIp(req: Request): Promise<string | null> {
-  const sel = Deno.env.get("IP_HASH_SALT");
   const ip = req.headers.get("cf-connecting-ip");
-  if (!sel || !ip) return null;
-  const octets = new TextEncoder().encode(sel + ip);
+  if (!ip) return null;
+  return await empreinteSalee(ip);
+}
+
+/** sha256 salé, même recette que `score` : le sel vient du secret, jamais du
+ *  code. Rend `null` sans sel — fail-closed : mieux vaut ne pas comparer que
+ *  comparer sur un sel vide, ce qui rendrait l'empreinte réversible. */
+async function empreinteSalee(valeur: string): Promise<string | null> {
+  const sel = Deno.env.get("IP_HASH_SALT");
+  if (!sel) return null;
+  const octets = new TextEncoder().encode(sel + valeur);
   const h = await crypto.subtle.digest("SHA-256", octets);
   return [...new Uint8Array(h)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }

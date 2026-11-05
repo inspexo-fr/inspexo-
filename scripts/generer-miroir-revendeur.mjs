@@ -29,6 +29,11 @@ const MODULES = [
   { ts: 'revendeur.ts', js: 'revendeur.gen.js' },
   { ts: 'critair.ts', js: 'critair.gen.js' },
   { ts: 'cibles.ts', js: 'cibles.gen.js' },
+  // SPRINT 20 — le décodage du VIN était écrit à la main dans src/lib/vin.js,
+  // et le serveur ne savait pas lire un VIN. La source est désormais
+  // _shared/vin.ts ; src/lib/vin.js n'est qu'un ré-export du miroir, de sorte
+  // que tests/vin.test.mjs et VinBloc continuent de passer par le même code.
+  { ts: 'vin.ts', js: 'vin.gen.js' },
 ]
 
 const ENTETE = (source) => `// GÉNÉRÉ par scripts/generer-miroir-revendeur.mjs — NE PAS ÉDITER À LA MAIN.
