@@ -831,6 +831,11 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
           organe: null,
           symptome: d.description,
           km_typique: null,
+          // SPRINT 21 — ce que l'entrée vise, DÉCLARÉ dans l'atlas. Absent :
+          // `ciblesAtlas` retombe sur sa déduction d'origine (entrées
+          // héritées). Présent et vide : l'entrée ne vise rien de distinctif
+          // et restera une question.
+          ...(Array.isArray(dd.cibles) ? { cibles: dd.cibles } : {}),
           // `gravite` (barème) si le sourcing l'a rejugée, sinon l'ancienne
           // étiquette. On ne PROMEUT jamais : pas de « casse » sans coût sourcé.
           gravite: typeof dd.gravite === "string" && dd.gravite
