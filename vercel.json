@@ -32,5 +32,12 @@
       "destination": "/airbags-takata",
       "statusCode": 301
     }
-  ]
+  ],
+  "functions": {
+    "api/og-image.js": {
+      "includeFiles": "node_modules/@vercel/og/dist/**",
+      "memory": 1024,
+      "maxDuration": 15
+    }
+  }
 }

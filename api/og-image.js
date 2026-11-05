@@ -55,6 +55,12 @@ const TAMPON = { vert: 'FEU VERT', orange: 'PRUDENCE', rouge: 'SIGNAUX ROUGES' }
 // garantit qu'un vrai import dynamique survit à la compilation.
 const PAQUET_OG = '@vercel/og'
 
+// ⚠️ Le specificateur variable defait aussi le TRAÇAGE des fichiers par
+// Vercel : sans aide, les `.wasm` de Satori et resvg ne sont pas embarques et
+// le processus meurt en 128 au premier rendu. D'ou `includeFiles` sur cette
+// fonction dans vercel.json — le traçage automatique ne peut pas deviner ce
+// qu'un import dynamique va charger.
+
 // ⚠️ SIGNATURE NODE, PAS EDGE. Troisième correction du même déploiement :
 // écrite pour le runtime edge, la fonction recevait un `Request` dont l'URL
 // est absolue. En Node, `req` est un `IncomingMessage` et `req.url` ne porte
