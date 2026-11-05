@@ -1455,6 +1455,84 @@ donc sans repayer la collecte).
   après la mesure de fiabilité — c'est elle qui dira si la méthode vaut la
   dépense.
 
+## Sprint 17 — Surveillance et leviers de trafic (nov. 2026)
+
+### Surveillance
+- **Quatre motifs d'alerte**, une seule mécanique (`_shared/alerting.ts`),
+  **une alerte par motif et par heure**, objet préfixé `[URGENT] Inspexo — `.
+  Le bilan quotidien porte `[Bilan] Inspexo — JJ/MM/AAAA`. ⚠️ **Ces préfixes
+  sont des FILTRES de boîte mail** : les changer ne casse rien visiblement,
+  mais les alertes n'arrivent plus dans le bon dossier — et une alerte qu'on
+  ne voit pas n'existe pas. Figés par `tests/alerting.test.mjs`.
+- ⚠️ **Une surcharge passagère n'alerte PAS** (429, 529, « overloaded ») :
+  elle se résout seule. Seuls le crédit épuisé et la clé invalide alertent,
+  parce qu'ils **ne se résolvent pas** sans intervention. `estCreditOuCle` est
+  pure et testée dans les deux sens, y compris le piège « Overloaded: quota
+  temporarily exceeded » — qui reste une surcharge.
+- ⚠️ **Base muette ⇒ on n'envoie pas.** `dejaAlerte` rend `true` quand la
+  lecture du témoin échoue : une base qui ne répond pas est déjà un incident,
+  y ajouter une boucle d'emails l'aggrave.
+- **Seuils en base** (`config`), modifiables sans redéploiement. Un seuil dans
+  le code se change par un déploiement, autant dire qu'il ne se change pas.
+- **Bilan quotidien** porté par le cron EXISTANT — un second cron serait une
+  seconde chose capable de s'arrêter sans bruit. ⚠️ Le coût **inclut** l'éval
+  (argent réellement dépensé), les volumes **l'excluent** (ce n'est pas du
+  trafic). ⚠️ 07:00 **UTC** = 8 h l'hiver, **9 h l'été** : le bilan porte son
+  heure d'envoi plutôt que de déplacer le cron deux fois par an.
+- **`/api/sante`**, public et sans secret. ⚠️ **Aucune donnée d'affaires** : ni
+  volume, ni chiffre, ni date de dernière analyse — une URL publique ne doit
+  pas laisser déduire le trafic. ⚠️ Et **elle ne juge pas sur le volume** : un
+  contrôle rouge faute d'analyse récente serait rouge en permanence
+  aujourd'hui, et un voyant toujours rouge ne se regarde plus.
+  - L'alerte « fonction en erreur » part de là, **seulement en cas de panne
+    détectée**, via la tâche `sante` de la fonction `alertes` — réemploi de
+    `CRON_PROXY_SECRET`, aucun secret nouveau à faire tourner.
+- Mode d'emploi du moniteur externe : `docs/surveillance.md` (**UptimeRobot**,
+  plus **Healthchecks.io** pour le cron — un cron qui cesse de tourner ne
+  produit aucune erreur, seul un dead-man's switch voit une absence).
+
+### Image de partage par dossier
+`api/og-image` (`@vercel/og`) : marque, modèle, année, tampon, score — **rien
+que ce que la page publique affiche déjà**. Une image de partage voyage plus
+loin que la page (aperçus, caches, captures) : elle en dit **moins**, jamais
+plus.
+- ⚠️ **DÉFAUT TROUVÉ EN RENDANT L'IMAGE EN LOCAL AVANT DE DÉPLOYER** :
+  `ImageResponse` pose son propre `Cache-Control: public, immutable,
+  max-age=31536000`, et l'en-tête passé en option **s'ajoute au lieu de le
+  remplacer**. La réponse sortait avec deux directives, et c'est la première
+  qui gagne : une image d'analyse **en cours** aurait été figée **un an** sur
+  « ANALYSE EN COURS », l'aperçu ne montrant jamais le verdict. L'en-tête est
+  désormais **réécrit** sur une `Response` neuve.
+- Police : celle de `@vercel/og`. Nos fontes sont en **woff2**, que Satori ne
+  lit pas, et aller chercher un ttf à chaque rendu ajouterait un aller-retour
+  dans un chemin que les robots d'aperçu coupent vite. Mise en page, couleurs
+  et tampon suivent la charte ; la fonte, non.
+- ⚠️ Le rendu Satori **n'est pas vérifiable hors ligne** (le paquet Node
+  réclame `hb.wasm` et un `require` dynamique). Vérifié localement : statut
+  200, `image/png`, en-tête de cache correct. Les captures
+  `captures-sprint14/s17-og-*.png` sont un **aperçu de mise en page**, pas le
+  rendu réel — à confirmer sur la préversion.
+
+### Takata : la page existait, elle manquait l'année
+⚠️ **Ne PAS créer `/takata`** : `/airbags-takata` existe depuis le sprint 6,
+pré-rendue, avec la liste officielle, la date, le lien ministère et une FAQ en
+données structurées. Deux pages sur le même sujet se concurrencent.
+- Ce qui manquait : **l'année**. Chaque modèle de la liste porte sa plage
+  (`debut`/`fin`) et elle n'était pas exploitée — un acheteur voyait « Clio »
+  et en concluait que SA Clio était visée. La recherche prend désormais
+  marque + modèle **+ année**, et ce qui concerne l'année saisie remonte en
+  tête : une liste où le « oui » est en bas se lit comme un « non ».
+- ⚠️ **Une année hors plage n'est jamais une garantie définitive** : la liste
+  évolue et seul le VIN tranche. Dit à l'écran et dans la FAQ. **Une donnée
+  absente n'écarte jamais** : bornes manquantes ⇒ l'entrée reste, et le dit.
+- `/takata` → `/airbags-takata` en **301**.
+
+### Liens de campagne
+`scripts/liens-src.mjs --md` → `docs/liens-src.md` (54 liens, 9 canaux).
+⚠️ Le script **vérifie le format** `^[a-z0-9][a-z0-9-]{0,39}$` avant d'écrire :
+une étiquette hors format est **refusée en base**, le visiteur arrive,
+l'analyse se fait, et la provenance est perdue **sans message d'erreur**.
+
 ## Outillage local (4 nov. 2026)
 
 **Docker Desktop est installé**, et avec lui la pile Supabase locale. ⚠️ Le

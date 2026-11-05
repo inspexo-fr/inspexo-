@@ -22,6 +22,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { executerDecision } from "../_shared/inspectionArgent.ts";
+import { alerterUneFoisParHeure, bilanHtml, sujetAlerte, sujetBilan } from "../_shared/alerting.ts";
 import {
   alerteExploitant,
   alerteRapportEnRetard,
@@ -221,6 +222,78 @@ serve(async (req: Request) => {
     return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
   }
   const admin = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+  // SPRINT 17 — Tâche « santé » : alerte IMMÉDIATE quand une fonction critique
+  // ne répond plus. Appelée par `/api/sante` (point de contrôle public) à la
+  // seule condition qu'il ait DÉTECTÉ une panne — jamais à chaque passage.
+  //
+  // ⚠️ Pas de secret nouveau : on réemploie `CRON_PROXY_SECRET`, déjà posé des
+  // deux côtés. Un secret de plus, c'est une rotation de plus à ne pas oublier.
+  // Et l'étranglement horaire borne l'amplification à un email par heure, même
+  // si quelqu'un martèle le point de contrôle public.
+  try {
+    const corps = await req.clone().json().catch(() => null);
+
+    // SPRINT 17 — Tâche « test » : envoie UNE alerte et UN bilan factices,
+    // pour vérifier que la chaîne d'email arrive et régler les filtres de
+    // boîte mail. Protégée par le même secret que le cron.
+    //
+    // ⚠️ Les deux messages portent « TEST » DANS L'OBJET et le disent en
+    // première ligne : un message d'essai qui ressemble à une vraie alerte
+    // apprend à ignorer les vraies. Et elle n'emprunte PAS l'étranglement
+    // horaire — sinon un test consommerait le droit d'alerter de l'heure, et
+    // un incident survenant juste après resterait muet.
+    if (corps?.tache === "test") {
+      const alerte = await alerteExploitant(
+        `${sujetAlerte("fonction_en_erreur")} — TEST`.replace("fonction en erreur — TEST", "TEST"),
+        `<p><strong>Ceci est un message d'essai.</strong> Aucun incident n'est en cours.</p>
+         <p>Il sert à vérifier que les alertes arrivent et à régler les filtres de boîte mail.
+            Les vraies alertes portent le même préfixe <code>[URGENT] Inspexo —</code>,
+            suivi du motif (crédit ou clé, échecs répétés, fonction en erreur, coût du jour).</p>
+         <p>Une alerte par motif et par heure, au maximum.</p>`,
+      );
+      const bilan = await alerteExploitant(
+        `${sujetBilan(new Date().toLocaleDateString("fr-FR"))} — TEST`,
+        `<p><strong>Ceci est un bilan d'essai.</strong> Les chiffres ci-dessous sont factices.</p>` +
+          bilanHtml({
+            jour: new Date().toISOString().slice(0, 10),
+            analyses: 12,
+            analyses_par_source: { "tiktok-01": 7, direct: 5 },
+            verdicts: { orange: 6, rouge: 4, vert: 2 },
+            clics: { pass: 3, inspection: 1, partage: 5 },
+            paiements: { pass: 1, inspections: 0 },
+            listes_attente: { pass_waitlist: 2 },
+            leads_pro: 1,
+            erreurs: { total: 0, par_etape: {}, service_indisponible: 0 },
+            cout_ia_eur: 1.23,
+            analyses_eval: 3,
+          }),
+      );
+      return new Response(JSON.stringify({ tache: "test", alerte, bilan }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    if (corps?.tache === "sante") {
+      const detail = String(corps?.detail ?? "").slice(0, 300).replace(/[<>]/g, "");
+      const etat = await alerterUneFoisParHeure(
+        admin,
+        "fonction_en_erreur",
+        `<p>Le point de contrôle <code>/api/sante</code> signale qu'une brique ne répond plus.</p>
+         <p><strong>Détail&nbsp;:</strong> <code>${detail || "non précisé"}</code></p>
+         <p>À vérifier&nbsp;: l'état du projet Supabase, puis le déploiement des fonctions
+            <code>score</code> et <code>rappels</code>.</p>`,
+        alerteExploitant,
+        detail.slice(0, 60),
+      );
+      return new Response(JSON.stringify({ tache: "sante", etat }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  } catch (e) {
+    console.error("tache sante:", e);
+  }
+
   const bilan = {
     vehicules_verifies: 0,
     alertes_rappel: 0,
@@ -233,6 +306,7 @@ serve(async (req: Request) => {
     photos_inspection_purgees: 0,
     preuves_absence_purgees: 0,
     coordonnees_vendeur_purgees: 0,
+    bilan_envoye: false,
     erreurs: 0,
   };
 
@@ -470,6 +544,37 @@ serve(async (req: Request) => {
       await admin.rpc("purger_rapports_inspection");
     } catch (e) {
       console.error("purge des coordonnées vendeur:", e);
+      bilan.erreurs += 1;
+    }
+
+    // ================= SPRINT 17 — Bilan quotidien =================
+    //
+    // Porté par le cron EXISTANT : un second cron, c'est une seconde chose
+    // qui peut s'arrêter sans bruit. Il part en DERNIER, après toutes les
+    // passes, pour que leurs effets du jour y figurent.
+    //
+    // ⚠️ Le cron tourne à 07:00 UTC : 8 h en heure d'hiver, 9 h en heure
+    // d'été. Vercel ne planifie qu'en UTC, et déplacer l'heure deux fois par
+    // an serait une occasion d'oublier. Le bilan porte donc son heure d'envoi.
+    try {
+      const hier = new Date(Date.now() - 24 * 3600 * 1000).toISOString().slice(0, 10);
+      const { data: b, error } = await admin.rpc("bilan_quotidien", { p_jour: hier });
+      if (error) throw error;
+      const jourFr = hier.split("-").reverse().join("/");
+      const envoye = await alerteExploitant(
+        sujetBilan(jourFr),
+        bilanHtml(b) +
+          `<p style="color:#6B7280;font-size:12px">Envoyé à ${
+            new Date().toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris", hour: "2-digit", minute: "2-digit" })
+          } (Paris). Le cron est planifié en UTC&nbsp;: 8 h l'hiver, 9 h l'été.</p>`,
+      );
+      bilan.bilan_envoye = envoye;
+      await admin.from("events").insert({
+        name: envoye ? "bilan_quotidien_envoye" : "bilan_quotidien_non_envoye",
+        props_json: { jour: hier, analyses: Number(b?.analyses ?? 0), cout_ia_eur: Number(b?.cout_ia_eur ?? 0) },
+      });
+    } catch (e) {
+      console.error("bilan quotidien:", e);
       bilan.erreurs += 1;
     }
 

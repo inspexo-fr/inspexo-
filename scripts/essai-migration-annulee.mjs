@@ -327,6 +327,54 @@ select pg_temp.essai_verifie('verifications : unicite (analysis_id, claim_hash)'
      join pg_class t on t.oid = c.conrelid
     where t.relname = 'verifications' and c.contype = 'u') = 1);
 
+-- ── SPRINT 17 : surveillance ──────────────────────────────────────────────
+
+-- Le point de controle est PUBLIC : il doit repondre a anon, et ne rien dire
+-- d autre que « la base repond ».
+select pg_temp.essai_verifie('sante() est ouverte a anon et ne rend aucun chiffre d affaires',
+  has_function_privilege('anon', 'public.sante()', 'execute')
+  and (public.sante()->>'base') = 'ok'
+  and (public.sante()->>'schema')::boolean = true
+  -- Elle NOMME les tables attendues (c est son role : verifier le schema),
+  -- mais elle n en LIT aucune : la seule source de donnees est
+  -- information_schema, et elle ne rend que deux cles.
+  and position('from public.' in pg_get_functiondef(p.oid)) = 0
+  and (select count(*) from jsonb_object_keys(public.sante())) = 2)
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'sante';
+
+-- Tout le reste de la surveillance est reserve au service role : le cout du
+-- jour et le bilan sont des donnees d exploitation.
+select pg_temp.essai_verifie('surveillance : cout, bilan et config refuses a anon',
+  not has_function_privilege('anon', 'public.cout_ia_jour(date)', 'execute')
+  and not has_function_privilege('authenticated', 'public.cout_ia_jour(date)', 'execute')
+  and not has_function_privilege('anon', 'public.bilan_quotidien(date)', 'execute')
+  and not has_function_privilege('anon', 'public.config_lire(text, numeric)', 'execute')
+  and not has_table_privilege('anon', 'public.config', 'select'));
+
+-- Les seuils vivent en base, avec leurs valeurs par defaut.
+select pg_temp.essai_verifie('config : les trois seuils sont semes',
+  public.config_lire('cout_ia_seuil_jour_eur', -1) = 5
+  and public.config_lire('echecs_fenetre_minutes', -1) = 15
+  and public.config_lire('echecs_seuil', -1) = 3
+  -- une cle inconnue rend le defaut, elle ne leve pas
+  and public.config_lire('cle_qui_n_existe_pas', 42) = 42);
+
+-- Sur une base vide, le bilan doit rendre une structure complete et des
+-- zeros — jamais null : un bilan a trous ne se lit pas.
+select pg_temp.essai_verifie('bilan_quotidien : structure complete meme a vide',
+  (select bool_and(public.bilan_quotidien(current_date) ? cle)
+     from unnest(array['jour','analyses','analyses_par_source','verdicts','clics',
+                       'paiements','listes_attente','erreurs','cout_ia_eur']) as cle)
+  and (public.bilan_quotidien(current_date)->>'analyses')::int = 0
+  and (public.bilan_quotidien(current_date)->>'cout_ia_eur')::numeric = 0);
+
+-- Le compteur d echecs lit bien les erreurs de pipeline, et borne sa fenetre.
+select pg_temp.essai_verifie('echecs_recents : zero a vide, fenetre bornee',
+  public.echecs_recents(15) = 0
+  and public.echecs_recents(999999) = 0
+  and public.echecs_recents(null) = 0);
+
 -- ⚠️ DROITS : plus de liste figée. Une liste de cinq tables avait laissé
 -- passer les neuf qui n'avaient pas de \`revoke\` — dont \`inspections\`. On
 -- assère donc sur TOUT le schéma public, tables et vues comprises, pour les

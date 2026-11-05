@@ -67,7 +67,10 @@ export default async function handler(req, res) {
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${escapeHtml(url)}">
-<meta property="og:image" content="https://www.inspexo.io/og-image.png">
+<meta property="og:image" content="https://www.inspexo.io/api/og-image?id=${encodeURIComponent(id)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${escapeHtml(title)}">
 <meta property="og:site_name" content="Inspexo">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="${escapeHtml(title)}">

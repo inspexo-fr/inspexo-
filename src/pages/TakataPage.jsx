@@ -18,10 +18,22 @@ function dateListe() {
   return m ? `${m[3]}/${m[2]}/${m[1]}` : iso
 }
 
-/** Recherche sur la même donnée que l'analyse : marque + modèle, sans année. */
-function chercher(requete) {
+/** Recherche sur la même donnée que l'analyse : marque + modèle, puis année.
+ *
+ * ⚠️ L'ANNÉE EST UN FILTRE, PAS UN CRITÈRE DE RECHERCHE. Chaque modèle de la
+ * liste porte sa plage de production visée (`debut`/`fin`) : sans elle, un
+ * acheteur voyait « Clio » dans la liste et en concluait que SA Clio était
+ * concernée, alors que la campagne ne vise qu'une plage. Avec elle, la
+ * réponse est beaucoup plus souvent « non », et c'est une bonne nouvelle
+ * qu'il faut savoir donner.
+ *
+ * ⚠️ Une année HORS plage ne devient jamais un « vous n'êtes pas concerné »
+ * définitif : la liste officielle évolue, et seul le VIN tranche. Le libellé
+ * le dit à chaque fois. */
+function chercher(requete, annee) {
   const q = norm(requete)
   if (q.length < 2) return null
+  const an = /^\d{4}$/.test(String(annee ?? '').trim()) ? Number(annee) : null
   const resultats = []
   for (const [marque, entrees] of Object.entries(takata.marques || {})) {
     const marqueN = norm(marque)
@@ -32,16 +44,27 @@ function chercher(requete) {
       const toucheModele = q.includes(nomN) || nomN.includes(q) ||
         nomN.split(/[^a-z0-9]+/).filter((w) => w.length >= 2).some((w) => q.includes(w))
       if ((toucheMarque && toucheModele) || (toucheModele && nomN.length >= 3)) {
-        resultats.push({ marque, ...e })
+        // Bornes manquantes = on ne sait pas : l'entrée est retenue par
+        // prudence, et le dira. On n'écarte jamais sur une donnée absente.
+        const debut = typeof e.debut === 'number' ? e.debut : null
+        const fin = typeof e.fin === 'number' ? e.fin : null
+        const dansPlage = an == null || debut == null || fin == null
+          ? null
+          : an >= debut && an <= fin
+        resultats.push({ marque, ...e, dansPlage })
       }
     }
   }
-  return resultats
+  // Ce qui concerne l'année saisie d'abord : c'est ce que le lecteur cherche.
+  return resultats.sort((a, b) => Number(b.dansPlage === true) - Number(a.dansPlage === true))
 }
 
 export default function TakataPage() {
   const [requete, setRequete] = useState('')
-  const resultats = useMemo(() => chercher(requete), [requete])
+  const [annee, setAnnee] = useState('')
+  const resultats = useMemo(() => chercher(requete, annee), [requete, annee])
+  const anneeValide = /^\d{4}$/.test(annee.trim())
+  const concernes = (resultats ?? []).filter((r) => r.dansPlage !== false)
   const marques = Object.entries(takata.marques || {}).sort((a, b) => a[0].localeCompare(b[0], 'fr'))
   const total = marques.reduce((n, [, v]) => n + v.length, 0)
   const maj = dateListe()
@@ -58,6 +81,10 @@ export default function TakataPage() {
     {
       q: 'Pourquoi ces airbags sont-ils dangereux ?',
       r: 'Le gaz propulseur au nitrate d\'ammonium peut se dégrader avec le temps, la chaleur et l\'humidité. Au déclenchement, le générateur peut alors se rompre et projeter des éclats métalliques dans l\'habitacle.',
+    },
+    {
+      q: 'Mon modèle est listé, mais pas pour mon année : suis-je concerné ?',
+      r: `La campagne ne vise pas tous les millésimes d'un modèle, mais une plage de production précise — c'est pourquoi cette page demande l'année. Un véhicule hors de la plage visée n'est pas couvert par la campagne telle que publiée le ${maj}. Ce n'est pas une garantie définitive : la liste officielle évolue, et seul le numéro de série (VIN) permet de trancher auprès du constructeur.`,
     },
     {
       q: 'Et si ma voiture n\'est pas sur la liste ?',
@@ -109,17 +136,36 @@ export default function TakataPage() {
                 <span>Liste du {maj}</span>
               </div>
               <div style={{ padding: '20px 18px 18px' }}>
-                <label className="lbl" htmlFor="takata-q">Marque et modèle</label>
-                <input
-                  id="takata-q"
-                  className="input"
-                  style={{ marginTop: 8 }}
-                  type="search"
-                  placeholder="Exemple : Citroën C3, BMW Série 1, Audi A4"
-                  value={requete}
-                  onChange={(e) => setRequete(e.target.value)}
-                  autoComplete="off"
-                />
+                <div style={{ display: 'grid', gap: 10, gridTemplateColumns: 'minmax(0,2fr) minmax(0,1fr)' }}>
+                  <div>
+                    <label className="lbl" htmlFor="takata-q">Marque et modèle</label>
+                    <input
+                      id="takata-q"
+                      className="input"
+                      style={{ marginTop: 8, width: '100%' }}
+                      type="search"
+                      placeholder="Exemple : Citroën C3"
+                      value={requete}
+                      onChange={(e) => setRequete(e.target.value)}
+                      autoComplete="off"
+                    />
+                  </div>
+                  <div>
+                    <label className="lbl" htmlFor="takata-annee">Année</label>
+                    <input
+                      id="takata-annee"
+                      className="input"
+                      style={{ marginTop: 8, width: '100%' }}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={4}
+                      placeholder="2012"
+                      value={annee}
+                      onChange={(e) => setAnnee(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                      autoComplete="off"
+                    />
+                  </div>
+                </div>
                 <div aria-live="polite" style={{ marginTop: 14 }}>
                   {resultats === null ? (
                     <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6 }}>
@@ -131,15 +177,34 @@ export default function TakataPage() {
                       Vérifiez l'orthographe, et faites confirmer par le VIN si vous avez un doute :
                       la liste évolue.
                     </div>
+                  ) : anneeValide && concernes.length === 0 ? (
+                    <div className="alert alert-vert" style={{ margin: 0 }}>
+                      <strong>
+                        Ce modèle figure sur la liste, mais pas pour l'année {annee}.
+                      </strong>
+                      <p style={{ marginTop: 8, fontSize: 14, lineHeight: 1.6 }}>
+                        La campagne vise {resultats.length > 1 ? 'les plages' : 'la plage'}{' '}
+                        {resultats.slice(0, 4).map((r) => `${r.debut ?? '?'}–${r.fin ?? '?'}`).join(', ')}.
+                        Un millésime hors plage n'est pas une garantie définitive : la liste
+                        officielle évolue, et seul le numéro de série (VIN) tranche.
+                      </p>
+                    </div>
                   ) : (
                     <div className="alert alert-rouge" style={{ margin: 0 }}>
                       <strong>
-                        {resultats.length} modèle{resultats.length > 1 ? 's' : ''} de la liste correspond
-                        {resultats.length > 1 ? 'ent' : ''} à votre recherche :
+                        {concernes.length} modèle{concernes.length > 1 ? 's' : ''} de la liste
+                        {anneeValide ? ` peut concerner un véhicule de ${annee}` : ' correspond'}
+                        {!anneeValide && concernes.length > 1 ? 'ent' : ''}
+                        {anneeValide ? ' :' : ' à votre recherche :'}
                       </strong>
-                      {resultats.slice(0, 12).map((r, i) => (
+                      {concernes.slice(0, 12).map((r, i) => (
                         <div key={i} className="ctrl" style={{ borderTop: '1px solid currentColor', opacity: 0.9 }}>
-                          <span>{r.marque} {r.nom}</span>
+                          <span>
+                            {r.marque} {r.nom}
+                            {r.dansPlage === null && anneeValide && (
+                              <span className="c-graphite"> — plage de production non précisée</span>
+                            )}
+                          </span>
                           <span className="val num">{r.debut ?? '?'}–{r.fin ?? '?'}</span>
                         </div>
                       ))}
