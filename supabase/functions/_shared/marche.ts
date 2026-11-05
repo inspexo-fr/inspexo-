@@ -555,6 +555,51 @@ export function fourchetteDepuisAgregats(
   return construire(retenues, "national", prixBruts);
 }
 
+/** SPRINT 20 — Fourchette bâtie sur les comparables de la recherche de
+ *  L'UTILISATEUR, et non sur le relevé collectif.
+ *
+ *  ⚠️ DEUX SOURCES, DEUX SEUILS, et ce n'est pas une incohérence. Le relevé
+ *  agrégé publie à partir de 15 relevés parce qu'il mélange les contributions
+ *  de tiers : il lui faut de quoi diluer une source dominante (verrou des
+ *  20 %), une préférence régionale, une fenêtre de trois mois. Les
+ *  comparables d'une page de recherche, eux, sont les annonces que
+ *  l'utilisateur a sous les yeux À L'INSTANT, déjà filtrées sur le même
+ *  modèle, la même énergie, ± 2 ans et ± 40 000 km. Six suffisent — c'est le
+ *  seuil que le mode revendeur applique depuis le sprint 19, et c'est le même
+ *  `SEUIL_COMPARABLES` qui est passé ici : ce module n'en garde AUCUNE copie,
+ *  pour qu'il ne puisse pas exister deux seuils qui divergent.
+ *
+ *  ⚠️ Les quantiles passent par `quantileHisto`, comme partout ailleurs. Le
+ *  prix est donc arrondi au milieu de sa tranche de 250 € — exactement la
+ *  précision avec laquelle le relevé agrégé est déjà publié. Lire des
+ *  quantiles « exacts » sur une liste aurait fait une SECONDE implémentation
+ *  des quantiles dans le projet, ce qu'on refuse depuis le sprint 9.
+ *
+ *  `portee` vaut toujours 'national' : une page de résultats n'a pas de
+ *  région, et en inventer une ferait écrire « relevé en Occitanie » sous des
+ *  prix dont on ne sait pas d'où ils viennent. */
+export function fourchetteDepuisComparables(
+  prix: readonly number[],
+  minimum: number,
+): Fourchette | null {
+  const retenus = prix.filter((p) => Number.isFinite(p) && p >= PRIX_MIN && p <= PRIX_MAX);
+  if (retenus.length < minimum) return null;
+  const histo: Histo = new Map();
+  for (const p of retenus) {
+    const t = tranchePrix(p);
+    histo.set(t, (histo.get(t) ?? 0) + 1);
+  }
+  const total = retenus.length;
+  return {
+    p25: Math.round(quantileHisto(histo, total, 0.25)),
+    mediane: Math.round(quantileHisto(histo, total, 0.5)),
+    p75: Math.round(quantileHisto(histo, total, 0.75)),
+    n: total,
+    portee: "national",
+    region: null,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Position de l'annonce dans la fourchette.
 // ---------------------------------------------------------------------------
@@ -681,9 +726,24 @@ export function referencePrix(
 ): ReferencePrix | null {
   const fourchette = fourchetteDepuisAgregats(lignes, vehicule, minimum, prixBruts);
   if (!fourchette) return null;
-  const brut = ajustementKm(lignes, vehicule);
+  return referenceDepuisFourchette(fourchette, ajustementKm(lignes, vehicule), prixAffiche);
+}
+
+/** SPRINT 20 — la queue commune aux DEUX sources de fourchette : décalage
+ *  kilométrique, référence, position de l'annonce, écart au-dessus.
+ *
+ *  ⚠️ EXTRAITE, pas recopiée. Le relevé agrégé et les comparables d'une
+ *  recherche n'ont ni le même seuil ni la même façon de mesurer la pente,
+ *  mais ce qu'on en DÉDUIT doit être identique au centime : sans quoi la même
+ *  annonce serait « dans la moyenne » par un chemin et « plus chère que 75 % »
+ *  par l'autre. */
+export function referenceDepuisFourchette(
+  fourchette: Fourchette,
+  ajustementBrut: AjustementKm | null,
+  prixAffiche: number | null,
+): ReferencePrix {
   // Un ajustement sous la largeur d'une tranche de prix n'apporte rien.
-  const ajustement = brut && Math.abs(brut.ecart_eur) >= ECART_KM_SIGNIFICATIF ? brut : null;
+  const ajustement = ajustementBrut && Math.abs(ajustementBrut.ecart_eur) >= ECART_KM_SIGNIFICATIF ? ajustementBrut : null;
   const decalage = ajustement?.ecart_eur ?? 0;
   const mediane_reference = Math.max(PRIX_MIN, fourchette.mediane + decalage);
   const position = prixAffiche != null
@@ -699,6 +759,37 @@ export function referencePrix(
     // ecart_au_dessus_eur === prix_affiche − mediane_reference. L'arrondi
     // d'affichage se fait côté appelant.
     ecart_au_dessus_eur: ecart > 0 ? ecart : 0,
+  };
+}
+
+/** SPRINT 20 — ajustement kilométrique mesuré sur une LISTE de comparables.
+ *
+ *  La pente est passée en argument (`penteKm` de `_shared/revendeur.ts`, qui
+ *  l'exige mesurable ET plausible : ≥ 6 points, ≥ 3 kilométrages distincts,
+ *  négative, au plus 0,20 €/km). Ce module ne la recalcule pas — il n'existe
+ *  qu'une implémentation de cette pente dans le projet, et elle est déjà
+ *  testée hors ligne.
+ *
+ *  Rend `null` dès qu'un élément manque : pas de pente, pas de kilométrage du
+ *  véhicule, pas de kilométrage médian. On ne décote jamais « au barème ». */
+export function ajustementKmListe(
+  comparables: readonly { prix: number; km?: number | null }[],
+  kmVehicule: number | null,
+  pente: number | null,
+): AjustementKm | null {
+  if (pente == null || kmVehicule == null) return null;
+  const kms = comparables.map((c) => c.km).filter((k): k is number => typeof k === "number" && Number.isFinite(k));
+  if (kms.length === 0) return null;
+  const tries = [...kms].sort((a, b) => a - b);
+  const m = Math.floor(tries.length / 2);
+  const kmMedian = tries.length % 2 ? tries[m] : Math.round((tries[m - 1] + tries[m]) / 2);
+  const tranches = new Set(kms.map((k) => Math.round(k / 10_000))).size;
+  return {
+    decote_eur_10000km: Math.round(-pente * 10_000),
+    km_median_segment: kmMedian,
+    ecart_eur: Math.round(pente * (kmVehicule - kmMedian)),
+    n_tranches: tranches,
+    n: comparables.length,
   };
 }
 

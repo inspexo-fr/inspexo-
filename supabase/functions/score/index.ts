@@ -34,6 +34,8 @@ import { calculerNegociation, chercherCout, coutsApplicables, negociationPubliqu
 import {
   comparablesDepuisStructures,
   MENTION_REVENDEUR,
+  penteKm,
+  SEUIL_COMPARABLES,
   messageVendeurRevendeur,
   offreOuverture,
   PARAMETRES_DEFAUT,
@@ -59,11 +61,15 @@ import {
   boiteDe,
   fondreReleves,
   generationDe,
+  ajustementKmListe,
+  fourchetteDepuisComparables,
   type LigneAgregat,
   marqueCanonique,
   modeleCanonique,
   moisRecents,
   normaliserNom,
+  positionPrix,
+  referenceDepuisFourchette,
   referencePrix,
   regionDe,
   segmentDepuisTitreAnnonce,
@@ -1286,7 +1292,7 @@ serve(async (req: Request) => {
         pannes_connues: [],
         incoherences: [],
         budget_12_mois: [],
-        prix: { commentaire: null, mediane_comparables: null },
+        prix: { commentaire: null, mediane_comparables: null, comparables: null },
         analyse_limitee: null,
         fiche: { statut: "absente", famille: null },
         critique: null,
@@ -1581,6 +1587,36 @@ serve(async (req: Request) => {
       images = [];
     }
 
+    // ---------------- Comparables de LA RECHERCHE de l'utilisateur ---------
+    // SPRINT 20. Ces annonces — celles que l'utilisateur a sous les yeux sur sa
+    // page de résultats, envoyées AU CLIC — servent maintenant DEUX blocs :
+    // l'axe prix et la négociation de l'analyse acheteur (ci-dessous), et le
+    // mode revendeur (plus bas). Le filtrage est donc fait ICI, UNE fois.
+    //
+    // ⚠️ C'est délibérément le filtre du mode revendeur
+    // (`comparablesDepuisStructures` → `filtrerComparables`) : même modèle,
+    // même énergie, ± 2 ans, ± 40 000 km. Le dupliquer « pour l'acheteur »
+    // aurait donné deux définitions de « comparable » dans le même dossier,
+    // donc deux fourchettes qui finissent par ne plus dire la même chose.
+    //
+    // ⚠️ Le MODÈLE de chaque comparable est déduit de son titre PAR LE
+    // SERVEUR, jamais envoyé par le client : sinon le client choisirait dans
+    // quel segment ses prix atterrissent (règle du sprint 9).
+    const modeleCibleComp = modeleCanonique(vehiculePublic.modele ?? "");
+    const vComparable = {
+      modele: modeleCibleComp,
+      energie: vehiculePublic.carburant ?? "",
+      annee: typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null,
+      km: typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null,
+    };
+    const compsRecherche = comparablesDepuisStructures(comparablesStructures, vComparable, {
+      modele_cible: modeleCibleComp,
+      modele_de: (titre: string) => {
+        const seg = segmentDepuisTitreAnnonce(titre);
+        return seg ? seg.modele : "";
+      },
+    });
+
     // ---------------- Prix de marché : fourchette P25-P75 ----------------
     // SPRINT 9. La base ne conserve AUCUNE ligne d'annonce : les prix vivent
     // en histogrammes par segment dans `marche_agregats`, et les quantiles
@@ -1616,6 +1652,11 @@ serve(async (req: Request) => {
       } | null;
       portee: "region" | "national";
       region: string | null;
+      /** Laquelle des deux sources a produit cette fourchette. L'écran doit
+       *  pouvoir le dire : « vos comparables » et « le relevé Inspexo » n'ont
+       *  ni le même effectif ni la même portée, et les confondre ferait passer
+       *  six annonces vues pour un relevé de marché. */
+      source: "recherche" | "releve";
     };
     let fourchette: Fourchette | null = null;
     // Écart au prix médian, repris par la marge de négociation.
@@ -1627,7 +1668,56 @@ serve(async (req: Request) => {
     const regionVehicule = regionDe(typeof v.code_postal === "string" ? v.code_postal : "");
     const dateJJMM = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Paris" })
       .format(new Date());
-    {
+
+    // ── Source 1 : les comparables de SA recherche (seuil 6) ───────────────
+    // SPRINT 20. Elle PASSE AVANT le relevé agrégé, et c'est le bon ordre :
+    // ce sont des annonces en ligne aujourd'hui, pour le même modèle, la même
+    // énergie, à ± 2 ans et ± 40 000 km du véhicule analysé. Le relevé
+    // collectif, lui, mélange trois mois de contributions de tiers sur un
+    // segment plus large. Le plus spécifique gagne — c'est déjà la règle
+    // posée au sprint 2 pour les comparables de l'extension.
+    //
+    // ⚠️ Pas de mélange des deux sources. Quand la recherche suffit, les
+    // agrégats ne sont même pas interrogés : additionner six annonces vues et
+    // quatorze relevés d'inconnus donnerait un effectif dont plus personne ne
+    // saurait dire ce qu'il mesure.
+    if (compsRecherche.retenus.length >= SEUIL_COMPARABLES) {
+      const fc = fourchetteDepuisComparables(compsRecherche.retenus.map((c) => c.prix), SEUIL_COMPARABLES);
+      if (fc) {
+        const ref = referenceDepuisFourchette(
+          fc,
+          ajustementKmListe(compsRecherche.retenus, vComparable.km, penteKm(compsRecherche.retenus)),
+          typeof prixAffiche === "number" ? prixAffiche : null,
+        );
+        fourchette = {
+          p25: fc.p25,
+          mediane: fc.mediane,
+          p75: fc.p75,
+          n: fc.n,
+          provenance: `comparables de votre recherche (${fc.n} annonces sur ${compsRecherche.recus} relevées)`,
+          libelle:
+            `Prix demandés sur ${fc.n} annonces comparables de votre recherche, relevées le ${dateJJMM} — les prix de vente réels sont souvent inférieurs.`,
+          position: ref.position?.libelle ?? null,
+          position_cle: ref.position?.cle ?? null,
+          mediane_reference: ref.mediane_reference,
+          ajustement_km: ref.ajustement
+            ? {
+              decote_eur_10000km: ref.ajustement.decote_eur_10000km,
+              km_median_segment: ref.ajustement.km_median_segment,
+              ecart_eur: ref.ajustement.ecart_eur,
+              n_tranches: ref.ajustement.n_tranches,
+            }
+            : null,
+          portee: fc.portee,
+          region: fc.region,
+          source: "recherche",
+        };
+        ecartMedianeEur = ref.ecart_au_dessus_eur;
+      }
+    }
+
+    // ── Source 2 : le relevé agrégé (seuil 15) ─────────────────────────────
+    if (!fourchette) {
       const marqueF = marqueCanonique(vehiculePublic.marque);
       // MÊME canonisation qu'à l'écriture : « Clio IV » doit interroger le
       // segment « clio », sinon la lecture ne retrouve jamais ce qu'elle écrit.
@@ -1710,6 +1800,7 @@ serve(async (req: Request) => {
             : null,
           portee: f.portee,
           region: f.region,
+          source: "releve",
         };
         ecartMedianeEur = ref.ecart_au_dessus_eur;
       }
@@ -2857,6 +2948,7 @@ serve(async (req: Request) => {
             n: fourchette.n,
             date: dateJJMM,
             ajuste_km: fourchette.ajustement_km != null,
+            source: fourchette.source,
           }
           : null,
         // deno-lint-ignore no-explicit-any
@@ -2888,26 +2980,16 @@ serve(async (req: Request) => {
     // annonces que l'utilisateur a lui-même sous les yeux, envoyées AU CLIC
     // depuis sa page de résultats. En dessous de 6 retenues : aucun chiffre.
     //
-    // ⚠️ Le MODÈLE de chaque comparable est déduit de son titre PAR LE
-    // SERVEUR (`modeleCanonique`), jamais envoyé par le client : sinon le
-    // client choisirait dans quel segment ses prix atterrissent.
+    // ⚠️ SPRINT 20 — le filtrage n'est PLUS refait ici : `compsRecherche` est
+    // calculé une seule fois, en amont du bloc prix, et les deux blocs lisent
+    // le même résultat. Deux appels au même filtre auraient fini par diverger
+    // le jour où l'un des deux aurait reçu un paramètre de plus.
     // deno-lint-ignore no-explicit-any
     let revendeur: any = null;
     try {
-      const modeleCible = modeleCanonique(vehiculePublic.modele ?? "");
-      const vRevendeur = {
-        modele: modeleCible,
-        energie: vehiculePublic.carburant ?? "",
-        annee: typeof vehiculePublic.annee === "number" ? vehiculePublic.annee : null,
-        km: typeof vehiculePublic.kilometrage === "number" ? vehiculePublic.kilometrage : null,
-      };
-      const comps = comparablesDepuisStructures(comparablesStructures, vRevendeur, {
-        modele_cible: modeleCible,
-        modele_de: (titre: string) => {
-          const seg = segmentDepuisTitreAnnonce(titre);
-          return seg ? seg.modele : "";
-        },
-      });
+      const vRevendeur = vComparable;
+      const comps = compsRecherche;
+      const modeleCible = modeleCibleComp;
 
       // Crit'Air et ZFE : classement réglementaire déduit de l'énergie et de
       // l'année. La ville de REVENTE n'est pas connue du serveur — c'est un
@@ -3192,6 +3274,20 @@ serve(async (req: Request) => {
         // l'effectif, la portée et la correction kilométrique mesurée.
         fourchette,
         ecart_mediane_eur: ecartMedianeEur > 0 ? ecartMedianeEur : null,
+        // SPRINT 20 — de quoi DIRE POURQUOI il n'y a pas de fourchette. Un
+        // « non évalué » devant dix annonces à l'écran passe pour une panne ;
+        // « 10 reçues, 2 retenues, 8 écartées (énergie) » se comprend et se
+        // corrige. Comptes seulement : aucun titre, aucune URL, et rien ici
+        // n'est réservé au Pass — ce sont les chiffres de SA propre recherche.
+        comparables: {
+          recus: compsRecherche.recus,
+          retenus: compsRecherche.retenus.length,
+          seuil: SEUIL_COMPARABLES,
+          ecartes_par_raison: compsRecherche.ecartes.reduce((acc: Record<string, number>, e) => {
+            acc[e.raison] = (acc[e.raison] ?? 0) + 1;
+            return acc;
+          }, {}),
+        },
       },
       analyse_limitee: analyseLimitee,
       fiche: {
@@ -3470,7 +3566,7 @@ serve(async (req: Request) => {
         negociation: null,
         revendeur: null,
         budget_12_mois: [],
-        prix: { commentaire: null, mediane_comparables: null, fourchette: null },
+        prix: { commentaire: null, mediane_comparables: null, fourchette: null, comparables: null },
         analyse_limitee: null,
         fiche: { statut: "absente", famille: vehiculePublic.famille_moteur, cache: null },
         critique: null,

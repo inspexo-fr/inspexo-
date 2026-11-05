@@ -236,6 +236,23 @@ const coutFreins = {
   verifie('pas de fourchette → aucun poste de marché',
     !absent.postes.some((p) => p.type === 'prix_marche'))
 
+  // SPRINT 20 — la SOURCE de la médiane est dite, parce que l'argument
+  // s'adresse à un vendeur : « vos 7 annonces » se vérifie en trois clics,
+  // « notre relevé » demande de nous croire.
+  const recherche = calculerNegociation({
+    ...base,
+    prix_marche: { ecart_eur: 900, mediane: 9_600, n: 7, date: '05/11', ajuste_km: false, source: 'recherche' },
+  }).postes.find((p) => p.type === 'prix_marche')
+  verifie('source « recherche » : l’argument dit « de votre recherche »',
+    recherche && /de votre recherche/.test(recherche.argument), recherche?.argument)
+  verifie('source « relevé » : l’argument ne s’attribue PAS la recherche de l’utilisateur',
+    poste && !/de votre recherche/.test(poste.argument), poste?.argument)
+  verifie('sans source déclarée, aucune attribution inventée',
+    !/de votre recherche/.test(
+      calculerNegociation({ ...base, prix_marche: { ...marche, source: undefined } })
+        .postes.find((p) => p.type === 'prix_marche').argument,
+    ))
+
   // Avec un second poste chiffré, l'écart au marché entre dans le total.
   const avecReparation = calculerNegociation({
     ...base,

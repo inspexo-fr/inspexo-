@@ -91,10 +91,50 @@ const verifiePrix = (titre, cond, detail = '') => {
     (avecOpposition.verdict_conditionnel?.score ?? 0) <= 30)
 }
 {
-  // 11.4 — une entrée de catalogue sans source publique ne pèse plus du tout,
-  // même quand l'annonce mentionne ce qu'elle vise. La liste des défauts qui
-  // comptent change : la version DOIT bouger, les clients d'API la suivent.
-  affirme('BAREME_VERSION passée à 11.4', BAREME_VERSION === '11.4', BAREME_VERSION)
+  // 11.5 — SPRINT 20. Les comparables de la recherche de l'utilisateur
+  // alimentent l'axe prix dès 6 retenus, là où seul le relevé agrégé le
+  // faisait dès 15 : un dossier dont l'axe prix était « non évalué », donc
+  // exclu du score, est désormais noté. Le barème lui-même n'a pas changé,
+  // mais ce qu'il reçoit oui — et les clients d'API suivent ce numéro.
+  affirme('BAREME_VERSION passée à 11.5', BAREME_VERSION === '11.5', BAREME_VERSION)
+}
+{
+  // ⚠️ L'INVARIANT DU SPRINT 20 : le barème est AVEUGLE à la source de la
+  // fourchette. Il ne reçoit que des nombres — p25, médiane, p75, effectif,
+  // décalage kilométrique — et doit rendre exactement le même axe qu'ils
+  // viennent de six annonces vues par l'utilisateur ou de quinze relevés
+  // collectifs. Sans cela, la même annonce aurait deux notes selon le chemin,
+  // et il n'y aurait plus de verdict reproductible.
+  const commun = {
+    annee_courante: 2026, statut_vendeur: 'particulier', annee: 2018, kilometrage: 95000,
+    prix_affiche: 11000, entretien_renseigne: true, signaux_entretien: 2,
+    contradictions_entretien: 0, operations_critiques_non_faites: 0,
+    catalogue_vide: false, pannes: [], incoherences: 0,
+    fourchette: { p25: 9500, mediane: 10500, p75: 11500 }, fourchette_decalage_km: -250,
+  }
+  // Seul l'effectif diffère : 6 (recherche) contre 20 (relevé). L'axe prix ne
+  // doit pas dépendre de l'effectif, qui ne sert qu'au LIBELLÉ.
+  const recherche = calculerAxes({ ...commun, fourchette_n: 6, comparables_count: 6 })
+  const releve = calculerAxes({ ...commun, fourchette_n: 20, comparables_count: 20 })
+  affirme('axe prix identique quelle que soit la source de la fourchette',
+    recherche.axes.prix.note === releve.axes.prix.note,
+    `${recherche.axes.prix.note} contre ${releve.axes.prix.note}`)
+  affirme('score identique quelle que soit la source de la fourchette',
+    recherche.score === releve.score, `${recherche.score} contre ${releve.score}`)
+
+  // Et la contre-épreuve, sans laquelle le test serait vrai pour la mauvaise
+  // raison : SANS fourchette, l'axe prix sort du score, donc le score CHANGE.
+  // C'est précisément l'effet que le sprint 20 produit sur les dossiers
+  // accompagnés de six comparables.
+  const sans = calculerAxes({ ...commun, fourchette: null, fourchette_n: 0, comparables_count: 0, fourchette_decalage_km: 0 })
+  affirme('sans fourchette, l’axe prix n’est pas évalué',
+    sans.axes.prix.note === null && /Non évalué/.test(sans.axes.prix.commentaire),
+    JSON.stringify(sans.axes.prix))
+  affirme('le message de « non évalué » nomme les DEUX chemins réels (6 ou 15), plus « collez 3 »',
+    /6 annonces comparables/.test(sans.axes.prix.commentaire) && !/collez 3/.test(sans.axes.prix.commentaire),
+    sans.axes.prix.commentaire)
+  affirme('le test mord : le score diffère entre « avec fourchette » et « sans »',
+    sans.score !== recherche.score, `${sans.score} contre ${recherche.score}`)
 }
 
 console.log('CALIBRATION\n')

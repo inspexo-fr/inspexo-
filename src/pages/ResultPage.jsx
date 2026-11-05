@@ -19,6 +19,17 @@ import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
 import { LIBELLES_REGION, SEUIL_FOURCHETTE } from '../data/marche'
+import { SEUIL_COMPARABLES } from '../data/revendeur.gen'
+
+// SPRINT 20 — pourquoi un comparable a été écarté, en français.
+// Les clés sont celles de `filtrerComparables` (_shared/revendeur.ts).
+const LIBELLES_ECART = {
+  modele: 'autre modèle',
+  energie: 'autre énergie',
+  annee: 'année trop éloignée',
+  km: 'kilométrage trop éloigné',
+  prix: 'prix inutilisable',
+}
 import {
   getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
   trackEvent, dossierAdd, envoyerLienMagique, marquerClicPass,
@@ -1429,11 +1440,33 @@ export default function ResultPage() {
                 {r.prix?.commentaire ? (
                   <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>{r.prix.commentaire}</p>
                 ) : !r.prix?.fourchette ? (
-                  <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
-                    Non évalué : il faut au moins {SEUIL_FOURCHETTE} annonces comparables récentes
-                    (même motorisation, année et kilométrage proches) pour situer ce prix sans l'inventer.
-                    Collez des annonces comparables lors de l'analyse pour y contribuer.
-                  </p>
+                  <>
+                    <p className="c-ink2" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
+                      Non évalué. Deux chemins le rendent évaluable : au moins{' '}
+                      {SEUIL_COMPARABLES} annonces comparables tirées de votre propre recherche
+                      (bouton « Ajouter ces annonces comme comparables » de l'extension, ou partage
+                      de la page de résultats depuis l'application), ou au moins{' '}
+                      {SEUIL_FOURCHETTE} relevés récents dans le relevé Inspexo pour ce modèle.
+                      Rien n'est estimé en dessous : un prix calculé sur quatre annonces a l'air
+                      sérieux, et c'est précisément ce qui le rend dangereux.
+                    </p>
+                    {/* SPRINT 20 — POURQUOI, et pas seulement « pas assez ». Un
+                        « non évalué » affiché devant dix annonces que
+                        l'utilisateur vient d'envoyer ressemble à une panne. */}
+                    {r.prix?.comparables?.recus > 0 && (
+                      <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginTop: 8 }}>
+                        {r.prix.comparables.recus} annonce{r.prix.comparables.recus > 1 ? 's' : ''} reçue
+                        {r.prix.comparables.recus > 1 ? 's' : ''} de votre recherche,{' '}
+                        {r.prix.comparables.retenus} retenue{r.prix.comparables.retenus > 1 ? 's' : ''}
+                        {' '}(seuil : {r.prix.comparables.seuil}).
+                        {Object.keys(r.prix.comparables.ecartes_par_raison || {}).length > 0 && (
+                          <> Écartées : {Object.entries(r.prix.comparables.ecartes_par_raison)
+                            .map(([raison, n]) => `${n} ${LIBELLES_ECART[raison] ?? raison}`)
+                            .join(', ')}.</>
+                        )}
+                      </p>
+                    )}
+                  </>
                 ) : null}
               </div>
             )}

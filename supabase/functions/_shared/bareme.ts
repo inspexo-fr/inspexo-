@@ -26,7 +26,15 @@
 // d'annonce identique, le score peut différer de celui rendu en 11.1 ou 11.2.
 // C'est exactement ce que cette version signale aux clients d'API — et c'est
 // ce qui rend le même texte toujours égal au même score (71/71/71 mesuré).
-export const BAREME_VERSION = "11.4";
+// 11.5 — SPRINT 20 : les comparables de la RECHERCHE de l'utilisateur
+// (extension, application) alimentent l'axe prix et la négociation, à partir
+// de 6 retenus, là où seul le relevé agrégé le faisait à partir de 15. Le
+// barème est inchangé — c'est ce qu'il REÇOIT qui change : un dossier dont
+// l'axe prix était « non évalué », et donc exclu du score, est désormais noté
+// dès que six annonces comparables accompagnent l'analyse. À texte d'annonce
+// identique MAIS sans comparables, le score est strictement le même qu'en
+// 11.4 (vérifié par tests/bareme.test.mjs et par les trois cas de référence).
+export const BAREME_VERSION = "11.5";
 
 export type FaitsAxes = {
   annee_courante: number;
@@ -129,9 +137,14 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
   if (!f.fourchette || f.prix_affiche == null) {
     axes.prix = {
       note: null,
+      // ⚠️ SPRINT 20 — le message disait « collez 3 annonces comparables » :
+      // trois n'ont jamais suffi à rien, et l'utilisateur qui en collait trois
+      // voyait toujours « non évalué » sans comprendre pourquoi. Les deux
+      // chemins réels sont 6 comparables de sa propre recherche, ou 15 relevés
+      // dans le relevé Inspexo.
       commentaire: f.comparables_count > 0
         ? "Non évalué — pas assez d'annonces comparables récentes pour situer ce prix."
-        : "Non évalué — collez 3 annonces comparables lors de l'analyse pour situer le prix.",
+        : "Non évalué — il faut 6 annonces comparables issues de votre recherche, ou 15 relevés pour ce modèle.",
     };
   } else {
     // Les bornes servant à NOTER sont corrigées du kilométrage quand le
