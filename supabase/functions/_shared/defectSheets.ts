@@ -455,6 +455,17 @@ export function sanitizePannes(
     // Une panne exige désormais au moins une source OFFICIELLE, de PRESSE ou
     // ÉDITORIALE. Les compilations, forums et vendeurs restent en appui : ils
     // peuvent préciser, jamais porter.
+    //
+    // ⚠️ LIMITE ASSUMÉE : on vérifie ici le RANG DU SITE, pas que la PAGE
+    // citée se lise. La règle « une source illisible ne porte pas » (décision
+    // d'Utku du 6 nov. 2026, à propos de truedelta.com en 403) est appliquée
+    // par `sourcesPortentLEntreeLues`, et seulement là où les pages sont
+    // RÉELLEMENT récupérées : la campagne de re-sourcing et `atlas-builder`,
+    // qui n'attachent une source qu'après avoir obtenu son texte. Ici, dans
+    // une fonction edge au budget de 150 s qui génère déjà la fiche par
+    // recherche web, ajouter une récupération par source (jusqu'à 5 par panne,
+    // 10 pannes par fiche) ferait expirer la génération. Dire ce qui n'est pas
+    // vérifié vaut mieux que le laisser croire.
     if (!sourcesPortentLEntree(urls)) {
       rejectedSources.push({
         url: urls[0],

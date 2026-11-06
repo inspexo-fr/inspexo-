@@ -144,6 +144,11 @@ const HOTES_EDITORIAL = [
   // Arrêté par Utku le 6 nov. 2026 : éditeur identifiable, contenu
   // rédactionnel, ne vend pas la réparation.
   "fiches-auto.fr", "pistonheads.com", "planeterenault.com", "drivisual.tv",
+  // ⚠️ Données d'enquêtes de propriétaires, fondateur identifié. Sa page
+  // d'accueil était en 403 au sondage du 6 nov. 2026 : le rang est donc un
+  // jugement, pas un relevé. Et la règle d'Utku s'applique — si la page
+  // CITÉE ne peut pas être lue, la panne ne passe pas (`pageLisible`).
+  "truedelta.com",
 ];
 
 /** COMPILATION : agrège des forums, éditeur NON identifié.
@@ -180,6 +185,20 @@ const MOTIFS_VENDEUR = [
   /\bcasse-/i, /reconditioned/i, /used-?engine/i, /occasion-moteur/i,
   /\bdevis\b/i, /carrosserie/i, /\bpneu/i,
 ];
+
+/** ⚠️ EXPLICITEMENT LAISSÉS « INCONNU », et c'est une décision, pas un oubli.
+ *
+ *  · `ford.oemdtc.com` : un tiers qui REPUBLIE des bulletins constructeur ne
+ *    vaut pas le bulletin d'origine. Le bulletin, lui, est à chercher chez le
+ *    constructeur ou la NHTSA — c'est une consigne de la campagne de
+ *    re-sourcing, pas un rang à accorder au miroir.
+ *  · `autos.yahoo.com` : un portail qui republie la presse d'autrui. On cite
+ *    l'article d'origine, jamais le portail.
+ *
+ *  Les nommer ici ne change pas leur rang — `inconnu` est le défaut — mais
+ *  empêche qu'on les reclasse un jour sans retrouver le raisonnement.
+ *  (Décisions d'Utku, 6 nov. 2026.) */
+const HOTES_INCONNU_ASSUME = ["oemdtc.com", "autos.yahoo.com", "yahoo.com"];
 
 /** HORS SUJET : un hôte qui n'a rien à voir avec le sujet d'une fiche moteur.
  *
@@ -248,6 +267,9 @@ const HOTES_VENDEUR = [
   // Déjà relevés à la campagne de l'atlas (5 nov. 2026).
   "autoliva.com", "la-boite-automatique.com", "ecutesting.com",
   "specialiste-bmw.fr", "caroom.fr", "findservicehistory.com",
+  // Fabricant de roulements : sa documentation technique est autoritaire, mais
+  // il vend les pièces. Décision d'Utku du 6 nov. 2026.
+  "ntn-snr.com",
   "oscaro.com", "casse-compare.fr", "moninspection.fr", "mecano.ovh",
   "goodmecano.com", "rpf-automobiles.fr", "re-fap.fr", "carbon-cleaning.com",
 ];
@@ -301,6 +323,8 @@ export function rangSource(url: unknown): RangSource {
   if (correspond(HOTES_COMMUNAUTE)) return "forum";
   if (correspond(HOTES_PRESSE)) return "presse";
   if (correspond(HOTES_HORS_SUJET)) return "hors_sujet";
+  // Avant tout autre classement : ceux qu'on a décidé de ne pas classer.
+  if (correspond(HOTES_INCONNU_ASSUME)) return "inconnu";
   if (correspond(HOTES_VENDEUR)) return "vendeur";
   if (MOTIFS_VENDEUR.some((re) => re.test(hote))) return "vendeur";
   if (correspond(HOTES_EDITORIAL)) return "editorial";
@@ -309,6 +333,27 @@ export function rangSource(url: unknown): RangSource {
   // qu'un site vend quelque chose sans l'avoir vérifié. Un hôte inconnu ne
   // porte pas une affirmation — même conséquence, sans l'allégation.
   return "inconnu";
+}
+
+/** ⚠️ UNE SOURCE QU'ON NE PEUT PAS LIRE NE PORTE PAS (décision d'Utku du
+ *  6 nov. 2026, à propos de `truedelta.com`, dont la page était en 403).
+ *
+ *  Le rang dit ce qu'est un SITE ; il ne dit pas que la PAGE citée existe et
+ *  se lit. Une page en 403, en 404 ou rendue côté client ne prouve rien — et
+ *  le dispositif de /fiabilite la compte déjà comme « source_injoignable »
+ *  plutôt que comme une confirmation.
+ *
+ *  `lisibles` est la liste des URL dont le texte a été réellement obtenu.
+ *  Appelée sans elle, la fonction se comporte comme avant : c'est aux
+ *  appelants qui RÉCUPÈRENT les pages (génération de fiche, sourcing d'atlas)
+ *  de la fournir. Un appelant qui lit un relevé déjà constitué ne peut pas
+ *  savoir si la page répondait ce jour-là, et il ne doit pas le deviner. */
+export function sourcesPortentLEntreeLues(
+  urls: readonly unknown[],
+  lisibles: readonly unknown[],
+): boolean {
+  const lues = new Set(lisibles.map((u) => String(u)));
+  return urls.filter((u) => lues.has(String(u))).some((u) => RANGS_PORTANTS.includes(rangSource(u)));
 }
 
 /** Une entrée tient-elle sur ses sources ?

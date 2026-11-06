@@ -8,6 +8,7 @@ import {
   pageParleDeLEntree,
   rangSource,
   sourcesPortentLEntree,
+  sourcesPortentLEntreeLues,
 } from '../supabase/functions/_shared/atlasSource.ts'
 
 let ok_ = 0, ko = 0
@@ -293,6 +294,65 @@ console.log('\n▶ La génération vérifie le rang AVANT d’accepter une sourc
 // Quatrième occurrence de ce motif dans le projet, après les trois
 // `process.exit(1)` placés avant les nouveaux blocs de
 // tests/inspection.test.mjs. Un test qui ne peut pas échouer n'est pas un test.
+
+// ──────────────────────────────────────────────────────────────────────────
+// Les 4 arbitrages d'Utku du 6 nov. 2026
+// ──────────────────────────────────────────────────────────────────────────
+console.log('\n▶ Arbitrages du 6 nov. 2026')
+
+eq(rangSource('https://www.truedelta.com/car-reliability-by-brand'), 'editorial',
+  'truedelta.com : éditorial (enquêtes de propriétaires, fondateur identifié)')
+ok(sourcesPortentLEntree(['https://www.truedelta.com/x']),
+  'et il porte une entrée — comme tout rang éditorial')
+
+// ⚠️ « Si tu ne peux toujours pas lire la page citée, la panne ne passe pas. »
+ok(!sourcesPortentLEntreeLues(['https://www.truedelta.com/x'], []),
+  'mais une page éditoriale ILLISIBLE ne porte pas')
+ok(sourcesPortentLEntreeLues(['https://www.truedelta.com/x'], ['https://www.truedelta.com/x']),
+  'la même page, lue, porte')
+ok(!sourcesPortentLEntreeLues(['https://www.largus.fr/a', 'https://forum-auto.caradisiac.com/b'],
+  ['https://forum-auto.caradisiac.com/b']),
+  'une presse illisible ne se rattrape pas sur un forum lisible')
+ok(sourcesPortentLEntreeLues(['https://www.largus.fr/a', 'https://www.truedelta.com/b'],
+  ['https://www.largus.fr/a']),
+  'il suffit qu’UNE source portante ait été lue')
+ok(!sourcesPortentLEntreeLues([], []), 'aucune source : rien ne porte')
+
+// ⚠️ Un tiers qui republie ne vaut pas le bulletin d'origine.
+for (const h of ['ford.oemdtc.com', 'oemdtc.com', 'www.oemdtc.com']) {
+  eq(rangSource(`https://${h}/tsb-12345`), 'inconnu',
+    `${h} : inconnu — un miroir de bulletin n’est pas le bulletin`)
+}
+eq(rangSource('https://autos.yahoo.com/article-repris'), 'inconnu',
+  'autos.yahoo.com : inconnu — on cite l’article d’origine, pas le portail')
+ok(!sourcesPortentLEntree(['https://ford.oemdtc.com/x', 'https://autos.yahoo.com/y']),
+  'et ni l’un ni l’autre ne porte une panne')
+
+eq(rangSource('https://www.ntn-snr.com/fr/roulement-x'), 'vendeur',
+  'ntn-snr.com : vendeur — sa documentation est autoritaire, mais il vend les pièces')
+ok(!coutUtilisable(['https://www.ntn-snr.com/fr/piece']),
+  'donc son prix ne fixe aucune gravité')
+
+// ⚠️ Le sous-domaine d'un constructeur chez un TIERS ne doit pas devenir
+// officiel par ressemblance de nom. Contre-épreuve du vrai domaine.
+eq(rangSource('https://www.ford.com/support/recalls/'), 'officiel',
+  'contre-épreuve : ford.com, lui, est bien officiel')
+
+// ⚠️ La règle de lisibilité est portée par l'ORDRE des opérations dans
+// `atlas-builder` : la page est récupérée AVANT que l'URL ne devienne une
+// source. Ce contrôle statique interdit d'inverser les deux.
+{
+  const b = readFileSync('supabase/functions/atlas-builder/index.ts', 'utf8')
+  const iTexte = b.indexOf('const texte = await texteDeLaPage(url)')
+  const iIllisible = b.indexOf('motif: "page_illisible"')
+  const iRetenue = b.indexOf('retenues.push({')
+  ok(iTexte > 0 && iIllisible > iTexte && iRetenue > iIllisible,
+    'atlas-builder écarte une page illisible AVANT de l’attacher comme source')
+  const d = readFileSync('supabase/functions/_shared/defectSheets.ts', 'utf8')
+  ok(/LIMITE ASSUMÉE[\s\S]{0,900}sourcesPortentLEntreeLues/.test(d),
+    'et sheet-builder DIT qu’il ne vérifie que le rang, pas la lisibilité')
+}
+
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${ok_}/${ok_ + ko} contrôles passés`)
 if (ko > 0) {
   console.error(`${ko} échec(s) dans tests/atlas-source.test.mjs`)
