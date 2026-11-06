@@ -91,6 +91,89 @@ const verifiePrix = (titre, cond, detail = '') => {
     (avecOpposition.verdict_conditionnel?.score ?? 0) <= 30)
 }
 {
+  // ⚠️ DÉFAUTS SIGNALÉS NON VÉRIFIABLES (sprint 21.1, décision d'Utku du
+  // 6 nov. 2026). Une panne ne pèse que si une source INDÉPENDANTE la porte.
+  // Les autres deviennent des questions — et leur nombre plafonne l'axe.
+  //
+  // ⚠️ LE PLAFOND EXISTE PARCE QUE LE SIMPLE RETRAIT FLATTAIT. Mesuré : en
+  // retirant les pannes non portées sans rien d'autre, l'axe de la Mercedes
+  // passait de 13 à 16/20 avec « Aucun défaut documenté retenu », et le
+  // verdict montait de 71 à 77. Appliqué aux fiches à terre, le dispositif
+  // aurait écrit à des dizaines de moteurs qu'ils n'ont aucun défaut connu.
+  const socle = {
+    annee_courante: 2026, statut_vendeur: 'particulier', annee: 2025, kilometrage: 36606,
+    prix_affiche: 41490, fourchette: null, comparables_count: 0, entretien_renseigne: true,
+    signaux_entretien: 2, contradictions_entretien: 0, operations_critiques_non_faites: 0,
+    incoherences: 0, catalogue_vide: false, famille_identifiee: true,
+  }
+  const majeure = { gravite: 'majeure', rappel_officiel: false, rappel_confirme_effectue: false }
+
+  // ⚠️ LE PLAFOND DÉPEND DE LA GRAVITÉ RÉTROGRADÉE (arbitrage du 6 nov. 2026).
+  const toutesRetro = calculerAxes({
+    ...socle, pannes: [], pannes_non_verifiables: 2, pannes_non_verifiables_max_gravite: 'majeure',
+  })
+  affirme('rétrogradées dont une majeure : l’axe vaut 10/20, pas 16',
+    toutesRetro.axes.risques_mecaniques.note === 10, String(toutesRetro.axes.risques_mecaniques.note))
+  const toutesMineures = calculerAxes({
+    ...socle, pannes: [], pannes_non_verifiables: 2, pannes_non_verifiables_max_gravite: 'mineure',
+  })
+  affirme('rétrogradées toutes mineures : l’axe vaut 13/20',
+    toutesMineures.axes.risques_mecaniques.note === 13, String(toutesMineures.axes.risques_mecaniques.note))
+  affirme('et son libellé ne dit pas davantage « aucun défaut documenté »',
+    !/aucun défaut documenté/i.test(toutesMineures.axes.risques_mecaniques.commentaire))
+  affirme('champ de gravité absent : plafond prudent à 10',
+    calculerAxes({ ...socle, pannes: [], pannes_non_verifiables: 2 })
+      .axes.risques_mecaniques.note === 10)
+  affirme('⚠️ et le libellé ne dit JAMAIS « aucun défaut documenté »',
+    !/aucun défaut documenté/i.test(toutesRetro.axes.risques_mecaniques.commentaire),
+    toutesRetro.axes.risques_mecaniques.commentaire)
+  affirme('il dit « non vérifiables »',
+    /non vérifiables/i.test(toutesRetro.axes.risques_mecaniques.commentaire))
+
+  const mixte = calculerAxes({ ...socle, pannes: [majeure], pannes_non_verifiables: 2, pannes_non_verifiables_max_gravite: 'majeure' })
+  affirme('une panne portée + des rétrogradées : l’axe est plafonné à 10',
+    mixte.axes.risques_mecaniques.note <= 10, String(mixte.axes.risques_mecaniques.note))
+  affirme('et le libellé annonce les défauts signalés sans source',
+    /sans source indépendante/i.test(mixte.axes.risques_mecaniques.commentaire))
+
+  // ⚠️ CONTRE-ÉPREUVE : sans rétrogradation, rien ne change.
+  const sansRetro = calculerAxes({ ...socle, pannes: [majeure] })
+  const champAbsent = calculerAxes({ ...socle, pannes: [majeure], pannes_non_verifiables: 0 })
+  affirme('aucune rétrogradation : le score est strictement celui d’avant',
+    sansRetro.score === champAbsent.score, `${sansRetro.score} contre ${champAbsent.score}`)
+  // ⚠️ LE PLAFOND NE MORD QUE SI LA NOTE SURVIVANTE DÉPASSE 10 — ce qui est
+  // le comportement juste, et pas celui que j'avais supposé : avec un défaut
+  // majeur retenu (9/20), la rétrogradation ne change que le LIBELLÉ, pas la
+  // note. Un plafond ne doit jamais remonter une note.
+  affirme('avec une panne majeure retenue (9/20), le plafond ne change pas la note',
+    mixte.axes.risques_mecaniques.note === sansRetro.axes.risques_mecaniques.note,
+    `${mixte.axes.risques_mecaniques.note} contre ${sansRetro.axes.risques_mecaniques.note}`)
+  // Là où il mord : des mineures survivantes valent 13, le plafond les ramène à 10.
+  const mineure = { gravite: 'mineure', rappel_officiel: false, rappel_confirme_effectue: false }
+  const mineuresRetro = calculerAxes({ ...socle, pannes: [mineure], pannes_non_verifiables: 3, pannes_non_verifiables_max_gravite: 'majeure' })
+  const mineuresSeules = calculerAxes({ ...socle, pannes: [mineure] })
+  affirme('le test mord : des mineures retenues passent de 13 à 10 avec des rétrogradées',
+    mineuresRetro.axes.risques_mecaniques.note === 10 && mineuresSeules.axes.risques_mecaniques.note === 13,
+    `${mineuresRetro.axes.risques_mecaniques.note} contre ${mineuresSeules.axes.risques_mecaniques.note}`)
+  affirme('et le score diffère bien dans ce cas',
+    mineuresRetro.score !== mineuresSeules.score, `${mineuresRetro.score} contre ${mineuresSeules.score}`)
+  // ⚠️ LA LIMITE DE LA 11.8 EST CORRIGÉE, et le test s'inverse pour le prouver.
+  // À la 11.8, le plafond valait 10 dans tous les cas — soit SOUS la note d'un
+  // défaut mineur CONFIRMÉ (13) : ne pas pouvoir vérifier un défaut mineur
+  // coûtait plus cher que le défaut lui-même, et c'est ce qui faisait tomber la
+  // Mercedes de vert 71 à orange 65. Désormais, ne pas pouvoir vérifier des
+  // signalements mineurs coûte EXACTEMENT ce que coûterait un mineur confirmé.
+  const mineureConfirmee = calculerAxes({ ...socle, pannes: [{ gravite: 'mineure', rappel_officiel: false, rappel_confirme_effectue: false }] })
+  affirme('des signalements mineurs invérifiables ne coûtent pas plus qu’un mineur confirmé',
+    toutesMineures.axes.risques_mecaniques.note === mineureConfirmee.axes.risques_mecaniques.note,
+    `${toutesMineures.axes.risques_mecaniques.note} contre ${mineureConfirmee.axes.risques_mecaniques.note}`)
+  // Et une rétrogradée MAJEURE, elle, coûte bien plus : on ignore un défaut
+  // potentiellement coûteux, et le plafond le dit.
+  affirme('une rétrogradée majeure plafonne plus bas qu’un mineur confirmé',
+    toutesRetro.axes.risques_mecaniques.note < mineureConfirmee.axes.risques_mecaniques.note,
+    `${toutesRetro.axes.risques_mecaniques.note} contre ${mineureConfirmee.axes.risques_mecaniques.note}`)
+}
+{
   // ⚠️ MOTEUR NON IDENTIFIÉ — le défaut mesuré le 5 nov. 2026 en production.
   // Sur la Classe C 220 d, quand l'identification ne déduisait pas l'OM654,
   // `catalogue_vide` passait à true, l'axe risques sortait du score — et comme
@@ -217,7 +300,7 @@ const verifiePrix = (titre, cond, detail = '') => {
   // faisait dès 15 : un dossier dont l'axe prix était « non évalué », donc
   // exclu du score, est désormais noté. Le barème lui-même n'a pas changé,
   // mais ce qu'il reçoit oui — et les clients d'API suivent ce numéro.
-  affirme('BAREME_VERSION passée à 11.7', BAREME_VERSION === '11.7', BAREME_VERSION)
+  affirme('BAREME_VERSION passée à 11.9', BAREME_VERSION === '11.9', BAREME_VERSION)
 }
 {
   // ⚠️ L'INVARIANT DU SPRINT 20 : le barème est AVEUGLE à la source de la

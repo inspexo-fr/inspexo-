@@ -301,6 +301,13 @@ serve(async (req: Request) => {
     for (const s of propose) {
       const url = typeof s?.url === "string" ? s.url.trim() : "";
       if (!/^https:\/\/\S{8,500}$/i.test(url)) { ecartees.push({ url, motif: "url_invalide" }); continue; }
+      // ⚠️ L'ORDRE EST LA GARANTIE DE LA RÈGLE « une source illisible ne
+      // porte pas » (décision d'Utku du 6 nov. 2026) : le texte est obtenu
+      // AVANT que l'URL ne devienne une source. Une page en 403 ou en 404
+      // n'atteint jamais `retenues`, quel que soit le rang de son hôte — un
+      // rang dit ce qu'est un SITE, pas que la PAGE existe et se lit.
+      // Déplacer cette récupération après l'attachement rendrait la règle
+      // inopérante sans qu'aucun test ne le voie.
       const texte = await texteDeLaPage(url);
       if (!texte) { ecartees.push({ url, motif: "page_illisible" }); continue; }
       if (!pageParleDeLEntree(texte, marqueurs)) { ecartees.push({ url, motif: "hors_sujet" }); continue; }

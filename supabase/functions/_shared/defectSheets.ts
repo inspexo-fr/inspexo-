@@ -10,6 +10,7 @@
 
 // deno-lint-ignore-file no-explicit-any
 import { normalizeBrand, rawBrandVariants, expandBrand } from "./brandAliases.ts";
+import { coutUtilisable, rangSource, sourcesPortentLEntree } from "./atlasSource.ts";
 import { appliquerGraviteRemede } from "./graviteRemede.ts";
 import { programmeSourceOk, sanitizeProgrammes, type WarrantyProgram } from "./warrantyPrograms.ts";
 
@@ -444,6 +445,46 @@ export function sanitizePannes(
       rejectedSources.push({ url: urls[0], vehicule_concerne: "(aucune source spécifique au moteur)", panne_titre: String(p.titre).slice(0, 120) });
       continue;
     }
+    // ⚠️ SPRINT 21.1 — LE RANG DE LA SOURCE EST VÉRIFIÉ AVANT D'ACCEPTER LA
+    // PANNE, et c'est ce qui manquait. L'audit du 6 nov. 2026 a trouvé que
+    // 80 % des citations des 44 fiches venaient de garages, de vendeurs de
+    // pièces et de forums — et qu'`uvoz.info`, un site bosnien sur l'IMPORT de
+    // véhicules, était seule source de trois pannes. Rien ici ne regardait ce
+    // qu'était la page : seulement si elle nommait le moteur.
+    //
+    // Une panne exige désormais au moins une source OFFICIELLE, de PRESSE ou
+    // ÉDITORIALE. Les compilations, forums et vendeurs restent en appui : ils
+    // peuvent préciser, jamais porter.
+    //
+    // ⚠️ LIMITE ASSUMÉE : on vérifie ici le RANG DU SITE, pas que la PAGE
+    // citée se lise. La règle « une source illisible ne porte pas » (décision
+    // d'Utku du 6 nov. 2026, à propos de truedelta.com en 403) est appliquée
+    // par `sourcesPortentLEntreeLues`, et seulement là où les pages sont
+    // RÉELLEMENT récupérées : la campagne de re-sourcing et `atlas-builder`,
+    // qui n'attachent une source qu'après avoir obtenu son texte. Ici, dans
+    // une fonction edge au budget de 150 s qui génère déjà la fiche par
+    // recherche web, ajouter une récupération par source (jusqu'à 5 par panne,
+    // 10 pannes par fiche) ferait expirer la génération. Dire ce qui n'est pas
+    // vérifié vaut mieux que le laisser croire.
+    if (!sourcesPortentLEntree(urls)) {
+      rejectedSources.push({
+        url: urls[0],
+        vehicule_concerne: `(aucune source indépendante : ${urls.map(rangSource).join(", ")})`,
+        panne_titre: String(p.titre).slice(0, 120),
+      });
+      continue;
+    }
+    // Un hôte hors sujet n'est pas « en appui », il est une erreur de
+    // recherche : la panne entière est rejetée s'il en est l'unique source.
+    const horsSujet = urls.filter((u) => rangSource(u) === "hors_sujet");
+    if (horsSujet.length > 0 && horsSujet.length === urls.length) {
+      rejectedSources.push({
+        url: horsSujet[0],
+        vehicule_concerne: "(source hors sujet)",
+        panne_titre: String(p.titre).slice(0, 120),
+      });
+      continue;
+    }
     // Titres déjà connus (re-validation admin d'une fiche existante) : conservés.
     const knownTitles = new Map<string, string | null>(
       (Array.isArray(p.sources) ? p.sources : [])
@@ -463,8 +504,14 @@ export function sanitizePannes(
       gravite: p.gravite === "securite"
         ? (p.gravite_citee_par_source === true ? "securite" : "majeure")
         : ["casse", "majeure", "mineure"].includes(p.gravite) ? p.gravite : "mineure",
-      cout_indicatif_eur_min: typeof p.cout_indicatif_eur_min === "number" ? p.cout_indicatif_eur_min : null,
-      cout_indicatif_eur_max: typeof p.cout_indicatif_eur_max === "number" ? p.cout_indicatif_eur_max : null,
+      // ⚠️ Un prix publié par un vendeur ne chiffre rien : sa page n'est pas
+      // un relevé, c'est une offre. 41 coûts de fiches étaient dans ce cas.
+      cout_indicatif_eur_min: coutUtilisable(urls) && typeof p.cout_indicatif_eur_min === "number"
+        ? p.cout_indicatif_eur_min
+        : null,
+      cout_indicatif_eur_max: coutUtilisable(urls) && typeof p.cout_indicatif_eur_max === "number"
+        ? p.cout_indicatif_eur_max
+        : null,
       url_source: urls.slice(0, 4),
       date_consultee: today,
       rappel_code: p.rappel_code ? String(p.rappel_code).slice(0, 40) : null,

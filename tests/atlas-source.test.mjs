@@ -8,6 +8,7 @@ import {
   pageParleDeLEntree,
   rangSource,
   sourcesPortentLEntree,
+  sourcesPortentLEntreeLues,
 } from '../supabase/functions/_shared/atlasSource.ts'
 
 let ok_ = 0, ko = 0
@@ -160,24 +161,33 @@ eq(rangSource('https://forum-auto.caradisiac.com/topic/123'), 'forum',
 eq(rangSource('https://www.reddit.com/r/cars/x'), 'forum', 'Reddit est un forum')
 eq(rangSource('https://www.planete-citroen.com/forum/x'), 'forum', 'Planète-Citroën est un forum')
 // Les hôtes réellement rencontrés dans la campagne, et mal classés par le modèle.
+// Les hôtes dont la VENTE est établie (relevée sur leur page le 5 nov. 2026).
 for (const h of ['autoliva.com', 'ecutesting.com', 'caroom.fr', 'la-boite-automatique.com',
-                 'automotohebdo.fr', 'findservicehistory.com', 'kangoo-pro.fr',
-                 'superbaroudeur.com', 'specialiste-bmw.fr', 'oscaro.com']) {
-  eq(rangSource(`https://www.${h}/page`), 'commercial', `${h} est commercial`)
+                 'findservicehistory.com', 'specialiste-bmw.fr', 'oscaro.com']) {
+  eq(rangSource(`https://www.${h}/page`), 'vendeur', `${h} est vendeur`)
 }
-// ⚠️ « commercial » est le DÉFAUT : un hôte inconnu ne porte pas une entrée.
-eq(rangSource('https://exemple-inconnu-xyz.fr/page'), 'commercial', 'un hôte inconnu est commercial')
-eq(rangSource('pas-une-url'), 'commercial', 'une URL illisible est commerciale')
-eq(rangSource(null), 'commercial', 'null est commercial')
+// ⚠️ ET CEUX-LÀ RESTENT « INCONNU », PAS « VENDEUR ». Les nommer vendeurs
+// serait AFFIRMER qu'ils vendent quelque chose sans l'avoir vérifié. Même
+// conséquence — aucun ne porte une entrée — sans l'allégation.
+for (const h of ['automotohebdo.fr', 'kangoo-pro.fr', 'superbaroudeur.com']) {
+  eq(rangSource(`https://www.${h}/page`), 'inconnu', `${h} reste inconnu, faute de l’avoir vérifié`)
+  ok(!sourcesPortentLEntree([`https://www.${h}/page`]), `et ${h} ne porte rien`)
+}
+// « inconnu » est le DÉFAUT : il ne porte pas.
+eq(rangSource('https://exemple-inconnu-xyz.fr/page'), 'inconnu', 'un hôte non classé est inconnu')
+eq(rangSource('pas-une-url'), 'inconnu', 'une URL illisible est inconnue')
+eq(rangSource(null), 'inconnu', 'null est inconnu')
+ok(!sourcesPortentLEntree(['https://exemple-inconnu-xyz.fr/page', null, 'pas-une-url']),
+  'et aucun des trois ne porte quoi que ce soit')
 
 console.log('\n▶ Ce qui PORTE une entrée')
 ok(sourcesPortentLEntree(['https://static.nhtsa.gov/a.pdf', 'https://autoliva.com/b']),
   'une source officielle porte l’entrée, même accompagnée de commercial')
 ok(sourcesPortentLEntree(['https://www.largus.fr/a']), 'une source de presse porte l’entrée')
 ok(!sourcesPortentLEntree(['https://autoliva.com/a', 'https://la-boite-automatique.com/b']),
-  '⚠️ deux sources commerciales ne portent PAS une entrée')
+  '⚠️ deux sources de vendeurs ne portent PAS une entrée')
 ok(!sourcesPortentLEntree(['https://forum-auto.caradisiac.com/a', 'https://autoliva.com/b']),
-  'un forum et un commercial ne portent pas une entrée')
+  'un forum et un vendeur ne portent pas une entrée')
 ok(!sourcesPortentLEntree([]), 'aucune source ne porte rien')
 
 console.log('\n▶ Un coût de réparateur ne fixe pas la gravité')
@@ -208,4 +218,144 @@ console.log('\n▶ Les garde-fous sont bien CÂBLÉS, pas seulement écrits')
     'la fusion refuse aussi une entrée sans source portante — un relevé déjà payé n’entre pas pour autant')
 }
 
+console.log('\n▶ Rang « compilation » et « hors sujet » (arbitrage du 6 nov. 2026)')
+eq(rangSource('https://docteurmoteurs.com/x'), 'compilation', 'docteurmoteurs est une compilation')
+eq(rangSource('https://mymotorlist.com/x'), 'compilation', 'mymotorlist aussi')
+eq(rangSource('https://enginescope.gr/x'), 'compilation', 'enginescope aussi')
+eq(rangSource('https://motorreviewer.com/x'), 'compilation', 'motorreviewer, même famille')
+// ⚠️ UNE COMPILATION NE PORTE PAS, exactement comme un forum : elle agrège des
+// fils de discussion sans rédaction identifiable, elle ne vaut pas mieux que
+// ce qu'elle agrège.
+ok(!sourcesPortentLEntree(['https://docteurmoteurs.com/x']),
+  '⚠️ une compilation seule ne porte PAS une panne')
+ok(!sourcesPortentLEntree(['https://docteurmoteurs.com/x', 'https://forum-peugeot.com/y']),
+  'compilation + forum ne portent pas davantage')
+ok(sourcesPortentLEntree(['https://docteurmoteurs.com/x', 'https://www.largus.fr/y']),
+  'mais une presse à côté suffit')
+ok(!coutUtilisable(['https://docteurmoteurs.com/tarifs']),
+  'et une compilation ne chiffre pas une gravité')
+
+eq(rangSource('https://uvoz.info/x'), 'hors_sujet',
+  'uvoz.info est HORS SUJET : un site bosnien sur l’import de véhicules')
+ok(!sourcesPortentLEntree(['https://uvoz.info/x']), 'un hôte hors sujet ne porte rien')
+
+console.log('\n▶ Les rangs PORTANTS, arrêtés par Utku')
+for (const [u, attendu] of [
+  ['https://static.nhtsa.gov/a.pdf', 'officiel'],
+  ['https://recalls-rappels.canada.ca/fr/x', 'officiel'],
+  ['https://www.ford.com/support/recalls/', 'officiel'],
+  ['https://www.dacia.fr/x', 'officiel'],
+  ['https://www.largus.fr/actualite/x', 'presse'],
+  ['https://www.thedrive.com/news/x', 'presse'],
+  ['https://www.bmwblog.com/x', 'presse'],
+  ['https://www.larevueautomobile.com/x', 'presse'],
+  ['https://www.fiches-auto.fr/articles-auto/x.php', 'editorial'],
+  ['https://www.pistonheads.com/news/x', 'editorial'],
+  ['https://www.planeterenault.com/essais/x', 'editorial'],
+  ['https://drivisual.tv/x', 'editorial'],
+]) eq(rangSource(u), attendu, `${u.replace(/^https?:\/\/(www\.)?/, '').slice(0, 42)}`)
+
+console.log('\n▶ ⚠️ Les motifs de vente n’attrapent AUCUN hôte portant')
+{
+  const portants = [
+    'static.nhtsa.gov', 'recalls-rappels.canada.ca', 'ford.com', 'dacia.fr',
+    'renault.fr', 'peugeot.fr', 'citroen.fr', 'volkswagen.fr', 'largus.fr',
+    'thedrive.com', 'slashgear.com', 'bmwblog.com', 'larevueautomobile.com',
+    'quechoisir.org', 'adac.de', 'honestjohn.co.uk', 'carbuzz.com',
+    'drive.com.au', 'fiches-auto.fr', 'pistonheads.com', 'planeterenault.com',
+    'drivisual.tv',
+  ]
+  const mauvais = portants.filter((h) => !['officiel', 'presse', 'editorial'].includes(rangSource(`https://${h}/x`)))
+  ok(mauvais.length === 0, `les ${portants.length} hôtes portants le restent`, mauvais.join(', '))
+  // Et les motifs mordent bien là où ils doivent.
+  for (const h of ['garage-pouget.fr', 'aepspieces.com', 'go-parts.com', 'autodoc.co.uk',
+                   'rachat-cash-voiture.fr', 'occasion-moteur.com', 'getusedengine.com']) {
+    eq(rangSource(`https://${h}/x`), 'vendeur', `${h} est reconnu vendeur par motif`)
+  }
+}
+
+console.log('\n▶ La génération vérifie le rang AVANT d’accepter une source')
+{
+  const fiches = readFileSync(new URL('../supabase/functions/_shared/defectSheets.ts', import.meta.url), 'utf8')
+  ok(/sourcesPortentLEntree\(urls\)/.test(fiches),
+    '⚠️ sheet-builder exige une source indépendante — c’est ce qui manquait quand uvoz.info est passé')
+  ok(/rangSource\(u\) === "hors_sujet"/.test(fiches),
+    'et il rejette une panne dont toutes les sources sont hors sujet')
+  ok(/coutUtilisable\(urls\)/.test(fiches),
+    'un prix de vendeur ne chiffre rien dans une fiche')
+}
+
+// ⚠️ CE FICHIER N'AVAIT AUCUN CODE DE SORTIE. Il imprimait « Tous les tests
+// atlas-source passent » quoi qu'il arrive — et le 6 nov. 2026 il l'a imprimé
+// avec TREIZE échecs à l'écran, après le renommage du rang « commercial ».
+// Chaîné dans `npm run eval`, il n'a donc jamais pu bloquer un déploiement
+// depuis le sprint 16.
+//
+// Quatrième occurrence de ce motif dans le projet, après les trois
+// `process.exit(1)` placés avant les nouveaux blocs de
+// tests/inspection.test.mjs. Un test qui ne peut pas échouer n'est pas un test.
+
+// ──────────────────────────────────────────────────────────────────────────
+// Les 4 arbitrages d'Utku du 6 nov. 2026
+// ──────────────────────────────────────────────────────────────────────────
+console.log('\n▶ Arbitrages du 6 nov. 2026')
+
+eq(rangSource('https://www.truedelta.com/car-reliability-by-brand'), 'editorial',
+  'truedelta.com : éditorial (enquêtes de propriétaires, fondateur identifié)')
+ok(sourcesPortentLEntree(['https://www.truedelta.com/x']),
+  'et il porte une entrée — comme tout rang éditorial')
+
+// ⚠️ « Si tu ne peux toujours pas lire la page citée, la panne ne passe pas. »
+ok(!sourcesPortentLEntreeLues(['https://www.truedelta.com/x'], []),
+  'mais une page éditoriale ILLISIBLE ne porte pas')
+ok(sourcesPortentLEntreeLues(['https://www.truedelta.com/x'], ['https://www.truedelta.com/x']),
+  'la même page, lue, porte')
+ok(!sourcesPortentLEntreeLues(['https://www.largus.fr/a', 'https://forum-auto.caradisiac.com/b'],
+  ['https://forum-auto.caradisiac.com/b']),
+  'une presse illisible ne se rattrape pas sur un forum lisible')
+ok(sourcesPortentLEntreeLues(['https://www.largus.fr/a', 'https://www.truedelta.com/b'],
+  ['https://www.largus.fr/a']),
+  'il suffit qu’UNE source portante ait été lue')
+ok(!sourcesPortentLEntreeLues([], []), 'aucune source : rien ne porte')
+
+// ⚠️ Un tiers qui republie ne vaut pas le bulletin d'origine.
+for (const h of ['ford.oemdtc.com', 'oemdtc.com', 'www.oemdtc.com']) {
+  eq(rangSource(`https://${h}/tsb-12345`), 'inconnu',
+    `${h} : inconnu — un miroir de bulletin n’est pas le bulletin`)
+}
+eq(rangSource('https://autos.yahoo.com/article-repris'), 'inconnu',
+  'autos.yahoo.com : inconnu — on cite l’article d’origine, pas le portail')
+ok(!sourcesPortentLEntree(['https://ford.oemdtc.com/x', 'https://autos.yahoo.com/y']),
+  'et ni l’un ni l’autre ne porte une panne')
+
+eq(rangSource('https://www.ntn-snr.com/fr/roulement-x'), 'vendeur',
+  'ntn-snr.com : vendeur — sa documentation est autoritaire, mais il vend les pièces')
+ok(!coutUtilisable(['https://www.ntn-snr.com/fr/piece']),
+  'donc son prix ne fixe aucune gravité')
+
+// ⚠️ Le sous-domaine d'un constructeur chez un TIERS ne doit pas devenir
+// officiel par ressemblance de nom. Contre-épreuve du vrai domaine.
+eq(rangSource('https://www.ford.com/support/recalls/'), 'officiel',
+  'contre-épreuve : ford.com, lui, est bien officiel')
+
+// ⚠️ La règle de lisibilité est portée par l'ORDRE des opérations dans
+// `atlas-builder` : la page est récupérée AVANT que l'URL ne devienne une
+// source. Ce contrôle statique interdit d'inverser les deux.
+{
+  const b = readFileSync('supabase/functions/atlas-builder/index.ts', 'utf8')
+  const iTexte = b.indexOf('const texte = await texteDeLaPage(url)')
+  const iIllisible = b.indexOf('motif: "page_illisible"')
+  const iRetenue = b.indexOf('retenues.push({')
+  ok(iTexte > 0 && iIllisible > iTexte && iRetenue > iIllisible,
+    'atlas-builder écarte une page illisible AVANT de l’attacher comme source')
+  const d = readFileSync('supabase/functions/_shared/defectSheets.ts', 'utf8')
+  ok(/LIMITE ASSUMÉE[\s\S]{0,900}sourcesPortentLEntreeLues/.test(d),
+    'et sheet-builder DIT qu’il ne vérifie que le rang, pas la lisibilité')
+}
+
+console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${ok_}/${ok_ + ko} contrôles passés`)
+if (ko > 0) {
+  console.error(`${ko} échec(s) dans tests/atlas-source.test.mjs`)
+  process.exit(1)
+}
 console.log('Tous les tests atlas-source passent.')
