@@ -49,9 +49,14 @@ for (const x of refs.sort((a, b) => (NOM[a.h] ?? '').localeCompare(NOM[b.h] ?? '
   const perdues = pesent.filter((p) => !tient(p))
 
   const avant = calculerAxes(faits)
+  // ⚠️ SPRINT 21.1 — les pannes non portées ne DISPARAISSENT pas : elles sont
+  // rétrogradées, et leur nombre plafonne l'axe à 10/20 tout en interdisant le
+  // libellé « aucun défaut documenté ». Sans ce champ, le simple retrait
+  // faisait MONTER le verdict.
   const apres = calculerAxes({
     ...faits,
     pannes: faits.pannes.filter((_, k) => tient(pesent[k] ?? {})),
+    pannes_non_verifiables: perdues.length,
   })
 
   console.log(`\n── ${NOM[x.h]}`)
@@ -65,6 +70,7 @@ for (const x of refs.sort((a, b) => (NOM[a.h] ?? '').localeCompare(NOM[b.h] ?? '
   }
   const a1 = avant.axes.risques_mecaniques, a2 = apres.axes.risques_mecaniques
   console.log(`   axe risques : ${a1.note} → ${a2.note}`)
+  console.log(`   libellé     : ${String(a2.commentaire).slice(0, 120)}`)
   console.log(`   SCORE       : ${avant.verdict} ${avant.score}  →  ${apres.verdict} ${apres.score}   (${apres.score > avant.score ? '+' : ''}${apres.score - avant.score})`)
   if (avant.plafond_raison !== apres.plafond_raison) {
     console.log(`   plafond     : « ${avant.plafond_raison ?? 'aucun'} » → « ${apres.plafond_raison ?? 'aucun'} »`)

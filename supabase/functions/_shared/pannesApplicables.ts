@@ -335,6 +335,35 @@ export function sansSourcePublique(ref: string, urls: readonly string[] | null |
   return !(urls ?? []).some((u) => /^https?:\/\/\S+/i.test(String(u ?? "")));
 }
 
+/** SPRINT 21.1 — l'entrée a des sources, mais AUCUNE n'est indépendante.
+ *
+ *  ⚠️ À distinguer de `sansSourcePublique`, qui vise les entrées d'atlas
+ *  SANS aucune URL. Ici l'entrée cite des pages — simplement, ce sont des
+ *  garages, des vendeurs de pièces ou des fils de forum. Mesuré le
+ *  6 nov. 2026 : 192 des 219 pannes de fiches, et 7 des 10 entrées d'atlas
+ *  d'origine. Le revenu de ces sites dépend de ce que le défaut soit réel et
+ *  réparé : leur page n'est pas une attestation.
+ *
+ *  S'applique aux pannes de FICHE autant qu'à celles d'atlas — c'est la
+ *  différence avec le sprint 15.1, qui ne regardait que l'atlas. */
+export function sansSourceIndependante(
+  urls: readonly string[] | null | undefined,
+  porte: (urls: readonly string[]) => boolean,
+): boolean {
+  const u = (urls ?? []).map((x) => String(x ?? "")).filter((x) => /^https?:\/\/\S+/i.test(x));
+  if (u.length === 0) return false; // aucune URL : c'est le cas du sprint 15.1
+  return !porte(u);
+}
+
+/** La question posée à la place d'une panne non confirmée. Libellé EXACT
+ *  demandé par Utku le 6 nov. 2026. */
+export function questionSansSourceIndependante(titre: string): string {
+  const sujet = String(titre ?? "").trim().replace(/\s+/g, " ").slice(0, 120);
+  return `Avez-vous rencontré quelque chose du côté de « ${sujet} » ? ` +
+    `(signalé par des garages et forums, non confirmé par une source ` +
+    `indépendante : à confirmer avec le carnet et les factures.)`;
+}
+
 /** La question posée à la place. Elle n'affirme RIEN : ni « panne », ni
  *  « défaut », ni « ce modèle connaît ». Nous n'avons pas de source — le dire
  *  est la seule formulation honnête. */

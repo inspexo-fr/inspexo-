@@ -114,6 +114,21 @@ const HOTES_PRESSE = [
   "carbuzz.com",
 ];
 
+/** ÉDITORIAL INDÉPENDANT (décision d'Utku, 6 nov. 2026) : un guide ou un média
+ *  qui ne vend NI la réparation, NI des pièces, NI des moteurs, NI un service
+ *  payant lié au défaut. Rang intermédiaire entre la presse et le forum : ces
+ *  sites n'ont pas de rédaction au sens d'un titre de presse, mais leur revenu
+ *  ne dépend pas de ce que le défaut soit réel et réparé.
+ *
+ *  ⚠️ C'EST CE CRITÈRE QUI TRANCHE, PAS LES BOUTONS DE LA PAGE. Sondés le
+ *  6 nov. 2026, `largus.fr` affiche panier, prix, abonnement et forum — et
+ *  reste de la presse. La question n'est pas « vend-il quelque chose », c'est
+ *  « son revenu dépend-il du défaut qu'il décrit ». */
+const HOTES_EDITORIAL = [
+  "docteurmoteurs.com", "mymotorlist.com", "fiches-auto.fr",
+  "drivisual.tv", "enginescope.gr", "planeterenault.com", "pistonheads.com",
+];
+
 /** Forums et agrégateurs de discussion : EN APPUI SEULEMENT (sprint 16). */
 const MOTIFS_FORUM = [
   /forum/i, /\bplanete-/i, /forumactif/i, /reddit\.com/i, /discord/i,
@@ -132,7 +147,54 @@ const MOTIFS_FORUM = [
  *  Liste d'OBSERVATION : elle grandit quand une campagne en rencontre un. */
 const HOTES_COMMUNAUTE = ["c5x7.fr", "wildcamping.co.uk"];
 
-export type RangSource = "officiel" | "presse" | "forum" | "commercial";
+/** ⚠️ UN FIL DE FORUM VIT SOUVENT DANS LE CHEMIN, PAS DANS LE SOUS-DOMAINE.
+ *  `planeterenault.com/forum/sujet-123`, `fiches-auto.fr/forum/...`,
+ *  `pistonheads.com/gassing/topic/...` : sans ces motifs, un fil de discussion
+ *  hébergé par un site éditorial PORTERAIT une affirmation, ce qui annulerait
+ *  la règle du sprint 16.
+ *
+ *  Trouvé le 6 nov. 2026 par un contrôle qui contredisait mon propre
+ *  commentaire : j'avais écrit que ce cas serait classé « forum », il ne
+ *  l'était pas. Une affirmation dans un commentaire n'est pas une garantie. */
+const MOTIFS_CHEMIN_FORUM = [
+  /^\/forum/i, /\/forums?\//i, /\/topic/i, /\/sujet/i, /\/thread/i,
+  /viewtopic/i, /\/discussion/i, /\/gassing/i, /\/t\/\d/i, /\/showthread/i,
+  /\/comments?\//i, /\/messages?\//i,
+];
+
+/** VENDEUR : vend la réparation, des pièces, des moteurs, ou un service payant
+ *  lié. Son revenu dépend de ce que le défaut soit réel et réparé — sa page
+ *  n'est pas une attestation, c'est une offre.
+ *
+ *  Relevé le 6 nov. 2026 en lisant chaque page d'accueil (marqueurs trouvés en
+ *  commentaire), pas en devinant. */
+const HOTES_VENDEUR = [
+  "carverif.fr",           // rapports d'historique payants : panier, tarifs
+  "auto-platinium.com",    // « Turbos et Injecteurs… Pièces reconditionnées »
+  "vag-perf.fr",           // préparateur VAG — page en 403, nom explicite
+  "autoscore.pro",         // analyse d'annonces payante : abonnement
+  "autocopilot.fr",        // page en HTTP 402 (Payment Required)
+  "carchecker.pro",        // contrôle de véhicule payant — page en 429
+  "moteurgarage.com",      // garage
+  "chaine-courroie.com",   // tableau + demande de devis
+  "bimmergarage.co.uk",    // « BMW | Mini Specialist in Nottingham »
+  "megaturbo.fr",          // « Turbo Pas Cher en Échange Standard »
+  "autopartswd.com",       // « Auto Engine & Parts Manufacturer »
+  "enginecode.uk",         // base de codes moteur + devis
+  "enginefinders.co.uk",   // « Reconditioned Engines UK | Save 40-60 % »
+  "icarcheck.net",         // contrôle de véhicule payant
+  "torquecars.com",        // boutique, pièces, abonnement
+  // Déjà relevés à la campagne de l'atlas (5 nov. 2026).
+  "autoliva.com", "la-boite-automatique.com", "ecutesting.com",
+  "specialiste-bmw.fr", "caroom.fr", "findservicehistory.com",
+  "oscaro.com", "casse-compare.fr", "moninspection.fr", "mecano.ovh",
+  "goodmecano.com", "rpf-automobiles.fr", "re-fap.fr", "carbon-cleaning.com",
+];
+
+export type RangSource = "officiel" | "presse" | "editorial" | "forum" | "vendeur" | "inconnu";
+
+/** Les rangs qui PORTENT une affirmation, dans l'ordre d'autorité. */
+export const RANGS_PORTANTS: readonly RangSource[] = ["officiel", "presse", "editorial"];
 
 /** Le rang d'une source, déduit de son hôte.
  *
@@ -142,20 +204,34 @@ export type RangSource = "officiel" | "presse" | "forum" | "commercial";
  *  pas une attestation, c'est une offre. */
 export function rangSource(url: unknown): RangSource {
   let hote = "";
+  let chemin = "";
   try {
-    hote = new URL(String(url)).hostname.toLowerCase().replace(/^www\./, "");
+    const u = new URL(String(url));
+    hote = u.hostname.toLowerCase().replace(/^www\./, "");
+    chemin = u.pathname.toLowerCase();
   } catch {
-    return "commercial";
+    // ⚠️ « inconnu » plutôt que « vendeur » : une URL illisible n'est pas une
+    // allégation sur ce que le site vend.
+    return "inconnu";
   }
   const correspond = (liste: string[]) =>
     liste.some((h) => hote === h || hote.endsWith(`.${h}`));
   if (correspond(HOTES_OFFICIELS)) return "officiel";
+  // Le CHEMIN d'abord : un fil de discussion reste un fil, quel que soit
+  // l'hôte qui l'héberge.
+  if (MOTIFS_CHEMIN_FORUM.some((re) => re.test(chemin))) return "forum";
   // ⚠️ L'ordre compte : `forum-auto.caradisiac.com` est un FORUM, pas la
-  // presse, même si le domaine racine est un titre reconnu.
+  // presse, même si le domaine racine est un titre reconnu. Et
+  // `planeterenault.com/forum/...` est un forum, même si le site est éditorial.
   if (MOTIFS_FORUM.some((re) => re.test(hote))) return "forum";
   if (correspond(HOTES_COMMUNAUTE)) return "forum";
   if (correspond(HOTES_PRESSE)) return "presse";
-  return "commercial";
+  if (correspond(HOTES_VENDEUR)) return "vendeur";
+  if (correspond(HOTES_EDITORIAL)) return "editorial";
+  // ⚠️ « inconnu », et NON « vendeur » : écrire « vendeur » serait AFFIRMER
+  // qu'un site vend quelque chose sans l'avoir vérifié. Un hôte inconnu ne
+  // porte pas une affirmation — même conséquence, sans l'allégation.
+  return "inconnu";
 }
 
 /** Une entrée tient-elle sur ses sources ?
@@ -163,10 +239,7 @@ export function rangSource(url: unknown): RangSource {
  *  Il lui faut au moins UNE source de rang officiel ou presse. Forums et sites
  *  commerciaux ne viennent qu'en appui — ils peuvent préciser, jamais porter. */
 export function sourcesPortentLEntree(urls: readonly unknown[]): boolean {
-  return urls.some((u) => {
-    const r = rangSource(u);
-    return r === "officiel" || r === "presse";
-  });
+  return urls.some((u) => RANGS_PORTANTS.includes(rangSource(u)));
 }
 
 /** Un COÛT publié par un site commercial ne fixe pas la gravité.
@@ -177,8 +250,5 @@ export function sourcesPortentLEntree(urls: readonly unknown[]): boolean {
  *  rouge. Un prix sur une page qui vend la réparation est une offre, pas un
  *  relevé. */
 export function coutUtilisable(urls: readonly unknown[]): boolean {
-  return urls.some((u) => {
-    const r = rangSource(u);
-    return r === "officiel" || r === "presse";
-  });
+  return urls.some((u) => RANGS_PORTANTS.includes(rangSource(u)));
 }

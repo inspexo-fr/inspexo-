@@ -49,7 +49,15 @@
 // avec une famille moteur identifiée — le score est strictement inchangé par
 // rapport à la 11.5, et le champ est optionnel pour que les anciens appelants
 // ne bougent pas. Vérifié par tests/bareme.test.mjs et sa contre-épreuve.
-export const BAREME_VERSION = "11.7";
+// 11.8 — SPRINT 21.1 : une panne ne pèse que si une source INDÉPENDANTE
+// (officielle, presse ou éditoriale) la porte. Les autres deviennent des
+// questions au vendeur. Dès qu'une panne est rétrogradée, l'axe risques est
+// plafonné à 10/20 et ne dit JAMAIS « aucun défaut documenté » — il dit
+// « défauts signalés non vérifiables ». Mesuré le 6 nov. 2026 : sans ce
+// plafond, retirer les pannes non sourcées FAISAIT MONTER le verdict (Mercedes
+// 71 → 77), et aurait écrit à 28 moteurs sur 44 qu'ils n'ont aucun défaut
+// connu. Champ OPTIONNEL : absent, aucun score ne bouge.
+export const BAREME_VERSION = "11.8";
 
 export type FaitsAxes = {
   annee_courante: number;
@@ -73,6 +81,19 @@ export type FaitsAxes = {
   operations_critiques_non_faites: number;
   // Risques
   catalogue_vide: boolean;
+  /** SPRINT 21.1 — combien de pannes ont été RÉTROGRADÉES en question faute
+   *  de source indépendante (ni officielle, ni presse, ni éditoriale) ?
+   *
+   *  ⚠️ CE CHAMP EXISTE POUR QU'ON NE PUISSE PAS DIRE « AUCUN DÉFAUT ». Mesuré
+   *  le 6 nov. 2026 : en retirant simplement les pannes non portées, l'axe
+   *  risques de la Mercedes passait de 13 à 16/20 avec le commentaire
+   *  « Aucun défaut documenté retenu sur ce moteur » — et le verdict montait
+   *  de 71 à 77. Appliqué aux 28 fiches à terre, le dispositif aurait écrit à
+   *  28 moteurs qu'ils n'ont aucun défaut connu, alors que la vérité est qu'on
+   *  ne sait pas les sourcer. C'est faux en substance, et flatteur.
+   *
+   *  Champ OPTIONNEL : absent, aucun score ne bouge. */
+  pannes_non_verifiables?: number;
   /** SPRINT 20.1 — la FAMILLE MOTEUR a-t-elle été identifiée ?
    *
    *  ⚠️ À distinguer de `catalogue_vide`, qui confond deux situations très
@@ -279,6 +300,19 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
       note: null,
       commentaire: "Non évalué — pas encore de données de fiabilité pour ce moteur.",
     };
+  } else if ((f.pannes_non_verifiables ?? 0) > 0 && f.pannes.length === 0) {
+    // ⚠️ TOUTES les pannes de ce moteur ont été rétrogradées : on ne dit
+    // SURTOUT PAS « aucun défaut documenté ». Des défauts sont signalés, nous
+    // ne pouvons simplement pas les confirmer. 10/20 est neutre, comme pour un
+    // moteur non identifié : ni bonne note, ni pénalité inventée.
+    const n = f.pannes_non_verifiables ?? 0;
+    axes.risques_mecaniques = {
+      note: 10,
+      commentaire: `Défauts signalés non vérifiables : ${n} point${n > 1 ? "s" : ""} de ` +
+        `défaillance ${n > 1 ? "sont rapportés" : "est rapporté"} sur cette motorisation, ` +
+        `mais aucune source indépendante ne les confirme. ${n > 1 ? "Ils figurent" : "Il figure"} ` +
+        `dans les questions à poser au vendeur.`,
+    };
   } else {
     // La note dépend de la GRAVITÉ LA PLUS ÉLEVÉE, pas du nombre de pannes :
     // qu'un moteur documenté expose 2 ou 4 défauts majeurs change peu le risque
@@ -303,11 +337,22 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
       mineures ? `${mineures} défaut${mineures > 1 ? "s" : ""} mineur${mineures > 1 ? "s" : ""}` : null,
       rappels ? `${rappels} rappel${rappels > 1 ? "s" : ""} constructeur à faire confirmer` : null,
     ].filter(Boolean);
+    // ⚠️ DÈS QU'UNE PANNE EST RÉTROGRADÉE, L'AXE EST PLAFONNÉ À 10/20.
+    // On a vu une partie des défauts seulement : la note ne peut pas être
+    // celle d'un moteur dont on aurait tout vérifié. Et le commentaire le dit,
+    // pour que l'acheteur sache que la liste est incomplète.
+    const nonVerifiables = f.pannes_non_verifiables ?? 0;
+    const notePlafonnee = nonVerifiables > 0 ? Math.min(note, 10) : note;
+    const suffixe = nonVerifiables > 0
+      ? ` ${nonVerifiables} autre${nonVerifiables > 1 ? "s" : ""} défaut${nonVerifiables > 1 ? "s" : ""} ` +
+        `${nonVerifiables > 1 ? "sont signalés" : "est signalé"} sans source indépendante : ` +
+        `${nonVerifiables > 1 ? "ils figurent" : "il figure"} dans les questions au vendeur.`
+      : "";
     axes.risques_mecaniques = {
-      note: borne(note),
-      commentaire: bouts.length
+      note: borne(notePlafonnee),
+      commentaire: (bouts.length
         ? `${bouts.join(", ")} retenu${bouts.length > 1 || securite + casses + majeures + mineures > 1 ? "s" : ""} sur ce moteur.`
-        : "Aucun défaut documenté retenu sur ce moteur à ce kilométrage.",
+        : "Aucun défaut documenté retenu sur ce moteur à ce kilométrage.") + suffixe,
     };
   }
 

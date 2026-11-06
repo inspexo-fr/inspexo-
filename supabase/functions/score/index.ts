@@ -27,6 +27,8 @@ import {
   panneCompteDansScore,
   pannesApplicables,
   questionSansSource,
+  questionSansSourceIndependante,
+  sansSourceIndependante,
   refsManquantes,
   sansSourcePublique,
 } from "../_shared/pannesApplicables.ts";
@@ -46,6 +48,7 @@ import {
 import { critair, libelleCritair, sourceZfe, verdictZfe, ZFE_SOCLE } from "../_shared/critair.ts";
 import { concordanceVin, decoderVin, incoherenceConstructeur, trouverVin } from "../_shared/vin.ts";
 import { resoudreFamille } from "../_shared/familleMoteur.ts";
+import { sourcesPortentLEntree } from "../_shared/atlasSource.ts";
 import { fourchettePayes, SEUIL_PRIX_PAYES } from "../_shared/prixPayes.ts";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { estAdminUserId } from "../_shared/adminAuth.ts";
@@ -2868,6 +2871,44 @@ serve(async (req: Request) => {
         });
       }
 
+      // ⚠️ SPRINT 21.1 — UNE PANNE NE PÈSE QUE SI UNE SOURCE INDÉPENDANTE LA
+      // PORTE (officielle, presse ou éditoriale). Décision d'Utku du
+      // 6 nov. 2026, après l'audit : 192 des 219 pannes de fiches et 7 des 10
+      // entrées d'atlas d'origine ne tenaient que sur des garages, des
+      // vendeurs de pièces ou des forums.
+      //
+      // ⚠️ ELLES NE SONT PAS SUPPRIMÉES, ELLES SONT RÉTROGRADÉES EN QUESTION.
+      // Les retirer silencieusement faisait MONTER le verdict : l'axe passait
+      // à « aucun défaut documenté » (16/20) et la Mercedes montait de 71 à
+      // 77. Le barème reçoit donc leur nombre (`pannes_non_verifiables`), qui
+      // plafonne l'axe à 10/20 et change son libellé.
+      let pannesNonVerifiables = 0;
+      {
+        const nonPortees = pannesJoined.filter((p) =>
+          sansSourceIndependante(p.urls, sourcesPortentLEntree)
+        );
+        if (nonPortees.length > 0) {
+          pannesNonVerifiables = nonPortees.length;
+          const portees = pannesJoined.filter((p) =>
+            !sansSourceIndependante(p.urls, sourcesPortentLEntree)
+          );
+          pannesJoined.length = 0;
+          pannesJoined.push(...portees);
+          pannesJoined.forEach((p, i) => { p.id = `P${i + 1}`; });
+          for (const p of nonPortees.slice(0, 3)) {
+            questions.push(questionSansSourceIndependante(p.titre));
+          }
+          await admin.from("events").insert({
+            name: "panne_sans_source_independante",
+            props_json: {
+              nb: nonPortees.length,
+              refs: nonPortees.map((p) => p.source_ref).slice(0, 8),
+              restantes: pannesJoined.length,
+            },
+          });
+        }
+      }
+
       const atlasAConfirmer: typeof pannesJoined = [];
       for (const p of pannesJoined) {
         const d = panneCompteDansScore(
@@ -2939,6 +2980,10 @@ serve(async (req: Request) => {
         // d'être exclu du score — ce qui faisait MONTER le verdict de 4 points
         // sur la Classe C 220 d quand l'OM654 n'était pas déduit.
         famille_identifiee: Boolean(vehiculePublic.famille_moteur),
+        // Nombre de pannes rétrogradées en question faute de source
+        // indépendante : plafonne l'axe risques à 10/20 et interdit le
+        // libellé « aucun défaut documenté ».
+        pannes_non_verifiables: pannesNonVerifiables,
         pannes: pannesQuiPesent.map((p) => ({
           gravite: p.gravite,
           rappel_officiel: Boolean(p.rappel_code) && !p.rappel_hors_periode,
