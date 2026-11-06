@@ -2883,12 +2883,19 @@ serve(async (req: Request) => {
       // 77. Le barème reçoit donc leur nombre (`pannes_non_verifiables`), qui
       // plafonne l'axe à 10/20 et change son libellé.
       let pannesNonVerifiables = 0;
+      let maxGraviteNonVerifiable = "mineure";
       {
         const nonPortees = pannesJoined.filter((p) =>
           sansSourceIndependante(p.urls, sourcesPortentLEntree)
         );
         if (nonPortees.length > 0) {
           pannesNonVerifiables = nonPortees.length;
+          // La gravité la plus élevée parmi les rétrogradées décide du
+          // plafond : 10/20 si l'une était majeure ou pire, 13/20 sinon.
+          const RANG_G: Record<string, number> = { mineure: 0, majeure: 1, casse: 2, securite: 3 };
+          maxGraviteNonVerifiable = nonPortees
+            .map((p) => String(p.gravite ?? "mineure"))
+            .reduce((a, b) => ((RANG_G[b] ?? 0) > (RANG_G[a] ?? 0) ? b : a), "mineure");
           const portees = pannesJoined.filter((p) =>
             !sansSourceIndependante(p.urls, sourcesPortentLEntree)
           );
@@ -2984,6 +2991,7 @@ serve(async (req: Request) => {
         // indépendante : plafonne l'axe risques à 10/20 et interdit le
         // libellé « aucun défaut documenté ».
         pannes_non_verifiables: pannesNonVerifiables,
+        pannes_non_verifiables_max_gravite: maxGraviteNonVerifiable,
         pannes: pannesQuiPesent.map((p) => ({
           gravite: p.gravite,
           rappel_officiel: Boolean(p.rappel_code) && !p.rappel_hors_periode,

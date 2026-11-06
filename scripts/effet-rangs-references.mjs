@@ -57,11 +57,20 @@ for (const x of refs.sort((a, b) => (NOM[a.h] ?? '').localeCompare(NOM[b.h] ?? '
     ...faits,
     pannes: faits.pannes.filter((_, k) => tient(pesent[k] ?? {})),
     pannes_non_verifiables: perdues.length,
+    // La gravité la plus élevée parmi les rétrogradées décide du plafond.
+    pannes_non_verifiables_max_gravite: perdues
+      .map((p) => String(p.gravite ?? 'mineure'))
+      .reduce((a, b) => (({ mineure: 0, majeure: 1, casse: 2, securite: 3 }[b] ?? 0)
+        > ({ mineure: 0, majeure: 1, casse: 2, securite: 3 }[a] ?? 0) ? b : a), 'mineure'),
   })
 
   console.log(`\n── ${NOM[x.h]}`)
   console.log(`   alignement faits/affichées : ${aligne ? 'exact' : '⚠️ APPROXIMATIF'} (${pesent.length}/${faits.pannes.length})`)
-  console.log(`   pannes qui pèsent : ${pesent.length} → ${gardees.length} tiennent, ${perdues.length} tombent`)
+  const maxG = perdues.map((p) => String(p.gravite ?? 'mineure'))
+    .reduce((a, b) => (({ mineure: 0, majeure: 1, casse: 2, securite: 3 }[b] ?? 0)
+      > ({ mineure: 0, majeure: 1, casse: 2, securite: 3 }[a] ?? 0) ? b : a), 'mineure')
+  console.log(`   pannes qui pèsent : ${pesent.length} → ${gardees.length} tiennent, ${perdues.length} tombent`
+    + (perdues.length ? ` (plus grave rétrogradée : ${maxG} ⇒ plafond ${maxG === 'mineure' ? 13 : 10})` : ''))
   for (const p of perdues) {
     console.log(`     TOMBE  ${(p.titre ?? '').slice(0, 46).padEnd(48)} ${String(p.gravite).padEnd(9)} ${urlsDe(p).map(rangSource).join(',') || '(aucune source)'}`)
   }

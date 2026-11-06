@@ -49,6 +49,13 @@
 // avec une famille moteur identifiée — le score est strictement inchangé par
 // rapport à la 11.5, et le champ est optionnel pour que les anciens appelants
 // ne bougent pas. Vérifié par tests/bareme.test.mjs et sa contre-épreuve.
+// 11.9 — SPRINT 21.1, second tour : le plafond des pannes rétrogradées dépend
+// de leur gravité. 10/20 si l'une était `majeure` ou pire, 13/20 si elles
+// étaient toutes `mineure`. La 11.8 plafonnait à 10 dans tous les cas — or 10
+// est SOUS la note d'un défaut mineur CONFIRMÉ (13) : un moteur aux
+// signalements mineurs invérifiables était jugé plus sévèrement qu'un moteur
+// au défaut mineur prouvé. Le plafond dit notre incertitude, il n'invente pas
+// une gravité. La 11.8 n'a jamais été déployée.
 // 11.8 — SPRINT 21.1 : une panne ne pèse que si une source INDÉPENDANTE
 // (officielle, presse ou éditoriale) la porte. Les autres deviennent des
 // questions au vendeur. Dès qu'une panne est rétrogradée, l'axe risques est
@@ -57,7 +64,7 @@
 // plafond, retirer les pannes non sourcées FAISAIT MONTER le verdict (Mercedes
 // 71 → 77), et aurait écrit à 28 moteurs sur 44 qu'ils n'ont aucun défaut
 // connu. Champ OPTIONNEL : absent, aucun score ne bouge.
-export const BAREME_VERSION = "11.8";
+export const BAREME_VERSION = "11.9";
 
 export type FaitsAxes = {
   annee_courante: number;
@@ -94,6 +101,16 @@ export type FaitsAxes = {
    *
    *  Champ OPTIONNEL : absent, aucun score ne bouge. */
   pannes_non_verifiables?: number;
+  /** La gravité LA PLUS ÉLEVÉE parmi les pannes rétrogradées.
+   *
+   *  ⚠️ ELLE DÉCIDE DU PLAFOND (décision d'Utku du 6 nov. 2026, après mesure) :
+   *  10/20 si une rétrogradée était `majeure` ou pire, 13/20 si elles étaient
+   *  toutes `mineure`. La première version plafonnait à 10 dans tous les cas —
+   *  or 10 est SOUS la note d'un défaut mineur confirmé (13), ce qui jugeait un
+   *  moteur aux signalements mineurs invérifiables plus sévèrement qu'un moteur
+   *  au défaut mineur prouvé. Le plafond dit notre incertitude ; il ne doit pas
+   *  inventer une gravité. */
+  pannes_non_verifiables_max_gravite?: string;
   /** SPRINT 20.1 — la FAMILLE MOTEUR a-t-elle été identifiée ?
    *
    *  ⚠️ À distinguer de `catalogue_vide`, qui confond deux situations très
@@ -173,6 +190,16 @@ export type ResultatBareme = {
   // Ce que deviendrait le verdict si la couverture de garantie était activée.
   verdict_conditionnel: { score: number; verdict: string; condition: string } | null;
 };
+
+/** Le plafond de l'axe risques quand des pannes ont été rétrogradées.
+ *
+ *  `majeure`, `casse` ou `securite` rétrogradée ⇒ 10/20 : nous ignorons un
+ *  défaut potentiellement coûteux. Rien que des `mineure` ⇒ 13/20, soit la
+ *  note d'un défaut mineur confirmé : ne pas pouvoir vérifier un défaut mineur
+ *  ne doit pas coûter plus cher que le défaut lui-même. */
+export function plafondNonVerifiables(maxGravite: string | undefined): number {
+  return maxGravite === "mineure" ? 13 : 10;
+}
 
 export function calculerAxes(f: FaitsAxes): ResultatBareme {
   const axes: Record<string, Axe> = {};
@@ -307,7 +334,7 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     // moteur non identifié : ni bonne note, ni pénalité inventée.
     const n = f.pannes_non_verifiables ?? 0;
     axes.risques_mecaniques = {
-      note: 10,
+      note: plafondNonVerifiables(f.pannes_non_verifiables_max_gravite),
       commentaire: `Défauts signalés non vérifiables : ${n} point${n > 1 ? "s" : ""} de ` +
         `défaillance ${n > 1 ? "sont rapportés" : "est rapporté"} sur cette motorisation, ` +
         `mais aucune source indépendante ne les confirme. ${n > 1 ? "Ils figurent" : "Il figure"} ` +
@@ -342,7 +369,9 @@ export function calculerAxes(f: FaitsAxes): ResultatBareme {
     // celle d'un moteur dont on aurait tout vérifié. Et le commentaire le dit,
     // pour que l'acheteur sache que la liste est incomplète.
     const nonVerifiables = f.pannes_non_verifiables ?? 0;
-    const notePlafonnee = nonVerifiables > 0 ? Math.min(note, 10) : note;
+    const notePlafonnee = nonVerifiables > 0
+      ? Math.min(note, plafondNonVerifiables(f.pannes_non_verifiables_max_gravite))
+      : note;
     const suffixe = nonVerifiables > 0
       ? ` ${nonVerifiables} autre${nonVerifiables > 1 ? "s" : ""} défaut${nonVerifiables > 1 ? "s" : ""} ` +
         `${nonVerifiables > 1 ? "sont signalés" : "est signalé"} sans source indépendante : ` +

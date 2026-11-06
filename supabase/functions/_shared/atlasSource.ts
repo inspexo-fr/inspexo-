@@ -89,6 +89,16 @@ const HOTES_OFFICIELS = [
   "economie.gouv.fr", "securite-routiere.gouv.fr", "ecologie.gouv.fr",
   "service-public.fr", "service-public.gouv.fr", "utac.com", "ademe.fr",
   "vehicle-recalls.service.gov.uk", "kba.de", "transportstyrelsen.se",
+  // Relevés dans les fiches le 6 nov. 2026.
+  "recalls-rappels.canada.ca",
+  // ⚠️ LE SITE D'UN CONSTRUCTEUR EST LA SOURCE LA PLUS FORTE QUI EXISTE pour
+  // un défaut de ses propres véhicules, et le critère d'Utku l'explique :
+  // « son revenu dépend-il de ce que le défaut soit réel et réparé ? » — un
+  // constructeur a l'intérêt EXACTEMENT INVERSE. Quand il reconnaît un
+  // défaut, il le reconnaît contre lui-même.
+  "ford.com", "dacia.fr", "renault.fr", "peugeot.fr", "citroen.fr",
+  "volkswagen.fr", "audi.fr", "bmw.fr", "mercedes-benz.fr", "toyota.fr",
+  "opel.fr", "fiat.fr", "nissan.fr", "volvocars.com", "hyundai.fr",
 ];
 
 /** Presse automobile et consumériste RECONNUE. Liste curée, à enrichir à la
@@ -102,6 +112,12 @@ const HOTES_PRESSE = [
   "autocar.co.uk", "whatcar.com", "honestjohn.co.uk", "drive.com.au",
   "motor1.com", "autoexpress.co.uk", "autobild.de", "adac.de",
   "consumerreports.org", "jdpower.com",
+  // Relevés dans les fiches le 6 nov. 2026 : titres établis, revenu
+  // publicitaire, aucune vente de réparation.
+  "thedrive.com", "slashgear.com", "larevueautomobile.com",
+  // ⚠️ `bmwblog.com` porte « blog » dans son nom mais c'est un titre avec une
+  // rédaction suivie, financé par la publicité. Jugement, pas relevé.
+  "bmwblog.com",
   // ⚠️ Ajouté le 6 nov. 2026 sur décision d'Utku, après examen des 14 hôtes
   // que le filtre écartait. C'est le SEUL des quatorze reclassé : publication
   // automobile américaine établie, rédaction identifiée.
@@ -125,9 +141,54 @@ const HOTES_PRESSE = [
  *  reste de la presse. La question n'est pas « vend-il quelque chose », c'est
  *  « son revenu dépend-il du défaut qu'il décrit ». */
 const HOTES_EDITORIAL = [
-  "docteurmoteurs.com", "mymotorlist.com", "fiches-auto.fr",
-  "drivisual.tv", "enginescope.gr", "planeterenault.com", "pistonheads.com",
+  // Arrêté par Utku le 6 nov. 2026 : éditeur identifiable, contenu
+  // rédactionnel, ne vend pas la réparation.
+  "fiches-auto.fr", "pistonheads.com", "planeterenault.com", "drivisual.tv",
 ];
+
+/** COMPILATION : agrège des forums, éditeur NON identifié.
+ *
+ *  ⚠️ APPUI SEULEMENT — il ne porte jamais une panne seul. Un site qui
+ *  rassemble des fils de discussion sans rédaction identifiable ne vaut pas
+ *  mieux que les fils qu'il rassemble ; il les rend seulement plus lisibles.
+ *
+ *  ⚠️ `docteurmoteurs.com` est ici, et c'est LA décision qui pèse le plus de
+ *  tout ce classement : 47 citations dans les fiches, seule source 10 fois.
+ *  Son passage d'« éditorial » à « compilation » fait tomber à lui seul une
+ *  grande partie des pannes de fiches. */
+const HOTES_COMPILATION = [
+  "docteurmoteurs.com", "mymotorlist.com", "enginescope.gr",
+  // Même famille, relevé dans les fiches : fiches techniques et « problems »
+  // sans rédaction identifiable.
+  "motorreviewer.com", "cararac.com", "mywikimotors.com",
+];
+
+/** ⚠️ MOTIFS DE VENTE — une RÈGLE, pas une liste d'affirmations.
+ *
+ *  Les 93 hôtes de la longue traîne n'ont pas été étiquetés un par un : les
+ *  nommer « vendeur » sans avoir lu leur page serait affirmer qu'ils vendent
+ *  quelque chose. Or `vendeur`, `forum`, `compilation` et `inconnu` ont
+ *  EXACTEMENT le même effet — aucun ne porte une panne, aucun ne chiffre une
+ *  gravité. Étiqueter n'aurait donc rien changé, sinon prêter une affirmation
+ *  de plus à chacun.
+ *
+ *  Ces motifs-ci sont différents : ils reconnaissent une règle d'écriture, pas
+ *  un site. Un domaine qui contient « garage », « pieces » ou « reconditioned »
+ *  dit lui-même ce qu'il fait. Vérifié qu'aucun hôte portant n'est attrapé. */
+const MOTIFS_VENDEUR = [
+  /\bgarage/i, /pieces/i, /[-.]parts\b/i, /\bautodoc\b/i, /rachat/i,
+  /\bcasse-/i, /reconditioned/i, /used-?engine/i, /occasion-moteur/i,
+  /\bdevis\b/i, /carrosserie/i, /\bpneu/i,
+];
+
+/** HORS SUJET : un hôte qui n'a rien à voir avec le sujet d'une fiche moteur.
+ *
+ *  ⚠️ `uvoz.info` est un site bosnien sur l'IMPORT de véhicules en
+ *  Bosnie-Herzégovine, et il était seule source de trois pannes. Ce n'est pas
+ *  un problème de classement, c'est un problème de ce que la génération de
+ *  fiches a accepté — traité à la racine : `sheet-builder` et `atlas-builder`
+ *  appliquent désormais `rangSource` AVANT d'accepter une source. */
+const HOTES_HORS_SUJET = ["uvoz.info"];
 
 /** Forums et agrégateurs de discussion : EN APPUI SEULEMENT (sprint 16). */
 const MOTIFS_FORUM = [
@@ -191,9 +252,22 @@ const HOTES_VENDEUR = [
   "goodmecano.com", "rpf-automobiles.fr", "re-fap.fr", "carbon-cleaning.com",
 ];
 
-export type RangSource = "officiel" | "presse" | "editorial" | "forum" | "vendeur" | "inconnu";
+export type RangSource =
+  | "officiel"
+  | "presse"
+  | "editorial"
+  | "compilation"
+  | "forum"
+  | "vendeur"
+  | "hors_sujet"
+  | "inconnu";
 
-/** Les rangs qui PORTENT une affirmation, dans l'ordre d'autorité. */
+/** Les rangs qui PORTENT une affirmation. Tout le reste est EN APPUI.
+ *
+ *  ⚠️ « compilation » n'y figure pas, et c'est la décision d'Utku du
+ *  6 nov. 2026 : un site qui agrège des fils de forum sans éditeur
+ *  identifiable ne vaut pas mieux que les forums qu'il agrège. Il peut
+ *  préciser, jamais porter — exactement comme un forum depuis le sprint 16. */
 export const RANGS_PORTANTS: readonly RangSource[] = ["officiel", "presse", "editorial"];
 
 /** Le rang d'une source, déduit de son hôte.
@@ -226,8 +300,11 @@ export function rangSource(url: unknown): RangSource {
   if (MOTIFS_FORUM.some((re) => re.test(hote))) return "forum";
   if (correspond(HOTES_COMMUNAUTE)) return "forum";
   if (correspond(HOTES_PRESSE)) return "presse";
+  if (correspond(HOTES_HORS_SUJET)) return "hors_sujet";
   if (correspond(HOTES_VENDEUR)) return "vendeur";
+  if (MOTIFS_VENDEUR.some((re) => re.test(hote))) return "vendeur";
   if (correspond(HOTES_EDITORIAL)) return "editorial";
+  if (correspond(HOTES_COMPILATION)) return "compilation";
   // ⚠️ « inconnu », et NON « vendeur » : écrire « vendeur » serait AFFIRMER
   // qu'un site vend quelque chose sans l'avoir vérifié. Un hôte inconnu ne
   // porte pas une affirmation — même conséquence, sans l'allégation.

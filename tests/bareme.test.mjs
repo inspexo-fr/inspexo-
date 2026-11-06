@@ -108,16 +108,29 @@ const verifiePrix = (titre, cond, detail = '') => {
   }
   const majeure = { gravite: 'majeure', rappel_officiel: false, rappel_confirme_effectue: false }
 
-  const toutesRetro = calculerAxes({ ...socle, pannes: [], pannes_non_verifiables: 2 })
-  affirme('toutes les pannes rétrogradées : l’axe vaut 10/20, pas 16',
+  // ⚠️ LE PLAFOND DÉPEND DE LA GRAVITÉ RÉTROGRADÉE (arbitrage du 6 nov. 2026).
+  const toutesRetro = calculerAxes({
+    ...socle, pannes: [], pannes_non_verifiables: 2, pannes_non_verifiables_max_gravite: 'majeure',
+  })
+  affirme('rétrogradées dont une majeure : l’axe vaut 10/20, pas 16',
     toutesRetro.axes.risques_mecaniques.note === 10, String(toutesRetro.axes.risques_mecaniques.note))
+  const toutesMineures = calculerAxes({
+    ...socle, pannes: [], pannes_non_verifiables: 2, pannes_non_verifiables_max_gravite: 'mineure',
+  })
+  affirme('rétrogradées toutes mineures : l’axe vaut 13/20',
+    toutesMineures.axes.risques_mecaniques.note === 13, String(toutesMineures.axes.risques_mecaniques.note))
+  affirme('et son libellé ne dit pas davantage « aucun défaut documenté »',
+    !/aucun défaut documenté/i.test(toutesMineures.axes.risques_mecaniques.commentaire))
+  affirme('champ de gravité absent : plafond prudent à 10',
+    calculerAxes({ ...socle, pannes: [], pannes_non_verifiables: 2 })
+      .axes.risques_mecaniques.note === 10)
   affirme('⚠️ et le libellé ne dit JAMAIS « aucun défaut documenté »',
     !/aucun défaut documenté/i.test(toutesRetro.axes.risques_mecaniques.commentaire),
     toutesRetro.axes.risques_mecaniques.commentaire)
   affirme('il dit « non vérifiables »',
     /non vérifiables/i.test(toutesRetro.axes.risques_mecaniques.commentaire))
 
-  const mixte = calculerAxes({ ...socle, pannes: [majeure], pannes_non_verifiables: 2 })
+  const mixte = calculerAxes({ ...socle, pannes: [majeure], pannes_non_verifiables: 2, pannes_non_verifiables_max_gravite: 'majeure' })
   affirme('une panne portée + des rétrogradées : l’axe est plafonné à 10',
     mixte.axes.risques_mecaniques.note <= 10, String(mixte.axes.risques_mecaniques.note))
   affirme('et le libellé annonce les défauts signalés sans source',
@@ -137,20 +150,26 @@ const verifiePrix = (titre, cond, detail = '') => {
     `${mixte.axes.risques_mecaniques.note} contre ${sansRetro.axes.risques_mecaniques.note}`)
   // Là où il mord : des mineures survivantes valent 13, le plafond les ramène à 10.
   const mineure = { gravite: 'mineure', rappel_officiel: false, rappel_confirme_effectue: false }
-  const mineuresRetro = calculerAxes({ ...socle, pannes: [mineure], pannes_non_verifiables: 3 })
+  const mineuresRetro = calculerAxes({ ...socle, pannes: [mineure], pannes_non_verifiables: 3, pannes_non_verifiables_max_gravite: 'majeure' })
   const mineuresSeules = calculerAxes({ ...socle, pannes: [mineure] })
   affirme('le test mord : des mineures retenues passent de 13 à 10 avec des rétrogradées',
     mineuresRetro.axes.risques_mecaniques.note === 10 && mineuresSeules.axes.risques_mecaniques.note === 13,
     `${mineuresRetro.axes.risques_mecaniques.note} contre ${mineuresSeules.axes.risques_mecaniques.note}`)
   affirme('et le score diffère bien dans ce cas',
     mineuresRetro.score !== mineuresSeules.score, `${mineuresRetro.score} contre ${mineuresSeules.score}`)
-  // ⚠️ ET LA CONSÉQUENCE À CONNAÎTRE : le plafond de 10 est SOUS la note d'un
-  // défaut mineur confirmé (13). Un moteur dont les seuls signalements sont
-  // mineurs et invérifiables est donc noté PLUS SÉVÈREMENT qu'un moteur avec
-  // un défaut mineur confirmé. C'est la conséquence directe du plafond
-  // demandé ; elle est épinglée ici pour qu'elle ne passe pas inaperçue.
+  // ⚠️ LA LIMITE DE LA 11.8 EST CORRIGÉE, et le test s'inverse pour le prouver.
+  // À la 11.8, le plafond valait 10 dans tous les cas — soit SOUS la note d'un
+  // défaut mineur CONFIRMÉ (13) : ne pas pouvoir vérifier un défaut mineur
+  // coûtait plus cher que le défaut lui-même, et c'est ce qui faisait tomber la
+  // Mercedes de vert 71 à orange 65. Désormais, ne pas pouvoir vérifier des
+  // signalements mineurs coûte EXACTEMENT ce que coûterait un mineur confirmé.
   const mineureConfirmee = calculerAxes({ ...socle, pannes: [{ gravite: 'mineure', rappel_officiel: false, rappel_confirme_effectue: false }] })
-  affirme('⚠️ limite épinglée : invérifiable (10) est noté SOUS mineur confirmé (13)',
+  affirme('des signalements mineurs invérifiables ne coûtent pas plus qu’un mineur confirmé',
+    toutesMineures.axes.risques_mecaniques.note === mineureConfirmee.axes.risques_mecaniques.note,
+    `${toutesMineures.axes.risques_mecaniques.note} contre ${mineureConfirmee.axes.risques_mecaniques.note}`)
+  // Et une rétrogradée MAJEURE, elle, coûte bien plus : on ignore un défaut
+  // potentiellement coûteux, et le plafond le dit.
+  affirme('une rétrogradée majeure plafonne plus bas qu’un mineur confirmé',
     toutesRetro.axes.risques_mecaniques.note < mineureConfirmee.axes.risques_mecaniques.note,
     `${toutesRetro.axes.risques_mecaniques.note} contre ${mineureConfirmee.axes.risques_mecaniques.note}`)
 }
@@ -281,7 +300,7 @@ const verifiePrix = (titre, cond, detail = '') => {
   // faisait dès 15 : un dossier dont l'axe prix était « non évalué », donc
   // exclu du score, est désormais noté. Le barème lui-même n'a pas changé,
   // mais ce qu'il reçoit oui — et les clients d'API suivent ce numéro.
-  affirme('BAREME_VERSION passée à 11.8', BAREME_VERSION === '11.8', BAREME_VERSION)
+  affirme('BAREME_VERSION passée à 11.9', BAREME_VERSION === '11.9', BAREME_VERSION)
 }
 {
   // ⚠️ L'INVARIANT DU SPRINT 20 : le barème est AVEUGLE à la source de la
