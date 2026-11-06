@@ -102,13 +102,35 @@ const HOTES_PRESSE = [
   "autocar.co.uk", "whatcar.com", "honestjohn.co.uk", "drive.com.au",
   "motor1.com", "autoexpress.co.uk", "autobild.de", "adac.de",
   "consumerreports.org", "jdpower.com",
+  // ⚠️ Ajouté le 6 nov. 2026 sur décision d'Utku, après examen des 14 hôtes
+  // que le filtre écartait. C'est le SEUL des quatorze reclassé : publication
+  // automobile américaine établie, rédaction identifiée.
+  //
+  // ⚠️ Et il ne sauve RIEN — l'entrée Ford PowerShift tenait déjà par une note
+  // technique NHTSA. C'est précisément pour cela qu'il pouvait être ajouté :
+  // la liste grandit par décision sur ce QU'EST la source, jamais pour
+  // rattraper une campagne. `autoliva.com` et `la-boite-automatique.com`
+  // auraient sauvé trois entrées ; ils restent commerciaux.
+  "carbuzz.com",
 ];
 
 /** Forums et agrégateurs de discussion : EN APPUI SEULEMENT (sprint 16). */
 const MOTIFS_FORUM = [
   /forum/i, /\bplanete-/i, /forumactif/i, /reddit\.com/i, /discord/i,
   /\bclub\b/i, /\.proboards\./i, /vbulletin/i, /quora\.com/i,
+  // ⚠️ Ajoutés le 6 nov. 2026. Le motif `\bclub\b` ne couvrait pas
+  // « toyotaownersclub.com » (pas de frontière de mot avant « club »), et
+  // « communaute.dacia.fr » ne contenait aucun des motifs : quatre sites
+  // communautaires tombaient donc dans « commercial ». Le COMPORTEMENT était
+  // juste — ni l'un ni l'autre ne porte une entrée — mais l'ÉTIQUETTE était
+  // fausse, et c'est elle qu'un humain relit dans le motif d'un retrait.
+  // Appeler « commercial » le club des propriétaires Toyota est inexact.
+  /ownersclub/i, /owners-club/i, /communaute/i, /community/i, /\bcamping\b/i,
 ];
+
+/** Hôtes communautaires repérés à l'usage, que les motifs ne capturent pas.
+ *  Liste d'OBSERVATION : elle grandit quand une campagne en rencontre un. */
+const HOTES_COMMUNAUTE = ["c5x7.fr", "wildcamping.co.uk"];
 
 export type RangSource = "officiel" | "presse" | "forum" | "commercial";
 
@@ -131,6 +153,7 @@ export function rangSource(url: unknown): RangSource {
   // ⚠️ L'ordre compte : `forum-auto.caradisiac.com` est un FORUM, pas la
   // presse, même si le domaine racine est un titre reconnu.
   if (MOTIFS_FORUM.some((re) => re.test(hote))) return "forum";
+  if (correspond(HOTES_COMMUNAUTE)) return "forum";
   if (correspond(HOTES_PRESSE)) return "presse";
   return "commercial";
 }

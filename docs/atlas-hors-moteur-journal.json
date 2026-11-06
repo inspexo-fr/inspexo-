@@ -1,0 +1,85 @@
+[
+  {
+    "cle": "FORD",
+    "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+    "action": "gravite_abaissee",
+    "de": "majeure",
+    "vers": "mineure",
+    "motif": "aucun coût publié"
+  },
+  {
+    "cle": "FORD",
+    "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+    "action": "ajoutee",
+    "categorie": "boite",
+    "gravite": "mineure",
+    "sources": 2
+  },
+  {
+    "cle": "VW",
+    "title": "Boîte DSG DQ200 : mécatronique et embrayages secs",
+    "action": "ajoutee",
+    "categorie": "boite",
+    "gravite": "casse",
+    "sources": 1
+  },
+  {
+    "cle": "VW",
+    "title": "Boîte DSG DQ250 : embrayages et bain d'huile",
+    "action": "refusee_source_commerciale",
+    "rangs": [
+      "commercial",
+      "commercial"
+    ]
+  },
+  {
+    "cle": "FIAT",
+    "title": "Boîte Dualogic : actionneur et embrayage",
+    "action": "refusee_source_commerciale",
+    "rangs": [
+      "commercial"
+    ]
+  },
+  {
+    "cle": "AUDI",
+    "title": "Boîte Multitronic : variateur et chaîne",
+    "action": "refusee_source_commerciale",
+    "rangs": [
+      "commercial",
+      "commercial"
+    ]
+  },
+  {
+    "cle": "AUDI",
+    "title": "Boîte S tronic DL501 : mécatronique et embrayages",
+    "action": "refusee_source_commerciale",
+    "rangs": [
+      "commercial",
+      "commercial"
+    ]
+  },
+  {
+    "cle": "RENAULT",
+    "title": "Corrosion du berceau et des bas de caisse Kangoo I",
+    "action": "refusee_source_commerciale",
+    "rangs": [
+      "commercial"
+    ]
+  },
+  {
+    "cle": "CITROEN",
+    "title": "Corrosion des bas de caisse Berlingo I",
+    "action": "refusee_source_commerciale",
+    "rangs": [
+      "commercial"
+    ]
+  },
+  {
+    "cle": "BMW",
+    "title": "Module FRM : éclairage et lève-vitres inopérants",
+    "action": "refusee_source_commerciale",
+    "rangs": [
+      "commercial"
+    ]
+  }
+]

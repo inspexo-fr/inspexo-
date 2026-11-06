@@ -16,7 +16,13 @@
  * sur le REMÈDE, jamais sur la conséquence redoutée. `severity` est conservé
  * pour les écrans hérités.
  *
- * Relevé de sourcing : docs/atlas-sourcing-resultats.json
+ * Relevé de sourcing : docs/atlas-sourcing-resultats.json (sprint 16, moteur)
+ * et docs/atlas-hors-moteur-resultats.json (sprint 21, hors moteur).
+ *
+ * ⚠️ Une entrée dont AUCUNE page ne donne le coût est enregistrée en
+ * `mineure`, même si son remède est manifestement cher : écrire « majeure »
+ * sans avoir lu de fourchette serait affirmer un montant. L'entrée reste
+ * affichée avec ses sources ; c'est la NOTE qu'on refuse de fonder sur rien.
  */
 
 export const defectAtlas = {
@@ -275,6 +281,65 @@ export const defectAtlas = {
         "cout_min_eur": 1000,
         "cout_max_eur": 3000,
         "remede": "Remplacement de la vanne EGR, des injecteurs et parfois du turbocompresseur défaillants suite à la sursollicitation induite par la mise à jour anti-pollution EA189 ; dans certains cas un retrait de la pièce bridant l'admission d'air a aussi été pratiqué."
+      },
+      {
+        "id": "vw-boite-boite-dsg-dq200-mecatronique-et-embrayages-s",
+        "severity": "CRITIQUE",
+        "title": "Boîte DSG DQ200 : mécatronique et embrayages secs",
+        "description": "Boîte à double embrayage sec DQ200 à sept rapports : défaillance du bloc mécatronique, à-coups, perte de rapports et passage en mode secours.",
+        "models": "Golf VI, Golf VII, Polo V, Passat B7",
+        "years": "2008-2019",
+        "categorie": "boite",
+        "cibles": [
+          "DQ200"
+        ],
+        "gravite": "casse",
+        "sources": [
+          {
+            "url": "https://www.drive.com.au/news/new-recall-of-80-000-volkswagen-audi-and-skoda-cars-with-dsg-gearboxes-some-for-the-second-time-in-six-years/",
+            "title": "New recall of 80,000 Volkswagen, Audi and Skoda cars with DSG gearboxes - some for the second time in six years"
+          }
+        ],
+        "url_source": [
+          "https://www.drive.com.au/news/new-recall-of-80-000-volkswagen-audi-and-skoda-cars-with-dsg-gearboxes-some-for-the-second-time-in-six-years/"
+        ],
+        "cout_min_eur": 1200,
+        "cout_max_eur": 3500,
+        "remede": "Remplacement (ou reconditionnement) du bloc mécatronique DQ200 défaillant (logement de l'accumulateur de pression fissuré, électronique de contrôle), avec remplacement du kit d'embrayage sec si celui-ci est également usé ou affecté par la pression hydraulique instable."
+      }
+    ]
+  },
+  "FORD": {
+    "label": "Ford",
+    "defects": [
+      {
+        "id": "ford-boite-boite-powershift-dps6-a-coups-broutement-et-",
+        "severity": "MINEUR",
+        "title": "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs",
+        "description": "Boîte à double embrayage sec PowerShift DPS6 : broutement au démarrage, à-coups, usure prématurée des embrayages et du module de commande.",
+        "models": "Fiesta VI, Focus III, B-Max, EcoSport",
+        "years": "2011-2018",
+        "categorie": "boite",
+        "cibles": [
+          "POWERSHIFT",
+          "DPS6"
+        ],
+        "gravite": "mineure",
+        "sources": [
+          {
+            "url": "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092372-5448.pdf",
+            "title": "FORD: 2011-2015 Fiesta 2012-2016 Focus - TSB DPS6 Clutch Shudder"
+          },
+          {
+            "url": "https://carbuzz.com/2018-ford-focus-transmission-problems-smart-buy/",
+            "title": "The Last Of Ford's Excellent Small Cars Makes A Bargain Used Buy - But Is It A Smart One?"
+          }
+        ],
+        "url_source": [
+          "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092372-5448.pdf",
+          "https://carbuzz.com/2018-ford-focus-transmission-problems-smart-buy/"
+        ],
+        "remede": "Remplacement du module d'embrayage double sec (clutch pack) et reprogrammation du module de commande TCM/PCM (apprentissage adaptatif de l'embrayage), parfois avec remplacement du joint d'arbre d'entrée en cas de fuite."
       }
     ]
   }
