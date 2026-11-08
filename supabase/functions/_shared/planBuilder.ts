@@ -4,6 +4,7 @@
 // puis juge à vote (cache 180 jours). Ce module n'écrit RIEN dans les fiches :
 // l'écriture passe par `admin-defect-sheets` (`ajouter_plan`), avec un jeton
 // d'administrateur. Le seul effet de bord est le cache du juge.
+import { rangSource } from "./atlasSource.ts";
 import {
   affirmationIntervalle,
   candidats,
@@ -135,7 +136,14 @@ export async function genererPlan(
   const aLire = new Set<string>();
   for (const c of cands) {
     if (!c.intervalle_km && !c.intervalle_annees) { ecartees.push({ operation: c.operation, motif: "aucun_intervalle_publie" }); continue; }
-    if (c.portantes.length === 0) { ecartees.push({ operation: c.operation, motif: "aucune_source_portante" }); continue; }
+    if (c.portantes.length === 0) {
+      // Les pages refusées sont NOMMÉES, avec leur rang : sans elles, on ne
+      // sait pas si la règle a écarté des garages ou des pages constructeur
+      // absentes de la liste blanche (constat du pilote du 8 nov. 2026).
+      ecartees.push({ operation: c.operation, motif: "aucune_source_portante",
+        url: c.url_source.map((u) => `${u} [${rangSource(u)}]`).join(" ; ").slice(0, 600) });
+      continue;
+    }
     c.portantes.forEach((u) => aLire.add(u));
   }
   const urls = [...aLire];
