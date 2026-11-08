@@ -63,6 +63,7 @@ const RAPPORT = 'docs/resourcage-fiches-resultats.json'
 // en moyenne, recherche + vérifications comprises. Le filtre de rang posé
 // AVANT la vérification devrait la faire baisser — on ne compte pas dessus.
 const COUT_PANNE_ESTIME = 0.20
+const cumulDepart = () => (existsSync(COMPTEUR) ? (JSON.parse(readFileSync(COMPTEUR, 'utf8')).eur ?? 0) : 0)
 
 const env = {}
 for (const l of (existsSync('.env.local') ? readFileSync('.env.local', 'utf8') : '').split('\n')) {
@@ -77,7 +78,7 @@ const EVAL_SECRET = env.EVAL_BYPASS_SECRET ?? ''
 // ⚠️ Le mode --appliquer ne lit QUE le journal : il n'a pas besoin du dump des
 // fiches, et l'exiger ferait échouer la fusion pour un fichier absent du
 // dépôt — alors qu'il n'a plus rien à y faire.
-const fiches = (APPLIQUER && !existsSync(FICHIER)) ? [] : JSON.parse(readFileSync(FICHIER, 'utf8'))
+const fiches = ((APPLIQUER || a('--rejouer-non-soutenues')) && !existsSync(FICHIER)) ? [] : JSON.parse(readFileSync(FICHIER, 'utf8'))
 const urlsDe = (p) => {
   const u = []
   for (const s of (p.sources ?? [])) if (s?.url) u.push(s.url)
@@ -131,7 +132,7 @@ unites.sort((x, y) => rang(x.fiche) - rang(y.fiche))
 // ── Mode estimation : aucune dépense ────────────────────────────────────────
 const parFiche = {}
 for (const u of unites) parFiche[u.fiche] = (parFiche[u.fiche] ?? 0) + 1
-if (ESTIMER) {
+if (ESTIMER && !a('--rejouer-non-soutenues')) {
   console.log(`\nCAMPAGNE DE RE-SOURCING — estimation (aucune dépense)\n`)
   console.log(`  fiches à terre            : ${Object.keys(parFiche).length}`)
   console.log(`  pannes à re-sourcer       : ${unites.length}`)
@@ -151,6 +152,75 @@ if (ESTIMER) {
   process.exit(0)
 }
 
+
+// ── MODE --rejouer-non-soutenues (sprint 22) ───────────────────────────────
+//
+// Décision d'Utku du 8 nov. 2026 : rejouer avec le JUGE À VOTE uniquement les
+// pannes pour lesquelles une page avait été TROUVÉE mais jugée « non
+// soutenue » par le juge à un seul passage. Pas les « aucune page » : il n'y a
+// rien à rejuger.
+//
+// Mode RATTRAPAGE d'atlas-builder : les URL sont fournies, AUCUNE recherche
+// n'est payée — seul le juge tourne. Et la requête est construite EXACTEMENT
+// comme la mesure du 8 nov. (marque, titre, symptômes, famille, années), pour
+// que les couples déjà jugés sortent du cache à 0 €.
+//
+// Le journal est mis à jour EN PLACE (la ligne gagne `rejeu`, et `porte` si une
+// page tient désormais) : `--appliquer` le lit tel quel, avec le jeton admin.
+if (a('--rejouer-non-soutenues')) {
+  const lus = existsSync(JOURNAL) ? JSON.parse(readFileSync(JOURNAL, 'utf8')) : []
+  const cibles = lus.filter((j) => !j.porte && !j.rejeu &&
+    (j.ecartees ?? []).some((e) => e.motif === 'non_soutenue'))
+  const pagesDe = (j) => [...new Set((j.ecartees ?? []).filter((e) => e.motif === 'non_soutenue').map((e) => e.url))]
+  const nPages = cibles.reduce((n, j) => n + pagesDe(j).length, 0)
+  // Mesuré le 8 nov. 2026 : 0,021 € par passage et par page ; 2 passages si
+  // les deux concordent, 3 sinon. Page déjà jugée : 0 €.
+  const PAR_PAGE_MIN = 0.042, PAR_PAGE_MAX = 0.063
+  console.log(`\nREJEU AU JUGE À VOTE — ${cibles.length} panne(s), ${nPages} page(s) « non soutenue »`)
+  for (const j of cibles) console.log(`  ${j.fiche.padEnd(18)} ${j.titre.slice(0, 60).padEnd(60)} ${pagesDe(j).length} page(s)`)
+  console.log(`\n  coût si aucune page n'est en cache : ${(nPages * PAR_PAGE_MIN).toFixed(2)} à ${(nPages * PAR_PAGE_MAX).toFixed(2)} €`)
+  console.log(`  mur de ce run : ${BUDGET.toFixed(2)} €`)
+  if (ESTIMER) process.exit(0)
+
+  let coutRun = 0, joues = 0
+  for (const j of cibles) {
+    const mur = murAtteint({ coutRun, casJoues: joues, coutSession: cumulDepart() + coutRun,
+      budgetRun: BUDGET, plafondSession: PLAFOND_CUMUL, estime: PAR_PAGE_MAX * pagesDe(j).length })
+    if (mur) { console.log(`\n⏸ mur atteint (${mur}) avant « ${j.titre.slice(0, 50)} » : NON jouée.`); break }
+    const res = await fetch(URL_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ANON}`, apikey: ANON, 'x-eval-secret': EVAL_SECRET },
+      body: JSON.stringify({
+        entree: { marque: j.marque, title: j.titre, description: j.symptomes ?? '', models: j.famille, years: j.annees ?? '' },
+        urls: pagesDe(j),
+      }),
+      signal: AbortSignal.timeout(240_000),
+    })
+    const r = await res.json().catch(() => null)
+    if (!res.ok || r == null || typeof r.cout_eur !== 'number') {
+      console.error(`\n  ⚠️ ARRÊT — ${j.titre.slice(0, 50)} : HTTP ${res.status}, coût non chiffrable. Rien n'est écrit pour elle.`)
+      break
+    }
+    joues++
+    coutRun += r.cout_eur
+    const retenues = (r.sources ?? []).map((x) => ({ url: x.url, rang: rangSource(x.url), titre: x.titre ?? '' }))
+    const porte = retenues.length > 0 && sourcesPortentLEntree(retenues.map((x) => x.url))
+    j.rejeu = { le: new Date().toISOString(), juge: r.juge ?? null, cout_eur: r.cout_eur,
+      verdicts: [...retenues.map((x) => [x.url, 'soutenue']), ...(r.ecartees ?? []).map((e) => [e.url, e.motif])] }
+    if (porte) {
+      j.porte = true
+      j.sources_trouvees = [...(j.sources_trouvees ?? []), ...retenues.filter((x) => !(j.sources_trouvees ?? []).some((y) => y.url === x.url))]
+      j.motif = null
+    }
+    console.log(`  ${porte ? 'PORTÉE ' : 'retirée'}  ${j.fiche.padEnd(18)} ${j.titre.slice(0, 50).padEnd(50)} ` +
+      `${JSON.stringify(r.juge)}  ${r.cout_eur.toFixed(3)} €`)
+    writeFileSync(JOURNAL, JSON.stringify(lus, null, 1))
+    writeFileSync(COMPTEUR, JSON.stringify({ eur: Number((cumulDepart() + coutRun).toFixed(4)), maj: new Date().toISOString() }))
+  }
+  console.log(`\n— Coût du rejeu : ${coutRun.toFixed(3)} € / ${BUDGET.toFixed(2)} € annoncés`)
+  console.log('  Écriture dans les fiches : node scripts/resourcer-fiches.mjs --appliquer (jeton admin).')
+  process.exit(0)
+}
 
 // ── MODE --appliquer : écrire les sources trouvées dans les fiches ──────────
 //
