@@ -99,6 +99,19 @@ eq(recommander([fiche('a', { eliminatoire: 'verdict rouge' }), fiche('b', { elim
   ])
   eq(r.issue, 'indecis', 'à trois, A ne bat C que sur la gravité (écart de score 2) : indécis')
 }
+{
+  // À trois : chaque raison nomme TOUS les rivaux battus sur le critère.
+  const r = recommander([
+    fiche('a', { score: 71 }),
+    fiche('b', { score: 55, gravite_max: 'majeure', pannes_portees: [{ titre: 'x', gravite: 'majeure' }] }),
+    fiche('c', { score: 51, gravite_max: 'mineure', pannes_portees: [{ titre: 'y', gravite: 'mineure' }] }),
+  ])
+  eq(r.issue, 'recommande', 'à trois, A bat B et C sur score et pannes')
+  const sc = r.raisons.find((x) => x.critere === 'score')?.texte ?? ''
+  ok(/55\/100/.test(sc) && /51\/100/.test(sc), `la raison de score cite les DEUX rivaux (${sc})`)
+  const pa = r.raisons.find((x) => x.critere === 'pannes')?.texte ?? ''
+  ok(/majeure/.test(pa) && /mineure/.test(pa), `la raison de pannes cite les DEUX rivaux (${pa})`)
+}
 // Déterminisme : même entrée, même sortie, 200 fois.
 {
   const ent = [fiche('a', { score: 72 }), fiche('b', { score: 60, gravite_max: 'casse' })]

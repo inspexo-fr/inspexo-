@@ -2066,6 +2066,112 @@ passages non joués comme des échecs d'analyse.
   même run » qui n'a jamais abouti, faute de budget.
 
 
+## Sprint 22 — Comparer et coût réel (8 nov. 2026)
+
+### Échéance portante, prix de comparateur — DÉCISION D'UTKU DU 8 NOV. 2026
+Deux questions, deux règles, et la frontière est exacte :
+1. **« Cette opération est-elle DUE ? »** — seul le plan d'entretien le dit, et
+   il lui faut une source **PORTANTE** (`sourcesPortentLEntree`). Sinon :
+   « à vérifier dans le carnet », hors total.
+2. **« Combien coûte-t-elle ? »** — pour une opération **PRÉVUE AU PLAN**, le
+   prix moyen d'un comparateur de garages (**Vroomly, iDGarages**) est ADMIS,
+   avec le libellé exact « prix moyen affiché par des garages, via
+   [comparateur] » (`coutEntretienPrevu`, `atlasSource.ts`).
+- ⚠️ **Ce n'est PAS un assouplissement de `rangSource`** : un comparateur ne
+  PORTE toujours rien, ne fixe JAMAIS la gravité d'une panne (`coutUtilisable`
+  inchangé) et ne chiffre JAMAIS une panne ou une opération HORS plan
+  (`coutHorsPlan` : devis validé ou source portante seulement). La règle du
+  6 nov. reste entière là-dessus.
+- Figé par `tests/atlas-source.test.mjs` : Vroomly/iDGarages restent non
+  portants, `coutEntretienPrevu` n'est importé QUE par `cout3ansSources.ts`
+  (balayage de toutes les fonctions), et `tests/independance-score.test.mjs`
+  interdit au chemin de notation de citer le comparateur, le coût sur 3 ans ou
+  `coutEntretienPrevu` (avec contre-épreuves).
+
+### Coût réel sur 3 ans
+- Module PUR `_shared/cout3ans.ts` (miroir généré `src/data/cout3ans.gen.js`,
+  parité sur 400 tirages) : il PROJETTE ; `_shared/cout3ansSources.ts` tranche
+  les sources côté serveur. Calculé **à la lecture** depuis `result_json`
+  (fonction `cout-3ans`, aucune IA) : **le score n'est pas touché**, toutes les
+  analyses en profitent.
+- Lignes : prix demandé (total dû s'il est connu), dû dès l'achat (échéance
+  passée sans justificatif, ou opération que l'annonce déclare non faite),
+  occurrences du plan dans 36 mois ou `km + 3 × km/an` (15 000 par défaut,
+  borné 1 000–80 000, « au premier des deux termes »), contrôles techniques
+  (4 ans puis tous les 2 ans ; au-delà de 4 ans le CT de la vente est au
+  vendeur, R323-22), carte grise (`coutCarteGrise`, région + CV), avertissement
+  ZFE (sans montant). Chaque ligne porte sa source et se corrige à l'écran.
+- **Prix du CT : relevé OFFICIEL DGCCRF** (data.gouv.fr, « Prix des contrôles
+  techniques », alimenté par les centres, consultable sur
+  prix.conso.gouv.fr) — P25–P75 par énergie, voiture particulière, contre-visite
+  exclue. `node scripts/releve-prix-ct.mjs` (aucune IA) produit la valeur semée
+  en `config.ct_prix` ; relevé du 08/11/2026, ≈ 6 100 centres par énergie,
+  75–85 € en diesel/essence. Moins de 50 tarifs ⇒ pas de chiffre.
+- ⚠️ **`data.gouv.fr` n'a PAS été ajouté aux hôtes officiels de `rangSource`** :
+  c'eût été juste, mais `rangSource` est sur le chemin de notation. Le CT porte
+  `via: officiel` directement. Un ajout d'hôte se fait dans un sprint qui rejoue
+  les références.
+- Verrou SERVEUR : sans Pass, `coutTroisAnsPublic` (total, nombre de lignes non
+  chiffrées) ; avec Pass, `cout` + `entree` pour recalcul local.
+- ⚠️ **MESURÉ SUR LES 4 RÉFÉRENCES : la partie entretien est presque vide.**
+  Les fiches EA824, EB2DTS et OM654 n'ont **aucun** `plan_entretien` ; celui de
+  la Clio (K9K) a 3 opérations, **toutes « à vérifier dans le carnet »**. Le
+  total vaut donc aujourd'hui prix + CT + carte grise (+ opérations déclarées
+  non faites, non chiffrées : la « distribution jamais faite » de la 308 n'est
+  pas au plan, donc le comparateur n'y a pas droit). La règle est appliquée ;
+  c'est la donnée qui manque. Le remplir = régénérer des plans sourcés.
+
+### Comparateur (Pass)
+- `/comparer?ids=a,b[,c]`, sélection depuis `/dossier`. Fonction `comparer` :
+  Pass ET appartenance de CHAQUE analyse au dossier de l'appelant, vérifiés
+  avant toute lecture d'analyse (`hors_dossier` → 403).
+- `_shared/comparateur.ts` (pur, aucun modèle) : éliminatoires (rouge, compteur
+  contredit, opposition / VGE HistoVec), puis trois critères à seuils fixes —
+  score ≥ 5 points, gravité max. des pannes PORTÉES (recalculée depuis les URL,
+  donc juste aussi avant le sprint 21.1), coût sur 3 ans ≥ 500 € **seulement si
+  les deux additions ont les mêmes postes non chiffrés**. Recommandé = bat
+  CHACUN des autres sur ≥ 2 critères sans en perdre un. Sinon « impossible de
+  départager » + la donnée qui manque, nommée. Moins de 3 critères gagnés :
+  compléments chiffrés favorables (prix, travaux, questions), jamais inventés.
+- ⚠️ **Le prix demandé n'est PAS un critère** : la Mercedes à 41 490 € est
+  recommandée face à une Clio à 2 450 € sur score et pannes. Choix ouvert,
+  soumis à Utku.
+
+### Juge stable — même page + même affirmation = même verdict
+- `_shared/jugeStable.ts` (sans import, testable hors ligne ; ré-exporté par
+  `verifSource.ts`) : **cache** `verif_cache` par sha256(URL sans fragment,
+  affirmation normalisée, moteur), **sans empreinte de la page** (décision
+  d'Utku), **180 jours** à la lecture ; sinon **vote** : 2 passages en
+  parallèle, un 3e seulement sur les affirmations en désaccord — strictement
+  équivalent à une majorité de 3 (vérifié sur les 27 combinaisons). Dispersion
+  ⇒ `non_soutenue`. Seul un verdict FIABLE (≥ 2 passages ont répondu) est mis en
+  cache : une panne d'API ne se fige pas 180 jours.
+- Branché dans `verification` (cache lu AVANT de lire la page ; page entièrement
+  en cache = pas lue) ET `atlas-builder`, qui gagne un client service role pour
+  ce seul usage (test : il n'adresse aucune table en direct).
+- **Mesuré le 8 nov.** sur le cas réel de variance (L'Argus, rattrapage sans
+  recherche, 5 pages) : 2 passages par page, **aucun 3e vote nécessaire**,
+  0,212 € ; **second tour 100 % cache, 0 €, verdicts identiques**. Surcoût réel
+  du vote : **×2** sur un couple nouveau, 0 ensuite.
+- ⚠️ **Le vote a contredit la campagne du 8 nov.** : une page L'Argus sur la
+  courroie EB2DTS, « non soutenue » en un passage, est **soutenue à 2 voix
+  contre 0**. **Rien n'a été écrit dans la fiche** : ce serait toucher le
+  chemin de notation (la 308 de référence est concernée). Décision d'Utku.
+- `scripts/verifier-analyses.mjs --analyse a,b,a,b` : plusieurs analyses en UN
+  run (un seul mur), compteurs cache/passages, `--journal`.
+
+### Mise en service partielle — 8 nov. 2026 (merge EN ATTENTE)
+Dumps prod hors dépôt, migration `20261125120000` (verif_cache + ct_prix),
+9 fonctions déployées (dont `score`, `sheet-builder`, `alertes`,
+`admin-defect-sheets` : seuls de NOUVEAUX exports d'`atlasSource.ts`, aucun
+comportement changé). `essai-local.sh` : 39 migrations, 83/83, plus
+`tests/sql/essai-verif-cache.sql` (6/6). Contrôles : `comparer` 401 sans
+session, `verif_cache` 401 à anon, `cout-3ans` total seul sans Pass.
+**Références INCHANGÉES** : S7 rouge 39, 308 orange 55, Mercedes vert 71,
+Clio II orange 51 (0,356 €). Dépense du sprint : **0,568 € / 0,90 €**.
+Captures 390 px : `captures-sprint22/` (gitignoré), zéro débordement, zéro
+erreur JS. ⚠️ Le site (bloc, `/comparer`) n'est en ligne qu'après le merge.
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |
@@ -2642,6 +2748,7 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 - Aucun chiffre d'économies affiché
 - Accès public à la base UNIQUEMENT via RPC SECURITY DEFINER — aucune policy RLS anon directe
 - **Une panne n'est AFFIRMÉE que si une source indépendante la confirme** (officielle, de presse, ou éditoriale à éditeur identifiable). Un garage, un vendeur de pièces, un forum ou un agrégateur de forums ne porte rien : son revenu dépend de ce que le défaut soit réel et réparé. Le reste est **présenté comme une question à poser au vendeur**, affiché, sans effet sur la note. L'accueil énonce cette règle ; `/fiabilite` porte le chiffre
+- **Une opération n'est DUE que sur source portante ; son PRIX, si elle est prévue au plan, peut venir d'un comparateur de garages** (Vroomly, iDGarages), libellé « prix moyen affiché par des garages, via … ». Un comparateur ne porte jamais une panne, ne fixe jamais une gravité, ne chiffre jamais une opération hors plan (décision du 8 nov. 2026)
 - **Tout script shell porte `set -euo pipefail`**, et toute invocation qui enchaîne un test ou un déploiement derrière un pipe commence par `set -o pipefail` — sinon `| tail` rend 0 sur un échec (constaté le 8 nov. 2026 : un déploiement en production derrière un test en échec)
 
 ## Sécurité — OBLIGATIONS

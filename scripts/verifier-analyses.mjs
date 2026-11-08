@@ -133,7 +133,11 @@ if (ESTIMER) {
 // ── Quelles analyses ────────────────────────────────────────────────────────
 let cibles = []
 if (ANALYSE) {
-  cibles = [{ id: ANALYSE }]
+  // SPRINT 22 — plusieurs analyses, DANS CET ORDRE, en UN SEUL run : les
+  // jouer par invocations séparées remettrait le mur du run à zéro à chaque
+  // fois. Répéter une analyse (a,b,a,b) mesure la stabilité du juge : le
+  // second passage doit sortir entièrement du cache, à 0 €.
+  cibles = String(ANALYSE).split(',').map((x) => x.trim()).filter(Boolean).map((id) => ({ id }))
 } else {
   // `analyses_a_verifier` est réservée au service role : on passe par la
   // fonction admin, qui l'appelle pour nous. Sans jeton admin, on demande
@@ -153,6 +157,7 @@ if (budgetAtteint()) {
 
 // ── Exécution ───────────────────────────────────────────────────────────────
 let total = 0
+const journal = []
 for (const c of cibles) {
   if (budgetAtteint()) {
     console.log(`\n⏸ ${motifArret()}. Reste non traité.`)
@@ -177,9 +182,15 @@ for (const c of cibles) {
   console.log(
     `${json.affirmations} affirmations · ${json.soutenues} soutenues · ` +
     `${json.non_soutenues} non soutenues · ${json.mauvais_moteur} mauvais moteur · ` +
-    `${json.sans_source} sans source · ${(json.cout_eur ?? 0).toFixed(4)} €`,
+    `${json.sans_source} sans source · ${json.injoignables ?? 0} injoignables · ` +
+    `${json.depuis_cache ?? 0} depuis le cache · ${json.passages ?? 0} passages ` +
+    `(${json.groupes_a_trois_votes ?? 0} page(s) à 3 votes) · ${(json.cout_eur ?? 0).toFixed(4)} €`,
   )
+  journal.push({ id: c.id, ...json })
 }
 
+if (args.includes('--journal')) {
+  writeFileSync(flag('journal', 'verification-journal.json'), JSON.stringify(journal, null, 2))
+}
 console.log(`\n${total} analyse(s) vérifiée(s).`)
 console.log(`— Coût de ce run : ${(cout - coutDepart).toFixed(4)} € · cumul : ${cout.toFixed(2)} € / ${PLAFOND_EUR} €`)

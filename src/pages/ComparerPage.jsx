@@ -106,7 +106,11 @@ export default function ComparerPage() {
             )} />
             <Rangee titre="Questions au vendeur" fiches={fiches} rendu={(f) => <>{f.questions}</>} />
             <Rangee titre="Travaux à prévoir chiffrés" fiches={fiches} rendu={(f) => (
-              f.travaux.postes > 0 ? <>{fourchette(f.travaux.min, f.travaux.max)} ({f.travaux.postes} poste{f.travaux.postes > 1 ? 's' : ''})</> : <>aucun poste chiffré</>
+              f.travaux.postes === 0 ? <>aucun poste chiffré</>
+                : f.travaux.min == null && f.travaux.max == null
+                  // La négociation ne publie un total qu'à partir de 2 postes chiffrés.
+                  ? <>{f.travaux.postes} poste chiffré, sans total (voir le dossier)</>
+                  : <>{fourchette(f.travaux.min, f.travaux.max)} ({f.travaux.postes} poste{f.travaux.postes > 1 ? 's' : ''})</>
             )} />
             <Rangee titre="Prix et position dans les comparables" fiches={fiches} rendu={(f) => (
               <>{f.prix.demande != null ? euros(f.prix.demande) : '—'}

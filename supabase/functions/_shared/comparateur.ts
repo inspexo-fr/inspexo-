@@ -179,6 +179,26 @@ function duel(a: FicheComparaison, b: FicheComparaison): Duel {
   return d;
 }
 
+/** Une seule phrase pour un critère gagné contre plusieurs rivaux. */
+function fusionnerRaisons(
+  critere: "score" | "pannes" | "cout_3ans",
+  a: FicheComparaison,
+  tous: FicheComparaison[],
+  textes: string[],
+): string {
+  const autres = tous.filter((b) => b !== a);
+  if (critere === "score") {
+    const battus = autres.filter((b) => a.score != null && b.score != null && a.score - b.score >= SEUIL_SCORE);
+    return `Score ${a.score}/100 contre ${battus.map((b) => `${b.score}/100`).join(" et ")}.`;
+  }
+  if (critere === "pannes") {
+    const battus = autres.filter((b) => (RANG_GRAVITE[a.gravite_max] ?? 0) < (RANG_GRAVITE[b.gravite_max] ?? 0));
+    return `Pannes documentées : ${a.pannes_portees.length} (gravité max. ${LIBELLE_GRAVITE[a.gravite_max]}) contre ` +
+      battus.map((b) => `${b.pannes_portees.length} (${LIBELLE_GRAVITE[b.gravite_max]})`).join(" et ") + ".";
+  }
+  return textes.join(" ");
+}
+
 /** Laquelle prendre. Un véhicule n'est recommandé que s'il l'emporte sur
  *  CHACUN des autres sur au moins 2 des 3 critères, sans en perdre aucun. */
 export function recommander(fiches: FicheComparaison[]): Recommandation {
@@ -205,10 +225,14 @@ export function recommander(fiches: FicheComparaison[]): Recommandation {
     const gagneTout = duels.every((d) => d.gagne >= 2 && d.perd === 0);
     for (const d of duels) for (const m of d.manque) manques.add(m);
     if (gagneTout) {
-      // Les raisons du duel le plus serré (le dernier concurrent sérieux).
+      // Une raison par critère, qui nomme TOUS les rivaux battus sur ce
+      // critère. À trois dossiers, citer le seul premier duel ferait croire
+      // que le recommandé n'a été comparé qu'à un véhicule.
       const raisons: Raison[] = [];
-      for (const d of duels) for (const r of d.raisons) {
-        if (!raisons.some((x) => x.critere === r.critere)) raisons.push(r);
+      for (const critere of ["score", "pannes", "cout_3ans"] as const) {
+        const textes = duels.flatMap((d) => d.raisons.filter((r) => r.critere === critere).map((r) => r.texte));
+        if (textes.length === 0) continue;
+        raisons.push({ critere, texte: textes.length === 1 ? textes[0] : fusionnerRaisons(critere, a, restants, textes) });
       }
       // Moins de trois critères gagnés : on complète par des faits CHIFFRÉS
       // où le recommandé fait au moins aussi bien que chacun des autres —
