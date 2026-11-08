@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { PhrasePannesPortees } from '../components/PannesPortees'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
@@ -37,6 +38,10 @@ function EtatFiabilite() {
   return (
     <Link to="/fiabilite">
       {methode}{suite ? ` ${suite}` : ''}
+      {/* ⚠️ Lu en base comme le reste de cette ligne. Publié tel quel,
+          décision d'Utku du 6 nov. 2026 : le chiffre est bas, et c'est
+          précisément pourquoi il doit être visible. */}
+      <PhrasePannesPortees />
     </Link>
   )
 }

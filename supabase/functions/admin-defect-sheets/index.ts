@@ -5,6 +5,7 @@
 //          liste avant validation.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sourcesPortentLEntree } from "../_shared/atlasSource.ts";
 import { sanitizePannes } from "../_shared/defectSheets.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 
@@ -57,13 +58,20 @@ serve(async (req: Request) => {
         // familles étrangères rejetées, champs typés/bornés.
         const { data: row } = await admin
           .from("defect_sheets")
-          .select("famille_moteur, marque")
+          .select("famille_moteur, marque, pannes")
           .eq("id", body.id)
           .maybeSingle();
         if (!row) {
           return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 404, headers: cors });
         }
-        const { pannes: cleaned } = sanitizePannes(body.pannes, row.famille_moteur, row.marque);
+        // Les titres déjà enregistrés sont exemptés du contrôle de rang : on
+        // corrige une fiche existante, on n'introduit pas une affirmation.
+        const titresExistants = (Array.isArray(row.pannes) ? row.pannes : [])
+          .map((p: { titre?: unknown }) => String(p?.titre ?? ""))
+          .filter(Boolean);
+        const { pannes: cleaned } = sanitizePannes(
+          body.pannes, row.famille_moteur, row.marque, titresExistants,
+        );
         if (cleaned.length !== body.pannes.length) {
           return new Response(
             JSON.stringify({
@@ -75,6 +83,63 @@ serve(async (req: Request) => {
         }
         fields.pannes = cleaned;
       }
+      // ── AJOUT DE SOURCES À DES PANNES EXISTANTES ──────────────────────
+      //
+      // C'est le chemin d'écriture de la campagne de re-sourcing : elle ne fait
+      // qu'AJOUTER des sources à des pannes déjà là. Aucune suppression, aucun
+      // titre nouveau, aucune gravité touchée.
+      //
+      // ⚠️ Il n'emprunte PAS le chemin `pannes` ci-dessus, et c'est voulu :
+      // réécrire la liste entière pour ajouter une URL donnerait à une
+      // opération additive le pouvoir de tout remplacer — et il suffirait d'un
+      // corps de requête tronqué pour vider une fiche. Ici, une panne absente
+      // du corps est une panne qu'on ne touche pas.
+      if (Array.isArray(body.ajouter_sources)) {
+        const { data: row } = await admin
+          .from("defect_sheets").select("pannes").eq("id", body.id).maybeSingle();
+        if (!row) {
+          return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        }
+        const pannes = (Array.isArray(row.pannes) ? row.pannes : []) as Array<Record<string, unknown>>;
+        const parTitre = new Map<string, Record<string, unknown>>();
+        for (const p of pannes) parTitre.set(String(p?.titre ?? "").trim().toLowerCase(), p);
+        let touchees = 0, ajoutees = 0;
+        const inconnues: string[] = [];
+        for (const ajout of body.ajouter_sources.slice(0, 40)) {
+          const cle = String(ajout?.panne_titre ?? "").trim().toLowerCase();
+          const panne = parTitre.get(cle);
+          if (!panne) { inconnues.push(String(ajout?.panne_titre ?? "").slice(0, 120)); continue; }
+          const existantes = Array.isArray(panne.sources) ? panne.sources as Array<{ url?: unknown }> : [];
+          const vues = new Set(existantes.map((x) => String(x?.url ?? "")));
+          const neuves = (Array.isArray(ajout?.sources) ? ajout.sources : [])
+            .filter((x: { url?: unknown }) => typeof x?.url === "string" && /^https:\/\/\S{8,500}$/i.test(x.url))
+            // Une source ajoutée doit PORTER : la campagne n'a aucune raison
+            // d'enrichir une panne d'un forum de plus.
+            .filter((x: { url: string }) => sourcesPortentLEntree([x.url]) && !vues.has(x.url))
+            .slice(0, 4)
+            .map((x: { url: string; title?: unknown }) => ({
+              url: x.url,
+              title: typeof x.title === "string" ? x.title.slice(0, 150) : null,
+            }));
+          if (neuves.length === 0) continue;
+          panne.sources = [...existantes, ...neuves].slice(0, 8);
+          touchees++; ajoutees += neuves.length;
+        }
+        if (touchees === 0) {
+          return new Response(
+            JSON.stringify({ error: "aucune source ajoutable", inconnues }),
+            { status: 400, headers: cors },
+          );
+        }
+        fields.pannes = pannes;
+        const { error: e2 } = await admin.from("defect_sheets").update(fields).eq("id", body.id);
+        if (e2) return new Response(JSON.stringify({ error: e2.message }), { status: 500, headers: cors });
+        return new Response(
+          JSON.stringify({ pannes_touchees: touchees, sources_ajoutees: ajoutees, inconnues }),
+          { headers: { ...cors, "Content-Type": "application/json" } },
+        );
+      }
+
       if (Object.keys(fields).length === 1) {
         return new Response(JSON.stringify({ error: "Nothing to update" }), { status: 400, headers: cors });
       }

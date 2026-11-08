@@ -374,3 +374,88 @@ export function sourcesPortentLEntree(urls: readonly unknown[]): boolean {
 export function coutUtilisable(urls: readonly unknown[]): boolean {
   return urls.some((u) => RANGS_PORTANTS.includes(rangSource(u)));
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// COMBIEN DE NOS AFFIRMATIONS SONT PORTÉES PAR UNE SOURCE INDÉPENDANTE ?
+//
+// Chiffre PUBLIÉ sur /fiabilite et sur l'accueil (décision d'Utku du 6 nov.
+// 2026 : « publié tel quel »).
+//
+// ⚠️ IL N'Y A QU'UNE IMPLÉMENTATION DE `rangSource` DANS LE PROJET, et elle
+// est ici, en TypeScript. Compter en SQL demanderait d'y réécrire la liste des
+// hôtes : deux listes qui divergent, et un chiffre public qui cesse de décrire
+// la règle réellement appliquée au score. Le comptage est donc fait par une
+// fonction edge, qui ÉCRIT le résultat dans `config` ; la base le sert, elle ne
+// le calcule pas.
+//
+// ⚠️ Et il est RECALCULÉ, jamais écrit à la main. La ligne « publié dès
+// 50 dossiers relus » de l'accueil a menti pendant un mois parce qu'elle était
+// figée dans un fichier : une phrase qui annonce un état doit lire cet état.
+
+export type ComptePannesPortees = {
+  /** Pannes dont au moins une source est officielle, de presse ou éditoriale. */
+  portees: number;
+  /** Total des pannes du catalogue (fiches moteur + atlas). */
+  total: number;
+  /** Fiches moteur dont AUCUNE panne n'est portée. */
+  fiches_a_terre: number;
+  fiches_total: number;
+};
+
+/** URLs d'une panne, quelle que soit la forme du champ (les fiches portent
+ *  `sources: [{url}]`, l'atlas `url_source: [...]`, et parfois les deux). */
+export function urlsDeLaPanne(p: unknown): string[] {
+  const o = (p ?? {}) as Record<string, unknown>;
+  const u: string[] = [];
+  for (const s of (Array.isArray(o.sources) ? o.sources : [])) {
+    const url = (s as { url?: unknown })?.url;
+    if (typeof url === "string") u.push(url);
+  }
+  const us = o.url_source;
+  if (Array.isArray(us)) for (const x of us) if (typeof x === "string") u.push(x);
+  else if (typeof us === "string") u.push(us);
+  return [...new Set(u)];
+}
+
+/** Les entrées de l'atlas, à plat.
+ *
+ *  ⚠️ L'atlas est une carte `{MARQUE: {label, logo, defects: [...]}}` : un
+ *  `Object.values(...).flat()` rend SEPT OBJETS DE MARQUE, pas les entrées —
+ *  et chacun, dépourvu de source, se compte alors comme une affirmation non
+ *  portée. Mesuré : le chiffre publié annonçait 48/226 au lieu de 52/219, soit
+ *  sept affirmations inventées et quatre vraies sources perdues. Un seul
+ *  endroit connaît cette forme, et c'est ici. */
+export function entreesAtlasAPlat(atlas: unknown): unknown[] {
+  const out: unknown[] = [];
+  for (const marque of Object.values((atlas ?? {}) as Record<string, unknown>)) {
+    const d = (marque as { defects?: unknown })?.defects;
+    if (Array.isArray(d)) out.push(...d);
+  }
+  return out;
+}
+
+export function compterPannesPortees(
+  fiches: readonly unknown[],
+  entreesAtlas: readonly unknown[] = [],
+): ComptePannesPortees {
+  let portees = 0, total = 0, fichesATerre = 0, fichesTotal = 0;
+  for (const f of fiches) {
+    const pannes = (f as { pannes?: unknown })?.pannes;
+    const liste = Array.isArray(pannes) ? pannes : [];
+    // ⚠️ Une fiche SANS panne n'est pas une fiche « à terre » : elle n'affirme
+    // rien. La compter ferait baisser le chiffre pour une raison fausse.
+    if (liste.length === 0) continue;
+    fichesTotal++;
+    let n = 0;
+    for (const p of liste) {
+      total++;
+      if (sourcesPortentLEntree(urlsDeLaPanne(p))) { portees++; n++; }
+    }
+    if (n === 0) fichesATerre++;
+  }
+  for (const e of entreesAtlas) {
+    total++;
+    if (sourcesPortentLEntree(urlsDeLaPanne(e))) portees++;
+  }
+  return { portees, total, fiches_a_terre: fichesATerre, fiches_total: fichesTotal };
+}

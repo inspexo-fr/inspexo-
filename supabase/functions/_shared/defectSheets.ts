@@ -381,7 +381,23 @@ export function sanitizePannes(
   raw: any[],
   famille: string,
   marque: string,
+  /** ⚠️ Titres DÉJÀ PRÉSENTS dans la fiche enregistrée, exemptés du contrôle
+   *  de rang de source.
+   *
+   *  Sans cette exemption, fermer la génération (sprint 21.1) a bloqué, sans
+   *  qu'on le voie, l'écran admin de CORRECTION d'une fiche : les 20 fiches à
+   *  terre ont toutes leurs pannes non portées, donc tout enregistrement
+   *  renvoyait « pannes invalides » et l'admin ne pouvait plus rien y changer.
+   *
+   *  La règle juste n'est pas « une fiche existante devient inéditable », mais
+   *  « le contrôle arrête une AFFIRMATION NOUVELLE ». Une panne déjà publiée
+   *  garde son droit d'exister : c'est le barème, à l'analyse, qui décide de
+   *  son poids — il la rétrograde en question sans l'effacer. La supprimer
+   *  d'office ferait disparaître une information qu'on a seulement cessé de
+   *  pouvoir affirmer. */
+  titresExistants: readonly string[] = [],
 ): { pannes: SheetPanne[]; rejectedSources: RejectedSource[]; sourcesUniques: number; sourcesSpecifiques: number } {
+  const dejaLa = new Set(titresExistants.map((t) => String(t).trim().toLowerCase()));
   const today = new Date().toISOString().slice(0, 10);
   const fam = normFamille(famille);
   const marqueNorm = normalizeBrand(marque);
@@ -466,7 +482,7 @@ export function sanitizePannes(
     // recherche web, ajouter une récupération par source (jusqu'à 5 par panne,
     // 10 pannes par fiche) ferait expirer la génération. Dire ce qui n'est pas
     // vérifié vaut mieux que le laisser croire.
-    if (!sourcesPortentLEntree(urls)) {
+    if (!sourcesPortentLEntree(urls) && !dejaLa.has(String(p.titre).trim().toLowerCase())) {
       rejectedSources.push({
         url: urls[0],
         vehicule_concerne: `(aucune source indépendante : ${urls.map(rangSource).join(", ")})`,

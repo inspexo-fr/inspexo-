@@ -52,7 +52,16 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const EVAL_BYPASS_SECRET = Deno.env.get("EVAL_BYPASS_SECRET") ?? null;
 const MODEL = "claude-sonnet-5";
 const MAX_SEARCHES = 3;
-const MAX_PAUSE_LOOPS = 6;
+// ⚠️ SIX BOUCLES DE PAUSE À 110 s FONT 11 MINUTES, et c'est ce qui a crevé la
+// campagne du 6 nov. 2026 : 56 appels sur 70 ont expiré CÔTÉ CLIENT alors que
+// le serveur avait déjà dépensé. Des jetons consommés qu'aucun compteur n'a
+// vus — donc un mur budgétaire contourné sans que personne ne le décide.
+//
+// Deux bornes plutôt qu'une : le nombre de boucles ET une échéance en temps
+// réel. La seconde est celle qui compte, puisque c'est le temps, pas le nombre
+// de tours, que le client attend.
+const MAX_PAUSE_LOOPS = 4;
+const ECHEANCE_RECHERCHE_MS = 150_000;
 const MAX_SOURCES = 4;
 
 type Usage = { input_tokens: number; output_tokens: number };
@@ -113,11 +122,20 @@ const SOURCE_TOOL = {
 const SYSTEM_RECHERCHE =
   `Tu cherches des SOURCES PUBLIQUES attestant un défaut connu sur un modèle automobile précis.
 
-Hiérarchie des sources, de la plus forte à la plus faible :
-1. document du constructeur, note technique, ou base de rappels publique (RappelConso, NHTSA, RAPEX) ;
-2. presse automobile reconnue traitant le défaut nommément ;
-3. forum technique de la marque — EN APPUI SEULEMENT. Un forum ne peut jamais porter une entrée à lui seul : s'il est ta seule trouvaille, réponds trouve=false ;
-4. référence de coût publiée (Vroomly, iDGarages…) — pour LE COÛT uniquement, jamais pour attester l'existence du défaut.
+CHERCHE D'ABORD, ET DANS CET ORDRE :
+1. NHTSA — bulletins techniques (TSB) ET rappels : nhtsa.gov, static.nhtsa.gov ;
+2. RappelConso (rappel.conso.gouv.fr) et RAPEX ;
+3. le site du constructeur lui-même : rappels, notes techniques, campagnes de service. Un constructeur qui reconnaît un défaut le reconnaît CONTRE LUI : c'est la source la plus forte qui existe ;
+4. presse automobile à rédaction identifiée traitant le défaut nommément — L'Argus, Auto Plus, Caradisiac (pages de RÉDACTION, pas le forum), Que Choisir, ADAC, Honest John, Autocar, Automobile Magazine ;
+5. guide ou média indépendant à éditeur identifiable qui ne vend NI la réparation NI les pièces.
+
+CE QUI N'EST PAS UNE SOURCE, et que tu ne dois PAS rendre :
+- un garage, un réparateur, un vendeur de pièces, de moteurs ou de boîtes, un service payant lié au défaut. Son revenu dépend de ce que le défaut soit réel et réparé : il n'est pas un tiers ;
+- un forum, un groupe de propriétaires, un fil de discussion — y compris hébergé par un site par ailleurs sérieux ;
+- un site qui AGRÈGE des forums sans éditeur identifié (listes de « problèmes courants » d'un moteur) ;
+- un portail qui REPUBLIE un article d'autrui : cite l'article d'origine, jamais le portail.
+
+⚠️ Ces pages sont écartées par le serveur AVANT toute vérification : les rendre ne sert à rien et ne sauve aucune entrée. Mieux vaut répondre trouve=false.
 
 Règles :
 - Une page qui parle du sujet sans affirmer le défaut précis N'EST PAS une source.
@@ -139,8 +157,16 @@ async function chercherSources(entree: any): Promise<{ input: any; usage: Usage 
     `Cherche, puis appelle rendre_sources.`;
   // deno-lint-ignore no-explicit-any
   let messages: any[] = [{ role: "user", content: demande }];
+  const echeance = Date.now() + ECHEANCE_RECHERCHE_MS;
 
   for (let i = 0; i < MAX_PAUSE_LOOPS; i++) {
+    // ⚠️ L'ÉCHÉANCE EST RENDUE AVEC LE COÛT DÉJÀ ENGAGÉ, jamais en silence.
+    // Un abandon qui ne dit pas ce qu'il a dépensé est un trou dans le mur.
+    if (Date.now() > echeance) {
+      console.error("atlas recherche : échéance atteinte, abandon avec le coût engagé");
+      return { input: { trouve: false, sources: [], remede: "", cout_min_eur: 0, cout_max_eur: 0,
+        motif_rejet: "echeance_de_recherche_atteinte" }, usage };
+    }
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       signal: AbortSignal.timeout(110_000),
@@ -298,7 +324,35 @@ serve(async (req: Request) => {
     const retenues: Array<Record<string, unknown>> = [];
     const ecartees: Array<Record<string, unknown>> = [];
 
-    for (const s of propose) {
+    // ⚠️ LE RANG SE JUGE AVANT DE PAYER LA VÉRIFICATION.
+    //
+    // Jusqu'ici l'ordre était : récupérer la page, la filtrer, PAYER un appel
+    // de vérification indépendante, puis — tout à la fin — écarter l'entrée si
+    // aucune source n'était de rang portant. Une page de garage était donc
+    // vérifiée intégralement pour être jetée ensuite. Sur la campagne hors
+    // moteur du 5 nov. 2026, l'essentiel des pages proposées était commercial :
+    // la majorité des appels de vérification ne pouvait rien sauver.
+    //
+    // Les pages sont désormais TRIÉES par rang, les portantes d'abord. Si
+    // aucune n'est de rang portant, l'entrée est retirée SANS un seul appel
+    // payant. Et si aucune portante ne survit à la vérification, les pages
+    // d'appui ne sont pas vérifiées non plus : elles ne pourraient que préciser
+    // une entrée qui n'existe plus.
+    const porte = (u: unknown) => sourcesPortentLEntree([u]);
+    const proposePortantes = propose.filter((s: Record<string, unknown>) => porte(s?.url));
+    const proposeAppui = propose.filter((s: Record<string, unknown>) => !porte(s?.url));
+    for (const s of proposeAppui) {
+      if (typeof s?.url === "string") {
+        ecartees.push({ url: s.url, motif: "rang_non_portant", rang: rangSource(s.url) });
+      }
+    }
+    // ⚠️ Pas d'event en base : cette fonction est SANS ÉTAT (aucun client
+    // service role). Le motif part dans la réponse — `ecartees` porte le rang
+    // de chaque page refusée — et c'est le script appelant qui le journalise.
+    // Ajouter un client ici pour une ligne de mesure donnerait à une fonction
+    // de lecture un droit d'écriture qu'elle n'a pas besoin d'avoir.
+
+    for (const s of proposePortantes) {
       const url = typeof s?.url === "string" ? s.url.trim() : "";
       if (!/^https:\/\/\S{8,500}$/i.test(url)) { ecartees.push({ url, motif: "url_invalide" }); continue; }
       // ⚠️ L'ORDRE EST LA GARANTIE DE LA RÈGLE « une source illisible ne

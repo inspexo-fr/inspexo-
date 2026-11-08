@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { getFiabilite } from '../lib/scoreApi'
 import { tauxLisible } from '../lib/intervalle'
+import PannesPortees from '../components/PannesPortees'
 
 // SPRINT 15 — La mesure publiée change de méthode.
 //
@@ -111,6 +112,12 @@ export default function FiabilitePage() {
                 </div>
               </div>
             </div>
+
+            {/* ⚠️ Avant le taux d'erreur, pas après : ce chiffre dit sur QUOI
+                porte la mesure. Un taux d'erreur lu sans savoir combien de nos
+                affirmations sont vérifiables se lit pour autre chose qu'il
+                n'est. */}
+            <PannesPortees />
 
             {data === undefined ? (
               <p className="eyebrow" aria-busy="true" style={{ marginTop: 28 }}>Chargement…</p>

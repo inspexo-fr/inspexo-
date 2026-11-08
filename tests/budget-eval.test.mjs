@@ -7,6 +7,7 @@
 // violait : elle s'arrêtait quand le cumul avait déjà dépassé le budget, donc
 // le dernier cas démarrait sous le mur et le franchissait en finissant. Un run
 // annoncé à 0,40 € a coûté 0,447 €.
+import { readFileSync } from 'node:fs'
 import { COUT_CAS_ESTIME_EUR, coutProchainCas, murAtteint } from '../scripts/budget.mjs'
 
 let ok_ = 0, ko = 0
@@ -114,5 +115,40 @@ eq(murAtteint({ coutRun: 0, casJoues: 0, coutSession: 0, budgetRun: 0.01, plafon
 
 
 console.log(`\n${ok_} contrôles passés, ${ko} échec(s).`)
-if (ko > 0) process.exit(1)
+
+// ──────────────────────────────────────────────────────────────────────────
+// ⚠️ UN MUR QUI LIT UN CHAMP INEXISTANT N'EST PAS UN MUR (6 nov. 2026)
+//
+// `scripts/resourcer-fiches.mjs` lisait `cout_usd` ; `atlas-builder` rend
+// `cout_eur`. Le coût relevé valait donc 0 € à chaque panne, la réserve du mur
+// était nulle, et la campagne annoncée à 9 € aurait joué ses 105 unités à
+// ≈ 21 €. Le mur existait, son entrée était muette.
+//
+// Ce contrôle exige que le script S'ARRÊTE quand le coût n'est pas chiffrable,
+// au lieu de le lire comme un zéro.
+{
+  const src = readFileSync('scripts/resourcer-fiches.mjs', 'utf8')
+  ok(/typeof r\.cout_eur !== 'number'/.test(src),
+    'resourcer-fiches vérifie que le coût est un nombre')
+  ok(/process\.exit\(1\)/.test(src.slice(src.indexOf("typeof r.cout_eur !== 'number'"),
+    src.indexOf("typeof r.cout_eur !== 'number'") + 700)),
+    'et il s’ARRÊTE au lieu de continuer à l’aveugle')
+  // ⚠️ Le champ fautif est NOMMÉ dans le commentaire qui explique le défaut,
+  // et c'est très bien ainsi : ce qui est interdit, c'est de le LIRE.
+  ok(!/r\??[.[]\s*['"]?cout_usd/.test(src), 'et il ne LIT plus le champ fautif')
+  const fn = readFileSync('supabase/functions/atlas-builder/index.ts', 'utf8')
+  ok(/cout_eur: Math\.round\(usd/.test(fn),
+    'et atlas-builder rend bien `cout_eur` — le nom que le script lit')
+}
+
+// ⚠️ LA PORTE DE SORTIE EST LA DERNIÈRE INSTRUCTION DU FICHIER, ET ELLE EST
+// FUSIONNÉE AVEC LE MESSAGE DE SUCCÈS. Elle se trouvait ligne 118, donc AVANT
+// le bloc ajouté le 6 nov. 2026 : la suite affichait « Mur budgétaire :
+// conforme » avec un FAIL à l'écran et sortait en 0. CINQUIÈME occurrence de
+// ce motif dans le projet (inspection ×2, atlas-source, visio, ici). On ne
+// peut plus annoncer la conformité sans avoir franchi le contrôle.
+if (ko > 0) {
+  console.error(`\n${ko} échec(s) dans tests/budget-eval.test.mjs`)
+  process.exit(1)
+}
 console.log('Mur budgétaire : conforme.')

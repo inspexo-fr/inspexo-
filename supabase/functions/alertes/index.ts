@@ -22,6 +22,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { executerDecision } from "../_shared/inspectionArgent.ts";
+import { compterPannesPortees, entreesAtlasAPlat } from "../_shared/atlasSource.ts";
+import defectAtlas from "../_shared/defectAtlas.json" with { type: "json" };
 import { alerterUneFoisParHeure, bilanHtml, sujetAlerte, sujetBilan } from "../_shared/alerting.ts";
 import {
   alerteExploitant,
@@ -305,6 +307,8 @@ serve(async (req: Request) => {
     rapports_en_retard: 0,
     photos_inspection_purgees: 0,
     preuves_absence_purgees: 0,
+    pannes_portees: 0,
+    pannes_total: 0,
     coordonnees_vendeur_purgees: 0,
     bilan_envoye: false,
     erreurs: 0,
@@ -535,6 +539,41 @@ serve(async (req: Request) => {
       }
     } catch (e) {
       console.error("purge des preuves d'absence:", e);
+      bilan.erreurs += 1;
+    }
+
+    // ========== 8. Recompter les pannes portées par une source =============
+    //
+    // Chiffre PUBLIÉ sur /fiabilite et sur l'accueil (décision d'Utku du
+    // 6 nov. 2026 : « publié tel quel »).
+    //
+    // ⚠️ IL EST RECALCULÉ CHAQUE JOUR, JAMAIS ÉCRIT À LA MAIN. La ligne
+    // « publié dès 50 dossiers relus à la main » de l'accueil a menti pendant
+    // un mois parce qu'elle était figée dans un fichier. Toute phrase qui
+    // annonce un état doit lire cet état — et un état qui bouge (la campagne
+    // de re-sourcing ajoute des sources, chaque fiche générée en ajoute
+    // d'autres) doit être repris à la source, pas recopié.
+    //
+    // ⚠️ Et le comptage est fait ICI, en TypeScript, parce que `rangSource`
+    // n'existe qu'en TypeScript. Le refaire en SQL créerait une seconde liste
+    // d'hôtes : deux chiffres qui divergent, dont un public qui cesserait de
+    // décrire la règle réellement appliquée au score.
+    try {
+      const { data: fiches } = await admin
+        .from("defect_sheets")
+        .select("pannes");
+      const compte = compterPannesPortees(
+        (fiches ?? []) as unknown[],
+        entreesAtlasAPlat(defectAtlas),
+      );
+      await admin.from("config").upsert({
+        cle: "pannes_portees",
+        valeur: { ...compte, maj: new Date().toISOString().slice(0, 10) },
+      }, { onConflict: "cle" });
+      bilan.pannes_portees = compte.portees;
+      bilan.pannes_total = compte.total;
+    } catch (e) {
+      console.error("comptage des pannes portées:", e);
       bilan.erreurs += 1;
     }
 

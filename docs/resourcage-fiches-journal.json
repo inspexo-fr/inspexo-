@@ -1,0 +1,1049 @@
+[
+ {
+  "fiche": "Peugeot EB2DT",
+  "fiche_id": "52df166c-3dde-4a15-b07f-ee8067db4752",
+  "marque": "Peugeot",
+  "famille": "EB2DT",
+  "annees": "2014-2022",
+  "titre": "Courroie de distribution humide : dégradation prématurée et risque de casse",
+  "symptomes": "Courroie qui se désagrège, se détend ou s'effrite au contact prolongé de l'huile ; bruit de cliquetis au démarrage ou à l'accélération ; moteur qui cale à froid sans raison apparente et redémarrage parfois impossible ; voyant pression d'huile qui s'allume brièvement ; codes défaut OBD P0341, P0011, P0014 ou P0521 ; dans les cas avancés, perte de puissance liée au tendeur de distribution ou casse complète de la distribution. Remède : remplacement de la courroie (et de la crépine si elle est colmatée). Si elle n'est pas remplacée à l'échéance : risque de casse moteur.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://chaine-courroie.com/puretech/peugeot-208-i-1-2-puretech",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://chaine-courroie.com/puretech/quand-changer-courroie-puretech",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.auto-infos.fr/article/psa-faiblesse-de-courroie-sur-le-moteur-1-2-puretech.171614",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.automobile-sportive.com/news.php?page=un-rappel-pour-la-courroie-de-distribution-des-moteurs-12-puretech-psa-20210110",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.assemblee-nationale.fr/dyn/16/questions/QANR5L16QE14313.pdf",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+    "motif": "non_soutenue",
+    "justification": "La page confirme la dégradation de la courroie humide et une conséquence sur le freinage (pompe à vide colmatée), mais ne mentionne ni bruit de cliquetis, ni calage moteur, ni codes OBD P0341/P0011/P0014/P0521, ni voyant pression d'huile."
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.1157,
+  "motif": "rang_non_portant ×3, non_soutenue ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2DT",
+  "fiche_id": "52df166c-3dde-4a15-b07f-ee8067db4752",
+  "marque": "Peugeot",
+  "famille": "EB2DT",
+  "annees": "2014-2022",
+  "titre": "Encrassement de la crépine d'huile par débris de courroie et baisse de pression d'huile",
+  "symptomes": "Débris issus de la dégradation de la courroie de distribution qui colmatent la crépine de la pompe à huile, provoquant une baisse de pression d'huile et une lubrification insuffisante de l'arbre à cames et des éléments mobiles ; code défaut pression d'huile au diagnostic.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://carverif.fr/blogs/fiabilite-voitures/peugeot-2008-i-1-2-puretech-110-eb2dt",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://chaine-courroie.com/puretech/peugeot-208-i-1-2-puretech",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.caradisiac.com/commentaires/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm",
+    "motif": "non_soutenue",
+    "justification": ""
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.2249,
+  "motif": "non_soutenue ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2DT",
+  "fiche_id": "52df166c-3dde-4a15-b07f-ee8067db4752",
+  "marque": "Peugeot",
+  "famille": "EB2DT",
+  "annees": "2014-2022",
+  "titre": "Surconsommation d'huile moteur avec le kilométrage",
+  "symptomes": "Augmentation progressive de la consommation d'huile moteur liée à l'usure des segments de piston ; niveau d'huile à surveiller entre deux vidanges, risque de lubrification insuffisante si non surveillé.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://www.citymotoclub.fr/moteur-puretech-fiabilite-problemes-conseils/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-opel-les-principaux-problemes-du-moteur-1-2-puretech-30023247.html",
+    "rang": "presse",
+    "titre": "Peugeot, Citroën, DS, Opel. Les principaux problèmes du moteur 1.2 PureTech"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/citroen-ds-opel-peugeot-1-2-puretech-nouvelle-prise-en-charge-pour-la-consommation-d-huile-30033017.html",
+    "rang": "presse",
+    "titre": "Citroën, DS, Opel, Peugeot 1.2 PureTech. Nouvelle prise en charge pour la consommation d'huile"
+   }
+  ],
+  "ecartees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/fiabilite-stellantis-1-2-puretech-de-nouvelles-solutions-contre-la-consommation-d-huile-30034597.html",
+    "motif": "non_soutenue",
+    "justification": ""
+   }
+  ],
+  "gravite_apres": "majeure",
+  "cout_eur": 0.1591,
+  "motif": null,
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2DT",
+  "fiche_id": "52df166c-3dde-4a15-b07f-ee8067db4752",
+  "marque": "Peugeot",
+  "famille": "EB2DT",
+  "annees": "2014-2022",
+  "titre": "Encrassement des soupapes d'admission (dépôts de calamine)",
+  "symptomes": "Accumulation de suie/calamine sur les soupapes d'admission du fait de l'injection directe (absence de rinçage par le carburant), entraînant une réduction progressive de la puissance et des performances du moteur.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0926,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2DTS",
+  "fiche_id": "36e03f2c-cd4d-49de-b206-c7db679e9593",
+  "marque": "Peugeot",
+  "famille": "EB2DTS",
+  "annees": "2014-2022",
+  "titre": "Courroie de distribution « humide » : dégradation, contamination du circuit d'huile et risque de casse moteur",
+  "symptomes": "La courroie de distribution, immergée dans l'huile moteur pour réduire bruit et frottements, se désagrège prématurément. Les débris colmatent la crépine d'huile, ce qui réduit la lubrification de l'arbre à cames, du turbo et parfois de la pompe à vide d'assistance au freinage. Les symptômes rapportés incluent un voyant/code défaut de pression d'huile (ex. code P011 constaté sur un cas forum), une baisse brutale du niveau d'huile, puis, en cas de poursuite de l'usage, un risque de casse moteur (c Remède : remplacement de la courroie (et de la crépine si elle est colmatée). Si elle n'est pas remplacée à l'échéance : risque de casse moteur.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/probl%C3%A8me-de-courroie-distribution-1-2-puretech-130.128063/page-2",
+    "rang": "forum"
+   },
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dts-1-2-puretech-130/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://www.ntn-snr.com/sites/default/files/2023-03/TECHinfo%201.2%20PureTech%20Turbo.pdf",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.automobile-sportive.com/news.php?page=un-rappel-pour-la-courroie-de-distribution-des-moteurs-12-puretech-psa-20210110",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html",
+    "motif": "non_soutenue",
+    "justification": ""
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+    "motif": "non_soutenue",
+    "justification": "La page confirme la dégradation de la courroie humide et le colmatage de la pompe à vide (frein), mais ne mentionne ni colmatage de la crépine d'huile, ni effet sur l'arbre à cames ou le turbo, ni code défaut P011, points essentiels de l'affirmation."
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-nouveau-rappel-de-grande-ampleur-pour-le-moteur-1-2-puretech-30024702.html",
+    "motif": "non_soutenue",
+    "justification": ""
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.1742,
+  "motif": "rang_non_portant ×1, non_soutenue ×3",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2DTS",
+  "fiche_id": "36e03f2c-cd4d-49de-b206-c7db679e9593",
+  "marque": "Peugeot",
+  "famille": "EB2DTS",
+  "annees": "2014-2022",
+  "titre": "Surconsommation d'huile moteur",
+  "symptomes": "Appoints d'huile fréquents, huile très noire, parfois message d'alerte niveau bas. Lié à l'usure du groupe pistons/segments, le phénomène s'aggrave avec le kilométrage et fragilise d'autant plus la courroie de distribution immergée dans l'huile.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dts-1-2-puretech-130/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://carverif.fr/blogs/fiabilite-voitures/peugeot-308-ii-1-2-puretech-130-eb2dts",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.test-achats.be/mobilite/autos/news/puretech",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/citroen-ds-opel-peugeot-1-2-puretech-nouvelle-prise-en-charge-pour-la-consommation-d-huile-30033017.html",
+    "motif": "non_soutenue",
+    "justification": "La page confirme bien la surconsommation d'huile sur le moteur EB2 (PureTech/THP) et le lien avec l'usure de la courroie de distribution immergée dans l'huile, mais elle ne mentionne ni huile très noire ni message d'alerte niveau bas, et attribue la cause à un encrassement des segments ou un défaut du déshuileur plutôt qu'à une 'usure du groupe pistons/segments' qui s'aggraverait simplement avec l"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/moteur-puretech-stellantis-generalise-sa-garantie-de-10-ans-ou-180-000-km-30040520.html",
+    "motif": "non_soutenue",
+    "justification": "La page confirme les problèmes de surconsommation d'huile et de courroie de distribution sur le PureTech, mais ne mentionne ni appoints fréquents, ni huile noire, ni message d'alerte niveau bas, ni lien causal entre l'usure pistons/segments et la fragilisation de la courroie immergée dans l'huile."
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.2354,
+  "motif": "rang_non_portant ×1, non_soutenue ×2",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4D",
+  "fiche_id": "1167124e-89dd-4e15-b3be-9eb696b070d5",
+  "marque": "Renault",
+  "famille": "H4D",
+  "annees": "2014",
+  "titre": "Fuite au boîtier d'eau / circuit de refroidissement",
+  "symptomes": "Fuite de liquide de refroidissement au niveau du boîtier d'eau, signalée comme quasi systématique sur ce moteur ; surveillance recommandée du fait de l'implantation arrière du moteur sur certains modèles (Twingo/Smart) qui complique le refroidissement.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://forum-auto.caradisiac.com/topic/537986-qualit%C3%A9-du-moteur-tce-90-ch/page/2/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://mymotorlist.com/engines/renault/h4d/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1833,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Pompe à eau interruptible défaillante (vanne N489 / bague de coulissement grippée)",
+  "symptomes": "La bague de coulissement de la pompe peut se gripper, empêchant la circulation normale du liquide de refroidissement et provoquant un risque de surchauffe moteur ; Volkswagen a modifié certaines séries en obstruant le conduit de la vanne N489 pour supprimer la fonction interruptible après des cas de surchauffe sur 1.6 et 2.0 TDI. Remède : remplacement de la pompe à eau, 400 € à 700 € selon etoilecollections.fr, souvent couplé au changement de la courroie de distribution.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.etoilecollections.fr/moteur-2-0-tdi-fiabilite/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.vag-technique.fr/threads/pompe-%C3%A0-eau-interruptible-sur-1-6-o%C3%B9-2-0tdi.2619/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.vag-technique.fr/ext_files/ssp/vw/SSP_514_La_nouvelle_gamme_de_moteurs_diesel_EA288.pdf",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1889,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Problèmes d'actionneur du turbo à géométrie variable",
+  "symptomes": "Sous-suralimentation, mode dégradé, à distinguer d'une vraie panne de turbo : souvent un actionneur ou une durite de pression défaillants plutôt que le turbo lui-même.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.tauntonautomobiles.com/problems/2-0-tdi-common-problems",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1791,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "BMW N47",
+  "fiche_id": "ffb9cf47-ae6b-4b9b-8e2b-1e2e64878fdb",
+  "marque": "BMW",
+  "famille": "N47",
+  "annees": "2007-2015",
+  "titre": "Usure et rupture de la chaîne de distribution arrière",
+  "symptomes": "Cliquetis métallique à froid au démarrage et au ralenti provenant de l'arrière du moteur, ratés/à-coups, voyant moteur, codes défaut liés au calage (synchronisation vilebrequin/arbre à cames). La chaîne est placée côté boîte de vitesses (à l'arrière du bloc), rendant son remplacement coûteux car nécessitant une dépose moteur ou séparation boîte/moteur. Si le défaut n'est pas traité : risque de saut de calage voire de rupture de chaîne, avec collision pistons/soupapes et destruction du moteur.",
+  "gravite": "casse",
+  "sources_actuelles": [
+   {
+    "url": "https://f30.bimmerpost.com/forums/showthread.php?t=1082340",
+    "rang": "forum"
+   },
+   {
+    "url": "https://g42.bimmerpost.com/forums/showthread.php?t=974836",
+    "rang": "forum"
+   },
+   {
+    "url": "https://7post.com/forums/showthread.php?p=19014405",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.pistonheads.com/gassing/topic.asp?h=0&f=72&t=1620367",
+    "rang": "forum"
+   }
+  ],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://www.quechoisir.org/actualite-moteur-diesel-bmw-chaine-de-distribution-fragile-n11281/",
+    "rang": "presse",
+    "titre": "Moteur Diesel BMW - Chaîne de distribution fragile - Actualité - Que Choisir Ensemble"
+   }
+  ],
+  "ecartees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/bmwmini-20d-n47-le-point-sur-les-soucis-de-distribution-9330391.html",
+    "motif": "non_soutenue",
+    "justification": "La page confirme bien un bruit de chaîne et un risque de saut/rupture sur le N47 jusqu'en 2013, mais elle ne mentionne ni la position arrière de la chaîne côté boîte de vitesses, ni la nécessité d'une dépose moteur/séparation boîte-moteur pour la réparer."
+   }
+  ],
+  "gravite_apres": "majeure",
+  "cout_eur": 0.1247,
+  "motif": null,
+  "erreur": null
+ },
+ {
+  "fiche": "BMW N47",
+  "fiche_id": "ffb9cf47-ae6b-4b9b-8e2b-1e2e64878fdb",
+  "marque": "BMW",
+  "famille": "N47",
+  "annees": "2007-2015",
+  "titre": "Encrassement de la vanne EGR",
+  "symptomes": "Encrassement progressif de la vanne EGR, perte de puissance, voyant moteur, nécessitant un nettoyage ou un remplacement ; réapparition possible après plusieurs dizaines de milliers de kilomètres.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://club.auto-doc.fr/forum/topic/moteur-n47-sans-probleme/",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1926,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "BMW N47",
+  "fiche_id": "ffb9cf47-ae6b-4b9b-8e2b-1e2e64878fdb",
+  "marque": "BMW",
+  "famille": "N47",
+  "annees": "2007-2015",
+  "titre": "Colmatage du filtre à particules (FAP)",
+  "symptomes": "Colmatage du FAP en cas de trajets courts et répétés en ville, régénération incomplète ; amélioré par des trajets réguliers sur autoroute permettant la régénération.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://club.auto-doc.fr/forum/topic/moteur-n47-sans-probleme/",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0954,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Toyota 2ZR-FXE",
+  "fiche_id": "c8204040-0a0c-4731-b372-f9783e207b8b",
+  "marque": "Toyota",
+  "famille": "2ZR-FXE",
+  "annees": "2009-2022",
+  "titre": "Consommation d'huile excessive (usure des segments de piston)",
+  "symptomes": "Consommation d'huile supérieure à la norme constructeur, appoints fréquents entre vidanges, parfois fumée à l'échappement. Documenté par des bulletins techniques Toyota sur Prius 2010-2014 (segments trop fins, pistons revus à partir d'un certain numéro de VIN en 2014). Remède : contrôle du taux de consommation puis remplacement des pistons et segments si hors norme.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://priuschat.com/threads/tsb-on-excessive-oil-consumption-for-2zr-fxe-engine.198649/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://toyota-club.net/files/faq/19-09-30_faq_zr-engine_eng.htm",
+    "rang": "forum"
+   }
+  ],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10132913-9999.pdf",
+    "rang": "officiel",
+    "titre": "Toyota TSB T-SB-0169-16 — 2ZR-FXE Engine Oil Consumption Repair Procedure"
+   },
+   {
+    "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10132912-9999.pdf",
+    "rang": "officiel",
+    "titre": "Toyota TSB T-SB-0168-16 — 2ZR-FXE Engine Oil Consumption Inspection Procedure"
+   }
+  ],
+  "ecartees": [],
+  "gravite_apres": "majeure",
+  "cout_eur": 0.1198,
+  "motif": null,
+  "erreur": null
+ },
+ {
+  "fiche": "Toyota 2ZR-FXE",
+  "fiche_id": "c8204040-0a0c-4731-b372-f9783e207b8b",
+  "marque": "Toyota",
+  "famille": "2ZR-FXE",
+  "annees": "2009-2022",
+  "titre": "Défaillance du joint de culasse à fort kilométrage (Prius Gen3)",
+  "symptomes": "Perte de liquide de refroidissement dans un cylindre, piston humide de liquide de refroidissement visible à l'endoscopie, parfois léger cliquetis moteur. Observé sur des Prius 2010-2015 à fort kilométrage. Remède : remplacement du joint de culasse (révision disponible chez Toyota).",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://bobistheoilguy.com/forums/threads/2011-prius-head-gasket-failure-at-185k-summary.305542/",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.theautopian.com/heres-why-you-might-not-want-to-buy-a-third-generation-toyota-prius/",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10132913-9999.pdf",
+    "motif": "non_soutenue",
+    "justification": "La page traite d'un TSB concernant la consommation d'huile moteur et le remplacement des pistons/segments sur le moteur 2ZR-FXE, mais ne mentionne aucune défaillance de joint de culasse, perte de liquide de refroidissement ni piston humide de liquide de refroidissement visible à l'endoscopie."
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.2519,
+  "motif": "rang_non_portant ×1, non_soutenue ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2DTS",
+  "fiche_id": "36e03f2c-cd4d-49de-b206-c7db679e9593",
+  "marque": "Peugeot",
+  "famille": "EB2DTS",
+  "annees": "2014-2022",
+  "titre": "Encrassement des soupapes d'admission (dépôts de calamine)",
+  "symptomes": "Accumulation de suie sur les soupapes d'admission, typique des moteurs à injection directe où le carburant ne lave plus les soupapes. Entraîne une baisse de performance, un ralenti instable et une hausse de consommation avec le temps.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dts-1-2-puretech-130/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://autoscore.fr/motorisation/puretech-eb2",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/fiabilite-renault-dacia-1-2-tce-des-casses-moteur-liees-a-la-fusion-des-soupapes-30028101.html",
+    "motif": "mauvais_moteur",
+    "justification": "La page traite de l'encrassement/calamine sur le moteur Renault-Dacia 1.2 TCe (H5F) et mentionne le 1.2 PureTech PSA uniquement en comparaison, mais ne parle jamais du moteur Peugeot EB2DTS."
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.2336,
+  "motif": "rang_non_portant ×1, mauvais_moteur ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2DTS",
+  "fiche_id": "36e03f2c-cd4d-49de-b206-c7db679e9593",
+  "marque": "Peugeot",
+  "famille": "EB2DTS",
+  "annees": "2014-2022",
+  "titre": "Jeu axial du vilebrequin (premiers moteurs turbo)",
+  "symptomes": "Sur les premiers moteurs turbocompressés EB2DTS, un jeu axial excessif du vilebrequin a été signalé, pouvant entraîner une usure accélérée des composants internes ; des campagnes de reprise en atelier ont été évoquées pour corriger ce point sur les premières productions.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dts-1-2-puretech-130/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1945,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2F",
+  "fiche_id": "61db6f06-ba13-4f51-88e8-2903b3696a1f",
+  "marque": "Peugeot",
+  "famille": "EB2F",
+  "annees": "2012",
+  "titre": "Dégradation de la courroie de distribution en bain d'huile (Belt in Oil)",
+  "symptomes": "La courroie de distribution, immergée en permanence dans l'huile moteur, se désagrège progressivement sous l'effet des additifs du lubrifiant. Les résidus de caoutchouc viennent colmater la crépine d'aspiration de la pompe à huile et, selon certaines sources généralistes sur la famille EB2, peuvent également obstruer la pompe à vide d'assistance au freinage. Cela provoque une chute de pression d'huile (voyant allumé), un encrassement des arbres à cames et, si la panne n'est pas traitée à temps, ",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://club.auto-doc.fr/forum/topic/probleme-de-moteur-12-puretech-82/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.mastercovering.fr/fiabilite-moteur-1-2-puretech-82-avis-conseils/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.ntn-snr.com/sites/default/files/2023-03/TECHinfo%201.2%20PureTech%20Atmo.pdf",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.2287,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2F",
+  "fiche_id": "61db6f06-ba13-4f51-88e8-2903b3696a1f",
+  "marque": "Peugeot",
+  "famille": "EB2F",
+  "annees": "2012",
+  "titre": "Surconsommation d'huile moteur (usure des segments)",
+  "symptomes": "Consommation d'huile anormalement élevée, pouvant nécessiter des appoints fréquents entre vidanges, liée à l'usure des segments de pistons ; aggravée par la contamination de l'huile issue de la dégradation de la courroie de distribution. Nécessite une surveillance régulière du niveau d'huile.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.mastercovering.fr/fiabilite-moteur-1-2-puretech-82-avis-conseils/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.moninspection.fr/guide-fiabilite-moteur/avis-fiabilite-moteur-1-2-puretech-82-cv",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://www.garagegine.fr/essais/peugeot-208-1-2-puretech-82-fiabilite/",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1915,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2F",
+  "fiche_id": "61db6f06-ba13-4f51-88e8-2903b3696a1f",
+  "marque": "Peugeot",
+  "famille": "EB2F",
+  "annees": "2012",
+  "titre": "Capteurs défaillants (sonde lambda, capteur de cliquetis)",
+  "symptomes": "Défaillance de la sonde lambda ou du capteur de cliquetis pouvant entraîner des à-coups ou une gestion moteur erratique.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0872,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2ADTS",
+  "fiche_id": "18dd553e-b24d-412b-8525-4f59c2e9d666",
+  "marque": "Peugeot",
+  "famille": "EB2ADTS",
+  "annees": "2016-2022",
+  "titre": "Usure prématurée de la courroie de distribution immergée dans l'huile, colmatage de la crépine/pompe à huile",
+  "symptomes": "Voyant orange 'clé mécanicien' avec message 'défaut moteur, dirigez-vous vers le garage Peugeot le plus proche', perte de pression d'huile, perte de puissance, ratés, et dans certains témoignages risque de perte d'assistance de freinage lorsque le circuit d'huile se colmate ; dans les cas extrêmes remplacement moteur complet. Remède : remplacement de la courroie (et de la crépine si elle est colmatée). Si elle n'est pas remplacée à l'échéance : risque de casse moteur.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-3",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-7",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-2",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/",
+    "rang": "forum"
+   }
+  ],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-nouveau-rappel-de-grande-ampleur-pour-le-moteur-1-2-puretech-30024702.html",
+    "rang": "presse",
+    "titre": "Peugeot-Citroën-DS-Opel. Nouveau rappel de grande ampleur pour le moteur 1.2 PureTech"
+   }
+  ],
+  "ecartees": [
+   {
+    "url": "https://www.automobile-sportive.com/news.php?page=un-rappel-pour-la-courroie-de-distribution-des-moteurs-12-puretech-psa-20210110",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html",
+    "motif": "non_soutenue",
+    "justification": ""
+   }
+  ],
+  "gravite_apres": "majeure",
+  "cout_eur": 0.1583,
+  "motif": null,
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2ADTS",
+  "fiche_id": "18dd553e-b24d-412b-8525-4f59c2e9d666",
+  "marque": "Peugeot",
+  "famille": "EB2ADTS",
+  "annees": "2016-2022",
+  "titre": "Défaut canister / circuit de mise à l'air du réservoir carburant entraînant à-coups moteur",
+  "symptomes": "À-coups moteur et perte de puissance, ralenti instable, voyant moteur allumé avec message 'faire réparer votre véhicule', diagnostic orientant vers un défaut de conception du réservoir/canister qualifié de vice caché par les intervenants du forum.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/fiabilite-peugeot-308-12-puretech-defaut-du-reservoir-de-carburant-10617405.html",
+    "motif": "non_soutenue",
+    "justification": "La page décrit un défaut de clapet du réservoir causant un débordement d'essence dans le canister et l'allumage du voyant diagnostic sur la Peugeot 308 1.2 PureTech, mais ne mentionne ni à-coups moteur, ni perte de puissance, ni ralenti instable, ni message 'faire réparer votre véhicule', ni qualification de vice caché par un forum."
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.1983,
+  "motif": "non_soutenue ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2ADTS",
+  "fiche_id": "18dd553e-b24d-412b-8525-4f59c2e9d666",
+  "marque": "Peugeot",
+  "famille": "EB2ADTS",
+  "annees": "2016-2022",
+  "titre": "Usure prématurée des bougies d'allumage / ratés moteur associés",
+  "symptomes": "Ralenti instable, moteur qui broute, à-coups et perte de puissance récurrents après remplacement des bougies, voyant moteur allumé.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/choix-moteur.117413/",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.2316,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EB2ADTS",
+  "fiche_id": "18dd553e-b24d-412b-8525-4f59c2e9d666",
+  "marque": "Peugeot",
+  "famille": "EB2ADTS",
+  "annees": "2016-2022",
+  "titre": "Sur-remplissage du carter d'huile constaté après vidange en réseau Peugeot",
+  "symptomes": "Niveau d'huile supérieur au maximum de jauge juste après une vidange effectuée en concession, observé sur plusieurs exemplaires avant et après 2017 ; nécessite une vérification et une purge de l'excédent.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0886,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EP6",
+  "fiche_id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "marque": "Peugeot",
+  "famille": "EP6",
+  "annees": "2006-2016",
+  "titre": "Allongement puis casse de la chaîne de distribution",
+  "symptomes": "Cliquetis métallique type \"crécelle\" au démarrage à froid pendant quelques secondes, à-coups en accélération, voyant moteur. Si le défaut n'est pas traité à temps : décalage de calage puis contact soupapes/pistons pouvant entraîner la casse complète du moteur.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://autocopilot.fr/motorisations/1-6-thp-ep6",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://www.megaturbo.fr/blog/105-fiabilite-1-6-thp",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://www.odopass.fr/blog/programme-entretien-peugeot-207-carnet-programme-guide-complet",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.occasion-moteur.com/post/moteur-1-6-thp-ep6-prince-d-occasion-fiabilit%C3%A9-et-pi%C3%A8ges",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_3.html",
+    "motif": "mauvais_moteur",
+    "justification": "La page traite de l'allongement de chaîne sur le moteur PSA/MINI 1.6 THP (150/156/175/200), pas sur le moteur EP6 2006-2016 dans sa globalité, et ne mentionne ni cliquetis type crécelle ni casse complète par contact soupapes/pistons."
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.2308,
+  "motif": "mauvais_moteur ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EP6",
+  "fiche_id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "marque": "Peugeot",
+  "famille": "EP6",
+  "annees": "2006-2016",
+  "titre": "Consommation d'huile excessive",
+  "symptomes": "Niveau d'huile qui chute rapidement entre deux vidanges, fumée bleutée à l'échappement au démarrage à froid ou en reprise, parfois sans alerte au tableau de bord dans les cas avancés (jusqu'à 1L/1000km). Aggrave l'usure de la chaîne de distribution par lubrification dégradée.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://autocopilot.fr/motorisations/1-6-thp-ep6",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://mytracks.fr/blog/moteur-1-6-thp-fiabilite",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1802,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EP6",
+  "fiche_id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "marque": "Peugeot",
+  "famille": "EP6",
+  "annees": "2006-2016",
+  "titre": "Encrassement des soupapes d'admission (calamine)",
+  "symptomes": "Ralenti instable, perte de puissance, moteur qui \"s'étouffe\", dépôts de calamine sur les soupapes d'admission dus à l'injection directe qui n'arrose que les pistons et non les soupapes.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.occasion-moteur.com/post/moteur-1-6-thp-ep6-prince-d-occasion-fiabilit%C3%A9-et-pi%C3%A8ges",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://www.megaturbo.fr/blog/105-fiabilite-1-6-thp",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1767,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EP6",
+  "fiche_id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "marque": "Peugeot",
+  "famille": "EP6",
+  "annees": "2006-2016",
+  "titre": "Défaillance de la pompe haute pression (HPFP)",
+  "symptomes": "Perte de puissance notable, voyant moteur allumé, fragilité de la membrane de la pompe haute pression.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://mytracks.fr/blog/moteur-1-6-thp-fiabilite",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1841,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EP6",
+  "fiche_id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "marque": "Peugeot",
+  "famille": "EP6",
+  "annees": "2006-2016",
+  "titre": "Turbo à géométrie variable grippé/encrassé",
+  "symptomes": "Perte de puissance, fumées à l'échappement, grippage de la géométrie variable.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://journal-auto-moto.fr/moteur-1-6-thp-fiabilite-et-problemes-courants/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0968,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot EP6",
+  "fiche_id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "marque": "Peugeot",
+  "famille": "EP6",
+  "annees": "2006-2016",
+  "titre": "Fuite de pompe à eau / boîtier d'eau",
+  "symptomes": "Fuite de liquide de refroidissement, pompe à eau et boîtier d'eau plastique fragiles, problème documenté jusqu'en octobre 2012 sur certaines séries.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://carverif.fr/blogs/fiabilite-voitures/peugeot-208-gti-1-6-thp-caracteristiques",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1693,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "annees": "2004-2023",
+  "titre": "Rappel logiciel calculateur moteur - campagne JMK (recalibration émissions NOx)",
+  "symptomes": "Mise à jour logicielle du calculateur pour corriger une calibration pouvant entraîner des émissions de NOx excessives ; intervention en concession d'environ 30 minutes à 1h30, sans remplacement de pièce.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.peugeotforums.com/threads/safety-recall-jmk-1-6-blue-hdi.342322/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.peugeotforums.com/threads/safety-recall-jmk-1-6-blue-hdi.342322/page-2",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1733,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "annees": "2004-2023",
+  "titre": "Crépine d'huile de turbo bouchée / casse turbo par manque de lubrification",
+  "symptomes": "Voyant de pression d'huile, sifflement ou perte de puissance du turbo, parfois casse brutale du turbo sans signe avant-coureur si la crépine (filtre) d'arrivée d'huile se bouche progressivement.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://forums.motorlegend.com/forum/voiture-allemande/forum-mini-nouvelle/49604-fiabilit%C3%A9-1-6-hdi-dv6-psa",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/fiabiliter-turbo-1-6-hdi.36100/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://chaine-courroie.com/moteurs/psa/psa-dv6-1-6-hdi-caracteristiques-fiabilite-entretien",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1904,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "annees": "2004-2023",
+  "titre": "Fuite d'huile au niveau de la demi-culasse",
+  "symptomes": "Suintement puis fuite d'huile visible au niveau des injecteurs, coulant entre moteur et boîte jusqu'au démarreur ; réparation lourde car elle impose la dépose du kit de distribution.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.forum-peugeot.com/Forum/threads/enqu%C3%AAte-fuite-dhuile-joint-demie-culasse-1-6hdi-dv6.118183/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://forum-auto.caradisiac.com/topic/80931-fiabilit%C3%A9-16-hdi-112ch/",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1966,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ }
+]

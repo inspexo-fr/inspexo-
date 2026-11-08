@@ -430,10 +430,16 @@ begin
     and not v_res ? 'cout_ia_seuil_jour_eur'
     and not v_res ? 'echecs_seuil'
     -- SPRINT 20 : + 'zfe' (liste des zones à faibles émissions). 7 -> 8.
+    -- SPRINT 21.1 : + 'pannes_portees' (combien de nos pannes sont portées par
+    -- une source indépendante — chiffre public, décision d'Utku du 6 nov.
+    -- 2026). 8 -> 9.
     -- ⚠️ Ce décompte EXACT est volontaire : ouvrir la liste publique doit
     -- casser un test, pour que ce soit un acte décidé et pas un glissement.
+    -- Il a effectivement cassé le 8 nov. 2026, et c'est ainsi que la neuvième
+    -- clé a été signée plutôt que glissée.
     and v_res ? 'zfe'
-    and (select count(*) from jsonb_object_keys(v_res)) = 8,
+    and v_res ? 'pannes_portees'
+    and (select count(*) from jsonb_object_keys(v_res)) = 9,
     (select string_agg(k, ', ') from jsonb_object_keys(v_res) k));
 end
 \$cfg\$;
@@ -908,9 +914,40 @@ select pg_temp.essai_verifie(
 select pg_temp.essai_verifie(
   'get_config_publique ne rend AUCUN reglage interne',
   (select count(*) from jsonb_object_keys(public.get_config_publique()) as t(k)
-    where t.k not in ('carte_grise_tarifs', 'zfe') and t.k not like 'revendeur\\_%') = 0,
+    where t.k not in ('carte_grise_tarifs', 'zfe', 'pannes_portees') and t.k not like 'revendeur\\_%') = 0,
   (select string_agg(t.k, ', ') from jsonb_object_keys(public.get_config_publique()) as t(k)
-    where t.k not in ('carte_grise_tarifs', 'zfe') and t.k not like 'revendeur\\_%'));
+    where t.k not in ('carte_grise_tarifs', 'zfe', 'pannes_portees') and t.k not like 'revendeur\\_%'));
+
+
+-- ⚠️ SPRINT 21.1 — « pannes_portees » est PUBLIC, et ce n'est pas un réglage
+-- d'exploitation : c'est un chiffre qu'Utku a décidé de publier tel quel
+-- (6 nov. 2026). Il dit combien de nos pannes référencées sont portées par
+-- une source officielle, de presse ou éditoriale.
+select pg_temp.essai_verifie(
+  'get_config_publique rend bien « pannes_portees »',
+  public.get_config_publique() ? 'pannes_portees');
+
+-- ⚠️ ET LA VALEUR SEMÉE PAR LA MIGRATION NE DOIT PAS RESSEMBLER À UNE MESURE.
+-- Semer 54/231 en dur aurait été exactement le défaut qu'on corrige : un
+-- chiffre figé par une migration, qui aurait l'air d'avoir été mesuré. La
+-- ligne porte « maj: null », que l'écran lit comme « pas encore mesuré » et
+-- n'affiche pas du tout.
+select pg_temp.essai_verifie(
+  'la valeur semee de pannes_portees porte maj = null (pas une fausse mesure)',
+  (public.get_config_publique() -> 'pannes_portees' -> 'maj') = 'null'::jsonb
+  and ((public.get_config_publique() -> 'pannes_portees' ->> 'total')::int) = 0);
+
+-- ⚠️ Le comptage lui-même N'EST PAS EN SQL, et un contrôle doit le figer :
+-- « rangSource » n'existe qu'en TypeScript. Si une fonction SQL se mettait à
+-- compter des sources portantes, il existerait deux listes d'hôtes — donc un
+-- chiffre public qui cesserait de décrire la règle appliquée au score.
+select pg_temp.essai_verifie(
+  'aucune fonction SQL ne compte les sources portantes (une seule implementation)',
+  not exists (
+    select 1 from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.prokind = 'f'
+      and pg_get_functiondef(p.oid) ~* '(rang_source|sources_portent|hotes_presse|hotes_officiels)'));
 
 -- Épreuve de comportement : une clé semée dans CETTE transaction et qui n'est
 -- ni « zfe », ni un tarif, ni un réglage revendeur ne doit PAS sortir.
