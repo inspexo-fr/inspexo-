@@ -64,7 +64,7 @@
 // plafond, retirer les pannes non sourcées FAISAIT MONTER le verdict (Mercedes
 // 71 → 77), et aurait écrit à 28 moteurs sur 44 qu'ils n'ont aucun défaut
 // connu. Champ OPTIONNEL : absent, aucun score ne bouge.
-export const BAREME_VERSION = "11.9";
+export const BAREME_VERSION = "11.10";
 
 export type FaitsAxes = {
   annee_courante: number;

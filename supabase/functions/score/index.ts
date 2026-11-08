@@ -56,6 +56,7 @@ import {
   compterCritiquesNonFaites,
   dejaCouvert,
   detecterEntretienDeclare,
+  signauxEntretienDeterministes,
   libelleDeclaration,
   type FaitEntretien,
 } from "../_shared/entretienDeclare.ts";
@@ -2754,11 +2755,14 @@ serve(async (req: Request) => {
         if (dejaCouvert(f, dejaDit)) continue;
         opsNonFaites.push(`${libelleDeclaration(f)} : « ${f.extrait} »`);
       }
-      const dejaPositif = [...signauxEntretien];
-      for (const f of declaresPositifs) {
-        if (dejaCouvert(f, dejaPositif)) continue;
-        signauxEntretien.push(`${libelleDeclaration(f)} : « ${f.extrait} »`);
-      }
+      // ⚠️ SPRINT 22 — LES SIGNAUX POSITIFS NE VIENNENT PLUS DU MODÈLE
+      // (décision d'Utku du 9 nov. 2026). La Mercedes de référence rendait 71
+      // ou 73 selon que le modèle rangeait ou non « Garantie constructeur en
+      // cours » parmi les preuves d'entretien. Un signal n'est retenu que s'il
+      // est ÉCRIT dans l'annonce et repéré par un motif fixe
+      // (`signauxEntretienDeterministes`) ; une garantie n'en est jamais un.
+      // Les signaux du modèle, même audités par la critique, sont REMPLACÉS.
+      signauxEntretien = signauxEntretienDeterministes(text);
       // Une opération déclarée faite ET datée est un vrai point rassurant :
       // on l'ajoute si le modèle ne l'a pas déjà dit. Le filtre de cohérence
       // en aval la retirera d'office si l'annonce se contredit par ailleurs.
