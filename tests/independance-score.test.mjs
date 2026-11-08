@@ -71,6 +71,13 @@ const INTERDITS = [
   { terme: 'la table api_clients', re: /from\s*\(\s*["'`]api_clients|public\.api_clients/i },
   { terme: 'un quota d’API', re: /api_consommer|api_rembourser|quota_mensuel|api_usage/i },
   { terme: 'la table des contacts pro', re: /leads_pro/i },
+  // SPRINT 22 — le comparateur et le coût sur 3 ans LISENT des verdicts
+  // rendus ; ils ne doivent jamais en produire. Et le prix d'un comparateur
+  // de garages (admis pour chiffrer une opération prévue au plan) ne doit
+  // jamais atteindre le barème ni la gravité d'une panne.
+  { terme: 'le comparateur de dossiers', re: /_shared\/comparateur|recommander\(/ },
+  { terme: 'le coût sur 3 ans', re: /_shared\/cout3ans/ },
+  { terme: 'le prix d’un comparateur de garages', re: /coutEntretienPrevu|comparateurDeGarages|COMPARATEURS_GARAGES/ },
 ]
 
 // `score/index.ts` porte LÉGITIMEMENT le drapeau de quota API : il décide
@@ -277,6 +284,15 @@ titre('3. Le drapeau de quota API n’ouvre pas le service gratuit')
   // personne d'autre ne peut y échapper par ce chemin.
   ok(src.indexOf('captcha_required') > src.indexOf('!isApi && !adminIllimite'),
     'le captcha reste à l’intérieur de la porte du plafond')
+}
+
+titre('3 bis. Sprint 22 — les contre-épreuves mordent')
+for (const [quoi, extrait] of [
+  ['un import du comparateur', 'import { recommander } from "../_shared/comparateur.ts"'],
+  ['un import du coût sur 3 ans', 'import { coutTroisAns } from "../_shared/cout3ans.ts"'],
+  ['un prix de comparateur', 'if (coutEntretienPrevu(urls).admis) gravite = "casse"'],
+]) {
+  ok(INTERDITS.some((i) => i.re.test(extrait)), `le contrôle détecte ${quoi}`)
 }
 
 titre('4. Version du barème')

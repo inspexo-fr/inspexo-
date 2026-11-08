@@ -95,6 +95,10 @@ export default function DossierPage() {
   const [lienEtat, setLienEtat] = useState('idle')
   const [captcha, setCaptcha] = useState(null)
   const [erreur, setErreur] = useState(null)
+  // SPRINT 22 — sélection de 2 ou 3 dossiers à comparer (Pass).
+  const [aComparer, setAComparer] = useState([])
+  const basculerComparaison = (id) => setAComparer((l) =>
+    l.includes(id) ? l.filter((x) => x !== id) : (l.length >= 3 ? l : [...l, id]))
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null))
@@ -280,7 +284,30 @@ export default function DossierPage() {
                     </Link>
                   </div>
                 ) : (
-                  items.map((item) => {
+                  <>
+                  {items.length >= 2 && (
+                    <div style={{ border: '1px solid var(--rule-strong)', padding: '12px 16px', marginBottom: 14, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span className="c-ink2" style={{ fontSize: 14 }}>
+                        {!!pass
+                          ? `Cochez 2 ou 3 dossiers à comparer (${aComparer.length} choisi${aComparer.length > 1 ? 's' : ''}).`
+                          : 'Comparer 2 ou 3 dossiers côte à côte : réservé au Pass achat.'}
+                      </span>
+                      {!!pass ? (
+                        <Link
+                          to={aComparer.length >= 2 ? `/comparer?ids=${aComparer.join(',')}` : '#'}
+                          aria-disabled={aComparer.length < 2}
+                          onClick={(e) => { if (aComparer.length < 2) e.preventDefault() }}
+                          className="btn-ghost btn-auto"
+                          style={{ height: 44, opacity: aComparer.length < 2 ? 0.5 : 1 }}
+                        >
+                          Comparer
+                        </Link>
+                      ) : (
+                        <Link to="/pass" className="c-ink2" style={{ fontSize: 14, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>Voir le Pass</Link>
+                      )}
+                    </div>
+                  )}
+                  {items.map((item) => {
                     const label = [item.marque, item.modele].filter(Boolean).join(' ') || 'Véhicule'
                     return (
                       <article key={item.analysis_id} style={{ border: '1px solid var(--rule-strong)', padding: '16px 18px', marginBottom: 14 }}>
@@ -335,9 +362,22 @@ export default function DossierPage() {
                         {item.statut === 'achete' && !item.retour_fait && (
                           <FormulaireRetour item={item} onDone={charger} />
                         )}
+
+                        {!!pass && items.length >= 2 && (
+                          <label className="c-ink2" style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', minHeight: 44, fontSize: 13 }}>
+                            <input
+                              type="checkbox"
+                              checked={aComparer.includes(item.analysis_id)}
+                              disabled={!aComparer.includes(item.analysis_id) && aComparer.length >= 3}
+                              onChange={() => basculerComparaison(item.analysis_id)}
+                            />
+                            Comparer ce dossier
+                          </label>
+                        )}
                       </article>
                     )
-                  })
+                  })}
+                  </>
                 )}
               </>
             )}

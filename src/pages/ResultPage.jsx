@@ -16,6 +16,7 @@ import VisioBloc from '../components/VisioBloc'
 import VinBloc from '../components/VinBloc'
 import CritairBloc from '../components/CritairBloc'
 import EtMaintenant from '../components/EtMaintenant'
+import Cout3AnsBloc from '../components/Cout3AnsBloc'
 import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
@@ -1383,6 +1384,12 @@ export default function ResultPage() {
                 le bloc de commande, c'est le livrable que l'acheteur a payé. */}
             {!enCours && r.type === 'vehicule' && <RapportInspection analysisId={id} />}
 
+
+            {/* Coût réel sur 3 ans (sprint 22). Total gratuit ; le détail
+                ligne à ligne est RETENU côté serveur sans Pass. */}
+            {!enCours && r.type === 'vehicule' && (
+              <Cout3AnsBloc analysisId={id} critair={r.critair} />
+            )}
 
             {/* Prix — relevé de marché (sprint 9) */}
             {!enCours && (

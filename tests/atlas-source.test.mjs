@@ -1,8 +1,10 @@
 // Test hors ligne du sourcing de l'atlas (aucun appel réseau).
 // Usage : node tests/atlas-source.test.mjs
-import { readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import {
   affirmationSansCout,
+  comparateurDeGarages,
+  coutEntretienPrevu,
   coutUtilisable,
   marqueursEntree,
   pageParleDeLEntree,
@@ -351,6 +353,47 @@ eq(rangSource('https://www.ford.com/support/recalls/'), 'officiel',
   const d = readFileSync('supabase/functions/_shared/defectSheets.ts', 'utf8')
   ok(/LIMITE ASSUMÉE[\s\S]{0,900}sourcesPortentLEntreeLues/.test(d),
     'et sheet-builder DIT qu’il ne vérifie que le rang, pas la lisibilité')
+}
+
+// ── SPRINT 22 — comparateurs de garages : le PRIX d'une opération PRÉVUE ───
+//
+// ⚠️ Décision d'Utku du 8 nov. 2026, et sa limite exacte : Vroomly et
+// iDGarages sont admis pour CHIFFRER une opération que le plan d'entretien
+// rend due. Ils ne PORTENT rien : ni l'échéance, ni une panne, ni sa gravité.
+// Ce bloc fige les deux côtés de la distinction.
+{
+  const VROOMLY = 'https://www.vroomly.com/blog/quel-est-le-prix-dun-changement-embrayage/'
+  const IDG = 'https://www.idgarages.com/fr-fr/prestations/vidange'
+  for (const u of [VROOMLY, IDG]) {
+    ok(!['officiel', 'presse', 'editorial'].includes(rangSource(u)), `${new URL(u).hostname} : rang NON portant (inchangé)`)
+    ok(!coutUtilisable([u]), `${new URL(u).hostname} : ne fixe toujours aucune gravité (coutUtilisable)`)
+    ok(!sourcesPortentLEntree([u]), `${new URL(u).hostname} : ne porte toujours aucune panne`)
+  }
+  eq(comparateurDeGarages(VROOMLY), 'Vroomly', 'Vroomly reconnu comme comparateur')
+  eq(comparateurDeGarages(IDG), 'iDGarages', 'iDGarages reconnu comme comparateur')
+  eq(comparateurDeGarages('https://www.oscaro.com/x'), null, 'un vendeur de pièces n’est pas un comparateur de garages')
+  const c = coutEntretienPrevu([VROOMLY])
+  ok(c.admis && c.via === 'comparateur', 'opération prévue : le prix du comparateur est admis')
+  eq(c.libelle, 'prix moyen affiché par des garages, via Vroomly', 'avec le libellé EXACT demandé')
+  ok(coutEntretienPrevu(['https://www.largus.fr/x']).via === 'portante', 'une page portante passe devant')
+  ok(!coutEntretienPrevu(['https://www.oscaro.com/x']).admis, 'un vendeur de pièces ne chiffre pas')
+  ok(!coutEntretienPrevu([]).admis, 'sans URL : rien')
+
+  // Le prix d'un comparateur ne sort JAMAIS du calcul du coût sur 3 ans.
+  const usages = []
+  const fichiers = [
+    ...readdirSync('supabase/functions/_shared').map((f) => `supabase/functions/_shared/${f}`),
+    ...readdirSync('supabase/functions').filter((d) => d !== '_shared').map((d) => `supabase/functions/${d}/index.ts`),
+  ].filter((f) => f.endsWith('.ts') && existsSync(f))
+  for (const f of fichiers) {
+    if (f.endsWith('/atlasSource.ts')) continue
+    if (/coutEntretienPrevu|comparateurDeGarages|COMPARATEURS_GARAGES/.test(readFileSync(f, 'utf8'))) usages.push(f)
+  }
+  eq(JSON.stringify(usages), JSON.stringify(['supabase/functions/_shared/cout3ansSources.ts']),
+    'coutEntretienPrevu n’est utilisé QUE par le coût sur 3 ans — jamais par la gravité ni le barème')
+  // Et dans le coût sur 3 ans, une opération HORS plan n'y a pas droit.
+  const c3 = readFileSync('supabase/functions/_shared/cout3ansSources.ts', 'utf8')
+  ok(/function coutHorsPlan[\s\S]{0,400}viaPortante/.test(c3), 'hors plan : seuls le devis et la source portante chiffrent')
 }
 
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${ok_}/${ok_ + ko} contrôles passés`)

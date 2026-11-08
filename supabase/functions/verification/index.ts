@@ -29,11 +29,14 @@ import {
   parSource,
 } from "../_shared/affirmations.ts";
 import {
+  cleVerif,
+  ecrireCacheVerif,
+  lireCacheVerif,
   messageVerification,
   texteDeLaPage,
-  VERDICTS_VALIDES,
   VERIF_SYSTEM,
   VERIF_TOOL,
+  voter,
 } from "../_shared/verifSource.ts";
 
 const corsHeaders = {
@@ -190,45 +193,67 @@ serve(async (req: Request) => {
     const groupes = parSource(affirmations, MAX_SOURCES);
     const resultats = new Map<string, { verdict: string; justification: string | null; modele: string | null }>();
     let usdTotal = 0;
+    const tarif = (u: Usage) =>
+      u.input_tokens * 3e-6 + u.output_tokens * 15e-6 +
+      (u.cache_read_input_tokens ?? 0) * 0.3e-6 +
+      (u.cache_creation_input_tokens ?? 0) * 3.75e-6;
+
+    // SPRINT 22 — LE CACHE D'ABORD. Un couple (URL, affirmation, moteur)
+    // déjà jugé depuis moins de 180 jours ne coûte ni lecture de page ni
+    // jeton, et rend le MÊME verdict : c'est toute la stabilité demandée.
+    const moteur = identite.famille_moteur ||
+      `${identite.marque} ${identite.modele} ${identite.motorisation}`;
+    const cleDe = new Map<string, string>();
+    for (const g of groupes) {
+      for (const a of g.affirmations) cleDe.set(a.empreinte + "|" + g.url, await cleVerif(g.url, a.texte, moteur));
+    }
+    const enCache = await lireCacheVerif(admin, [...new Set(cleDe.values())]);
+    let depuisCache = 0, passagesTotal = 0, votesATrois = 0;
+    const aEcrire: Parameters<typeof ecrireCacheVerif>[1] = [];
+
+    const aJuger = groupes.map((g) => g.affirmations.filter((a) => {
+      const c = enCache.get(cleDe.get(a.empreinte + "|" + g.url)!);
+      if (!c) return true;
+      resultats.set(a.empreinte, { verdict: c.verdict, justification: c.justification, modele: c.modele });
+      depuisCache++;
+      return false;
+    }));
 
     // Les pages sont lues EN PARALLÈLE : une analyse qui cite six sources
-    // dépasserait sinon le budget de 150 s de la fonction.
-    const textes = await Promise.all(groupes.map((g) => texteDeLaPage(g.url)));
+    // dépasserait sinon le budget de 150 s de la fonction. Une page dont
+    // toutes les affirmations sont en cache n'est pas lue du tout.
+    const textes = await Promise.all(groupes.map((g, i) => aJuger[i].length ? texteDeLaPage(g.url) : Promise.resolve(null)));
 
     for (let i = 0; i < groupes.length; i++) {
       const g = groupes[i];
+      const affs = aJuger[i];
+      if (affs.length === 0) continue;
       const texte = textes[i];
       if (!texte) {
-        for (const a of g.affirmations) {
+        for (const a of affs) {
           resultats.set(a.empreinte, { verdict: "source_injoignable", justification: "Page non lisible (indisponible, PDF ou rendue côté client).", modele: null });
         }
         continue;
       }
-      const { verdicts, usage, modele } = await verifierGroupe(identite, g.affirmations, texte, g.url);
-      if (usage) {
-        usdTotal += usage.input_tokens * 3e-6 + usage.output_tokens * 15e-6 +
-          (usage.cache_read_input_tokens ?? 0) * 0.3e-6 +
-          (usage.cache_creation_input_tokens ?? 0) * 3.75e-6;
-      }
-      for (const v of verdicts) {
-        const idx = Number(v?.index) - 1;
-        const a = g.affirmations[idx];
-        if (!a) continue;
-        const verdict = (VERDICTS_VALIDES as readonly string[]).includes(v?.verdict) ? v.verdict : "non_soutenue";
-        resultats.set(a.empreinte, {
-          verdict,
-          justification: typeof v?.justification === "string" ? v.justification.slice(0, 600) : null,
-          modele,
-        });
-      }
-      // Une affirmation que le passage n'a pas notée n'est pas « soutenue »
-      // par défaut : le silence ne vaut pas accord.
-      for (const a of g.affirmations) {
-        if (!resultats.has(a.empreinte)) {
-          resultats.set(a.empreinte, { verdict: "non_soutenue", justification: "Aucun verdict rendu pour cette affirmation.", modele });
+      const vote = await voter(async (sous) => {
+        const r = await verifierGroupe(identite, sous as Affirmation[], texte, g.url);
+        return r.modele ? r : null;
+      }, affs);
+      passagesTotal += vote.passages;
+      if (vote.passages === 3) votesATrois++;
+      for (const u of vote.usages) usdTotal += tarif(u);
+      affs.forEach((a, k) => {
+        const r = vote.resultats[k];
+        resultats.set(a.empreinte, { verdict: r.verdict, justification: r.justification, modele: r.modele });
+        if (r.fiable) {
+          aEcrire.push({
+            cle: cleDe.get(a.empreinte + "|" + g.url)!, url: g.url, affirmation: a.texte, moteur,
+            verdict: r.verdict, justification: r.justification, votes: r.votes, modele: r.modele,
+          });
         }
-      }
+      });
     }
+    await ecrireCacheVerif(admin, aEcrire);
 
     const lignes = affirmations.map((a) => {
       const r = resultats.get(a.empreinte);
@@ -266,6 +291,9 @@ serve(async (req: Request) => {
       mauvais_moteur: compte("mauvais_moteur"),
       sans_source: compte("source_absente"),
       injoignables: compte("source_injoignable"),
+      depuis_cache: depuisCache,
+      passages: passagesTotal,
+      groupes_a_trois_votes: votesATrois,
       cout_eur: Math.round(usdTotal * 0.92 * 10000) / 10000,
     });
   } catch (err) {
