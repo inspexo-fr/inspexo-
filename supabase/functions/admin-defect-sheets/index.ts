@@ -7,6 +7,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sourcesPortentLEntree } from "../_shared/atlasSource.ts";
 import { sanitizePannes } from "../_shared/defectSheets.ts";
+import { fusionnerPlan } from "../_shared/planEntretien.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 
 const cors = {
@@ -138,6 +139,45 @@ serve(async (req: Request) => {
           JSON.stringify({ pannes_touchees: touchees, sources_ajoutees: ajoutees, inconnues }),
           { headers: { ...cors, "Content-Type": "application/json" } },
         );
+      }
+
+      // ── SPRINT 22 — AJOUT D'UN PLAN D'ENTRETIEN SOURCÉ ─────────────────
+      //
+      // Même philosophie qu'`ajouter_sources` : ADDITIF. `fusionnerPlan`
+      // ajoute une opération nouvelle, complète une opération « à vérifier
+      // dans le carnet », et ne remplace JAMAIS une opération déjà établie.
+      // Le rang des sources est recontrôlé ici : l'écriture ne fait pas
+      // confiance à l'appelant, même administrateur.
+      //
+      // Le plan d'AVANT est renvoyé dans la réponse : le script le garde pour
+      // pouvoir revenir en arrière (`restaurer_plan`) dans l'heure du jeton.
+      if (Array.isArray(body.ajouter_plan) || Array.isArray(body.restaurer_plan)) {
+        const { data: row } = await admin
+          .from("defect_sheets").select("plan_entretien").eq("id", body.id).maybeSingle();
+        if (!row) {
+          return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        }
+        const avant = Array.isArray(row.plan_entretien) ? row.plan_entretien : [];
+        let plan = avant;
+        let bilan: Record<string, unknown> = {};
+        if (Array.isArray(body.restaurer_plan)) {
+          // Retour arrière : on remet EXACTEMENT ce qui a été renvoyé avant.
+          plan = body.restaurer_plan.slice(0, 12);
+          bilan = { restaure: true };
+        } else {
+          const f = fusionnerPlan(avant, body.ajouter_plan);
+          if (f.ajoutees + f.completees === 0) {
+            return new Response(JSON.stringify({ error: "aucune operation ajoutable", refusees: f.refusees }), { status: 400, headers: cors });
+          }
+          plan = f.plan;
+          bilan = { ajoutees: f.ajoutees, completees: f.completees, refusees: f.refusees };
+        }
+        const { error: e3 } = await admin.from("defect_sheets")
+          .update({ ...fields, plan_entretien: plan }).eq("id", body.id);
+        if (e3) return new Response(JSON.stringify({ error: e3.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ ...bilan, plan_avant: avant, plan_apres: plan }), {
+          headers: { ...cors, "Content-Type": "application/json" },
+        });
       }
 
       if (Object.keys(fields).length === 1) {

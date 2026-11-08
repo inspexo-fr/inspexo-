@@ -49,7 +49,21 @@
   "gravite_apres": null,
   "cout_eur": 0.1157,
   "motif": "rang_non_portant ×3, non_soutenue ×1",
-  "erreur": null
+  "erreur": null,
+  "rejeu": {
+   "le": "2026-11-08T22:09:27.876Z",
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 1
+   },
+   "cout_eur": 0,
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+     "non_soutenue"
+    ]
+   ]
+  }
  },
  {
   "fiche": "Peugeot EB2DT",
@@ -86,7 +100,21 @@
   "gravite_apres": null,
   "cout_eur": 0.2249,
   "motif": "non_soutenue ×1",
-  "erreur": null
+  "erreur": null,
+  "rejeu": {
+   "le": "2026-11-08T22:09:31.734Z",
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.041,
+   "verdicts": [
+    [
+     "https://www.caradisiac.com/commentaires/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm",
+     "non_soutenue"
+    ]
+   ]
+  }
  },
  {
   "fiche": "Peugeot EB2DT",
@@ -178,8 +206,14 @@
     "rang": "vendeur"
    }
   ],
-  "porte": false,
-  "sources_trouvees": [],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-nouveau-rappel-de-grande-ampleur-pour-le-moteur-1-2-puretech-30024702.html",
+    "rang": "presse",
+    "titre": ""
+   }
+  ],
   "ecartees": [
    {
     "url": "https://www.automobile-sportive.com/news.php?page=un-rappel-pour-la-courroie-de-distribution-des-moteurs-12-puretech-psa-20210110",
@@ -204,8 +238,30 @@
   ],
   "gravite_apres": null,
   "cout_eur": 0.1742,
-  "motif": "rang_non_portant ×1, non_soutenue ×3",
-  "erreur": null
+  "motif": null,
+  "erreur": null,
+  "rejeu": {
+   "le": "2026-11-08T22:09:33.418Z",
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 3
+   },
+   "cout_eur": 0,
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-nouveau-rappel-de-grande-ampleur-pour-le-moteur-1-2-puretech-30024702.html",
+     "soutenue"
+    ],
+    [
+     "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html",
+     "non_soutenue"
+    ],
+    [
+     "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+     "mauvais_moteur"
+    ]
+   ]
+  }
  },
  {
   "fiche": "Peugeot EB2DTS",
@@ -226,8 +282,14 @@
     "rang": "vendeur"
    }
   ],
-  "porte": false,
-  "sources_trouvees": [],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/citroen-ds-opel-peugeot-1-2-puretech-nouvelle-prise-en-charge-pour-la-consommation-d-huile-30033017.html",
+    "rang": "presse",
+    "titre": ""
+   }
+  ],
   "ecartees": [
    {
     "url": "https://www.test-achats.be/mobilite/autos/news/puretech",
@@ -247,8 +309,26 @@
   ],
   "gravite_apres": null,
   "cout_eur": 0.2354,
-  "motif": "rang_non_portant ×1, non_soutenue ×2",
-  "erreur": null
+  "motif": null,
+  "erreur": null,
+  "rejeu": {
+   "le": "2026-11-08T22:09:37.988Z",
+   "juge": {
+    "passages": 4,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0782,
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/citroen-ds-opel-peugeot-1-2-puretech-nouvelle-prise-en-charge-pour-la-consommation-d-huile-30033017.html",
+     "soutenue"
+    ],
+    [
+     "https://www.largus.fr/actualite-automobile/moteur-puretech-stellantis-generalise-sa-garantie-de-10-ans-ou-180-000-km-30040520.html",
+     "non_soutenue"
+    ]
+   ]
+  }
  },
  {
   "fiche": "Renault H4D",
@@ -502,7 +582,21 @@
   "gravite_apres": null,
   "cout_eur": 0.2519,
   "motif": "rang_non_portant ×1, non_soutenue ×1",
-  "erreur": null
+  "erreur": null,
+  "rejeu": {
+   "le": "2026-11-08T22:09:40.727Z",
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0444,
+   "verdicts": [
+    [
+     "https://static.nhtsa.gov/odi/tsbs/2016/MC-10132913-9999.pdf",
+     "non_soutenue"
+    ]
+   ]
+  }
  },
  {
   "fiche": "Peugeot EB2DTS",
@@ -733,7 +827,21 @@
   "gravite_apres": null,
   "cout_eur": 0.1983,
   "motif": "non_soutenue ×1",
-  "erreur": null
+  "erreur": null,
+  "rejeu": {
+   "le": "2026-11-08T22:09:43.397Z",
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0349,
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/fiabilite-peugeot-308-12-puretech-defaut-du-reservoir-de-carburant-10617405.html",
+     "non_soutenue"
+    ]
+   ]
+  }
  },
  {
   "fiche": "Peugeot EB2ADTS",

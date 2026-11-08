@@ -199,7 +199,8 @@ if (a('--rejouer-non-soutenues')) {
     const r = await res.json().catch(() => null)
     if (!res.ok || r == null || typeof r.cout_eur !== 'number') {
       console.error(`\n  ⚠️ ARRÊT — ${j.titre.slice(0, 50)} : HTTP ${res.status}, coût non chiffrable. Rien n'est écrit pour elle.`)
-      break
+      console.error(`     Coût du rejeu jusqu'ici : ${coutRun.toFixed(3)} €. Sans coût relevé, le mur ne protège de rien.`)
+      process.exit(1)
     }
     joues++
     coutRun += r.cout_eur
