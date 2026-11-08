@@ -2075,6 +2075,13 @@ passages non joués comme des échecs d'analyse.
 | `mercedes-2025-societe` | **vert 71** (dérive mesurée 71-75) | 4 nov. 2026 (sprint 13) |
 | `revendeur-clio2-dci` | **orange 51** | 5 nov. 2026 (sprint 20a) |
 
+⚠️ **`BAREME_VERSION` 11.9** depuis le sprint 21.1 : une panne ne pèse que si
+une source indépendante la porte. Les quatre verdicts sont **inchangés**, et
+pour une raison qu'il faut dire — dans ces quatre dossiers, les pannes qui
+pesaient citaient déjà au moins une page de presse ou officielle. La règle n'y
+retire rien. Son effet se voit sur les **20 fiches moteur à terre**, qui ne
+sont dans aucun cas de référence.
+
 ⚠️ **Les relevés datés dans les sections de sprint ci-dessus disent ce qui a
 été mesuré CE JOUR-LÀ** : la S7 y figure à 38 avant le sprint 17.1, et c'est
 exact. On ne réécrit pas un relevé passé pour le faire coïncider avec le
@@ -2365,6 +2372,185 @@ importent `_shared/marche.ts` — aucun `git diff` ne les cite). Merge et push.
   dernier gagne**. Le fourre-tout `functions/v1/**` posé après la route précise
   l'interceptait, et `/cibles` affichait « Chargement impossible ».
 - Captures 390 px : `captures-sprint19/cibles-*.png`.
+
+## Sprint 21.1 — Une panne ne pèse que si une source indépendante la porte (nov. 2026)
+
+### Le classement des sources, arrêté par Utku
+`rangSource(url)` (module PUR `_shared/atlasSource.ts`, 119 contrôles) rend
+**officiel · presse · éditorial · compilation · forum · vendeur · hors_sujet ·
+inconnu**. Seuls les **trois premiers PORTENT** une panne ; tout le reste est
+de l'appui. Critère retenu : *« son revenu dépend-il de ce que le défaut soit
+réel et réparé ? »*, et *éditeur identifiable ou non*.
+- **Officiel** inclut les **domaines constructeurs** : un constructeur qui
+  reconnaît un défaut le reconnaît **contre lui-même**.
+- **Compilation** (agrège des forums, éditeur non identifié —
+  `docteurmoteurs.com`, `mymotorlist.com`, `enginescope.gr`) vaut appui
+  seulement, comme un forum.
+- ⚠️ **`MOTIFS_CHEMIN_FORUM` : le CHEMIN est lu avant l'hôte.** Un fil de
+  discussion hébergé par un site par ailleurs éditorial reste un forum —
+  `planeterenault.com/forum/...` rend `forum`, pas `editorial`. Mesuré :
+  `pistonheads.com` et `planeterenault.com` sont cités 5 fois chacun dans les
+  fiches, **par des URL de forum**.
+- **Arbitrages du 6 nov. 2026** : `truedelta.com` → éditorial (enquêtes de
+  propriétaires, fondateur identifié) · `ntn-snr.com` → **vendeur** (sa
+  documentation est autoritaire, mais il vend les pièces) · `ford.oemdtc.com`
+  et `autos.yahoo.com` → **inconnu explicitement** (`HOTES_INCONNU_ASSUME`) :
+  un tiers qui republie ne vaut pas le bulletin d'origine, et on cite
+  l'article, jamais le portail.
+- ⚠️ **La longue traîne (93 hôtes) n'est PAS étiquetée, et c'est une décision** :
+  `vendeur`, `forum`, `compilation` et `inconnu` ont exactement le même effet —
+  aucun ne porte, aucun ne chiffre. Les nommer sans avoir lu leur page
+  n'aurait fait que prêter une affirmation de plus à chacun.
+
+### ⚠️ UNE SOURCE QU'ON NE PEUT PAS LIRE NE PORTE PAS
+Le rang dit ce qu'est un **SITE** ; il ne dit pas que la **PAGE** citée existe
+et se lit. `sourcesPortentLEntreeLues` porte la règle, et elle n'est appliquée
+que là où les pages sont **réellement récupérées** : dans `atlas-builder`,
+c'est l'**ORDRE des opérations** qui la garantit (texte obtenu avant que l'URL
+ne devienne une source), et un test statique interdit de les inverser.
+`sheet-builder`, lui, **DIT qu'il ne vérifie que le rang** : récupérer jusqu'à
+5 pages par panne et 10 pannes par fiche ferait expirer une fonction edge au
+budget de 150 s. **Dire ce qui n'est pas vérifié vaut mieux que le laisser
+croire.**
+
+### Barème — `BAREME_VERSION` 11.9
+Une panne non portée devient une **question au vendeur** (« signalé par des
+garages et forums, non confirmé par une source indépendante »), **affichée**,
+sans effet sur la note. L'axe risques est alors plafonné, et il ne dit **jamais**
+« aucun défaut documenté » mais « **défauts signalés non vérifiables** ».
+- **Plafond par GRAVITÉ** (décision d'Utku) : **10/20** si une panne
+  rétrogradée était majeure ou pire, **13/20** si toutes étaient mineures.
+  ⚠️ C'est ce qui **sauve la Mercedes** : avec un plafond unique à 10 elle
+  tombait à **orange 65**, alors que ses deux pannes rétrogradées sont mineures.
+- Un **prix publié par un vendeur** ne fixe plus aucune gravité (`coutUtilisable`).
+- **Les 4 références sont INCHANGÉES, vérifiées en prod** : S7 rouge 39 ·
+  308 orange 55 (mesuré **sans docteurmoteurs**, désormais « compilation ») ·
+  Mercedes vert 71 · Clio II orange 51.
+
+### Audit des 44 fiches — 20 à terre sur 44
+**54 pannes portées sur 231 (23 %)**. Répartition des citations : vendeur 139 ·
+inconnu 118 · forum 113 · compilation 74 · presse 34 · éditorial 19 ·
+officiel 12 · hors sujet 5. **6 des 12 entrées d'atlas tombent**, 49 coûts ne
+sont plus portants.
+
+### ⚠️ Le test qui n'avait jamais pu échouer
+`tests/atlas-source.test.mjs` **n'avait AUCUN code de sortie** : il imprimait
+« Tous les tests passent » quoi qu'il arrive, et l'a fait avec **treize échecs
+à l'écran**. Chaîné dans `npm run eval`, il n'a donc **jamais pu bloquer un
+déploiement depuis le sprint 16**. **Quatrième** occurrence de ce motif ;
+`tests/budget-eval.test.mjs` en était la **cinquième** (porte ligne 118, donc
+avant les blocs ajoutés le 6 nov.). Les deux portes sont désormais la
+**dernière instruction du fichier**, fusionnées avec le message de succès.
+
+### Campagne de re-sourcing — ARRÊTÉE par son propre critère
+Par **lots de 20 pannes, mur 4 € par lot**, dans l'ordre du **parc français**
+(les quatre PureTech en tête). **Arrêt si un lot rend moins de 15 %.**
+- **Lot 1 : 1/20 = 5 % ⇒ campagne arrêtée**, 3,484 € sur 4 € annoncés.
+  Motif dominant : **25 retraits sur 37 pour « aucune page proposée »** — le
+  prompt contraint aux sources retenues fait répondre `trouve=false` plutôt
+  que de rendre des pages commerciales. Ces défauts ne sont réellement pas
+  documentés par des sources indépendantes.
+- **4 fiches sauvées** : Peugeot EB2DT, Peugeot EB2ADTS, BMW N47,
+  Toyota 2ZR-FXE (celle-ci sur **deux sources officielles**).
+- ⚠️ **Variance du juge, mesurée** : la campagne a trouvé **exactement la même
+  page L'Argus** qu'un appel de diagnostic pour la chaîne EP6, et le juge
+  indépendant l'a déclarée `mauvais_moteur` alors qu'il l'avait jugée
+  `soutenue` une heure plus tôt. Le juge est volontairement sévère (« le doute
+  tranche contre l'affirmation ») mais il n'est pas déterministe. Cela n'annule
+  pas le résultat — 68 % des retraits viennent de l'absence de page, pas du
+  juge.
+- `scripts/resourcer-fiches.mjs` est **purement ADDITIF** : il ne supprime
+  aucune panne. C'est le barème, à l'analyse, qui décide du poids.
+- Le filtre de rang passe **AVANT la vérification payante** : une page de
+  garage était vérifiée intégralement pour être jetée ensuite.
+
+### ⚠️ TROIS DÉFAUTS DE MON OUTILLAGE BUDGÉTAIRE, LE MÊME JOUR
+1. **LE MUR LISAIT UN CHAMP INEXISTANT** : le script lisait `cout_usd`,
+   `atlas-builder` rend `cout_eur`. Le coût relevé valait **0 € à chaque
+   panne**, la réserve du mur était nulle, le mur ne se serait **JAMAIS**
+   déclenché — 105 pannes à ≈ 21 € au lieu des 9 € annoncés. Le script
+   **s'ARRÊTE** désormais si le coût n'est pas chiffrable. **Un mur dont
+   l'entrée est muette n'est pas un mur.**
+2. **UN APPEL EN ÉCHEC N'EST PAS UNE PANNE JOUÉE** : 56 `TimeoutError` avaient
+   été journalisés comme « retirée ». La reprise les aurait écartés
+   **DÉFINITIVEMENT sans qu'aucun n'ait été examiné**, et le rapport aurait
+   annoncé 70 pannes jouées pour 14 réelles. Les lignes en échec sont purgées
+   à la reprise ; arrêt après **trois échecs d'affilée**.
+3. **ET LA DÉPENSE A RÉELLEMENT FUI** : `atlas-builder` bouclait jusqu'à
+   11 minutes (6 × 110 s) ; le client abandonnait à 300 s **alors que le
+   serveur avait déjà dépensé**. Compté 2,64 €, borne haute réelle **≈ 12,16 €
+   contre 9 € annoncés** — le chiffre exact n'existe que dans la console
+   Anthropic. Échéance de **150 s** côté fonction, et le coût engagé est
+   **RENDU même en abandonnant** : *un abandon qui ne dit pas ce qu'il a
+   dépensé est un trou dans le mur.*
+
+### ⚠️ Lecture avant déclaration : une classe de défaut DISTINCTE
+`tests/portee-fonctions.test.mjs` couvre désormais les **8 scripts qui
+dépensent** (TS2448/TS2454), avec la contre-épreuve du défaut réel du 8 nov. :
+`porteesLot` lu dans l'objet `rapport` vingt lignes avant son `const` →
+**ReferenceError APRÈS avoir dépensé**, rapport jamais écrit.
+- ⚠️ **Un identifiant hors de portée et une lecture avant déclaration sont
+  deux défauts différents**, et l'ancien bloc n'attrapait que le premier : le
+  nom EXISTAIT dans le module, donc « Cannot find name » ne disait rien.
+- Le filtre ne garde **que** 2448 et 2454 : « Cannot find name » crierait sur
+  `process`, `console`, `fetch` — tous les globaux de Node. *Un test qui crie
+  à tort finit désactivé.*
+
+### Le chiffre public — `/fiabilite` et accueil
+**54 / 231 (23 %)**, « publié tel quel » (décision d'Utku). Lu en base, clé
+publique `pannes_portees`, **recalculé chaque jour** par la passe 8 du cron
+`alertes` ; tâche dédiée `{"tache":"pannes_portees"}` pour le recompter **sans
+envoyer un seul email**.
+- ⚠️ **Le comptage reste en TypeScript** : `rangSource` n'existe que là. Le
+  refaire en SQL créerait une **seconde liste d'hôtes**, donc un chiffre public
+  qui cesserait de décrire la règle appliquée au score. Une assertion de
+  l'essai local **interdit** à toute fonction SQL de compter des sources
+  portantes.
+- ⚠️ **`entreesAtlasAPlat`** : l'atlas est une carte `{MARQUE: {defects}}` ;
+  un `Object.values().flat()` rend **SEPT OBJETS DE MARQUE**, pas les entrées,
+  et chacun — dépourvu de source — se compte comme une affirmation non portée.
+  Le chiffre annonçait **48/226 au lieu de 54/231**.
+- ⚠️ **La valeur semée par la migration porte `maj: null`** : semer 54/231 en
+  dur aurait été exactement le défaut qu'on corrige, un chiffre figé qui aurait
+  l'air d'une mesure. L'écran n'affiche **rien** tant que le cron n'a pas
+  tourné.
+- Le **compte exact de clés publiques (8 → 9)** a cassé l'essai local, comme
+  prévu : ouvrir la liste publique doit être un acte **signé**, pas un
+  glissement.
+
+### Correctif d'un effet de bord de la règle
+`sanitizePannes` refusait toute panne non portée, donc **l'écran admin de
+CORRECTION était bloqué** sur les 20 fiches à terre (« pannes invalides », rien
+d'enregistrable). Le contrôle arrête une affirmation **NOUVELLE** ; il ne rend
+pas inéditable une fiche existante (`titresExistants`).
+
+### Écriture des sources trouvées — réservée à un vrai admin
+Chemin `{ id, ajouter_sources: [...] }` d'`admin-defect-sheets` : **fusion
+seule**, sources de rang portant seulement, pannes existantes seulement. Une
+panne absente du corps est une panne qu'on ne touche pas.
+- ⚠️ **AUCUNE authentification n'a été affaiblie.** J'avais commencé par ouvrir
+  ce chemin au secret d'éval ; le garde-fou de l'environnement l'a refusé, et
+  il avait raison. `node scripts/resourcer-fiches.mjs --appliquer` consomme un
+  `ADMIN_ACCESS_TOKEN` de **courte durée** (une heure), à poser dans
+  `.env.local` puis à **retirer** — le script le rappelle en sortant.
+  Récupération :
+  `JSON.parse(localStorage.getItem('sb-pspsqtokhqmotzkyqnkj-auth-token')).access_token`
+  dans la console de `www.inspexo.io`, après le lien magique
+  `/admin/audit`.
+
+### ⚠️ Pièges rencontrés, à ne pas refaire
+- **`node tests/x.mjs | tail -3` rend le code de sortie de `tail`**, pas celui
+  de node : un `&&` laisse alors passer un test **en échec**. C'est ainsi
+  qu'`alertes` a été déployée avec un `corsHeaders` inexistant — recopié
+  d'`atlas-builder`, alors que cette fonction de cron n'a aucun objet CORS.
+- **Redéployer une fonction pendant qu'une campagne l'utilise** : fait par
+  inadvertance, sans dégât (Supabase laisse les requêtes en vol finir), mais à
+  séquencer autrement.
+- Un **backtick** dans un commentaire SQL casse le littéral de gabarit JS de
+  `scripts/essai-migration-annulee.mjs` — **troisième** fois.
+- Le minifieur CRA **échappe les accents** (`ind\xe9pendante`) : chercher une
+  chaîne accentuée dans `build/static/js/*.js` ne trouve rien. Mon grep était
+  faux, pas le build.
 
 ## Marques Couvertes
 
