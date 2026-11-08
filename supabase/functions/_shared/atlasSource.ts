@@ -88,9 +88,6 @@ const HOTES_OFFICIELS = [
   "nhtsa.gov", "static.nhtsa.gov", "europa.eu", "rappel.conso.gouv.fr",
   "economie.gouv.fr", "securite-routiere.gouv.fr", "ecologie.gouv.fr",
   "service-public.fr", "service-public.gouv.fr", "utac.com", "ademe.fr",
-  // SPRINT 22 — relevé officiel des prix des centres de contrôle technique
-  // (DGCCRF), publié sur data.gouv.fr et consultable sur prix.conso.gouv.fr.
-  "data.gouv.fr", "prix.conso.gouv.fr",
   "vehicle-recalls.service.gov.uk", "kba.de", "transportstyrelsen.se",
   // Relevés dans les fiches le 6 nov. 2026.
   "recalls-rappels.canada.ca",
