@@ -57,6 +57,13 @@ const nouvellePage = async () => {
   await c.addInitScript((p) => {
     localStorage.setItem('inspexo_region', p.region); localStorage.setItem('inspexo_cv', String(p.cv))
     localStorage.setItem('inspexo_km_an', String(p.km_an))
+    // Session FACTICE, locale à la capture : toutes les requêtes sont
+    // interceptées, le jeton ne part nulle part. Sans elle, /comparer
+    // s'arrête (à juste titre) sur « connectez-vous ».
+    localStorage.setItem('sb-pspsqtokhqmotzkyqnkj-auth-token', JSON.stringify({
+      access_token: 'capture', refresh_token: 'capture', token_type: 'bearer', expires_in: 3600,
+      expires_at: 4102444800, user: { id: '00000000-0000-0000-0000-000000000000', aud: 'authenticated', email: 'capture@exemple.test' },
+    }))
   }, PREFS)
   const page = await c.newPage()
   const erreurs = []
