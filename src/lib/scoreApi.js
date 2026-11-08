@@ -406,3 +406,11 @@ export async function revendeurCibleRetirer({ marque, modele, energie }) {
  *  sont calculés par la fonction edge, avec l unique implémentation du
  *  projet. */
 export const revendeurCibles = () => callFunction('revendeur-cibles', {})
+
+// SPRINT 22 — coût réel sur 3 ans (total gratuit, détail Pass, verrou serveur).
+export const coutTroisAnsDossier = (analysisId, { kmAn, region, cv } = {}) =>
+  callFunction('cout-3ans', { analysis_id: analysisId, km_an: kmAn, region: region || null, cv: cv ? Number(cv) : null })
+
+// SPRINT 22 — comparateur de dossiers (Pass, dossiers de l'appelant seulement).
+export const comparerDossiers = (ids, { kmAn, region, cv } = {}) =>
+  callFunction('comparer', { ids, km_an: kmAn, region: region || null, cv: cv ? Number(cv) : null })

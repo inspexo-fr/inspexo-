@@ -34,6 +34,9 @@ const MODULES = [
   // _shared/vin.ts ; src/lib/vin.js n'est qu'un ré-export du miroir, de sorte
   // que tests/vin.test.mjs et VinBloc continuent de passer par le même code.
   { ts: 'vin.ts', js: 'vin.gen.js' },
+  // SPRINT 22 — le coût sur 3 ans se recalcule à l'écran (kilométrage annuel,
+  // corrections) avec le MÊME code que le serveur.
+  { ts: 'cout3ans.ts', js: 'cout3ans.gen.js' },
 ]
 
 const ENTETE = (source) => `// GÉNÉRÉ par scripts/generer-miroir-revendeur.mjs — NE PAS ÉDITER À LA MAIN.

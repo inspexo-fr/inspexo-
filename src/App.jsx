@@ -29,6 +29,7 @@ const CGVVisio = lazy(() => import('./pages/CGVVisio'))
 const VisioPage = lazy(() => import('./pages/VisioPage'))
 const DossierPage = lazy(() => import('./pages/DossierPage'))
 const CiblesPage = lazy(() => import('./pages/CiblesPage'))
+const ComparerPage = lazy(() => import('./pages/ComparerPage'))
 const FiabilitePage = lazy(() => import('./pages/FiabilitePage'))
 const AdminAudit = lazy(() => import('./pages/AdminAudit'))
 const ExtensionPage = lazy(() => import('./pages/ExtensionPage'))
@@ -120,6 +121,7 @@ export default function App() {
           <Route path="/a/:id/visite" element={<VisitePage />} />
           <Route path="/a/:id/signature" element={<KitSignaturePage />} />
           <Route path="/dossier" element={<DossierPage />} />
+          <Route path="/comparer" element={<ComparerPage />} />
           <Route path="/cibles" element={<CiblesPage />} />
           <Route path="/inspecteur" element={<InspecteurPage />} />
           <Route path="/inspecteur/inscription" element={<InspecteurInscription />} />

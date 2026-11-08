@@ -459,3 +459,67 @@ export function compterPannesPortees(
   }
   return { portees, total, fiches_a_terre: fichesATerre, fiches_total: fichesTotal };
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// SPRINT 22 — CHIFFRER UNE OPÉRATION PRÉVUE AU PLAN D'ENTRETIEN
+//
+// ⚠️ DÉCISION D'UTKU DU 8 NOV. 2026, ET SA LIMITE EXACTE.
+// Deux questions différentes, deux règles différentes :
+//   1. « Cette opération est-elle DUE ? » — c'est le plan d'entretien qui le
+//      dit, et il lui faut une source PORTANTE (`sourcesPortentLEntree`).
+//   2. « Combien coûte-t-elle ? » — pour une opération PRÉVUE AU PLAN, le prix
+//      moyen affiché par un comparateur de garages (Vroomly, iDGarages) est
+//      ADMIS, avec le libellé « prix moyen affiché par des garages, via … ».
+//
+// Ce n'est PAS un assouplissement de `rangSource` ni de `coutUtilisable` :
+// un comparateur de garages ne PORTE toujours rien. Il ne fixe JAMAIS la
+// gravité d'une panne, et il ne chiffre JAMAIS une panne non prévue au plan —
+// la règle du 6 nov. 2026 reste entière là-dessus. Le prix d'une vidange
+// prévue n'est pas une allégation sur l'existence d'un défaut : c'est un
+// tarif de prestation courante, et un comparateur de tarifs en est la
+// mesure ordinaire.
+//
+// `tests/atlas-source.test.mjs` vérifie que cette fonction n'est importée que
+// par le calcul du coût sur 3 ans, jamais par le chemin de notation.
+
+/** Comparateurs de garages admis pour le PRIX d'une opération prévue au plan. */
+export const COMPARATEURS_GARAGES: Readonly<Record<string, string>> = {
+  "vroomly.com": "Vroomly",
+  "idgarages.com": "iDGarages",
+};
+
+export function comparateurDeGarages(url: unknown): string | null {
+  try {
+    const hote = new URL(String(url)).hostname.toLowerCase().replace(/^www\./, "");
+    for (const [h, nom] of Object.entries(COMPARATEURS_GARAGES)) {
+      if (hote === h || hote.endsWith(`.${h}`)) return nom;
+    }
+  } catch { /* URL illisible : pas un comparateur */ }
+  return null;
+}
+
+export type CoutEntretienAdmis =
+  | { admis: true; via: "portante"; libelle: string; urls: string[] }
+  | { admis: true; via: "comparateur"; libelle: string; urls: string[] }
+  | { admis: false };
+
+/** Le coût d'une opération PRÉVUE AU PLAN peut-il être affiché ? */
+export function coutEntretienPrevu(urls: readonly unknown[]): CoutEntretienAdmis {
+  const u = urls.map((x) => String(x ?? "")).filter((x) => /^https?:\/\/\S+/i.test(x));
+  const portantes = u.filter((x) => RANGS_PORTANTS.includes(rangSource(x)));
+  if (portantes.length > 0) {
+    return { admis: true, via: "portante", libelle: "prix publié", urls: portantes.slice(0, 2) };
+  }
+  for (const x of u) {
+    const nom = comparateurDeGarages(x);
+    if (nom) {
+      return {
+        admis: true,
+        via: "comparateur",
+        libelle: `prix moyen affiché par des garages, via ${nom}`,
+        urls: [x],
+      };
+    }
+  }
+  return { admis: false };
+}

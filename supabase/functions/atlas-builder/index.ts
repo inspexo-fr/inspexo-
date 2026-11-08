@@ -22,6 +22,7 @@
 //
 // Accès : administrateur, ou header x-eval-secret.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 import { appliquerGraviteRemede } from "../_shared/graviteRemede.ts";
 import {
@@ -33,12 +34,16 @@ import {
   sourcesPortentLEntree,
 } from "../_shared/atlasSource.ts";
 import {
+  cleVerif,
+  ecrireCacheVerif,
+  lireCacheVerif,
   messageVerification,
   neutraliser,
+  type ReponseJuge,
   texteDeLaPage,
-  VERDICTS_VALIDES,
   VERIF_SYSTEM,
   VERIF_TOOL,
+  voter,
 } from "../_shared/verifSource.ts";
 
 const corsHeaders = {
@@ -50,6 +55,13 @@ const json = (b: unknown, s = 200) =>
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const EVAL_BYPASS_SECRET = Deno.env.get("EVAL_BYPASS_SECRET") ?? null;
+// SPRINT 22 — cette fonction était SANS ÉTAT. Elle gagne un accès service
+// role, et UN SEUL usage : le cache des verdicts du juge (`verif_cache`).
+// C'est ici que la variance du juge a été constatée (même page L'Argus,
+// deux verdicts à une heure d'écart) : sans cache, la stabilité demandée ne
+// couvrirait pas le seul cas où elle a manqué.
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const MODEL = "claude-sonnet-5";
 const MAX_SEARCHES = 3;
 // ⚠️ SIX BOUCLES DE PAUSE À 110 s FONT 11 MINUTES, et c'est ce qui a crevé la
@@ -225,12 +237,13 @@ async function chercherSources(entree: any): Promise<{ input: any; usage: Usage 
 
 // ── Étape 3 : la vérification indépendante ─────────────────────────────────
 
-async function verifierIndependamment(
+/** Un passage du juge. null = aucune réponse exploitable. */
+async function unPassage(
   cible: string,
-  affirmation: string,
+  affirmations: Array<{ type: string; texte: string }>,
   url: string,
   texteSource: string,
-): Promise<{ verdict: string; justification: string; usage: Usage } | null> {
+): Promise<ReponseJuge> {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     signal: AbortSignal.timeout(60_000),
@@ -245,7 +258,7 @@ async function verifierIndependamment(
       // ⚠️ Message NEUF : ni la recherche, ni le raisonnement de l'étape 1.
       messages: [{
         role: "user",
-        content: [{ type: "text", text: messageVerification(cible, [{ type: "panne", texte: affirmation }], url, texteSource) }],
+        content: [{ type: "text", text: messageVerification(cible, affirmations, url, texteSource) }],
       }],
     }),
   });
@@ -256,13 +269,41 @@ async function verifierIndependamment(
   const data = await res.json();
   // deno-lint-ignore no-explicit-any
   const bloc = (data.content ?? []).find((b: any) => b.type === "tool_use" && b.name === "rendre_verifications");
-  const v = bloc?.input?.verdicts?.[0];
-  if (!v) return null;
+  if (!bloc) return null;
   return {
-    verdict: (VERDICTS_VALIDES as readonly string[]).includes(v.verdict) ? v.verdict : "non_soutenue",
-    justification: String(v.justification ?? "").slice(0, 400),
+    verdicts: Array.isArray(bloc.input?.verdicts) ? bloc.input.verdicts : [],
     usage: { input_tokens: data.usage?.input_tokens ?? 0, output_tokens: data.usage?.output_tokens ?? 0 },
+    modele: MODEL,
   };
+}
+
+/** SPRINT 22 — le juge stable : cache (URL, affirmation, cible) 180 jours,
+ *  sinon vote à deux passages + un troisième en cas de désaccord. */
+async function verifierIndependamment(
+  // deno-lint-ignore no-explicit-any
+  db: any,
+  cible: string,
+  affirmation: string,
+  url: string,
+  texteSource: string,
+): Promise<{ verdict: string; justification: string; usages: Usage[]; depuis_cache: boolean; passages: number } | null> {
+  const cle = await cleVerif(url, affirmation, cible);
+  if (db) {
+    const c = (await lireCacheVerif(db, [cle])).get(cle);
+    if (c) return { verdict: c.verdict, justification: String(c.justification ?? ""), usages: [], depuis_cache: true, passages: 0 };
+  }
+  const v = await voter((a) => unPassage(cible, a, url, texteSource), [{ type: "panne", texte: affirmation }]);
+  const r = v.resultats[0];
+  const usages = v.usages.map((u) => ({ input_tokens: u.input_tokens, output_tokens: u.output_tokens }));
+  // Aucun passage n'a répondu : la vérification est indisponible, pas négative.
+  if (!r || r.votes.length === 0) return null;
+  if (db && r.fiable) {
+    await ecrireCacheVerif(db, [{
+      cle, url, affirmation, moteur: cible, verdict: r.verdict,
+      justification: r.justification, votes: r.votes, modele: r.modele,
+    }]);
+  }
+  return { verdict: r.verdict, justification: String(r.justification ?? "").slice(0, 400), usages, depuis_cache: false, passages: v.passages };
 }
 
 // ── Étape 2 : le filtre déterministe ────────────────────────────────────────
@@ -285,6 +326,8 @@ serve(async (req: Request) => {
     }
 
     let usd = 0;
+    const db = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) : null;
+    const juge = { passages: 0, depuis_cache: 0 };
 
     // ── Mode RATTRAPAGE : des URL déjà connues, aucune recherche ──────────
     // La première campagne a écarté 22 pages pour « illisible », surtout des
@@ -366,9 +409,11 @@ serve(async (req: Request) => {
       if (!texte) { ecartees.push({ url, motif: "page_illisible" }); continue; }
       if (!pageParleDeLEntree(texte, marqueurs)) { ecartees.push({ url, motif: "hors_sujet" }); continue; }
 
-      const v = await verifierIndependamment(cible, affirmation, url, texte);
+      const v = await verifierIndependamment(db, cible, affirmation, url, texte);
       if (!v) { ecartees.push({ url, motif: "verification_indisponible" }); continue; }
-      usd += TARIF(v.usage);
+      for (const u of v.usages) usd += TARIF(u);
+      juge.passages += v.passages;
+      if (v.depuis_cache) juge.depuis_cache++;
       if (v.verdict !== "soutenue") {
         ecartees.push({ url, motif: v.verdict, justification: v.justification });
         continue;
@@ -448,6 +493,8 @@ serve(async (req: Request) => {
       cout_max_eur: coutMax,
       gravite,
       gravite_avant: entree.severity ?? null,
+      // SPRINT 22 — combien de passages du juge, combien de verdicts relus.
+      juge,
       cout_eur: Math.round(usd * 0.92 * 10000) / 10000,
     });
   } catch (e) {

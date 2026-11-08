@@ -129,6 +129,8 @@ eq(identiteVehicule({}).marque, '', 'une analyse vide ne fait pas tomber l’ext
   // méthode aurait recalées. Le contrôle porte donc sur les deux fichiers.
   const src = readFileSync(new URL('../supabase/functions/verification/index.ts', import.meta.url), 'utf8')
     + '\n' + readFileSync(new URL('../supabase/functions/_shared/verifSource.ts', import.meta.url), 'utf8')
+    // SPRINT 22 — le vote et la règle du silence vivent dans le juge stable.
+    + '\n' + readFileSync(new URL('../supabase/functions/_shared/jugeStable.ts', import.meta.url), 'utf8')
   const fn = readFileSync(new URL('../supabase/functions/verification/index.ts', import.meta.url), 'utf8')
   const debut = fn.indexOf('const corps = (model: string)')
   const fin = fn.indexOf('for (const model of [MODEL, FALLBACK_MODEL])')

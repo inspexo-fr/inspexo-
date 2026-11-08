@@ -569,6 +569,28 @@ export default function PolitiqueConfidentialite() {
             </li>
           </ul>
 
+          <h2 className="legal-h2">6 terdecies. Coût réel sur 3 ans et comparaison de dossiers</h2>
+          <ul className="legal-ul">
+            <li>
+              Pour calculer le <strong>coût sur 3 ans</strong>, votre navigateur envoie à notre
+              serveur le <strong>kilométrage annuel</strong> que vous indiquez, et, si vous les avez
+              renseignées, votre <strong>région</strong> et la <strong>puissance fiscale</strong>.
+              Elles servent au seul calcul de la réponse et <strong>ne sont pas enregistrées</strong>.
+              Elles restent mémorisées dans votre navigateur (stockage local) pour ne pas vous être
+              redemandées.
+            </li>
+            <li>
+              La <strong>comparaison de dossiers</strong> ne porte que sur les analyses que vous
+              suivez dans votre dossier. Elle ne crée aucune donnée nouvelle&nbsp;: elle relit des
+              analyses déjà produites, et sa recommandation est calculée par des règles fixes, sans
+              appel à un modèle d'intelligence artificielle.
+            </li>
+            <li>
+              Le prix du contrôle technique provient du relevé public des tarifs des centres
+              (DGCCRF, data.gouv.fr)&nbsp;: aucune donnée vous concernant n'y est transmise.
+            </li>
+          </ul>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">
