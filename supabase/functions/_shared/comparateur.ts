@@ -21,6 +21,10 @@ type Json = any;
 
 export const SEUIL_SCORE = 5; // points
 export const SEUIL_COUT_EUR = 500; // € sur 3 ans
+export const SEUIL_PERCENTILE = 10; // points de percentile dans les comparables
+/** Au-delà de cet écart de prix demandé, les véhicules ne relèvent plus du
+ *  même budget : aucune recommandation (décision d'Utku du 8 nov. 2026). */
+export const ECART_BUDGET_MAX = 0.30;
 export const RANG_GRAVITE: Record<string, number> = { aucune: 0, mineure: 1, majeure: 2, casse: 3, securite: 4 };
 const LIBELLE_GRAVITE: Record<string, string> = {
   aucune: "aucune panne documentée", mineure: "mineure", majeure: "majeure", casse: "risque de casse", securite: "sécurité",
@@ -37,7 +41,15 @@ export type FicheComparaison = {
   gravite_max: string;
   questions: number;
   travaux: { min: number | null; max: number | null; postes: number };
-  prix: { demande: number | null; position: string | null; n: number | null; source: string | null };
+  prix: {
+    demande: number | null;
+    position: string | null;
+    n: number | null;
+    source: string | null;
+    /** Percentile du prix demandé dans SES comparables, en intervalle :
+     *  exact entre P25 et P75, borné au-delà (« 25 ou moins », « 75 ou plus »). */
+    percentile: { min: number; max: number } | null;
+  };
   critair: string | null;
   cout_3ans: {
     total_min: number;
@@ -48,6 +60,29 @@ export type FicheComparaison = {
 };
 
 const s = (x: unknown) => (typeof x === "string" ? x : "");
+
+/** Percentile du prix demandé, interpolé entre P25, médiane et P75 — bornes
+ *  décalées comme la médiane de référence quand le kilométrage a été corrigé
+ *  (même référence que la position affichée dans le dossier). Hors de
+ *  [P25, P75], on ne sait PAS où l'annonce se situe exactement : on rend un
+ *  intervalle plutôt qu'un chiffre inventé. */
+export function percentilePrix(prix: number | null, f: Json): { min: number; max: number } | null {
+  if (prix == null || !f) return null;
+  const p25 = Number(f.p25), med = Number(f.mediane), p75 = Number(f.p75);
+  if (![p25, med, p75].every(Number.isFinite) || !(p25 <= med && med <= p75)) return null;
+  const dec = Number.isFinite(Number(f.mediane_reference)) ? Number(f.mediane_reference) - med : 0;
+  const a = p25 + dec, m = med + dec, b = p75 + dec;
+  if (prix <= a) return { min: 0, max: 25 };
+  if (prix >= b) return { min: 75, max: 100 };
+  const v = prix <= m
+    ? 25 + (m === a ? 0 : (25 * (prix - a)) / (m - a))
+    : 50 + (b === m ? 0 : (25 * (prix - m)) / (b - m));
+  const r = Math.round(v);
+  return { min: r, max: r };
+}
+
+const libellePercentile = (p: { min: number; max: number }) =>
+  p.min === p.max ? `${p.min}e percentile` : p.min === 0 ? "dans le quart le moins cher" : "dans le quart le plus cher";
 
 export function ficheDepuisAnalyse(
   id: string,
@@ -100,6 +135,7 @@ export function ficheDepuisAnalyse(
       position: f ? s(f.position) || null : null,
       n: f && typeof f.n === "number" ? f.n : null,
       source: f ? s(f.source) || null : null,
+      percentile: percentilePrix(prixDemande, f),
     },
     critair: rj?.critair?.libelle ? s(rj.critair.libelle) : null,
     cout_3ans: cout
@@ -113,11 +149,12 @@ export function ficheDepuisAnalyse(
   };
 }
 
-export type Raison = { critere: "score" | "pannes" | "cout_3ans" | "complement"; texte: string };
+export type Raison = { critere: "score" | "pannes" | "cout_3ans" | "prix_position" | "complement"; texte: string };
 
 export type Recommandation =
   | { issue: "recommande"; analysis_id: string; titre: string; raisons: Raison[]; ecartes: Array<{ titre: string; motif: string }> }
   | { issue: "aucune"; motif: string; ecartes: Array<{ titre: string; motif: string }> }
+  | { issue: "budgets"; motif: string; ecart_eur: number; ecartes: Array<{ titre: string; motif: string }> }
   | { issue: "indecis"; motif: string; manque: string[]; ecartes: Array<{ titre: string; motif: string }> };
 
 const eur = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " €";
@@ -176,12 +213,27 @@ function duel(a: FicheComparaison, b: FicheComparaison): Duel {
     }
   } else d.manque.push(`coût sur 3 ans de « ${a.cout_3ans ? b.titre : a.titre} »`);
 
+  // 4) Position du prix dans SES comparables : moins cher que son marché.
+  //    Chaque annonce est située dans son propre segment — c'est ce qui rend
+  //    la comparaison possible entre deux modèles. Gagné seulement si l'écart
+  //    d'au moins 10 points est GARANTI, intervalles compris.
+  const pa = a.prix.percentile, pb = b.prix.percentile;
+  if (pa && pb) {
+    if (pa.max <= pb.min - SEUIL_PERCENTILE) {
+      d.gagne++;
+      d.raisons.push({
+        critere: "prix_position",
+        texte: `Prix ${libellePercentile(pa)} de ses comparables, contre ${libellePercentile(pb)} pour « ${b.titre} ».`,
+      });
+    } else if (pb.max <= pa.min - SEUIL_PERCENTILE) d.perd++;
+  } else d.manque.push(`position du prix dans les comparables de « ${pa ? b.titre : a.titre} »`);
+
   return d;
 }
 
 /** Une seule phrase pour un critère gagné contre plusieurs rivaux. */
 function fusionnerRaisons(
-  critere: "score" | "pannes" | "cout_3ans",
+  critere: "score" | "pannes" | "cout_3ans" | "prix_position",
   a: FicheComparaison,
   tous: FicheComparaison[],
   textes: string[],
@@ -196,6 +248,11 @@ function fusionnerRaisons(
     return `Pannes documentées : ${a.pannes_portees.length} (gravité max. ${LIBELLE_GRAVITE[a.gravite_max]}) contre ` +
       battus.map((b) => `${b.pannes_portees.length} (${LIBELLE_GRAVITE[b.gravite_max]})`).join(" et ") + ".";
   }
+  if (critere === "prix_position" && a.prix.percentile) {
+    const battus = autres.filter((b) => b.prix.percentile && a.prix.percentile!.max <= b.prix.percentile.min - SEUIL_PERCENTILE);
+    return `Prix ${libellePercentile(a.prix.percentile)} de ses comparables, contre ` +
+      battus.map((b) => `${libellePercentile(b.prix.percentile!)} (« ${b.titre} »)`).join(" et ") + ".";
+  }
   return textes.join(" ");
 }
 
@@ -203,6 +260,33 @@ function fusionnerRaisons(
  *  CHACUN des autres sur au moins 2 des 3 critères, sans en perdre aucun. */
 export function recommander(fiches: FicheComparaison[]): Recommandation {
   const ecartes = fiches.filter((f) => f.eliminatoire).map((f) => ({ titre: f.titre, motif: f.eliminatoire! }));
+
+  // ⚠️ GARDE-FOU DE BUDGET, AVANT TOUT CRITÈRE. Une voiture à 41 000 € et une
+  // autre à 2 500 € ne répondent pas au même achat : recommander l'une sur
+  // son score serait répondre à une question que l'acheteur n'a pas posée.
+  // L'écart se mesure sur TOUS les dossiers comparés, éliminés compris : c'est
+  // la comparaison demandée qui est mal posée, pas un véhicule.
+  const prix = fiches.map((f) => f.prix.demande).filter((p): p is number => typeof p === "number" && p > 0);
+  if (prix.length < fiches.length) {
+    // Un prix manquant rend le garde-fou invérifiable : on ne tranche pas.
+    return {
+      issue: "indecis",
+      motif: "Impossible de vérifier que ces véhicules relèvent du même budget : un prix demandé manque.",
+      manque: fiches.filter((f) => !(typeof f.prix.demande === "number" && f.prix.demande > 0)).map((f) => `prix demandé de « ${f.titre} »`),
+      ecartes,
+    };
+  }
+  if (prix.length >= 2) {
+    const bas = Math.min(...prix), haut = Math.max(...prix);
+    if ((haut - bas) / bas > ECART_BUDGET_MAX) {
+      return {
+        issue: "budgets",
+        motif: `Budgets trop différents pour comparer (écart de ${eur(haut - bas)}).`,
+        ecart_eur: Math.round(haut - bas),
+        ecartes,
+      };
+    }
+  }
   const restants = fiches.filter((f) => !f.eliminatoire);
 
   if (restants.length === 0) {
@@ -229,7 +313,7 @@ export function recommander(fiches: FicheComparaison[]): Recommandation {
       // critère. À trois dossiers, citer le seul premier duel ferait croire
       // que le recommandé n'a été comparé qu'à un véhicule.
       const raisons: Raison[] = [];
-      for (const critere of ["score", "pannes", "cout_3ans"] as const) {
+      for (const critere of ["score", "pannes", "cout_3ans", "prix_position"] as const) {
         const textes = duels.flatMap((d) => d.raisons.filter((r) => r.critere === critere).map((r) => r.texte));
         if (textes.length === 0) continue;
         raisons.push({ critere, texte: textes.length === 1 ? textes[0] : fusionnerRaisons(critere, a, restants, textes) });
@@ -268,7 +352,8 @@ export function recommander(fiches: FicheComparaison[]): Recommandation {
     issue: "indecis",
     motif: "Impossible de départager sur ces données : aucun véhicule ne l'emporte nettement " +
       `sur au moins deux critères (score d'au moins ${SEUIL_SCORE} points, pannes documentées moins graves, ` +
-      `coût sur 3 ans inférieur d'au moins ${eur(SEUIL_COUT_EUR)}).`,
+      `coût sur 3 ans inférieur d'au moins ${eur(SEUIL_COUT_EUR)}, prix mieux placé dans ses comparables ` +
+      `d'au moins ${SEUIL_PERCENTILE} points de percentile).`,
     manque: [...manques].slice(0, 6),
     ecartes,
   };

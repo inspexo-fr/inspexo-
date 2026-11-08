@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { comparerDossiers } from '../lib/scoreApi'
+import { supabase } from '../lib/supabaseClient'
 
 // SPRINT 22 — Comparer 2 ou 3 dossiers (Pass).
 //
@@ -47,9 +48,15 @@ export default function ComparerPage() {
 
   useEffect(() => {
     if (ids.length < 2) { setErreur({ code: 'invalid_input' }); return }
-    comparerDossiers(ids, { kmAn: lire('inspexo_km_an') || undefined, region: lire('inspexo_region'), cv: lire('inspexo_cv') })
-      .then(setData)
-      .catch((e) => setErreur(e))
+    // Sans session, le refus est CERTAIN : on n'émet pas la requête, que le
+    // navigateur journaliserait en erreur (même correction que /cibles au
+    // sprint 20.1 — un catch ne la supprime pas, elle vient du réseau).
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data?.session) { setErreur({ code: 'connexion_requise' }); return }
+      comparerDossiers(ids, { kmAn: lire('inspexo_km_an') || undefined, region: lire('inspexo_region'), cv: lire('inspexo_cv') })
+        .then(setData)
+        .catch((e) => setErreur(e))
+    }).catch(() => setErreur({ code: 'connexion_requise' }))
   }, [ids])
 
   const fiches = data?.fiches || []
@@ -114,7 +121,13 @@ export default function ComparerPage() {
             )} />
             <Rangee titre="Prix et position dans les comparables" fiches={fiches} rendu={(f) => (
               <>{f.prix.demande != null ? euros(f.prix.demande) : '—'}
-                {f.prix.position ? <><br /><span className="c-ink2">{f.prix.position}{f.prix.n ? ` (${f.prix.n} annonces)` : ''}</span></> : <><br /><span className="c-graphite">position non évaluée</span></>}
+                {f.prix.position ? (
+                  <><br /><span className="c-ink2">{f.prix.position}{f.prix.n ? ` (${f.prix.n} annonces)` : ''}
+                    {f.prix.percentile && (f.prix.percentile.min === f.prix.percentile.max
+                      ? ` · ${f.prix.percentile.min}e percentile`
+                      : ` · percentile ${f.prix.percentile.min}–${f.prix.percentile.max}`)}
+                  </span></>
+                ) : <><br /><span className="c-graphite">position non évaluée</span></>}
               </>
             )} />
             <Rangee titre="Crit'Air" fiches={fiches} rendu={(f) => <>{f.critair || 'non déterminé'}</>} />
@@ -139,7 +152,7 @@ export default function ComparerPage() {
                     </ol>
                   </>
                 )}
-                {reco.issue === 'aucune' && <p style={{ fontSize: 16, marginTop: 6 }}>{reco.motif}</p>}
+                {(reco.issue === 'aucune' || reco.issue === 'budgets') && <p style={{ fontSize: 16, marginTop: 6 }}>{reco.motif}</p>}
                 {reco.issue === 'indecis' && (
                   <>
                     <p style={{ fontSize: 16, marginTop: 6 }}>{reco.motif}</p>
@@ -157,10 +170,12 @@ export default function ComparerPage() {
                 )}
                 <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginTop: 12 }}>
                   Recommandation calculée par règles fixes : élimination des verdicts rouges et des faits graves,
-                  puis score (écart d'au moins 5 points), gravité des pannes documentées et coût sur 3 ans
-                  (écart d'au moins 500 €, mêmes postes chiffrés des deux côtés). Un véhicule n'est recommandé
-                  que s'il l'emporte sur au moins deux critères sans en perdre aucun. Analyse automatique à
-                  partir des annonces, ne remplace pas un examen des véhicules.
+                  puis aucune recommandation si les prix demandés diffèrent de plus de 30 %. Quatre critères :
+                  score (écart d'au moins 5 points), gravité des pannes documentées, coût sur 3 ans (écart
+                  d'au moins 500 €, mêmes postes chiffrés des deux côtés) et position du prix dans ses
+                  annonces comparables (écart d'au moins 10 points de percentile). Un véhicule n'est
+                  recommandé que s'il l'emporte sur au moins deux critères sans en perdre aucun. Analyse
+                  automatique à partir des annonces, ne remplace pas un examen des véhicules.
                 </p>
               </section>
             )}

@@ -1,7 +1,7 @@
 // Test hors ligne du comparateur (sprint 22). Recommandation PAR RÈGLES.
 // Usage : node tests/comparateur.test.mjs
 import { readFileSync } from 'node:fs'
-import { ficheDepuisAnalyse, recommander, SEUIL_COUT_EUR, SEUIL_SCORE } from '../supabase/functions/_shared/comparateur.ts'
+import { ECART_BUDGET_MAX, ficheDepuisAnalyse, percentilePrix, recommander, SEUIL_COUT_EUR, SEUIL_PERCENTILE, SEUIL_SCORE } from '../supabase/functions/_shared/comparateur.ts'
 
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) ok_++; else { ko++; console.log(`FAIL — ${l}`) } }
@@ -13,7 +13,7 @@ const fiche = (id, o = {}) => ({
   analysis_id: id, titre: `Voiture ${id}`, verdict: 'orange', score: 60, eliminatoire: null,
   pannes_portees: [], gravite_max: 'aucune', questions: 4,
   travaux: { min: 300, max: 600, postes: 2 },
-  prix: { demande: 10_000, position: 'dans la moyenne', n: 12, source: 'recherche' },
+  prix: { demande: 10_000, position: 'dans la moyenne', n: 12, source: 'recherche', percentile: null },
   critair: "Crit'Air 2",
   cout_3ans: { total_min: 11_000, total_max: 11_500, non_chiffrees: [{ libelle: 'Carte grise', motif: 'x' }], partiel: true },
   ...o,
@@ -48,7 +48,7 @@ const fiche = (id, o = {}) => ({
 // ── Recommandation ──────────────────────────────────────────────────────────
 {
   const b = fiche('b', { score: 60, gravite_max: 'majeure', pannes_portees: [{ titre: 'x', gravite: 'majeure' }] })
-  const r = recommander([fiche('a', { score: 72, prix: { demande: 9_200, position: null, n: null, source: null } }), b])
+  const r = recommander([fiche('a', { score: 72, prix: { demande: 9_200, position: null, n: null, source: null, percentile: null } }), b])
   eq(r.issue, 'recommande', 'A gagne score ET pannes : recommandée')
   eq(r.analysis_id, 'a', '… c’est bien A')
   eq(r.raisons.length, 3, 'trois raisons')
@@ -111,6 +111,58 @@ eq(recommander([fiche('a', { eliminatoire: 'verdict rouge' }), fiche('b', { elim
   ok(/55\/100/.test(sc) && /51\/100/.test(sc), `la raison de score cite les DEUX rivaux (${sc})`)
   const pa = r.raisons.find((x) => x.critere === 'pannes')?.texte ?? ''
   ok(/majeure/.test(pa) && /mineure/.test(pa), `la raison de pannes cite les DEUX rivaux (${pa})`)
+}
+// ── Garde-fou de budget (décision du 8 nov. 2026) ───────────────────────────
+const prixDe = (demande, percentile = null) => ({ demande, position: null, n: null, source: null, percentile })
+{
+  const r = recommander([fiche('a', { score: 71, prix: prixDe(41_490) }), fiche('b', { score: 51, prix: prixDe(2_450) })])
+  eq(r.issue, 'budgets', 'Mercedes 41 490 € face à Clio 2 450 € : pas de recommandation')
+  eq(r.motif, 'Budgets trop différents pour comparer (écart de 39\u00a0040\u00a0€).', 'le motif donne l’écart en euros')
+  eq(ECART_BUDGET_MAX, 0.30, 'seuil : 30 %')
+  eq(recommander([fiche('a', { score: 80, prix: prixDe(10_000) }), fiche('b', { score: 60, gravite_max: 'majeure', prix: prixDe(13_000) })]).issue,
+    'recommande', '30 % tout juste : comparaison permise')
+  eq(recommander([fiche('a', { score: 80, prix: prixDe(10_000) }), fiche('b', { score: 60, gravite_max: 'majeure', prix: prixDe(13_001) })]).issue,
+    'budgets', 'au-delà de 30 % : refus')
+  eq(recommander([fiche('a', { score: 80, prix: prixDe(10_000), eliminatoire: 'verdict rouge' }), fiche('b', { prix: prixDe(20_000) }), fiche('c', { prix: prixDe(20_500) })]).issue,
+    'budgets', 'le garde-fou porte sur TOUS les dossiers comparés, éliminés compris')
+  const sansPrix = recommander([fiche('a', { score: 80 }), fiche('b', { score: 60, prix: prixDe(null) })])
+  eq(sansPrix.issue, 'indecis', 'un prix manquant : budget invérifiable, on ne tranche pas')
+  ok(sansPrix.manque.some((m) => /prix demandé/.test(m)), '… et le prix manquant est nommé')
+}
+
+// ── 4e critère : position du prix dans les comparables ─────────────────────
+{
+  const f = { p25: 9_000, mediane: 10_000, p75: 11_000 }
+  eq(percentilePrix(10_000, f), { min: 50, max: 50 }, 'à la médiane : 50e')
+  eq(percentilePrix(9_500, f), { min: 38, max: 38 }, 'entre P25 et médiane : interpolé')
+  eq(percentilePrix(8_000, f), { min: 0, max: 25 }, 'sous P25 : intervalle, pas un chiffre inventé')
+  eq(percentilePrix(12_000, f), { min: 75, max: 100 }, 'au-dessus de P75 : intervalle')
+  eq(percentilePrix(10_000, { ...f, mediane_reference: 10_500 }), { min: 38, max: 38 }, 'bornes décalées comme la médiane de référence (kilométrage)')
+  eq(percentilePrix(10_000, null), null, 'sans fourchette : rien')
+  eq(SEUIL_PERCENTILE, 10, 'seuil : 10 points')
+
+  // Score + position : recommandée.
+  const r = recommander([
+    fiche('a', { score: 70, prix: prixDe(10_000, { min: 30, max: 30 }) }),
+    fiche('b', { score: 62, prix: prixDe(10_500, { min: 45, max: 45 }) }),
+  ])
+  eq(r.issue, 'recommande', 'score + position du prix (15 points) : 2 critères gagnés')
+  ok(r.raisons.some((x) => x.critere === 'prix_position' && /30e percentile/.test(x.texte)), 'la raison de position est chiffrée')
+
+  // Écart non garanti : intervalle [0,25] contre 30 → 5 points au mieux, pas gagné.
+  eq(recommander([
+    fiche('a', { score: 70, prix: prixDe(10_000, { min: 0, max: 25 }) }),
+    fiche('b', { score: 62, prix: prixDe(10_500, { min: 30, max: 30 }) }),
+  ]).issue, 'indecis', 'écart de percentile non garanti par les intervalles : critère non gagné')
+
+  // Gagner 2 critères en PERDANT la position : pas de recommandation.
+  eq(recommander([
+    fiche('a', { score: 75, prix: prixDe(10_000, { min: 75, max: 100 }) }),
+    fiche('b', { score: 60, gravite_max: 'majeure', prix: prixDe(9_000, { min: 0, max: 25 }) }),
+  ]).issue, 'indecis', 'deux critères gagnés mais la position perdue : on ne tranche pas')
+
+  const m = recommander([fiche('a', { score: 63 }), fiche('b', { score: 60 })])
+  ok(m.manque.some((x) => /position du prix/.test(x)), 'position non évaluée : nommée dans ce qui manque')
 }
 // Déterminisme : même entrée, même sortie, 200 fois.
 {
