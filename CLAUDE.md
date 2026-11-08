@@ -2641,6 +2641,8 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 - Le verdict porte sur l'annonce et le modèle, jamais sur le vendeur en tant que personne
 - Aucun chiffre d'économies affiché
 - Accès public à la base UNIQUEMENT via RPC SECURITY DEFINER — aucune policy RLS anon directe
+- **Une panne n'est AFFIRMÉE que si une source indépendante la confirme** (officielle, de presse, ou éditoriale à éditeur identifiable). Un garage, un vendeur de pièces, un forum ou un agrégateur de forums ne porte rien : son revenu dépend de ce que le défaut soit réel et réparé. Le reste est **présenté comme une question à poser au vendeur**, affiché, sans effet sur la note. L'accueil énonce cette règle ; `/fiabilite` porte le chiffre
+- **Tout script shell porte `set -euo pipefail`**, et toute invocation qui enchaîne un test ou un déploiement derrière un pipe commence par `set -o pipefail` — sinon `| tail` rend 0 sur un échec (constaté le 8 nov. 2026 : un déploiement en production derrière un test en échec)
 
 ## Sécurité — OBLIGATIONS
 
