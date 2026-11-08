@@ -219,6 +219,34 @@ async function inviterAuxRetours(admin: any, bilan: { invitations_envoyees: numb
   }
 }
 
+
+/** Recompte les pannes portées par une source indépendante et écrit le
+ *  résultat dans `config`.
+ *
+ *  ⚠️ Extraite pour être appelable SEULE (tâche `pannes_portees`), sans
+ *  déclencher les sept autres passes du cron : celles-ci envoient des emails —
+ *  invitations au retour d'issue, alertes d'exploitation, avis d'expiration.
+ *  Recompter un chiffre d'affichage ne doit pas écrire à des gens. */
+async function recompterPannesPortees(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+): Promise<{ portees: number; total: number; fiches_a_terre: number; fiches_total: number }> {
+  const { data: fiches, error } = await admin.from("defect_sheets").select("pannes");
+  // ⚠️ Une lecture en échec n'écrit RIEN : écraser le chiffre publié par un
+  // zéro parce que la base n'a pas répondu afficherait « 0 panne portée », ce
+  // qui est faux et alarmant pour la mauvaise raison.
+  if (error) throw error;
+  const compte = compterPannesPortees(
+    (fiches ?? []) as unknown[],
+    entreesAtlasAPlat(defectAtlas),
+  );
+  await admin.from("config").upsert({
+    cle: "pannes_portees",
+    valeur: { ...compte, maj: new Date().toISOString().slice(0, 10) },
+  }, { onConflict: "cle" });
+  return compte;
+}
+
 serve(async (req: Request) => {
   if (!(await secretOk(req))) {
     return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
@@ -272,6 +300,26 @@ serve(async (req: Request) => {
           }),
       );
       return new Response(JSON.stringify({ tache: "test", alerte, bilan }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Recompter SEULEMENT le chiffre public, sans envoyer un seul email.
+    // Utilisé après chaque lot de la campagne de re-sourcing : le chiffre
+    // bouge, et attendre le cron du lendemain pour le voir afficherait une
+    // mesure périmée sur une page qui dit « recalculé chaque jour ».
+    if (corps?.tache === "pannes_portees") {
+      const admin = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      );
+      const compte = await recompterPannesPortees(admin);
+      return new Response(JSON.stringify({ tache: "pannes_portees", ...compte }), {
+        // ⚠️ Pas de CORS ici, et ce n'est pas un oubli : `alertes` est une
+        // fonction de cron, appelée de serveur à serveur derrière
+        // CRON_PROXY_SECRET. Aucun navigateur ne l'appelle. J'avais recopié
+        // un `corsHeaders` d'`atlas-builder` — un nom qui n'existe pas dans ce
+        // fichier, donc un ReferenceError sur ce seul chemin.
         headers: { "Content-Type": "application/json" },
       });
     }
@@ -559,17 +607,7 @@ serve(async (req: Request) => {
     // d'hôtes : deux chiffres qui divergent, dont un public qui cesserait de
     // décrire la règle réellement appliquée au score.
     try {
-      const { data: fiches } = await admin
-        .from("defect_sheets")
-        .select("pannes");
-      const compte = compterPannesPortees(
-        (fiches ?? []) as unknown[],
-        entreesAtlasAPlat(defectAtlas),
-      );
-      await admin.from("config").upsert({
-        cle: "pannes_portees",
-        valeur: { ...compte, maj: new Date().toISOString().slice(0, 10) },
-      }, { onConflict: "cle" });
+      const compte = await recompterPannesPortees(admin);
       bilan.pannes_portees = compte.portees;
       bilan.pannes_total = compte.total;
     } catch (e) {

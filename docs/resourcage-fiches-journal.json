@@ -1045,5 +1045,144 @@
   "cout_eur": 0.1966,
   "motif": "aucune page proposée par la recherche",
   "erreur": null
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "annees": "2004-2023",
+  "titre": "Défaillance / fuite des injecteurs",
+  "symptomes": "Forte odeur de gazole dans l'habitacle, moteur qui tourne de façon irrégulière (\"sur 3 cylindres\"), perte de puissance ; plusieurs injecteurs peuvent lâcher successivement.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://forums.motorlegend.com/forum/voiture-allemande/forum-mini-nouvelle/49604-fiabilit%C3%A9-1-6-hdi-dv6-psa",
+    "rang": "forum"
+   },
+   {
+    "url": "https://forum-auto.caradisiac.com/topic/80931-fiabilit%C3%A9-16-hdi-112ch/",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1863,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "annees": "2004-2023",
+  "titre": "Usure prématurée du volant moteur bi-masse",
+  "symptomes": "Bruit métallique au ralenti ou à l'accélération, vibrations à l'embrayage, signalé comme point de fragilité connu du bloc DV6.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://forums.motorlegend.com/forum/voiture-allemande/forum-mini-nouvelle/49604-fiabilit%C3%A9-1-6-hdi-dv6-psa",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1835,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "annees": "2004-2023",
+  "titre": "Dégradation de la courroie de distribution (moteur à interférence)",
+  "symptomes": "Bruit caractéristique au niveau des courroies, point dur possible lors du remontage/réglage de la distribution ; le DV6 est un moteur à interférence : si la courroie casse ou saute, les pistons heurtent les soupapes et la casse moteur suit. Si elle n'est pas remplacée à l'échéance : risque de casse moteur.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://chaine-courroie.com/moteurs/psa/psa-dv6-1-6-hdi-caracteristiques-fiabilite-entretien",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://forum-auto.caradisiac.com/topic/559715-point-dur-distribution-16-hdi-dv6ted4-9hz/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.odopass.fr/blog/programme-entretien-peugeot-207-carnet-programme-guide-complet",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1739,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "annees": "2004-2023",
+  "titre": "Rappel - risque d'arrêt moteur (boîtier d'injection carburant / durites)",
+  "symptomes": "Rappel décrit par le réseau Peugeot comme \"major engine recall\" / \"safety recall\" : selon le concessionnaire, le défaut concerné pouvait, dans le pire des cas, arrêter le moteur en fonctionnement et nécessiter un remplacement moteur ; véhicules immobilisés/mis en quarantaine avant livraison dans l'attente du correctif.",
+  "gravite": "securite",
+  "sources_actuelles": [
+   {
+    "url": "https://www.peugeotforums.com/threads/dv6-major-engine-recall.302265/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.peugeotforums.com/threads/total-recall.308009/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://www.peugeotforums.com/threads/recall-to-check-engine-components.328406/",
+    "rang": "forum"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1976,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DW12",
+  "fiche_id": "c58ac4a6-eea9-4e40-a830-346344050cc5",
+  "marque": "Peugeot",
+  "famille": "DW12",
+  "annees": "2000",
+  "titre": "Usure et rupture de la chaîne de distribution interne (entre arbres à cames)",
+  "symptomes": "Bruits métalliques, ratés moteur ; sur les toutes premières productions la chaîne entre arbres à cames s'est parfois rompue, avec désynchronisation de la distribution. Les pignons d'arbre à cames peuvent aussi tourner lors d'un démarrage poussé ou par grand froid. Si la chaîne n'est pas contrôlée/remplacée à temps : risque de casse moteur par désynchronisation.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/moteur-peugeot-citroen-2-2-hdi-dw12/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://docteurmoteurs.com/moteur-citroen-peugeot-dw12ted4-dw12ated4-2-2-hdi/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.189,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
  }
 ]

@@ -1,0 +1,188 @@
+{
+ "date": "2026-11-08",
+ "fiches_visees": 20,
+ "pannes_visees": 105,
+ "pannes_jouees": 37,
+ "pannes_jouees_ce_run": 20,
+ "pannes_non_jouees": 68,
+ "pannes_portees": 4,
+ "fiches_sauvees": [
+  "Peugeot EB2DT",
+  "BMW N47",
+  "Toyota 2ZR-FXE",
+  "Peugeot EB2ADTS"
+ ],
+ "cout_eur": 3.484,
+ "mur": null,
+ "lot_jouees": 20,
+ "lot_portees": 1,
+ "lot_rendement": 0.05,
+ "fin_de_lot": true,
+ "retirees": [
+  {
+   "fiche": "Peugeot EB2DT",
+   "titre": "Courroie de distribution humide : dégradation prématurée et risque de casse",
+   "motif": "rang_non_portant ×3, non_soutenue ×1"
+  },
+  {
+   "fiche": "Peugeot EB2DT",
+   "titre": "Encrassement de la crépine d'huile par débris de courroie et baisse de pression d'huile",
+   "motif": "non_soutenue ×1"
+  },
+  {
+   "fiche": "Peugeot EB2DT",
+   "titre": "Encrassement des soupapes d'admission (dépôts de calamine)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EB2DTS",
+   "titre": "Courroie de distribution « humide » : dégradation, contamination du circuit d'huile et risque de casse moteur",
+   "motif": "rang_non_portant ×1, non_soutenue ×3"
+  },
+  {
+   "fiche": "Peugeot EB2DTS",
+   "titre": "Surconsommation d'huile moteur",
+   "motif": "rang_non_portant ×1, non_soutenue ×2"
+  },
+  {
+   "fiche": "Renault H4D",
+   "titre": "Fuite au boîtier d'eau / circuit de refroidissement",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Pompe à eau interruptible défaillante (vanne N489 / bague de coulissement grippée)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Problèmes d'actionneur du turbo à géométrie variable",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "BMW N47",
+   "titre": "Encrassement de la vanne EGR",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "BMW N47",
+   "titre": "Colmatage du filtre à particules (FAP)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Toyota 2ZR-FXE",
+   "titre": "Défaillance du joint de culasse à fort kilométrage (Prius Gen3)",
+   "motif": "rang_non_portant ×1, non_soutenue ×1"
+  },
+  {
+   "fiche": "Peugeot EB2DTS",
+   "titre": "Encrassement des soupapes d'admission (dépôts de calamine)",
+   "motif": "rang_non_portant ×1, mauvais_moteur ×1"
+  },
+  {
+   "fiche": "Peugeot EB2DTS",
+   "titre": "Jeu axial du vilebrequin (premiers moteurs turbo)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EB2F",
+   "titre": "Dégradation de la courroie de distribution en bain d'huile (Belt in Oil)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EB2F",
+   "titre": "Surconsommation d'huile moteur (usure des segments)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EB2F",
+   "titre": "Capteurs défaillants (sonde lambda, capteur de cliquetis)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EB2ADTS",
+   "titre": "Défaut canister / circuit de mise à l'air du réservoir carburant entraînant à-coups moteur",
+   "motif": "non_soutenue ×1"
+  },
+  {
+   "fiche": "Peugeot EB2ADTS",
+   "titre": "Usure prématurée des bougies d'allumage / ratés moteur associés",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EB2ADTS",
+   "titre": "Sur-remplissage du carter d'huile constaté après vidange en réseau Peugeot",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EP6",
+   "titre": "Allongement puis casse de la chaîne de distribution",
+   "motif": "mauvais_moteur ×1"
+  },
+  {
+   "fiche": "Peugeot EP6",
+   "titre": "Consommation d'huile excessive",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EP6",
+   "titre": "Encrassement des soupapes d'admission (calamine)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EP6",
+   "titre": "Défaillance de la pompe haute pression (HPFP)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EP6",
+   "titre": "Turbo à géométrie variable grippé/encrassé",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot EP6",
+   "titre": "Fuite de pompe à eau / boîtier d'eau",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "titre": "Rappel logiciel calculateur moteur - campagne JMK (recalibration émissions NOx)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "titre": "Crépine d'huile de turbo bouchée / casse turbo par manque de lubrification",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "titre": "Fuite d'huile au niveau de la demi-culasse",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "titre": "Défaillance / fuite des injecteurs",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "titre": "Usure prématurée du volant moteur bi-masse",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "titre": "Dégradation de la courroie de distribution (moteur à interférence)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "titre": "Rappel - risque d'arrêt moteur (boîtier d'injection carburant / durites)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DW12",
+   "titre": "Usure et rupture de la chaîne de distribution interne (entre arbres à cames)",
+   "motif": "aucune page proposée par la recherche"
+  }
+ ]
+}
