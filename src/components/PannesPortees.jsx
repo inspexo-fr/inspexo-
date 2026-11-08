@@ -42,18 +42,11 @@ export function tauxPortees(p) {
   return Math.round((Number(p.portees) / Number(p.total)) * 100)
 }
 
-/** Une phrase, pour l'accueil. */
-export function PhrasePannesPortees() {
-  const p = usePannesPortees()
-  if (!p) return null
-  return (
-    <>
-      {' '}
-      <strong>{p.portees}</strong> de nos <strong>{p.total}</strong> pannes
-      {' '}référencées sont portées par une source indépendante ({tauxPortees(p)} %).
-    </>
-  )
-}
+// ⚠️ `PhrasePannesPortees` (une phrase chiffrée pour l'accueil) a été
+// SUPPRIMÉE le 8 nov. 2026 : l'accueil énonce désormais la RÈGLE et renvoie
+// à /fiabilite pour le chiffre (décision d'Utku). Elle n'est pas conservée
+// « au cas où » — du code mort donne l'illusion d'une fonctionnalité, c'est
+// la raison pour laquelle `visio_disponible` a été retirée au sprint 20.1.
 
 /** Le bloc détaillé, pour /fiabilite. */
 export default function PannesPortees() {

@@ -7,7 +7,7 @@
 // violait : elle s'arrêtait quand le cumul avait déjà dépassé le budget, donc
 // le dernier cas démarrait sous le mur et le franchissait en finissant. Un run
 // annoncé à 0,40 € a coûté 0,447 €.
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync, unlinkSync } from 'node:fs'
 import { COUT_CAS_ESTIME_EUR, coutProchainCas, murAtteint } from '../scripts/budget.mjs'
 
 let ok_ = 0, ko = 0
@@ -139,6 +139,42 @@ console.log(`\n${ok_} contrôles passés, ${ko} échec(s).`)
   const fn = readFileSync('supabase/functions/atlas-builder/index.ts', 'utf8')
   ok(/cout_eur: Math\.round\(usd/.test(fn),
     'et atlas-builder rend bien `cout_eur` — le nom que le script lit')
+}
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// ⚠️ « | tail » NE DOIT PLUS JAMAIS MASQUER UN CODE DE SORTIE (8 nov. 2026)
+//
+// Dans un pipeline shell, le code de sortie est celui du DERNIER maillon. Donc
+// `node tests/x.mjs | tail -3` rend le code de `tail`, c'est-à-dire 0, même
+// quand le test a échoué. Le 8 nov. 2026, un `node tests/portee-fonctions.
+// test.mjs | tail -3 && npx supabase functions deploy …` a ainsi DÉPLOYÉ EN
+// PRODUCTION derrière un test en échec — la fonction `alertes` est partie avec
+// un identifiant inexistant.
+//
+// `set -o pipefail` fait rendre au pipeline le code du premier maillon en
+// échec. Tout script shell du dépôt doit le porter, et c'est ce que ce
+// contrôle exige — y compris des scripts qui n'existent pas encore.
+{
+  const shells = readdirSync('scripts')
+    .filter((f) => f.endsWith('.sh'))
+    .map((f) => `scripts/${f}`)
+  ok(shells.length > 0, 'au moins un script shell est surveillé (sinon ce test serait vide)')
+  for (const f of shells) {
+    const tete = readFileSync(f, 'utf8').split('\n').slice(0, 20).join('\n')
+    ok(/set -[a-z]*o?\s*pipefail|set -o pipefail/.test(tete),
+      `${f} porte « set -o pipefail » dans ses 20 premières lignes`)
+  }
+
+  // Contre-épreuve : un script sans la ligne doit faire échouer le contrôle.
+  const temoin = 'scripts/__temoin_pipefail.sh'
+  writeFileSync(temoin, '#!/usr/bin/env bash\nset -eu\necho bonjour\n')
+  let vu
+  try {
+    const tete = readFileSync(temoin, 'utf8').split('\n').slice(0, 20).join('\n')
+    vu = /set -[a-z]*o?\s*pipefail|set -o pipefail/.test(tete)
+  } finally { unlinkSync(temoin) }
+  ok(vu === false, 'le test MORD : un script shell sans pipefail est détecté')
 }
 
 // ⚠️ LA PORTE DE SORTIE EST LA DERNIÈRE INSTRUCTION DU FICHIER, ET ELLE EST

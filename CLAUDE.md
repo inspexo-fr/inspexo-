@@ -2496,8 +2496,23 @@ dépensent** (TS2448/TS2454), avec la contre-épreuve du défaut réel du 8 nov.
   `process`, `console`, `fetch` — tous les globaux de Node. *Un test qui crie
   à tort finit désactivé.*
 
-### Le chiffre public — `/fiabilite` et accueil
-**54 / 231 (23 %)**, « publié tel quel » (décision d'Utku). Lu en base, clé
+### Le chiffre public — `/fiabilite` porte le chiffre, l'accueil énonce la règle
+⚠️ **Décision d'Utku du 8 nov. 2026** : l'accueil ne porte plus de nombre, mais
+la **règle** — « Une panne n'est affirmée que si une source indépendante la
+confirme (constructeur, rappel, presse). Les autres signalements vous sont
+présentés comme des questions à poser au vendeur. » — avec un lien vers
+`/fiabilite`, qui garde le chiffre détaillé.
+- Cette phrase **ne décrit pas un état** : elle décrit ce que le code fait à
+  chaque analyse. Elle ne peut donc pas vieillir en silence, contrairement au
+  « publié dès 50 dossiers relus » du sprint 3 — rien à lire en base ici.
+- Et elle dit mieux la chose : un nombre sur l'accueil se lit « 54 pannes
+  seulement », là où ce qui compte est « **aucune panne affirmée sans
+  preuve** ».
+- `PhrasePannesPortees` a été **supprimée**, pas gardée « au cas où » : du code
+  mort donne l'illusion d'une fonctionnalité (leçon de `visio_disponible`,
+  sprint 20.1).
+
+**54 / 231 (23 %)** sur `/fiabilite`, « publié tel quel » (décision d'Utku). Lu en base, clé
 publique `pannes_portees`, **recalculé chaque jour** par la passe 8 du cron
 `alertes` ; tâche dédiée `{"tache":"pannes_portees"}` pour le recompter **sans
 envoyer un seul email**.
@@ -2551,6 +2566,43 @@ panne absente du corps est une panne qu'on ne touche pas.
 - Le minifieur CRA **échappe les accents** (`ind\xe9pendante`) : chercher une
   chaîne accentuée dans `build/static/js/*.js` ne trouve rien. Mon grep était
   faux, pas le build.
+
+## ⚠️ `set -o pipefail` — RÈGLE D'OUTILLAGE (8 nov. 2026)
+
+**Dans un pipeline shell, le code de sortie est celui du DERNIER maillon.**
+`node tests/x.mjs | tail -3` rend donc le code de `tail`, c'est-à-dire **0**,
+même quand le test a échoué.
+
+Le 8 novembre 2026, cette seule ligne a **déployé en production derrière un
+test en échec** :
+
+```sh
+node tests/portee-fonctions.test.mjs | tail -3 && npx supabase functions deploy alertes …
+```
+
+Le test sortait en 1, `tail` en 0, le `&&` a laissé passer, et `alertes` est
+partie avec un identifiant inexistant (`corsHeaders`, recopié d'une autre
+fonction). Seul le nouveau chemin était touché et le cron quotidien n'a jamais
+été cassé — mais c'est de la chance, pas un garde-fou.
+
+**Donc, sans exception :**
+- **Tout script shell du dépôt porte `set -euo pipefail`** dans son en-tête.
+  `tests/budget-eval.test.mjs` l'exige, avec sa contre-épreuve, et le contrôle
+  balaie `scripts/*.sh` — il mordra sur un script qui n'existe pas encore.
+- **Toute invocation Bash qui enchaîne un test, un build ou un déploiement
+  derrière un pipe commence par `set -o pipefail;`.** Un `| tail`, un `| grep`
+  ou un `| head` placé devant un `&&` sans cela est un faux signal, pas un
+  filtre d'affichage.
+- Quand le code de sortie compte vraiment, **rediriger dans un fichier puis
+  relire** (`cmd > log 2>&1; echo $?; tail log`) vaut mieux qu'un pipeline :
+  on ne peut pas se tromper sur l'origine du code.
+- ⚠️ `${PIPESTATUS[0]}` existe, mais il se lit **après** la commande et se
+  perd au premier `echo` intermédiaire. Il a déjà rendu une valeur vide dans ce
+  projet. `pipefail` ne demande pas de s'en souvenir au bon moment.
+
+C'est la même famille de défaut que les **cinq** `process.exit(1)` placés avant
+les blocs qu'ils devaient protéger : **un contrôle qui n'échoue pas
+bruyamment ne contrôle rien.**
 
 ## Marques Couvertes
 

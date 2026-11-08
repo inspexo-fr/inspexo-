@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { PhrasePannesPortees } from '../components/PannesPortees'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
@@ -38,10 +37,6 @@ function EtatFiabilite() {
   return (
     <Link to="/fiabilite">
       {methode}{suite ? ` ${suite}` : ''}
-      {/* ⚠️ Lu en base comme le reste de cette ligne. Publié tel quel,
-          décision d'Utku du 6 nov. 2026 : le chiffre est bas, et c'est
-          précisément pourquoi il doit être visible. */}
-      <PhrasePannesPortees />
     </Link>
   )
 }
@@ -189,7 +184,25 @@ export default function HomePage() {
               <div className="proof"><div className="k">2 <small>LECTURES</small></div><p>Une première écrit le dossier. Une seconde le relit contre l'annonce et les sources, et retire ce qui ne tient pas. Le compte des retraits est affiché.</p></div>
               <div className="proof"><div className="k">0 <small>CHIFFRE INVENTÉ</small></div><p>Pas de « juste prix » sans assez d'annonces comparables. Pas de coût de réparation sans source. On écrit « non évalué » plutôt qu'un nombre.</p></div>
             </div>
-            <p style={{ marginTop: 28 }}><EtatFiabilite /></p>
+            {/* ⚠️ L'ACCUEIL ÉNONCE LA RÈGLE ; /fiabilite PORTE LE CHIFFRE.
+                Décision d'Utku du 8 nov. 2026.
+
+                Cette phrase ne décrit PAS un état, elle décrit ce que le code
+                fait à chaque analyse — donc elle ne peut pas vieillir en
+                silence, contrairement au « publié dès 50 dossiers relus » du
+                sprint 3. Rien à lire en base ici : la règle est appliquée par
+                `pannesApplicables` et le barème, et c'est le chiffre détaillé,
+                lui, qui se mesure et se publie sur /fiabilite. Mettre un
+                nombre sur l'accueil aurait donné à lire « 54 pannes
+                seulement » là où ce qui compte est « aucune panne affirmée
+                sans preuve ». */}
+            <p style={{ marginTop: 28, fontSize: 15, lineHeight: 1.65 }}>
+              Une panne n'est affirmée que si une source indépendante la confirme
+              (constructeur, rappel, presse). Les autres signalements vous sont
+              présentés comme des questions à poser au vendeur.{' '}
+              <Link to="/fiabilite">Voir le détail et nos chiffres.</Link>
+            </p>
+            <p style={{ marginTop: 14 }}><EtatFiabilite /></p>
           </div>
         </section>
 
