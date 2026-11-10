@@ -105,6 +105,8 @@ function verdictsParIndex(r: ReponseJuge, n: number): Vote[] | null {
   for (let i = 0; i < n; i++) {
     // deno-lint-ignore no-explicit-any
     const v = (r.verdicts ?? []).find((x: any) => Number(x?.index) === i + 1);
+    // Le silence ne vaut pas accord : une affirmation non notée n'est jamais
+    // soutenue — et, depuis le 10 nov. 2026, elle n'est pas non plus un vote.
     out.push(v && (VERDICTS_VALIDES as readonly string[]).includes(v.verdict)
       ? { verdict: v.verdict, justification: typeof v.justification === "string" ? v.justification.slice(0, 600) : null }
       : { verdict: "non_soutenue", justification: "Aucun verdict rendu pour cette affirmation.", absent: true });
