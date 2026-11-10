@@ -184,8 +184,6 @@ export function messageVerification(
 // la lecture standard (`texteDeLaPage`) : on ne centre que sur une preuve
 // effectivement localisée.
 
-export const DEMI_FENETRE = 3_000;
-const MARQUE_SECTION = "§§";
 
 /** Texte d'une page avec son titre et des marqueurs de section (h1–h3). */
 export async function pageStructuree(url: string): Promise<{ titre: string | null; texte: string } | null> {

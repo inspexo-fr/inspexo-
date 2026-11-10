@@ -58,6 +58,10 @@ const CODES = new Set([
   // `texteCentre` : l'ancienne ligne d'import était restée.
   2300, // Duplicate identifier 'x'
   2451, // Cannot redeclare block-scoped variable 'x'
+  // Même jour, second défaut du même déplacement : `DEMI_FENETRE` exporté DEUX
+  // fois (constante + ré-export). Deno : « Duplicate export », BOOT_ERROR.
+  2323, // Cannot redeclare exported variable 'x'
+  2484, // Export declaration conflicts with exported declaration of 'x'
 ])
 
 const DIR = new URL('../supabase/functions/', import.meta.url).pathname
@@ -117,6 +121,12 @@ ok(defauts.length === 0, 'aucun identifiant hors de portée',
     const d = nonResolus([temoin])
     ok(d.some((x) => x.nom === 'b'), 'un import posé deux fois est détecté (BOOT_ERROR du 10 nov. 2026)')
   } finally { rmSync(temoin, { force: true }) }
+  const temoin2 = join(DIR, '_shared', '__temoin_double_export.ts')
+  writeFileSync(temoin2, ['export { A } from "./x.ts";', 'export const A = 1;'].join('\n'))
+  try {
+    const d = nonResolus([temoin2])
+    ok(d.some((x) => x.nom === 'A'), 'un nom exporté deux fois est détecté (« Duplicate export », même jour)')
+  } finally { rmSync(temoin2, { force: true }) }
 }
 
 // ── Le test MORD-IL ? ──────────────────────────────────────────────────────
