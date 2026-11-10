@@ -111,6 +111,50 @@ serve(async (req: Request) => {
       })) });
     }
 
+    // ── SPRINT 23 — SILENCES DU JUGE FIGÉS À TORT (décision d'Utku du
+    // 10 nov. 2026). Deux temps, jamais un seul :
+    //   « silences »        : COMPTAGE À BLANC, lecture seule — lignes ciblées,
+    //                         dates, fonction d'origine ; plus les lignes de
+    //                         `verifications` (/fiabilite) touchées.
+    //   « purger_silences » : supprime EXACTEMENT les clés fournies, et
+    //                         seulement si leur justification est bien celle
+    //                         du silence. Rien d'autre dans verif_cache.
+    // Réservés au SECRET D'ÉVAL (pas au jeton admin seul).
+    if (body?.mode === "silences" || body?.mode === "purger_silences") {
+      if (!(await evalSecretMatches(req))) return json({ error: "secret_eval_requis" }, 403);
+      const SILENCE = "Aucun verdict rendu pour cette affirmation.";
+      if (body.mode === "silences") {
+        const { data: lignes, error } = await admin
+          .from("verif_cache").select("cle, url, moteur, juge_le, votes, verdict").eq("justification", SILENCE).limit(5000);
+        if (error) return json({ error: error.message }, 500);
+        // Origine, d'après la forme de la clé moteur : le fichier de sources
+        // emploie des clés « MARQUE-MOTEUR » en capitales ; atlas-builder une
+        // cible « Marque CODE années » ; verification une famille moteur seule.
+        // deno-lint-ignore no-explicit-any
+        const origine = (m: string) => /^[A-Z0-9][A-Z0-9.\-]+$/.test(m) && m.includes("-") ? "sources-externes"
+          : /\s(19|20)\d{2}/.test(m) ? "atlas-builder ou plans" : "verification";
+        // deno-lint-ignore no-explicit-any
+        const rows = ((lignes ?? []) as any[]).map((r) => ({ cle: r.cle, url: r.url, moteur: r.moteur, juge_le: r.juge_le, origine: origine(String(r.moteur ?? "")) }));
+        const { data: verifs } = await admin
+          .from("verifications").select("analysis_id, created_at, verdict, analyses!inner(is_eval)").eq("justification", SILENCE).limit(5000);
+        // deno-lint-ignore no-explicit-any
+        const v = (verifs ?? []) as any[];
+        const reelles = v.filter((x) => x.analyses?.is_eval === false);
+        return json({
+          verif_cache: { lignes: rows.length, par_origine: rows.reduce((o: Record<string, number>, r) => (o[r.origine] = (o[r.origine] ?? 0) + 1, o), {}),
+            premiere: rows.map((r) => r.juge_le).sort()[0] ?? null, derniere: rows.map((r) => r.juge_le).sort().at(-1) ?? null, cles: rows },
+          verifications: { lignes: v.length, sur_analyses_reelles: reelles.length,
+            analyses_reelles_touchees: new Set(reelles.map((x) => x.analysis_id)).size },
+        });
+      }
+      const cles = (Array.isArray(body.cles) ? body.cles : []).filter((c: unknown) => typeof c === "string" && /^[0-9a-f]{64}$/.test(c as string));
+      if (cles.length === 0) return json({ error: "cles_requises" }, 400);
+      const { data: supprimees, error } = await admin
+        .from("verif_cache").delete().in("cle", cles).eq("justification", SILENCE).select("cle");
+      if (error) return json({ error: error.message }, 500);
+      return json({ demandees: cles.length, supprimees: (supprimees ?? []).length });
+    }
+
     if (body?.mode === "precontrole") {
       const pages = (Array.isArray(body.pages) ? body.pages : []).slice(0, 25)
         .filter((p: { url?: unknown }) => typeof p?.url === "string" && /^https?:\/\/\S{8,1000}$/i.test(p.url));

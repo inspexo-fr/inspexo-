@@ -67,3 +67,7 @@ captures-sprint22/
 # ANNULÉ — CRA suit le lien et refuse alors d'importer hors de src/
 # (« falls outside of the project src/ directory »). Seuls les caches Android
 # sont en .nosync (android/.gitignore).
+# ⚠️ node_modules est exclu d'iCloud par l'attribut étendu
+#    xattr -w 'com.apple.fileprovider.ignore#P' 1 node_modules
+# (macOS 26.6 : fileproviderctl evaluate → isExcludedFromSync = 1 ; l'attribut
+# survit à `npm ci`, vérifié le 10 nov. 2026). Le dossier garde son nom.
