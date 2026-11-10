@@ -171,7 +171,7 @@ if (ESTIMER && !a('--rejouer-non-soutenues') && !a('--candidats-externes')) {
 //     lecture, pas de source.
 //   - type=constat : jamais jugé comme une panne (exclu).
 if (a('--candidats-externes')) {
-  const { affirmationNoyau, detailsAffichables, extraireNoyau } =
+  const { affirmationNoyau, defautsNoyau, detailsAffichables, extraireNoyau } =
     await import(new URL('../supabase/functions/_shared/noyau.ts', import.meta.url))
   const SRC = JSON.parse(readFileSync('docs/sources-moteurs-2026-11.json', 'utf8'))
   const PRE = existsSync('docs/precontrole-sources.json') ? JSON.parse(readFileSync('docs/precontrole-sources.json', 'utf8')).pages : null
@@ -248,6 +248,18 @@ if (a('--candidats-externes')) {
     return pris
   }
 
+  // ⚠️ UN NOYAU SALE N'EST JAMAIS ENVOYÉ AU JUGE (décision d'Utku du 10 nov.
+  // 2026 : « relis les noyaux par script avant l'envoi »). Il est mis de côté,
+  // listé, et reste à jouer : on ne paie pas pour une phrase mal formée.
+  journal.noyaux_a_reprendre = journal.noyaux_a_reprendre ?? {}
+  for (let i = objets.length - 1; i >= 0; i--) {
+    const o = objets[i]
+    const d = defautsNoyau(extraireNoyau(o.intitule, o.type).noyau, o.intitule, o.type)
+    if (d.length) { journal.noyaux_a_reprendre[o.id] = d; objets.splice(i, 1) }
+    else delete journal.noyaux_a_reprendre[o.id]
+  }
+  console.log(`  ${Object.keys(journal.noyaux_a_reprendre).length} noyau(x) mis de côté (forme à reprendre), jamais envoyés`)
+
   for (let k = 0; k < NB_LOTS && objets.length; k++) {
     const lot = (k === 0 ? premierLot() : objets.splice(0, 20)).filter((o) => sourcesDe(o).length > 0)
     if (lot.length === 0) continue
@@ -280,7 +292,8 @@ if (a('--candidats-externes')) {
             const v = r.verdict ?? 'non_soutenue'
             if (v === 'mauvais_moteur') mauvaisMoteur++
             ;(v === 'soutenue' ? etat[o.id].confirmees : etat[o.id].ecartees)
-              .push({ url, verdict: v, classe: classeDe(url), lecture: r.lecture ?? null, cache: r.depuis_cache === true })
+              .push({ url, verdict: v, classe: classeDe(url), lecture: r.lecture ?? null, cache: r.depuis_cache === true,
+                justification: typeof r.justification === 'string' ? r.justification.slice(0, 400) : null })
           }
         }
         if (arretLot) break

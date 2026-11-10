@@ -9,7 +9,7 @@ ok(n('Rappel décembre 2015 (Twingo III EDC) : 944 modèles concernés — calcu
 ok(!/2015|944/.test(n('Rappel décembre 2015 (Twingo III EDC) : 944 modèles concernés — calculateur').noyau), 'ni date ni volume dans le noyau')
 ok(n('Turbo : réparation 2 500 € en moyenne').details.some((d) => /2 500 €/.test(d)), 'coût retiré')
 ok(/110-120 km\/h/.test(n('Bimasse : vibrations à 110-120 km/h').noyau), '« km/h » est une vitesse : conservé')
-ok(n('Rupture parfois avant 50 000 km').details.some((d) => /50 000 km/.test(d)), 'un kilométrage de panne est un détail')
+ok(n('Rupture parfois avant 50 000 km').noyau.includes('50 000 km'), 'un kilométrage RESTE dans le noyau : seuls dates, périodes, volumes et coûts sortent (décision du 10 nov. 2026)')
 {
   const e = n('Distribution par courroie : remplacement périodique — 160 000 km ou 6 ans (ADAC) ; 150 000 km ou 5 ans (Caradisiac)', 'entretien')
   ok(e.noyau === 'Distribution par courroie: remplacement périodique', 'entretien : le noyau est le type et l’opération')
