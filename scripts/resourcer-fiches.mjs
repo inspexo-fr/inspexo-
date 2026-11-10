@@ -171,36 +171,59 @@ if (ESTIMER && !a('--rejouer-non-soutenues') && !a('--candidats-externes')) {
 //     lecture, pas de source.
 //   - type=constat : jamais jugé comme une panne (exclu).
 if (a('--candidats-externes')) {
+  const { affirmationNoyau, detailsAffichables, extraireNoyau } =
+    await import(new URL('../supabase/functions/_shared/noyau.ts', import.meta.url))
   const SRC = JSON.parse(readFileSync('docs/sources-moteurs-2026-11.json', 'utf8'))
   const PRE = existsSync('docs/precontrole-sources.json') ? JSON.parse(readFileSync('docs/precontrole-sources.json', 'utf8')).pages : null
   if (!PRE) { console.error('Pré-contrôle absent : node scripts/precontrole-sources.mjs (gratuit) d’abord.'); process.exit(1) }
+  const CORR = existsSync('docs/correspondance-familles.json') ? JSON.parse(readFileSync('docs/correspondance-familles.json', 'utf8')) : { lignes: [] }
+  const codesDe = Object.fromEntries(CORR.lignes.map((l) => [l.cle, l.codes ?? []]))
   const JOURNAL_EXT = 'docs/candidats-externes-journal.json'
   const MUR_LOT = Number(flag('--mur-lot', '1.30')) || 1.3
-  const NB_LOTS = Number(flag('--lots', '3')) || 3
-  const GROUPES = String(flag('--groupes', 'A,B,H,C,E,D,F,G')).split(',')
+  const NB_LOTS = Number(flag('--lots', '1')) || 1
+  // Projection : on continue tant que (dépensé + projeté) ≤ ce plafond.
+  const PLAFOND_PROJETE = Number(flag('--plafond-projete', '30')) || 30
+  const DEJA_DEPENSE = Number(flag('--deja-depense', '0')) || 0
   const SEUIL_LOT = 0.5
   const RANG = { officiel: 0, presse: 1, consommateurs: 1, editorial: 2 }
+  const FORTE = new Set(['officiel', 'presse', 'consommateurs'])
   const classeDe = (u) => SRC.hotes[new URL(u).hostname.replace(/^www\./, '')]?.classe
   const joignable = (u) => PRE[u]?.joignable === true
 
+  // ⚠️ ORDRE RÉEL (décision d'Utku du 10 nov. 2026) : ces moteurs d'abord,
+  // puis le groupe H (modèles anciens), puis VAG, puis le reste.
+  const PRIORITE = ['K9K', 'EB2', 'DV6', 'DW10', 'H5FT', 'EP6', 'DV5']
+  const rangObjet = (o) => {
+    const codes = codesDe[o.famille] ?? []
+    const k = PRIORITE.findIndex((p) => codes.some((c) => c === p || c.startsWith(p)))
+    if (k >= 0) return k
+    if (o.groupe === 'H') return 100
+    if (o.groupe === 'C') return 200
+    return 300
+  }
+
   const journal = existsSync(JOURNAL_EXT) ? JSON.parse(readFileSync(JOURNAL_EXT, 'utf8')) : { lots: [], affirmations: {} }
-  const faites = new Set(Object.keys(journal.affirmations))
-  // Ordre : parc français en remontant les petits prix (décision d'Utku).
+  // Le pilote du 10 nov. a jugé l'INTITULÉ entier : ses verdicts ne valent pas
+  // pour le noyau. Seules les affirmations jugées en mode « noyau » comptent.
+  const faites = new Set(Object.entries(journal.affirmations).filter(([, v]) => v.mode === 'noyau').map(([k]) => k))
   const objets = SRC.objets
-    .filter((o) => o.type !== 'constat' && GROUPES.includes(o.groupe) && !faites.has(o.id))
-    .sort((x, y) => (GROUPES.indexOf(x.groupe) - GROUPES.indexOf(y.groupe)) || x.famille.localeCompare(y.famille) || x.id.localeCompare(y.id))
+    .filter((o) => o.type !== 'constat' && !faites.has(o.id))
+    .sort((x, y) => (rangObjet(x) - rangObjet(y)) || x.famille.localeCompare(y.famille) || x.id.localeCompare(y.id))
   const sourcesDe = (o) => [...(o.sources ?? [])]
     .filter((s) => joignable(s.url))
     .sort((x, y) => (RANG[classeDe(x.url)] ?? 9) - (RANG[classeDe(y.url)] ?? 9))
   const cibleDe = (o) => `${(o.marques ?? []).join('/')} ${o.libelle_moteur}${o.modeles_annees ? ` — ${o.modeles_annees}` : ''}`.slice(0, 200)
+  const extraitsVerbatim = (o, url) => (o.sources.find((s) => s.url === url)?.extraits ?? [])
+    .filter((e) => e?.verbatim === true && typeof e.texte === 'string').map((e) => e.texte)
+  const totalRestant = objets.filter((o) => sourcesDe(o).length > 0).length
 
-  let coutRun = 0
+  let coutRun = 0, affirmationsJouees = 0
   const appelJuge = async (url, groupe) => {
     const res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/sources-externes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ANON}`, 'x-eval-secret': EVAL_SECRET },
       body: JSON.stringify({ mode: 'juger', url, cible: cibleDe(groupe[0]), moteur: groupe[0].famille,
-        affirmations: groupe.map((o) => ({ id: o.id, texte: o.intitule })) }),
+        affirmations: groupe.map((o) => ({ id: o.id, texte: affirmationNoyau(o.intitule, o.type, o.libelle_moteur), extraits: extraitsVerbatim(o, url) })) }),
       signal: AbortSignal.timeout(150_000),
     })
     const j = await res.json().catch(() => null)
@@ -211,58 +234,84 @@ if (a('--candidats-externes')) {
     return j
   }
 
+  // --melange K9K,EB2 : le PREMIER lot puise à parts égales dans ces moteurs
+  // (pilote du 10 nov. 2026 : « un seul lot K9K + EB2 »).
+  const MELANGE = flag('--melange') ? String(flag('--melange')).split(',') : null
+  const premierLot = () => {
+    if (!MELANGE) return objets.splice(0, 20)
+    const part = Math.floor(20 / MELANGE.length)
+    const pris = []
+    for (const m of MELANGE) {
+      const candidats = objets.filter((o) => (codesDe[o.famille] ?? []).some((c) => c === m || c.startsWith(m)) && sourcesDe(o).length > 0).slice(0, part)
+      for (const o of candidats) { pris.push(o); objets.splice(objets.indexOf(o), 1) }
+    }
+    return pris
+  }
+
   for (let k = 0; k < NB_LOTS && objets.length; k++) {
-    const lot = objets.splice(0, 20)
-    const etat = Object.fromEntries(lot.map((o) => [o.id, { confirmees: [], ecartees: [], restantes: sourcesDe(o).map((s) => s.url) }]))
-    let coutLot = 0, appels = 0, arretLot = null
-    // Tours : à chaque tour, chaque affirmation non close propose sa prochaine
-    // page ; les pages sont regroupées, une page = un appel (≤ 12 affirmations).
-    for (let tour = 0; tour < 6; tour++) {
+    const lot = (k === 0 ? premierLot() : objets.splice(0, 20)).filter((o) => sourcesDe(o).length > 0)
+    if (lot.length === 0) continue
+    const etat = Object.fromEntries(lot.map((o) => [o.id, { confirmees: [], ecartees: [], restantes: sourcesDe(o).map((s) => s.url), close: false }]))
+    let coutLot = 0, appels = 0, arretLot = null, mauvaisMoteur = 0
+    // Une affirmation est CLOSE dès : une source forte confirmée ; ou deux
+    // éditoriales confirmées ; ou deux rejets ; ou plus de page.
+    const close = (e) => e.confirmees.some((c) => FORTE.has(c.classe)) || e.confirmees.length >= 2 ||
+      e.ecartees.length >= 2 || e.restantes.length === 0
+    for (let tour = 0; tour < 4; tour++) {
       const parPage = new Map()
       for (const o of lot) {
         const e = etat[o.id]
-        if (e.confirmees.length >= 2 || e.restantes.length === 0) continue
-        // Au 1er tour, les DEUX meilleures pages ; ensuite une à la fois.
-        const n = tour === 0 ? Math.min(2, e.restantes.length) : 1
-        for (const u of e.restantes.splice(0, n - (tour === 0 ? 0 : 0))) {
-          if (!parPage.has(u)) parPage.set(u, [])
-          parPage.get(u).push(o)
-        }
+        if (e.close || close(e)) { e.close = true; continue }
+        const u = e.restantes.shift() // UNE page par tour, la meilleure restante
+        if (!parPage.has(u)) parPage.set(u, [])
+        parPage.get(u).push(o)
       }
       if (parPage.size === 0) break
       for (const [url, groupe] of parPage) {
         for (let i = 0; i < groupe.length; i += 12) {
           const sous = groupe.slice(i, i + 12)
-          // Mur : réserve le coût moyen d'un appel déjà observé (0,063 € avant le premier).
           const reserve = appels ? coutLot / appels : 0.063
           if (coutLot + reserve > MUR_LOT) { arretLot = `mur du lot (${MUR_LOT.toFixed(2)} €)`; break }
           if (coutRun + reserve > BUDGET) { arretLot = `mur du run (${BUDGET.toFixed(2)} €)`; break }
           const j = await appelJuge(url, sous)
           appels++; coutLot += j.cout_eur; coutRun += j.cout_eur
           for (const o of sous) {
-            const v = j.verdicts?.[o.id]?.verdict ?? 'non_soutenue'
-            ;(v === 'soutenue' ? etat[o.id].confirmees : etat[o.id].ecartees).push({ url, verdict: v, classe: classeDe(url), cache: j.verdicts?.[o.id]?.depuis_cache === true })
+            const r = j.verdicts?.[o.id] ?? {}
+            const v = r.verdict ?? 'non_soutenue'
+            if (v === 'mauvais_moteur') mauvaisMoteur++
+            ;(v === 'soutenue' ? etat[o.id].confirmees : etat[o.id].ecartees)
+              .push({ url, verdict: v, classe: classeDe(url), lecture: r.lecture ?? null, cache: r.depuis_cache === true })
           }
         }
         if (arretLot) break
       }
       if (arretLot) break
     }
-    const confirmees1 = lot.filter((o) => etat[o.id].confirmees.length >= 1).length
-    const confirmees2 = lot.filter((o) => etat[o.id].confirmees.length >= 2).length
-    const taux = confirmees1 / lot.length
-    for (const o of lot) journal.affirmations[o.id] = { famille: o.famille, type: o.type, intitule: o.intitule, ...etat[o.id], restantes: undefined, lot: journal.lots.length + 1 }
-    journal.lots.push({ n: journal.lots.length + 1, affirmations: lot.length, confirmees_1: confirmees1, confirmees_2: confirmees2, appels, cout_eur: Number(coutLot.toFixed(4)), arret: arretLot, le: new Date().toISOString(),
-      familles: [...new Set(lot.map((o) => o.famille))] })
+    const confirmees = lot.filter((o) => etat[o.id].confirmees.length >= 1).length
+    const taux = confirmees / lot.length
+    affirmationsJouees += lot.length
+    for (const o of lot) {
+      const e = etat[o.id]
+      const { noyau, details } = extraireNoyau(o.intitule, o.type)
+      const extraitsConfirmes = e.confirmees.flatMap((c) => extraitsVerbatim(o, c.url))
+      journal.affirmations[o.id] = { mode: 'noyau', famille: o.famille, type: o.type, intitule: o.intitule, noyau,
+        details, details_affichables: detailsAffichables(details, extraitsConfirmes),
+        confirmees: e.confirmees, ecartees: e.ecartees, lot: journal.lots.length + 1 }
+    }
+    const coutParAff = coutLot / lot.length
+    journal.lots.push({ n: journal.lots.length + 1, mode: 'noyau', affirmations: lot.length, confirmees, mauvais_moteur: mauvaisMoteur,
+      appels, cout_eur: Number(coutLot.toFixed(4)), cout_par_affirmation: Number(coutParAff.toFixed(4)), arret: arretLot,
+      familles: [...new Set(lot.map((o) => o.famille))], le: new Date().toISOString() })
     writeFileSync(JOURNAL_EXT, JSON.stringify(journal, null, 1))
     writeFileSync(COMPTEUR, JSON.stringify({ eur: Number((cumulDepart() + coutLot).toFixed(4)), maj: new Date().toISOString() }))
+    const restant = totalRestant - affirmationsJouees
+    const projete = DEJA_DEPENSE + coutRun + restant * (coutRun / affirmationsJouees)
     console.log(`  lot ${journal.lots.length} · ${lot.length} affirmations (${[...new Set(lot.map((o) => o.famille))].join(', ')})`)
-    console.log(`    confirmées ≥1 : ${confirmees1} (${Math.round(taux * 100)} %) · ≥2 : ${confirmees2} · ${appels} appel(s) · ${coutLot.toFixed(3)} €${arretLot ? ` · ARRÊT : ${arretLot}` : ''}`)
-    // ⚠️ Le mur d'un LOT ferme ce lot, pas le run (défaut du pilote du
-    // 10 nov. 2026 : le run s'arrêtait au 2e lot avec 1,58 € encore
-    // disponibles). Seul le mur du RUN arrête tout.
+    console.log(`    confirmées ${confirmees} (${Math.round(taux * 100)} %) · mauvais moteur ${mauvaisMoteur} · ${appels} appel(s) · ${coutLot.toFixed(3)} € · ${coutParAff.toFixed(4)} €/affirmation`)
+    console.log(`    projection : ${projete.toFixed(2)} € cumulés pour les ${totalRestant} affirmations jugeables (plafond ${PLAFOND_PROJETE} €)${arretLot ? ` · ARRÊT : ${arretLot}` : ''}`)
     if (arretLot?.startsWith('mur du run')) { console.log('\n⏸ Mur du run atteint : le reste n’est pas joué.'); break }
-    if (taux < SEUIL_LOT) { console.log(`\n⏹ ARRÊT IMMÉDIAT : le lot confirme moins de ${SEUIL_LOT * 100} % (problème de lecture probable).`); break }
+    if (taux < SEUIL_LOT) { console.log(`\n⏹ ARRÊT IMMÉDIAT : le lot confirme moins de ${SEUIL_LOT * 100} %.`); break }
+    if (projete > PLAFOND_PROJETE) { console.log(`\n⏹ ARRÊT : la projection dépasse ${PLAFOND_PROJETE} € cumulés. Décision d’Utku requise.`); break }
   }
   console.log(`\n— Coût du run : ${coutRun.toFixed(3)} € / ${BUDGET.toFixed(2)} € · journal ${JOURNAL_EXT} · rien n’est écrit dans les fiches.`)
   process.exit(0)

@@ -25,7 +25,7 @@ Générée le 2026-11-10 par `scripts/correspondance-familles.mjs` · 44 fiches 
 | OPEL-1.4-TURBO | moteur | 14NET | 2009-2019 | **aucune** | 3 |
 | OPEL-1.6-CDTI | moteur | B16DTH | 2015-2015 | **aucune** | 2 |
 | OPEL-1.7-CDTI | moteur | A17DTS | 2008-2012 | **aucune** | 3 |
-| OPEL-CDTI-ASTRA-J | non_rattachee | — | 2009-2016 | **aucune** | 2 |
+| OPEL-CDTI-ASTRA-J | modele | — | 2009-2016 | **aucune** | 2 |
 | OPEL-M32 | boite | — | 2009-2017 | **aucune** | 1 |
 | PSA-AL4-DP0 | boite | — | 2007-2011 | **aucune** | 1 |
 | PSA-BMP6-ETG | boite | — | 2013-2017 | **aucune** | 2 |
@@ -56,7 +56,7 @@ Générée le 2026-11-10 par `scripts/correspondance-familles.mjs` · 44 fiches 
 | VAG-HALDEX-4MOTION | boite | — | 2014-2023 | **aucune** | 3 |
 | VAG-MULTITRONIC | boite | — | 2001-2016 | **aucune** | 2 |
 | VAG-STRONIC-DL501 | boite | — | 2007-2016 | **aucune** | 1 |
-| VAG-V6-3.0TDI | non_rattachee | — | 2004-2018 | **aucune** | 6 |
+| VAG-V6-3.0TDI | modele | — | 2004-2018 | **aucune** | 6 |
 | FORD-1.0-ECOBOOST | moteur | FOX | 2011-2024 | Ford FOX | 9 |
 | FORD-1.5-1.6-TDCI | moteur | DV6 | 2007-2019 | Peugeot DV6 | 5 |
 | FORD-1.5-ECOBOOST | moteur | DRAGON | 2012-2022 | Ford DRAGON | 3 |
@@ -66,7 +66,7 @@ Générée le 2026-11-10 par `scripts/correspondance-familles.mjs` · 44 fiches 
 | FORD-POWERSHIFT-DPS6 | boite | — | 2011-2019 | **aucune** | 1 |
 | HONDA-1.0-VTEC-TURBO-P10A2 | moteur | P10A2 | 2017-2022 | **aucune** | 1 |
 | HONDA-1.5-VTEC-TURBO-L15B7 | moteur | L15B7 | 2017-2024 | **aucune** | 2 |
-| HONDA-1.6-IDTEC-N16 | non_rattachee | — | 2015-2020 | **aucune** | 5 |
+| HONDA-1.6-IDTEC-N16 | moteur | N16A | 2015-2020 | **aucune** | 5 |
 | HONDA-1.8-IVTEC-R18 | moteur | R18 | 2006-2016 | **aucune** | 1 |
 | HONDA-2.2-ICTDI-IDTEC-N22 | moteur | N22 | 2006-2010 | **aucune** | 3 |
 | HONDA-CVT | boite | — | 2009-2022 | **aucune** | 1 |
@@ -214,6 +214,7 @@ Générée le 2026-11-10 par `scripts/correspondance-familles.mjs` · 44 fiches 
 | SMARTSTREAM | 7 | Hyundai, Kia | HYUNDAI-KIA-1.6-CRDI-U3-D4FE, HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM |
 | DV4 | 6 | Mazda, Peugeot, Citroën, Toyota | MAZDA-1.6-MZ-CD-DV6, PSA-DV4 |
 | D7F | 6 | Renault, Dacia | RENAULT-1.2-D7F-D4F |
+| N16A | 5 | Honda | HONDA-1.6-IDTEC-N16 |
 | K14C | 5 | Suzuki | SUZUKI-BOOSTERJET-DUALJET |
 | N20 | 5 | BMW | BMW-N20 |
 | D5244T | 5 | Volvo | VOLVO-D5244T |

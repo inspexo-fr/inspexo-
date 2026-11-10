@@ -125,6 +125,15 @@ const MARQUES_DU_CODE = {
   B37: /bmw|mini/i, B38: /bmw|mini/i, B47: /bmw|mini|toyota/i, B48: /bmw|mini|toyota/i,
   N16A: /honda/i, N22: /honda/i, R18: /honda/i,
 }
+// ⚠️ DÉCISIONS D'UTKU DU 10 NOV. 2026 sur les trois clés non rattachées :
+//   - Honda N16 : c'est le 1.6 i-DTEC (voir libelle_moteur) ; N16 est ambigu
+//     avec BMW, LA MARQUE TRANCHE → code canonique N16A pour Honda ;
+//   - Opel CDTI Astra J : fiche MODÈLE Astra J, pas une fiche moteur ;
+//   - VAG V6 3.0 TDI : jamais tranché par code ; rattaché par modèle et
+//     années, fiche modèle si la période chevauche.
+const CODE_SELON_MARQUE = (code, marques) => (code === 'N16' && /honda/i.test(marques) ? 'N16A' : code)
+const CLES_MODELE = { 'OPEL-CDTI-ASTRA-J': 'Opel Astra J', 'VAG-V6-3.0TDI': 'par modèle et années (V6 3.0 TDI)' }
+
 const codesDuTexte = (t) => {
   const n = ' ' + String(t ?? '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Z0-9]+/g, ' ') + ' '
   // Correspondance EXACTE ; un suffixe n'est admis que si le code finit par un
@@ -137,7 +146,8 @@ for (const f of Object.values(familles)) {
   const texte = `${f.cle} ${f.libelle}`
   const marques = [...f.marques].join(' ')
   const per = annees([...f.modeles].join(' ') + ' ' + f.libelle)
-  let codes = codesDuTexte(texte).filter((c) => !MARQUES_DU_CODE[c] || MARQUES_DU_CODE[c].test(marques))
+  let codes = codesDuTexte(texte).map((c) => CODE_SELON_MARQUE(c, marques))
+    .filter((c) => !MARQUES_DU_CODE[c] || MARQUES_DU_CODE[c].test(marques))
   const viaAlias = []
   for (const a of ALIAS) {
     if (!a.marques.test(marques + ' ' + f.cle)) continue
@@ -148,7 +158,9 @@ for (const f of Object.values(familles)) {
   codes = [...new Set([...codes, ...viaAlias.filter((c) => !c.startsWith('AMBIGU'))].map(canonique))]
   // Une ambiguïté de période ne compte pas quand la clé NOMME déjà son code.
   if (codesDuTexte(texte).length) viaAlias.splice(0, viaAlias.length, ...viaAlias.filter((c) => !c.startsWith('AMBIGU')))
-  const nature = ORGANE.test(texte) && codes.length === 0 ? 'organe'
+  if (CLES_MODELE[f.cle]) codes = []
+  const nature = CLES_MODELE[f.cle] ? 'modele'
+    : ORGANE.test(texte) && codes.length === 0 ? 'organe'
     : BOITE.test(texte) && codes.length === 0 ? 'boite'
     : codes.length ? 'moteur' : 'non_rattachee'
   // Fiches en base compatibles (même règle de préfixe que la recherche de fiche).

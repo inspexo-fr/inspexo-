@@ -87,3 +87,46 @@ export function controlerPage(url: string, texteComplet: string | null, extraits
   }
   return { url, joignable: true, longueur: texteComplet.length, extraits_verbatim: extraitsVerbatim.length, trouves, au_dela_du_juge: auDela };
 }
+
+// ── SPRINT 23 — fenêtre centrée sur l'extrait (voir verifSource.ts) ────────
+export const DEMI_FENETRE = 3_000;
+/** Marqueur posé autour des titres de section (h1–h3) à l'extraction. */
+export const MARQUE_SECTION = "\u00a7\u00a7";
+
+/** Le texte à soumettre au juge pour un groupe d'extraits localisés : une
+ *  fenêtre par extrait, fusionnées si elles se chevauchent, précédées du
+ *  titre de page et du titre de section. null si AUCUN extrait n'est retrouvé
+ *  (l'appelant retombe alors sur la lecture standard). */
+export function texteCentre(page: { titre: string | null; texte: string }, extraits: string[], maxCaracteres = 14_000): string | null {
+  // Même longueur en minuscules qu'en casse d'origine : la position trouvée
+  // dans la version normalisée vaut dans la version affichée.
+  const doux = page.texte.replace(/[‘’‚‛′´`]/g, "'")
+    .replace(/[“”„‟«»″]/g, '"').replace(/[‐-―−]/g, "-")
+    .replace(/[     ​]/g, " ");
+  const bas = doux.toLowerCase();
+  const plages: Array<[number, number, number]> = [];
+  for (const x of extraits) {
+    const n = normaliser(x).replace(/^\.\.\.|\.\.\.$/g, "").trim();
+    if (n.length < 12) continue;
+    const p = bas.indexOf(n);
+    if (p < 0) continue;
+    plages.push([Math.max(0, p - DEMI_FENETRE), Math.min(doux.length, p + n.length + DEMI_FENETRE), p]);
+  }
+  if (plages.length === 0) return null;
+  plages.sort((a, b) => a[0] - b[0]);
+  const fusion: Array<[number, number, number]> = [];
+  for (const pl of plages) {
+    const der = fusion[fusion.length - 1];
+    if (der && pl[0] <= der[1]) der[1] = Math.max(der[1], pl[1]); else fusion.push([...pl]);
+  }
+  // Le titre de section est le dernier AVANT L'EXTRAIT (pas avant le début
+  // de la fenêtre : il est souvent dans la fenêtre elle-même).
+  const blocs = fusion.map(([a, b, p]) => {
+    const avant = doux.lastIndexOf(MARQUE_SECTION, p);
+    const debutTitre = avant > 0 ? doux.lastIndexOf(MARQUE_SECTION, avant - 1) : -1;
+    const section = debutTitre >= 0 ? doux.slice(debutTitre + MARQUE_SECTION.length, avant).trim() : "";
+    const corps = doux.slice(a, b).replaceAll(MARQUE_SECTION, " ").replace(/\s+/g, " ").trim();
+    return `${section ? `[Section : ${section.slice(0, 160)}]\n` : ""}${a > 0 ? "[…] " : ""}${corps}${b < doux.length ? " […]" : ""}`;
+  });
+  return `${page.titre ? `[Titre de la page : ${page.titre}]\n` : ""}${blocs.join("\n\n")}`.slice(0, maxCaracteres);
+}

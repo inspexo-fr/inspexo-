@@ -24,7 +24,9 @@ import {
   lireCacheVerif,
   MAX_TEXTE_SOURCE,
   messageVerification,
+  pageStructuree,
   type ReponseJuge,
+  texteCentre,
   texteDeLaPage,
   texteDeLaPageComplet,
   VERIF_SYSTEM,
@@ -121,13 +123,18 @@ serve(async (req: Request) => {
       const cible = String(body.cible ?? "").slice(0, 200);
       const moteurCle = String(body.moteur ?? cible).slice(0, 120);
       const affs = (Array.isArray(body.affirmations) ? body.affirmations : []).slice(0, 12)
-        .map((a: { id?: unknown; texte?: unknown }) => ({ id: String(a?.id ?? ""), texte: String(a?.texte ?? "").slice(0, 400) }))
+        .map((a: { id?: unknown; texte?: unknown; extraits?: unknown }) => ({
+          id: String(a?.id ?? ""), texte: String(a?.texte ?? "").slice(0, 400),
+          // Extraits VERBATIM de cette affirmation sur cette page : ils servent
+          // à centrer la fenêtre. Absents ⇒ lecture standard.
+          extraits: (Array.isArray(a?.extraits) ? a.extraits : []).filter((x): x is string => typeof x === "string").slice(0, 6),
+        }))
         .filter((a: { id: string; texte: string }) => a.id && a.texte);
       if (!/^https?:\/\//i.test(url) || !cible || affs.length === 0) return json({ error: "invalid_input" }, 400);
 
       const cles = await Promise.all(affs.map((a: { texte: string }) => cleVerif(url, a.texte, moteurCle)));
       const enCache = await lireCacheVerif(admin, cles);
-      const verdicts: Record<string, { verdict: string; justification: string | null; depuis_cache: boolean; votes?: string[] }> = {};
+      const verdicts: Record<string, { verdict: string; justification: string | null; depuis_cache: boolean; votes?: string[]; lecture?: string }> = {};
       const aJuger: number[] = [];
       affs.forEach((a: { id: string }, i: number) => {
         const c = enCache.get(cles[i]);
@@ -135,25 +142,43 @@ serve(async (req: Request) => {
         else aJuger.push(i);
       });
       let usd = 0, passages = 0, lisible = true;
+      const juger = async (indices: number[], texte: string, lecture: string) => {
+        const v = await voter((sous) => unPassage(cible, sous, url, texte), indices.map((i) => ({ type: "panne", texte: affs[i].texte })));
+        passages += v.passages;
+        for (const u of v.usages) {
+          usd += u.input_tokens * 3e-6 + u.output_tokens * 15e-6 +
+            (u.cache_read_input_tokens ?? 0) * 0.3e-6 + (u.cache_creation_input_tokens ?? 0) * 3.75e-6;
+        }
+        const aEcrire: Parameters<typeof ecrireCacheVerif>[1] = [];
+        indices.forEach((i, k) => {
+          const r = v.resultats[k];
+          verdicts[affs[i].id] = { verdict: r.verdict, justification: r.justification, depuis_cache: false, votes: r.votes, lecture };
+          if (r.fiable) aEcrire.push({ cle: cles[i], url, affirmation: affs[i].texte, moteur: moteurCle, verdict: r.verdict, justification: r.justification, votes: r.votes, modele: r.modele });
+        });
+        await ecrireCacheVerif(admin, aEcrire);
+      };
       if (aJuger.length) {
-        const texte = await texteDeLaPage(url);
-        if (!texte) {
-          lisible = false;
-          for (const i of aJuger) verdicts[affs[i].id] = { verdict: "source_injoignable", justification: null, depuis_cache: false };
-        } else {
-          const v = await voter((sous) => unPassage(cible, sous, url, texte), aJuger.map((i) => ({ type: "panne", texte: affs[i].texte })));
-          passages = v.passages;
-          for (const u of v.usages) {
-            usd += u.input_tokens * 3e-6 + u.output_tokens * 15e-6 +
-              (u.cache_read_input_tokens ?? 0) * 0.3e-6 + (u.cache_creation_input_tokens ?? 0) * 3.75e-6;
+        // 1) Fenêtre centrée pour les affirmations dont l'extrait est retrouvé.
+        const avecExtraits = aJuger.filter((i) => affs[i].extraits.length > 0);
+        const page = avecExtraits.length ? await pageStructuree(url) : null;
+        const centrees: number[] = [];
+        if (page) {
+          for (const i of avecExtraits) if (texteCentre(page, affs[i].extraits)) centrees.push(i);
+        }
+        if (page && centrees.length) {
+          const fenetre = texteCentre(page, centrees.flatMap((i) => affs[i].extraits))!;
+          await juger(centrees, fenetre, "fenetre");
+        }
+        // 2) Lecture standard pour les autres (extrait absent ou non verbatim).
+        const reste = aJuger.filter((i) => !centrees.includes(i));
+        if (reste.length) {
+          const texte = await texteDeLaPage(url);
+          if (!texte) {
+            lisible = false;
+            for (const i of reste) verdicts[affs[i].id] = { verdict: "source_injoignable", justification: null, depuis_cache: false };
+          } else {
+            await juger(reste, texte, "standard");
           }
-          const aEcrire: Parameters<typeof ecrireCacheVerif>[1] = [];
-          aJuger.forEach((i, k) => {
-            const r = v.resultats[k];
-            verdicts[affs[i].id] = { verdict: r.verdict, justification: r.justification, depuis_cache: false, votes: r.votes };
-            if (r.fiable) aEcrire.push({ cle: cles[i], url, affirmation: affs[i].texte, moteur: moteurCle, verdict: r.verdict, justification: r.justification, votes: r.votes, modele: r.modele });
-          });
-          await ecrireCacheVerif(admin, aEcrire);
         }
       }
       return json({ url, lisible, passages, verdicts, cout_eur: Math.round(usd * 0.92 * 10000) / 10000 });

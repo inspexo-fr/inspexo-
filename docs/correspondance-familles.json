@@ -500,7 +500,7 @@
   {
    "cle": "OPEL-CDTI-ASTRA-J",
    "groupe": "B",
-   "nature": "non_rattachee",
+   "nature": "modele",
    "libelle": "Opel Astra J diesel (1.3, 1.6, 1.7 et 2.0 CDTI, sans distinction dans la source)",
    "marques": [
     "Opel"
@@ -1207,7 +1207,7 @@
   {
    "cle": "VAG-V6-3.0TDI",
    "groupe": "C",
-   "nature": "non_rattachee",
+   "nature": "modele",
    "libelle": "Audi/VW V6 3.0 TDI (et 2.7 TDI)",
    "marques": [
     "Audi",
@@ -1420,13 +1420,15 @@
   {
    "cle": "HONDA-1.6-IDTEC-N16",
    "groupe": "D",
-   "nature": "non_rattachee",
+   "nature": "moteur",
    "libelle": "Honda 1.6 i-DTEC N16 (120 ch ; 160 ch bi-turbo CR-V)",
    "marques": [
     "Honda"
    ],
    "periode": "2015-2020",
-   "codes": [],
+   "codes": [
+    "N16A"
+   ],
    "ambigu": [],
    "fiches_en_base": [],
    "objets": 5,
@@ -4253,6 +4255,15 @@
     "Dacia"
    ],
    "objets": 6
+  },
+  "N16A": {
+   "cles": [
+    "HONDA-1.6-IDTEC-N16"
+   ],
+   "marques": [
+    "Honda"
+   ],
+   "objets": 5
   },
   "K14C": {
    "cles": [
