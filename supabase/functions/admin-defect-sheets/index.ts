@@ -8,6 +8,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { sourcesPortentLEntree } from "../_shared/atlasSource.ts";
 import { sanitizePannes } from "../_shared/defectSheets.ts";
 import { fusionnerPlan } from "../_shared/planEntretien.ts";
+import { couvertureValide } from "../_shared/couverture.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 
 const cors = {
@@ -178,6 +179,27 @@ serve(async (req: Request) => {
         return new Response(JSON.stringify({ ...bilan, plan_avant: avant, plan_apres: plan }), {
           headers: { ...cors, "Content-Type": "application/json" },
         });
+      }
+
+      // ── SPRINT 23 — COUVERTURE MULTI-MARQUES ───────────────────────────
+      //
+      // Remplace la couverture d'une fiche par une liste RELUE (marque,
+      // modèle, années). Nettoyée par `couvertureValide` : marques et modèles
+      // canonisés, bornes plausibles. La couverture d'avant est renvoyée pour
+      // le retour arrière (même jeton). Écrire une couverture CHANGE DES
+      // SCORES : c'est le changement (e) de la séquence, jamais en douce.
+      if (Array.isArray(body.definir_couverture)) {
+        const { data: row } = await admin
+          .from("defect_sheets").select("couverture").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const propre = couvertureValide(body.definir_couverture);
+        const { error: e4 } = await admin.from("defect_sheets")
+          .update({ ...fields, couverture: propre }).eq("id", body.id);
+        if (e4) return new Response(JSON.stringify({ error: e4.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({
+          entrees: propre.length, rejetees: body.definir_couverture.length - propre.length,
+          couverture_avant: row.couverture ?? [], couverture_apres: propre,
+        }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
 
       if (Object.keys(fields).length === 1) {
