@@ -78,7 +78,7 @@ const EVAL_SECRET = env.EVAL_BYPASS_SECRET ?? ''
 // ⚠️ Le mode --appliquer ne lit QUE le journal : il n'a pas besoin du dump des
 // fiches, et l'exiger ferait échouer la fusion pour un fichier absent du
 // dépôt — alors qu'il n'a plus rien à y faire.
-const fiches = ((APPLIQUER || a('--rejouer-non-soutenues')) && !existsSync(FICHIER)) ? [] : JSON.parse(readFileSync(FICHIER, 'utf8'))
+const fiches = ((APPLIQUER || a('--rejouer-non-soutenues') || a('--candidats-externes')) && !existsSync(FICHIER)) ? [] : JSON.parse(readFileSync(FICHIER, 'utf8'))
 const urlsDe = (p) => {
   const u = []
   for (const s of (p.sources ?? [])) if (s?.url) u.push(s.url)
@@ -132,7 +132,7 @@ unites.sort((x, y) => rang(x.fiche) - rang(y.fiche))
 // ── Mode estimation : aucune dépense ────────────────────────────────────────
 const parFiche = {}
 for (const u of unites) parFiche[u.fiche] = (parFiche[u.fiche] ?? 0) + 1
-if (ESTIMER && !a('--rejouer-non-soutenues')) {
+if (ESTIMER && !a('--rejouer-non-soutenues') && !a('--candidats-externes')) {
   console.log(`\nCAMPAGNE DE RE-SOURCING — estimation (aucune dépense)\n`)
   console.log(`  fiches à terre            : ${Object.keys(parFiche).length}`)
   console.log(`  pannes à re-sourcer       : ${unites.length}`)
@@ -152,6 +152,121 @@ if (ESTIMER && !a('--rejouer-non-soutenues')) {
   process.exit(0)
 }
 
+
+// ── MODE --candidats-externes (sprint 23) — JUGE SEULEMENT ─────────────────
+//
+// Fichier docs/sources-moteurs-2026-11.json. Ce mode JUGE ; il n'écrit RIEN
+// dans les fiches (cache du juge et journal seulement). La fusion est un
+// second geste, avec le jeton d'administrateur.
+//
+// Règles (décisions d'Utku du 10 nov. 2026) :
+//   - pages injoignables au pré-contrôle (docs/precontrole-sources.json)
+//     EXCLUES : on ne paie pas pour elles ;
+//   - sources prises par MEILLEURE CLASSE d'abord, arrêt à 2 confirmées ;
+//   - lots de 20 affirmations, une page jugée UNE fois par lot pour toutes
+//     les affirmations du lot qui la citent ;
+//   - mur par lot (--mur-lot, 1,30 €) ET mur du run (--budget) ;
+//   - ARRÊT IMMÉDIAT si un lot confirme moins de 50 % de ses affirmations :
+//     ces pages ont déjà été ouvertes, un taux bas signale un problème de
+//     lecture, pas de source.
+//   - type=constat : jamais jugé comme une panne (exclu).
+if (a('--candidats-externes')) {
+  const SRC = JSON.parse(readFileSync('docs/sources-moteurs-2026-11.json', 'utf8'))
+  const PRE = existsSync('docs/precontrole-sources.json') ? JSON.parse(readFileSync('docs/precontrole-sources.json', 'utf8')).pages : null
+  if (!PRE) { console.error('Pré-contrôle absent : node scripts/precontrole-sources.mjs (gratuit) d’abord.'); process.exit(1) }
+  const JOURNAL_EXT = 'docs/candidats-externes-journal.json'
+  const MUR_LOT = Number(flag('--mur-lot', '1.30')) || 1.3
+  const NB_LOTS = Number(flag('--lots', '3')) || 3
+  const GROUPES = String(flag('--groupes', 'A,B,H,C,E,D,F,G')).split(',')
+  const SEUIL_LOT = 0.5
+  const RANG = { officiel: 0, presse: 1, consommateurs: 1, editorial: 2 }
+  const classeDe = (u) => SRC.hotes[new URL(u).hostname.replace(/^www\./, '')]?.classe
+  const joignable = (u) => PRE[u]?.joignable === true
+
+  const journal = existsSync(JOURNAL_EXT) ? JSON.parse(readFileSync(JOURNAL_EXT, 'utf8')) : { lots: [], affirmations: {} }
+  const faites = new Set(Object.keys(journal.affirmations))
+  // Ordre : parc français en remontant les petits prix (décision d'Utku).
+  const objets = SRC.objets
+    .filter((o) => o.type !== 'constat' && GROUPES.includes(o.groupe) && !faites.has(o.id))
+    .sort((x, y) => (GROUPES.indexOf(x.groupe) - GROUPES.indexOf(y.groupe)) || x.famille.localeCompare(y.famille) || x.id.localeCompare(y.id))
+  const sourcesDe = (o) => [...(o.sources ?? [])]
+    .filter((s) => joignable(s.url))
+    .sort((x, y) => (RANG[classeDe(x.url)] ?? 9) - (RANG[classeDe(y.url)] ?? 9))
+  const cibleDe = (o) => `${(o.marques ?? []).join('/')} ${o.libelle_moteur}${o.modeles_annees ? ` — ${o.modeles_annees}` : ''}`.slice(0, 200)
+
+  let coutRun = 0
+  const appelJuge = async (url, groupe) => {
+    const res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/sources-externes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ANON}`, 'x-eval-secret': EVAL_SECRET },
+      body: JSON.stringify({ mode: 'juger', url, cible: cibleDe(groupe[0]), moteur: groupe[0].famille,
+        affirmations: groupe.map((o) => ({ id: o.id, texte: o.intitule })) }),
+      signal: AbortSignal.timeout(150_000),
+    })
+    const j = await res.json().catch(() => null)
+    if (!res.ok || typeof j?.cout_eur !== 'number') {
+      console.error(`\n  ⚠️ ARRÊT — juge sur ${url} : HTTP ${res.status}, coût non chiffrable.`)
+      process.exit(1)
+    }
+    return j
+  }
+
+  for (let k = 0; k < NB_LOTS && objets.length; k++) {
+    const lot = objets.splice(0, 20)
+    const etat = Object.fromEntries(lot.map((o) => [o.id, { confirmees: [], ecartees: [], restantes: sourcesDe(o).map((s) => s.url) }]))
+    let coutLot = 0, appels = 0, arretLot = null
+    // Tours : à chaque tour, chaque affirmation non close propose sa prochaine
+    // page ; les pages sont regroupées, une page = un appel (≤ 12 affirmations).
+    for (let tour = 0; tour < 6; tour++) {
+      const parPage = new Map()
+      for (const o of lot) {
+        const e = etat[o.id]
+        if (e.confirmees.length >= 2 || e.restantes.length === 0) continue
+        // Au 1er tour, les DEUX meilleures pages ; ensuite une à la fois.
+        const n = tour === 0 ? Math.min(2, e.restantes.length) : 1
+        for (const u of e.restantes.splice(0, n - (tour === 0 ? 0 : 0))) {
+          if (!parPage.has(u)) parPage.set(u, [])
+          parPage.get(u).push(o)
+        }
+      }
+      if (parPage.size === 0) break
+      for (const [url, groupe] of parPage) {
+        for (let i = 0; i < groupe.length; i += 12) {
+          const sous = groupe.slice(i, i + 12)
+          // Mur : réserve le coût moyen d'un appel déjà observé (0,063 € avant le premier).
+          const reserve = appels ? coutLot / appels : 0.063
+          if (coutLot + reserve > MUR_LOT) { arretLot = `mur du lot (${MUR_LOT.toFixed(2)} €)`; break }
+          if (coutRun + reserve > BUDGET) { arretLot = `mur du run (${BUDGET.toFixed(2)} €)`; break }
+          const j = await appelJuge(url, sous)
+          appels++; coutLot += j.cout_eur; coutRun += j.cout_eur
+          for (const o of sous) {
+            const v = j.verdicts?.[o.id]?.verdict ?? 'non_soutenue'
+            ;(v === 'soutenue' ? etat[o.id].confirmees : etat[o.id].ecartees).push({ url, verdict: v, classe: classeDe(url), cache: j.verdicts?.[o.id]?.depuis_cache === true })
+          }
+        }
+        if (arretLot) break
+      }
+      if (arretLot) break
+    }
+    const confirmees1 = lot.filter((o) => etat[o.id].confirmees.length >= 1).length
+    const confirmees2 = lot.filter((o) => etat[o.id].confirmees.length >= 2).length
+    const taux = confirmees1 / lot.length
+    for (const o of lot) journal.affirmations[o.id] = { famille: o.famille, type: o.type, intitule: o.intitule, ...etat[o.id], restantes: undefined, lot: journal.lots.length + 1 }
+    journal.lots.push({ n: journal.lots.length + 1, affirmations: lot.length, confirmees_1: confirmees1, confirmees_2: confirmees2, appels, cout_eur: Number(coutLot.toFixed(4)), arret: arretLot, le: new Date().toISOString(),
+      familles: [...new Set(lot.map((o) => o.famille))] })
+    writeFileSync(JOURNAL_EXT, JSON.stringify(journal, null, 1))
+    writeFileSync(COMPTEUR, JSON.stringify({ eur: Number((cumulDepart() + coutLot).toFixed(4)), maj: new Date().toISOString() }))
+    console.log(`  lot ${journal.lots.length} · ${lot.length} affirmations (${[...new Set(lot.map((o) => o.famille))].join(', ')})`)
+    console.log(`    confirmées ≥1 : ${confirmees1} (${Math.round(taux * 100)} %) · ≥2 : ${confirmees2} · ${appels} appel(s) · ${coutLot.toFixed(3)} €${arretLot ? ` · ARRÊT : ${arretLot}` : ''}`)
+    // ⚠️ Le mur d'un LOT ferme ce lot, pas le run (défaut du pilote du
+    // 10 nov. 2026 : le run s'arrêtait au 2e lot avec 1,58 € encore
+    // disponibles). Seul le mur du RUN arrête tout.
+    if (arretLot?.startsWith('mur du run')) { console.log('\n⏸ Mur du run atteint : le reste n’est pas joué.'); break }
+    if (taux < SEUIL_LOT) { console.log(`\n⏹ ARRÊT IMMÉDIAT : le lot confirme moins de ${SEUIL_LOT * 100} % (problème de lecture probable).`); break }
+  }
+  console.log(`\n— Coût du run : ${coutRun.toFixed(3)} € / ${BUDGET.toFixed(2)} € · journal ${JOURNAL_EXT} · rien n’est écrit dans les fiches.`)
+  process.exit(0)
+}
 
 // ── MODE --rejouer-non-soutenues (sprint 22) ───────────────────────────────
 //

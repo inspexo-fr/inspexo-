@@ -1,0 +1,903 @@
+{
+ "lots": [
+  {
+   "n": 1,
+   "affirmations": 20,
+   "confirmees_1": 12,
+   "confirmees_2": 1,
+   "appels": 26,
+   "cout_eur": 1.1688,
+   "arret": null,
+   "le": "2026-11-10T14:37:28.793Z",
+   "familles": [
+    "NISSAN-CVT-XTRONIC",
+    "NISSAN-HR12DDT",
+    "NISSAN-MR16DDT-MR20DE",
+    "RENAULT-B4D"
+   ]
+  },
+  {
+   "n": 2,
+   "affirmations": 20,
+   "confirmees_1": 14,
+   "confirmees_2": 3,
+   "appels": 25,
+   "cout_eur": 1.2542,
+   "arret": "mur du lot (1.30 €)",
+   "le": "2026-11-10T14:39:04.056Z",
+   "familles": [
+    "RENAULT-D4F-K4M",
+    "RENAULT-EDC-DC4-EASY-R",
+    "RENAULT-H4BT"
+   ]
+  }
+ ],
+ "affirmations": {
+  "A-NISSAN-CVT-XTRONIC-01": {
+   "famille": "NISSAN-CVT-XTRONIC",
+   "type": "panne",
+   "intitule": "X-Tronic CVT : dysfonctionnements fréquents sur Qashqai 2 de 2013-2014 (broutements, à-coups, perte de puissance), vibrations/hésitations sur X-Trail 3, patinage rare sur Koleos 2",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/maxi-fiche-occasion-du-renault-koleos-2-enfin-un-modele-fiable-dans-la-gamme-du-losange-196916.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-CVT-XTRONIC-02": {
+   "famille": "NISSAN-CVT-XTRONIC",
+   "type": "campagne",
+   "intitule": "Campagne de service Nissan juin 2015 : reprogrammation de la boîte automatique X-Tronic CVT des Qashqai 2 fabriqués entre le 4 novembre 2013 et le 27 novembre 2014",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 1
+  },
+  "A-NISSAN-CVT-XTRONIC-03": {
+   "famille": "NISSAN-CVT-XTRONIC",
+   "type": "verification",
+   "intitule": "Agrément et consommation : la X-Tronic fait surconsommer (Kadjar 1.6 dCi 130)",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-renault-kadjar-la-maxi-fiche-occasion-de-caradisiac-186486.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf",
+     "verdict": "mauvais_moteur",
+     "classe": "consommateurs",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-HR12DDT-01": {
+   "famille": "NISSAN-HR12DDT",
+   "type": "panne",
+   "intitule": "Surconsommation d'huile pouvant aller jusqu'à la casse moteur (même défaut de segmentation / pression collecteur que le 1.2 TCe)",
+   "confirmees": [
+    {
+     "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE26444.pdf",
+     "verdict": "soutenue",
+     "classe": "officiel",
+     "cache": false
+    },
+    {
+     "url": "https://www.largus.fr/actualite-automobile/renault-12-tce-et-nissan-12-dig-t-des-moteurs-gourmands-en-huile-8196384.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 1
+  },
+  "A-NISSAN-HR12DDT-02": {
+   "famille": "NISSAN-HR12DDT",
+   "type": "panne",
+   "intitule": "Chaîne de distribution bruyante / tendeur à remplacer (allongement lié au manque d'huile)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/renault-12-tce-et-nissan-12-dig-t-des-moteurs-gourmands-en-huile-8196384.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.largus.fr/actualite-automobile/consommation-anormale-dhuile-la-liste-des-moteurs-a-risque-8672389.html",
+     "verdict": "mauvais_moteur",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/advice",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-HR12DDT-03": {
+   "famille": "NISSAN-HR12DDT",
+   "type": "entretien",
+   "intitule": "Distribution par chaîne, sans remplacement périodique",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 1
+  },
+  "A-NISSAN-HR12DDT-04": {
+   "famille": "NISSAN-HR12DDT",
+   "type": "campagne",
+   "intitule": "Pas de rappel imposé : reprogrammation Nissan du module de gestion moteur, prise en charge financière au cas par cas (réponses ministérielles 2020-2021 ; Que Choisir 2019)",
+   "confirmees": [
+    {
+     "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE26444.pdf",
+     "verdict": "soutenue",
+     "classe": "officiel",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.quechoisir.org/actualite-moteur-1-2-renault-pas-de-rappel-impose-aux-constructeurs-n74119/",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-HR12DDT-05": {
+   "famille": "NISSAN-HR12DDT",
+   "type": "verification",
+   "intitule": "Nissan Qashqai 2014-2021 : fiabilité d'ensemble médiocre selon l'ADAC (pannes surtout dues aux batteries) et What Car? — indépendamment du moteur",
+   "confirmees": [
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf",
+     "verdict": "soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0384-nissan-qashqai-2014-2021-diesel-bericht.pdf",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    },
+    {
+     "url": "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/n17397/reliability",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-01": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "panne",
+   "intitule": "Juke 1.6 DIG-T 190 : casses de boîte de vitesses ayant entraîné son remplacement",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-02": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "panne",
+   "intitule": "Chaîne de distribution bruyante sur certains 1.6 DIG-T (phénomène rare)",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-03": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "entretien",
+   "intitule": "Distribution par chaîne, sans remplacement périodique ; moteurs jugés globalement sans souci par la presse consultée",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-04": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "rappel",
+   "intitule": "Rappel décembre 2014 (Juke) : capteur de pression de carburant pouvant ne pas être serré correctement sur les 1.6 Turbo fabriqués de janvier 2012 à mai 2014",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-05": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "campagne",
+   "intitule": "Nissan Juke 2011-2013 (MR16DDT, marché nord-américain) : campagne volontaire P4213 de remplacement de la chaîne de distribution, des guides et du pignon de vilebrequin",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://static.nhtsa.gov/odi/tsbs/2014/SB-10058825-3211.pdf",
+     "verdict": "non_soutenue",
+     "classe": "officiel",
+     "cache": false
+    },
+    {
+     "url": "https://static.nhtsa.gov/odi/tsbs/2015/MC-10192689-9999.pdf",
+     "verdict": "non_soutenue",
+     "classe": "officiel",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-06": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "entretien",
+   "intitule": "Bulletin Nissan NTB16-035 (Juke F15 2012-2016, MR16DDT) : à tout remplacement du turbo, remplacer aussi le tube d'alimentation en huile du turbocompresseur",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10192772-9999.pdf",
+     "verdict": "non_soutenue",
+     "classe": "officiel",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-07": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "rappel",
+   "intitule": "Rappel 08/2016 (1.6 DIG-T) : la sonde à oxygène arrière peut tomber en panne sur court-circuit sans allumer le voyant moteur — mise à jour du logiciel du calculateur moteur",
+   "confirmees": [
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf",
+     "verdict": "soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/advice",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-NISSAN-MR16DDT-MR20DE-08": {
+   "famille": "NISSAN-MR16DDT-MR20DE",
+   "type": "verification",
+   "intitule": "Nissan Juke I (tous moteurs) : pertes d'huile moteur et boîte, échappements défectueux relevés par le TÜV (via ADAC) ; moteurs 1.6 atmosphériques jugés largement sans problème",
+   "confirmees": [
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+     "verdict": "soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 1
+  },
+  "A-RENAULT-B4D-01": {
+   "famille": "RENAULT-B4D",
+   "type": "entretien",
+   "intitule": "Distribution par chaîne, sans entretien (SCe et TCe)",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-de-la-dacia-logan-2-la-maxi-fiche-occasion-de-caradisiac-163643.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 1
+  },
+  "A-RENAULT-B4D-02": {
+   "famille": "RENAULT-B4D",
+   "type": "panne",
+   "intitule": "Voyant OBD ou filtre à particules allumé (ligne commune 1.0 SCe / 1.0 TCe, 21/07/2020 – 08/03/2022)",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/clio/avis-fiabilite-renault-clio-v-bja-30038864.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-RENAULT-B4D-03": {
+   "famille": "RENAULT-B4D",
+   "type": "panne",
+   "intitule": "Twingo III 1.0 SCe 70 : vibrations, claquements, à-coups en roulant (tampons/supports moteur, jusqu'au 12/03/2016)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 1
+  },
+  "A-RENAULT-B4D-04": {
+   "famille": "RENAULT-B4D",
+   "type": "panne",
+   "intitule": "Twingo III 0.9 TCe / 1.0 SCe : allongement de la chaîne de distribution (01/09/2014 – 12/04/2018), pompe à eau bruyante (jusqu'en mars 2018), capteur PMH et sonde à oxygène (2015)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390_p_3.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 1
+  },
+  "A-RENAULT-D4F-K4M-01": {
+   "famille": "RENAULT-D4F-K4M",
+   "type": "panne",
+   "intitule": "Bobines d'allumage défaillantes (1.4 et 1.6 16v, surtout jusqu'en 2004)",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Scenic-2-en-occasion-98498.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Kangoo-2-en-occasion-93188.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/Renault-Megane-2-II-40410.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-D4F-K4M-02": {
+   "famille": "RENAULT-D4F-K4M",
+   "type": "panne",
+   "intitule": "Poulie de variateur de phase (déphaseur d'arbre à cames) : claquements à chaud à partir de 120 000 km (1.6 16v et 2.0 16v)",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/Renault-Megane-2-II-40410.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 2
+  },
+  "A-RENAULT-D4F-K4M-03": {
+   "famille": "RENAULT-D4F-K4M",
+   "type": "panne",
+   "intitule": "Démarrage parfois impossible sur les moteurs essence jusqu'à mi-2003 (capteur de point mort haut et/ou bougies)",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/Renault-Megane-2-II-40410.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Scenic-2-en-occasion-98498.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-D4F-K4M-04": {
+   "famille": "RENAULT-D4F-K4M",
+   "type": "panne",
+   "intitule": "Dacia 1.6 105 : usure de la courroie d'accessoires (jusqu'au 27/04/2013)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390_p_3.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 2
+  },
+  "A-RENAULT-D4F-K4M-05": {
+   "famille": "RENAULT-D4F-K4M",
+   "type": "entretien",
+   "intitule": "Distribution par courroie : 1.6 16V 105 = 120 000 km / 60 mois (ADAC Kangoo, 550 €) ou 6 ans / 120 000 km (Caradisiac Kangoo 2) ; 1.6 8V 90 = 80 000 km / 60 mois (ADAC, 420 €) ; 160 000 km ou 6 ans cités par Caradisiac pour le 1.2 16v de la Sandero 2 — intervalles divergents",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Kangoo-2-en-occasion-93188.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-dacia-sandero-2-en-occasion-107723.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Scenic-2-en-occasion-98498.htm",
+     "verdict": "mauvais_moteur",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-01": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "panne",
+   "intitule": "EDC : bruits métalliques, craquements, patinage à froid, blocages, refus de passer un rapport, casses (parfois avant 40 000 km)",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-renault-captur-la-maxi-fiche-occasion-de-caradisiac-166405.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-renault-megane-4-un-modele-a-risque-198261.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-renault-kadjar-la-maxi-fiche-occasion-de-caradisiac-186486.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-02": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "panne",
+   "intitule": "EDC (Mégane III) : patinage de l'embrayage par fuite au joint de l'arbre primaire (jusqu'au 19/12/2013), perte de traction et message « EDC à contrôler » (reprogrammations jusqu'en juin 2016)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/megane/avis-fiabilite-renault-megane-iii-b95-30038973.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.fiches-auto.fr/articles-auto/enquete-fiabilite/s-2277-fiabilite-mauvaise-de-la-boite-edc-renault.php",
+     "verdict": "non_soutenue",
+     "classe": "editorial",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-03": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "panne",
+   "intitule": "EDC (Clio 4) : bruits métalliques à l'accélération / au démarrage et au rétrogradage 6→5 (masselotte sur l'actionneur d'embrayage)",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.fiches-auto.fr/articles-auto/enquete-fiabilite/s-2277-fiabilite-mauvaise-de-la-boite-edc-renault.php",
+     "verdict": "non_soutenue",
+     "classe": "editorial",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Clio-4-en-occasion-104931.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-04": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "panne",
+   "intitule": "Easy-R (Dacia) : impossibilité d'engager les rapports (actionneur d'embrayage, dCi 90, jusqu'au 25/05/2017) et grincement en 5e (pignon de 5e ou boîte, janvier 2016 – 30/04/2018)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/dacia/sandero/avis-fiabilite-dacia-sandero-ii-b52-30039368.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/dacia-sandero-duster-low-cost-et-fiabilite-font-ils-bon-menage-10361391_p_3.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/fiabilite-de-la-dacia-logan-2-la-maxi-fiche-occasion-de-caradisiac-163643.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-06": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "garantie",
+   "intitule": "EDC : participation Renault aux réparations selon le kilométrage — 100 % à moins de 50 000 km, au moins 60 % autour de 100 000 km (Caradisiac, Mégane 4)",
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-renault-megane-4-un-modele-a-risque-198261.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-renault-captur-la-maxi-fiche-occasion-de-caradisiac-166405.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Clio-4-en-occasion-104931.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-07": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "rappel",
+   "intitule": "Rappel décembre 2015 (Twingo III EDC) : 944 modèles équipés de la boîte EDC produits jusqu'au 20/10/2015 — mauvaise configuration du calculateur d'habitacle (UCH)",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-08": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "rappel",
+   "intitule": "Rappel 01/2016 (Twingo III EDC, Allemagne) : erreur logicielle de la commande de boîte automatique — le moteur peut démarrer en position N sans appui sur le frein",
+   "confirmees": [
+    {
+     "url": "https://www.autobild.de/artikel/gebrauchtwagen-check-renault-modelle-17028399.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0397-renault-twingo-2014-2024-bericht.pdf",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-09": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "rappel",
+   "intitule": "Rappel (Allemagne, relevé par l'ADAC) Mégane III / Scénic III à boîte EDC : perte du rapport sélectionné pouvant entraîner une perte de traction à basse vitesse — mise à jour du logiciel de boîte",
+   "confirmees": [
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0195-renault-megane-2008-2016-benziner-bericht.pdf",
+     "verdict": "soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    },
+    {
+     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0213-renault-scenic-2009-2016-bericht.pdf",
+     "verdict": "soutenue",
+     "classe": "consommateurs",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 2
+  },
+  "A-RENAULT-EDC-DC4-EASY-R-10": {
+   "famille": "RENAULT-EDC-DC4-EASY-R",
+   "type": "rappel",
+   "intitule": "Rappel avril 2017 (Mégane IV GT, boîte EDC 7 à embrayages humides DW5) : un défaut logiciel peut provoquer la surchauffe de l'embrayage — mise à jour de la calibration de la boîte (3 281 véhicules en France)",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-renault-megane-4-un-modele-a-risque-198261.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-H4BT-01": {
+   "famille": "RENAULT-H4BT",
+   "type": "panne",
+   "intitule": "Allongement et bruit de la chaîne de distribution (kit et carter à remplacer) — véhicules produits 2014 – 12/04/2018",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/captur/avis-fiabilite-renault-captur-i-j87-30039383.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 2
+  },
+  "A-RENAULT-H4BT-02": {
+   "famille": "RENAULT-H4BT",
+   "type": "panne",
+   "intitule": "Fuite d'huile au carter de distribution (étanchéité à refaire) — jusqu'au 01/01/2016 / 10/10/2016",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/dacia/sandero/avis-fiabilite-dacia-sandero-ii-b52-30039368.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/captur/avis-fiabilite-renault-captur-i-j87-30039383.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [],
+   "lot": 2
+  },
+  "A-RENAULT-H4BT-03": {
+   "famille": "RENAULT-H4BT",
+   "type": "panne",
+   "intitule": "Voyant de pression d'huile allumé : électrovanne de pompe à huile (2015-2019)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/dacia/sandero/avis-fiabilite-dacia-sandero-ii-b52-30039368.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/captur/avis-fiabilite-renault-captur-i-j87-30039383.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-H4BT-04": {
+   "famille": "RENAULT-H4BT",
+   "type": "panne",
+   "intitule": "Huile dans le circuit de refroidissement (échangeur eau-huile, jusqu'au 09/01/2018) et consommation de liquide de refroidissement",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/captur/avis-fiabilite-renault-captur-i-j87-30039383.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390_p_3.html",
+     "verdict": "mauvais_moteur",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-renault-captur-la-maxi-fiche-occasion-de-caradisiac-166405.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-H4BT-05": {
+   "famille": "RENAULT-H4BT",
+   "type": "panne",
+   "intitule": "Sondes à oxygène (amont/aval) : à-coups, trous à l'accélération à froid, voyant injection/OBD, calage (2014-2019)",
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/captur/avis-fiabilite-renault-captur-i-j87-30039383.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  },
+  "A-RENAULT-H4BT-06": {
+   "famille": "RENAULT-H4BT",
+   "type": "panne",
+   "intitule": "Actionneur de turbo corrodé (manque de puissance, message « injection à contrôler ») et casses prématurées de turbo (parfois avant 50 000 km)",
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-de-la-renault-twingo-3-la-maxi-fiche-occasion-de-caradisiac-187815.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    },
+    {
+     "url": "https://www.autobild.de/artikel/gebrauchtwagen-check-renault-modelle-17028399.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "cache": false
+    }
+   ],
+   "lot": 2
+  }
+ }
+}
