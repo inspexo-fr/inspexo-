@@ -5,6 +5,7 @@
 // l'écriture passe par `admin-defect-sheets` (`ajouter_plan`), avec un jeton
 // d'administrateur. Le seul effet de bord est le cache du juge.
 import { rangSource } from "./atlasSource.ts";
+import { surveillerSilences } from "./alerteJuge.ts";
 import {
   affirmationIntervalle,
   candidats,
@@ -182,6 +183,7 @@ export async function genererPlan(
     if (aJuger.length) {
       const v = await voter((a) => unPassage(cleApi, cible, a, url, textes.get(url)!), aJuger.map((i) => ({ type: "entretien", texte: claims[i].texte })));
       juge.passages += v.passages;
+      await surveillerSilences(db, "sheet-builder (plans)", v.silences, url);
       for (const u of v.usages) usd += usdDe(u);
       const aEcrire: Parameters<typeof ecrireCacheVerif>[1] = [];
       aJuger.forEach((i, k) => {

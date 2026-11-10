@@ -56,6 +56,15 @@ export function verdictsDeLaReponse(input: any): any[] {
 
 export const VERIF_CACHE_JOURS = 180;
 
+/** SPRINT 23 — seuil d'alerte : plus de 10 % des affirmations d'un passage
+ *  du juge sans verdict (décision d'Utku du 11 nov. 2026). Le défaut des
+ *  verdicts encodés en chaîne JSON avait rendu muettes 19 affirmations d'un
+ *  même lot sans que personne ne le voie : un silence massif doit se voir. */
+export const SEUIL_SILENCE_PASSAGE = 0.1;
+export function passageTropSilencieux(sans: number, n: number): boolean {
+  return n > 0 && sans / n > SEUIL_SILENCE_PASSAGE;
+}
+
 export type UsageJuge = {
   input_tokens: number;
   output_tokens: number;
@@ -142,13 +151,18 @@ function verdictsParIndex(r: ReponseJuge, n: number): Vote[] | null {
 export async function voter(
   appel: AppelJuge,
   affirmations: Array<{ type: string; texte: string }>,
-): Promise<{ resultats: VerdictVote[]; usages: UsageJuge[]; passages: number }> {
+): Promise<{ resultats: VerdictVote[]; usages: UsageJuge[]; passages: number; silences: Array<{ n: number; sans: number }> }> {
   const n = affirmations.length;
   const usages: UsageJuge[] = [];
   const [r1, r2] = await Promise.all([appel(affirmations), appel(affirmations)]);
   let passages = 2;
   for (const r of [r1, r2]) if (r?.usage) usages.push(r.usage);
   const v1 = verdictsParIndex(r1, n), v2 = verdictsParIndex(r2, n);
+  // Par passage : combien d'affirmations sont restées sans verdict. Un passage
+  // qui n'a rien rendu du tout (appel en échec) compte comme entièrement muet.
+  const silences: Array<{ n: number; sans: number }> = [];
+  const compter = (v: Vote[] | null, m: number) => silences.push({ n: m, sans: v ? v.filter((x) => x.absent).length : m });
+  compter(v1, n); compter(v2, n);
   const modele = r1?.modele ?? r2?.modele ?? null;
 
   const reels = (vs: Array<Vote | undefined>) => vs.filter((x): x is Vote => !!x && !x.absent);
@@ -175,6 +189,7 @@ export async function voter(
     const r3 = await appel(desaccords.map((i) => affirmations[i]));
     if (r3?.usage) usages.push(r3.usage);
     const v3 = verdictsParIndex(r3, desaccords.length);
+    compter(v3, desaccords.length);
     desaccords.forEach((i, k) => {
       const tous = reels([v1?.[i], v2?.[i], v3?.[k]]);
       const verdict = tous.length ? majorite(tous.map((x) => x.verdict)) : "non_soutenue";
@@ -190,7 +205,7 @@ export async function voter(
       };
     });
   }
-  return { resultats, usages, passages };
+  return { resultats, usages, passages, silences };
 }
 
 /** Lecture du cache : seuls les verdicts de moins de 180 jours comptent. */

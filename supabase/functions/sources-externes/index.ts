@@ -17,6 +17,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
+import { surveillerSilences } from "../_shared/alerteJuge.ts";
 import { controlerPage } from "../_shared/precontrole.ts";
 import {
   cleVerif,
@@ -197,6 +198,7 @@ serve(async (req: Request) => {
       const juger = async (indices: number[], texte: string, lecture: string) => {
         const v = await voter((sous) => unPassage(cible, sous, url, texte), indices.map((i) => ({ type: "panne", texte: affs[i].texte })));
         passages += v.passages;
+        await surveillerSilences(admin, "sources-externes", v.silences, url);
         for (const u of v.usages) {
           usd += u.input_tokens * 3e-6 + u.output_tokens * 15e-6 +
             (u.cache_read_input_tokens ?? 0) * 0.3e-6 + (u.cache_creation_input_tokens ?? 0) * 3.75e-6;

@@ -24,6 +24,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
+import { surveillerSilences } from "../_shared/alerteJuge.ts";
 import { appliquerGraviteRemede } from "../_shared/graviteRemede.ts";
 import {
   affirmationSansCout,
@@ -294,6 +295,7 @@ async function verifierIndependamment(
     if (c) return { verdict: c.verdict, justification: String(c.justification ?? ""), usages: [], depuis_cache: true, passages: 0 };
   }
   const v = await voter((a) => unPassage(cible, a, url, texteSource), [{ type: "panne", texte: affirmation }]);
+  await surveillerSilences(db, "atlas-builder", v.silences, url);
   const r = v.resultats[0];
   const usages = v.usages.map((u) => ({ input_tokens: u.input_tokens, output_tokens: u.output_tokens }));
   // Aucun passage n'a répondu : la vérification est indisponible, pas négative.
