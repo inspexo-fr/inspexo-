@@ -56,6 +56,9 @@ async function evalSecretMatches(req: Request): Promise<boolean> {
   return diff === 0;
 }
 
+// Collecte des réponses brutes du juge, seulement en mode debug (secret d'éval).
+let BRUTS: Array<Record<string, unknown>> | null = null;
+
 async function unPassage(cible: string, affs: Array<{ type: string; texte: string }>, url: string, texte: string): Promise<ReponseJuge> {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -72,6 +75,8 @@ async function unPassage(cible: string, affs: Array<{ type: string; texte: strin
   const data = await res.json();
   // deno-lint-ignore no-explicit-any
   const bloc = (data.content ?? []).find((b: any) => b.type === "tool_use" && b.name === "rendre_verifications");
+  // Diagnostic (mode debug) : la réponse BRUTE de chaque passage.
+  BRUTS?.push({ stop_reason: data.stop_reason ?? null, verdicts: bloc?.input?.verdicts ?? null, sortie: data.usage?.output_tokens ?? null });
   if (!bloc) return null;
   return {
     verdicts: Array.isArray(bloc.input?.verdicts) ? bloc.input.verdicts : [],
@@ -131,6 +136,8 @@ serve(async (req: Request) => {
         }))
         .filter((a: { id: string; texte: string }) => a.id && a.texte);
       if (!/^https?:\/\//i.test(url) || !cible || affs.length === 0) return json({ error: "invalid_input" }, 400);
+      // Debug : réservé au secret d'éval, jamais à un jeton admin seul.
+      BRUTS = body.debug === true && (await evalSecretMatches(req)) ? [] : null;
 
       const cles = await Promise.all(affs.map((a: { texte: string }) => cleVerif(url, a.texte, moteurCle)));
       const enCache = await lireCacheVerif(admin, cles);
@@ -181,7 +188,7 @@ serve(async (req: Request) => {
           }
         }
       }
-      return json({ url, lisible, passages, verdicts, cout_eur: Math.round(usd * 0.92 * 10000) / 10000 });
+      return json({ url, lisible, passages, verdicts, cout_eur: Math.round(usd * 0.92 * 10000) / 10000, ...(BRUTS ? { bruts: BRUTS } : {}) });
     }
 
     return json({ error: "mode_inconnu" }, 400);

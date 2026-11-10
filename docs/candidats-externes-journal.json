@@ -30,6 +30,23 @@
     "RENAULT-EDC-DC4-EASY-R",
     "RENAULT-H4BT"
    ]
+  },
+  {
+   "n": 3,
+   "mode": "noyau",
+   "affirmations": 20,
+   "confirmees": 7,
+   "mauvais_moteur": 0,
+   "appels": 24,
+   "cout_eur": 0.6248,
+   "cout_par_affirmation": 0.0312,
+   "arret": null,
+   "familles": [
+    "MERCEDES-OM607",
+    "RENAULT-K9K",
+    "PSA-EB2"
+   ],
+   "le": "2026-11-10T18:18:38.340Z"
   }
  ],
  "affirmations": {
@@ -898,6 +915,602 @@
     }
    ],
    "lot": 2
+  },
+  "E-MERCEDES-OM607-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM607",
+   "type": "entretien",
+   "intitule": "Distribution par courroie, à remplacer tous les 10 ans ou 200 000 km (ADAC : 750 € sur le GLA 180 CDI) — les autres moteurs du GLA sont à chaîne",
+   "noyau": "Distribution par courroie, à remplacer tous les 10 ans ou 200 000 km",
+   "details": [
+    "10 ans ou 200 000 km"
+   ],
+   "details_affichables": [
+    "10 ans ou 200 000 km"
+   ],
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-mercedes-gla-la-maxi-fiche-occasion-de-caradisiac-187066.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page indique explicitement que le petit diesel 180d, d'origine Renault, est à courroie de distribution devant être remplacée tous les 10 ans ou 200 000 km."
+    }
+   ],
+   "ecartees": [],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-01": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Courroie de distribution désalignée : usure prématurée et rupture (moteurs produits sept. 2009 – fév. 2011)",
+   "noyau": "Courroie de distribution désalignée: usure prématurée et rupture",
+   "details": [
+    "moteurs produits sept. 2009 – fév. 2011"
+   ],
+   "details_affichables": [],
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_2.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page indique pour le Renault/Nissan/Dacia 1.5 dCi (K9K) un 'mauvais alignement de la courroie' entraînant 'usure prématurée' et un 'risque de casse moteur', ce qui correspond à l'affirmation."
+    }
+   ],
+   "ecartees": [],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-02": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Coussinets de bielle : usure prématurée et casse moteur (surtout avant 2006-2007)",
+   "noyau": "Coussinets de bielle: usure prématurée et casse moteur",
+   "details": [
+    "avant 2006-2007"
+   ],
+   "details_affichables": [],
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_3.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page confirme que les coussinets de bielle du 1.5 dCi s'usent anormalement, 'risque de casse moteur' jusqu'en 2007."
+    }
+   ],
+   "ecartees": [],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-03": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Injection : grippage de pompe (jusqu'en 2006), limaille, injecteurs et joints d'injecteurs défaillants (jusqu'en 2011, dCi 110 surtout)",
+   "noyau": "Injection: grippage de pompe, limaille, injecteurs et joints d'injecteurs défaillants (surtout dCi 110)",
+   "details": [
+    "jusqu'en 2006",
+    "jusqu'en 2011"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_3.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page mentionne un 'grippage de la pompe d'injection jusqu'en 2006' mais ne parle pas de limaille, d'injecteurs ou de joints d'injecteurs défaillants, ni spécifiquement du dCi 110."
+    },
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Scenic-2-en-occasion-98498.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-04": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Pompe à huile / pression d'huile : voyant allumé, fuite, bruit, jusqu'à la destruction du moteur (production jusqu'au 02/08/2017)",
+   "noyau": "Pompe à huile / pression d'huile: voyant allumé, fuite, bruit, jusqu'à la destruction du moteur",
+   "details": [
+    "production jusqu'au 02/08/2017"
+   ],
+   "details_affichables": [],
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/renault/megane/avis-fiabilite-renault-megane-iii-b95-30038973.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page mentionne pour le 1.5 dCi : \"Fuite d'huile, voyant de pression moteur allumé, bruit, voire destruction du moteur jusqu'à la fin de la production\" avec intervention sur le filtre et la pompe à huile, voire le moteur."
+    }
+   ],
+   "ecartees": [],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-05": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Turbo : casse prématurée, actionneur de turbo endommagé par une fuite d'huile de la conduite d'admission (Nissan 1.5 dCi 110, 2012-2014)",
+   "noyau": "Turbo: casse prématurée, actionneur de turbo endommagé par une fuite d'huile de la conduite d'admission (Nissan 1.5 dCi 110)",
+   "details": [
+    "2012-2014"
+   ],
+   "details_affichables": [],
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/fiabilite-nissan-juke-et-qashqai-avarie-de-turbo-sur-le-15-dci-7852395.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page indique qu'une fuite d'huile au niveau de la conduite d'admission est susceptible d'endommager l'actionneur du turbo sur les Nissan 1.5 dCi 110 produits du 1er mai 2012 au 29 avril 2013, ce qui correspond exactement à l'affirmation."
+    }
+   ],
+   "ecartees": [],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-06": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Durites d'admission d'air du turbo qui éclatent ou se déboîtent (perte de puissance, mode dégradé)",
+   "noyau": "Durites d'admission d'air du turbo qui éclatent ou se déboîtent (perte de puissance, mode dégradé)",
+   "details": [],
+   "details_affichables": [],
+   "confirmees": [
+    {
+     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page indique explicitement une 'faiblesse récurrente de la Durit d'admission d'air du turbo, qui éclate, parfois à répétition' sur le 1.5 dCi du Qashqai 2."
+    }
+   ],
+   "ecartees": [],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-07": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Volant moteur bimasse et embrayage : rupture prématurée, vibrations à 110-120 km/h, broutage",
+   "noyau": "Volant moteur bimasse et embrayage: rupture prématurée, vibrations à 110-120 km/h, broutage",
+   "details": [],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Megane-3-en-occasion-105588.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-le-renault-scenic-3-en-occasion-106472.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page mentionne un volant moteur défaillant (vibrations au ralenti, bruits métalliques, bris avant 40 000 km) mais ne parle ni de volant moteur bimasse en lien avec l'embrayage, ni de vibrations à 110-120 km/h, ni de broutage d'embrayage pour le 1.5 dCi, elle évoque seulement une butée d'embrayage défaillante sur le 1.9 dCi 130, qui est un autre moteur."
+    }
+   ],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-08": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "dCi 105 : pompe d'injection mal positionnée, difficultés de démarrage et risque de casse moteur (sept. 2009 – juin 2010)",
+   "noyau": "dCi 105: pompe d'injection mal positionnée, difficultés de démarrage et risque de casse moteur",
+   "details": [
+    "sept. 2009 – juin 2010"
+   ],
+   "details_affichables": [],
+   "confirmees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_3.html",
+     "verdict": "soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page indique bien 'risque de casse moteur sur dCi 105 de septembre 2009 à juin 2010 : pompe d'injection à repositionner', correspondant au mauvais positionnement évoqué."
+    }
+   ],
+   "ecartees": [],
+   "lot": 3
+  },
+  "A-RENAULT-K9K-09": {
+   "mode": "noyau",
+   "famille": "RENAULT-K9K",
+   "type": "panne",
+   "intitule": "Filtre à particules : encrassement récurrent (Euro 5) et surchauffe du FAP sur Nissan Qashqai 1 1.5 dCi 110 (2010-2013)",
+   "noyau": "Filtre à particules: encrassement récurrent (Euro 5) et surchauffe du FAP sur Nissan Qashqai 1 1.5 dCi 110",
+   "details": [
+    "2010-2013"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_3.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page mentionne l'encrassement récurrent du FAP sur les versions Euro 5 du 1.5 dCi mais ne parle pas d'une surchauffe du FAP sur le Nissan Qashqai 1 1.5 dCi 110."
+    },
+    {
+     "url": "https://www.largus.fr/actualite-automobile/nissan-qashqai-1-2007-2014-ca-sent-le-roussi-pour-le-fap-8310384.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-01": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "panne",
+   "intitule": "Dégradation prématurée de la courroie de distribution immergée dans l'huile (débris vers pompe à vide et circuit d'huile)",
+   "noyau": "Dégradation prématurée de la courroie de distribution immergée dans l'huile (débris vers pompe à vide et circuit d'huile)",
+   "details": [],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.quechoisir.org/actualite-moteurs-puretech-un-probleme-d-ampleur-pour-stellantis-n109962",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page évoque une courroie de distribution gonflée et sa dégradation par vieillissement prématuré de l'huile, mais ne mentionne jamais que la courroie est immergée dans l'huile ni de débris allant vers le circuit d'huile."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-02": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "panne",
+   "intitule": "Surconsommation d'huile (segmentation sur les versions avant Euro 6.2, déshuileur sur Euro 6.2 et suivantes)",
+   "noyau": "Surconsommation d'huile (segmentation sur les versions avant Euro 6.2, déshuileur sur Euro 6.2 et suivantes)",
+   "details": [],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/moteur-1-2-puretech-stellantis-lancera-bientot-une-plate-forme-d-indemnisation-30037499.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.largus.fr/guide-achat-occasion/peugeot/3008/avis-fiabilite-peugeot-3008-i-30038837.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-03": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "panne",
+   "intitule": "Encrassement de la culasse et pré-allumage : à-coups, saccades, voire casse moteur (1.2 PureTech 110/130)",
+   "noyau": "Encrassement de la culasse et pré-allumage: à-coups, saccades, voire casse moteur (1.2 PureTech 110/130)",
+   "details": [],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/fiabilite-que-valent-les-nouvelles-voitures-francaises-9556393_p_2.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.largus.fr/actualite-automobile/fiabilite-que-valent-les-nouvelles-voitures-francaises-9556393.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-04": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "entretien",
+   "intitule": "Distribution : courroie crantée immergée dans l'huile — intervalle ramené de 10 ans/175 000 km à 6 ans/100 000 km",
+   "noyau": "Distribution: courroie crantée immergée dans l'huile",
+   "details": [
+    "10 ans/175 000 km",
+    "6 ans/100 000 km"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.caradisiac.com/peugeot-des-rappels-de-plus-en-plus-importants-206033.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-05": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "garantie",
+   "intitule": "Extension de garantie Stellantis 10 ans / 175 000 km (courroie de distribution et surconsommation d'huile), en place depuis mars 2024",
+   "noyau": "Extension de garantie Stellantis 10 ans / 175 000 km (courroie de distribution et surconsommation d'huile), en place",
+   "details": [
+    "depuis mars 2024"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.quechoisir.org/actualite-moteurs-puretech-stellantis-prend-a-minima-ses-responsabilites-n148604/",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "lecture": "standard",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-06": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "campagne",
+   "intitule": "Plate-forme d'indemnisation rétroactive Stellantis (stellantis-support.com), ouverte le 16 janvier 2025",
+   "noyau": "Plate-forme d'indemnisation rétroactive Stellantis (stellantis-support.com), ouverte",
+   "details": [
+    "le 16 janvier 2025"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/moteur-1-2-puretech-stellantis-lancera-bientot-une-plate-forme-d-indemnisation-30037499.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.largus.fr/actualite-automobile/puretech-et-adblue-la-plate-forme-de-reclamation-indisponible-pour-cause-de-bugs-30038506.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-07": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "rappel",
+   "intitule": "Rappels courroie de distribution / pompe à vide (perte d'assistance de freinage) : campagnes de novembre 2020, août 2021, décembre 2022 et décembre 2023",
+   "noyau": "Rappels courroie de distribution / pompe à vide (perte d'assistance de freinage): campagnes",
+   "details": [
+    "de novembre 2020, août 2021, décembre 2022 et décembre 2023"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.quechoisir.org/actualite-moteurs-puretech-un-probleme-d-ampleur-pour-stellantis-n109962",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-08": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "rappel",
+   "intitule": "Rappel gicleurs de refroidissement par jet d'huile (1.2 PureTech 82 ch) : 68 000 véhicules en France, risque de départ de feu",
+   "noyau": "Rappel gicleurs de refroidissement par jet d'huile (1.2 PureTech 82 ch): véhicules en France, risque de départ de feu",
+   "details": [
+    "68 000 véhicules"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://journalauto.com/constructeurs/puretech-stellantis-doit-rappeler-68-000-voitures/",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-09": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "campagne",
+   "intitule": "Actions judiciaires PureTech : action collective (plus de 5 000 propriétaires) et plaintes pénales (883 automobilistes ; UFC-Que Choisir)",
+   "noyau": "Actions judiciaires PureTech: action collective et plaintes pénales (UFC-Que Choisir)",
+   "details": [
+    "plus de 5 000 propriétaires",
+    "883 automobilistes"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://journalauto.com/constructeurs/moteurs-1-2-puretech-pres-de-900-automobilistes-portent-plainte-contre-stellantis/",
+     "verdict": "non_soutenue",
+     "classe": "presse",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    },
+    {
+     "url": "https://www.quechoisir.org/billet-de-la-presidente-moteurs-puretech-stellantis-encore-a-la-peine-n167096/",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "La page confirme une plainte de l'UFC-Que Choisir déposée auprès du Procureur de la République d'Arras (et non de Versailles) et ne mentionne nullement une plainte de 883 automobilistes déposée en février 2025 auprès du procureur de Versailles."
+    }
+   ],
+   "lot": 3
+  },
+  "B-PSA-EB2-10": {
+   "mode": "noyau",
+   "famille": "PSA-EB2",
+   "type": "verification",
+   "intitule": "À ne pas confondre : l'action de groupe UFC-Que Choisir contre Stellantis et Automobiles Citroën (juillet 2025) vise l'immobilisation liée aux rappels « stop drive », pas le PureTech",
+   "noyau": "À ne pas confondre: l'action de groupe UFC-Que Choisir contre Stellantis et Automobiles Citroën vise l'immobilisation liée aux rappels « stop drive », pas le PureTech",
+   "details": [
+    "juillet 2025"
+   ],
+   "details_affichables": [],
+   "confirmees": [],
+   "ecartees": [
+    {
+     "url": "https://www.quechoisir.org/formulaire-action-de-groupe-contre-stellantis-et-citroen-etre-informe-de-l-evolution-de-la-procedure-n168784/",
+     "verdict": "non_soutenue",
+     "classe": "consommateurs",
+     "lecture": "fenetre",
+     "cache": false,
+     "justification": "Aucun verdict rendu pour cette affirmation."
+    }
+   ],
+   "lot": 3
   }
+ },
+ "noyaux_a_reprendre": {
+  "G-VE-TRANSVERSAL-01": [
+   "points de suspension"
+  ],
+  "D-SUZUKI-BOOSTERJET-DUALJET-04": [
+   "mot orphelin (« les) »)"
+  ],
+  "E-MERCEDES-OM654-01": [
+   "mot orphelin (« et, »)"
+  ],
+  "E-MERCEDES-OM651-09": [
+   "mot orphelin (« avec) »)"
+  ],
+  "E-MERCEDES-OM651-01": [
+   "mot orphelin (« le, »)"
+  ],
+  "F-HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC-01": [
+   "mot orphelin (« les) »)"
+  ],
+  "D-HONDA-1.5-VTEC-TURBO-L15B7-02": [
+   "mot orphelin (« les) »)"
+  ],
+  "B-FIAT-1.3-MULTIJET-02": [
+   "mot orphelin (« sur, »)"
+  ],
+  "C-VAG-EA288-1.6-2.0TDI-09": [
+   "jour ou nombre orphelin"
+  ],
+  "C-VAG-EA211-1.2TSI-01": [
+   "mot orphelin (« de: »)"
+  ],
+  "C-VAG-EA188-TDI-PD-07": [
+   "mot orphelin (« les) »)"
+  ],
+  "C-VAG-EA111-1.4TSI-08": [
+   "mot orphelin (« les »)"
+  ],
+  "H-VAG-GOLF-5-ESSENCE-ELECTRONIQUE-01": [
+   "mot orphelin (« et, »)"
+  ],
+  "H-RENAULT-MEGANE2-SCENIC2-ELECTRONIQUE-CHASSIS-01": [
+   "mot orphelin (« et »)"
+  ],
+  "H-PSA-DV4-04": [
+   "double ponctuation"
+  ],
+  "H-OPEL-CORSA-D-02": [
+   "mot orphelin (« les) »)"
+  ],
+  "H-AYGO-C1-107-RAPPELS-02": [
+   "jour ou nombre orphelin"
+  ]
  }
 }

@@ -74,6 +74,22 @@ const juge = (scenario) => {
   const appel = async (sous) => ({ verdicts: [], usage: null, modele: 'm' })
   const v = await voter(appel, affs)
   ok(v.resultats.every((r) => r.verdict === 'non_soutenue'), 'aucun verdict rendu : non soutenue')
+  // ⚠️ … ET UN SILENCE N'EST JAMAIS FIABLE (défaut du 10 nov. 2026 : deux
+  // silences « s'accordaient » et partaient au cache pour 180 jours).
+  ok(v.resultats.every((r) => r.fiable === false), 'deux silences ne font pas un verdict fiable : rien au cache')
+  ok(v.resultats.every((r) => r.votes.length === 0), 'un silence n’est compté comme aucun vote')
+}
+{
+  // Un vote réel et un silence : pas de majorité, troisième passage, et
+  // fiable seulement si deux votes RÉELS existent au bout.
+  let n = 0
+  const appel = async (sous) => {
+    n++
+    if (n === 2) return { verdicts: [], usage: null, modele: 'm' }
+    return { verdicts: sous.map((_, i) => ({ index: i + 1, verdict: 'soutenue', justification: 'ok' })), usage: null, modele: 'm' }
+  }
+  const v = await voter(appel, [{ type: 'panne', texte: 'A' }])
+  ok(n === 3 && v.resultats[0].verdict === 'soutenue' && v.resultats[0].fiable, 'un silence + deux votes réels concordants : fiable')
 }
 
 // ── Garde-fous statiques : le cache AVANT la page, le juge partagé ─────────

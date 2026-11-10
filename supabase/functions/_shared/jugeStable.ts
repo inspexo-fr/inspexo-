@@ -89,16 +89,25 @@ export async function cleVerif(url: string, affirmation: string, moteur: string)
 }
 
 // deno-lint-ignore no-explicit-any
-function verdictsParIndex(r: ReponseJuge, n: number): Array<{ verdict: string; justification: string | null }> | null {
+// ⚠️ UN SILENCE N'EST PAS UN VOTE (défaut trouvé le 10 nov. 2026). Le modèle
+// rend parfois une réponse sans verdict pour une affirmation (index absent,
+// valeur hors des trois admises). Compté comme « non_soutenue », deux silences
+// « s'accordaient », le verdict passait pour FIABLE et entrait au cache pour
+// 180 jours : 19 affirmations du pilote K9K + EB2 y ont été figées en rejet
+// sans qu'aucune page ait été réellement jugée. Désormais un silence est
+// marqué `absent`, ne compte dans aucune majorité, et un verdict n'est fiable
+// qu'avec au moins DEUX votes réels.
+type Vote = { verdict: string; justification: string | null; absent?: true };
+
+function verdictsParIndex(r: ReponseJuge, n: number): Vote[] | null {
   if (!r) return null;
-  const out: Array<{ verdict: string; justification: string | null }> = [];
+  const out: Vote[] = [];
   for (let i = 0; i < n; i++) {
     // deno-lint-ignore no-explicit-any
     const v = (r.verdicts ?? []).find((x: any) => Number(x?.index) === i + 1);
-    // Le silence ne vaut pas accord : une affirmation non notée vote contre.
     out.push(v && (VERDICTS_VALIDES as readonly string[]).includes(v.verdict)
       ? { verdict: v.verdict, justification: typeof v.justification === "string" ? v.justification.slice(0, 600) : null }
-      : { verdict: "non_soutenue", justification: "Aucun verdict rendu pour cette affirmation." });
+      : { verdict: "non_soutenue", justification: "Aucun verdict rendu pour cette affirmation.", absent: true });
   }
   return out;
 }
@@ -116,10 +125,11 @@ export async function voter(
   const v1 = verdictsParIndex(r1, n), v2 = verdictsParIndex(r2, n);
   const modele = r1?.modele ?? r2?.modele ?? null;
 
+  const reels = (vs: Array<Vote | undefined>) => vs.filter((x): x is Vote => !!x && !x.absent);
   const resultats: VerdictVote[] = [];
   const desaccords: number[] = [];
   for (let i = 0; i < n; i++) {
-    const votes = [v1?.[i], v2?.[i]].filter((x): x is { verdict: string; justification: string | null } => !!x);
+    const votes = reels([v1?.[i], v2?.[i]]);
     if (votes.length === 2 && votes[0].verdict === votes[1].verdict) {
       resultats.push({ verdict: votes[0].verdict, justification: votes[0].justification, votes: votes.map((x) => x.verdict), fiable: true, modele });
     } else {
@@ -140,13 +150,15 @@ export async function voter(
     if (r3?.usage) usages.push(r3.usage);
     const v3 = verdictsParIndex(r3, desaccords.length);
     desaccords.forEach((i, k) => {
-      const tous = [v1?.[i], v2?.[i], v3?.[k]].filter((x): x is { verdict: string; justification: string | null } => !!x);
-      const verdict = majorite(tous.map((x) => x.verdict));
+      const tous = reels([v1?.[i], v2?.[i], v3?.[k]]);
+      const verdict = tous.length ? majorite(tous.map((x) => x.verdict)) : "non_soutenue";
       resultats[i] = {
         verdict,
-        justification: tous.find((x) => x.verdict === verdict)?.justification ?? tous[0]?.justification ?? null,
+        justification: tous.find((x) => x.verdict === verdict)?.justification ?? tous[0]?.justification ??
+          "Aucun verdict rendu pour cette affirmation.",
         votes: tous.map((x) => x.verdict),
-        // Fiable dès que deux passages au moins ont réellement répondu.
+        // Fiable seulement avec DEUX votes réels au moins : un silence ne se
+        // fige jamais au cache.
         fiable: tous.length >= 2,
         modele: modele ?? r3?.modele ?? null,
       };

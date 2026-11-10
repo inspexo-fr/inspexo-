@@ -290,6 +290,12 @@ if (a('--candidats-externes')) {
           for (const o of sous) {
             const r = j.verdicts?.[o.id] ?? {}
             const v = r.verdict ?? 'non_soutenue'
+            // Un silence du juge (aucun vote réel) n'est PAS un rejet : la
+            // page n'a pas été jugée. L'affirmation reste à rejuger.
+            if (Array.isArray(r.votes) && r.votes.length === 0 && !r.depuis_cache) {
+              ;(etat[o.id].silences ??= []).push(url)
+              continue
+            }
             if (v === 'mauvais_moteur') mauvaisMoteur++
             ;(v === 'soutenue' ? etat[o.id].confirmees : etat[o.id].ecartees)
               .push({ url, verdict: v, classe: classeDe(url), lecture: r.lecture ?? null, cache: r.depuis_cache === true,
@@ -301,13 +307,17 @@ if (a('--candidats-externes')) {
       if (arretLot) break
     }
     const confirmees = lot.filter((o) => etat[o.id].confirmees.length >= 1).length
-    const taux = confirmees / lot.length
+    // Le taux porte sur les affirmations RÉELLEMENT jugées : celles qui n'ont
+    // reçu que des silences sont à rejuger, pas rejetées.
+    const silencieuses = lot.filter((o) => (etat[o.id].silences ?? []).length && !etat[o.id].confirmees.length && !etat[o.id].ecartees.length)
+    const jugees = lot.length - silencieuses.length
+    const taux = jugees ? confirmees / jugees : 0
     affirmationsJouees += lot.length
     for (const o of lot) {
       const e = etat[o.id]
       const { noyau, details } = extraireNoyau(o.intitule, o.type)
       const extraitsConfirmes = e.confirmees.flatMap((c) => extraitsVerbatim(o, c.url))
-      journal.affirmations[o.id] = { mode: 'noyau', famille: o.famille, type: o.type, intitule: o.intitule, noyau,
+      journal.affirmations[o.id] = { silences: e.silences ?? [], a_rejuger: silencieuses.includes(o), mode: silencieuses.includes(o) ? 'a_rejuger' : 'noyau', famille: o.famille, type: o.type, intitule: o.intitule, noyau,
         details, details_affichables: detailsAffichables(details, extraitsConfirmes),
         confirmees: e.confirmees, ecartees: e.ecartees, lot: journal.lots.length + 1 }
     }
@@ -320,7 +330,7 @@ if (a('--candidats-externes')) {
     const restant = totalRestant - affirmationsJouees
     const projete = DEJA_DEPENSE + coutRun + restant * (coutRun / affirmationsJouees)
     console.log(`  lot ${journal.lots.length} · ${lot.length} affirmations (${[...new Set(lot.map((o) => o.famille))].join(', ')})`)
-    console.log(`    confirmées ${confirmees} (${Math.round(taux * 100)} %) · mauvais moteur ${mauvaisMoteur} · ${appels} appel(s) · ${coutLot.toFixed(3)} € · ${coutParAff.toFixed(4)} €/affirmation`)
+    console.log(`    confirmées ${confirmees}/${jugees} jugées (${Math.round(taux * 100)} %) · à rejuger (silence du juge) ${silencieuses.length} · mauvais moteur ${mauvaisMoteur} · ${appels} appel(s) · ${coutLot.toFixed(3)} € · ${coutParAff.toFixed(4)} €/affirmation`)
     console.log(`    projection : ${projete.toFixed(2)} € cumulés pour les ${totalRestant} affirmations jugeables (plafond ${PLAFOND_PROJETE} €)${arretLot ? ` · ARRÊT : ${arretLot}` : ''}`)
     if (arretLot?.startsWith('mur du run')) { console.log('\n⏸ Mur du run atteint : le reste n’est pas joué.'); break }
     if (taux < SEUIL_LOT) { console.log(`\n⏹ ARRÊT IMMÉDIAT : le lot confirme moins de ${SEUIL_LOT * 100} %.`); break }
