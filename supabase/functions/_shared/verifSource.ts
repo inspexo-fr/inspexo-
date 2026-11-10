@@ -101,7 +101,14 @@ export function estSiteDAnnonces(url: string): boolean {
   }
 }
 
-export async function texteDeLaPage(url: string, minCaracteres = 400): Promise<string | null> {
+/** SPRINT 23 — le texte ENTIER d'une page (pré-contrôle). `texteDeLaPage`
+ *  le coupe à MAX_TEXTE_SOURCE : c'est ce que voit le juge, et un extrait
+ *  placé plus loin lui est invisible. Le pré-contrôle doit le savoir. */
+export function texteDeLaPageComplet(url: string, minCaracteres = 400): Promise<string | null> {
+  return texteDeLaPage(url, minCaracteres, 400_000);
+}
+
+export async function texteDeLaPage(url: string, minCaracteres = 400, maxCaracteres = MAX_TEXTE_SOURCE): Promise<string | null> {
   if (estSiteDAnnonces(url)) return null
   try {
     const res = await fetch(url, {
@@ -122,14 +129,14 @@ export async function texteDeLaPage(url: string, minCaracteres = 400): Promise<s
         const brut = (typeof extrait === "string" ? extrait : (extrait?.text ?? "")).replace(/\s+/g, " ").trim();
         // Même seuil de texte utile que partout : un scan rend deux
         // caractères sans erreur, et « aucune erreur » ne vaut pas « lu ».
-        return brut.length >= minCaracteres ? brut.slice(0, MAX_TEXTE_SOURCE) : null;
+        return brut.length >= minCaracteres ? brut.slice(0, maxCaracteres) : null;
       } catch (_) {
         return null;
       }
     }
 
     if (!type.includes("html")) return null;
-    const html = (await res.text()).slice(0, 400_000);
+    const html = (await res.text()).slice(0, Math.max(400_000, maxCaracteres * 4));
     const txt = html
       .replace(/<script[\s\S]*?<\/script>/gi, " ")
       .replace(/<style[\s\S]*?<\/style>/gi, " ")
@@ -137,7 +144,7 @@ export async function texteDeLaPage(url: string, minCaracteres = 400): Promise<s
       .replace(/&nbsp;/g, " ")
       .replace(/\s+/g, " ")
       .trim();
-    return txt.length >= minCaracteres ? txt.slice(0, MAX_TEXTE_SOURCE) : null;
+    return txt.length >= minCaracteres ? txt.slice(0, maxCaracteres) : null;
   } catch (_) {
     return null;
   }

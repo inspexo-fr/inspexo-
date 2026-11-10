@@ -1,0 +1,4713 @@
+{
+ "genere_le": "2026-11-10",
+ "source": "docs/sources-moteurs-2026-11.json",
+ "fiches_en_base": 44,
+ "lignes": [
+  {
+   "cle": "NISSAN-CVT-XTRONIC",
+   "groupe": "A",
+   "nature": "boite",
+   "libelle": "Boîte automatique à variation continue Nissan/Renault X-Tronic (CVT) — Qashqai II, X-Trail III, Kadjar, Koleos II",
+   "marques": [
+    "Nissan",
+    "Renault"
+   ],
+   "periode": "2013-2014",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 1,
+    "campagne": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "NISSAN-HR12DDT",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Nissan 1.2 DIG-T 115 (HR12DDT, même base que le Renault H5Ft) — Qashqai II, Juke, Pulsar",
+   "marques": [
+    "Nissan",
+    "Renault"
+   ],
+   "periode": "2014-2021",
+   "codes": [
+    "H5FT"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Renault H5FT"
+   ],
+   "objets": 5,
+   "types": {
+    "panne": 2,
+    "entretien": 1,
+    "campagne": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "NISSAN-MR16DDT-MR20DE",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Nissan 1.6 DIG-T 163/190/200/218 (MR16DDT) et 2.0 16v 140 (MR20DE) — Juke, Qashqai, X-Trail",
+   "marques": [
+    "Nissan"
+   ],
+   "periode": "2010-2019",
+   "codes": [
+    "MR16DDT",
+    "MR20DE",
+    "MR20",
+    "MR16"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Nissan MR16DDT",
+    "Nissan MR20DE"
+   ],
+   "objets": 8,
+   "types": {
+    "panne": 2,
+    "entretien": 2,
+    "rappel": 2,
+    "campagne": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "RENAULT-B4D",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia 1.0 SCe 65/70/75 atmosphérique (B4D sur Sandero/Clio ; les pages citées nomment seulement « 1.0 SCe » — correspondance code/modèle non sourcée, notamment pour la Twingo III)",
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "periode": "2014-2022",
+   "codes": [
+    "B4D",
+    "H4D"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Renault H4D"
+   ],
+   "objets": 4,
+   "types": {
+    "entretien": 1,
+    "panne": 3
+   }
+  },
+  {
+   "cle": "RENAULT-D4F-K4M",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia 1.2 16v 75 (D4F) et 1.4/1.6 16v (K4J/K4M) atmosphériques — Clio, Mégane II, Scénic II, Kangoo, Sandero, Duster I",
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "periode": "2003-2013",
+   "codes": [
+    "K4M",
+    "K4J",
+    "D4F"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 4,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "RENAULT-EDC-DC4-EASY-R",
+   "groupe": "A",
+   "nature": "boite",
+   "libelle": "Boîte robotisée double embrayage Renault EDC (DC4 6 rapports à sec ; EDC7) et boîte robotisée Dacia Easy-R",
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "periode": "2008-2019",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 10,
+   "types": {
+    "panne": 4,
+    "constat": 1,
+    "garantie": 1,
+    "rappel": 4
+   }
+  },
+  {
+   "cle": "RENAULT-H4BT",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia 0.9 TCe 90/95 (H4Bt) — Clio IV, Captur I, Twingo III, Sandero II, Logan II",
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "periode": "2014-2024",
+   "codes": [
+    "H4BT"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Renault H4BT"
+   ],
+   "objets": 10,
+   "types": {
+    "panne": 7,
+    "entretien": 1,
+    "rappel": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "RENAULT-H4DT",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia 1.0 TCe 90/100 et Eco-G GPL (H4Dt) — Clio V, Captur II, Duster II, Sandero III, Jogger",
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "periode": "2018-2023",
+   "codes": [
+    "H4DT",
+    "H4D"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Renault H4DT",
+    "Renault H4D"
+   ],
+   "objets": 8,
+   "types": {
+    "panne": 6,
+    "entretien": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "RENAULT-H4M",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia 1.6 SCe 100/115 (H4M, dérivé du Nissan HR16DE) — Duster II, Sandero/Logan, Captur, Clio",
+   "marques": [
+    "Dacia",
+    "Nissan",
+    "Renault"
+   ],
+   "periode": "2018-2024",
+   "codes": [
+    "H4M",
+    "HR16"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Renault H4M"
+   ],
+   "objets": 3,
+   "types": {
+    "panne": 1,
+    "entretien": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "RENAULT-H5FT",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia 1.2 TCe 115/120/125/130 (H5Ft), Nissan 1.2 DIG-T 115, Mercedes Citan 1.2",
+   "marques": [
+    "Dacia",
+    "Mercedes",
+    "Nissan",
+    "Renault"
+   ],
+   "periode": "2012-2024",
+   "codes": [
+    "H5FT"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Renault H5FT"
+   ],
+   "objets": 12,
+   "types": {
+    "panne": 6,
+    "entretien": 1,
+    "rappel": 1,
+    "campagne": 2,
+    "garantie": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "RENAULT-H5HT",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia 1.3 TCe 115-160 (H5Ht / HR13, aussi Mercedes M282 et Nissan 1.3 DIG-T)",
+   "marques": [
+    "Dacia",
+    "Mercedes",
+    "Nissan",
+    "Renault"
+   ],
+   "periode": "2017-2024",
+   "codes": [
+    "H5HT"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 11,
+   "types": {
+    "panne": 8,
+    "entretien": 1,
+    "rappel": 1,
+    "constat": 1
+   }
+  },
+  {
+   "cle": "RENAULT-K9K",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Dacia/Nissan 1.5 dCi (K9K, toutes générations ; Blue dCi = K9K Gen8)",
+   "marques": [
+    "Dacia",
+    "Nissan",
+    "Renault"
+   ],
+   "periode": "2001-2021",
+   "codes": [
+    "K9K"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Mercedes OM607",
+    "Renault K9K"
+   ],
+   "objets": 40,
+   "types": {
+    "panne": 25,
+    "entretien": 1,
+    "campagne": 4,
+    "rappel": 6,
+    "garantie": 3,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "RENAULT-M9R",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Nissan 2.0 dCi 130/150/175 et 2.0 Blue dCi 160-200 (M9R) — Laguna III, Espace IV/V, Koleos, Talisman, Trafic, Qashqai, X-Trail",
+   "marques": [
+    "Nissan",
+    "Renault",
+    "Fiat"
+   ],
+   "periode": "2006-2021",
+   "codes": [
+    "M9R"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 7,
+   "types": {
+    "panne": 4,
+    "entretien": 1,
+    "garantie": 1,
+    "constat": 1
+   }
+  },
+  {
+   "cle": "RENAULT-R9M",
+   "groupe": "A",
+   "nature": "moteur",
+   "libelle": "Renault/Nissan 1.6 dCi 130/160/165 (R9M) — Mégane III/IV, Scénic III/IV, Kadjar, Espace V, Talisman, Trafic III, Qashqai, X-Trail, Koleos II",
+   "marques": [
+    "Nissan",
+    "Renault"
+   ],
+   "periode": "2010-2018",
+   "codes": [
+    "R9M"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 15,
+   "types": {
+    "panne": 8,
+    "entretien": 1,
+    "campagne": 1,
+    "constat": 1,
+    "rappel": 3,
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "BMW-MINI-R56-PRINCE-N12-N14-N18",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "Mini II R56 essence (moteurs Prince N12/N14/N18)",
+   "marques": [
+    "Mini"
+   ],
+   "periode": "2007-2014",
+   "codes": [
+    "EP6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot EP6",
+    "Mini N18"
+   ],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "FIAT-1.3-MULTIJET",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "Fiat 1.3 JTD/Multijet 70/75/90/95 (aussi Opel 1.3 CDTI)",
+   "marques": [
+    "Fiat",
+    "Opel",
+    "Alfa Romeo"
+   ],
+   "periode": "2004-2012",
+   "codes": [
+    "MULTIJET"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 10,
+   "types": {
+    "panne": 7,
+    "entretien": 2,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "FIAT-DUALOGIC",
+   "groupe": "B",
+   "nature": "boite",
+   "libelle": "Boîte robotisée Fiat Dualogic",
+   "marques": [
+    "Fiat"
+   ],
+   "periode": "2007-2009",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "FIAT-ESSENCE-FIRE-TWINAIR",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "Fiat 500 essence (1.2, 0.9 TwinAir, 1.4)",
+   "marques": [
+    "Fiat"
+   ],
+   "periode": "2007-2007",
+   "codes": [
+    "TWINAIR",
+    "FIRE"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Fiat TWINAIR"
+   ],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "OPEL-1.4-TURBO",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "Opel 1.4 Turbo (A14NET/B14NET et dérivés 100/120/125/140/150 ch)",
+   "marques": [
+    "Opel"
+   ],
+   "periode": "2009-2019",
+   "codes": [
+    "14NET"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 2,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "OPEL-1.6-CDTI",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "Opel 1.6 CDTI (B16DTH/B16DTE)",
+   "marques": [
+    "Opel"
+   ],
+   "periode": "2015-2015",
+   "codes": [
+    "B16DTH"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "OPEL-1.7-CDTI",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "Opel 1.7 CDTI (A17DTR/A17DTS et dérivés 100/110/125/130 ch)",
+   "marques": [
+    "Opel"
+   ],
+   "periode": "2008-2012",
+   "codes": [
+    "A17DTS"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 3
+   }
+  },
+  {
+   "cle": "OPEL-CDTI-ASTRA-J",
+   "groupe": "B",
+   "nature": "non_rattachee",
+   "libelle": "Opel Astra J diesel (1.3, 1.6, 1.7 et 2.0 CDTI, sans distinction dans la source)",
+   "marques": [
+    "Opel"
+   ],
+   "periode": "2009-2016",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "OPEL-M32",
+   "groupe": "B",
+   "nature": "boite",
+   "libelle": "Boîte manuelle 6 rapports Opel (M32) — Astra J",
+   "marques": [
+    "Opel"
+   ],
+   "periode": "2009-2017",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "PSA-AL4-DP0",
+   "groupe": "B",
+   "nature": "boite",
+   "libelle": "Boîte automatique 4 rapports PSA/Renault (AL4, DP0)",
+   "marques": [
+    "Peugeot",
+    "Renault"
+   ],
+   "periode": "2007-2011",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "PSA-BMP6-ETG",
+   "groupe": "B",
+   "nature": "boite",
+   "libelle": "Boîtes manuelles pilotées PSA (BMP6, ETG5/ETG6)",
+   "marques": [
+    "Peugeot",
+    "Citroën"
+   ],
+   "periode": "2013-2017",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 2
+   }
+  },
+  {
+   "cle": "PSA-DV5",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "PSA/Stellantis 1.5 BlueHDi 75/100/110/120/130 (DV5RC/DV5RD)",
+   "marques": [
+    "DS",
+    "Fiat",
+    "Opel",
+    "Peugeot",
+    "Toyota",
+    "Citroën"
+   ],
+   "periode": "2008-2026",
+   "codes": [
+    "DV5"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DV5"
+   ],
+   "objets": 10,
+   "types": {
+    "panne": 3,
+    "garantie": 2,
+    "rappel": 4,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "PSA-DV6",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "PSA 1.6 HDi / e-HDi / BlueHDi (DV6TED4 90/110, DV6C/DV6D 92/112/115, DV6FC/DV6FD 100/120)",
+   "marques": [
+    "Mini",
+    "Peugeot",
+    "DS",
+    "Citroën",
+    "Opel",
+    "Toyota"
+   ],
+   "periode": "2004-2025",
+   "codes": [
+    "DV6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DV6"
+   ],
+   "objets": 18,
+   "types": {
+    "panne": 13,
+    "garantie": 1,
+    "rappel": 3,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "PSA-DW10",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "PSA 2.0 BlueHDi 150/180 (DW10FC/DW10FD) — système SCR AdBlue",
+   "marques": [
+    "Citroën",
+    "DS",
+    "Opel",
+    "Peugeot",
+    "Toyota"
+   ],
+   "periode": "2001-2025",
+   "codes": [
+    "DW10"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DW10"
+   ],
+   "objets": 17,
+   "types": {
+    "panne": 11,
+    "garantie": 1,
+    "rappel": 4,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "PSA-EAT6",
+   "groupe": "B",
+   "nature": "boite",
+   "libelle": "Boîte automatique 6 rapports Aisin (EAT6 / AM6, « BVA6 »)",
+   "marques": [
+    "Citroën",
+    "DS",
+    "Peugeot"
+   ],
+   "periode": "2008-2019",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "PSA-EAT8",
+   "groupe": "B",
+   "nature": "boite",
+   "libelle": "Boîte automatique 8 rapports Aisin (EAT8)",
+   "marques": [
+    "Citroën",
+    "DS",
+    "Peugeot",
+    "Opel"
+   ],
+   "periode": "2019-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "PSA-EB2",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "PSA/Stellantis 1.2 PureTech (EB2 : VTi/PureTech 82 atmo, PureTech 110/130 turbo)",
+   "marques": [
+    "Opel",
+    "Peugeot",
+    "Citroën",
+    "DS",
+    "Alfa Romeo",
+    "Fiat",
+    "Jeep",
+    "Lancia"
+   ],
+   "periode": "2008-2026",
+   "codes": [
+    "EB2"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot EB2DTS",
+    "Peugeot EB2DT",
+    "Peugeot EB2ADTS",
+    "Peugeot EB2",
+    "Peugeot EB2F"
+   ],
+   "objets": 14,
+   "types": {
+    "panne": 5,
+    "entretien": 1,
+    "garantie": 1,
+    "campagne": 2,
+    "rappel": 4,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "PSA-EP6",
+   "groupe": "B",
+   "nature": "moteur",
+   "libelle": "PSA/BMW 1.6 VTi et 1.6 THP « Prince » (EP6, EP6DT, EP6CDT, EP6FDT ; Mini N12/N14/N18)",
+   "marques": [
+    "BMW",
+    "Mini",
+    "Peugeot",
+    "Citroën",
+    "Opel"
+   ],
+   "periode": "2007-2019",
+   "codes": [
+    "EP6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot EP6",
+    "Mini N18"
+   ],
+   "objets": 13,
+   "types": {
+    "panne": 9,
+    "campagne": 1,
+    "rappel": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "PSA-HYDRACTIVE-III",
+   "groupe": "B",
+   "nature": "organe",
+   "libelle": "Suspension hydropneumatique Hydractive III/III+ (Citroën C5)",
+   "marques": [
+    "Citroën"
+   ],
+   "periode": "2001-2017",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "verification": 1,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "PSA-SUSPENSION-PNEUMATIQUE-C4-PICASSO",
+   "groupe": "B",
+   "nature": "organe",
+   "libelle": "Suspension arrière pneumatique (Grand C4 Picasso I)",
+   "marques": [
+    "Citroën"
+   ],
+   "periode": "2010-2010",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "VAG-AUDI-DIESEL-RAPPELS-KBA",
+   "groupe": "C",
+   "nature": "organe",
+   "libelle": "Audi diesel (moteurs non précisés par la source) – rappels ordonnés par le KBA",
+   "marques": [
+    "Audi"
+   ],
+   "periode": "2005-2017",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "VAG-DSG-DQ200",
+   "groupe": "C",
+   "nature": "boite",
+   "libelle": "DSG7 / S tronic 7 à embrayages à sec DQ200",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Skoda",
+    "Volkswagen"
+   ],
+   "periode": "2008-2017",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 9,
+   "types": {
+    "panne": 5,
+    "campagne": 2,
+    "rappel": 2
+   }
+  },
+  {
+   "cle": "VAG-DSG-DQ250",
+   "groupe": "C",
+   "nature": "boite",
+   "libelle": "DSG6 / S tronic 6 à bain d'huile DQ250 (02E)",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Skoda",
+    "Volkswagen"
+   ],
+   "periode": "2003-2023",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "rappel": 2,
+    "panne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-DSG-DQ381",
+   "groupe": "C",
+   "nature": "boite",
+   "libelle": "DSG7 à bain d'huile (DQ381) – Tiguan II / Passat B8 : code non nommé par les sources",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Skoda",
+    "Volkswagen"
+   ],
+   "periode": "2014-2023",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "VAG-EA111-1.2TSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.2 TSI 85/105 (CBZA, CBZB, CBZC)",
+   "marques": [
+    "Audi",
+    "Volkswagen"
+   ],
+   "periode": "2011-2012",
+   "codes": [
+    "EA111"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 3,
+    "campagne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-EA111-1.4TSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.4 TSI EA111 (CAXA 122 ; twincharger CAVD/CAVE/CTHD 140-185)",
+   "marques": [
+    "Audi",
+    "Volkswagen",
+    "Seat",
+    "Skoda"
+   ],
+   "periode": "2009-2014",
+   "codes": [
+    "EA111"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 9,
+   "types": {
+    "panne": 6,
+    "campagne": 1,
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-EA113-2.0TFSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW/Audi 2.0 TFSI EA113 (AXX, BWA, BPY ; S3 CDL)",
+   "marques": [
+    "Audi",
+    "Volkswagen"
+   ],
+   "periode": "2004-2012",
+   "codes": [
+    "EA113",
+    "EA888"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "entretien": 1,
+    "verification": 1,
+    "panne": 2
+   }
+  },
+  {
+   "cle": "VAG-EA188-TDI-PD",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW/Audi 1.9 TDI PD 100-130 & 2.0 TDI PD 140 (injecteurs-pompes) 2000-2009",
+   "marques": [
+    "Audi",
+    "Skoda",
+    "Volkswagen",
+    "Seat"
+   ],
+   "periode": "2000-2017",
+   "codes": [
+    "EA188"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 12,
+   "types": {
+    "panne": 8,
+    "rappel": 2,
+    "verification": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.6 TDI (CAY) & 2.0 TDI common rail EA189 (CBA, CBD, CFF, CFH…) 2008-2015",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Skoda",
+    "Volkswagen"
+   ],
+   "periode": "2007-2018",
+   "codes": [
+    "EA189"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Volkswagen EA189"
+   ],
+   "objets": 16,
+   "types": {
+    "rappel": 4,
+    "verification": 1,
+    "garantie": 1,
+    "panne": 9,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-EA211-1.0TSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.0 TSI 3 cylindres (CHZB, DKRF, DKLA)",
+   "marques": [
+    "Volkswagen",
+    "Seat"
+   ],
+   "periode": "2015-2019",
+   "codes": [
+    "EA211"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "panne": 2,
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-EA211-1.2TSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.2 TSI 90/105/110 (CJZA, CJZB, CJZC)",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Volkswagen",
+    "Skoda"
+   ],
+   "periode": "2012-2019",
+   "codes": [
+    "EA211"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 3,
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-EA211-1.4TSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.4 TSI 122/125/140 ACT/150 (CXSA, CPTA, CZCA, CHPA, CZEA)",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Volkswagen"
+   ],
+   "periode": "2012-2023",
+   "codes": [
+    "EA211"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 8,
+   "types": {
+    "panne": 6,
+    "verification": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-EA211-1.5TSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.5 TSI ACT / evo (DADA, DPCA)",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Skoda",
+    "Volkswagen"
+   ],
+   "periode": "2017-2022",
+   "codes": [
+    "EA211"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 7,
+   "types": {
+    "panne": 4,
+    "campagne": 1,
+    "entretien": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "VAG-EA288-1.6-2.0TDI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW 1.6 TDI & 2.0 TDI EA288 (CLHA, CXXB, DDYA ; CRBC, CRLB, CRMB, DFGA, DCYA…) 2012-",
+   "marques": [
+    "Audi",
+    "Volkswagen"
+   ],
+   "periode": "2012-2023",
+   "codes": [
+    "EA288",
+    "CRBC"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Volkswagen EA288",
+    "Audi EA288",
+    "Volkswagen CRBC"
+   ],
+   "objets": 12,
+   "types": {
+    "panne": 9,
+    "verification": 1,
+    "entretien": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "VAG-EA888-1.8-2.0TSI",
+   "groupe": "C",
+   "nature": "moteur",
+   "libelle": "VW/Audi 1.8 & 2.0 TSI/TFSI EA888 gen 1-3 (CAW, CCZ, CDH, CDN, CJX, CHH…)",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Volkswagen",
+    "Skoda"
+   ],
+   "periode": "2006-2017",
+   "codes": [
+    "EA888"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 15,
+   "types": {
+    "panne": 10,
+    "campagne": 1,
+    "garantie": 1,
+    "rappel": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-HALDEX-4MOTION",
+   "groupe": "C",
+   "nature": "boite",
+   "libelle": "Transmission intégrale 4Motion / quattro à coupleur Haldex",
+   "marques": [
+    "Audi",
+    "Seat",
+    "Skoda",
+    "Volkswagen"
+   ],
+   "periode": "2014-2023",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-MULTITRONIC",
+   "groupe": "C",
+   "nature": "boite",
+   "libelle": "Audi Multitronic (boîte à variation continue) – A4 B6/B7, A5…",
+   "marques": [
+    "Audi"
+   ],
+   "periode": "2001-2016",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "VAG-STRONIC-DL501",
+   "groupe": "C",
+   "nature": "boite",
+   "libelle": "Audi S tronic 7 rapports longitudinale (A4/A5/Q5) – code DL501 non nommé par les sources",
+   "marques": [
+    "Audi"
+   ],
+   "periode": "2007-2016",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "verification": 1
+   }
+  },
+  {
+   "cle": "VAG-V6-3.0TDI",
+   "groupe": "C",
+   "nature": "non_rattachee",
+   "libelle": "Audi/VW V6 3.0 TDI (et 2.7 TDI)",
+   "marques": [
+    "Audi",
+    "Porsche",
+    "Volkswagen"
+   ],
+   "periode": "2004-2018",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 6,
+   "types": {
+    "rappel": 1,
+    "panne": 4,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "FORD-1.0-ECOBOOST",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Ford 1.0 EcoBoost (Fox, 3 cylindres)",
+   "marques": [
+    "Ford"
+   ],
+   "periode": "2011-2024",
+   "codes": [
+    "FOX"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Ford FOX"
+   ],
+   "objets": 9,
+   "types": {
+    "panne": 4,
+    "campagne": 4,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "FORD-1.5-1.6-TDCI",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Ford 1.5 TDCi / 1.6 TDCi (base PSA DV6)",
+   "marques": [
+    "Ford",
+    "Peugeot"
+   ],
+   "periode": "2007-2019",
+   "codes": [
+    "DV6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DV6"
+   ],
+   "objets": 5,
+   "types": {
+    "panne": 3,
+    "campagne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "FORD-1.5-ECOBOOST",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Ford 1.5 EcoBoost (4 cyl. 2014-2018 ; 3 cyl. Dragon 2018+)",
+   "marques": [
+    "Ford"
+   ],
+   "periode": "2012-2022",
+   "codes": [
+    "DRAGON"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Ford DRAGON"
+   ],
+   "objets": 3,
+   "types": {
+    "campagne": 1,
+    "entretien": 1,
+    "constat": 1
+   }
+  },
+  {
+   "cle": "FORD-1.6-ECOBOOST",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Ford 1.6 EcoBoost / SCTi (Sigma)",
+   "marques": [
+    "Ford"
+   ],
+   "periode": "2010-2018",
+   "codes": [
+    "SIGMA"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Ford SIGMA"
+   ],
+   "objets": 2,
+   "types": {
+    "campagne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "FORD-2.0-TDCI",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Ford 2.0 TDCi (base PSA DW10)",
+   "marques": [
+    "Ford",
+    "Peugeot"
+   ],
+   "periode": "2013-2022",
+   "codes": [
+    "DW10"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DW10"
+   ],
+   "objets": 4,
+   "types": {
+    "panne": 2,
+    "campagne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "FORD-ECOBLUE",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Ford 1.5 EcoBlue / 2.0 EcoBlue (Panther)",
+   "marques": [
+    "Ford"
+   ],
+   "periode": "2019-2022",
+   "codes": [
+    "ECOBLUE"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "FORD-POWERSHIFT-DPS6",
+   "groupe": "D",
+   "nature": "boite",
+   "libelle": "Ford PowerShift DPS6 / 6DCT250 (double embrayage à sec)",
+   "marques": [
+    "Ford"
+   ],
+   "periode": "2011-2019",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "HONDA-1.0-VTEC-TURBO-P10A2",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Honda 1.0 VTEC Turbo (126/129 ch, Civic X) — hors liste initiale",
+   "marques": [
+    "Honda"
+   ],
+   "periode": "2017-2022",
+   "codes": [
+    "P10A2"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "HONDA-1.5-VTEC-TURBO-L15B7",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Honda 1.5 VTEC Turbo L15B7 (182 ch Civic X ; CR-V 5)",
+   "marques": [
+    "Honda"
+   ],
+   "periode": "2017-2024",
+   "codes": [
+    "L15B7"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "HONDA-1.6-IDTEC-N16",
+   "groupe": "D",
+   "nature": "non_rattachee",
+   "libelle": "Honda 1.6 i-DTEC N16 (120 ch ; 160 ch bi-turbo CR-V)",
+   "marques": [
+    "Honda"
+   ],
+   "periode": "2015-2020",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 3,
+    "campagne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "HONDA-1.8-IVTEC-R18",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Honda 1.8 i-VTEC R18 (140/142 ch)",
+   "marques": [
+    "Honda"
+   ],
+   "periode": "2006-2016",
+   "codes": [
+    "R18"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "HONDA-2.2-ICTDI-IDTEC-N22",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Honda 2.2 i-CTDi N22A (140 ch) / 2.2 i-DTEC (150 ch)",
+   "marques": [
+    "Honda"
+   ],
+   "periode": "2006-2010",
+   "codes": [
+    "N22"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "HONDA-CVT",
+   "groupe": "D",
+   "nature": "boite",
+   "libelle": "Honda boîte CVT (Jazz 3/4, HR-V 2, Civic 10)",
+   "marques": [
+    "Honda"
+   ],
+   "periode": "2009-2022",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "constat": 1
+   }
+  },
+  {
+   "cle": "MAZDA-1.6-MZ-CD-DV6",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Mazda 1.6 MZ-CD 90/95 ch (= PSA DV6) et 1.4 MZ-CD 68 (= DV4)",
+   "marques": [
+    "Mazda",
+    "Peugeot"
+   ],
+   "periode": "2007-2015",
+   "codes": [
+    "DV4",
+    "DV6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DV6"
+   ],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MAZDA-SKYACTIV-D-1.5",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Mazda 1.5 Skyactiv-D (105 ch)",
+   "marques": [
+    "Mazda"
+   ],
+   "periode": "2014-2019",
+   "codes": [
+    "SKYACTIV"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MAZDA-SKYACTIV-D-2.2",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Mazda 2.2 Skyactiv-D SH-VPTS (150/175/184 ch)",
+   "marques": [
+    "Mazda"
+   ],
+   "periode": "2012-2022",
+   "codes": [
+    "SKYACTIV"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 3,
+    "campagne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "MAZDA-SKYACTIV-G",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Mazda Skyactiv-G 1.5 / 2.0 / 2.5 (injection directe)",
+   "marques": [
+    "Mazda"
+   ],
+   "periode": "2013-2020",
+   "codes": [
+    "SKYACTIV"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "SUZUKI-BOOSTERJET-DUALJET",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Suzuki 1.0 Boosterjet K10C, 1.4 Boosterjet K14C/K14D, 1.2 Dualjet K12C/K12D (Swift, Vitara, S-Cross, Ignis)",
+   "marques": [
+    "Suzuki"
+   ],
+   "periode": "2013-2024",
+   "codes": [
+    "K14C"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "entretien": 1,
+    "panne": 1,
+    "campagne": 3
+   }
+  },
+  {
+   "cle": "TOYOTA-1.2T-8NR-FTS",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 1.2 Turbo 8NR-FTS (1.2T 116 ch)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": "2015-2020",
+   "codes": [
+    "8NR"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "constat": 1
+   }
+  },
+  {
+   "cle": "TOYOTA-1.33-1NR-FE",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 1.33 VVT-i 1NR-FE (99/101 ch)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": "2009-2020",
+   "codes": [
+    "1NR"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "TOYOTA-1.4-D4D-1ND-TV",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 1.4 D-4D 1ND-TV (90 ch)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": "2005-2018",
+   "codes": [
+    "1ND"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "panne": 3,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "TOYOTA-1.5-HYBRID-M15A-FXE",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 1.5 hybride M15A-FXE (Yaris 4 116/130 ch, Yaris Cross)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": "2020-2024",
+   "codes": [
+    "M15A"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 1,
+    "campagne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "TOYOTA-1.6-1ZR-FAE",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 1.6 VVT-i / Valvematic 1ZR-FE/1ZR-FAE (124/132 ch)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": "2007-2018",
+   "codes": [
+    "1ZR"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "TOYOTA-1.6-D4D-1WW",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 1.6 D-4D 112 ch (1WW, origine BMW) — hors liste initiale",
+   "marques": [
+    "BMW",
+    "Toyota"
+   ],
+   "periode": "2014-2018",
+   "codes": [
+    "1WW"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "TOYOTA-1.8-HYBRID-2ZR-FXE",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 1.8 hybride 2ZR-FXE (Prius 3/4, Auris HSD, C-HR 122h, Corolla 122h)",
+   "marques": [
+    "Toyota",
+    "Lexus"
+   ],
+   "periode": "2009-2024",
+   "codes": [
+    "2ZR"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 9,
+   "types": {
+    "panne": 3,
+    "campagne": 4,
+    "entretien": 2
+   }
+  },
+  {
+   "cle": "TOYOTA-2.0-2.2-D4D-1AD-2AD",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 2.0 D-4D 1AD-FTV / 2.2 D-4D 2AD-FTV, 2AD-FHV (Avensis, RAV4, Auris, Verso, Corolla)",
+   "marques": [
+    "Toyota",
+    "Lexus"
+   ],
+   "periode": "2005-2023",
+   "codes": [
+    "AD"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 9,
+   "types": {
+    "panne": 6,
+    "entretien": 3
+   }
+  },
+  {
+   "cle": "TOYOTA-2.0-HYBRID-M20A-FXS",
+   "groupe": "D",
+   "nature": "moteur",
+   "libelle": "Toyota 2.0 hybride M20A-FXS (184/196 ch)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": "2018-2024",
+   "codes": [
+    "M20A"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "BMW-B37",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 1.5d trois-cylindres B37 (214d/216d Active Tourer, 116d, sDrive16d, Mini One D / Cooper D F56)",
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "periode": null,
+   "codes": [
+    "B37"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "BMW-B38",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 1.5 trois-cylindres turbo essence B38 (216i/218i, 118i, Mini Cooper, 225xe)",
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "periode": "2014-2024",
+   "codes": [
+    "B38"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "panne": 2,
+    "entretien": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "BMW-B47",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 2.0d B47 (2014+)",
+   "marques": [
+    "BMW"
+   ],
+   "periode": "2012-2024",
+   "codes": [
+    "B47"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "BMW B47"
+   ],
+   "objets": 2,
+   "types": {
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "BMW-B47-B37",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW diesels B47 (2.0d quatre-cylindres) et B37 (1.5d trois-cylindres), 2014+",
+   "marques": [
+    "BMW"
+   ],
+   "periode": "2014-2022",
+   "codes": [
+    "B47",
+    "B37"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "BMW B47"
+   ],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "BMW-B48",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 2.0 turbo essence B48 (20i/30i, Mini Cooper S, 2014+)",
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "periode": "2014-2024",
+   "codes": [
+    "B48"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "BMW-BVA8-AISIN-DKG7-BMW-MINI-TRACTION",
+   "groupe": "E",
+   "nature": "boite",
+   "libelle": "Boîtes automatiques des BMW/Mini à moteur transversal : BVA8 Aisin et double embrayage DKG7",
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "periode": "2014-2022",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "BMW-DV6-MINI",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mini One D / Cooper D 1.6 D 90-110 ch d'origine PSA (DV6), Mini II 2007-2010",
+   "marques": [
+    "Mini",
+    "Peugeot"
+   ],
+   "periode": "2007-2010",
+   "codes": [
+    "DV6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DV6"
+   ],
+   "objets": 3,
+   "types": {
+    "panne": 3
+   }
+  },
+  {
+   "cle": "BMW-N12-N16",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mini 1.6 essence atmosphérique N12 (2006-2010) / N16 (2010-2013) — One, Cooper 120/122 ch (famille Prince, = PSA EP6)",
+   "marques": [
+    "Mini",
+    "Peugeot"
+   ],
+   "periode": "2006-2013",
+   "codes": [
+    "EP6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot EP6",
+    "Mini N18"
+   ],
+   "objets": 2,
+   "types": {
+    "panne": 2
+   }
+  },
+  {
+   "cle": "BMW-N13",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 1.6 turbo N13 (famille Prince, co-développé avec PSA) — 114i/116i/118i F20/F21 2011-2015",
+   "marques": [
+    "BMW",
+    "Peugeot"
+   ],
+   "periode": "2011-2015",
+   "codes": [
+    "N13"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "BMW N13"
+   ],
+   "objets": 4,
+   "types": {
+    "panne": 3,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "BMW-N14-N18",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mini 1.6 turbo essence N14 (2006-2010) / N18 (2010-2015) — Cooper S, JCW (famille Prince, = PSA EP6DT/EP6CDT)",
+   "marques": [
+    "Mini",
+    "Peugeot"
+   ],
+   "periode": "2006-2015",
+   "codes": [
+    "EP6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot EP6",
+    "Mini N18"
+   ],
+   "objets": 11,
+   "types": {
+    "panne": 7,
+    "rappel": 3,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "BMW-N20",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 2.0 turbo essence N20 / N26 (20i/28i, 2011-2015)",
+   "marques": [
+    "BMW"
+   ],
+   "periode": "2011-2015",
+   "codes": [
+    "N20"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 1,
+    "garantie": 1,
+    "campagne": 1,
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "BMW-N45-N46-N43",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW quatre-cylindres essence atmosphériques N45 / N46 / N43 (116i, 118i, 120i — Série 1 E81/E87 2004-2011)",
+   "marques": [
+    "BMW"
+   ],
+   "periode": "2004-2011",
+   "codes": [
+    "N43",
+    "N46"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 1,
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "BMW-N47",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 2.0d N47 (16d/18d/20d/23d/25d, 2007-2015 ; aussi décliné en 1.6d)",
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "periode": "2004-2018",
+   "codes": [
+    "N47",
+    "DV6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "BMW N47",
+    "Peugeot DV6"
+   ],
+   "objets": 16,
+   "types": {
+    "panne": 9,
+    "verification": 1,
+    "campagne": 1,
+    "garantie": 1,
+    "entretien": 1,
+    "rappel": 3
+   }
+  },
+  {
+   "cle": "BMW-N47-B47",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 2.0d N47 puis B47 (selon millésime)",
+   "marques": [
+    "BMW"
+   ],
+   "periode": null,
+   "codes": [
+    "N47",
+    "B47"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "BMW N47",
+    "BMW B47"
+   ],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "BMW-N57",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "BMW 3.0d six-cylindres N57 (25d/30d/35d/40d, 2008-2018)",
+   "marques": [
+    "BMW"
+   ],
+   "periode": "2007-2018",
+   "codes": [
+    "N57"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "panne": 2,
+    "rappel": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "BMW-XDRIVE-BOITE-DE-TRANSFERT-BMW",
+   "groupe": "E",
+   "nature": "boite",
+   "libelle": "BMW transmission intégrale xDrive — boîte de transfert",
+   "marques": [
+    "BMW"
+   ],
+   "periode": null,
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "JLR-INGENIUM-2.0-D",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Jaguar Land Rover 2.0 diesel quatre-cylindres Ingenium (AJ200D : 150/163/180/240 ch, 2015+)",
+   "marques": [
+    "Jaguar",
+    "Land Rover"
+   ],
+   "periode": "2014-2016",
+   "codes": [
+    "INGENIUM"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "panne": 3,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-4MATIC-GLA",
+   "groupe": "E",
+   "nature": "boite",
+   "libelle": "Mercedes transmission intégrale 4Matic des compactes (GLA 220 d)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2014-2020",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-7G-DCT",
+   "groupe": "E",
+   "nature": "boite",
+   "libelle": "Mercedes boîte à double embrayage 7G-DCT (Classe A/B, CLA, GLA)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2014-2020",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-9G-TRONIC",
+   "groupe": "E",
+   "nature": "boite",
+   "libelle": "Mercedes boîte automatique 9G-Tronic (725.0)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2015-2022",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-AIRMATIC",
+   "groupe": "E",
+   "nature": "organe",
+   "libelle": "Mercedes suspension pneumatique (Airmatic / Air Body Control)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": null,
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-ELV-W204",
+   "groupe": "E",
+   "nature": "organe",
+   "libelle": "Mercedes Classe C W204 — blocage électronique de la colonne de direction (ELV) et contacteur EZS",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2007-2014",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-M260",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes 2.0 turbo essence « 250 » 224 ch (M260, Classe A W177 et dérivés, 2018+)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2018-2020",
+   "codes": [
+    "M260"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-M270",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes 1.6 / 2.0 turbo essence M270 (A/B/CLA/GLA 160/180/200/250, 2012-2018)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2012-2023",
+   "codes": [
+    "M270"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-M270-OM651",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes essence M270 (A/B/CLA/GLA) et diesel OM651 des compactes",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2011-2016",
+   "codes": [
+    "OM651",
+    "M270"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Mercedes OM651"
+   ],
+   "objets": 1,
+   "types": {
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-M271-M272",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes essence 1.8 Kompressor M271 (200 K) et V6 M272 (280/300/350) — SLK R171 2004-2011",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2004-2011",
+   "codes": [
+    "M271",
+    "M272"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-M274",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes 1.6 / 2.0 turbo essence M274 (C 160/180/200/250/300, 2014-2018)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2014-2018",
+   "codes": [
+    "M274"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-OM607",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes 1.5 CDI OM607 (= Renault K9K) — A/B 160/180 CDI, CLA/GLA 180 CDI / 180 d",
+   "marques": [
+    "Mercedes",
+    "Renault"
+   ],
+   "periode": "2014-2018",
+   "codes": [
+    "K9K"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Mercedes OM607",
+    "Renault K9K"
+   ],
+   "objets": 1,
+   "types": {
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-OM642",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes V6 3.0 CDI OM642 (320/350 CDI)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2007-2011",
+   "codes": [
+    "OM642"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-OM651",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes 1.8 / 2.1 CDI quatre-cylindres OM651 (180/200/220/250 CDI, 200 d/220 d/250 d, 2008-2019)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2008-2022",
+   "codes": [
+    "OM651"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Mercedes OM651"
+   ],
+   "objets": 11,
+   "types": {
+    "campagne": 1,
+    "panne": 5,
+    "rappel": 3,
+    "garantie": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "MERCEDES-OM651-OM654-220-D",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes 220 d : 2.1 OM651 170 ch (jusqu'en 2018-2019) puis 2.0 OM654 194 ch",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2014-2021",
+   "codes": [
+    "OM651",
+    "OM654"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Mercedes OM651",
+    "Mercedes OM654",
+    "Mercedes-Benz OM654"
+   ],
+   "objets": 2,
+   "types": {
+    "panne": 2
+   }
+  },
+  {
+   "cle": "MERCEDES-OM654",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Mercedes 2.0d quatre-cylindres OM654 (200 d/220 d/300 d, 2016+)",
+   "marques": [
+    "Mercedes"
+   ],
+   "periode": "2016-2021",
+   "codes": [
+    "OM654"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Mercedes OM654",
+    "Mercedes-Benz OM654"
+   ],
+   "objets": 3,
+   "types": {
+    "rappel": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VOLVO-D4162T",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Volvo 1.6 D / D2 d'origine PSA (D4164T 109 ch, D4162T 115 ch = DV6)",
+   "marques": [
+    "Peugeot",
+    "Volvo"
+   ],
+   "periode": "2005-2012",
+   "codes": [
+    "DV6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot DV6"
+   ],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "VOLVO-D4204T",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Volvo 2.0 diesel quatre-cylindres Drive-E / VEA (D4204T : D3 150 ch, D4 181/190 ch, 2013+)",
+   "marques": [
+    "Volvo"
+   ],
+   "periode": "2010-2019",
+   "codes": [
+    "D4204T"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Volvo D4204T"
+   ],
+   "objets": 4,
+   "types": {
+    "rappel": 1,
+    "panne": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VOLVO-D4204T-ANCIEN-2.0D-136-CH",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Volvo 2.0D 136 ch D4204T (2004-2010, ancienne génération — à ne pas confondre avec le Drive-E)",
+   "marques": [
+    "Volvo"
+   ],
+   "periode": "2004-2010",
+   "codes": [
+    "D4204T"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Volvo D4204T"
+   ],
+   "objets": 1,
+   "types": {
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "VOLVO-D5244T",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Volvo cinq-cylindres diesel 2.4 D5 / 2.4D / D3 / D4 (D5244T et dérivés, 2001-2016)",
+   "marques": [
+    "Volvo"
+   ],
+   "periode": "2001-2016",
+   "codes": [
+    "D5244T"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "rappel": 2,
+    "panne": 3
+   }
+  },
+  {
+   "cle": "VOLVO-DIESEL-2012-2019-MOTEUR-NON-CODE",
+   "groupe": "E",
+   "nature": "moteur",
+   "libelle": "Volvo diesel 2.0 D3/D4 Drive-E (D4204T VEA) et cinq-cylindres — moteur non codé par l'ADAC pour ces rappels",
+   "marques": [
+    "Volvo"
+   ],
+   "periode": "2012-2016",
+   "codes": [
+    "D4204T"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Volvo D4204T"
+   ],
+   "objets": 2,
+   "types": {
+    "rappel": 2
+   }
+  },
+  {
+   "cle": "VOLVO-GEARTRONIC-AISIN",
+   "groupe": "E",
+   "nature": "boite",
+   "libelle": "Volvo boîte automatique Geartronic (Aisin TF-80SC 6 rapports / TG-81SC 8 rapports)",
+   "marques": [
+    "Volvo"
+   ],
+   "periode": "2010-2018",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "FIAT-1.3-T4-FIREFLY",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Jeep Renegade / Compass 1.3 T4 FireFly (GSE) 150-180 ch, 2018+",
+   "marques": [
+    "Jeep"
+   ],
+   "periode": "2018-2019",
+   "codes": [
+    "FIREFLY"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "constat": 1
+   }
+  },
+  {
+   "cle": "FIAT-1.5-FIREFLY-MHEV",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Alfa Romeo Tonale 1.5 T4 micro-hybride 160 ch (FireFly 1.5, moteur partagé avec Jeep Compass/Renegade e-Hybrid 1.5)",
+   "marques": [
+    "Alfa Romeo",
+    "Jeep"
+   ],
+   "periode": "2022-2026",
+   "codes": [
+    "FIREFLY"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "FIAT-1.6-MULTIJET",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Jeep Renegade / Compass (Fiat 500X) 1.6 MultiJet (120 ch) et 2.0 MultiJet",
+   "marques": [
+    "Fiat",
+    "Jeep"
+   ],
+   "periode": "2014-2018",
+   "codes": [
+    "MULTIJET"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "panne": 1,
+    "entretien": 1,
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "FIAT-2.0-MULTIJET",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Jeep Renegade / Compass (Fiat 500X) 1.6 MultiJet (120 ch) et 2.0 MultiJet — boîte auto 9 rapports",
+   "marques": [
+    "Fiat",
+    "Jeep"
+   ],
+   "periode": "2015-2022",
+   "codes": [
+    "MULTIJET"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "FIAT-ALFA-2.0-JTDM",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Alfa Romeo Giulietta 1.4 TB/MultiAir, 1.6 JTDm, 2.0 JTDm, 1750 TBi (2010-2021) — boîte TCT",
+   "marques": [
+    "Alfa Romeo"
+   ],
+   "periode": "2010-2021",
+   "codes": [
+    "MULTIAIR",
+    "MULTIJET"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "FIAT-ALFA-GIULIA-2.2-JTDM-2.0-TURBO",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Alfa Romeo Giulia 2.2 JTDm et 2.0 turbo essence (2016+)",
+   "marques": [
+    "Alfa Romeo"
+   ],
+   "periode": "2016-2016",
+   "codes": [
+    "MULTIJET"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "FIAT-ALFA-GIULIETTA-1.4-MULTIAIR-1.6-JTDM",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Alfa Romeo Giulietta 1.4 TB/MultiAir, 1.6 JTDm, 2.0 JTDm, 1750 TBi (2010-2021)",
+   "marques": [
+    "Alfa Romeo"
+   ],
+   "periode": "2010-2021",
+   "codes": [
+    "MULTIAIR",
+    "MULTIJET"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "constat": 1
+   }
+  },
+  {
+   "cle": "FIAT-JEEP-RENEGADE-MHEV-PHEV",
+   "groupe": "F",
+   "nature": "organe",
+   "libelle": "Jeep Renegade e-Hybrid 1.5 / 4xe 1.3 (Fiat 500X, Alfa Tonale)",
+   "marques": [
+    "Alfa Romeo",
+    "Fiat",
+    "Jeep"
+   ],
+   "periode": "2023-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-1.0-1.2-MPI-KAPPA",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai i10 AC3 2024 (1.0 / 1.2 MPI)",
+   "marques": [
+    "Hyundai"
+   ],
+   "periode": "2024-2024",
+   "codes": [
+    "KAPPA"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 1.0 T-GDI Kappa (G3LC)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2014-2024",
+   "codes": [
+    "G3LC",
+    "KAPPA"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Hyundai G3LC"
+   ],
+   "objets": 4,
+   "types": {
+    "panne": 1,
+    "entretien": 1,
+    "campagne": 2
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.4-TGDI-KAPPA-G4LD",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 1.4 T-GDI Kappa (G4LD)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2017-2024",
+   "codes": [
+    "G4LD",
+    "KAPPA"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Hyundai G4LD"
+   ],
+   "objets": 1,
+   "types": {
+    "constat": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.6-CRDI-U2-D4FB",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 1.6 CRDi U2 (D4FB) — et 1.7 CRDi U2 (D4FD)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2015-2018",
+   "codes": [
+    "U2"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.6-CRDI-U3-D4FE",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 1.6 CRDi Smartstream D1.6 / U3 (D4FE) — 2018+",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2016-2022",
+   "codes": [
+    "U2",
+    "SMARTSTREAM"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 6,
+   "types": {
+    "campagne": 3,
+    "panne": 1,
+    "constat": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 1.6 GDI Gamma (G4FD)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2010-2022",
+   "codes": [
+    "G4FD"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Hyundai G4FD"
+   ],
+   "objets": 4,
+   "types": {
+    "panne": 1,
+    "campagne": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 1.6 T-GDI Gamma II (G4FJ)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2015-2020",
+   "codes": [
+    "G4FJ"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "entretien": 1,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia Smartstream G1.6 T-GDI (G4FP/G4FT, 2019+)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2019-2023",
+   "codes": [
+    "SMARTSTREAM"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-1.7-CRDI-U2-D4FD",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 1.7 CRDi U2 (D4FD)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2015-2022",
+   "codes": [
+    "U2"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai/Kia 2.0/2.4 Theta II (G4KD/G4KE MPI, G4KH/G4KJ GDI)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2010-2021",
+   "codes": [
+    "G4KD"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Hyundai G4KD"
+   ],
+   "objets": 8,
+   "types": {
+    "panne": 1,
+    "campagne": 6,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-BOITE-7DCT",
+   "groupe": "F",
+   "nature": "boite",
+   "libelle": "Boîte double embrayage Hyundai/Kia 7DCT (et 6DCT hybride)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2015-2022",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 2
+   }
+  },
+  {
+   "cle": "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Hyundai Ioniq / Kia Niro hybride (1.6 GDI Kappa hybride + 6DCT, batterie Li-ion)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2015-2023",
+   "codes": [
+    "KAPPA"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "campagne": 3,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MITSUBISHI-1.2-MIVEC-3A92",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Mitsubishi 1.2 MIVEC 3 cylindres 3A92 (Space Star / Mirage) — et 1.0 3A90",
+   "marques": [
+    "Mitsubishi"
+   ],
+   "periode": "2012-2021",
+   "codes": [
+    "3A92"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "constat": 1
+   }
+  },
+  {
+   "cle": "MITSUBISHI-1.6-MIVEC-4A92",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Mitsubishi 1.6 MIVEC 4A92 (ASX)",
+   "marques": [
+    "Mitsubishi"
+   ],
+   "periode": "2011-2019",
+   "codes": [
+    "4A92"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "campagne": 1
+   }
+  },
+  {
+   "cle": "MITSUBISHI-1.8-DID-4N13",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Mitsubishi 1.8 DI-D (4N13) — ASX / C4 Aircross / 4008",
+   "marques": [
+    "Citroën",
+    "Mitsubishi",
+    "Peugeot"
+   ],
+   "periode": "2012-2012",
+   "codes": [
+    "4N1"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MITSUBISHI-2.0-2.4-MIVEC-4B11-4B12",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Mitsubishi 2.0 4B11 / 2.4 4B12 MIVEC (Outlander, ASX, Outlander PHEV)",
+   "marques": [
+    "Mitsubishi"
+   ],
+   "periode": "2012-2021",
+   "codes": [
+    "4B1"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "constat": 1
+   }
+  },
+  {
+   "cle": "MITSUBISHI-2.2-DID-4N14",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Mitsubishi 2.2 DI-D (4N14)",
+   "marques": [
+    "Mitsubishi"
+   ],
+   "periode": "2012-2021",
+   "codes": [
+    "4N1"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "panne": 1
+   }
+  },
+  {
+   "cle": "MITSUBISHI-OUTLANDER-PHEV",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Mitsubishi Outlander PHEV (2.0 4B11 / 2.4 4B12 + batterie 12-13,8 kWh)",
+   "marques": [
+    "Mitsubishi"
+   ],
+   "periode": "2014-2024",
+   "codes": [
+    "4B1"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "campagne": 2
+   }
+  },
+  {
+   "cle": "SUBARU-BOITE-LINEARTRONIC",
+   "groupe": "F",
+   "nature": "boite",
+   "libelle": "Subaru Lineartronic CVT",
+   "marques": [
+    "Subaru"
+   ],
+   "periode": null,
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "constat": 1
+   }
+  },
+  {
+   "cle": "SUBARU-BOXER-EJ20-EJ25",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Subaru 2.5 boxer EJ25 (et EJ20)",
+   "marques": [
+    "Subaru"
+   ],
+   "periode": "2009-2014",
+   "codes": [
+    "EJ"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "SUBARU-BOXER-FB16-FB20-FB25",
+   "groupe": "F",
+   "nature": "moteur",
+   "libelle": "Subaru 2.0/2.5 boxer FB20/FB25 (et 1.6 FB16)",
+   "marques": [
+    "Subaru"
+   ],
+   "periode": "2012-2024",
+   "codes": [
+    "FB"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "campagne": 1,
+    "entretien": 1,
+    "constat": 1
+   }
+  },
+  {
+   "cle": "PHEV-BMW",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "BMW 225xe / 330e / X1 xDrive25e (PHEV)",
+   "marques": [
+    "BMW"
+   ],
+   "periode": "2025-2025",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "PHEV-HYUNDAI-KIA",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Hyundai Tucson/Santa Fe PHEV, Kia Niro/Sportage/Ceed PHEV (PHEV)",
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2021-2026",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "PHEV-PEUGEOT",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Peugeot 3008 Hybrid / 508 Hybrid (PHEV)",
+   "marques": [
+    "Peugeot"
+   ],
+   "periode": "2019-2019",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "PHEV-VOLVO",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Volvo XC40 / XC60 Recharge (PHEV et VE)",
+   "marques": [
+    "Volvo"
+   ],
+   "periode": "2020-2020",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-500E",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Fiat 500e (VE, 23,8 / 42 kWh)",
+   "marques": [
+    "Fiat"
+   ],
+   "periode": "2020-2020",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-BORN",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Cupra Born (VE, MEB)",
+   "marques": [
+    "Cupra"
+   ],
+   "periode": "2021-2021",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-E-CMP",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Peugeot e-208 / e-2008, Citroën ë-C4, Opel Corsa-e, DS 3 E-Tense (VE, plateforme e-CMP)",
+   "marques": [
+    "Citroën",
+    "DS",
+    "Opel",
+    "Peugeot"
+   ],
+   "periode": "2008-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "garantie": 2,
+    "panne": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "VE-E-GMP",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Hyundai Ioniq 5 / Ioniq 6, Kia EV6, Genesis GV60 (VE, plateforme E-GMP 800 V)",
+   "marques": [
+    "Genesis",
+    "Hyundai",
+    "Kia"
+   ],
+   "periode": "2022-2025",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "VE-ENYAQ",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Skoda Enyaq / Elroq (VE, MEB)",
+   "marques": [
+    "Skoda"
+   ],
+   "periode": "2021-2025",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-I3",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "BMW i3 60Ah / 94Ah / 120Ah, i3 REx (VE)",
+   "marques": [
+    "BMW"
+   ],
+   "periode": "2013-2022",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-KIA-EV",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Kia e-Niro / Niro EV / e-Soul / EV6 (VE)",
+   "marques": [
+    "Kia"
+   ],
+   "periode": "2019-2026",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-KONA-EV",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Hyundai Kona Electric / Ioniq Electric / Ioniq 5 (VE)",
+   "marques": [
+    "Hyundai"
+   ],
+   "periode": "2016-2023",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "garantie": 1,
+    "rappel": 2
+   }
+  },
+  {
+   "cle": "VE-LEAF",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Nissan Leaf ZE1 40 / 62 kWh (VE)",
+   "marques": [
+    "Nissan"
+   ],
+   "periode": "2011-2019",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 6,
+   "types": {
+    "garantie": 2,
+    "panne": 3,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "VE-MG4",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "MG4 / MG ZS EV (VE)",
+   "marques": [
+    "MG"
+   ],
+   "periode": "2020-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "garantie": 1,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "VE-SMART-EQ",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Smart EQ fortwo / forfour (VE)",
+   "marques": [
+    "Smart"
+   ],
+   "periode": "2018-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-SPRING",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Dacia Spring 45 / 65 ch (VE, 26,8 kWh)",
+   "marques": [
+    "Dacia"
+   ],
+   "periode": "2021-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "garantie": 1,
+    "rappel": 1,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "VE-TESLA-3Y",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Tesla Model 3 / Model Y (VE)",
+   "marques": [
+    "Tesla"
+   ],
+   "periode": "2012-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "garantie": 1,
+    "rappel": 2
+   }
+  },
+  {
+   "cle": "VE-TOYOTA-BEV",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Toyota bZ4X / Proace électriques (VE)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": "2022-2022",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-TOYOTA-HSD",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Toyota hybrides Yaris / Corolla / C-HR / RAV4 (HEV et PHEV)",
+   "marques": [
+    "Toyota"
+   ],
+   "periode": null,
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-TRANSVERSAL",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Véhicules électriques — tableau comparatif des garanties batterie (Citroën C-Zero, DS 3 Crossback E-Tense, Opel Corsa-e, Mercedes EQ, Smart EQ…)",
+   "marques": [
+    "Citroën",
+    "DS",
+    "Dacia",
+    "Honda",
+    "Kia",
+    "MG",
+    "Mercedes",
+    "Mini",
+    "Opel",
+    "Smart"
+   ],
+   "periode": "2020-2021",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 1,
+   "types": {
+    "garantie": 1
+   }
+  },
+  {
+   "cle": "VE-VW-ID",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Volkswagen ID.3 / ID.4 (VE, plateforme MEB)",
+   "marques": [
+    "Volkswagen"
+   ],
+   "periode": "2020-2025",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "garantie": 1,
+    "panne": 1,
+    "verification": 1
+   }
+  },
+  {
+   "cle": "VE-ZOE",
+   "groupe": "G",
+   "nature": "organe",
+   "libelle": "Renault Zoe / Mégane E-Tech / Twingo E-Tech (VE)",
+   "marques": [
+    "Renault"
+   ],
+   "periode": "2013-2024",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "garantie": 1,
+    "verification": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "AYGO-C1-107-RAPPELS",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Toyota Aygo / Citroën C1 / Peugeot 107 (2005-2014) : rappels et organes hors moteur",
+   "marques": [
+    "Citroën",
+    "Peugeot",
+    "Toyota"
+   ],
+   "periode": "2005-2014",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "rappel": 2
+   }
+  },
+  {
+   "cle": "DACIA-LOGAN1-SANDERO1",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Dacia Logan I / Sandero I : entretien, GPL, corrosion et rappels",
+   "marques": [
+    "Dacia"
+   ],
+   "periode": "2005-2012",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "campagne": 1,
+    "panne": 1,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "FIAT-500-ESSENCE",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Fiat 500 1.2 et 1.4 16v essence (2007+)",
+   "marques": [
+    "Fiat"
+   ],
+   "periode": "2007-2008",
+   "codes": [
+    "FIRE"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "rappel": 1,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "FIAT-DIRECTION-ROULEMENTS",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Fiat Grande Punto (2005-2012) : direction assistée électrique, roulements, freinage",
+   "marques": [
+    "Fiat"
+   ],
+   "periode": "2005-2012",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 2
+   }
+  },
+  {
+   "cle": "OPEL-CORSA-D",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Opel Corsa D (2006+) : moteurs, direction, suspension, freinage",
+   "marques": [
+    "Opel"
+   ],
+   "periode": "2006-2010",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 3,
+   "types": {
+    "rappel": 2,
+    "panne": 1
+   }
+  },
+  {
+   "cle": "PSA-DV4",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Peugeot / Citroën / Toyota 1.4 HDi 54 à 70 ch (code usuel DV4, non cité par la source)",
+   "marques": [
+    "Citroën",
+    "Peugeot",
+    "Toyota"
+   ],
+   "periode": "2001-2004",
+   "codes": [
+    "DV4"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "rappel": 3,
+    "panne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "PSA-ELECTRONIQUE-BSI-COM2000",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Peugeot 206 / 207 / 307 : électronique (BSI, COM 2000, combiné, antivol)",
+   "marques": [
+    "Peugeot"
+   ],
+   "periode": "1999-2008",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 2,
+    "rappel": 3
+   }
+  },
+  {
+   "cle": "PSA-ESSENCE-TU-ET-EW",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Peugeot / Citroën essence 1.4 8v, 1.4 16v, 1.6 16v, 1.6 VTi 120, 2.0 16v (familles usuelles TU / ET / EP / EW, non citées par la source)",
+   "marques": [
+    "Citroën",
+    "Peugeot"
+   ],
+   "periode": "2001-2008",
+   "codes": [
+    "EP6"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Peugeot EP6",
+    "Mini N18"
+   ],
+   "objets": 5,
+   "types": {
+    "panne": 2,
+    "rappel": 2,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "PSA-TRAINS-ROULANTS-BOITE",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Peugeot 206 / 207 / 307, Citroën Xsara Picasso : trains roulants, boîte, freinage",
+   "marques": [
+    "Citroën",
+    "Peugeot"
+   ],
+   "periode": "1999-2006",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 4,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "RENAULT-1.2-D7F-D4F",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Renault 1.2 8v, 1.2 16v 75 ch et 1.2 TCe 100 (codes usuels D7F / D4F / D4FT, non cités par la source)",
+   "marques": [
+    "Renault",
+    "Dacia"
+   ],
+   "periode": "1998-2012",
+   "codes": [
+    "D4F",
+    "D7F"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 6,
+   "types": {
+    "panne": 3,
+    "rappel": 1,
+    "constat": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "RENAULT-1.4-1.6-16V-K4J-K4M",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Renault 1.4 16v, 1.6 16v et 2.0 16v (codes usuels K4J / K4M / F4R, non cités par la source)",
+   "marques": [
+    "Renault"
+   ],
+   "periode": "2002-2009",
+   "codes": [
+    "K4M",
+    "K4J",
+    "F4R"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 2,
+   "types": {
+    "panne": 1,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "RENAULT-1.9-DCI-F9Q",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Renault 1.9 D, 1.9 dTi et 1.9 dCi 120 (code usuel F8Q / F9Q, non cité par la source)",
+   "marques": [
+    "Renault"
+   ],
+   "periode": "1998-2005",
+   "codes": [
+    "F9Q"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "panne": 3,
+    "rappel": 1
+   }
+  },
+  {
+   "cle": "RENAULT-CLIO2-CLIO3-TWINGO2-HORS-MOTEUR",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Renault Clio II / Clio III / Twingo II : organes hors moteur et rappels",
+   "marques": [
+    "Renault"
+   ],
+   "periode": "1998-2012",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "rappel": 2,
+    "panne": 2
+   }
+  },
+  {
+   "cle": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Renault / Dacia 1.4 et 1.6 8 soupapes, dont 1.4 MPI 75 et 1.6 MPI (codes usuels K7J / K7M, non cités par la source)",
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "periode": "1999-2012",
+   "codes": [
+    "K7M",
+    "K7J"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [
+    "Dacia K7M"
+   ],
+   "objets": 4,
+   "types": {
+    "entretien": 1,
+    "panne": 3
+   }
+  },
+  {
+   "cle": "RENAULT-MEGANE2-SCENIC2-ELECTRONIQUE-CHASSIS",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Renault Mégane II / Scénic II : électronique, direction, freinage et trains roulants",
+   "marques": [
+    "Renault"
+   ],
+   "periode": "2002-2010",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 8,
+   "types": {
+    "panne": 6,
+    "rappel": 2
+   }
+  },
+  {
+   "cle": "TOYOTA-PSA-1.0-VVTI-1KR",
+   "groupe": "H",
+   "nature": "moteur",
+   "libelle": "Toyota Aygo / Citroën C1 / Peugeot 107 1.0 VVT-i 68 ch 3 cylindres (code usuel 1KR-FE, non cité par la source)",
+   "marques": [
+    "Citroën",
+    "Peugeot",
+    "Toyota"
+   ],
+   "periode": "2005-2009",
+   "codes": [
+    "1KR"
+   ],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 5,
+   "types": {
+    "panne": 4,
+    "entretien": 1
+   }
+  },
+  {
+   "cle": "VAG-GOLF-5-ESSENCE-ELECTRONIQUE",
+   "groupe": "H",
+   "nature": "organe",
+   "libelle": "Volkswagen Golf V (2003-2008) : essence FSI, électronique, direction, trains roulants",
+   "marques": [
+    "Volkswagen"
+   ],
+   "periode": "2003-2008",
+   "codes": [],
+   "ambigu": [],
+   "fiches_en_base": [],
+   "objets": 4,
+   "types": {
+    "panne": 3,
+    "entretien": 1
+   }
+  }
+ ],
+ "groupes_de_cles": [
+  [
+   "RENAULT-K9K",
+   "MERCEDES-OM607"
+  ],
+  [
+   "RENAULT-H5FT",
+   "NISSAN-HR12DDT"
+  ],
+  [
+   "RENAULT-H4DT",
+   "RENAULT-B4D"
+  ],
+  [
+   "RENAULT-D4F-K4M",
+   "RENAULT-1.2-D7F-D4F",
+   "RENAULT-1.4-1.6-16V-K4J-K4M"
+  ],
+  [
+   "PSA-EP6",
+   "BMW-MINI-R56-PRINCE-N12-N14-N18",
+   "BMW-N14-N18",
+   "BMW-N12-N16",
+   "PSA-ESSENCE-TU-ET-EW"
+  ],
+  [
+   "PSA-DV6",
+   "FORD-1.5-1.6-TDCI",
+   "MAZDA-1.6-MZ-CD-DV6",
+   "BMW-N47",
+   "BMW-B47",
+   "BMW-DV6-MINI",
+   "VOLVO-D4162T",
+   "BMW-N47-B47",
+   "BMW-B47-B37",
+   "BMW-B37",
+   "PSA-DV4"
+  ],
+  [
+   "PSA-DW10",
+   "FORD-2.0-TDCI"
+  ],
+  [
+   "FIAT-1.3-MULTIJET",
+   "FIAT-1.6-MULTIJET",
+   "FIAT-2.0-MULTIJET",
+   "FIAT-ALFA-GIULIETTA-1.4-MULTIAIR-1.6-JTDM",
+   "FIAT-ALFA-2.0-JTDM",
+   "FIAT-ALFA-GIULIA-2.2-JTDM-2.0-TURBO"
+  ],
+  [
+   "FIAT-ESSENCE-FIRE-TWINAIR",
+   "FIAT-500-ESSENCE"
+  ],
+  [
+   "VAG-EA211-1.5TSI",
+   "VAG-EA211-1.0TSI",
+   "VAG-EA211-1.2TSI",
+   "VAG-EA211-1.4TSI"
+  ],
+  [
+   "VAG-EA111-1.4TSI",
+   "VAG-EA111-1.2TSI"
+  ],
+  [
+   "VAG-EA888-1.8-2.0TSI",
+   "VAG-EA113-2.0TFSI"
+  ],
+  [
+   "MAZDA-SKYACTIV-D-2.2",
+   "MAZDA-SKYACTIV-D-1.5",
+   "MAZDA-SKYACTIV-G"
+  ],
+  [
+   "MERCEDES-OM651",
+   "MERCEDES-OM651-OM654-220-D",
+   "MERCEDES-M270-OM651",
+   "MERCEDES-OM654",
+   "MERCEDES-M270"
+  ],
+  [
+   "VOLVO-DIESEL-2012-2019-MOTEUR-NON-CODE",
+   "VOLVO-D4204T",
+   "VOLVO-D4204T-ANCIEN-2.0D-136-CH"
+  ],
+  [
+   "HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC",
+   "HYUNDAI-KIA-1.4-TGDI-KAPPA-G4LD",
+   "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ",
+   "HYUNDAI-1.0-1.2-MPI-KAPPA"
+  ],
+  [
+   "HYUNDAI-KIA-1.6-CRDI-U2-D4FB",
+   "HYUNDAI-KIA-1.7-CRDI-U2-D4FD",
+   "HYUNDAI-KIA-1.6-CRDI-U3-D4FE",
+   "HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM"
+  ],
+  [
+   "MITSUBISHI-2.0-2.4-MIVEC-4B11-4B12",
+   "MITSUBISHI-OUTLANDER-PHEV"
+  ],
+  [
+   "MITSUBISHI-2.2-DID-4N14",
+   "MITSUBISHI-1.8-DID-4N13"
+  ],
+  [
+   "FIAT-1.3-T4-FIREFLY",
+   "FIAT-1.5-FIREFLY-MHEV"
+  ]
+ ],
+ "moteurs_sans_fiche": {
+  "EA211": {
+   "cles": [
+    "VAG-EA211-1.5TSI",
+    "VAG-EA211-1.0TSI",
+    "VAG-EA211-1.2TSI",
+    "VAG-EA211-1.4TSI"
+   ],
+   "marques": [
+    "Audi",
+    "Seat",
+    "Skoda",
+    "Volkswagen"
+   ],
+   "objets": 24
+  },
+  "EA888": {
+   "cles": [
+    "VAG-EA888-1.8-2.0TSI",
+    "VAG-EA113-2.0TFSI"
+   ],
+   "marques": [
+    "Audi",
+    "Seat",
+    "Volkswagen",
+    "Skoda"
+   ],
+   "objets": 19
+  },
+  "MULTIJET": {
+   "cles": [
+    "FIAT-1.3-MULTIJET",
+    "FIAT-1.6-MULTIJET",
+    "FIAT-2.0-MULTIJET",
+    "FIAT-ALFA-GIULIETTA-1.4-MULTIAIR-1.6-JTDM",
+    "FIAT-ALFA-2.0-JTDM",
+    "FIAT-ALFA-GIULIA-2.2-JTDM-2.0-TURBO"
+   ],
+   "marques": [
+    "Fiat",
+    "Opel",
+    "Alfa Romeo",
+    "Jeep"
+   ],
+   "objets": 18
+  },
+  "R9M": {
+   "cles": [
+    "RENAULT-R9M"
+   ],
+   "marques": [
+    "Nissan",
+    "Renault"
+   ],
+   "objets": 15
+  },
+  "EA111": {
+   "cles": [
+    "VAG-EA111-1.4TSI",
+    "VAG-EA111-1.2TSI"
+   ],
+   "marques": [
+    "Audi",
+    "Volkswagen",
+    "Seat",
+    "Skoda"
+   ],
+   "objets": 14
+  },
+  "EA188": {
+   "cles": [
+    "VAG-EA188-TDI-PD"
+   ],
+   "marques": [
+    "Audi",
+    "Skoda",
+    "Volkswagen",
+    "Seat"
+   ],
+   "objets": 12
+  },
+  "H5HT": {
+   "cles": [
+    "RENAULT-H5HT"
+   ],
+   "marques": [
+    "Dacia",
+    "Mercedes",
+    "Nissan",
+    "Renault"
+   ],
+   "objets": 11
+  },
+  "D4F": {
+   "cles": [
+    "RENAULT-D4F-K4M",
+    "RENAULT-1.2-D7F-D4F"
+   ],
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "objets": 11
+  },
+  "KAPPA": {
+   "cles": [
+    "HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC",
+    "HYUNDAI-KIA-1.4-TGDI-KAPPA-G4LD",
+    "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ",
+    "HYUNDAI-1.0-1.2-MPI-KAPPA"
+   ],
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "objets": 10
+  },
+  "2ZR": {
+   "cles": [
+    "TOYOTA-1.8-HYBRID-2ZR-FXE"
+   ],
+   "marques": [
+    "Toyota",
+    "Lexus"
+   ],
+   "objets": 9
+  },
+  "AD": {
+   "cles": [
+    "TOYOTA-2.0-2.2-D4D-1AD-2AD"
+   ],
+   "marques": [
+    "Toyota",
+    "Lexus"
+   ],
+   "objets": 9
+  },
+  "SKYACTIV": {
+   "cles": [
+    "MAZDA-SKYACTIV-D-2.2",
+    "MAZDA-SKYACTIV-D-1.5",
+    "MAZDA-SKYACTIV-G"
+   ],
+   "marques": [
+    "Mazda"
+   ],
+   "objets": 8
+  },
+  "U2": {
+   "cles": [
+    "HYUNDAI-KIA-1.6-CRDI-U2-D4FB",
+    "HYUNDAI-KIA-1.7-CRDI-U2-D4FD",
+    "HYUNDAI-KIA-1.6-CRDI-U3-D4FE"
+   ],
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "objets": 8
+  },
+  "M9R": {
+   "cles": [
+    "RENAULT-M9R"
+   ],
+   "marques": [
+    "Nissan",
+    "Renault",
+    "Fiat"
+   ],
+   "objets": 7
+  },
+  "K4M": {
+   "cles": [
+    "RENAULT-D4F-K4M",
+    "RENAULT-1.4-1.6-16V-K4J-K4M"
+   ],
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "objets": 7
+  },
+  "K4J": {
+   "cles": [
+    "RENAULT-D4F-K4M",
+    "RENAULT-1.4-1.6-16V-K4J-K4M"
+   ],
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "objets": 7
+  },
+  "SMARTSTREAM": {
+   "cles": [
+    "HYUNDAI-KIA-1.6-CRDI-U3-D4FE",
+    "HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM"
+   ],
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "objets": 7
+  },
+  "DV4": {
+   "cles": [
+    "MAZDA-1.6-MZ-CD-DV6",
+    "PSA-DV4"
+   ],
+   "marques": [
+    "Mazda",
+    "Peugeot",
+    "Citroën",
+    "Toyota"
+   ],
+   "objets": 6
+  },
+  "D7F": {
+   "cles": [
+    "RENAULT-1.2-D7F-D4F"
+   ],
+   "marques": [
+    "Renault",
+    "Dacia"
+   ],
+   "objets": 6
+  },
+  "K14C": {
+   "cles": [
+    "SUZUKI-BOOSTERJET-DUALJET"
+   ],
+   "marques": [
+    "Suzuki"
+   ],
+   "objets": 5
+  },
+  "N20": {
+   "cles": [
+    "BMW-N20"
+   ],
+   "marques": [
+    "BMW"
+   ],
+   "objets": 5
+  },
+  "D5244T": {
+   "cles": [
+    "VOLVO-D5244T"
+   ],
+   "marques": [
+    "Volvo"
+   ],
+   "objets": 5
+  },
+  "1KR": {
+   "cles": [
+    "TOYOTA-PSA-1.0-VVTI-1KR"
+   ],
+   "marques": [
+    "Citroën",
+    "Peugeot",
+    "Toyota"
+   ],
+   "objets": 5
+  },
+  "B4D": {
+   "cles": [
+    "RENAULT-B4D"
+   ],
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "objets": 4
+  },
+  "EA113": {
+   "cles": [
+    "VAG-EA113-2.0TFSI"
+   ],
+   "marques": [
+    "Audi",
+    "Volkswagen"
+   ],
+   "objets": 4
+  },
+  "1ND": {
+   "cles": [
+    "TOYOTA-1.4-D4D-1ND-TV"
+   ],
+   "marques": [
+    "Toyota"
+   ],
+   "objets": 4
+  },
+  "N57": {
+   "cles": [
+    "BMW-N57"
+   ],
+   "marques": [
+    "BMW"
+   ],
+   "objets": 4
+  },
+  "B38": {
+   "cles": [
+    "BMW-B38"
+   ],
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "objets": 4
+  },
+  "INGENIUM": {
+   "cles": [
+    "JLR-INGENIUM-2.0-D"
+   ],
+   "marques": [
+    "Jaguar",
+    "Land Rover"
+   ],
+   "objets": 4
+  },
+  "K7J": {
+   "cles": [
+    "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M"
+   ],
+   "marques": [
+    "Dacia",
+    "Renault"
+   ],
+   "objets": 4
+  },
+  "F9Q": {
+   "cles": [
+    "RENAULT-1.9-DCI-F9Q"
+   ],
+   "marques": [
+    "Renault"
+   ],
+   "objets": 4
+  },
+  "HR16": {
+   "cles": [
+    "RENAULT-H4M"
+   ],
+   "marques": [
+    "Dacia",
+    "Nissan",
+    "Renault"
+   ],
+   "objets": 3
+  },
+  "FIRE": {
+   "cles": [
+    "FIAT-ESSENCE-FIRE-TWINAIR",
+    "FIAT-500-ESSENCE"
+   ],
+   "marques": [
+    "Fiat"
+   ],
+   "objets": 3
+  },
+  "14NET": {
+   "cles": [
+    "OPEL-1.4-TURBO"
+   ],
+   "marques": [
+    "Opel"
+   ],
+   "objets": 3
+  },
+  "A17DTS": {
+   "cles": [
+    "OPEL-1.7-CDTI"
+   ],
+   "marques": [
+    "Opel"
+   ],
+   "objets": 3
+  },
+  "M15A": {
+   "cles": [
+    "TOYOTA-1.5-HYBRID-M15A-FXE"
+   ],
+   "marques": [
+    "Toyota"
+   ],
+   "objets": 3
+  },
+  "N22": {
+   "cles": [
+    "HONDA-2.2-ICTDI-IDTEC-N22"
+   ],
+   "marques": [
+    "Honda"
+   ],
+   "objets": 3
+  },
+  "N43": {
+   "cles": [
+    "BMW-N45-N46-N43"
+   ],
+   "marques": [
+    "BMW"
+   ],
+   "objets": 3
+  },
+  "N46": {
+   "cles": [
+    "BMW-N45-N46-N43"
+   ],
+   "marques": [
+    "BMW"
+   ],
+   "objets": 3
+  },
+  "B37": {
+   "cles": [
+    "BMW-B47-B37",
+    "BMW-B37"
+   ],
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "objets": 3
+  },
+  "M270": {
+   "cles": [
+    "MERCEDES-M270-OM651",
+    "MERCEDES-M270"
+   ],
+   "marques": [
+    "Mercedes"
+   ],
+   "objets": 3
+  },
+  "FB": {
+   "cles": [
+    "SUBARU-BOXER-FB16-FB20-FB25"
+   ],
+   "marques": [
+    "Subaru"
+   ],
+   "objets": 3
+  },
+  "4B1": {
+   "cles": [
+    "MITSUBISHI-2.0-2.4-MIVEC-4B11-4B12",
+    "MITSUBISHI-OUTLANDER-PHEV"
+   ],
+   "marques": [
+    "Mitsubishi"
+   ],
+   "objets": 3
+  },
+  "MULTIAIR": {
+   "cles": [
+    "FIAT-ALFA-GIULIETTA-1.4-MULTIAIR-1.6-JTDM",
+    "FIAT-ALFA-2.0-JTDM"
+   ],
+   "marques": [
+    "Alfa Romeo"
+   ],
+   "objets": 3
+  },
+  "B16DTH": {
+   "cles": [
+    "OPEL-1.6-CDTI"
+   ],
+   "marques": [
+    "Opel"
+   ],
+   "objets": 2
+  },
+  "ECOBLUE": {
+   "cles": [
+    "FORD-ECOBLUE"
+   ],
+   "marques": [
+    "Ford"
+   ],
+   "objets": 2
+  },
+  "8NR": {
+   "cles": [
+    "TOYOTA-1.2T-8NR-FTS"
+   ],
+   "marques": [
+    "Toyota"
+   ],
+   "objets": 2
+  },
+  "1NR": {
+   "cles": [
+    "TOYOTA-1.33-1NR-FE"
+   ],
+   "marques": [
+    "Toyota"
+   ],
+   "objets": 2
+  },
+  "M20A": {
+   "cles": [
+    "TOYOTA-2.0-HYBRID-M20A-FXS"
+   ],
+   "marques": [
+    "Toyota"
+   ],
+   "objets": 2
+  },
+  "L15B7": {
+   "cles": [
+    "HONDA-1.5-VTEC-TURBO-L15B7"
+   ],
+   "marques": [
+    "Honda"
+   ],
+   "objets": 2
+  },
+  "B48": {
+   "cles": [
+    "BMW-B48"
+   ],
+   "marques": [
+    "BMW",
+    "Mini"
+   ],
+   "objets": 2
+  },
+  "G4FJ": {
+   "cles": [
+    "HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ"
+   ],
+   "marques": [
+    "Hyundai",
+    "Kia"
+   ],
+   "objets": 2
+  },
+  "4N1": {
+   "cles": [
+    "MITSUBISHI-2.2-DID-4N14",
+    "MITSUBISHI-1.8-DID-4N13"
+   ],
+   "marques": [
+    "Mitsubishi",
+    "Citroën",
+    "Peugeot"
+   ],
+   "objets": 2
+  },
+  "FIREFLY": {
+   "cles": [
+    "FIAT-1.3-T4-FIREFLY",
+    "FIAT-1.5-FIREFLY-MHEV"
+   ],
+   "marques": [
+    "Jeep",
+    "Alfa Romeo"
+   ],
+   "objets": 2
+  },
+  "F4R": {
+   "cles": [
+    "RENAULT-1.4-1.6-16V-K4J-K4M"
+   ],
+   "marques": [
+    "Renault"
+   ],
+   "objets": 2
+  },
+  "1ZR": {
+   "cles": [
+    "TOYOTA-1.6-1ZR-FAE"
+   ],
+   "marques": [
+    "Toyota"
+   ],
+   "objets": 1
+  },
+  "1WW": {
+   "cles": [
+    "TOYOTA-1.6-D4D-1WW"
+   ],
+   "marques": [
+    "BMW",
+    "Toyota"
+   ],
+   "objets": 1
+  },
+  "P10A2": {
+   "cles": [
+    "HONDA-1.0-VTEC-TURBO-P10A2"
+   ],
+   "marques": [
+    "Honda"
+   ],
+   "objets": 1
+  },
+  "R18": {
+   "cles": [
+    "HONDA-1.8-IVTEC-R18"
+   ],
+   "marques": [
+    "Honda"
+   ],
+   "objets": 1
+  },
+  "M274": {
+   "cles": [
+    "MERCEDES-M274"
+   ],
+   "marques": [
+    "Mercedes"
+   ],
+   "objets": 1
+  },
+  "M260": {
+   "cles": [
+    "MERCEDES-M260"
+   ],
+   "marques": [
+    "Mercedes"
+   ],
+   "objets": 1
+  },
+  "M271": {
+   "cles": [
+    "MERCEDES-M271-M272"
+   ],
+   "marques": [
+    "Mercedes"
+   ],
+   "objets": 1
+  },
+  "M272": {
+   "cles": [
+    "MERCEDES-M271-M272"
+   ],
+   "marques": [
+    "Mercedes"
+   ],
+   "objets": 1
+  },
+  "OM642": {
+   "cles": [
+    "MERCEDES-OM642"
+   ],
+   "marques": [
+    "Mercedes"
+   ],
+   "objets": 1
+  },
+  "EJ": {
+   "cles": [
+    "SUBARU-BOXER-EJ20-EJ25"
+   ],
+   "marques": [
+    "Subaru"
+   ],
+   "objets": 1
+  },
+  "4A92": {
+   "cles": [
+    "MITSUBISHI-1.6-MIVEC-4A92"
+   ],
+   "marques": [
+    "Mitsubishi"
+   ],
+   "objets": 1
+  },
+  "3A92": {
+   "cles": [
+    "MITSUBISHI-1.2-MIVEC-3A92"
+   ],
+   "marques": [
+    "Mitsubishi"
+   ],
+   "objets": 1
+  }
+ }
+}
