@@ -10,6 +10,8 @@ const C = JSON.parse(readFileSync('docs/correspondance-familles.json', 'utf8'))
 const codes = Object.fromEntries(C.lignes.map((l) => [l.cle, l.codes ?? []]))
 const filtre = (process.argv[2] && !process.argv[2].startsWith('--')) ? process.argv[2].split(',') : null
 const TOUT = process.argv.includes('--tout')
+// Noyaux corrigés à la main (même règle), appliqués avant la relecture.
+const CORRIGES = JSON.parse(readFileSync('docs/noyaux-corriges.json', 'utf8'))
 
 // « avant » / « après » sont des mots légitimes (« suspensions avant »).
 let n = 0, ko = 0
@@ -18,6 +20,7 @@ for (const o of S.objets) {
   if (filtre && !(codes[o.famille] ?? []).some((c) => filtre.some((f) => c === f || c.startsWith(f)))) continue
   n++
   const r = extraireNoyau(o.intitule, o.type)
+  if (CORRIGES[o.id]) r.noyau = CORRIGES[o.id]
   const d = defautsNoyau(r.noyau, o.intitule, o.type)
   if (d.length) ko++
   if (d.length || TOUT) console.log(`${d.length ? '✗' : '✓'} ${o.id.padEnd(30)} ${r.noyau}${d.length ? `\n    → ${d.join(' ; ')}` : ''}${r.periodes.length ? `\n    période : ${r.periodes.map((p) => `${p.debut ?? '…'}–${p.fin ?? '…'}${p.bornante ? '' : ' (indicative)'}`).join(', ')}` : ''}`)

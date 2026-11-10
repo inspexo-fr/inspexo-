@@ -25,7 +25,11 @@ const UNE_DATE = `(?:${JOUR_MOIS}|\\b\\d{1,2}\\/\\d{1,2}\\/(?:19|20)?\\d{2}\\b|(
 // Une date ou une plage : « 2011-2013 », « février 2015 et septembre 2015 ».
 // Une ou plusieurs plages : « 24/11/2014 – 29/05/2015 et 17/08/2015 – … »,
 // « entre le 31 août et le 25 octobre 2011 ».
-const DATE = `${UNE_DATE}(?:\\s*(?:[-–à]|et|,)\\s*(?:le\\s+)?${UNE_DATE})*`;
+// « de mars à juin 2004 », « février-mai 2005 », « juillet-décembre 2002 » :
+// le PREMIER mois n'a pas d'année, la plage entière est une date.
+const PLAGE_MOIS = `(?:(?:de|du)\\s+)?(?:${MOIS})(?:\\s+${ANNEE})?\\s*(?:[-–]|à|au)\\s*(?:${MOIS})\\s+${ANNEE}`;
+const SAISON = `(?:printemps|été|automne|hiver)\\s+${ANNEE}`;
+const DATE = `(?:${PLAGE_MOIS}|${SAISON}|${UNE_DATE})(?:\\s*(?:[-–à]|et|,)\\s*(?:le\\s+)?(?:${PLAGE_MOIS}|${UNE_DATE}))*`;
 // Un volume : « 944 modèles », « 211 725 véhicules », « >1,6 M de véhicules ».
 const VOLUME = `[>≈~]?\\s?\\d[\\d\\s\\u00a0\\u202f.,]*\\s*(?:M|millions?|milliers?)?\\s*(?:de\\s+)?(?:mod[eè]les|v[ée]hicules|voitures|unit[ée]s|exemplaires|propri[ée]taires|clients|automobilistes|plaignants|personnes)`;
 // « 109 890 Clio et Kangoo » : un nombre groupé par milliers suivi d'un NOM
@@ -160,7 +164,7 @@ export function detailsAffichables(details: string[], extraitsConfirmes: string[
 }
 
 // ── Relecture de forme (sprint 23) ─────────────────────────────────────────
-const ORPHELINS_NOYAU = /\b(?:de|du|des|la|le|les|l'|à|au|aux|et|ou|par|pour|sur|avec|en|entre|produits?|produites?|équipés?|équipées?|jusqu'?|depuis|dès|surtout)\s*(?:—|:|$|\)|,)/i
+const ORPHELINS_NOYAU = /(?<![\p{L}\d'])(?:de|du|des|la|le|les|l'|à|au|aux|et|ou|par|pour|sur|avec|en|entre|produits?|produites?|équipés?|équipées?|jusqu'?|depuis|dès|surtout)\s*(?:—|:|$|\)|,)/iu
 /** Les défauts de forme d'un noyau. Vide = phrase propre, envoyable au juge.
  *  Partagé par `scripts/relire-noyaux.mjs` et le lanceur du juge : la règle
  *  qui relit est celle qui filtre. */
@@ -176,7 +180,7 @@ export function defautsNoyau(n: string, intitule: string, type: string): string[
   // « Distribution : chaîne » est un noyau d'entretien complet (le moteur le préfixe).
   if (n.split(/\s+/).length < (type === 'entretien' ? 2 : 3)) d.push('trop court')
   if ((n.match(/\(/g) ?? []).length !== (n.match(/\)/g) ?? []).length) d.push('parenthèse non fermée')
-  if (/\b(?:jusqu'(?:au|en)|le|au|du|entre)\s+\d{1,2}\b(?![.,]\d)(?!\s\d{3})(?!\s*(?:km|ch|cv|ans|mois|%|l\b|v\b|kw))/i.test(n)) d.push('jour ou nombre orphelin')
+  if (/\b(?:jusqu'(?:au|en)|le|au|du|entre)\s+\d{1,2}\b(?![.,]\d)(?!\s\d{3})(?!\s*(?:km|ch|cv|ans|mois|%|l\b|v\b|kw|[A-Z]{2,}))/.test(n)) d.push('jour ou nombre orphelin')
   if (/\b(?:de moins|ou de|et de|autour|vers|environ|entre|à partir|dès)\s*$/i.test(n)) d.push('fin tronquée')
   if (/\b(?:entre|de|à)\s+(?:et|à)\b/i.test(n)) d.push('plage vidée')
   // « 1.4/1.6 VTi » est une cylindrée, pas une date.
@@ -187,4 +191,49 @@ export function defautsNoyau(n: string, intitule: string, type: string): string[
     }
   }
   return d
+}
+
+// ── SPRINT 23 — UN DÉFAUT PAR AFFIRMATION (décision d'Utku du 10 nov. 2026) ─
+//
+// Pilote K9K + EB2 : 4 rejets sur 5 venaient d'un noyau à plusieurs défauts
+// dont la page n'en portait qu'un (« Injection : grippage de pompe, limaille,
+// injecteurs… » — la page ne parle que du grippage). Chaque défaut est donc
+// jugé À PART ; seules les parties confirmées sont affichées, jamais
+// l'intitulé d'origine complet. Chaque partie garde ce qui précède « : »
+// (organe ou version : « dCi 105 ») et la parenthèse finale de version ; la
+// période reste celle de l'affirmation mère.
+//
+// ⚠️ On ne coupe JAMAIS au prix d'une phrase mal formée : seulement sur « , »
+// et « ; » hors parenthèses (jamais sur « et », qui partage souvent un
+// qualificatif), et si une seule partie échoue à la relecture
+// (`defautsNoyau`), le noyau reste entier.
+export function decouperNoyau(noyau: string, type: string): string[] {
+  if (type === "entretien") return [noyau];
+  const i = noyau.indexOf(": ");
+  if (i < 0) return [noyau];
+  const tete = noyau.slice(0, i).trim();
+  let corps = noyau.slice(i + 2).trim();
+  let version = "";
+  const fin = corps.match(/\s*(\([^()]*\))\s*$/);
+  if (fin && fin.index !== undefined && fin.index > 0) { version = ` ${fin[1]}`; corps = corps.slice(0, fin.index).trim(); }
+  // Découpe hors parenthèses.
+  const morceaux: string[] = [];
+  let prof = 0, debut = 0;
+  for (let k = 0; k < corps.length; k++) {
+    const c = corps[k];
+    if (c === "(") prof++;
+    else if (c === ")") prof = Math.max(0, prof - 1);
+    if (prof > 0) continue;
+    const reste = corps.slice(k);
+    // « , » et « ; » seulement : couper sur « et » perd le qualificatif commun
+    // (« injecteurs et joints d'injecteurs défaillants » → « injecteurs » seul).
+    const sep = reste.match(/^(?:,\s+|;\s+)/);
+    if (sep) { morceaux.push(corps.slice(debut, k)); k += sep[0].length - 1; debut = k + 1; }
+  }
+  morceaux.push(corps.slice(debut));
+  const parts = morceaux.map((m) => m.trim()).filter((m) => m.length > 0);
+  if (parts.length < 2) return [noyau];
+  const phrases = parts.map((p) => `${tete}: ${p}${version}`);
+  if (phrases.some((p) => defautsNoyau(p, p, type).length > 0)) return [noyau];
+  return phrases;
 }

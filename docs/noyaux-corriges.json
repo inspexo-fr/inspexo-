@@ -1,0 +1,20 @@
+{
+ "_note": "Noyaux corrigés à la main pour les intitulés que l'extraction automatique laisse mal formés (sprint 23, 10 nov. 2026). Même règle : seuls sortent dates, périodes, volumes et coûts ; la version reste. Appliqués par scripts/relire-noyaux.mjs et par le lanceur du juge.",
+ "B-FIAT-1.3-MULTIJET-02": "1.3 Multijet: fuite de liquide de refroidissement par joint de culasse sur la Fiat 500; consommations d'huile et de carburant anormales sur la Panda",
+ "C-VAG-EA111-1.4TSI-08": "Rappel (ADAC, Allemagne): mise à jour du calculateur moteur 1.4 TSI CAVD après des réclamations sur le comportement du moteur (à-coups, manque de reprise)",
+ "C-VAG-EA188-TDI-PD-07": "Injecteurs-pompes du 1.9 TDI 130: vibrations au ralenti, fonctionnement chaotique",
+ "D-HONDA-1.5-VTEC-TURBO-L15B7-02": "Rappels Civic 10 (moteur non précisé): pompe à carburant (turbine mal moulée); pompe haute pression (fissure par vibrations)",
+ "D-SUZUKI-BOOSTERJET-DUALJET-04": "Rappels Ignis: courroie d'entraînement de pompe à eau pouvant rompre et Stop & Start inopérant",
+ "E-MERCEDES-OM651-01": "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): remplacement des injecteurs dans le cadre d'une opération de satisfaction clientèle, sans rappel officiel",
+ "E-MERCEDES-OM651-09": "Volant moteur bi-masse: casse prématurée ou bruits métalliques, parfois avant 80 000 km",
+ "E-MERCEDES-OM654-01": "Rappel: défaut d'étanchéité entre le circuit de refroidissement et le circuit de dépression au niveau de la pompe de refroidissement, avec une fuite, voire un incendie dans les cas les plus graves",
+ "F-HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC-01": "Cliquetis et bruit de chaîne de distribution au démarrage à froid (jeu insuffisant de la chaîne d'arbre à cames, galets tendeurs bruyants)",
+ "G-VE-TRANSVERSAL-01": "Garantie de la batterie de traction: standard de 8 ans ou 160 000 km avec un seuil de capacité de 70 %",
+ "H-RENAULT-MEGANE2-SCENIC2-ELECTRONIQUE-CHASSIS-01": "Frein de parking automatique pouvant se desserrer seul (Scénic II) puis se serrer en roulant, objet de rappels",
+ "H-PSA-DV4-04": "1.4 HDi des Aygo / C1: rappel pour remplacement de coussinets de bielle non conformes (Aygo); quelques C1 1.4 HDi remplacés pour risque de serrage moteur",
+ "H-AYGO-C1-107-RAPPELS-02": "Autres rappels: vis de fixation des roues, amortisseurs avant (Aygo), fuite de carburant (C1 1.0); calculateur d'airbag à remplacer",
+ "H-OPEL-CORSA-D-02": "Rappels Corsa D: soudure défectueuse des bras de suspension avant; blocage du frein à main",
+ "H-VAG-GOLF-5-ESSENCE-ELECTRONIQUE-01": "Essence FSI (Golf V): à-coups et voyant de gestion moteur parfois allumé",
+ "C-VAG-EA211-1.5TSI-03": "Témoin de dépollution allumé sur les premiers véhicules de la série",
+ "C-VAG-EA211-1.5TSI-07": "Identifier la génération: 1.5 TSI evo2 (ACTplus), d'abord sur T-Roc; les à-coups à froid documentés concernent le 1.5 TSI evo"
+}
