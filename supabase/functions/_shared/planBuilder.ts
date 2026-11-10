@@ -25,6 +25,7 @@ import {
   VERIF_SYSTEM,
   VERIF_TOOL,
   voter,
+  verdictsDeLaReponse,
 } from "./verifSource.ts";
 
 const MODEL = "claude-sonnet-5";
@@ -112,7 +113,7 @@ async function unPassage(cle: string, cible: string, affs: Array<{ type: string;
   const bloc = (data.content ?? []).find((b: any) => b.type === "tool_use" && b.name === "rendre_verifications");
   if (!bloc) return null;
   return {
-    verdicts: Array.isArray(bloc.input?.verdicts) ? bloc.input.verdicts : [],
+    verdicts: verdictsDeLaReponse(bloc.input),
     usage: { input_tokens: data.usage?.input_tokens ?? 0, output_tokens: data.usage?.output_tokens ?? 0 },
     modele: MODEL,
   };

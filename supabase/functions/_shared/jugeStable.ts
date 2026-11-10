@@ -6,6 +6,30 @@
 
 export const VERDICTS_VALIDES = ["soutenue", "non_soutenue", "mauvais_moteur"] as const;
 
+/** La liste des verdicts d'une réponse du juge, QUELLE QUE SOIT sa forme.
+ *
+ *  ⚠️ CAUSE DES SILENCES (trouvée le 10 nov. 2026 par le mode debug). Le
+ *  modèle rend parfois le champ `verdicts` ENCODÉ EN CHAÎNE JSON —
+ *  `"verdicts": "{\"verdicts\":[…]}"` — au lieu d'une liste. Le code lisait
+ *  `Array.isArray(input.verdicts) ? … : []` : une liste vide, donc un silence,
+ *  compté « non soutenue » et, deux fois de suite, figé au cache. Les trois
+ *  passages du diagnostic avaient pourtant tous rendu un verdict motivé.
+ *
+ *  Une seule lecture, partagée par TOUS les appelants du juge. */
+// deno-lint-ignore no-explicit-any
+export function verdictsDeLaReponse(input: any): any[] {
+  let v = input?.verdicts;
+  for (let i = 0; i < 2 && typeof v === "string"; i++) {
+    try {
+      const p = JSON.parse(v);
+      v = Array.isArray(p) ? p : p?.verdicts;
+    } catch (_) {
+      return [];
+    }
+  }
+  return Array.isArray(v) ? v : [];
+}
+
 // ──────────────────────────────────────────────────────────────────────────
 // SPRINT 22 — UN JUGE STABLE : même page + même affirmation = même verdict.
 //

@@ -37,6 +37,7 @@ import {
   VERIF_SYSTEM,
   VERIF_TOOL,
   voter,
+  verdictsDeLaReponse,
 } from "../_shared/verifSource.ts";
 
 const corsHeaders = {
@@ -128,7 +129,7 @@ async function verifierGroupe(
       // deno-lint-ignore no-explicit-any
       const block = (data.content ?? []).find((b: any) => b.type === "tool_use" && b.name === "rendre_verifications");
       if (block) {
-        return { verdicts: Array.isArray(block.input?.verdicts) ? block.input.verdicts : [], usage: data.usage ?? null, modele: model };
+        return { verdicts: verdictsDeLaReponse(block.input), usage: data.usage ?? null, modele: model };
       }
     } catch (err) {
       console.error("verification exception:", model, err);

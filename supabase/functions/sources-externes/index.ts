@@ -32,6 +32,7 @@ import {
   VERIF_SYSTEM,
   VERIF_TOOL,
   voter,
+  verdictsDeLaReponse,
 } from "../_shared/verifSource.ts";
 
 const corsHeaders = {
@@ -79,7 +80,7 @@ async function unPassage(cible: string, affs: Array<{ type: string; texte: strin
   BRUTS?.push({ stop_reason: data.stop_reason ?? null, verdicts: bloc?.input?.verdicts ?? null, sortie: data.usage?.output_tokens ?? null });
   if (!bloc) return null;
   return {
-    verdicts: Array.isArray(bloc.input?.verdicts) ? bloc.input.verdicts : [],
+    verdicts: verdictsDeLaReponse(bloc.input),
     usage: { input_tokens: data.usage?.input_tokens ?? 0, output_tokens: data.usage?.output_tokens ?? 0,
       cache_read_input_tokens: data.usage?.cache_read_input_tokens ?? 0, cache_creation_input_tokens: data.usage?.cache_creation_input_tokens ?? 0 },
     modele: MODEL,

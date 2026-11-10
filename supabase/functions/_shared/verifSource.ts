@@ -65,6 +65,7 @@ export {
   type UsageJuge,
   VERIF_CACHE_JOURS,
   type VerdictVote,
+  verdictsDeLaReponse,
   voter,
 } from "./jugeStable.ts";
 

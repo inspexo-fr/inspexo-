@@ -1,7 +1,7 @@
 // Test hors ligne du juge stable (sprint 22) : vote et cache. Aucun réseau.
 // Usage : node tests/juge-stable.test.mjs
 import { readFileSync } from 'node:fs'
-import { cleBrute, cleVerif, majorite, voter, VERIF_CACHE_JOURS } from '../supabase/functions/_shared/jugeStable.ts'
+import { cleBrute, cleVerif, majorite, verdictsDeLaReponse, voter, VERIF_CACHE_JOURS } from '../supabase/functions/_shared/jugeStable.ts'
 
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) ok_++; else { ko++; console.log(`FAIL — ${l}`) } }
@@ -90,6 +90,22 @@ const juge = (scenario) => {
   }
   const v = await voter(appel, [{ type: 'panne', texte: 'A' }])
   ok(n === 3 && v.resultats[0].verdict === 'soutenue' && v.resultats[0].fiable, 'un silence + deux votes réels concordants : fiable')
+}
+
+// ── La forme RÉELLE relevée par le diagnostic du 10 nov. 2026 ──────────────
+{
+  const brut = { verdicts: '{"verdicts":[{"index":1,"justification":"x","verdict":"non_soutenue"}]}' }
+  eq(verdictsDeLaReponse(brut).map((v) => v.verdict), ['non_soutenue'], 'verdicts encodés en chaîne JSON : lus (cause des silences)')
+  eq(verdictsDeLaReponse({ verdicts: '[{"index":1,"verdict":"soutenue"}]' }).length, 1, 'chaîne contenant directement la liste : lue')
+  eq(verdictsDeLaReponse({ verdicts: [{ index: 1, verdict: 'soutenue' }] }).length, 1, 'liste normale : inchangée')
+  eq(verdictsDeLaReponse({ verdicts: 'pas du json' }), [], 'chaîne illisible : vide (donc silence, jamais un vote)')
+  eq(verdictsDeLaReponse(null), [], 'réponse absente : vide')
+  const fichiers = ['supabase/functions/verification/index.ts', 'supabase/functions/atlas-builder/index.ts',
+    'supabase/functions/sources-externes/index.ts', 'supabase/functions/_shared/planBuilder.ts']
+  for (const f of fichiers) {
+    const src = readFileSync(f, 'utf8')
+    ok(/verdictsDeLaReponse\(/.test(src) && !/Array\.isArray\(\w+\.input\?\.verdicts\)/.test(src), `${f} : lit les verdicts par le lecteur partagé`)
+  }
 }
 
 // ── Garde-fous statiques : le cache AVANT la page, le juge partagé ─────────
