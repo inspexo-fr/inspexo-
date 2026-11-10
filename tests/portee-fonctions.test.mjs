@@ -16,7 +16,7 @@
 // `noLib: true` et `noResolve: true`, les SEULS noms qu'il ne sait pas
 // résoudre sont les primitives du runtime — liste fermée ci-dessous. Tout
 // autre nom non résolu est un vrai défaut de portée.
-import { readdirSync, readFileSync, writeFileSync, unlinkSync, existsSync } from 'node:fs'
+import { readdirSync, readFileSync, rmSync, writeFileSync, unlinkSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import ts from 'typescript'
 
@@ -52,6 +52,12 @@ const CODES = new Set([
   2304, // Cannot find name 'x'
   2448, // Block-scoped variable 'x' used before its declaration
   2552, // Cannot find name 'x'. Did you mean 'y'?
+  // ⚠️ SPRINT 23 — un identifiant DÉCLARÉ DEUX FOIS (même import posé deux
+  // fois) : Deno refuse de démarrer la fonction (BOOT_ERROR, HTTP 503).
+  // Constaté le 10 nov. 2026 sur `sources-externes`, après le déplacement de
+  // `texteCentre` : l'ancienne ligne d'import était restée.
+  2300, // Duplicate identifier 'x'
+  2451, // Cannot redeclare block-scoped variable 'x'
 ])
 
 const DIR = new URL('../supabase/functions/', import.meta.url).pathname
@@ -98,6 +104,20 @@ console.log(`\n▶ ${entrees.length} fonctions edge + ${partages.length} modules
 const defauts = nonResolus([...entrees, ...partages])
 ok(defauts.length === 0, 'aucun identifiant hors de portée',
   defauts.slice(0, 12).map((d) => `${d.fichier}:${d.ligne} — ${d.texte}`).join('\n       '))
+
+// ── Contre-épreuve : un import posé deux fois est-il vu ? ─────────────────
+{
+  const temoin = join(DIR, '_shared', '__temoin_double_import.ts')
+  writeFileSync(temoin, [
+    'import { a as b } from "./x.ts";',
+    'import { a as b } from "./x.ts";',
+    'export const c = b;',
+  ].join('\n'))
+  try {
+    const d = nonResolus([temoin])
+    ok(d.some((x) => x.nom === 'b'), 'un import posé deux fois est détecté (BOOT_ERROR du 10 nov. 2026)')
+  } finally { rmSync(temoin, { force: true }) }
+}
 
 // ── Le test MORD-IL ? ──────────────────────────────────────────────────────
 //

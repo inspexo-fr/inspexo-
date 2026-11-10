@@ -183,7 +183,6 @@ export function messageVerification(
 // Une affirmation dont l'extrait n'est pas retrouvé (ou verbatim=false) garde
 // la lecture standard (`texteDeLaPage`) : on ne centre que sur une preuve
 // effectivement localisée.
-import { decoderEntites as decoderEntitesPage, normaliser as normaliserPage } from "./precontrole.ts";
 
 export const DEMI_FENETRE = 3_000;
 const MARQUE_SECTION = "§§";
