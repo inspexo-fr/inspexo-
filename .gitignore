@@ -62,3 +62,9 @@ tests/fiabilite/annonces/
 captures-sprint21/
 captures-logo/
 captures-sprint22/
+
+# iCloud (10 nov. 2026) : les dossiers lourds vivent dans des « .nosync »
+# qu'iCloud ne synchronise pas, et un lien symbolique garde le nom attendu.
+# ⚠️ Sans barre finale : un lien symbolique n'est pas un dossier pour git.
+node_modules
+node_modules.nosync/
