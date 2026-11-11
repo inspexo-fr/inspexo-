@@ -1489,6 +1489,9 @@ serve(async (req: Request) => {
         marque: v.marque,
         famille_moteur: familleResolue.famille,
         annee: v.annee_modele ?? null,
+        // SPRINT 23 — le modèle permet de trouver une fiche d'une autre marque
+        // qui couvre EXPLICITEMENT ce véhicule (fiches multi-marques).
+        modele: v.modele ?? null,
       };
       let found = await lookupDefectSheet(admin, sheetParams);
       if (found) {

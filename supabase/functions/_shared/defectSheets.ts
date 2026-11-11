@@ -13,6 +13,8 @@ import { normalizeBrand, rawBrandVariants, expandBrand } from "./brandAliases.ts
 import { coutUtilisable, rangSource, sourcesPortentLEntree } from "./atlasSource.ts";
 import { appliquerGraviteRemede } from "./graviteRemede.ts";
 import { programmeSourceOk, sanitizeProgrammes, type WarrantyProgram } from "./warrantyPrograms.ts";
+import { couvre } from "./couverture.ts";
+import { marqueCanonique } from "./marche.ts";
 
 const MODEL = "claude-sonnet-5";
 const SHEET_TTL_MS = 90 * 24 * 3600 * 1000;
@@ -658,7 +660,7 @@ async function generateSheet(
 /** Lookup seul (cache) — utilisé par `score` pour le polling. */
 export async function lookupDefectSheet(
   admin: any,
-  params: { marque: string; famille_moteur: string; annee?: number | null },
+  params: { marque: string; famille_moteur: string; annee?: number | null; modele?: string | null },
 ): Promise<DefectSheet | null> {
   const marqueNorm = normalizeBrand(params.marque);
   const familleNorm = normFamille(params.famille_moteur);
@@ -671,12 +673,29 @@ export async function lookupDefectSheet(
   // famille est compatible par préfixe, la plus spécifique d'abord.
   // Toutes les écritures connues de la marque : « Mercedes » et « Mercedes-Benz »
   // désignent le même constructeur et doivent partager la même fiche.
-  const { data: toutes } = await admin
+  const { data: propres } = await admin
     .from("defect_sheets")
     .select("*")
     .in("marque_norm", expandBrand(params.marque))
     .order("updated_at", { ascending: false })
     .limit(40);
+
+  // SPRINT 23 — FICHES MULTI-MARQUES (décision d'Utku du 10 nov. 2026) :
+  // une fiche d'une AUTRE marque ne sert que si sa couverture EXPLICITE nomme
+  // cette marque, ce modèle et cette année (`couvre`, restrictive). Sans
+  // couverture écrite, rien n'est ajouté : le comportement est celui d'avant.
+  let couvertes: unknown[] = [];
+  if (params.modele) {
+    const { data } = await admin
+      .from("defect_sheets")
+      .select("*")
+      .filter("couverture", "cs", JSON.stringify([{ marque: marqueCanonique(params.marque) }]))
+      .limit(40);
+    couvertes = ((data ?? []) as Array<{ couverture?: unknown; id: string }>)
+      .filter((r) => couvre(r.couverture, { marque: params.marque, modele: params.modele, annee: params.annee ?? null }))
+      .filter((r) => !(propres ?? []).some((p: { id: string }) => p.id === r.id));
+  }
+  const toutes = [...(propres ?? []), ...couvertes];
 
   const compatibles = (toutes ?? []).filter((r: { famille_norm: string }) =>
     r.famille_norm === familleNorm ||
