@@ -1,0 +1,197 @@
+[
+ {
+  "marque": "Peugeot",
+  "famille": "EB2",
+  "fiche": "Peugeot EB2",
+  "fiche_id": "02cb41ca-1911-4ab8-9a7a-553a5034404f",
+  "plan_existant": 0,
+  "operations": [
+   {
+    "operation": "Distribution (courroie de distribution en bain d'huile, kit)",
+    "intervalle_km": 100000,
+    "intervalle_annees": 6,
+    "critique": false,
+    "lie_a_panne": null,
+    "cout_min_eur": null,
+    "cout_max_eur": null,
+    "url_source": [
+     "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html"
+    ],
+    "a_verifier_carnet": false
+   }
+  ],
+  "ecartees": [
+   {
+    "operation": "Vidange moteur + filtre à huile",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Liquide de frein",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Bougies d'allumage",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Filtre à air",
+    "motif": "aucune_source_portante"
+   }
+  ],
+  "proposees": 5,
+  "recherches": 3,
+  "juge": {
+   "passages": 2,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.3802,
+  "le": "2026-11-08T22:17:01.120Z"
+ },
+ {
+  "marque": "Peugeot",
+  "famille": "DV6",
+  "fiche": "Peugeot DV6",
+  "fiche_id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+  "plan_existant": 5,
+  "operations": [],
+  "ecartees": [
+   {
+    "operation": "Distribution (courroie) + pompe à eau",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Vidange moteur + filtre à huile",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Vidange boîte automatique (EAT8)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Remplacement liquide de frein",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Filtre à air",
+    "motif": "aucune_source_portante"
+   }
+  ],
+  "proposees": 5,
+  "recherches": 3,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.3429,
+  "le": "2026-11-08T22:17:47.793Z"
+ },
+ {
+  "marque": "Renault",
+  "famille": "K9K",
+  "fiche": "Renault K9K",
+  "fiche_id": "5ee2f43c-51ba-453c-9f6d-7cd2e78e58fb",
+  "plan_existant": 3,
+  "operations": [],
+  "ecartees": [],
+  "proposees": 0,
+  "recherches": 3,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.2364,
+  "le": "2026-11-08T22:18:32.132Z"
+ },
+ {
+  "marque": "Renault",
+  "famille": "H4D",
+  "fiche": "Renault H4D",
+  "fiche_id": "1167124e-89dd-4e15-b3be-9eb696b070d5",
+  "plan_existant": 2,
+  "operations": [],
+  "ecartees": [
+   {
+    "operation": "Distribution (chaîne) - sans remplacement périodique (durée de vie moteur)",
+    "motif": "aucun_intervalle_publie"
+   },
+   {
+    "operation": "Vidange moteur + filtre à huile (1.0 SCe, H4D)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Vidange moteur + filtre à huile (1.0 TCe 90-100, H4D)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Filtre à air (1.0 SCe, H4D)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Filtre à air (1.0 TCe 90-100, H4D)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Bougies d'allumage (1.0 SCe, H4D)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Bougies d'allumage (1.0 TCe 90-100, H4D)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Liquide de frein (1.0 SCe, H4D)",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Liquide de frein (1.0 TCe 90-100, H4D)",
+    "motif": "aucune_source_portante"
+   }
+  ],
+  "proposees": 9,
+  "recherches": 2,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.219,
+  "le": "2026-11-08T22:19:17.207Z"
+ },
+ {
+  "marque": "Peugeot",
+  "famille": "EP6",
+  "fiche": "Peugeot EP6",
+  "fiche_id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "plan_existant": 6,
+  "operations": [],
+  "ecartees": [
+   {
+    "operation": "Vidange moteur + remplacement filtre à huile",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Distribution (chaîne) - aucun intervalle de remplacement préventif fixé par le constructeur",
+    "motif": "aucun_intervalle_publie"
+   },
+   {
+    "operation": "Bougies d'allumage",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Filtre à air",
+    "motif": "aucune_source_portante"
+   },
+   {
+    "operation": "Liquide de frein",
+    "motif": "aucune_source_portante"
+   }
+  ],
+  "proposees": 5,
+  "recherches": 3,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.2128,
+  "le": "2026-11-08T22:19:38.234Z"
+ }
+]

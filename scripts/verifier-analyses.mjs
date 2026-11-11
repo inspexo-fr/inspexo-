@@ -132,7 +132,31 @@ if (ESTIMER) {
 
 // ── Quelles analyses ────────────────────────────────────────────────────────
 let cibles = []
-if (ANALYSE) {
+// SPRINT 22 — la liste des analyses RÉELLES (is_eval = false) non encore
+// vérifiées, lue par la fonction admin `admin-fiabilite` avec le jeton
+// d'administrateur (`analyses_a_verifier` est réservée au service role). Le
+// secret d'éval ne suffit pas, et c'est voulu : il n'ouvre pas une liste
+// d'analyses de vrais utilisateurs.
+const DEPUIS_ADMIN = args.includes('--depuis-admin')
+const etatFiabilite = async () => {
+  const r = await fetch(`${URL_BASE}/functions/v1/admin-fiabilite?limite=50`, {
+    headers: { Authorization: `Bearer ${env.ADMIN_ACCESS_TOKEN}`, apikey: ANON },
+  })
+  if (r.status === 401 || r.status === 403) {
+    console.error('✗ Jeton admin refusé ou expiré (ADMIN_ACCESS_TOKEN).')
+    process.exit(1)
+  }
+  if (!r.ok) { console.error(`✗ admin-fiabilite : HTTP ${r.status}`); process.exit(1) }
+  return r.json()
+}
+let etatAvant = null
+if (DEPUIS_ADMIN) {
+  if (!env.ADMIN_ACCESS_TOKEN) { console.error('✗ ADMIN_ACCESS_TOKEN requis pour --depuis-admin.'); process.exit(1) }
+  etatAvant = await etatFiabilite()
+  cibles = (etatAvant.a_verifier ?? []).map((a) => ({ id: a.id, libelle: `${a.marque ?? ''} ${a.modele ?? ''}`.trim() }))
+  console.log(`${cibles.length} analyse(s) réelle(s) non vérifiée(s) · déjà vérifiées : ` +
+    `${etatAvant.stats?.analyses_verifiees ?? 0} / ${etatAvant.stats?.seuil ?? 30}`)
+} else if (ANALYSE) {
   // SPRINT 22 — plusieurs analyses, DANS CET ORDRE, en UN SEUL run : les
   // jouer par invocations séparées remettrait le mur du run à zéro à chaque
   // fois. Répéter une analyse (a,b,a,b) mesure la stabilité du juge : le
@@ -189,6 +213,28 @@ for (const c of cibles) {
   journal.push({ id: c.id, ...json })
 }
 
+if (DEPUIS_ADMIN) {
+  // Le rapport demandé : ce que le juge a rendu, et ce qui manque pour 30.
+  const somme = (k) => journal.reduce((n, j) => n + (Number(j[k]) || 0), 0)
+  const apres = await etatFiabilite()
+  const seuil = apres.stats?.seuil ?? 30
+  const faites = apres.stats?.analyses_verifiees ?? 0
+  const restantes = (apres.a_verifier ?? []).length
+  console.log('\n── RAPPORT ─────────────────────────────────────────────')
+  console.log(`  affirmations vérifiées      ${somme('affirmations')}`)
+  console.log(`  soutenues                   ${somme('soutenues')}`)
+  console.log(`  non soutenues               ${somme('non_soutenues')}`)
+  console.log(`  mauvais moteur              ${somme('mauvais_moteur')}`)
+  console.log(`  sans source publique        ${somme('sans_source')}`)
+  console.log(`  page injoignable            ${somme('injoignables')}`)
+  console.log(`  verdicts sortis du cache    ${somme('depuis_cache')}`)
+  console.log(`  analyses vérifiées (publié) ${faites} / ${seuil}${apres.stats?.publie ? ' — PUBLIÉ' : ''}`)
+  console.log(`  encore non vérifiées        ${restantes}`)
+  const manque = Math.max(0, seuil - faites - restantes)
+  console.log(manque > 0
+    ? `  ⚠️ Il manque ${manque} analyse(s) RÉELLE(S) pour atteindre ${seuil}, même en vérifiant toutes celles en attente.`
+    : `  Les analyses en attente suffisent pour atteindre ${seuil}.`)
+}
 if (args.includes('--journal')) {
   writeFileSync(flag('journal', 'verification-journal.json'), JSON.stringify(journal, null, 2))
 }

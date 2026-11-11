@@ -4,7 +4,9 @@
 // Auth stricte : Authorization doit porter exactement la service role key.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { getOrCreateDefectSheet, refreshProgrammes } from "../_shared/defectSheets.ts";
+import { getOrCreateDefectSheet, normFamille, refreshProgrammes } from "../_shared/defectSheets.ts";
+import { expandBrand } from "../_shared/brandAliases.ts";
+import { genererPlan } from "../_shared/planBuilder.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
@@ -40,6 +42,32 @@ serve(async (req: Request) => {
     }
 
     const admin = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+    // SPRINT 22 — Mode « plan » : relève le plan d'entretien SOURCÉ d'une fiche
+    // EXISTANTE, et le RENVOIE sans l'écrire. L'écriture passe par
+    // admin-defect-sheets (`ajouter_plan`), avec un jeton d'administrateur :
+    // ce mode ne touche ni aux pannes, ni au plan en place.
+    if (body?.mode === "plan") {
+      const { data: lignes } = await admin
+        .from("defect_sheets")
+        .select("id, marque, famille_moteur, famille_norm, moteur_label, annee_debut, annee_fin, plan_entretien")
+        .in("marque_norm", expandBrand(marque))
+        .eq("famille_norm", normFamille(famille));
+      const fiche = (lignes ?? [])[0];
+      if (!fiche) {
+        return new Response(JSON.stringify({ error: "fiche_absente", message: `Aucune fiche ${marque} ${famille}.` }), { status: 404 });
+      }
+      const annees = [fiche.annee_debut, fiche.annee_fin].filter((x: unknown) => x != null).join("-");
+      const r = await genererPlan(ANTHROPIC_API_KEY!, admin, {
+        marque: fiche.marque, famille: fiche.famille_moteur, label: fiche.moteur_label ?? null, annees,
+      });
+      return new Response(JSON.stringify({
+        fiche_id: fiche.id,
+        fiche: `${fiche.marque} ${fiche.famille_moteur}`,
+        plan_existant: Array.isArray(fiche.plan_entretien) ? fiche.plan_entretien.length : 0,
+        ...r,
+      }), { headers: { "Content-Type": "application/json" } });
+    }
 
     // Mode « programmes » : rejoue UNIQUEMENT la recherche d'extensions de
     // garantie sur une fiche existante (régénération ciblée).

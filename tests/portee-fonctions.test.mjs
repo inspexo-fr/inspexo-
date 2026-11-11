@@ -158,7 +158,7 @@ ok(defauts.length === 0, 'aucun identifiant hors de portée',
     'scripts/resourcer-fiches.mjs', 'scripts/eval.mjs', 'scripts/budget.mjs',
     'scripts/verifier-analyses.mjs', 'scripts/sourcer-atlas.mjs',
     'scripts/rattraper-atlas.mjs', 'scripts/couverture-moteurs.mjs',
-    'scripts/etendre-atlas.mjs',
+    'scripts/etendre-atlas.mjs', 'scripts/plans-entretien.mjs',
   ].filter((f) => existsSync(f))
 
   const avantDeclaration = (fichiers) => {
