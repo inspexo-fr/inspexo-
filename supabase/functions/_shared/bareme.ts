@@ -64,7 +64,12 @@
 // plafond, retirer les pannes non sourcées FAISAIT MONTER le verdict (Mercedes
 // 71 → 77), et aurait écrit à 28 moteurs sur 44 qu'ils n'ont aucun défaut
 // connu. Champ OPTIONNEL : absent, aucun score ne bouge.
-export const BAREME_VERSION = "11.9";
+//
+// 11.10 (sprint 23, a2) : le calcul ne change pas, mais le statut du vendeur
+// qui l'alimente devient DÉTERMINISTE (_shared/statutVendeur.ts) — « pro
+// déguisé » n'est plus posé que sur indices nommés. Les statuts rendus par
+// l'API peuvent changer à texte identique : la version le signale.
+export const BAREME_VERSION = "11.10";
 
 export type FaitsAxes = {
   annee_courante: number;

@@ -63,6 +63,7 @@ import { dedupliquerCatalogue } from "../_shared/dedupPannes.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
 import { estAppelApi } from "../_shared/apiClients.ts";
+import { deciderStatut } from "../_shared/statutVendeur.ts";
 import {
   boiteDe,
   fondreReleves,
@@ -1268,7 +1269,20 @@ serve(async (req: Request) => {
     const ident = identCall.input;
     const v = ident.vehicule ?? {};
     const moteur = v.moteur ?? {};
-    const statutVendeur: string = ident.statut_vendeur ?? "particulier";
+    // ---------------- Statut vendeur : DÉTERMINISTE (sprint 23, a2) --------
+    // « Pro déguisé » est une accusation : elle ne sort plus d'une variance du
+    // modèle. Agence / dépôt-vente / mandataire écrits ⇒ intermédiaire ;
+    // pro déguisé seulement si le vendeur se dit particulier ET un indice
+    // fort ou deux faibles distincts, trouvés par motifs fixes et AFFICHÉS.
+    const decisionStatut = deciderStatut(text, ident.statut_vendeur);
+    const statutVendeur: string = decisionStatut.statut;
+    const indicesStatut: string[] = decisionStatut.indices.slice(0, 6);
+    if (decisionStatut.ecart) {
+      await admin.from("events").insert({
+        name: "statut_vendeur_corrige",
+        props_json: { modele: ident.statut_vendeur ?? null, retenu: statutVendeur, motif: decisionStatut.ecart },
+      });
+    }
     const prixAffiche = v.prix_texte_eur ?? v.prix_visuel_eur ?? null;
 
     // ---------------- Famille moteur : DÉTERMINISTE (sprint 20.1) ----------
@@ -1998,7 +2012,7 @@ serve(async (req: Request) => {
 
     // deno-lint-ignore no-explicit-any
     const planEntretien: any[] = Array.isArray((sheet as any)?.plan_entretien) ? (sheet as any).plan_entretien : [];
-    let analyseUser = `${dateBlock}\n\n<identification>\n${JSON.stringify({ vehicule: vehiculePublic, statut_vendeur: statutVendeur, indices_statut: ident.indices_statut ?? [], observations_visuelles: ident.observations_visuelles ?? [] })}\n</identification>\n\n<catalogue_pannes>\n${JSON.stringify(catalogueForPrompt)}\n</catalogue_pannes>\n\n${annonceBlock}`;
+    let analyseUser = `${dateBlock}\n\n<identification>\n${JSON.stringify({ vehicule: vehiculePublic, statut_vendeur: statutVendeur, indices_statut: indicesStatut, observations_visuelles: ident.observations_visuelles ?? [] })}\n</identification>\n\n<catalogue_pannes>\n${JSON.stringify(catalogueForPrompt)}\n</catalogue_pannes>\n\n${annonceBlock}`;
     if (planEntretien.length > 0) {
       analyseUser += `\n\n<plan_entretien>\n${JSON.stringify(planEntretien.map((o) => ({ operation: o.operation, intervalle_km: o.intervalle_km, intervalle_annees: o.intervalle_annees, critique: o.critique })))}\n</plan_entretien>`;
     }
@@ -2593,6 +2607,13 @@ serve(async (req: Request) => {
       const statutQRe = /mandataire|statut\s+juridique|interm[ée]diaire|d[ée]p[oô]t[- ]vente|propri[ée]taire\s+du\s+v[ée]hicule/i;
       questions = questions.filter((q) => !statutQRe.test(q));
       questions.splice(Math.min(4, questions.length), 0, INTERMEDIAIRE_QUESTION);
+      questions = questions.slice(0, 8);
+    }
+
+    // Un indice de professionnel qui ne fonde pas d'accusation (un seul indice
+    // faible, ou vendeur qui ne se dit pas particulier) devient une question.
+    if (decisionStatut.question && !questions.includes(decisionStatut.question)) {
+      questions.splice(Math.min(4, questions.length), 0, decisionStatut.question);
       questions = questions.slice(0, 8);
     }
 
@@ -3423,7 +3444,7 @@ serve(async (req: Request) => {
       etape: "final",
       vehicule: vehiculePublic,
       statut_vendeur: statutVendeur,
-      indices_statut: (ident.indices_statut ?? []).slice(0, 6),
+      indices_statut: indicesStatut,
       verdict,
       score,
       plafond_raison: plafondRaison,
@@ -3824,7 +3845,7 @@ serve(async (req: Request) => {
         etape: "photos_fiche",
         vehicule: vehiculePublic,
         statut_vendeur: statutVendeur,
-        indices_statut: (ident.indices_statut ?? []).slice(0, 6),
+        indices_statut: indicesStatut,
         verdict: null,
         score: null,
         score_detail: null,
