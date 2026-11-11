@@ -208,7 +208,13 @@ if (a('--candidats-externes')) {
   // ⚠️ Seules comptent les affirmations jugées au FORMAT ACTUEL (vote corrigé,
   // un défaut par partie : champ `parties`). Le lot K9K + EB2 du premier
   // passage — ancien vote, silences comptés « non » — est REJOUÉ.
-  const faites = new Set(Object.entries(journal.affirmations).filter(([, v]) => v.mode === 'noyau' && Array.isArray(v.parties)).map(([k]) => k))
+  // Et une affirmation dont AUCUNE partie n'a reçu de verdict (silence, appel en
+  // échec, ou lot arrêté avant de la juger — les 11 du lot 31) n'est pas faite :
+  // elle est À REJUGER, jamais comptée rejetée (décision d'Utku du 11 nov. 2026).
+  const faites = new Set(Object.entries(journal.affirmations)
+    .filter(([, v]) => v.mode === 'noyau' && Array.isArray(v.parties) &&
+      v.parties.some((p) => (p.confirmees?.length ?? 0) + (p.ecartees?.length ?? 0) > 0))
+    .map(([k]) => k))
   // Corrections manuelles de noyaux (même règle) et affirmations RETIRÉES par
   // Utku le 10 nov. 2026 : un constat, et des pénalités américaines sans
   // intérêt pour l'acheteur.
@@ -233,18 +239,31 @@ if (a('--candidats-externes')) {
   // non attrapée au lot 27, après 23 lots complets). L'appel rend null ; le
   // lanceur réserve un coût PRUDENT (le serveur a pu dépenser sans le dire),
   // marque les unités « à rejuger », et s'arrête après trois échecs d'affilée.
+  // Page LONGUE (pré-contrôle) : deux passages, puis le 3e vote dans un appel
+  // SÉPARÉ pour les seules affirmations en désaccord (décision du 11 nov. 2026 :
+  // deux passages + un troisième dans le même appel dépassaient les 150 s).
+  const SEUIL_PAGE_LONGUE = 30_000
   const appelJuge = async (url, groupe) => {
-    try { return await appelJugeBrut(url, groupe) } catch (e) {
+    try {
+      if ((PRE[url]?.longueur ?? 0) <= SEUIL_PAGE_LONGUE) return await appelJugeBrut(url, groupe)
+      const j1 = await appelJugeBrut(url, groupe, { deux_seulement: true })
+      const aDep = groupe.filter((u) => j1.verdicts?.[u.uid]?.a_departager)
+      if (aDep.length === 0) return j1
+      const j2 = await appelJugeBrut(url, aDep.map((u) => ({ ...u, votes_detail: j1.verdicts[u.uid].votes_detail })), { departager: true })
+      return { ...j1, verdicts: { ...j1.verdicts, ...j2.verdicts }, cout_eur: j1.cout_eur + j2.cout_eur }
+    } catch (e) {
       console.error(`\n  ⚠️ appel en échec (${String(e?.name ?? e).slice(0, 40)}) sur ${url.slice(0, 80)} — unités à rejuger, coût réservé`)
       return null
     }
   }
-  const appelJugeBrut = async (url, groupe) => {
+  const appelJugeBrut = async (url, groupe, opts = {}) => {
     const res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/sources-externes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ANON}`, 'x-eval-secret': EVAL_SECRET },
       body: JSON.stringify({ mode: 'juger', url, cible: cibleDe(groupe[0].o), moteur: groupe[0].o.famille,
-        affirmations: groupe.map((u) => ({ id: u.uid, texte: `Sur ${String(u.o.libelle_moteur).trim()} : ${u.partie}`.slice(0, 400), extraits: extraitsVerbatim(u.o, url) })) }),
+        ...opts,
+        affirmations: groupe.map((u) => ({ id: u.uid, texte: `Sur ${String(u.o.libelle_moteur).trim()} : ${u.partie}`.slice(0, 400), extraits: extraitsVerbatim(u.o, url),
+          ...(opts.departager ? { votes: u.votes_detail ?? [] } : {}) })) }),
       signal: AbortSignal.timeout(150_000),
     })
     const j = await res.json().catch(() => null)
@@ -308,9 +327,10 @@ if (a('--candidats-externes')) {
       }
       if (parPage.size === 0) break
       for (const [url, groupe] of parPage) {
-        // 6 par appel : 8 approchaient les 150 s d'une fonction edge.
-        for (let i = 0; i < groupe.length; i += 6) {
-          const sous = groupe.slice(i, i + 6)
+        // 3 par appel (11 nov. 2026) : 6 dépassaient encore les 150 s d'une
+        // fonction edge sur les pages longues.
+        for (let i = 0; i < groupe.length; i += 3) {
+          const sous = groupe.slice(i, i + 3)
           const reserve = appels ? coutLot / appels : 0.063
           if (coutLot + reserve > MUR_LOT) { arretLot = `mur du lot (${MUR_LOT.toFixed(2)} €)`; break }
           if (coutRun + reserve > BUDGET) { arretLot = `mur du run (${BUDGET.toFixed(2)} €)`; break }

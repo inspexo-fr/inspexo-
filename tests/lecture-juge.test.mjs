@@ -3,7 +3,7 @@
 // alerte au-delà de 10 % de silences dans un passage.
 // Usage : node tests/lecture-juge.test.mjs
 import { readFileSync } from 'node:fs'
-import { passageTropSilencieux, SEUIL_SILENCE_PASSAGE, verdictsDeLaReponse, voter } from '../supabase/functions/_shared/jugeStable.ts'
+import { departager, majorite, passageTropSilencieux, SEUIL_SILENCE_PASSAGE, verdictsDeLaReponse, voter } from '../supabase/functions/_shared/jugeStable.ts'
 import { LIBELLE_MOTIF, PREFIXE_URGENT, sujetAlerte } from '../supabase/functions/_shared/alerting.ts'
 
 let ok_ = 0, ko = 0
@@ -38,6 +38,22 @@ for (const [nom, input] of Object.entries(FORMES)) {
   let n = 0
   const v = await voter(async () => { n++; return n === 1 ? { verdicts: liste.slice(0, 1), usage: null, modele: 'm' } : { verdicts: [], usage: null, modele: 'm' } }, deux)
   ok(v.resultats[1].votes.length === 0 && !v.resultats[1].fiable, 'affirmation jamais notée : aucun vote, pas fiable')
+}
+// 3e vote en appel séparé : même résultat qu'un vote en un seul appel, sur les 27 combinaisons.
+{
+  const V = ['soutenue', 'non_soutenue', 'mauvais_moteur']
+  let ecarts = 0, cas = 0
+  for (const a of V) for (const b of V) for (const c of V) {
+    let n = 0
+    const seq = [a, b, c]
+    const appel = async (sous) => ({ verdicts: sous.map((_, i) => ({ index: i + 1, verdict: seq[n], justification: seq[n] })), usage: null, modele: 'm', _: n++ })
+    const deux = await voter(appel, [{ type: 'panne', texte: 'A' }], { deuxSeulement: true })
+    let final = deux.resultats[0]
+    if (final.a_departager) final = (await departager(appel, [{ type: 'panne', texte: 'A', votes: final.votes_detail }])).resultats[0]
+    cas++
+    if (final.verdict !== majorite([a, b, c].slice(0, a === b ? 2 : 3))) ecarts++
+  }
+  ok(ecarts === 0 && cas === 27, 'vote scindé (2 + 1 séparé) = vote en un appel, 27 combinaisons')
 }
 // Seuil d'alerte.
 ok(SEUIL_SILENCE_PASSAGE === 0.1, 'seuil : 10 %')

@@ -35,6 +35,7 @@ import {
   voter,
   verdictsDeLaReponse,
 } from "../_shared/verifSource.ts";
+import { departager } from "../_shared/jugeStable.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -174,8 +175,12 @@ serve(async (req: Request) => {
       const cible = String(body.cible ?? "").slice(0, 200);
       const moteurCle = String(body.moteur ?? cible).slice(0, 120);
       const affs = (Array.isArray(body.affirmations) ? body.affirmations : []).slice(0, 12)
-        .map((a: { id?: unknown; texte?: unknown; extraits?: unknown }) => ({
+        .map((a: { id?: unknown; texte?: unknown; extraits?: unknown; votes?: unknown }) => ({
           id: String(a?.id ?? ""), texte: String(a?.texte ?? "").slice(0, 400),
+          // 3e vote séparé (pages longues) : les votes RÉELS des deux premiers
+          // passages, renvoyés par l'appel précédent.
+          votes: (Array.isArray(a?.votes) ? a.votes : []).slice(0, 2)
+            .map((v: { verdict?: unknown; justification?: unknown }) => ({ verdict: String(v?.verdict ?? ""), justification: typeof v?.justification === "string" ? v.justification.slice(0, 600) : null })),
           // Extraits VERBATIM de cette affirmation sur cette page : ils servent
           // à centrer la fenêtre. Absents ⇒ lecture standard.
           extraits: (Array.isArray(a?.extraits) ? a.extraits : []).filter((x): x is string => typeof x === "string").slice(0, 6),
@@ -187,7 +192,9 @@ serve(async (req: Request) => {
 
       const cles = await Promise.all(affs.map((a: { texte: string }) => cleVerif(url, a.texte, moteurCle)));
       const enCache = await lireCacheVerif(admin, cles);
-      const verdicts: Record<string, { verdict: string; justification: string | null; depuis_cache: boolean; votes?: string[]; lecture?: string }> = {};
+      const verdicts: Record<string, { verdict: string; justification: string | null; depuis_cache: boolean; votes?: string[]; lecture?: string; a_departager?: boolean; votes_detail?: Array<{ verdict: string; justification: string | null }> }> = {};
+      const DEUX_SEULEMENT = body.deux_seulement === true;
+      const DEPARTAGER = body.departager === true;
       const aJuger: number[] = [];
       affs.forEach((a: { id: string }, i: number) => {
         const c = enCache.get(cles[i]);
@@ -196,7 +203,10 @@ serve(async (req: Request) => {
       });
       let usd = 0, passages = 0, lisible = true;
       const juger = async (indices: number[], texte: string, lecture: string) => {
-        const v = await voter((sous) => unPassage(cible, sous, url, texte), indices.map((i) => ({ type: "panne", texte: affs[i].texte })));
+        const appel = (sous: Array<{ type: string; texte: string }>) => unPassage(cible, sous, url, texte);
+        const v = DEPARTAGER
+          ? { ...(await departager(appel, indices.map((i) => ({ type: "panne", texte: affs[i].texte, votes: affs[i].votes })))), passages: 1 }
+          : await voter(appel, indices.map((i) => ({ type: "panne", texte: affs[i].texte })), { deuxSeulement: DEUX_SEULEMENT });
         passages += v.passages;
         await surveillerSilences(admin, "sources-externes", v.silences, url);
         for (const u of v.usages) {
@@ -206,7 +216,8 @@ serve(async (req: Request) => {
         const aEcrire: Parameters<typeof ecrireCacheVerif>[1] = [];
         indices.forEach((i, k) => {
           const r = v.resultats[k];
-          verdicts[affs[i].id] = { verdict: r.verdict, justification: r.justification, depuis_cache: false, votes: r.votes, lecture };
+          verdicts[affs[i].id] = { verdict: r.verdict, justification: r.justification, depuis_cache: false, votes: r.votes, lecture,
+            ...(r.a_departager ? { a_departager: true, votes_detail: r.votes_detail } : {}) };
           if (r.fiable) aEcrire.push({ cle: cles[i], url, affirmation: affs[i].texte, moteur: moteurCle, verdict: r.verdict, justification: r.justification, votes: r.votes, modele: r.modele });
         });
         await ecrireCacheVerif(admin, aEcrire);

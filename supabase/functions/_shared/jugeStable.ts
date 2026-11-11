@@ -82,6 +82,9 @@ export type ReponseJuge = {
 export type AppelJuge = (affirmations: Array<{ type: string; texte: string }>) => Promise<ReponseJuge>;
 
 export type VerdictVote = {
+  /** Pages longues : désaccord laissé au 3e vote, appel séparé. */
+  a_departager?: boolean;
+  votes_detail?: Array<{ verdict: string; justification: string | null }>;
   verdict: string;
   justification: string | null;
   votes: string[];
@@ -151,6 +154,10 @@ function verdictsParIndex(r: ReponseJuge, n: number): Vote[] | null {
 export async function voter(
   appel: AppelJuge,
   affirmations: Array<{ type: string; texte: string }>,
+  // SPRINT 23 — pages LONGUES : le 3e vote part dans un appel SÉPARÉ
+  // (`departager`), sans quoi deux passages + un troisième sur une page de
+  // 14 000 caractères dépassaient les 150 s d'une fonction edge.
+  options: { deuxSeulement?: boolean } = {},
 ): Promise<{ resultats: VerdictVote[]; usages: UsageJuge[]; passages: number; silences: Array<{ n: number; sans: number }> }> {
   const n = affirmations.length;
   const usages: UsageJuge[] = [];
@@ -179,12 +186,13 @@ export async function voter(
         votes: votes.map((x) => x.verdict),
         fiable: false,
         modele,
+        ...(options.deuxSeulement ? { a_departager: true, votes_detail: votes.map((x) => ({ verdict: x.verdict, justification: x.justification })) } : {}),
       });
       desaccords.push(i);
     }
   }
 
-  if (desaccords.length > 0) {
+  if (desaccords.length > 0 && !options.deuxSeulement) {
     passages = 3;
     const r3 = await appel(desaccords.map((i) => affirmations[i]));
     if (r3?.usage) usages.push(r3.usage);
@@ -240,4 +248,31 @@ export async function ecrireCacheVerif(db: any, lignes: Array<{
     { onConflict: "cle" },
   );
   if (error) console.error("verif_cache écriture:", error.message);
+}
+
+/** Le 3e vote, dans un appel SÉPARÉ (pages longues). Il reçoit les votes
+ *  RÉELS des deux premiers passages et rend exactement ce qu'aurait rendu
+ *  `voter` en un seul appel : majorité, « non_soutenue » en dispersion, fiable
+ *  seulement avec deux votes réels. */
+export async function departager(
+  appel: AppelJuge,
+  affirmations: Array<{ type: string; texte: string; votes: Array<{ verdict: string; justification: string | null }> }>,
+): Promise<{ resultats: VerdictVote[]; usages: UsageJuge[]; silences: Array<{ n: number; sans: number }> }> {
+  const n = affirmations.length;
+  const r3 = await appel(affirmations.map(({ type, texte }) => ({ type, texte })));
+  const v3 = verdictsParIndex(r3, n);
+  const silences = [{ n, sans: v3 ? v3.filter((x) => x.absent).length : n }];
+  const resultats = affirmations.map((a, k) => {
+    const prec = (a.votes ?? []).filter((x) => (VERDICTS_VALIDES as readonly string[]).includes(x.verdict)).slice(0, 2);
+    const tous = [...prec, ...(v3 && !v3[k].absent ? [v3[k]] : [])];
+    const verdict = tous.length ? majorite(tous.map((x) => x.verdict)) : "non_soutenue";
+    return {
+      verdict,
+      justification: tous.find((x) => x.verdict === verdict)?.justification ?? "Aucun verdict rendu pour cette affirmation.",
+      votes: tous.map((x) => x.verdict),
+      fiable: tous.length >= 2,
+      modele: r3?.modele ?? null,
+    };
+  });
+  return { resultats, usages: r3?.usage ? [r3.usage] : [], silences };
 }
