@@ -16,3 +16,16 @@ Mercedes vert 71 · Clio II orange 51 · cumul tests 3,00 €.
   redéployer depuis main ramènerait l'ancien juge (défaut des silences), il
   n'est donc PAS redéployé.
 - Outillage : `--plafond-session` reporté de sprint23 dans `scripts/eval.mjs`.
+- Résultat (b) : S7 rouge 39/39/39 · 308 orange 55/55/55 · Mercedes vert
+  71/71/71 · Clio II orange 51/51/51 — inchangés. 1,046 € · cumul 4,04 €.
+
+## (c) sprint22d, signaux d'entretien déterministes — 11 nov. 2026
+- Écart annoncé (barème rejoué hors ligne sur les faits des dossiers de (b),
+  signaux remplacés par ceux des motifs fixes) : S7 39 · 308 55 ·
+  **Mercedes 71 → 73** (aucun signal écrit, garantie exclue ⇒ axe entretien
+  non évalué) · Clio II 51.
+- `BAREME_VERSION` : 22d portait « 11.10 », déjà pris par (a2) et servi depuis
+  ce matin. Renuméroté **11.11** (11.10-22d n'a jamais été servi).
+- Déploiement annoncé : `score` + fonctions qui importent `bareme.ts`
+  (`api-analyses`, `lecture-ct`, `lecture-histovec`, `visite`), liste à
+  confirmer par `scripts/fonctions-a-redeployer.mjs`.
