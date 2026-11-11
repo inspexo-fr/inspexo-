@@ -75,3 +75,6 @@ captures-sprint22/
 # quelle que soit la branche (décision du 11 nov. 2026).
 node_modules.nosync
 node_modules.nosync/
+
+# Captures du chantier design (nov. 2026)
+captures-design/
