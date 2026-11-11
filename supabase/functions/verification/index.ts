@@ -22,6 +22,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
+import { surveillerSilences } from "../_shared/alerteJuge.ts";
 import {
   type Affirmation,
   affirmationsDeAnalyse,
@@ -37,6 +38,7 @@ import {
   VERIF_SYSTEM,
   VERIF_TOOL,
   voter,
+  verdictsDeLaReponse,
 } from "../_shared/verifSource.ts";
 
 const corsHeaders = {
@@ -128,7 +130,7 @@ async function verifierGroupe(
       // deno-lint-ignore no-explicit-any
       const block = (data.content ?? []).find((b: any) => b.type === "tool_use" && b.name === "rendre_verifications");
       if (block) {
-        return { verdicts: Array.isArray(block.input?.verdicts) ? block.input.verdicts : [], usage: data.usage ?? null, modele: model };
+        return { verdicts: verdictsDeLaReponse(block.input), usage: data.usage ?? null, modele: model };
       }
     } catch (err) {
       console.error("verification exception:", model, err);
@@ -151,6 +153,27 @@ serve(async (req: Request) => {
     }
 
     const body = await req.json().catch(() => null);
+
+    // SPRINT 23 — LISTAGE EN LECTURE SEULE des analyses RÉELLES (is_eval =
+    // false) depuis une date, pour savoir lesquelles ont pu être touchées par
+    // une entrée retirée à cause d'un silence du juge (décision d'Utku du
+    // 11 nov. 2026). Champs du VÉHICULE seulement : ni texte d'annonce, ni
+    // donnée personnelle. Aucune écriture. Secret d'éval exigé.
+    if (body?.mode === "lister_analyses_reelles") {
+      if (!isEval) return jsonResponse({ error: "secret_eval_requis" }, 403);
+      const depuis = typeof body.depuis === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.depuis) ? body.depuis : "2026-11-04";
+      const lecteur = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+      const { data, error } = await lecteur
+        .from("analyses")
+        .select("id, created_at, verdict, score, result_json->vehicule->>marque, result_json->vehicule->>modele, result_json->vehicule->>famille_moteur, result_json->vehicule->>annee")
+        .eq("is_eval", false)
+        .gte("created_at", depuis)
+        .order("created_at", { ascending: true })
+        .limit(2000);
+      if (error) return jsonResponse({ error: error.message }, 500);
+      return jsonResponse({ depuis, analyses: data ?? [] });
+    }
+
     const analysisId = typeof body?.analysis_id === "string" ? body.analysis_id : null;
     if (!analysisId || !/^[0-9a-f-]{36}$/i.test(analysisId)) {
       return jsonResponse({ error: "invalid_input", message: "analysis_id requis." }, 400);
@@ -240,6 +263,7 @@ serve(async (req: Request) => {
         return r.modele ? r : null;
       }, affs);
       passagesTotal += vote.passages;
+      await surveillerSilences(admin, "verification", vote.silences, g.url);
       if (vote.passages === 3) votesATrois++;
       for (const u of vote.usages) usdTotal += tarif(u);
       affs.forEach((a, k) => {

@@ -78,7 +78,7 @@ const EVAL_SECRET = env.EVAL_BYPASS_SECRET ?? ''
 // ⚠️ Le mode --appliquer ne lit QUE le journal : il n'a pas besoin du dump des
 // fiches, et l'exiger ferait échouer la fusion pour un fichier absent du
 // dépôt — alors qu'il n'a plus rien à y faire.
-const fiches = ((APPLIQUER || a('--rejouer-non-soutenues')) && !existsSync(FICHIER)) ? [] : JSON.parse(readFileSync(FICHIER, 'utf8'))
+const fiches = ((APPLIQUER || a('--rejouer-non-soutenues') || a('--candidats-externes')) && !existsSync(FICHIER)) ? [] : JSON.parse(readFileSync(FICHIER, 'utf8'))
 const urlsDe = (p) => {
   const u = []
   for (const s of (p.sources ?? [])) if (s?.url) u.push(s.url)
@@ -132,7 +132,7 @@ unites.sort((x, y) => rang(x.fiche) - rang(y.fiche))
 // ── Mode estimation : aucune dépense ────────────────────────────────────────
 const parFiche = {}
 for (const u of unites) parFiche[u.fiche] = (parFiche[u.fiche] ?? 0) + 1
-if (ESTIMER && !a('--rejouer-non-soutenues')) {
+if (ESTIMER && !a('--rejouer-non-soutenues') && !a('--candidats-externes')) {
   console.log(`\nCAMPAGNE DE RE-SOURCING — estimation (aucune dépense)\n`)
   console.log(`  fiches à terre            : ${Object.keys(parFiche).length}`)
   console.log(`  pannes à re-sourcer       : ${unites.length}`)
@@ -152,6 +152,258 @@ if (ESTIMER && !a('--rejouer-non-soutenues')) {
   process.exit(0)
 }
 
+
+// ── MODE --candidats-externes (sprint 23) — JUGE SEULEMENT ─────────────────
+//
+// Fichier docs/sources-moteurs-2026-11.json. Ce mode JUGE ; il n'écrit RIEN
+// dans les fiches (cache du juge et journal seulement). La fusion est un
+// second geste, avec le jeton d'administrateur.
+//
+// Règles (décisions d'Utku du 10 nov. 2026) :
+//   - pages injoignables au pré-contrôle (docs/precontrole-sources.json)
+//     EXCLUES : on ne paie pas pour elles ;
+//   - sources prises par MEILLEURE CLASSE d'abord, arrêt à 2 confirmées ;
+//   - lots de 20 affirmations, une page jugée UNE fois par lot pour toutes
+//     les affirmations du lot qui la citent ;
+//   - mur par lot (--mur-lot, 1,30 €) ET mur du run (--budget) ;
+//   - ARRÊT IMMÉDIAT si un lot confirme moins de 50 % de ses affirmations :
+//     ces pages ont déjà été ouvertes, un taux bas signale un problème de
+//     lecture, pas de source.
+//   - type=constat : jamais jugé comme une panne (exclu).
+if (a('--candidats-externes')) {
+  const { decouperNoyau, defautsNoyau, detailsAffichables, extraireNoyau } =
+    await import(new URL('../supabase/functions/_shared/noyau.ts', import.meta.url))
+  const SRC = JSON.parse(readFileSync('docs/sources-moteurs-2026-11.json', 'utf8'))
+  const PRE = existsSync('docs/precontrole-sources.json') ? JSON.parse(readFileSync('docs/precontrole-sources.json', 'utf8')).pages : null
+  if (!PRE) { console.error('Pré-contrôle absent : node scripts/precontrole-sources.mjs (gratuit) d’abord.'); process.exit(1) }
+  const CORR = existsSync('docs/correspondance-familles.json') ? JSON.parse(readFileSync('docs/correspondance-familles.json', 'utf8')) : { lignes: [] }
+  const codesDe = Object.fromEntries(CORR.lignes.map((l) => [l.cle, l.codes ?? []]))
+  const JOURNAL_EXT = 'docs/candidats-externes-journal.json'
+  const MUR_LOT = Number(flag('--mur-lot', '1.30')) || 1.3
+  const NB_LOTS = Number(flag('--lots', '1')) || 1
+  // Projection : on continue tant que (dépensé + projeté) ≤ ce plafond.
+  const PLAFOND_PROJETE = Number(flag('--plafond-projete', '30')) || 30
+  const DEJA_DEPENSE = Number(flag('--deja-depense', '0')) || 0
+  const SEUIL_LOT = 0.5
+  const RANG = { officiel: 0, presse: 1, consommateurs: 1, editorial: 2 }
+  const FORTE = new Set(['officiel', 'presse', 'consommateurs'])
+  const classeDe = (u) => SRC.hotes[new URL(u).hostname.replace(/^www\./, '')]?.classe
+  const joignable = (u) => PRE[u]?.joignable === true
+
+  // ⚠️ ORDRE RÉEL (décision d'Utku du 10 nov. 2026) : ces moteurs d'abord,
+  // puis le groupe H (modèles anciens), puis VAG, puis le reste.
+  const PRIORITE = ['K9K', 'EB2', 'DV6', 'DW10', 'H5FT', 'EP6', 'DV5']
+  const rangObjet = (o) => {
+    const codes = codesDe[o.famille] ?? []
+    const k = PRIORITE.findIndex((p) => codes.some((c) => c === p || c.startsWith(p)))
+    if (k >= 0) return k
+    if (o.groupe === 'H') return 100
+    if (o.groupe === 'C') return 200
+    return 300
+  }
+
+  const journal = existsSync(JOURNAL_EXT) ? JSON.parse(readFileSync(JOURNAL_EXT, 'utf8')) : { lots: [], affirmations: {} }
+  // Le pilote du 10 nov. a jugé l'INTITULÉ entier : ses verdicts ne valent pas
+  // pour le noyau. Seules les affirmations jugées en mode « noyau » comptent.
+  // ⚠️ Seules comptent les affirmations jugées au FORMAT ACTUEL (vote corrigé,
+  // un défaut par partie : champ `parties`). Le lot K9K + EB2 du premier
+  // passage — ancien vote, silences comptés « non » — est REJOUÉ.
+  // Et une affirmation dont AUCUNE partie n'a reçu de verdict (silence, appel en
+  // échec, ou lot arrêté avant de la juger — les 11 du lot 31) n'est pas faite :
+  // elle est À REJUGER, jamais comptée rejetée (décision d'Utku du 11 nov. 2026).
+  const faites = new Set(Object.entries(journal.affirmations)
+    .filter(([, v]) => v.mode === 'noyau' && Array.isArray(v.parties) &&
+      v.parties.some((p) => (p.confirmees?.length ?? 0) + (p.ecartees?.length ?? 0) > 0))
+    .map(([k]) => k))
+  // Corrections manuelles de noyaux (même règle) et affirmations RETIRÉES par
+  // Utku le 10 nov. 2026 : un constat, et des pénalités américaines sans
+  // intérêt pour l'acheteur.
+  const NOYAUX_CORRIGES = JSON.parse(readFileSync('docs/noyaux-corriges.json', 'utf8'))
+  const RETIREES = new Set(['B-PSA-EAT8-02', 'F-HYUNDAI-KIA-2.0-2.4-THETA-II-02'])
+  const noyauDe = (o) => NOYAUX_CORRIGES[o.id] ?? extraireNoyau(o.intitule, o.type).noyau
+  const objets = SRC.objets
+    .filter((o) => o.type !== 'constat' && !faites.has(o.id) && !RETIREES.has(o.id))
+    .sort((x, y) => (rangObjet(x) - rangObjet(y)) || x.famille.localeCompare(y.famille) || x.id.localeCompare(y.id))
+  const sourcesDe = (o) => [...(o.sources ?? [])]
+    .filter((s) => joignable(s.url))
+    .sort((x, y) => (RANG[classeDe(x.url)] ?? 9) - (RANG[classeDe(y.url)] ?? 9))
+  const cibleDe = (o) => `${(o.marques ?? []).join('/')} ${o.libelle_moteur}${o.modeles_annees ? ` — ${o.modeles_annees}` : ''}`.slice(0, 200)
+  const extraitsVerbatim = (o, url) => (o.sources.find((s) => s.url === url)?.extraits ?? [])
+    .filter((e) => e?.verbatim === true && typeof e.texte === 'string').map((e) => e.texte)
+  const totalRestant = objets.filter((o) => sourcesDe(o).length > 0).length
+
+  let coutRun = 0, affirmationsJouees = 0
+  // Une UNITÉ = une partie de noyau (un défaut). `groupe` est une liste
+  // d'unités de la MÊME page.
+  // ⚠️ UN DÉLAI DÉPASSÉ NE FAIT PLUS TOMBER LE RUN (11 nov. 2026 : TimeoutError
+  // non attrapée au lot 27, après 23 lots complets). L'appel rend null ; le
+  // lanceur réserve un coût PRUDENT (le serveur a pu dépenser sans le dire),
+  // marque les unités « à rejuger », et s'arrête après trois échecs d'affilée.
+  // Page LONGUE (pré-contrôle) : deux passages, puis le 3e vote dans un appel
+  // SÉPARÉ pour les seules affirmations en désaccord (décision du 11 nov. 2026 :
+  // deux passages + un troisième dans le même appel dépassaient les 150 s).
+  const SEUIL_PAGE_LONGUE = 30_000
+  const appelJuge = async (url, groupe) => {
+    try {
+      if ((PRE[url]?.longueur ?? 0) <= SEUIL_PAGE_LONGUE) return await appelJugeBrut(url, groupe)
+      const j1 = await appelJugeBrut(url, groupe, { deux_seulement: true })
+      const aDep = groupe.filter((u) => j1.verdicts?.[u.uid]?.a_departager)
+      if (aDep.length === 0) return j1
+      const j2 = await appelJugeBrut(url, aDep.map((u) => ({ ...u, votes_detail: j1.verdicts[u.uid].votes_detail })), { departager: true })
+      return { ...j1, verdicts: { ...j1.verdicts, ...j2.verdicts }, cout_eur: j1.cout_eur + j2.cout_eur }
+    } catch (e) {
+      console.error(`\n  ⚠️ appel en échec (${String(e?.name ?? e).slice(0, 40)}) sur ${url.slice(0, 80)} — unités à rejuger, coût réservé`)
+      return null
+    }
+  }
+  const appelJugeBrut = async (url, groupe, opts = {}) => {
+    const res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/sources-externes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ANON}`, 'x-eval-secret': EVAL_SECRET },
+      body: JSON.stringify({ mode: 'juger', url, cible: cibleDe(groupe[0].o), moteur: groupe[0].o.famille,
+        ...opts,
+        affirmations: groupe.map((u) => ({ id: u.uid, texte: `Sur ${String(u.o.libelle_moteur).trim()} : ${u.partie}`.slice(0, 400), extraits: extraitsVerbatim(u.o, url),
+          ...(opts.departager ? { votes: u.votes_detail ?? [] } : {}) })) }),
+      signal: AbortSignal.timeout(150_000),
+    })
+    const j = await res.json().catch(() => null)
+    if (!res.ok || typeof j?.cout_eur !== 'number') {
+      console.error(`\n  ⚠️ ARRÊT — juge sur ${url} : HTTP ${res.status}, coût non chiffrable.`)
+      process.exit(1)
+    }
+    return j
+  }
+
+  // --melange K9K,EB2 : le PREMIER lot puise à parts égales dans ces moteurs
+  // (pilote du 10 nov. 2026 : « un seul lot K9K + EB2 »).
+  const MELANGE = flag('--melange') ? String(flag('--melange')).split(',') : null
+  const premierLot = () => {
+    if (!MELANGE) return objets.splice(0, 20)
+    const part = Math.floor(20 / MELANGE.length)
+    const pris = []
+    for (const m of MELANGE) {
+      const candidats = objets.filter((o) => (codesDe[o.famille] ?? []).some((c) => c === m || c.startsWith(m)) && sourcesDe(o).length > 0).slice(0, part)
+      for (const o of candidats) { pris.push(o); objets.splice(objets.indexOf(o), 1) }
+    }
+    return pris
+  }
+
+  // ⚠️ UN NOYAU SALE N'EST JAMAIS ENVOYÉ AU JUGE (décision d'Utku du 10 nov.
+  // 2026 : « relis les noyaux par script avant l'envoi »). Il est mis de côté,
+  // listé, et reste à jouer : on ne paie pas pour une phrase mal formée.
+  journal.noyaux_a_reprendre = journal.noyaux_a_reprendre ?? {}
+  for (let i = objets.length - 1; i >= 0; i--) {
+    const o = objets[i]
+    const d = defautsNoyau(noyauDe(o), o.intitule, o.type)
+    if (d.length) { journal.noyaux_a_reprendre[o.id] = d; objets.splice(i, 1) }
+    else delete journal.noyaux_a_reprendre[o.id]
+  }
+  console.log(`  ${Object.keys(journal.noyaux_a_reprendre).length} noyau(x) mis de côté (forme à reprendre), jamais envoyés`)
+
+  const SEUIL_SILENCE = 0.2
+  let echecsDAffilee = 0, echecsEstimes = 0
+  for (let k = 0; k < NB_LOTS && objets.length; k++) {
+    const lot = (k === 0 ? premierLot() : objets.splice(0, 20)).filter((o) => sourcesDe(o).length > 0)
+    if (lot.length === 0) continue
+    // Unités : un défaut par partie (décision du 10 nov. 2026).
+    const unites = lot.flatMap((o) => {
+      const parts = decouperNoyau(noyauDe(o), o.type)
+      return parts.map((partie, i) => ({ o, partie, uid: parts.length > 1 ? `${o.id}#${i + 1}` : o.id }))
+    })
+    const etat = Object.fromEntries(unites.map((u) => [u.uid, { confirmees: [], ecartees: [], silences: [], restantes: sourcesDe(u.o).map((x) => x.url), close: false }]))
+    let coutLot = 0, appels = 0, arretLot = null, mauvaisMoteur = 0
+    // Une unité est CLOSE dès : une source forte confirmée ; ou deux
+    // éditoriales confirmées ; ou deux rejets RÉELS ; ou plus de page.
+    const close = (e) => e.confirmees.some((c) => FORTE.has(c.classe)) || e.confirmees.length >= 2 ||
+      e.ecartees.length >= 2 || e.restantes.length === 0
+    for (let tour = 0; tour < 4; tour++) {
+      const parPage = new Map()
+      for (const u of unites) {
+        const e = etat[u.uid]
+        if (e.close || close(e)) { e.close = true; continue }
+        const url = e.restantes.shift()
+        if (!parPage.has(url)) parPage.set(url, [])
+        parPage.get(url).push(u)
+      }
+      if (parPage.size === 0) break
+      for (const [url, groupe] of parPage) {
+        // 3 par appel (11 nov. 2026) : 6 dépassaient encore les 150 s d'une
+        // fonction edge sur les pages longues.
+        for (let i = 0; i < groupe.length; i += 3) {
+          const sous = groupe.slice(i, i + 3)
+          const reserve = appels ? coutLot / appels : 0.063
+          if (coutLot + reserve > MUR_LOT) { arretLot = `mur du lot (${MUR_LOT.toFixed(2)} €)`; break }
+          if (coutRun + reserve > BUDGET) { arretLot = `mur du run (${BUDGET.toFixed(2)} €)`; break }
+          const j = await appelJuge(url, sous)
+          if (!j) {
+            const RESERVE_ECHEC = 0.063
+            coutLot += RESERVE_ECHEC; coutRun += RESERVE_ECHEC; echecsEstimes += RESERVE_ECHEC
+            for (const u of sous) etat[u.uid].silences.push(url)
+            if (++echecsDAffilee >= 3) { arretLot = 'trois appels en échec d’affilée'; break }
+            continue
+          }
+          echecsDAffilee = 0
+          appels++; coutLot += j.cout_eur; coutRun += j.cout_eur
+          for (const u of sous) {
+            const r = j.verdicts?.[u.uid] ?? {}
+            // Un silence (aucun vote réel) n'est pas un rejet : à rejuger.
+            if (Array.isArray(r.votes) && r.votes.length === 0 && !r.depuis_cache) { etat[u.uid].silences.push(url); continue }
+            const v = r.verdict ?? 'non_soutenue'
+            if (v === 'mauvais_moteur') mauvaisMoteur++
+            ;(v === 'soutenue' ? etat[u.uid].confirmees : etat[u.uid].ecartees)
+              .push({ url, verdict: v, classe: classeDe(url), lecture: r.lecture ?? null, cache: r.depuis_cache === true,
+                justification: typeof r.justification === 'string' ? r.justification.slice(0, 400) : null })
+          }
+        }
+        if (arretLot) break
+      }
+      if (arretLot) break
+    }
+    // Bilan PAR AFFIRMATION MÈRE.
+    let confirmees = 0, silencieuses = 0
+    for (const o of lot) {
+      const us = unites.filter((u) => u.o === o)
+      const conf = us.filter((u) => etat[u.uid].confirmees.length > 0)
+      const jugees = us.filter((u) => etat[u.uid].confirmees.length + etat[u.uid].ecartees.length > 0)
+      const silence = jugees.length === 0 && us.some((u) => etat[u.uid].silences.length > 0)
+      if (conf.length) confirmees++
+      if (silence) silencieuses++
+      const { details, periodes } = extraireNoyau(o.intitule, o.type)
+      const extraitsConfirmes = conf.flatMap((u) => etat[u.uid].confirmees.flatMap((c) => extraitsVerbatim(o, c.url)))
+      journal.affirmations[o.id] = {
+        mode: silence ? 'a_rejuger' : 'noyau', famille: o.famille, type: o.type, intitule: o.intitule,
+        noyau: noyauDe(o), periodes, details, details_affichables: detailsAffichables(details, extraitsConfirmes),
+        // Seules les parties CONFIRMÉES sont affichables, jamais l'intitulé
+        // d'origine complet ; chacune garde la période de la mère.
+        parties: us.map((u) => ({ uid: u.uid, partie: u.partie, confirmees: etat[u.uid].confirmees, ecartees: etat[u.uid].ecartees, silences: etat[u.uid].silences })),
+        parties_affichables: conf.map((u) => u.partie),
+        lot: journal.lots.length + 1,
+      }
+    }
+    const jugees = lot.length - silencieuses
+    const taux = jugees ? confirmees / jugees : 0
+    const partSilence = silencieuses / lot.length
+    affirmationsJouees += lot.length
+    const coutParAff = coutLot / lot.length
+    journal.lots.push({ n: journal.lots.length + 1, mode: 'noyau', affirmations: lot.length, unites: unites.length, confirmees, jugees,
+      silencieuses, mauvais_moteur: mauvaisMoteur, appels, cout_eur: Number(coutLot.toFixed(4)), cout_par_affirmation: Number(coutParAff.toFixed(4)),
+      arret: arretLot, familles: [...new Set(lot.map((o) => o.famille))], le: new Date().toISOString() })
+    writeFileSync(JOURNAL_EXT, JSON.stringify(journal, null, 1))
+    writeFileSync(COMPTEUR, JSON.stringify({ eur: Number((cumulDepart() + coutLot).toFixed(4)), maj: new Date().toISOString() }))
+    const restant = totalRestant - affirmationsJouees
+    const projete = DEJA_DEPENSE + coutRun + restant * (coutRun / affirmationsJouees)
+    console.log(`  lot ${journal.lots.length} · ${lot.length} affirmations, ${unites.length} unités (${[...new Set(lot.map((o) => o.famille))].join(', ')})`)
+    console.log(`    confirmées ${confirmees}/${jugees} jugées (${Math.round(taux * 100)} %) · silencieuses ${silencieuses} (${Math.round(partSilence * 100)} %) · mauvais moteur ${mauvaisMoteur} · ${appels} appel(s) · ${coutLot.toFixed(3)} € · ${coutParAff.toFixed(4)} €/affirmation`)
+    console.log(`    projection : ${projete.toFixed(2)} € cumulés (plafond ${PLAFOND_PROJETE} €)${arretLot ? ` · ARRÊT : ${arretLot}` : ''}`)
+    if (arretLot?.startsWith('mur du run') || arretLot?.startsWith('trois appels')) { console.log(`\n⏸ ${arretLot} : le reste n’est pas joué.`); break }
+    if (partSilence > SEUIL_SILENCE) { console.log(`\n⏹ ARRÊT : plus de ${SEUIL_SILENCE * 100} % du lot est resté silencieux.`); break }
+    if (taux < SEUIL_LOT) { console.log(`\n⏹ ARRÊT IMMÉDIAT : le lot confirme moins de ${SEUIL_LOT * 100} % de ce qui a été jugé.`); break }
+    if (projete > PLAFOND_PROJETE) { console.log(`\n⏹ ARRÊT : la projection dépasse ${PLAFOND_PROJETE} € cumulés. Décision d’Utku requise.`); break }
+  }
+  if (echecsEstimes) console.log(`  dont ${echecsEstimes.toFixed(3)} € RÉSERVÉS pour des appels en échec (coût réel inconnu)`)
+  console.log(`\n— Coût du run : ${coutRun.toFixed(3)} € / ${BUDGET.toFixed(2)} € · journal ${JOURNAL_EXT} · rien n’est écrit dans les fiches.`)
+  process.exit(0)
+}
 
 // ── MODE --rejouer-non-soutenues (sprint 22) ───────────────────────────────
 //

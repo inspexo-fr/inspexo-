@@ -1,0 +1,4382 @@
+{
+ "maj": "2026-11-10T14:34:43.218Z",
+ "limite_juge": 14000,
+ "pages": {
+  "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_2.html",
+   "joignable": true,
+   "longueur": 8920,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_3.html",
+   "joignable": true,
+   "longueur": 11734,
+   "extraits_verbatim": 14,
+   "trouves": 14,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Megane-3-en-occasion-105588.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Megane-3-en-occasion-105588.htm",
+   "joignable": true,
+   "longueur": 26466,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 2
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-le-renault-scenic-3-en-occasion-106472.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-le-renault-scenic-3-en-occasion-106472.htm",
+   "joignable": true,
+   "longueur": 27006,
+   "extraits_verbatim": 18,
+   "trouves": 18,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/renault/megane/avis-fiabilite-renault-megane-iii-b95-30038973.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/renault/megane/avis-fiabilite-renault-megane-iii-b95-30038973.html",
+   "joignable": true,
+   "longueur": 17599,
+   "extraits_verbatim": 17,
+   "trouves": 17,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Laguna-3-en-occasion-79060.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Laguna-3-en-occasion-79060.htm",
+   "joignable": true,
+   "longueur": 24072,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/dacia-sandero-duster-low-cost-et-fiabilite-font-ils-bon-menage-10361391_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/dacia-sandero-duster-low-cost-et-fiabilite-font-ils-bon-menage-10361391_p_2.html",
+   "joignable": true,
+   "longueur": 11456,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+   "joignable": true,
+   "longueur": 10494,
+   "extraits_verbatim": 7,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Scenic-2-en-occasion-98498.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Scenic-2-en-occasion-98498.htm",
+   "joignable": true,
+   "longueur": 26356,
+   "extraits_verbatim": 10,
+   "trouves": 10,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/Renault-Megane-2-II-40410.htm": {
+   "url": "https://www.caradisiac.com/Renault-Megane-2-II-40410.htm",
+   "joignable": true,
+   "longueur": 24635,
+   "extraits_verbatim": 20,
+   "trouves": 20,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Kangoo-2-en-occasion-93188.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Renault-Kangoo-2-en-occasion-93188.htm",
+   "joignable": true,
+   "longueur": 23694,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm": {
+   "url": "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm",
+   "joignable": true,
+   "longueur": 19344,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.planeterenault.com/1-gamme/45-moteurs/1597-actualite-automobile/11784--moteur-1-5-dci-bloc-diesel-fiable-a-longevite-record/": {
+   "url": "https://www.planeterenault.com/1-gamme/45-moteurs/1597-actualite-automobile/11784--moteur-1-5-dci-bloc-diesel-fiable-a-longevite-record/",
+   "joignable": true,
+   "longueur": 10012,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-renault-kadjar-la-maxi-fiche-occasion-de-caradisiac-186486.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-renault-kadjar-la-maxi-fiche-occasion-de-caradisiac-186486.htm",
+   "joignable": true,
+   "longueur": 27984,
+   "extraits_verbatim": 18,
+   "trouves": 18,
+   "au_dela_du_juge": 2
+  },
+  "https://www.caradisiac.com/fiabilite-du-dacia-duster-2-la-maxi-fiche-occasion-de-caradisiac-195834.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-dacia-duster-2-la-maxi-fiche-occasion-de-caradisiac-195834.htm",
+   "joignable": true,
+   "longueur": 21394,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/renault/captur/avis-fiabilite-renault-captur-i-j87-30039383.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/renault/captur/avis-fiabilite-renault-captur-i-j87-30039383.html",
+   "joignable": true,
+   "longueur": 16915,
+   "extraits_verbatim": 20,
+   "trouves": 20,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Renault-Clio-40181.htm": {
+   "url": "https://www.caradisiac.com/Renault-Clio-40181.htm",
+   "joignable": true,
+   "longueur": 25373,
+   "extraits_verbatim": 19,
+   "trouves": 18,
+   "au_dela_du_juge": 2
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Clio-3-en-occasion-82728.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Clio-3-en-occasion-82728.htm",
+   "joignable": true,
+   "longueur": 24984,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Dacia-Logan-en-occasion-89871.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Dacia-Logan-en-occasion-89871.htm",
+   "joignable": true,
+   "longueur": 24423,
+   "extraits_verbatim": 10,
+   "trouves": 10,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/dacia-sandero-duster-low-cost-et-fiabilite-font-ils-bon-menage-10361391_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/dacia-sandero-duster-low-cost-et-fiabilite-font-ils-bon-menage-10361391_p_3.html",
+   "joignable": true,
+   "longueur": 11054,
+   "extraits_verbatim": 7,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/dacia/sandero/avis-fiabilite-dacia-sandero-ii-b52-30039368.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/dacia/sandero/avis-fiabilite-dacia-sandero-ii-b52-30039368.html",
+   "joignable": true,
+   "longueur": 17079,
+   "extraits_verbatim": 19,
+   "trouves": 19,
+   "au_dela_du_juge": 2
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-nissan-juke-et-qashqai-avarie-de-turbo-sur-le-15-dci-7852395.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-nissan-juke-et-qashqai-avarie-de-turbo-sur-le-15-dci-7852395.html",
+   "joignable": true,
+   "longueur": 8190,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
+   "joignable": true,
+   "longueur": 27197,
+   "extraits_verbatim": 14,
+   "trouves": 14,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-dacia-sandero-2-en-occasion-107723.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-dacia-sandero-2-en-occasion-107723.htm",
+   "joignable": true,
+   "longueur": 22105,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-dacia-logan-2-la-maxi-fiche-occasion-de-caradisiac-163643.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-dacia-logan-2-la-maxi-fiche-occasion-de-caradisiac-163643.htm",
+   "joignable": true,
+   "longueur": 25595,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/gebrauchtwagen-check-renault-modelle-17028399.html": {
+   "url": "https://www.autobild.de/artikel/gebrauchtwagen-check-renault-modelle-17028399.html",
+   "joignable": true,
+   "longueur": 37972,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 2
+  },
+  "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/n17397/reliability": {
+   "url": "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/n17397/reliability",
+   "joignable": true,
+   "longueur": 11356,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Dacia-Duster-en-occasion-75565.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Dacia-Duster-en-occasion-75565.htm",
+   "joignable": true,
+   "longueur": 21285,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/dacia/duster/avis-fiabilite-dacia-duster-ii-hjd-30038702.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/dacia/duster/avis-fiabilite-dacia-duster-ii-hjd-30038702.html",
+   "joignable": true,
+   "longueur": 17500,
+   "extraits_verbatim": 20,
+   "trouves": 20,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-renault-captur-la-maxi-fiche-occasion-de-caradisiac-166405.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-renault-captur-la-maxi-fiche-occasion-de-caradisiac-166405.htm",
+   "joignable": true,
+   "longueur": 25267,
+   "extraits_verbatim": 14,
+   "trouves": 14,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Dacia-Lodgy-en-occasion-102790.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Dacia-Lodgy-en-occasion-102790.htm",
+   "joignable": true,
+   "longueur": 21900,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/nissan-qashqai-1-2007-2014-ca-sent-le-roussi-pour-le-fap-8310384.html": {
+   "url": "https://www.largus.fr/actualite-automobile/nissan-qashqai-1-2007-2014-ca-sent-le-roussi-pour-le-fap-8310384.html",
+   "joignable": true,
+   "longueur": 8683,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Les-Nissan-Qashquai-et-Qashqai-2-67843.htm": {
+   "url": "https://www.caradisiac.com/Les-Nissan-Qashquai-et-Qashqai-2-67843.htm",
+   "joignable": true,
+   "longueur": 22892,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-dacia-1-5-blue-dci-le-probleme-de-surconsommation-d-huile-solutionne-30023258.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-dacia-1-5-blue-dci-le-probleme-de-surconsommation-d-huile-solutionne-30023258.html",
+   "joignable": true,
+   "longueur": 10959,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-15-blue-dci-risque-de-surconsommation-dhuile-10405408.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-15-blue-dci-risque-de-surconsommation-dhuile-10405408.html",
+   "joignable": true,
+   "longueur": 9648,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/renault/clio/avis-fiabilite-renault-clio-v-bja-30038864.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/renault/clio/avis-fiabilite-renault-clio-v-bja-30038864.html",
+   "joignable": true,
+   "longueur": 21790,
+   "extraits_verbatim": 20,
+   "trouves": 20,
+   "au_dela_du_juge": 4
+  },
+  "https://www.largus.fr/actualite-automobile/renault-dacia-15-blue-dci-problemes-de-temoin-de-temperature-moteur-10582408.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-dacia-15-blue-dci-problemes-de-temoin-de-temperature-moteur-10582408.html",
+   "joignable": true,
+   "longueur": 10022,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-blue-dci-prise-en-charge-de-la-defaillance-du-reservoir-d-adblue-30029363.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-blue-dci-prise-en-charge-de-la-defaillance-du-reservoir-d-adblue-30029363.html",
+   "joignable": true,
+   "longueur": 9581,
+   "extraits_verbatim": 4,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-15-dci-et-16-dci-probleme-de-demarrage-sur-les-diesels-9932390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-15-dci-et-16-dci-probleme-de-demarrage-sur-les-diesels-9932390.html",
+   "joignable": true,
+   "longueur": 9688,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/dacia-15-blue-dci-une-solution-contre-le-bruit-dans-lhabitacle-9956397.html": {
+   "url": "https://www.largus.fr/actualite-automobile/dacia-15-blue-dci-une-solution-contre-le-bruit-dans-lhabitacle-9956397.html",
+   "joignable": true,
+   "longueur": 9917,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/dacia-sandero-duster-low-cost-et-fiabilite-font-ils-bon-menage-10361391.html": {
+   "url": "https://www.largus.fr/actualite-automobile/dacia-sandero-duster-low-cost-et-fiabilite-font-ils-bon-menage-10361391.html",
+   "joignable": true,
+   "longueur": 12135,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-dacia-duster-2-le-moteur-diesel-15-dci-cafouille-10332406.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-dacia-duster-2-le-moteur-diesel-15-dci-cafouille-10332406.html",
+   "joignable": true,
+   "longueur": 9004,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-clio-et-captur-blue-dci-affichage-du-niveau-dhuile-inexact-10566399.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-clio-et-captur-blue-dci-affichage-du-niveau-dhuile-inexact-10566399.html",
+   "joignable": true,
+   "longueur": 10039,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.planeterenault.com/1-gamme/7-gamme-2019/1597-actualite-automobile/12098-renault-captur-2-bilan-fiabilite-et-pannes-plus-frequentes/": {
+   "url": "https://www.planeterenault.com/1-gamme/7-gamme-2019/1597-actualite-automobile/12098-renault-captur-2-bilan-fiabilite-et-pannes-plus-frequentes/",
+   "joignable": true,
+   "longueur": 10668,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-dacia-les-bruits-de-craquement-dembrayage-continuent-10595401.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-dacia-les-bruits-de-craquement-dembrayage-continuent-10595401.html",
+   "joignable": true,
+   "longueur": 10293,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-renault-megane-4-un-modele-a-risque-198261.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-renault-megane-4-un-modele-a-risque-198261.htm",
+   "joignable": true,
+   "longueur": 26061,
+   "extraits_verbatim": 12,
+   "trouves": 12,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Clio-4-en-occasion-104931.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Clio-4-en-occasion-104931.htm",
+   "joignable": true,
+   "longueur": 24292,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0384-nissan-qashqai-2014-2021-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0384-nissan-qashqai-2014-2021-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 10584,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0543-dacia-duster-2018-2024-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0543-dacia-duster-2018-2024-bericht.pdf",
+   "joignable": true,
+   "longueur": 11245,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/advice": {
+   "url": "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/advice",
+   "joignable": true,
+   "longueur": 19235,
+   "extraits_verbatim": 4,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Dacia-Sandero-que-vaut-elle-en-occasion-85715.htm": {
+   "url": "https://www.caradisiac.com/Dacia-Sandero-que-vaut-elle-en-occasion-85715.htm",
+   "joignable": true,
+   "longueur": 31347,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+   "joignable": true,
+   "longueur": 17345,
+   "extraits_verbatim": 20,
+   "trouves": 20,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-12-tce-et-nissan-12-dig-t-des-moteurs-gourmands-en-huile-8196384.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-12-tce-et-nissan-12-dig-t-des-moteurs-gourmands-en-huile-8196384.html",
+   "joignable": true,
+   "longueur": 10442,
+   "extraits_verbatim": 5,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/consommation-anormale-dhuile-la-liste-des-moteurs-a-risque-8672389.html": {
+   "url": "https://www.largus.fr/actualite-automobile/consommation-anormale-dhuile-la-liste-des-moteurs-a-risque-8672389.html",
+   "joignable": true,
+   "longueur": 10884,
+   "extraits_verbatim": 4,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteur-1-2-renault-400-000-voitures-en-danger-n67215/": {
+   "url": "https://www.quechoisir.org/actualite-moteur-1-2-renault-400-000-voitures-en-danger-n67215/",
+   "joignable": true,
+   "longueur": 17767,
+   "extraits_verbatim": 4,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteur-1-2-renault-pas-de-rappel-impose-aux-constructeurs-n74119/": {
+   "url": "https://www.quechoisir.org/actualite-moteur-1-2-renault-pas-de-rappel-impose-aux-constructeurs-n74119/",
+   "joignable": true,
+   "longueur": 11500,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE26444.pdf": {
+   "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE26444.pdf",
+   "joignable": true,
+   "longueur": 7017,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390_p_3.html",
+   "joignable": true,
+   "longueur": 11147,
+   "extraits_verbatim": 12,
+   "trouves": 11,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/guide-fiabilite-que-valent-les-dacia-1er-bilan-de-la-peugeot-508-10208411.html": {
+   "url": "https://www.largus.fr/actualite-automobile/guide-fiabilite-que-valent-les-dacia-1er-bilan-de-la-peugeot-508-10208411.html",
+   "joignable": true,
+   "longueur": 10555,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-1-2-tce-et-1-2-puretech-les-associations-de-victimes-interpellent-emmanuel-macron-30031466.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-1-2-tce-et-1-2-puretech-les-associations-de-victimes-interpellent-emmanuel-macron-30031466.html",
+   "joignable": true,
+   "longueur": 14537,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390.html",
+   "joignable": true,
+   "longueur": 11066,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0385-renault-kangoo-seit-2008-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0385-renault-kangoo-seit-2008-benziner-bericht.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0195-renault-megane-2008-2016-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0195-renault-megane-2008-2016-benziner-bericht.pdf",
+   "joignable": true,
+   "longueur": 15020,
+   "extraits_verbatim": 4,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE23164.pdf": {
+   "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE23164.pdf",
+   "joignable": true,
+   "longueur": 5824,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteur-1-2-renault-les-constructeurs-minimisent-n69379/": {
+   "url": "https://www.quechoisir.org/actualite-moteur-1-2-renault-les-constructeurs-minimisent-n69379/",
+   "joignable": true,
+   "longueur": 11208,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+   "joignable": true,
+   "longueur": 18440,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 2
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-renault-twingo-3-la-maxi-fiche-occasion-de-caradisiac-187815.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-renault-twingo-3-la-maxi-fiche-occasion-de-caradisiac-187815.htm",
+   "joignable": true,
+   "longueur": 23882,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2501-fiabilite-du-10-tce-dacia-renault-nissan.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2501-fiabilite-du-10-tce-dacia-renault-nissan.php",
+   "joignable": true,
+   "longueur": 16205,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-dacia-quel-bilan-fiabilite-pour-le-moteur-13-tce-10583412.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-dacia-quel-bilan-fiabilite-pour-le-moteur-13-tce-10583412.html",
+   "joignable": true,
+   "longueur": 15224,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-dacia-et-renault-manque-de-puissance-du-moteur-1-3-tce-30030141.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-dacia-et-renault-manque-de-puissance-du-moteur-1-3-tce-30030141.html",
+   "joignable": true,
+   "longueur": 9439,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/renault/austral/avis-fiabilite-renault-austral-i-hhn-30038663.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/renault/austral/avis-fiabilite-renault-austral-i-hhn-30038663.html",
+   "joignable": true,
+   "longueur": 16748,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-occasion-du-renault-koleos-2-enfin-un-modele-fiable-dans-la-gamme-du-losange-196916.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-occasion-du-renault-koleos-2-enfin-un-modele-fiable-dans-la-gamme-du-losange-196916.htm",
+   "joignable": true,
+   "longueur": 20695,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-espace-talisman-et-trafic-risque-de-casse-du-moteur-16-dci-9928390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-espace-talisman-et-trafic-risque-de-casse-du-moteur-16-dci-9928390.html",
+   "joignable": true,
+   "longueur": 10264,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/la-renault-espace-5-est-il-aussi-catastrophique-qu-on-le-pense-niveau-fiabilite-220797.htm": {
+   "url": "https://www.caradisiac.com/la-renault-espace-5-est-il-aussi-catastrophique-qu-on-le-pense-niveau-fiabilite-220797.htm",
+   "joignable": true,
+   "longueur": 32348,
+   "extraits_verbatim": 13,
+   "trouves": 13,
+   "au_dela_du_juge": 3
+  },
+  "https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-diesel/s-2443-fiabilite-du-16-dci.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-diesel/s-2443-fiabilite-du-16-dci.php",
+   "joignable": true,
+   "longueur": 12688,
+   "extraits_verbatim": 6,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+   "joignable": true,
+   "longueur": 24838,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-renault-koleos-la-maxi-fiche-occasion-de-caradisiac-168319.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-renault-koleos-la-maxi-fiche-occasion-de-caradisiac-168319.htm",
+   "joignable": true,
+   "longueur": 24055,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/renault-trafic-talisman-consommation-dhuile-sur-le-20-diesel-m9r-10565390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/renault-trafic-talisman-consommation-dhuile-sur-le-20-diesel-m9r-10565390.html",
+   "joignable": true,
+   "longueur": 10351,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/enquete-fiabilite/s-2277-fiabilite-mauvaise-de-la-boite-edc-renault.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/enquete-fiabilite/s-2277-fiabilite-mauvaise-de-la-boite-edc-renault.php",
+   "joignable": true,
+   "longueur": 32130,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/citroen-dacia-ds-peugeot-renault-les-40-pannes-prises-en-charge-9722390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/citroen-dacia-ds-peugeot-renault-les-40-pannes-prises-en-charge-9722390.html",
+   "joignable": true,
+   "longueur": 12619,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf",
+   "joignable": true,
+   "longueur": 11266,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0231-renault-captur-2013-2019-bericht.pdf": {
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0231-renault-captur-2013-2019-bericht.pdf",
+   "joignable": true,
+   "longueur": 11703,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2014/SB-10058825-3211.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2014/SB-10058825-3211.pdf",
+   "joignable": true,
+   "longueur": 6191,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2015/MC-10192689-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2015/MC-10192689-9999.pdf",
+   "joignable": true,
+   "longueur": 9704,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2016/MC-10192772-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10192772-9999.pdf",
+   "joignable": true,
+   "longueur": 988,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0397-renault-twingo-2014-2024-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0397-renault-twingo-2014-2024-bericht.pdf",
+   "joignable": true,
+   "longueur": 11123,
+   "extraits_verbatim": 4,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0213-renault-scenic-2009-2016-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0213-renault-scenic-2009-2016-bericht.pdf",
+   "joignable": true,
+   "longueur": 13156,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.ecologie.gouv.fr/sites/default/files/documents/Rappels%20des%20r%C3%A9ceptions%20faites%20en%20France.pdf": {
+   "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Rappels%20des%20r%C3%A9ceptions%20faites%20en%20France.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+   "joignable": true,
+   "longueur": 13565,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteurs-puretech-un-probleme-d-ampleur-pour-stellantis-n109962": {
+   "url": "https://www.quechoisir.org/actualite-moteurs-puretech-un-probleme-d-ampleur-pour-stellantis-n109962",
+   "joignable": true,
+   "longueur": 13334,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://journalauto.com/constructeurs/moteurs-1-2-puretech-pres-de-900-automobilistes-portent-plainte-contre-stellantis/": {
+   "url": "https://journalauto.com/constructeurs/moteurs-1-2-puretech-pres-de-900-automobilistes-portent-plainte-contre-stellantis/",
+   "joignable": true,
+   "longueur": 4933,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/peugeot-des-rappels-de-plus-en-plus-importants-206033.htm": {
+   "url": "https://www.caradisiac.com/peugeot-des-rappels-de-plus-en-plus-importants-206033.htm",
+   "joignable": true,
+   "longueur": 12213,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/cinq-ans-de-stellantis-des-rates-cote-fiabilite-et-une-gestion-controversee-des-problemes-30045249.html": {
+   "url": "https://www.largus.fr/actualite-automobile/cinq-ans-de-stellantis-des-rates-cote-fiabilite-et-une-gestion-controversee-des-problemes-30045249.html",
+   "joignable": true,
+   "longueur": 18748,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/peugeot/308/avis-fiabilite-peugeot-308-iii-30039494.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/308/avis-fiabilite-peugeot-308-iii-30039494.html",
+   "joignable": true,
+   "longueur": 22246,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/peugeot/3008/avis-fiabilite-peugeot-3008-ii-30039638.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/3008/avis-fiabilite-peugeot-3008-ii-30039638.html",
+   "joignable": true,
+   "longueur": 29356,
+   "extraits_verbatim": 11,
+   "trouves": 11,
+   "au_dela_du_juge": 8
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-citroen-c3-une-discrete-a-ne-pas-ecarter-201000.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-citroen-c3-une-discrete-a-ne-pas-ecarter-201000.htm",
+   "joignable": true,
+   "longueur": 28609,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-citroen-c4-cactus-la-maxi-fiche-occasion-de-caradisiac-191983.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-citroen-c4-cactus-la-maxi-fiche-occasion-de-caradisiac-191983.htm",
+   "joignable": true,
+   "longueur": 23830,
+   "extraits_verbatim": 13,
+   "trouves": 13,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/moteur-1-2-puretech-stellantis-lancera-bientot-une-plate-forme-d-indemnisation-30037499.html": {
+   "url": "https://www.largus.fr/actualite-automobile/moteur-1-2-puretech-stellantis-lancera-bientot-une-plate-forme-d-indemnisation-30037499.html",
+   "joignable": true,
+   "longueur": 12499,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/peugeot/3008/avis-fiabilite-peugeot-3008-i-30038837.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/3008/avis-fiabilite-peugeot-3008-i-30038837.html",
+   "joignable": true,
+   "longueur": 18182,
+   "extraits_verbatim": 17,
+   "trouves": 17,
+   "au_dela_du_juge": 1
+  },
+  "https://www.largus.fr/guide-achat-occasion/peugeot/2008/avis-fiabilite-peugeot-2008-i-30038970.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/2008/avis-fiabilite-peugeot-2008-i-30038970.html",
+   "joignable": true,
+   "longueur": 22652,
+   "extraits_verbatim": 14,
+   "trouves": 14,
+   "au_dela_du_juge": 5
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-que-valent-les-nouvelles-voitures-francaises-9556393_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-que-valent-les-nouvelles-voitures-francaises-9556393_p_2.html",
+   "joignable": true,
+   "longueur": 14454,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-que-valent-les-nouvelles-voitures-francaises-9556393.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-que-valent-les-nouvelles-voitures-francaises-9556393.html",
+   "joignable": true,
+   "longueur": 11557,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0519-peugeot-208-seit-2019-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0519-peugeot-208-seit-2019-bericht.pdf",
+   "joignable": true,
+   "longueur": 10155,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm": {
+   "url": "https://www.caradisiac.com/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm",
+   "joignable": true,
+   "longueur": 10448,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteurs-puretech-stellantis-prend-a-minima-ses-responsabilites-n148604/": {
+   "url": "https://www.quechoisir.org/actualite-moteurs-puretech-stellantis-prend-a-minima-ses-responsabilites-n148604/",
+   "joignable": true,
+   "longueur": 14672,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.media.stellantis.com/be-nl/opel/press/stellantis-breidt-compensatiebeleid-uit-voor-claims-van-europese-consumenten-op-eerdere-generaties-puretech-1-0-en-1-2-motoren": {
+   "url": "https://www.media.stellantis.com/be-nl/opel/press/stellantis-breidt-compensatiebeleid-uit-voor-claims-van-europese-consumenten-op-eerdere-generaties-puretech-1-0-en-1-2-motoren",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.citroen.co.uk/content/dam/citroen/uk/b2c/maintain/Puretech-Message-V-2-2025.pdf": {
+   "url": "https://www.citroen.co.uk/content/dam/citroen/uk/b2c/maintain/Puretech-Message-V-2-2025.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/puretech-et-adblue-la-plate-forme-de-reclamation-indisponible-pour-cause-de-bugs-30038506.html": {
+   "url": "https://www.largus.fr/actualite-automobile/puretech-et-adblue-la-plate-forme-de-reclamation-indisponible-pour-cause-de-bugs-30038506.html",
+   "joignable": true,
+   "longueur": 10571,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://journalauto.com/constructeurs/puretech-stellantis-doit-rappeler-68-000-voitures/": {
+   "url": "https://journalauto.com/constructeurs/puretech-stellantis-doit-rappeler-68-000-voitures/",
+   "joignable": true,
+   "longueur": 5042,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/billet-de-la-presidente-moteurs-puretech-stellantis-encore-a-la-peine-n167096/": {
+   "url": "https://www.quechoisir.org/billet-de-la-presidente-moteurs-puretech-stellantis-encore-a-la-peine-n167096/",
+   "joignable": true,
+   "longueur": 10348,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/formulaire-action-de-groupe-contre-stellantis-et-citroen-etre-informe-de-l-evolution-de-la-procedure-n168784/": {
+   "url": "https://www.quechoisir.org/formulaire-action-de-groupe-contre-stellantis-et-citroen-etre-informe-de-l-evolution-de-la-procedure-n168784/",
+   "joignable": true,
+   "longueur": 9778,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-stellantis-des-dizaines-de-milliers-de-voitures-concernees-par-plusieurs-rappels-n175390/": {
+   "url": "https://www.quechoisir.org/actualite-stellantis-des-dizaines-de-milliers-de-voitures-concernees-par-plusieurs-rappels-n175390/",
+   "joignable": true,
+   "longueur": 18375,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/renault-scenic-3-vs-citroen-c4-picasso-le-match-fiabilite-110098.htm": {
+   "url": "https://www.caradisiac.com/renault-scenic-3-vs-citroen-c4-picasso-le-match-fiabilite-110098.htm",
+   "joignable": true,
+   "longueur": 21320,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/peugeot/207/avis-fiabilite-peugeot-207-i-30038695.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/207/avis-fiabilite-peugeot-207-i-30038695.html",
+   "joignable": true,
+   "longueur": 16103,
+   "extraits_verbatim": 12,
+   "trouves": 12,
+   "au_dela_du_juge": 0
+  },
+  "https://autocar.co.uk/node/89207": {
+   "url": "https://autocar.co.uk/node/89207",
+   "joignable": true,
+   "longueur": 13434,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-essence/s-2280-fiabilite-des-16-thp.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-essence/s-2280-fiabilite-des-16-thp.php",
+   "joignable": true,
+   "longueur": 15585,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_3.html",
+   "joignable": true,
+   "longueur": 8743,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-peugeot-508-la-maxi-fiche-occasion-de-caradisiac-113407.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-peugeot-508-la-maxi-fiche-occasion-de-caradisiac-113407.htm",
+   "joignable": true,
+   "longueur": 24903,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-DS3-en-occasion-101726.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-DS3-en-occasion-101726.htm",
+   "joignable": true,
+   "longueur": 24959,
+   "extraits_verbatim": 12,
+   "trouves": 12,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-C5-2-en-occasion-84816.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-C5-2-en-occasion-84816.htm",
+   "joignable": true,
+   "longueur": 24264,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-C4-2e-generation-en-occasion-97844.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-C4-2e-generation-en-occasion-97844.htm",
+   "joignable": true,
+   "longueur": 21837,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Peugeot-40287.htm": {
+   "url": "https://www.caradisiac.com/Peugeot-40287.htm",
+   "joignable": true,
+   "longueur": 21514,
+   "extraits_verbatim": 11,
+   "trouves": 11,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/enquete-fiabilite-surconsommation-dhuile-les-moteurs-a-risque-7671384_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/enquete-fiabilite-surconsommation-dhuile-les-moteurs-a-risque-7671384_p_2.html",
+   "joignable": true,
+   "longueur": 11285,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-essence/s-2470-fiabilite-du-16-vti-psa-bmw-mini.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-essence/s-2470-fiabilite-du-16-vti-psa-bmw-mini.php",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/bilan-occasion-peugeot-207-cc-178286_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/bilan-occasion-peugeot-207-cc-178286_p_3.html",
+   "joignable": true,
+   "longueur": 10071,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/bilan-occasion-peugeot-3008-185605_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/bilan-occasion-peugeot-3008-185605_p_3.html",
+   "joignable": true,
+   "longueur": 9897,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-citadine-polyvalente-acheter-3179376_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-citadine-polyvalente-acheter-3179376_p_3.html",
+   "joignable": true,
+   "longueur": 15246,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/moteur-psa-16-puretech-probleme-de-papillon-motorise-pris-en-charge-10563401.html": {
+   "url": "https://www.largus.fr/actualite-automobile/moteur-psa-16-puretech-probleme-de-papillon-motorise-pris-en-charge-10563401.html",
+   "joignable": true,
+   "longueur": 10368,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/dacia-psa-renault-les-moteurs-essence-sont-ils-fiables-9467395_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/dacia-psa-renault-les-moteurs-essence-sont-ils-fiables-9467395_p_3.html",
+   "joignable": true,
+   "longueur": 12130,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-peugeot-308-acheter-2360367.html": {
+   "url": "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-peugeot-308-acheter-2360367.html",
+   "joignable": true,
+   "longueur": 15525,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/distribution/s-2521-distribution-les-moteurs-a-problemes.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/distribution/s-2521-distribution-les-moteurs-a-problemes.php",
+   "joignable": true,
+   "longueur": 63025,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 2
+  },
+  "https://www.largus.fr/guide-achat-occasion/mini/mini/avis-fiabilite-mini-mini-ii-r56-30038969.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/mini/mini/avis-fiabilite-mini-mini-ii-r56-30038969.html",
+   "joignable": true,
+   "longueur": 14404,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/bilan-occasion-peugeot-307-181128_p_4.html": {
+   "url": "https://www.largus.fr/actualite-automobile/bilan-occasion-peugeot-307-181128_p_4.html",
+   "joignable": true,
+   "longueur": 10221,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_2.html",
+   "joignable": true,
+   "longueur": 12826,
+   "extraits_verbatim": 15,
+   "trouves": 14,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quel-citroen-c4-picasso-acheter-2530370_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quel-citroen-c4-picasso-acheter-2530370_p_2.html",
+   "joignable": true,
+   "longueur": 10902,
+   "extraits_verbatim": 10,
+   "trouves": 10,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0463-peugeot-308-seit-2013-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0463-peugeot-308-seit-2013-diesel-bericht.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 7,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-le-Citroen-Grand-C4-Picasso-70537.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-le-Citroen-Grand-C4-Picasso-70537.htm",
+   "joignable": true,
+   "longueur": 28067,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 3
+  },
+  "https://www.largus.fr/actualite-automobile/quelle-peugeot-3008-doccasion-acheter-5220379_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/quelle-peugeot-3008-doccasion-acheter-5220379_p_2.html",
+   "joignable": true,
+   "longueur": 13532,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-citroen-c4-picasso-2-la-maxi-fiche-occasion-de-caradisiac-161756.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-citroen-c4-picasso-2-la-maxi-fiche-occasion-de-caradisiac-161756.htm",
+   "joignable": true,
+   "longueur": 27526,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/": {
+   "url": "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/",
+   "joignable": true,
+   "longueur": 21057,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-opel-probleme-de-casse-sur-le-15-diesel-dv5-11079390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-opel-probleme-de-casse-sur-le-15-diesel-dv5-11079390.html",
+   "joignable": true,
+   "longueur": 14350,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-1-5-bluehdi-la-liste-des-citroen-ds-opel-et-peugeot-touchees-par-les-soucis-de-distribution-30037239.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-1-5-bluehdi-la-liste-des-citroen-ds-opel-et-peugeot-touchees-par-les-soucis-de-distribution-30037239.html",
+   "joignable": true,
+   "longueur": 14093,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/casse-chaine-1-5-bluehdi-pas-de-plate-forme-d-indemnisation-pour-le-moment-30038450.html": {
+   "url": "https://www.largus.fr/actualite-automobile/casse-chaine-1-5-bluehdi-pas-de-plate-forme-d-indemnisation-pour-le-moment-30038450.html",
+   "joignable": true,
+   "longueur": 12590,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-630-000-vehicules-et-etend-la-couverture-a-10-ans-30041132.html": {
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-630-000-vehicules-et-etend-la-couverture-a-10-ans-30041132.html",
+   "joignable": true,
+   "longueur": 12652,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/casse-chaine-1-5-bluehdi-stellantis-etend-sa-prise-en-charge-a-7-ans-ou-180-000-km-30038271.html": {
+   "url": "https://www.largus.fr/actualite-automobile/casse-chaine-1-5-bluehdi-stellantis-etend-sa-prise-en-charge-a-7-ans-ou-180-000-km-30038271.html",
+   "joignable": true,
+   "longueur": 11230,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/1-5-bluehdi-pourquoi-citroen-ds-et-peugeot-rappellent-des-centaines-de-milliers-de-vehicules-30036711.html": {
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-pourquoi-citroen-ds-et-peugeot-rappellent-des-centaines-de-milliers-de-vehicules-30036711.html",
+   "joignable": true,
+   "longueur": 13166,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/moteur-15-bluehdi-psa-probleme-de-grippage-du-systeme-dinjection-10638390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/moteur-15-bluehdi-psa-probleme-de-grippage-du-systeme-dinjection-10638390.html",
+   "joignable": true,
+   "longueur": 10019,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+   "joignable": true,
+   "longueur": 10457,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/nouveautes-automobiles/s-4114-rappel-du-15-bluehdi-encore-un-souci-de-distribution-.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/nouveautes-automobiles/s-4114-rappel-du-15-bluehdi-encore-un-souci-de-distribution-.php",
+   "joignable": true,
+   "longueur": 20128,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html": {
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+   "joignable": true,
+   "longueur": 10723,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-un-rappel-pour-les-risques-de-calage-du-1-5-bluehdi-eat8-30025965.html": {
+   "url": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-un-rappel-pour-les-risques-de-calage-du-1-5-bluehdi-eat8-30025965.html",
+   "joignable": true,
+   "longueur": 10691,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html",
+   "joignable": true,
+   "longueur": 15526,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-additif-moteur-diesel-l-adblue-le-nouveau-dieselgate-n104347": {
+   "url": "https://www.quechoisir.org/actualite-additif-moteur-diesel-l-adblue-le-nouveau-dieselgate-n104347",
+   "joignable": true,
+   "longueur": 16250,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://journalauto.com/services/adblue-pourquoi-les-pannes-sont-si-courantes-sur-les-modeles-peugeot-et-citroen/": {
+   "url": "https://journalauto.com/services/adblue-pourquoi-les-pannes-sont-si-courantes-sur-les-modeles-peugeot-et-citroen/",
+   "joignable": true,
+   "longueur": 4248,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.media.stellantis.com/fr-fr/citroen/press/stellantis-etend-la-politique-d-indemnisation-volontaire-pour-les-consommateurs-europeens-sur-les-cas-de-reservoir-d-uree-adblue": {
+   "url": "https://www.media.stellantis.com/fr-fr/citroen/press/stellantis-etend-la-politique-d-indemnisation-volontaire-pour-les-consommateurs-europeens-sur-les-cas-de-reservoir-d-uree-adblue",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/citroen/c5-aircross/avis-fiabilite-citroen-c5-aircross-i-30038717.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/citroen/c5-aircross/avis-fiabilite-citroen-c5-aircross-i-30038717.html",
+   "joignable": true,
+   "longueur": 21633,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 1
+  },
+  "https://www.largus.fr/actualite-automobile/moteur-2-0-bluehdi-des-fap-a-remplacer-chez-citroen-ds-opel-peugeot-30025875.html": {
+   "url": "https://www.largus.fr/actualite-automobile/moteur-2-0-bluehdi-des-fap-a-remplacer-chez-citroen-ds-opel-peugeot-30025875.html",
+   "joignable": true,
+   "longueur": 13618,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/peugeot/208/avis-fiabilite-peugeot-208-ii-30038754.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/208/avis-fiabilite-peugeot-208-ii-30038754.html",
+   "joignable": true,
+   "longueur": 25384,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/citroen/berlingo/avis-fiabilite-citroen-berlingo-iii-30040051.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/citroen/berlingo/avis-fiabilite-citroen-berlingo-iii-30040051.html",
+   "joignable": true,
+   "longueur": 21925,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://fiches-auto.fr/articles-auto/boites-automatiques/s-1863-boite-auto-eat8-peugeot-citroen.php": {
+   "url": "https://fiches-auto.fr/articles-auto/boites-automatiques/s-1863-boite-auto-eat8-peugeot-citroen.php",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/boites-automatiques/s-1381-boite-auto-eat6-peugeot-citroen.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/boites-automatiques/s-1381-boite-auto-eat6-peugeot-citroen.php",
+   "joignable": true,
+   "longueur": 45909,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/boites-automatiques/s-1025-bmp-etg-de-peugeot-citroen.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/boites-automatiques/s-1025-bmp-etg-de-peugeot-citroen.php",
+   "joignable": true,
+   "longueur": 43700,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-fiat-500-acheter-2925372.html": {
+   "url": "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-fiat-500-acheter-2925372.html",
+   "joignable": true,
+   "longueur": 16175,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/ces-occasions-oubliees-qu-on-achete-a-prix-normal-la-citroen-c5-2001-208663.htm": {
+   "url": "https://www.caradisiac.com/ces-occasions-oubliees-qu-on-achete-a-prix-normal-la-citroen-c5-2001-208663.htm",
+   "joignable": true,
+   "longueur": 23966,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiat-500-mini-et-volkswagen-new-beetle-premier-prix-des-neo-retro-sans-souci-190247.htm": {
+   "url": "https://www.caradisiac.com/fiat-500-mini-et-volkswagen-new-beetle-premier-prix-des-neo-retro-sans-souci-190247.htm",
+   "joignable": true,
+   "longueur": 22163,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.whatcar.com/fiat/panda/hatchback/used-review/n330/advice": {
+   "url": "https://www.whatcar.com/fiat/panda/hatchback/used-review/n330/advice",
+   "joignable": true,
+   "longueur": 9093,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3995-fiabilite-du-moteur-13-jtd-multijet.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3995-fiabilite-du-moteur-13-jtd-multijet.php",
+   "joignable": true,
+   "longueur": 21505,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3996-fiabilite-du-moteur-13-cdti-opel.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3996-fiabilite-du-moteur-13-cdti-opel.php",
+   "joignable": true,
+   "longueur": 23134,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0363-opel-astra-ab-2015-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0363-opel-astra-ab-2015-diesel-bericht.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-peugeot-308-ii-la-maxi-fiche-occasion-de-caradisiac-109564.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-peugeot-308-ii-la-maxi-fiche-occasion-de-caradisiac-109564.htm",
+   "joignable": true,
+   "longueur": 23920,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-opel-corsa-5-tranquillite-assuree-205741.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-opel-corsa-5-tranquillite-assuree-205741.htm",
+   "joignable": true,
+   "longueur": 23576,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm": {
+   "url": "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm",
+   "joignable": true,
+   "longueur": 16988,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/opel-astra-j-gebrauchtwagen-test-6948145.html": {
+   "url": "https://www.autobild.de/artikel/opel-astra-j-gebrauchtwagen-test-6948145.html",
+   "joignable": true,
+   "longueur": 11646,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/opel-astra-192/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/opel-astra-192/",
+   "joignable": true,
+   "longueur": 24008,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 1
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-opel-vers-un-retour-a-la-confiance-1323368_p_6.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-opel-vers-un-retour-a-la-confiance-1323368_p_6.html",
+   "joignable": true,
+   "longueur": 8889,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-l-Opel-Meriva-2-en-occasion-89468.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-l-Opel-Meriva-2-en-occasion-89468.htm",
+   "joignable": true,
+   "longueur": 23612,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-l-Opel-Zafira-2-en-occasion-96224.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-l-Opel-Zafira-2-en-occasion-96224.htm",
+   "joignable": true,
+   "longueur": 23308,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/car-news/107558/juddering-vw-group-cars-no-end-in-sight-for-owners": {
+   "url": "https://www.autoexpress.co.uk/car-news/107558/juddering-vw-group-cars-no-end-in-sight-for-owners",
+   "joignable": true,
+   "longueur": 9694,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://whatcar.com/advice/owning/my-car-doesnt-pull-away-properly-when-cold-is-this-a-common-problem/n19134": {
+   "url": "https://whatcar.com/advice/owning/my-car-doesnt-pull-away-properly-when-cold-is-this-a-common-problem/n19134",
+   "joignable": true,
+   "longueur": 5628,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/faut-il-se-mefier-de-la-fiabilite-du-volkswagen-t-roc-219098.htm": {
+   "url": "https://www.caradisiac.com/faut-il-se-mefier-de-la-fiabilite-du-volkswagen-t-roc-219098.htm",
+   "joignable": true,
+   "longueur": 23267,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.dev.honestjohn.co.uk/news/new-cars/2020-03/volkswagen-announces-fix-for-15-tsi-engine-hesitation-issues/": {
+   "url": "https://www.dev.honestjohn.co.uk/news/new-cars/2020-03/volkswagen-announces-fix-for-15-tsi-engine-hesitation-issues/",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/volkswagen/t-roc/avis-fiabilite-volkswagen-t-roc-i-30039740.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/volkswagen/t-roc/avis-fiabilite-volkswagen-t-roc-i-30039740.html",
+   "joignable": true,
+   "longueur": 19251,
+   "extraits_verbatim": 14,
+   "trouves": 14,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-volkswagen-golf-viii-du-genre-agacante-208091.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-volkswagen-golf-viii-du-genre-agacante-208091.htm",
+   "joignable": true,
+   "longueur": 25691,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-volkswagen-golf-7-la-maxi-fiche-occasion-de-caradisiac-113860.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-volkswagen-golf-7-la-maxi-fiche-occasion-de-caradisiac-113860.htm",
+   "joignable": true,
+   "longueur": 24632,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-volkswagen-passat-8-la-maxi-fiche-occasion-de-caradisiac-190890.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-volkswagen-passat-8-la-maxi-fiche-occasion-de-caradisiac-190890.htm",
+   "joignable": true,
+   "longueur": 24293,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-golf-7-gebrauchtwagen-test-16898773.html": {
+   "url": "https://www.autobild.de/artikel/vw-golf-7-gebrauchtwagen-test-16898773.html",
+   "joignable": true,
+   "longueur": 16020,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 1
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0352-vw-passat-2014-2023-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0352-vw-passat-2014-2023-benziner-bericht.pdf",
+   "joignable": true,
+   "longueur": 17464,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0372-vw-touran-ab-2015-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0372-vw-touran-ab-2015-benziner-bericht.pdf",
+   "joignable": true,
+   "longueur": 12352,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/peut-on-acheter-une-volkswagen-polo-vi-d-occasion-en-toute-quietude-223224.htm": {
+   "url": "https://www.caradisiac.com/peut-on-acheter-une-volkswagen-polo-vi-d-occasion-en-toute-quietude-223224.htm",
+   "joignable": true,
+   "longueur": 23651,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-skoda-fabia-3-la-maxi-fiche-occasion-de-caradisiac-191453.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-skoda-fabia-3-la-maxi-fiche-occasion-de-caradisiac-191453.htm",
+   "joignable": true,
+   "longueur": 25799,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/seat-ateca-466/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/seat-ateca-466/",
+   "joignable": true,
+   "longueur": 24834,
+   "extraits_verbatim": 0,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-des-moteurs-a-essence-tsi-6352385.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-des-moteurs-a-essence-tsi-6352385.html",
+   "joignable": true,
+   "longueur": 13880,
+   "extraits_verbatim": 20,
+   "trouves": 13,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/enquete-fiabilite-surconsommation-dhuile-les-moteurs-a-risque-7671384_p_3.html": {
+   "url": "https://www.largus.fr/actualite-automobile/enquete-fiabilite-surconsommation-dhuile-les-moteurs-a-risque-7671384_p_3.html",
+   "joignable": true,
+   "longueur": 9883,
+   "extraits_verbatim": 18,
+   "trouves": 18,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/enquete-fiabilite-surconsommation-dhuile-les-moteurs-a-risque-7671384_p_5.html": {
+   "url": "https://www.largus.fr/actualite-automobile/enquete-fiabilite-surconsommation-dhuile-les-moteurs-a-risque-7671384_p_5.html",
+   "joignable": true,
+   "longueur": 9364,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/une-volkswagen-coccinelle-d-occasion-sympa-mais-attention-a-la-fiabilite-221321.htm": {
+   "url": "https://www.caradisiac.com/une-volkswagen-coccinelle-d-occasion-sympa-mais-attention-a-la-fiabilite-221321.htm",
+   "joignable": true,
+   "longueur": 22424,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-beetle-320/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-beetle-320/",
+   "joignable": true,
+   "longueur": 19379,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-seat-leon-3-la-maxi-fiche-occasion-de-caradisiac-111257.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-seat-leon-3-la-maxi-fiche-occasion-de-caradisiac-111257.htm",
+   "joignable": true,
+   "longueur": 22414,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-l-audi-a3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-173275.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-l-audi-a3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-173275.htm",
+   "joignable": true,
+   "longueur": 24081,
+   "extraits_verbatim": 12,
+   "trouves": 12,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-occasion-volkswagen-tiguan-ii-un-eleve-serieux-199855.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-occasion-volkswagen-tiguan-ii-un-eleve-serieux-199855.htm",
+   "joignable": true,
+   "longueur": 34240,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-golf-7-gebrauchtwagen-kauftipps-und-rabatt-16840917.html": {
+   "url": "https://www.autobild.de/artikel/vw-golf-7-gebrauchtwagen-kauftipps-und-rabatt-16840917.html",
+   "joignable": true,
+   "longueur": 17110,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 2
+  },
+  "https://www.autobild.de/artikel/vw-golf-schwachstellen-maengel-staerken-28207053.html": {
+   "url": "https://www.autobild.de/artikel/vw-golf-schwachstellen-maengel-staerken-28207053.html",
+   "joignable": true,
+   "longueur": 15513,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/nous-avons-decortique-l-audi-q2-fiabilite-couts-point-forts-et-faibles-que-vaut-il-en-occasion-215914.htm": {
+   "url": "https://www.caradisiac.com/nous-avons-decortique-l-audi-q2-fiabilite-couts-point-forts-et-faibles-que-vaut-il-en-occasion-215914.htm",
+   "joignable": true,
+   "longueur": 24121,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-steuerketten-kulanz-2892135.html": {
+   "url": "https://www.autobild.de/artikel/vw-steuerketten-kulanz-2892135.html",
+   "joignable": true,
+   "longueur": 8071,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-volkswagen-touran-2-la-maxi-fiche-occasion-de-caradisiac-167738.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-volkswagen-touran-2-la-maxi-fiche-occasion-de-caradisiac-167738.htm",
+   "joignable": true,
+   "longueur": 23111,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-eos-199/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-eos-199/",
+   "joignable": true,
+   "longueur": 22981,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 2
+  },
+  "https://www.autobild.de/artikel/vw-golf-vi-gebrauchtwagen-test-3798221.html": {
+   "url": "https://www.autobild.de/artikel/vw-golf-vi-gebrauchtwagen-test-3798221.html",
+   "joignable": true,
+   "longueur": 14594,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/le-skoda-yeti-est-il-un-petit-suv-fiable-en-occasion-211457.htm": {
+   "url": "https://www.caradisiac.com/le-skoda-yeti-est-il-un-petit-suv-fiable-en-occasion-211457.htm",
+   "joignable": true,
+   "longueur": 19530,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Volkswagen-Polo-5-en-occasion-88401.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Volkswagen-Polo-5-en-occasion-88401.htm",
+   "joignable": true,
+   "longueur": 26482,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-l-audi-a1-la-maxi-fiche-occasion-de-caradisiac-109165.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-l-audi-a1-la-maxi-fiche-occasion-de-caradisiac-109165.htm",
+   "joignable": true,
+   "longueur": 24470,
+   "extraits_verbatim": 11,
+   "trouves": 11,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0154-vw-golf-vi-2008-2012-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0154-vw-golf-vi-2008-2012-benziner-bericht.pdf",
+   "joignable": true,
+   "longueur": 14726,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-tiguan-schwachstellen-maengel-staerken-28280027.html": {
+   "url": "https://www.autobild.de/artikel/vw-tiguan-schwachstellen-maengel-staerken-28280027.html",
+   "joignable": true,
+   "longueur": 10210,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a1-182/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a1-182/",
+   "joignable": true,
+   "longueur": 19557,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a3-91/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a3-91/",
+   "joignable": true,
+   "longueur": 22400,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 2
+  },
+  "https://www.autobild.de/artikel/oel-saufende-tfsi-motoren-11525331.html": {
+   "url": "https://www.autobild.de/artikel/oel-saufende-tfsi-motoren-11525331.html",
+   "joignable": true,
+   "longueur": 9921,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/audi-a5-sportback-gebrauchtwagen-test-14884731.html": {
+   "url": "https://www.autobild.de/artikel/audi-a5-sportback-gebrauchtwagen-test-14884731.html",
+   "joignable": true,
+   "longueur": 9895,
+   "extraits_verbatim": 10,
+   "trouves": 10,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-passat-schwachstellen-maengel-staerken-28274249.html": {
+   "url": "https://www.autobild.de/artikel/vw-passat-schwachstellen-maengel-staerken-28274249.html",
+   "joignable": true,
+   "longueur": 9320,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-audi-a4-2007-2015-belle-mais-capricieuse-201597.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-audi-a4-2007-2015-belle-mais-capricieuse-201597.htm",
+   "joignable": true,
+   "longueur": 27342,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 3
+  },
+  "https://www.autobild.de/artikel/skoda-octavia-gebraucht-schwachstellen-maengel-staerken-28080923.html": {
+   "url": "https://www.autobild.de/artikel/skoda-octavia-gebraucht-schwachstellen-maengel-staerken-28080923.html",
+   "joignable": true,
+   "longueur": 9736,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-l-Audi-A5-en-occasion-94006.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-l-Audi-A5-en-occasion-94006.htm",
+   "joignable": true,
+   "longueur": 24283,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/enquete-fiabilite-volkswagen-une-reputation-mise-a-mal-6412385.html": {
+   "url": "https://www.largus.fr/actualite-automobile/enquete-fiabilite-volkswagen-une-reputation-mise-a-mal-6412385.html",
+   "joignable": true,
+   "longueur": 12719,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2018/MC-10153151-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2018/MC-10153151-9999.pdf",
+   "joignable": true,
+   "longueur": 12308,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2018/MC-10149820-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2018/MC-10149820-9999.pdf",
+   "joignable": true,
+   "longueur": 13155,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2019/MC-10154364-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2019/MC-10154364-9999.pdf",
+   "joignable": true,
+   "longueur": 13409,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-golf-v-gti-gebrauchtwagen-test-5782656.html": {
+   "url": "https://www.autobild.de/artikel/vw-golf-v-gti-gebrauchtwagen-test-5782656.html",
+   "joignable": true,
+   "longueur": 11305,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-tdi-le-groupe-volkswagen-annonce-ses-solutions-techniques-6727405.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-tdi-le-groupe-volkswagen-annonce-ses-solutions-techniques-6727405.html",
+   "joignable": true,
+   "longueur": 11036,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.volkswagen.at/information-zu-ea189-dieselmotoren": {
+   "url": "https://www.volkswagen.at/information-zu-ea189-dieselmotoren",
+   "joignable": true,
+   "longueur": 25885,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://annualreport2016.volkswagenag.com/group-management-report/diesel-issue/eu28-and-rest-of-the-world/print.html": {
+   "url": "https://annualreport2016.volkswagenag.com/group-management-report/diesel-issue/eu28-and-rest-of-the-world/print.html",
+   "joignable": true,
+   "longueur": 2922,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.volkswagen.es/comunicacion/?p=24243": {
+   "url": "https://www.volkswagen.es/comunicacion/?p=24243",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-scandale-volkswagen-un-certificat-de-remise-en-conformite-suffit-n23407/": {
+   "url": "https://www.quechoisir.org/actualite-scandale-volkswagen-un-certificat-de-remise-en-conformite-suffit-n23407/",
+   "joignable": true,
+   "longueur": 9666,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-volkswagen-passat-7-la-maxi-fiche-occasion-de-caradisiac-163107.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-volkswagen-passat-7-la-maxi-fiche-occasion-de-caradisiac-163107.htm",
+   "joignable": true,
+   "longueur": 23598,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0174-vw-golf-vi-2008-2012-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0174-vw-golf-vi-2008-2012-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 13917,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a3-92/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a3-92/",
+   "joignable": true,
+   "longueur": 23331,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-beetle-321/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-beetle-321/",
+   "joignable": true,
+   "longueur": 17747,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.volkswagen.fr/fr/entretenir-ma-volkswagen/informations-client/campagnes-de-rappel/information-moteurs-diesel-ea189.html": {
+   "url": "https://www.volkswagen.fr/fr/entretenir-ma-volkswagen/informations-client/campagnes-de-rappel/information-moteurs-diesel-ea189.html",
+   "joignable": true,
+   "longueur": 7079,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/abgasskandal-rechte/vw/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/abgasskandal-rechte/vw/",
+   "joignable": true,
+   "longueur": 11325,
+   "extraits_verbatim": 15,
+   "trouves": 15,
+   "au_dela_du_juge": 0
+  },
+  "https://autocar.co.uk/node/81725": {
+   "url": "https://autocar.co.uk/node/81725",
+   "joignable": true,
+   "longueur": 8874,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/volkswagen-une-mise-a-jour-pour-reparer-la-mise-a-jour-162144.htm": {
+   "url": "https://www.caradisiac.com/volkswagen-une-mise-a-jour-pour-reparer-la-mise-a-jour-162144.htm",
+   "joignable": true,
+   "longueur": 10124,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autocar.co.uk/node/81391": {
+   "url": "https://www.autocar.co.uk/node/81391",
+   "joignable": true,
+   "longueur": 11160,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-affaire-volkswagen-la-mise-a-jour-du-logiciel-truqueur-pose-question-n50960": {
+   "url": "https://www.quechoisir.org/actualite-affaire-volkswagen-la-mise-a-jour-du-logiciel-truqueur-pose-question-n50960",
+   "joignable": true,
+   "longueur": 10249,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.tcs.ch/mam/Digital-Media/PDF/Booklets/Le-TCS-teste-les-mises-jour-informatiques-VW.pdf": {
+   "url": "https://www.tcs.ch/mam/Digital-Media/PDF/Booklets/Le-TCS-teste-les-mises-jour-informatiques-VW.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/commentaires/volkswagen-nouvelles-anomalies-sur-des-moteurs-l-action-en-justice-se-prepare-173467.htm": {
+   "url": "https://www.caradisiac.com/commentaires/volkswagen-nouvelles-anomalies-sur-des-moteurs-l-action-en-justice-se-prepare-173467.htm",
+   "joignable": true,
+   "longueur": 51073,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-les-problemes-du-moteur-diesel-16-tdi-6411386.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-les-problemes-du-moteur-diesel-16-tdi-6411386.html",
+   "joignable": true,
+   "longueur": 11453,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-seat-ibiza-5-en-occasion-108185.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-seat-ibiza-5-en-occasion-108185.htm",
+   "joignable": true,
+   "longueur": 25494,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-que-vaut-le-moteur-20-tdi-6411387.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-que-vaut-le-moteur-20-tdi-6411387.html",
+   "joignable": true,
+   "longueur": 12107,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Skoda-Octavia-II-2-40385.htm": {
+   "url": "https://www.caradisiac.com/Skoda-Octavia-II-2-40385.htm",
+   "joignable": true,
+   "longueur": 21946,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/soyez-prudents-si-vous-achetez-une-seat-ibiza-4-en-occasion-218738.htm": {
+   "url": "https://www.caradisiac.com/soyez-prudents-si-vous-achetez-une-seat-ibiza-4-en-occasion-218738.htm",
+   "joignable": true,
+   "longueur": 19161,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-audi-q3-la-maxi-fiche-occasion-de-caradisiac-180369.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-audi-q3-la-maxi-fiche-occasion-de-caradisiac-180369.htm",
+   "joignable": true,
+   "longueur": 21422,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/le-volkswagen-eos-restyle-est-plus-fiable-qu-avant-mise-a-jour-mais-loin-de-la-perfection-215718.htm": {
+   "url": "https://www.caradisiac.com/le-volkswagen-eos-restyle-est-plus-fiable-qu-avant-mise-a-jour-mais-loin-de-la-perfection-215718.htm",
+   "joignable": true,
+   "longueur": 18482,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/La-Volkswagen-Golf-6-69715.htm": {
+   "url": "https://www.caradisiac.com/La-Volkswagen-Golf-6-69715.htm",
+   "joignable": true,
+   "longueur": 22855,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-volkswagen-tiguan-la-maxi-fiche-fiabilite-de-caradisiac-160824.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-volkswagen-tiguan-la-maxi-fiche-fiabilite-de-caradisiac-160824.htm",
+   "joignable": true,
+   "longueur": 22842,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/seat-ibiza-198/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/seat-ibiza-198/",
+   "joignable": true,
+   "longueur": 24799,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Volkswagen-Golf-40202.htm": {
+   "url": "https://www.caradisiac.com/Volkswagen-Golf-40202.htm",
+   "joignable": true,
+   "longueur": 21873,
+   "extraits_verbatim": 12,
+   "trouves": 12,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Audi-A3-2-II-40143.htm": {
+   "url": "https://www.caradisiac.com/Audi-A3-2-II-40143.htm",
+   "joignable": true,
+   "longueur": 21784,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Audi-A4-40146.htm": {
+   "url": "https://www.caradisiac.com/Audi-A4-40146.htm",
+   "joignable": true,
+   "longueur": 23952,
+   "extraits_verbatim": 13,
+   "trouves": 13,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/audi-a6-iii-2004-2011-la-fiche-express-fiabilite-de-caradisiac-196966.htm": {
+   "url": "https://www.caradisiac.com/audi-a6-iii-2004-2011-la-fiche-express-fiabilite-de-caradisiac-196966.htm",
+   "joignable": true,
+   "longueur": 18343,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/courroie-de-distribution-le-maillon-faible-158264_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-le-maillon-faible-158264_p_2.html",
+   "joignable": true,
+   "longueur": 8232,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-passat-variant-b8-gebrauchtwagen-test-28604069.html": {
+   "url": "https://www.autobild.de/artikel/vw-passat-variant-b8-gebrauchtwagen-test-28604069.html",
+   "joignable": true,
+   "longueur": 14065,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0260-vw-golf-vii-2012-2020-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0260-vw-golf-vii-2012-2020-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 16377,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-passat-b8-gebrauchtwagen-test-11808025.html": {
+   "url": "https://www.autobild.de/artikel/vw-passat-b8-gebrauchtwagen-test-11808025.html",
+   "joignable": true,
+   "longueur": 14026,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-passat-351/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-passat-351/",
+   "joignable": true,
+   "longueur": 29070,
+   "extraits_verbatim": 0,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-tiguan-371/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/vw-tiguan-371/",
+   "joignable": true,
+   "longueur": 29062,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/l-audi-q5-ii-est-objectivement-un-bon-eleve-en-matiere-de-fiabilite-210481.htm": {
+   "url": "https://www.caradisiac.com/l-audi-q5-ii-est-objectivement-un-bon-eleve-en-matiere-de-fiabilite-210481.htm",
+   "joignable": true,
+   "longueur": 26210,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-de-la-boite-dsg-6348384.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-de-la-boite-dsg-6348384.html",
+   "joignable": true,
+   "longueur": 10510,
+   "extraits_verbatim": 12,
+   "trouves": 12,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/skoda-octavia-242/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/skoda-octavia-242/",
+   "joignable": true,
+   "longueur": 23270,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a3-265/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/audi-a3-265/",
+   "joignable": true,
+   "longueur": 23427,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/groupe-volkswagen-rectificatif-de-la-boite-dsg7-dans-les-ateliers-5330379.html": {
+   "url": "https://www.largus.fr/actualite-automobile/groupe-volkswagen-rectificatif-de-la-boite-dsg7-dans-les-ateliers-5330379.html",
+   "joignable": true,
+   "longueur": 11475,
+   "extraits_verbatim": 7,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-probleme-mit-dsg-4559939.html": {
+   "url": "https://www.autobild.de/artikel/vw-probleme-mit-dsg-4559939.html",
+   "joignable": true,
+   "longueur": 3990,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/vw-tiguan-ii-gebrauchtwagen-test-5981857.html": {
+   "url": "https://www.autobild.de/artikel/vw-tiguan-ii-gebrauchtwagen-test-5981857.html",
+   "joignable": true,
+   "longueur": 17397,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0204-audi-a5-2007-2016-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0204-audi-a5-2007-2016-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 13956,
+   "extraits_verbatim": 5,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/l-audi-a7-sportback-est-une-grande-berline-plutot-fiable-212542.htm": {
+   "url": "https://www.caradisiac.com/l-audi-a7-sportback-est-une-grande-berline-plutot-fiable-212542.htm",
+   "joignable": true,
+   "longueur": 18315,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/volkswagen-amelioration-en-profondeur-du-bloc-1-5-tsi-act-150-ch-197213.htm": {
+   "url": "https://www.caradisiac.com/volkswagen-amelioration-en-profondeur-du-bloc-1-5-tsi-act-150-ch-197213.htm",
+   "joignable": true,
+   "longueur": 11250,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/volkswagen-une-version-evo2-pour-le-moteur-essence-1-5-tsi-30000672.html": {
+   "url": "https://www.largus.fr/actualite-automobile/volkswagen-une-version-evo2-pour-le-moteur-essence-1-5-tsi-30000672.html",
+   "joignable": true,
+   "longueur": 8147,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autocar.co.uk/node/50655": {
+   "url": "https://www.autocar.co.uk/node/50655",
+   "joignable": true,
+   "longueur": 9354,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autocar.co.uk/node/50684": {
+   "url": "https://www.autocar.co.uk/node/50684",
+   "joignable": true,
+   "longueur": 8919,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autocar.co.uk/node/50675": {
+   "url": "https://www.autocar.co.uk/node/50675",
+   "joignable": true,
+   "longueur": 8514,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://volkswagen.co.nz/en/owners-and-servicing/about-my-car/campaigns-and-recalls/mechatronics-unit.html": {
+   "url": "https://volkswagen.co.nz/en/owners-and-servicing/about-my-car/campaigns-and-recalls/mechatronics-unit.html",
+   "joignable": true,
+   "longueur": 8404,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradvice.com.au/news/new-recall-of-80-000-volkswagen-audi-and-skoda-cars-with-dsg-gearboxes-some-for-the-second-time-in-six-years/": {
+   "url": "https://www.caradvice.com.au/news/new-recall-of-80-000-volkswagen-audi-and-skoda-cars-with-dsg-gearboxes-some-for-the-second-time-in-six-years/",
+   "joignable": true,
+   "longueur": 8445,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm": {
+   "url": "https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm",
+   "joignable": true,
+   "longueur": 19175,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.auto-motor-und-sport.de/verkehr/nhtsa-sieht-unzumutbares-risiko-ford-oelzahnriemen-kann-motor-lahmlegen/": {
+   "url": "https://www.auto-motor-und-sport.de/verkehr/nhtsa-sieht-unzumutbares-risiko-ford-oelzahnriemen-kann-motor-lahmlegen/",
+   "joignable": true,
+   "longueur": 6977,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/ford-b-max-quelques-defauts-resolus-la-fiche-fiabilite-express-de-caradisiac-204367.htm": {
+   "url": "https://www.caradisiac.com/ford-b-max-quelques-defauts-resolus-la-fiche-fiabilite-express-de-caradisiac-204367.htm",
+   "joignable": true,
+   "longueur": 16889,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2306-fiabilite-du-10-ecoboost.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2306-fiabilite-du-10-ecoboost.php",
+   "joignable": true,
+   "longueur": 17025,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.consumerreports.org/cars/car-recalls-defects/ford-ecosport-and-focus-recalled-for-engine-issues-a8600857471": {
+   "url": "https://www.consumerreports.org/cars/car-recalls-defects/ford-ecosport-and-focus-recalled-for-engine-issues-a8600857471",
+   "joignable": true,
+   "longueur": 11425,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.thedrive.com/news/fords-self-clogging-1-0-liter-ecoboost-engine-is-finally-getting-recalled": {
+   "url": "https://www.thedrive.com/news/fords-self-clogging-1-0-liter-ecoboost-engine-is-finally-getting-recalled",
+   "joignable": true,
+   "longueur": 5990,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://carbuyer.co.uk/tips-and-advice/170038/ford-ecoboost-engines-what-are-they-and-should-you-buy-one": {
+   "url": "https://carbuyer.co.uk/tips-and-advice/170038/ford-ecoboost-engines-what-are-they-and-should-you-buy-one",
+   "joignable": true,
+   "longueur": 12802,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/ford/104803/ford-10-litre-ecoboost-engine-failures-company-pledges-to-pay-for-all-repairs": {
+   "url": "https://www.autoexpress.co.uk/ford/104803/ford-10-litre-ecoboost-engine-failures-company-pledges-to-pay-for-all-repairs",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-ford-focus-3-en-occasion-106907.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-ford-focus-3-en-occasion-106907.htm",
+   "joignable": true,
+   "longueur": 26160,
+   "extraits_verbatim": 10,
+   "trouves": 10,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-ford-fiesta-vi-exempte-de-gros-reproches-204603.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-ford-fiesta-vi-exempte-de-gros-reproches-204603.htm",
+   "joignable": true,
+   "longueur": 26960,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/fiabilite-du-ford-ecosport-la-maxi-fiche-occasion-de-caradisiac-182663.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-ford-ecosport-la-maxi-fiche-occasion-de-caradisiac-182663.htm",
+   "joignable": true,
+   "longueur": 23549,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-ford-mondeo-4-la-maxi-fiche-occasion-de-caradisiac-190769.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-ford-mondeo-4-la-maxi-fiche-occasion-de-caradisiac-190769.htm",
+   "joignable": true,
+   "longueur": 23190,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379.html": {
+   "url": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379.html",
+   "joignable": true,
+   "longueur": 10410,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-ford/fiabilite-663-pannes-ford-puma.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-ford/fiabilite-663-pannes-ford-puma.php",
+   "joignable": true,
+   "longueur": 26599,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/fiabilite-du-ford-kuga-2-la-maxi-fiche-occasion-de-caradisiac-112283.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-ford-kuga-2-la-maxi-fiche-occasion-de-caradisiac-112283.htm",
+   "joignable": true,
+   "longueur": 22005,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-ford/fiabilite-627-pannes-ford-focus-4.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-ford/fiabilite-627-pannes-ford-focus-4.php",
+   "joignable": true,
+   "longueur": 38758,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-ford-16-ecoboostscti-risque-de-surchauffe-de-culasse-10799390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-ford-16-ecoboostscti-risque-de-surchauffe-de-culasse-10799390.html",
+   "joignable": true,
+   "longueur": 10222,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite/s-1192-diesels-les-moins-fiables.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite/s-1192-diesels-les-moins-fiables.php",
+   "joignable": true,
+   "longueur": 38970,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 5
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Ford-Fiesta-5-en-occasion-95446.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Ford-Fiesta-5-en-occasion-95446.htm",
+   "joignable": true,
+   "longueur": 27664,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite/s-4053-les-faiblesses-des-boites-edc-et-powershift.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite/s-4053-les-faiblesses-des-boites-edc-et-powershift.php",
+   "joignable": true,
+   "longueur": 18731,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.thedrive.com/news/fords-getting-sued-over-powershift-transmissions-again": {
+   "url": "https://www.thedrive.com/news/fords-getting-sued-over-powershift-transmissions-again",
+   "joignable": true,
+   "longueur": 6027,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://mag.toyota.co.uk/new-toyota-1-2t-engine/": {
+   "url": "https://mag.toyota.co.uk/new-toyota-1-2t-engine/",
+   "joignable": true,
+   "longueur": 17376,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-toyota-auris-2-la-maxi-fiche-occasion-de-caradisiac-111729.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-toyota-auris-2-la-maxi-fiche-occasion-de-caradisiac-111729.htm",
+   "joignable": true,
+   "longueur": 22462,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/la-fiabilite-du-toyota-c-hr-fait-elle-honneur-a-la-reputation-de-la-marque-212552.htm": {
+   "url": "https://www.caradisiac.com/la-fiabilite-du-toyota-c-hr-fait-elle-honneur-a-la-reputation-de-la-marque-212552.htm",
+   "joignable": true,
+   "longueur": 26255,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.fiches-auto.fr/fiabilite-toyota/fiabilite-568-pannes-toyota-c-hr.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-toyota/fiabilite-568-pannes-toyota-c-hr.php",
+   "joignable": true,
+   "longueur": 27132,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Toyota-Yaris-3-en-occasion-104375.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Toyota-Yaris-3-en-occasion-104375.htm",
+   "joignable": true,
+   "longueur": 23773,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Toyota-Auris-en-occasion-100926.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Toyota-Auris-en-occasion-100926.htm",
+   "joignable": true,
+   "longueur": 24636,
+   "extraits_verbatim": 8,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2620-moteurs-essence-qui-consomment-de-l-huile.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2620-moteurs-essence-qui-consomment-de-l-huile.php",
+   "joignable": true,
+   "longueur": 31771,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-toyota-prius-3-la-maxi-fiche-occasion-de-caradisiac-165788.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-toyota-prius-3-la-maxi-fiche-occasion-de-caradisiac-165788.htm",
+   "joignable": true,
+   "longueur": 23755,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-occasion-toyota-prius-4-toujours-aussi-fiable-198785.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-occasion-toyota-prius-4-toujours-aussi-fiable-198785.htm",
+   "joignable": true,
+   "longueur": 20427,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/la-toyota-corolla-12-d-occasion-fait-elle-honneur-a-la-reputation-de-fiabilite-de-toyota-214624.htm": {
+   "url": "https://www.caradisiac.com/la-toyota-corolla-12-d-occasion-fait-elle-honneur-a-la-reputation-de-fiabilite-de-toyota-214624.htm",
+   "joignable": true,
+   "longueur": 25577,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/la-toyota-yaris-4-est-elle-aussi-fiable-que-les-precedentes-generations-213525.htm": {
+   "url": "https://www.caradisiac.com/la-toyota-yaris-4-est-elle-aussi-fiable-que-les-precedentes-generations-213525.htm",
+   "joignable": true,
+   "longueur": 27444,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/un-suv-en-occasion-le-toyota-rav-4-de-3e-generation-aurait-il-ete-le-pire-des-rav-4-en-matiere-de-fiabilite-224256.htm": {
+   "url": "https://www.caradisiac.com/un-suv-en-occasion-le-toyota-rav-4-de-3e-generation-aurait-il-ete-le-pire-des-rav-4-en-matiere-de-fiabilite-224256.htm",
+   "joignable": true,
+   "longueur": 20256,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-occasion-caradisiac-toyota-rav4-fidele-a-sa-reputation-de-fiabilite-202451.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-occasion-caradisiac-toyota-rav4-fidele-a-sa-reputation-de-fiabilite-202451.htm",
+   "joignable": true,
+   "longueur": 23520,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Toyota-Avensis-40197.htm": {
+   "url": "https://www.caradisiac.com/Toyota-Avensis-40197.htm",
+   "joignable": true,
+   "longueur": 19965,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/toyota-verso-presque-irreprochable-la-fiche-fiabilite-express-de-caradisiac-206124.htm": {
+   "url": "https://www.caradisiac.com/toyota-verso-presque-irreprochable-la-fiche-fiabilite-express-de-caradisiac-206124.htm",
+   "joignable": true,
+   "longueur": 19772,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Toyota-Yaris-2-en-occasion-91734.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Toyota-Yaris-2-en-occasion-91734.htm",
+   "joignable": true,
+   "longueur": 22696,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-occasion-caradisiac-la-honda-civic-10-si-fiable-que-ca-204029.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-occasion-caradisiac-la-honda-civic-10-si-fiable-que-ca-204029.htm",
+   "joignable": true,
+   "longueur": 24185,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-honda/fiabilite-608-pannes-honda-civic.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-honda/fiabilite-608-pannes-honda-civic.php",
+   "joignable": true,
+   "longueur": 23944,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/le-honda-cr-v-4-2012-2017-est-il-le-suv-le-moins-fiable-de-honda-217015.htm": {
+   "url": "https://www.caradisiac.com/le-honda-cr-v-4-2012-2017-est-il-le-suv-le-moins-fiable-de-honda-217015.htm",
+   "joignable": true,
+   "longueur": 26857,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-honda/fiabilite-480-pannes-honda-crv.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-honda/fiabilite-480-pannes-honda-crv.php",
+   "joignable": true,
+   "longueur": 27599,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/honda-hr-v-2-2015-2022-un-bon-cheval-la-fiche-fiabilite-express-de-caradisiac-205018.htm": {
+   "url": "https://www.caradisiac.com/honda-hr-v-2-2015-2022-un-bon-cheval-la-fiche-fiabilite-express-de-caradisiac-205018.htm",
+   "joignable": true,
+   "longueur": 19819,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-honda-civic-9-la-maxi-fiche-occasion-de-caradisiac-164553.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-honda-civic-9-la-maxi-fiche-occasion-de-caradisiac-164553.htm",
+   "joignable": true,
+   "longueur": 20579,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Honda-Civic-8-en-occasion-94584.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Honda-Civic-8-en-occasion-94584.htm",
+   "joignable": true,
+   "longueur": 24821,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-honda-cr-v-3-la-maxi-fiche-occasion-de-caradisiac-110222.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-honda-cr-v-3-la-maxi-fiche-occasion-de-caradisiac-110222.htm",
+   "joignable": true,
+   "longueur": 19816,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/honda-jazz-3-la-fiche-fiabilite-express-de-caradisiac-200420.htm": {
+   "url": "https://www.caradisiac.com/honda-jazz-3-la-fiche-fiabilite-express-de-caradisiac-200420.htm",
+   "joignable": true,
+   "longueur": 24992,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/la-honda-jazz-4-est-tellement-fiable-que-vous-pouvez-acheter-les-yeux-fermes-215185.htm": {
+   "url": "https://www.caradisiac.com/la-honda-jazz-4-est-tellement-fiable-que-vous-pouvez-acheter-les-yeux-fermes-215185.htm",
+   "joignable": true,
+   "longueur": 25030,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/honda-jazz-2-2008-2015-la-fiche-fiabilite-express-de-caradisiac-196030.htm": {
+   "url": "https://www.caradisiac.com/honda-jazz-2-2008-2015-la-fiche-fiabilite-express-de-caradisiac-196030.htm",
+   "joignable": true,
+   "longueur": 23277,
+   "extraits_verbatim": 0,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php",
+   "joignable": true,
+   "longueur": 19113,
+   "extraits_verbatim": 4,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+   "joignable": true,
+   "longueur": 32335,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3016-fiabilite-du-22-skyactiv-d-de-mazda.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3016-fiabilite-du-22-skyactiv-d-de-mazda.php",
+   "joignable": true,
+   "longueur": 10781,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-598-pannes-mazda-cx-5-ii.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-598-pannes-mazda-cx-5-ii.php",
+   "joignable": true,
+   "longueur": 20457,
+   "extraits_verbatim": 0,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm",
+   "joignable": true,
+   "longueur": 27148,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-520-pannes-mazda-2.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-520-pannes-mazda-2.php",
+   "joignable": true,
+   "longueur": 23343,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-454-pannes-mazda-3.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-454-pannes-mazda-3.php",
+   "joignable": true,
+   "longueur": 26815,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2481-fiabilite-des-skyactiv-g.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2481-fiabilite-des-skyactiv-g.php",
+   "joignable": true,
+   "longueur": 11141,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-mazda-2-2e-generation-la-maxi-fiche-occasion-de-caradisiac-179965.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-mazda-2-2e-generation-la-maxi-fiche-occasion-de-caradisiac-179965.htm",
+   "joignable": true,
+   "longueur": 24073,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-suzuki-vitara-iv-quand-fiabilite-ne-rime-pas-avec-qualite-206074.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-suzuki-vitara-iv-quand-fiabilite-ne-rime-pas-avec-qualite-206074.htm",
+   "joignable": true,
+   "longueur": 25437,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/la-suzuki-swift-4-2017-2024-est-un-peu-moins-fiable-que-ses-devancieres-215649.htm": {
+   "url": "https://www.caradisiac.com/la-suzuki-swift-4-2017-2024-est-un-peu-moins-fiable-que-ses-devancieres-215649.htm",
+   "joignable": true,
+   "longueur": 29609,
+   "extraits_verbatim": 0,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/suzuki-sx4-s-cross-2013-2021-incidents-isoles-la-fiche-fiabilite-express-de-caradisiac-208170.htm": {
+   "url": "https://www.caradisiac.com/suzuki-sx4-s-cross-2013-2021-incidents-isoles-la-fiche-fiabilite-express-de-caradisiac-208170.htm",
+   "joignable": true,
+   "longueur": 20613,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-suzuki/fiabilite-602-pannes-suzuki-ignis.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-suzuki/fiabilite-602-pannes-suzuki-ignis.php",
+   "joignable": true,
+   "longueur": 17911,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-suzuki/fiabilite-533-pannes-suzuki-vitara.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-suzuki/fiabilite-533-pannes-suzuki-vitara.php",
+   "joignable": true,
+   "longueur": 22432,
+   "extraits_verbatim": 0,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteur-diesel-bmw-chaine-de-distribution-fragile-n11281/": {
+   "url": "https://www.quechoisir.org/actualite-moteur-diesel-bmw-chaine-de-distribution-fragile-n11281/",
+   "joignable": true,
+   "longueur": 12975,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/moteur-diesel-bmw-la-chaine-de-la-discorde-4280379.html": {
+   "url": "https://www.largus.fr/actualite-automobile/moteur-diesel-bmw-la-chaine-de-la-discorde-4280379.html",
+   "joignable": true,
+   "longueur": 9955,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/bmwmini-20d-n47-le-point-sur-les-soucis-de-distribution-9330391.html": {
+   "url": "https://www.largus.fr/actualite-automobile/bmwmini-20d-n47-le-point-sur-les-soucis-de-distribution-9330391.html",
+   "joignable": true,
+   "longueur": 10916,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteurs-diesel-bmw-toujours-aussi-fragiles-n7927/": {
+   "url": "https://www.quechoisir.org/actualite-moteurs-diesel-bmw-toujours-aussi-fragiles-n7927/",
+   "joignable": true,
+   "longueur": 9736,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.auto-motor-und-sport.de/tech-zukunft/steuerkettenprobleme-bei-bmw-n47-motoren-symptome-kosten-loesungen/": {
+   "url": "https://www.auto-motor-und-sport.de/tech-zukunft/steuerkettenprobleme-bei-bmw-n47-motoren-symptome-kosten-loesungen/",
+   "joignable": true,
+   "longueur": 4635,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.auto-motor-und-sport.de/tech-zukunft/steuerkettenprobleme-beim-bmw-n47-ursachen-und-loesungen/": {
+   "url": "https://www.auto-motor-und-sport.de/tech-zukunft/steuerkettenprobleme-beim-bmw-n47-ursachen-und-loesungen/",
+   "joignable": true,
+   "longueur": 4717,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/bmw-x1-e84-gebrauchtwagen-test-11352019.html": {
+   "url": "https://www.autobild.de/artikel/bmw-x1-e84-gebrauchtwagen-test-11352019.html",
+   "joignable": true,
+   "longueur": 12756,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-31/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-31/",
+   "joignable": true,
+   "longueur": 26365,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 2
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0031-bmw-1er-reihe-2004-2013-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0031-bmw-1er-reihe-2004-2013-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 15367,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiabilite-bmw-problemes-de-chaine-de-distribution-sur-le-20-diesel-6313385_p_2.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-bmw-problemes-de-chaine-de-distribution-sur-le-20-diesel-6313385_p_2.html",
+   "joignable": true,
+   "longueur": 9943,
+   "extraits_verbatim": 4,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-moteurs-diesel-bmw-la-galere-des-frais-de-reparation-n46060/": {
+   "url": "https://www.quechoisir.org/actualite-moteurs-diesel-bmw-la-galere-des-frais-de-reparation-n46060/",
+   "joignable": true,
+   "longueur": 12317,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/enquete-bmw-le-service-apres-vente-defaille-n10719": {
+   "url": "https://www.quechoisir.org/enquete-bmw-le-service-apres-vente-defaille-n10719",
+   "joignable": true,
+   "longueur": 8535,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/rcl/2018/RCRIT-18V755-0780.pdf": {
+   "url": "https://static.nhtsa.gov/odi/rcl/2018/RCRIT-18V755-0780.pdf",
+   "joignable": true,
+   "longueur": 26520,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/bmw/105051/bmw-recalls-268000-uk-cars-over-diesel-engine-fire-risk": {
+   "url": "https://www.autoexpress.co.uk/bmw/105051/bmw-recalls-268000-uk-cars-over-diesel-engine-fire-risk",
+   "joignable": true,
+   "longueur": 12085,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2021711": {
+   "url": "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2021711",
+   "joignable": true,
+   "longueur": 3113,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2025560-bmw": {
+   "url": "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2025560-bmw",
+   "joignable": true,
+   "longueur": 2775,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm",
+   "joignable": true,
+   "longueur": 30721,
+   "extraits_verbatim": 13,
+   "trouves": 13,
+   "au_dela_du_juge": 3
+  },
+  "https://www.press.bmwgroup.com/global/article/detail/T0283855EN/bmw-group-information-regarding-a-voluntary-technical-campaign": {
+   "url": "https://www.press.bmwgroup.com/global/article/detail/T0283855EN/bmw-group-information-regarding-a-voluntary-technical-campaign",
+   "joignable": true,
+   "longueur": 2920,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.which.co.uk/news/2018/10/bmw-recalls-268000-uk-cars-due-to-fire-risk": {
+   "url": "https://www.which.co.uk/news/2018/10/bmw-recalls-268000-uk-cars-due-to-fire-risk",
+   "joignable": true,
+   "longueur": 4868,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-2er-reihe-active-gran-tourer-367/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-2er-reihe-active-gran-tourer-367/",
+   "joignable": true,
+   "longueur": 23677,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-bmw-serie-3-f30-la-maxi-fiche-occasion-de-caradisiac-172002.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-bmw-serie-3-f30-la-maxi-fiche-occasion-de-caradisiac-172002.htm",
+   "joignable": true,
+   "longueur": 23467,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-bmw-x3-f25-deutsche-qualitat-ou-pas-195376.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-bmw-x3-f25-deutsche-qualitat-ou-pas-195376.htm",
+   "joignable": true,
+   "longueur": 24809,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1292-rappels-bmw.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1292-rappels-bmw.php",
+   "joignable": true,
+   "longueur": 168261,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 1
+  },
+  "https://static.nhtsa.gov/odi/rcl/2018/RCRIT-18V755-1316.pdf": {
+   "url": "https://static.nhtsa.gov/odi/rcl/2018/RCRIT-18V755-1316.pdf",
+   "joignable": true,
+   "longueur": 25134,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/bmw-1er-gebrauchtwagen-test-14695647.html": {
+   "url": "https://www.autobild.de/artikel/bmw-1er-gebrauchtwagen-test-14695647.html",
+   "joignable": true,
+   "longueur": 7778,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/essai-bmw/moteur-essai-340-3-bmw-serie-1-_-116i-_-136.php": {
+   "url": "https://www.fiches-auto.fr/essai-bmw/moteur-essai-340-3-bmw-serie-1-_-116i-_-136.php",
+   "joignable": true,
+   "longueur": 13200,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/bmw-1er-gebrauchtwagen-test-12551927.html": {
+   "url": "https://www.autobild.de/artikel/bmw-1er-gebrauchtwagen-test-12551927.html",
+   "joignable": true,
+   "longueur": 14755,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-2er-reihe-active-gran-tourer-366/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-2er-reihe-active-gran-tourer-366/",
+   "joignable": true,
+   "longueur": 21764,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0366-bmw-2er-reihe-active-gran-tourer-2014-2021-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0366-bmw-2er-reihe-active-gran-tourer-2014-2021-benziner-bericht.pdf",
+   "joignable": true,
+   "longueur": 11219,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2021/MC-10204534-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2021/MC-10204534-9999.pdf",
+   "joignable": true,
+   "longueur": 45457,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2020/MC-10186213-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10186213-9999.pdf",
+   "joignable": true,
+   "longueur": 26915,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 2
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2021/MC-10201140-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2021/MC-10201140-9999.pdf",
+   "joignable": true,
+   "longueur": 70456,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 1
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2017/MC-10142923-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2017/MC-10142923-9999.pdf",
+   "joignable": true,
+   "longueur": 19564,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2021/MC-10204619-9999.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2021/MC-10204619-9999.pdf",
+   "joignable": true,
+   "longueur": 28781,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-227/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-227/",
+   "joignable": true,
+   "longueur": 27656,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 3
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0125-bmw-3er-reihe-2012-2018-benziner-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0125-bmw-3er-reihe-2012-2018-benziner-bericht.pdf",
+   "joignable": true,
+   "longueur": 12994,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/fiabilite-bmw/fiabilite-340-pannes-bmw-serie-1.php": {
+   "url": "https://www.fiches-auto.fr/fiabilite-bmw/fiabilite-340-pannes-bmw-serie-1.php",
+   "joignable": true,
+   "longueur": 54909,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/gebrauchtwagen-test-bmw-1er-526626.html": {
+   "url": "https://www.autobild.de/artikel/gebrauchtwagen-test-bmw-1er-526626.html",
+   "joignable": true,
+   "longueur": 10548,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.pistonheads.com/news/general/mini-cooper-s-r56--ph-used-buying-guide/37413": {
+   "url": "https://www.pistonheads.com/news/general/mini-cooper-s-r56--ph-used-buying-guide/37413",
+   "joignable": true,
+   "longueur": 9195,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.pistonheads.com/news/general/mini-jcw-and-gp2-r56--ph-used-buying-guide/42356": {
+   "url": "https://www.pistonheads.com/news/general/mini-jcw-and-gp2-r56--ph-used-buying-guide/42356",
+   "joignable": true,
+   "longueur": 24818,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 4
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/",
+   "joignable": true,
+   "longueur": 22819,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0162-mini-mini-2006-2015-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0162-mini-mini-2006-2015-bericht.pdf",
+   "joignable": true,
+   "longueur": 12809,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/mini-clubman-2007-2014-la-fiche-fiabilite-express-de-caradisiac-194613.htm": {
+   "url": "https://www.caradisiac.com/mini-clubman-2007-2014-la-fiche-fiabilite-express-de-caradisiac-194613.htm",
+   "joignable": true,
+   "longueur": 17459,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Mini-Countryman-en-occasion-99666.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Mini-Countryman-en-occasion-99666.htm",
+   "joignable": true,
+   "longueur": 20922,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/mercedes-classe-c-classe-e-et-glk-rates-a-l-allumage-165454.html": {
+   "url": "https://www.largus.fr/actualite-automobile/mercedes-classe-c-classe-e-et-glk-rates-a-l-allumage-165454.html",
+   "joignable": true,
+   "longueur": 10910,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autobild.de/artikel/mercedes-220-cdi-und-250-cdi-2795392.html": {
+   "url": "https://www.autobild.de/artikel/mercedes-220-cdi-und-250-cdi-2795392.html",
+   "joignable": true,
+   "longueur": 5263,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm",
+   "joignable": true,
+   "longueur": 23571,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/mercedes-18-et-21-diesel-om651-souci-de-chaine-de-distribution-10431390.html": {
+   "url": "https://www.largus.fr/actualite-automobile/mercedes-18-et-21-diesel-om651-souci-de-chaine-de-distribution-10431390.html",
+   "joignable": true,
+   "longueur": 11120,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0188-mercedes-benz-e-klasse-2009-2016-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0188-mercedes-benz-e-klasse-2009-2016-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 19426,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0281-mercedes-benz-glk-klasse-2008-2015-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0281-mercedes-benz-glk-klasse-2008-2015-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 13593,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 20454,
+   "extraits_verbatim": 6,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/rappels-mercedes/r-484-rappels-mercedes-classe-c.php": {
+   "url": "https://www.fiches-auto.fr/rappels-mercedes/r-484-rappels-mercedes-classe-c.php",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0409-mercedes-benz-gla-klasse-seit-2014-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0409-mercedes-benz-gla-klasse-seit-2014-diesel-bericht.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 5,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm",
+   "joignable": true,
+   "longueur": 28515,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 2
+  },
+  "https://www.largus.fr/actualite-automobile/dieselgate-de-nouveaux-soupcons-pour-mercedes-9184394.html": {
+   "url": "https://www.largus.fr/actualite-automobile/dieselgate-de-nouveaux-soupcons-pour-mercedes-9184394.html",
+   "joignable": true,
+   "longueur": 10491,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://journalauto.com/constructeurs/mercedes-benz-contraint-de-rappeler-pres-de-800-000-vehicules-diesel-en-europe/": {
+   "url": "https://journalauto.com/constructeurs/mercedes-benz-contraint-de-rappeler-pres-de-800-000-vehicules-diesel-en-europe/",
+   "joignable": true,
+   "longueur": 2829,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-mercedes-gla-la-maxi-fiche-occasion-de-caradisiac-187066.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-mercedes-gla-la-maxi-fiche-occasion-de-caradisiac-187066.htm",
+   "joignable": true,
+   "longueur": 23345,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-mercedes-classe-c-risque-de-surchauffe-de-lalternateur-10573402.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-classe-c-risque-de-surchauffe-de-lalternateur-10573402.html",
+   "joignable": true,
+   "longueur": 9700,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s70-v70-xc70-323/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s70-v70-xc70-323/",
+   "joignable": true,
+   "longueur": 27044,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 6
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-xc60-218/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-xc60-218/",
+   "joignable": true,
+   "longueur": 27304,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 3
+  },
+  "https://assets.adac.de/Autodatenbank/GWInfo/gw0218-volvo-xc60-2008-2017-diesel-bericht.pdf": {
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0218-volvo-xc60-2008-2017-diesel-bericht.pdf",
+   "joignable": true,
+   "longueur": 16877,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autocar.co.uk/node/97662": {
+   "url": "https://www.autocar.co.uk/node/97662",
+   "joignable": true,
+   "longueur": 10402,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://journalauto.com/constructeurs/volvo-rappelle-pres-de-30-000-vehicules-en-france/": {
+   "url": "https://journalauto.com/constructeurs/volvo-rappelle-pres-de-30-000-vehicules-en-france/",
+   "joignable": true,
+   "longueur": 3258,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-volvo-s60-v60-la-maxi-fiche-occasion-de-caradisiac-177865.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-volvo-s60-v60-la-maxi-fiche-occasion-de-caradisiac-177865.htm",
+   "joignable": true,
+   "longueur": 24035,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/",
+   "joignable": true,
+   "longueur": 25608,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-BMW-Serie-3-E90-en-occasion-90408.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-BMW-Serie-3-E90-en-occasion-90408.htm",
+   "joignable": true,
+   "longueur": 24521,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-bmw-serie-1-f20-f21-2011-la-maxi-fiche-occasion-de-caradisiac-184091.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-bmw-serie-1-f20-f21-2011-la-maxi-fiche-occasion-de-caradisiac-184091.htm",
+   "joignable": true,
+   "longueur": 26893,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-de-la-bmw-serie-5-f10-une-allemande-pas-si-fiable-201003.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-de-la-bmw-serie-5-f10-une-allemande-pas-si-fiable-201003.htm",
+   "joignable": true,
+   "longueur": 24420,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/bmw-x1-e84-2009-2015-la-fiche-fiabilite-express-de-caradisiac-195148.htm": {
+   "url": "https://www.caradisiac.com/bmw-x1-e84-2009-2015-la-fiche-fiabilite-express-de-caradisiac-195148.htm",
+   "joignable": true,
+   "longueur": 17105,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/maxi-fiche-fiabilite-bmw-x1-f48-216379.htm": {
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-bmw-x1-f48-216379.htm",
+   "joignable": true,
+   "longueur": 25948,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 2
+  },
+  "https://www.caradisiac.com/bmw-serie-2-2014-2022-plutot-fiable-la-fiche-fiabilite-express-de-caradisiac-207760.htm": {
+   "url": "https://www.caradisiac.com/bmw-serie-2-2014-2022-plutot-fiable-la-fiche-fiabilite-express-de-caradisiac-207760.htm",
+   "joignable": true,
+   "longueur": 20567,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/la-bmw-serie-1-f40-est-elle-la-plus-fiable-des-serie-1-en-occasion-219194.htm": {
+   "url": "https://www.caradisiac.com/la-bmw-serie-1-f40-est-elle-la-plus-fiable-des-serie-1-en-occasion-219194.htm",
+   "joignable": true,
+   "longueur": 26955,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat/Bmw_Serie-1.html": {
+   "url": "https://www.largus.fr/guide-achat/Bmw_Serie-1.html",
+   "joignable": true,
+   "longueur": 9410,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/le-bmw-x3-g01-de-2017-est-il-le-meilleur-suv-premium-en-occasion-209498.htm": {
+   "url": "https://www.caradisiac.com/le-bmw-x3-g01-de-2017-est-il-le-meilleur-suv-premium-en-occasion-209498.htm",
+   "joignable": true,
+   "longueur": 30000,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3308-fiabilite-220d-bluetec-mercedes.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3308-fiabilite-220d-bluetec-mercedes.php",
+   "joignable": true,
+   "longueur": 13878,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/peut-on-s-offrir-un-mercedes-glc-d-occasion-les-yeux-fermes-214142.htm": {
+   "url": "https://www.caradisiac.com/peut-on-s-offrir-un-mercedes-glc-d-occasion-les-yeux-fermes-214142.htm",
+   "joignable": true,
+   "longueur": 26979,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 1
+  },
+  "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mercedes-benz-a-klasse-276/": {
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mercedes-benz-a-klasse-276/",
+   "joignable": true,
+   "longueur": 25835,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 2
+  },
+  "https://www.caradisiac.com/mercedes-classe-a-3-la-fiche-fiabilite-express-de-caradisiac-194156.htm": {
+   "url": "https://www.caradisiac.com/mercedes-classe-a-3-la-fiche-fiabilite-express-de-caradisiac-194156.htm",
+   "joignable": true,
+   "longueur": 19804,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html",
+   "joignable": true,
+   "longueur": 11203,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-3225-fiabilite-moteur-250-mercedes.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-3225-fiabilite-moteur-250-mercedes.php",
+   "joignable": true,
+   "longueur": 12910,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/mercedes-slk-2-la-fiche-fiabilite-express-de-caradisiac-199902.htm": {
+   "url": "https://www.caradisiac.com/mercedes-slk-2-la-fiche-fiabilite-express-de-caradisiac-199902.htm",
+   "joignable": true,
+   "longueur": 16385,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/fiabilite-du-volvo-xc60-la-maxi-fiche-occasion-de-caradisiac-194780.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-du-volvo-xc60-la-maxi-fiche-occasion-de-caradisiac-194780.htm",
+   "joignable": true,
+   "longueur": 21844,
+   "extraits_verbatim": 7,
+   "trouves": 7,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/les-volvo-s60-v60-sont-elles-aussi-fiables-que-leur-reputation-le-laisse-esperer-210910.htm": {
+   "url": "https://www.caradisiac.com/les-volvo-s60-v60-sont-elles-aussi-fiables-que-leur-reputation-le-laisse-esperer-210910.htm",
+   "joignable": true,
+   "longueur": 26487,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.auto-motor-und-sport.de/tech-zukunft/motorschaeden-durch-ingenium-technik-was-kaeufer-wissen-muessen/": {
+   "url": "https://www.auto-motor-und-sport.de/tech-zukunft/motorschaeden-durch-ingenium-technik-was-kaeufer-wissen-muessen/",
+   "joignable": true,
+   "longueur": 7799,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/jaguar-xe-la-fiche-fiabilite-express-de-caradisiac-202489.htm": {
+   "url": "https://www.caradisiac.com/jaguar-xe-la-fiche-fiabilite-express-de-caradisiac-202489.htm",
+   "joignable": true,
+   "longueur": 20482,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/jaguar-f-pace-la-fiche-fiabilite-express-de-caradisiac-199234.htm": {
+   "url": "https://www.caradisiac.com/jaguar-f-pace-la-fiche-fiabilite-express-de-caradisiac-199234.htm",
+   "joignable": true,
+   "longueur": 15845,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.thedrive.com/guides-and-gear/how-to-tell-if-your-2011-2019-hyundai-or-kia-engine-might-fail": {
+   "url": "https://www.thedrive.com/guides-and-gear/how-to-tell-if-your-2011-2019-hyundai-or-kia-engine-might-fail",
+   "joignable": true,
+   "longueur": 8707,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2015428-hyundai": {
+   "url": "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2015428-hyundai",
+   "joignable": true,
+   "longueur": 3123,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/tsbs/2020/MC-10178174-0001.pdf": {
+   "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10178174-0001.pdf",
+   "joignable": true,
+   "longueur": 13138,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.nhtsa.gov/press-releases/nhtsa-announces-consent-orders-hyundai-and-kia-over-theta-ii-recall": {
+   "url": "https://www.nhtsa.gov/press-releases/nhtsa-announces-consent-orders-hyundai-and-kia-over-theta-ii-recall",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation": {
+   "url": "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation",
+   "joignable": true,
+   "longueur": 12782,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://static.nhtsa.gov/odi/inv/2021/INRD-EA21003-18044.pdf": {
+   "url": "https://static.nhtsa.gov/odi/inv/2021/INRD-EA21003-18044.pdf",
+   "joignable": true,
+   "longueur": 2033,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-kia-optima-hybrid-des-moteurs-remplaces-sur-d-anciens-exemplaires-30029484.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-kia-optima-hybrid-des-moteurs-remplaces-sur-d-anciens-exemplaires-30029484.html",
+   "joignable": true,
+   "longueur": 9896,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide": {
+   "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+   "joignable": true,
+   "longueur": 28665,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 1
+  },
+  "https://static.nhtsa.gov/odi/rcl/2019/RCMN-19V120-3267.pdf": {
+   "url": "https://static.nhtsa.gov/odi/rcl/2019/RCMN-19V120-3267.pdf",
+   "joignable": true,
+   "longueur": 3605,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2021204": {
+   "url": "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2021204",
+   "joignable": true,
+   "longueur": 3081,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/kia/niro/370401/used-kia-niro-mk2-2022-date-buyers-guide-something-everyone": {
+   "url": "https://www.autoexpress.co.uk/kia/niro/370401/used-kia-niro-mk2-2022-date-buyers-guide-something-everyone",
+   "joignable": true,
+   "longueur": 16581,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/hyundai/kona/353798/used-hyundai-kona-review": {
+   "url": "https://www.autoexpress.co.uk/hyundai/kona/353798/used-hyundai-kona-review",
+   "joignable": true,
+   "longueur": 28262,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2907-fiabilite-du-10-t-gdi.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2907-fiabilite-du-10-t-gdi.php",
+   "joignable": true,
+   "longueur": 11211,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1296-rappels-hyundai.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1296-rappels-hyundai.php",
+   "joignable": true,
+   "longueur": 31665,
+   "extraits_verbatim": 4,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.whatcar.com/hyundai/i30/hatchback/used-review/n905/reliability": {
+   "url": "https://www.whatcar.com/hyundai/i30/hatchback/used-review/n905/reliability",
+   "joignable": true,
+   "longueur": 9219,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.whatcar.com/kia/sportage/4x4/used-review/n17426/reliability": {
+   "url": "https://www.whatcar.com/kia/sportage/4x4/used-review/n17426/reliability",
+   "joignable": true,
+   "longueur": 8839,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-kia-1-6-diesel-verification-de-la-pompe-a-huile-et-a-vide-sur-plus-de-13-000-vehicules-30030272.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-kia-1-6-diesel-verification-de-la-pompe-a-huile-et-a-vide-sur-plus-de-13-000-vehicules-30030272.html",
+   "joignable": true,
+   "longueur": 11122,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat/KIA_Ceed.html": {
+   "url": "https://www.largus.fr/guide-achat/KIA_Ceed.html",
+   "joignable": true,
+   "longueur": 8226,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.oeamtc.at/rueckrufaktionen/kia-ceed-sportage-stonic-probleme-mit-der-tandempumpe-63875399": {
+   "url": "https://www.oeamtc.at/rueckrufaktionen/kia-ceed-sportage-stonic-probleme-mit-der-tandempumpe-63875399",
+   "joignable": true,
+   "longueur": 1581,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1297-rappels-kia.php": {
+   "url": "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1297-rappels-kia.php",
+   "joignable": true,
+   "longueur": 30526,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiches-auto.fr/rappels-hyundai/r-616-rappels-hyundai-kona.php": {
+   "url": "https://www.fiches-auto.fr/rappels-hyundai/r-616-rappels-hyundai-kona.php",
+   "joignable": true,
+   "longueur": 24883,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.largus.fr/actualite-automobile/kia-ceed-et-sportage-diesel-des-filtres-a-particules-a-remplacer-10623397.html": {
+   "url": "https://www.largus.fr/actualite-automobile/kia-ceed-et-sportage-diesel-des-filtres-a-particules-a-remplacer-10623397.html",
+   "joignable": true,
+   "longueur": 9898,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.ecologie.gouv.fr/sites/default/files/documents/rappels%202025.pdf": {
+   "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/rappels%202025.pdf",
+   "joignable": true,
+   "longueur": 158609,
+   "extraits_verbatim": 5,
+   "trouves": 3,
+   "au_dela_du_juge": 3
+  },
+  "https://www.largus.fr/actualite-automobile/kia-problemes-de-vibrations-avec-la-boite-double-embrayage-dct-7-10641403.html": {
+   "url": "https://www.largus.fr/actualite-automobile/kia-problemes-de-vibrations-avec-la-boite-double-embrayage-dct-7-10641403.html",
+   "joignable": true,
+   "longueur": 10943,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review": {
+   "url": "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review",
+   "joignable": true,
+   "longueur": 27880,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 1
+  },
+  "https://www.autoexpress.co.uk/subaru/xv/351932/used-subaru-xv-mk1-2012-2018-review": {
+   "url": "https://www.autoexpress.co.uk/subaru/xv/351932/used-subaru-xv-mk1-2012-2018-review",
+   "joignable": true,
+   "longueur": 13236,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/subaru/forester/108640/used-subaru-forester-review": {
+   "url": "https://www.autoexpress.co.uk/subaru/forester/108640/used-subaru-forester-review",
+   "joignable": true,
+   "longueur": 25140,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/subaru/xv/359603/used-subaru-xv-mk2-2017-date-review": {
+   "url": "https://www.autoexpress.co.uk/subaru/xv/359603/used-subaru-xv-mk2-2017-date-review",
+   "joignable": true,
+   "longueur": 15024,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/subaru/outback/109113/used-subaru-outback-review": {
+   "url": "https://www.autoexpress.co.uk/subaru/outback/109113/used-subaru-outback-review",
+   "joignable": true,
+   "longueur": 13711,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/subaru/forester/366912/used-subaru-forester-mk5-2019-2024-buyers-guide-great-road-less-good-it": {
+   "url": "https://www.autoexpress.co.uk/subaru/forester/366912/used-subaru-forester-mk5-2019-2024-buyers-guide-great-road-less-good-it",
+   "joignable": true,
+   "longueur": 28232,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/subaru/outback/20595/2009-2014-estate": {
+   "url": "https://www.autoexpress.co.uk/subaru/outback/20595/2009-2014-estate",
+   "joignable": true,
+   "longueur": 13158,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/mitsubishi/outlander/106711/used-mitsubishi-outlander-review": {
+   "url": "https://www.autoexpress.co.uk/mitsubishi/outlander/106711/used-mitsubishi-outlander-review",
+   "joignable": true,
+   "longueur": 13385,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/mitsubishi/outlander/phev": {
+   "url": "https://www.autoexpress.co.uk/mitsubishi/outlander/phev",
+   "joignable": true,
+   "longueur": 24078,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 2
+  },
+  "https://www.largus.fr/actualite-automobile/citroen-c4-aircross-mitsubishi-asx-et-peugeot-4008-casse-du-turbo-5899385.html": {
+   "url": "https://www.largus.fr/actualite-automobile/citroen-c4-aircross-mitsubishi-asx-et-peugeot-4008-casse-du-turbo-5899385.html",
+   "joignable": true,
+   "longueur": 10008,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/mitsubishi-etend-sa-garantie-a-8-ans-sur-ses-vehicules-neufs-30033682.html": {
+   "url": "https://www.largus.fr/actualite-automobile/mitsubishi-etend-sa-garantie-a-8-ans-sur-ses-vehicules-neufs-30033682.html",
+   "joignable": true,
+   "longueur": 11208,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-mitsubishi-triple-campagne-pour-les-asx-eclipse-cross-et-outlander-30044666.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-mitsubishi-triple-campagne-pour-les-asx-eclipse-cross-et-outlander-30044666.html",
+   "joignable": true,
+   "longueur": 10503,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/mitsubishi-outlander-asx-et-eclipse-cross-7-455-vehicules-rappeles-10661393.html": {
+   "url": "https://www.largus.fr/actualite-automobile/mitsubishi-outlander-asx-et-eclipse-cross-7-455-vehicules-rappeles-10661393.html",
+   "joignable": true,
+   "longueur": 9932,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/mitsubishi/mirage": {
+   "url": "https://www.autoexpress.co.uk/mitsubishi/mirage",
+   "joignable": true,
+   "longueur": 12602,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/fiat-500x-et-jeep-renegade-defaillance-du-turbo-sur-le-diesel-16-mjt-8606389.html": {
+   "url": "https://www.largus.fr/actualite-automobile/fiat-500x-et-jeep-renegade-defaillance-du-turbo-sur-le-diesel-16-mjt-8606389.html",
+   "joignable": true,
+   "longueur": 8591,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/jeep/renegade/108279/used-jeep-renegade-review": {
+   "url": "https://www.autoexpress.co.uk/jeep/renegade/108279/used-jeep-renegade-review",
+   "joignable": true,
+   "longueur": 13478,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/jeep/renegade": {
+   "url": "https://www.autoexpress.co.uk/jeep/renegade",
+   "joignable": true,
+   "longueur": 30051,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 2
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-alfa-romeo-tonale-risque-de-casse-moteur-sur-le-suv-micro-hybride-40003376.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-alfa-romeo-tonale-risque-de-casse-moteur-sur-le-suv-micro-hybride-40003376.html",
+   "joignable": true,
+   "longueur": 10101,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-souci-de-freinage-sur-plus-de-68-000-alfa-romeo-tonale-fiat-500x-et-jeep-renegade-30037441.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-souci-de-freinage-sur-plus-de-68-000-alfa-romeo-tonale-fiat-500x-et-jeep-renegade-30037441.html",
+   "joignable": true,
+   "longueur": 10411,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/alfa-romeo/giulietta/100072/used-alfa-romeo-giulietta-review": {
+   "url": "https://www.autoexpress.co.uk/alfa-romeo/giulietta/100072/used-alfa-romeo-giulietta-review",
+   "joignable": true,
+   "longueur": 12847,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/alfa-romeo/giulietta": {
+   "url": "https://www.autoexpress.co.uk/alfa-romeo/giulietta",
+   "joignable": true,
+   "longueur": 25461,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 1
+  },
+  "https://www.autoexpress.co.uk/alfa-romeo/giulia": {
+   "url": "https://www.autoexpress.co.uk/alfa-romeo/giulia",
+   "joignable": true,
+   "longueur": 34172,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.autoexpress.co.uk/lexus/ct/96907/used-lexus-ct-review": {
+   "url": "https://www.autoexpress.co.uk/lexus/ct/96907/used-lexus-ct-review",
+   "joignable": true,
+   "longueur": 13698,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/lexus/ct": {
+   "url": "https://www.autoexpress.co.uk/lexus/ct",
+   "joignable": true,
+   "longueur": 17592,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/un-kit-bosch-pour-reparer-les-batteries-des-toyota-et-lexus-hybrides-a-moindre-cout-30030383.html": {
+   "url": "https://www.largus.fr/actualite-automobile/un-kit-bosch-pour-reparer-les-batteries-des-toyota-et-lexus-hybrides-a-moindre-cout-30030383.html",
+   "joignable": true,
+   "longueur": 12180,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/lexus/is/97471/used-lexus-is-review": {
+   "url": "https://www.autoexpress.co.uk/lexus/is/97471/used-lexus-is-review",
+   "joignable": true,
+   "longueur": 13693,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/rappel-lexus-is-rc-et-gs-plus-de-6-700-vehicules-a-faire-corriger-en-france-30024810.html": {
+   "url": "https://www.largus.fr/actualite-automobile/rappel-lexus-is-rc-et-gs-plus-de-6-700-vehicules-a-faire-corriger-en-france-30024810.html",
+   "joignable": true,
+   "longueur": 10530,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.autoexpress.co.uk/toyota/rav4/96295/used-toyota-rav4-review": {
+   "url": "https://www.autoexpress.co.uk/toyota/rav4/96295/used-toyota-rav4-review",
+   "joignable": true,
+   "longueur": 26628,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://cdn.group.renault.com/ren/fr/renault-service/201124_RENAULT_LEAFLET_CS_ZE_95x210_2022_DEF-BD.pdf": {
+   "url": "https://cdn.group.renault.com/ren/fr/renault-service/201124_RENAULT_LEAFLET_CS_ZE_95x210_2022_DEF-BD.pdf",
+   "joignable": true,
+   "longueur": 8158,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://cdn.group.renault.com/ren/ch/renault-new-cars/pricelists/Renault_Neuer_ZOE_PL_f.pdf": {
+   "url": "https://cdn.group.renault.com/ren/ch/renault-new-cars/pricelists/Renault_Neuer_ZOE_PL_f.pdf",
+   "joignable": true,
+   "longueur": 8767,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/voitures-electriques-quelle-est-la-longevite-des-batteries-10196395.html": {
+   "url": "https://www.largus.fr/actualite-automobile/voitures-electriques-quelle-est-la-longevite-des-batteries-10196395.html",
+   "joignable": true,
+   "longueur": 14411,
+   "extraits_verbatim": 9,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/articles/voiture-electrique-quelle-garantie-pour-la-batterie/": {
+   "url": "https://www.automobile-propre.com/articles/voiture-electrique-quelle-garantie-pour-la-batterie/",
+   "joignable": true,
+   "longueur": 19772,
+   "extraits_verbatim": 3,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-renault-zoe-les-batteries-disponibles-a-l-achat-n54293/": {
+   "url": "https://www.quechoisir.org/actualite-renault-zoe-les-batteries-disponibles-a-l-achat-n54293/",
+   "joignable": true,
+   "longueur": 13115,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/breves/rappel-renault-zoe-probleme-freinage/": {
+   "url": "https://www.automobile-propre.com/breves/rappel-renault-zoe-probleme-freinage/",
+   "joignable": true,
+   "longueur": 10905,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://peugeot.ie/owners/assistance-warranty/battery-warranties.html": {
+   "url": "https://peugeot.ie/owners/assistance-warranty/battery-warranties.html",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://peugeot.ie/electric-and-hybrid/drive-electric/electric-technology.html": {
+   "url": "https://peugeot.ie/electric-and-hybrid/drive-electric/electric-technology.html",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/articles/peugeot-e-208-doccasion-voici-tout-ce-quil-faut-savoir-avant-dacheter/": {
+   "url": "https://www.automobile-propre.com/articles/peugeot-e-208-doccasion-voici-tout-ce-quil-faut-savoir-avant-dacheter/",
+   "joignable": true,
+   "longueur": 25783,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://journalauto.com/constructeurs/peugeot-etend-sa-garantie-de-huit-ans-a-toute-sa-gamme-electrique/": {
+   "url": "https://journalauto.com/constructeurs/peugeot-etend-sa-garantie-de-huit-ans-a-toute-sa-gamme-electrique/",
+   "joignable": true,
+   "longueur": 3377,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://fr.nissan.be/experience-nissan/vehicules-electriques/nissan-charge.html": {
+   "url": "https://fr.nissan.be/experience-nissan/vehicules-electriques/nissan-charge.html",
+   "joignable": true,
+   "longueur": 37721,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 3
+  },
+  "https://m.nissan.co.uk/owners/car-warranty.html": {
+   "url": "https://m.nissan.co.uk/owners/car-warranty.html",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.nissan.co.uk/content/dam/Nissan/gb/EV-Customer-Promise/EV%20Customer_Promise_TCs.pdf": {
+   "url": "https://www.nissan.co.uk/content/dam/Nissan/gb/EV-Customer-Promise/EV%20Customer_Promise_TCs.pdf",
+   "joignable": true,
+   "longueur": 5528,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.nissan.ca/content/dam/Nissan/Canada/owners/warranties/fr/2015-Nissan-Leaf-WIB-Fr.pdf": {
+   "url": "https://www.nissan.ca/content/dam/Nissan/Canada/owners/warranties/fr/2015-Nissan-Leaf-WIB-Fr.pdf",
+   "joignable": true,
+   "longueur": 105610,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 2
+  },
+  "https://www.automobile-propre.com/breves/nissan-leaf-combien-coute-changement-batterie-france/": {
+   "url": "https://www.automobile-propre.com/breves/nissan-leaf-combien-coute-changement-batterie-france/",
+   "joignable": true,
+   "longueur": 11455,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/degradation-capacite-batterie-nissan-leaf": {
+   "url": "https://www.automobile-propre.com/degradation-capacite-batterie-nissan-leaf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/articles/rapidgate-premier-bad-buzz-pour-la-nouvelle-nissan-leaf/": {
+   "url": "https://www.automobile-propre.com/articles/rapidgate-premier-bad-buzz-pour-la-nouvelle-nissan-leaf/",
+   "joignable": true,
+   "longueur": 15261,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/articles/nissan-leaf-fin-du-rapidgate/": {
+   "url": "https://www.automobile-propre.com/articles/nissan-leaf-fin-du-rapidgate/",
+   "joignable": true,
+   "longueur": 12364,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.quechoisir.org/actualite-automobile-batterie-irremplacable-nouvelle-voiture-n148892/": {
+   "url": "https://www.quechoisir.org/actualite-automobile-batterie-irremplacable-nouvelle-voiture-n148892/",
+   "joignable": true,
+   "longueur": 10930,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.nissan-global.com/EN/SUSTAINABILITY/SOCIAL/QUALITY/NEW_VEHICLES/LEAF_LITHIUM-ION_BATTERY/": {
+   "url": "https://www.nissan-global.com/EN/SUSTAINABILITY/SOCIAL/QUALITY/NEW_VEHICLES/LEAF_LITHIUM-ION_BATTERY/",
+   "joignable": true,
+   "longueur": 5096,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.tesla.com/fr_be/support/vehicle-warranty": {
+   "url": "https://www.tesla.com/fr_be/support/vehicle-warranty",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.tesla.com/es_ES/support/Vehicle-warranty": {
+   "url": "https://www.tesla.com/es_ES/support/Vehicle-warranty",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 3,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/breves/tesla-bouleverse-les-conditions-de-garantie-de-ses-batteries/": {
+   "url": "https://www.automobile-propre.com/breves/tesla-bouleverse-les-conditions-de-garantie-de-ses-batteries/",
+   "joignable": true,
+   "longueur": 11186,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/breves/les-tesla-model-3-et-model-y-au-rappel-pour-un-defaut-de-ceinture/": {
+   "url": "https://www.automobile-propre.com/breves/les-tesla-model-3-et-model-y-au-rappel-pour-un-defaut-de-ceinture/",
+   "joignable": true,
+   "longueur": 11896,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.tesla.com/fr_ch/support/recall-seat-belt-reminder-signal": {
+   "url": "https://www.tesla.com/fr_ch/support/recall-seat-belt-reminder-signal",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 2,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.volkswagen.fr/fr/electriques-et-hybrides/univers-id/garantie-entretien-batterie.html": {
+   "url": "https://www.volkswagen.fr/fr/electriques-et-hybrides/univers-id/garantie-entretien-batterie.html",
+   "joignable": true,
+   "longueur": 10057,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.volkswagen.fr/fr/decouvrir-nos-innovations-et-services/mobilite-electrique/garantie-entretien-batterie.html": {
+   "url": "https://www.volkswagen.fr/fr/decouvrir-nos-innovations-et-services/mobilite-electrique/garantie-entretien-batterie.html",
+   "joignable": true,
+   "longueur": 10057,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.volkswagen.fr/idhub/content/dam/onehub_pkw/importers/fr/pdf/tarifs/id_3_2.pdf": {
+   "url": "https://www.volkswagen.fr/idhub/content/dam/onehub_pkw/importers/fr/pdf/tarifs/id_3_2.pdf",
+   "joignable": true,
+   "longueur": 57859,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/breves/volkswagen-id-une-garantie-de-8-ans-ou-160-000-km-pour-la-batterie/": {
+   "url": "https://www.automobile-propre.com/breves/volkswagen-id-une-garantie-de-8-ans-ou-160-000-km-pour-la-batterie/",
+   "joignable": true,
+   "longueur": 10777,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/articles/volkswagen-id-3-ils-temoignent-des-debuts-difficiles-de-la-compacte-electrique/": {
+   "url": "https://www.automobile-propre.com/articles/volkswagen-id-3-ils-temoignent-des-debuts-difficiles-de-la-compacte-electrique/",
+   "joignable": true,
+   "longueur": 24633,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 2
+  },
+  "https://www.carbuyer.co.uk/volkswagen/id3/reliability": {
+   "url": "https://www.carbuyer.co.uk/volkswagen/id3/reliability",
+   "joignable": true,
+   "longueur": 6535,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.volkswagen-newsroom.com/en/press-releases/over-90-per-cent-capacity-id3-battery-impresses-in-adacs-160000-kilometre-endurance-test-19433": {
+   "url": "https://www.volkswagen-newsroom.com/en/press-releases/over-90-per-cent-capacity-id3-battery-impresses-in-adacs-160000-kilometre-endurance-test-19433",
+   "joignable": true,
+   "longueur": 12860,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://fr.skoda.be/_doc/5b73a599-3cf8-4d87-9cc3-5a24f97a76da": {
+   "url": "https://fr.skoda.be/_doc/5b73a599-3cf8-4d87-9cc3-5a24f97a76da",
+   "joignable": true,
+   "longueur": 14205,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.skoda.fr/_doc/813c0e4d-23c3-44ae-9199-f9a39a40dfa1": {
+   "url": "https://www.skoda.fr/_doc/813c0e4d-23c3-44ae-9199-f9a39a40dfa1",
+   "joignable": true,
+   "longueur": 5052,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.cupra.be/pdf/garantie_CUPRA_fr.pdf": {
+   "url": "https://www.cupra.be/pdf/garantie_CUPRA_fr.pdf",
+   "joignable": true,
+   "longueur": 5246,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.cupraofficial.ch/content/dam/countries/ch/cupra-website/gerneric/Garantiebroschuere/AGB%20Garantie_CUPRA_FR.pdf": {
+   "url": "https://www.cupraofficial.ch/content/dam/countries/ch/cupra-website/gerneric/Garantiebroschuere/AGB%20Garantie_CUPRA_FR.pdf",
+   "joignable": true,
+   "longueur": 18997,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.cupraofficial.com/electrification/how-to-maintain-ev-battery-life": {
+   "url": "https://www.cupraofficial.com/electrification/how-to-maintain-ev-battery-life",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.hyundai.com/fr/voiture-electrique/faq-electrique.html": {
+   "url": "https://www.hyundai.com/fr/voiture-electrique/faq-electrique.html",
+   "joignable": true,
+   "longueur": 25885,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.hyundai.com/lu/service/conduite-sans-souci/garantie-de-8-ans-sur-la-batterie.html": {
+   "url": "https://www.hyundai.com/lu/service/conduite-sans-souci/garantie-de-8-ans-sur-la-batterie.html",
+   "joignable": true,
+   "longueur": 12313,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.hyundai.com/be/fr/conduire-hyundai/posseder-une-hyundai/service-hyundai/garantie.html": {
+   "url": "https://www.hyundai.com/be/fr/conduire-hyundai/posseder-une-hyundai/service-hyundai/garantie.html",
+   "joignable": true,
+   "longueur": 12531,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/breves/hyundai-un-rappel-massif-pour-remplacer-les-batteries-des-kona-electriques/": {
+   "url": "https://www.automobile-propre.com/breves/hyundai-un-rappel-massif-pour-remplacer-les-batteries-des-kona-electriques/",
+   "joignable": true,
+   "longueur": 11028,
+   "extraits_verbatim": 2,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/breves/batteries-hyundai-kona-defectueuses-lg-chem-va-payer-la-majorite-du-rappel/": {
+   "url": "https://www.automobile-propre.com/breves/batteries-hyundai-kona-defectueuses-lg-chem-va-payer-la-majorite-du-rappel/",
+   "joignable": true,
+   "longueur": 10974,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/breves/hyundai-kona-electrique-rappel-massif-partout-dans-le-monde-pour-un-potentiel-risque-dincendie/": {
+   "url": "https://www.automobile-propre.com/breves/hyundai-kona-electrique-rappel-massif-partout-dans-le-monde-pour-un-potentiel-risque-dincendie/",
+   "joignable": true,
+   "longueur": 11698,
+   "extraits_verbatim": 3,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://insideevs.com/news/742007/hyunda-kia-iccu-12-volt-recall/": {
+   "url": "https://insideevs.com/news/742007/hyunda-kia-iccu-12-volt-recall/",
+   "joignable": true,
+   "longueur": 8306,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 0
+  },
+  "https://www.kia.com/fr/services/garantie/": {
+   "url": "https://www.kia.com/fr/services/garantie/",
+   "joignable": true,
+   "longueur": 14412,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.kia.com/fr/services/apres-vente/warranty-guides/": {
+   "url": "https://www.kia.com/fr/services/apres-vente/warranty-guides/",
+   "joignable": true,
+   "longueur": 14333,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/articles/mg-4-doccasion-voici-tout-ce-quil-faut-savoir-avant-dacheter/": {
+   "url": "https://www.automobile-propre.com/articles/mg-4-doccasion-voici-tout-ce-quil-faut-savoir-avant-dacheter/",
+   "joignable": true,
+   "longueur": 23552,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/actualite-automobile/voitures-electriques-quelle-est-la-duree-de-garantie-de-la-batterie-10544412.html": {
+   "url": "https://www.largus.fr/actualite-automobile/voitures-electriques-quelle-est-la-duree-de-garantie-de-la-batterie-10544412.html",
+   "joignable": true,
+   "longueur": 9551,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://cdn.group.renault.com/dac/fr/transversal-assets/apv/dacia-leaflet-%20contrats-entretien-vehicule-electrique-NBI.pdf": {
+   "url": "https://cdn.group.renault.com/dac/fr/transversal-assets/apv/dacia-leaflet-%20contrats-entretien-vehicule-electrique-NBI.pdf",
+   "joignable": true,
+   "longueur": 7284,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 0
+  },
+  "https://www.dacia.co.uk/faqs/electric-vehicles/battery-warranty.html": {
+   "url": "https://www.dacia.co.uk/faqs/electric-vehicles/battery-warranty.html",
+   "joignable": true,
+   "longueur": 4592,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.largus.fr/guide-achat-occasion/dacia/spring/avis-fiabilite-dacia-spring-i-bbg-30039762.html": {
+   "url": "https://www.largus.fr/guide-achat-occasion/dacia/spring/avis-fiabilite-dacia-spring-i-bbg-30039762.html",
+   "joignable": true,
+   "longueur": 15223,
+   "extraits_verbatim": 5,
+   "trouves": 5,
+   "au_dela_du_juge": 0
+  },
+  "https://www.automobile-propre.com/articles/dacia-spring-doccasion-tout-ce-quil-faut-savoir-avant-dacheter/": {
+   "url": "https://www.automobile-propre.com/articles/dacia-spring-doccasion-tout-ce-quil-faut-savoir-avant-dacheter/",
+   "joignable": true,
+   "longueur": 22171,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.bmw.ch/content/dam/bmw/marketCH/bmw_ch/fr_CH/BMW_QZ_fu%CC%88r_HVB_fr.pdf.coredownload.pdf": {
+   "url": "https://www.bmw.ch/content/dam/bmw/marketCH/bmw_ch/fr_CH/BMW_QZ_fu%CC%88r_HVB_fr.pdf.coredownload.pdf",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 5,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://insideevs.com/news/390799/bmw-extended-european-warranty-i3-batteries/": {
+   "url": "https://insideevs.com/news/390799/bmw-extended-european-warranty-i3-batteries/",
+   "joignable": true,
+   "longueur": 7633,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 0
+  },
+  "https://www.fiat.ie/owners/warrranty": {
+   "url": "https://www.fiat.ie/owners/warrranty",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://aemcertms6a-www.fiat.fr/owners/fiat-flexcare-electric": {
+   "url": "https://aemcertms6a-www.fiat.fr/owners/fiat-flexcare-electric",
+   "joignable": false,
+   "longueur": 0,
+   "extraits_verbatim": 1,
+   "trouves": 0,
+   "au_dela_du_juge": 0
+  },
+  "https://www.toyota.fr/votre-toyota/entretien/garantie-et-assistance/garantie-toyota": {
+   "url": "https://www.toyota.fr/votre-toyota/entretien/garantie-et-assistance/garantie-toyota",
+   "joignable": true,
+   "longueur": 29054,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 3
+  },
+  "https://www.toyota.fr/votre-toyota/entretien/garantie-et-assistance/centre-expert-hybride-toyota.html": {
+   "url": "https://www.toyota.fr/votre-toyota/entretien/garantie-et-assistance/centre-expert-hybride-toyota.html",
+   "joignable": true,
+   "longueur": 28608,
+   "extraits_verbatim": 3,
+   "trouves": 3,
+   "au_dela_du_juge": 3
+  },
+  "https://www.toyota.fr/offres/hybride-de-confiance": {
+   "url": "https://www.toyota.fr/offres/hybride-de-confiance",
+   "joignable": true,
+   "longueur": 35030,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.toyota.fr/gamme-electrifiee/hybride-rechargeable/combien-de-temps-durent-les-batteries-hybrides-rechargeables": {
+   "url": "https://www.toyota.fr/gamme-electrifiee/hybride-rechargeable/combien-de-temps-durent-les-batteries-hybrides-rechargeables",
+   "joignable": true,
+   "longueur": 24348,
+   "extraits_verbatim": 1,
+   "trouves": 1,
+   "au_dela_du_juge": 1
+  },
+  "https://www.toyota.fr/gamme-electrifiee/electrique/questions-electrique/quel-controle-technique-pour-une-voiture-electrique": {
+   "url": "https://www.toyota.fr/gamme-electrifiee/electrique/questions-electrique/quel-controle-technique-pour-une-voiture-electrique",
+   "joignable": true,
+   "longueur": 28335,
+   "extraits_verbatim": 2,
+   "trouves": 2,
+   "au_dela_du_juge": 2
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-la-Renault-Twingo-2-74111.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-la-Renault-Twingo-2-74111.htm",
+   "joignable": true,
+   "longueur": 23660,
+   "extraits_verbatim": 8,
+   "trouves": 8,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Peugeot-40413.htm": {
+   "url": "https://www.caradisiac.com/Peugeot-40413.htm",
+   "joignable": true,
+   "longueur": 28332,
+   "extraits_verbatim": 17,
+   "trouves": 17,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Peugeot-40133.htm": {
+   "url": "https://www.caradisiac.com/Peugeot-40133.htm",
+   "joignable": true,
+   "longueur": 33287,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 4
+  },
+  "https://www.caradisiac.com/fiabilite-de-la-toyota-aygo-la-maxi-fiche-occasion-de-caradisiac-175538.htm": {
+   "url": "https://www.caradisiac.com/fiabilite-de-la-toyota-aygo-la-maxi-fiche-occasion-de-caradisiac-175538.htm",
+   "joignable": true,
+   "longueur": 23090,
+   "extraits_verbatim": 10,
+   "trouves": 10,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-C1-en-occasion-78632.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Citroen-C1-en-occasion-78632.htm",
+   "joignable": true,
+   "longueur": 22899,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Fiabilite-45721.htm": {
+   "url": "https://www.caradisiac.com/Fiabilite-45721.htm",
+   "joignable": true,
+   "longueur": 15641,
+   "extraits_verbatim": 4,
+   "trouves": 4,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Fiat-Grande-Punto-en-occasion-99196.htm": {
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Fiat-Grande-Punto-en-occasion-99196.htm",
+   "joignable": true,
+   "longueur": 22306,
+   "extraits_verbatim": 9,
+   "trouves": 9,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Fiat-40429.htm": {
+   "url": "https://www.caradisiac.com/Fiat-40429.htm",
+   "joignable": true,
+   "longueur": 22468,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  },
+  "https://www.caradisiac.com/Opel-Corsa-40390.htm": {
+   "url": "https://www.caradisiac.com/Opel-Corsa-40390.htm",
+   "joignable": true,
+   "longueur": 21270,
+   "extraits_verbatim": 6,
+   "trouves": 6,
+   "au_dela_du_juge": 0
+  }
+ }
+}

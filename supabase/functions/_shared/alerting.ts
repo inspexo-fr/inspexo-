@@ -17,7 +17,8 @@ export type MotifAlerte =
   | "credit_ou_cle"
   | "echecs_repetes"
   | "fonction_en_erreur"
-  | "cout_du_jour";
+  | "cout_du_jour"
+  | "silences_juge";
 
 /** Libellé lisible d'un motif, pour l'objet de l'email. */
 export const LIBELLE_MOTIF: Record<MotifAlerte, string> = {
@@ -25,6 +26,7 @@ export const LIBELLE_MOTIF: Record<MotifAlerte, string> = {
   echecs_repetes: "analyses en échec à répétition",
   fonction_en_erreur: "fonction en erreur",
   cout_du_jour: "coût IA du jour au-dessus du seuil",
+  silences_juge: "le juge de vérification rend des réponses sans verdict",
 };
 
 /** Le détail renvoyé par l'API désigne-t-il un problème de CRÉDIT ou de CLÉ ?

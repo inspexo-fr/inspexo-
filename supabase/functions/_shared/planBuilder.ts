@@ -5,6 +5,7 @@
 // l'écriture passe par `admin-defect-sheets` (`ajouter_plan`), avec un jeton
 // d'administrateur. Le seul effet de bord est le cache du juge.
 import { rangSource } from "./atlasSource.ts";
+import { surveillerSilences } from "./alerteJuge.ts";
 import {
   affirmationIntervalle,
   candidats,
@@ -25,6 +26,7 @@ import {
   VERIF_SYSTEM,
   VERIF_TOOL,
   voter,
+  verdictsDeLaReponse,
 } from "./verifSource.ts";
 
 const MODEL = "claude-sonnet-5";
@@ -112,7 +114,7 @@ async function unPassage(cle: string, cible: string, affs: Array<{ type: string;
   const bloc = (data.content ?? []).find((b: any) => b.type === "tool_use" && b.name === "rendre_verifications");
   if (!bloc) return null;
   return {
-    verdicts: Array.isArray(bloc.input?.verdicts) ? bloc.input.verdicts : [],
+    verdicts: verdictsDeLaReponse(bloc.input),
     usage: { input_tokens: data.usage?.input_tokens ?? 0, output_tokens: data.usage?.output_tokens ?? 0 },
     modele: MODEL,
   };
@@ -181,6 +183,7 @@ export async function genererPlan(
     if (aJuger.length) {
       const v = await voter((a) => unPassage(cleApi, cible, a, url, textes.get(url)!), aJuger.map((i) => ({ type: "entretien", texte: claims[i].texte })));
       juge.passages += v.passages;
+      await surveillerSilences(db, "sheet-builder (plans)", v.silences, url);
       for (const u of v.usages) usd += usdDe(u);
       const aEcrire: Parameters<typeof ecrireCacheVerif>[1] = [];
       aJuger.forEach((i, k) => {
