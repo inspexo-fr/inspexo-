@@ -77,3 +77,9 @@ Plafond de tests porté à 10 € pour toute la séquence (décision d'Utku).
 
 ## ARRÊT OBLIGATOIRE avant (e) — 11 nov. 2026
 Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
+
+## (e) préparation — 11 nov. 2026
+- Merge de `sprint23` dans main (juge corrigé, outillage, journaux ; aucun
+  fichier du chemin de notation). Chaîne hors ligne verte.
+- Déploiement annoncé : **`sheet-builder` et `atlas-builder`** depuis main
+  (nouvelle liste d'hôtes + juge corrigé). Rien d'autre.
