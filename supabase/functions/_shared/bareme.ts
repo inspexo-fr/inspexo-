@@ -69,7 +69,12 @@
 // qui l'alimente devient DÉTERMINISTE (_shared/statutVendeur.ts) — « pro
 // déguisé » n'est plus posé que sur indices nommés. Les statuts rendus par
 // l'API peuvent changer à texte identique : la version le signale.
-export const BAREME_VERSION = "11.10";
+//
+// 11.11 (sprint 22d, mis en ligne le 11 nov. 2026) : les signaux d'entretien
+// viennent de motifs fixes sur le texte, plus du modèle ; une garantie n'est
+// jamais une preuve d'entretien. (Développé sous le numéro 11.10, jamais servi
+// sous ce numéro : 11.10 désigne le statut vendeur déterministe.)
+export const BAREME_VERSION = "11.11";
 
 export type FaitsAxes = {
   annee_courante: number;

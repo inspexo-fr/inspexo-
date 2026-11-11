@@ -112,6 +112,10 @@ const VERBE_A_FAIRE =
 const NEGATION_AMONT =
   /(?:\b(?:pas|aucune?|aucuns|rien|nul{1,2}e?|jamais)\s+(?:de\s+|d['’]\s*)?|\bsans\s+)$/i;
 
+/** Juste avant un verbe en tête : une intention, pas un fait. */
+const INTENTION_AMONT =
+  /(?:\b(?:pr[ée]voir|pr[ée]vu|pr[ée]voyez|faudra|faut|devra|doit|doivent|reste|restent|penser|pensez|pour|afin)\s+(?:de\s+|d['’]\s*|à\s+|a\s+)?|\b(?:à|de)\s+)$/i;
+
 /** Un contexte comme « jamais eu de souci de … » parle de pannes, pas d'entretien. */
 const FAUX_SUJET =
   /\b(?:probl[èe]mes?|soucis?|panne|pannes|bruits?|claquements?|fuites?|d[ée]fauts?)\b/i;
@@ -173,11 +177,28 @@ export function detecterEntretienDeclare(texte: string): FaitEntretien[] {
     const origine = new RegExp(`(${op.sujet})(\\s+(?:d['’]\\s*|de\\s+l['’]\\s*)origine)`, "gi");
     // 4. À PRÉVOIR — « distribution à prévoir », « pneus à changer ».
     const aPrevoir = new RegExp(`(${op.sujet})(${QUALIFICATIF}\\s+[àa]\\s+${VERBE_A_FAIRE})`, "gi");
-    // 5. FAIT — « distribution faite à 95 000 km », « vidange effectuée le … ».
+    // 5. FAIT — « distribution faite à 95 000 km », « vidange effectuée le … »,
+    //    « Contrôle technique : fait en mars 2025 » (deux-points admis).
     const fait = new RegExp(
-      `(${op.sujet})(${QUALIFICATIF}(?:\\s+\\([^)]*\\))?(?:\\s+(?:a|ont|est|sont))?\\s+(?:[ée]t[ée]\\s+)?${VERBE_FAIT})`,
+      `(${op.sujet})(${QUALIFICATIF}(?:\\s+\\([^)]*\\))?(?:\\s*:)?(?:\\s+(?:a|ont|est|sont))?\\s+(?:[ée]t[ée]\\s+)?${VERBE_FAIT})`,
       "gi",
     );
+    // 6. FAIT, verbe en tête — « je viens de faire la vidange et les
+    //    plaquettes avant », « j'ai changé les pneus ». L'opération peut être
+    //    la seconde d'une énumération (« … la vidange ET les plaquettes »),
+    //    dans la même proposition (40 caractères, sans ponctuation forte).
+    //    Les intentions (« prévoir de faire la vidange ») sont écartées plus
+    //    bas par INTENTION_AMONT.
+    const faitInverse = new RegExp(
+      `((?:(?:viens|vient|venons|venez|viennent)\\s+d['’]?e?\\s*)?(?:faire|fait|faits|refait|refaire|chang[ée]s?|changer|remplac[ée]s?|remplacer|effectu[ée]s?)\\s+(?:faire\\s+)?(?:(?:la|le|les|l['’]|des|du|de\\s+la)\\s*)?(?:[^.;!?\\n]{0,40}?\\b(?:et|,)\\s+(?:(?:la|le|les|l['’]|des|du)\\s*)?)?(?:${op.sujet}))`,
+      "gi",
+    );
+    // 7. CONTRÔLE TECHNIQUE « OK » — « CT OK de moins de 6 mois », « contrôle
+    //    technique vierge ». Réservé au contrôle technique : « freins OK » ne
+    //    dit pas qu'une opération a été faite.
+    const ctOk = op.cle === "controle_technique"
+      ? new RegExp(`(${op.sujet})(\\s*:?\\s*(?:ok|okay|vierge|sans\\s+d[ée]faut|valid[ée]|r[ée]cent|passé)\\b)`, "gi")
+      : null;
 
     const essais: Array<{ re: RegExp; statut: StatutEntretien }> = [
       { re: nonFait, statut: "non_fait" },
@@ -185,6 +206,8 @@ export function detecterEntretienDeclare(texte: string): FaitEntretien[] {
       { re: origine, statut: "non_fait" },
       { re: aPrevoir, statut: "a_prevoir" },
       { re: fait, statut: "fait" },
+      { re: faitInverse, statut: "fait" },
+      ...(ctOk ? [{ re: ctOk, statut: "fait" as StatutEntretien }] : []),
     ];
 
     for (const { re, statut } of essais) {
@@ -194,6 +217,11 @@ export function detecterEntretienDeclare(texte: string): FaitEntretien[] {
         // « pas de distribution à prévoir », « sans vidange à faire » : la
         // négation porte sur l'opération elle-même, il n'y a rien à signaler.
         if (NEGATION_AMONT.test(amont)) continue;
+        // « prévoir de faire la vidange », « il faudra changer les pneus » :
+        // une intention n'est pas une opération faite. Seul « vient de »
+        // (passé récent) est admis, et il est déjà dans le motif.
+        // (« viens de » fait partie du motif lui-même, donc jamais de l'amont.)
+        if (re === faitInverse && INTENTION_AMONT.test(amont)) continue;
         const { phrase } = phraseAutour(t, index);
         // « jamais eu de problème de distribution » : le sujet de la phrase
         // est une panne, pas une opération d'entretien.
@@ -263,4 +291,97 @@ export function dejaCouvert(f: FaitEntretien, phrases: string[]): boolean {
   const cle = f.operation.toLowerCase().split(/\s+/)[0].replace(/[^a-zà-ÿ]/g, "");
   if (cle.length < 4) return false;
   return phrases.some((p) => p.toLowerCase().includes(cle.slice(0, 6)));
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// SPRINT 22 — LES PREUVES D'ENTRETIEN, PAR MOTIFS FIXES SEULEMENT
+//
+// ⚠️ DÉCISION D'UTKU DU 9 NOV. 2026. La Mercedes de référence rendait 71 ou 73
+// selon le passage : le modèle classait parfois « Garantie constructeur en
+// cours » parmi les signaux d'entretien prouvés, ce qui faisait évaluer l'axe
+// historique_entretien (13/20) au lieu de le laisser « non évalué ». La
+// décision dépendait du modèle, pas du texte.
+//
+// Désormais un signal d'entretien n'est retenu QUE s'il est écrit dans
+// l'annonce et repéré par un motif ci-dessous (ou par une opération déclarée
+// faite, `detecterEntretienDeclare`). Les signaux_positifs du modèle ne
+// comptent plus.
+//
+// ⚠️ LA GARANTIE NE COMPTE JAMAIS. Ce n'est pas un oubli de la liste : une
+// garantie dit qui paiera une réparation, pas que l'entretien a été fait. Le
+// projet avait déjà posé qu'une garantie « n'allège jamais le verdict » tant
+// que les justificatifs ne sont pas fournis. Aucun motif ne la vise, et un test
+// vérifie qu'aucune de ses formulations ne déclenche un signal.
+
+type Preuve = { cle: string; libelle: string; motif: RegExp };
+
+// ⚠️ PAS DE `\b` EN FIN DE MOTIF : en JavaScript, `\b` ne connaît pas « é ».
+// « entretien effectué » suivi d'une espace n'y aurait jamais de frontière de
+// mot, et le motif échouerait en silence. Fin de mot = `(?![a-zà-ÿ])`.
+const PREUVES: Preuve[] = [
+  {
+    cle: "carnet",
+    libelle: "Carnet d'entretien",
+    // « carnet d'entretien », « carnet tamponné », « carnet à jour ».
+    motif: /\bcarnets?(?:\s+d['’]\s*entretien|\s+(?:de\s+)?(?:suivi|service|maintenance))?(?:\s+(?:complet|à\s+jour|a\s+jour|tamponn[ée]|[àa]\s+jour\s+tamponn[ée]))?(?![a-zà-ÿ])/gi,
+  },
+  {
+    cle: "factures",
+    libelle: "Factures d'entretien",
+    motif: /\b(?:toutes\s+(?:les\s+)?)?factures?(?![a-zà-ÿ])/gi,
+  },
+  {
+    cle: "historique",
+    libelle: "Historique d'entretien",
+    motif: /\bhistorique\s+(?:d['’]\s*|de\s+l['’]\s*)?entretien(?![a-zà-ÿ])/gi,
+  },
+  {
+    cle: "entretien_suivi",
+    libelle: "Entretien déclaré suivi",
+    // « entretien à jour », « entretien suivi », « entretien effectué en
+    // concession », « entretien complet réalisé chez Mercedes ». Le mot
+    // « entretien » est EXIGÉ : « garantie constructeur » ne peut pas matcher.
+    motif: /\bentretiens?\s+(?:(?:complet|r[ée]gulier|int[ée]gral|constructeur)\s+)?(?:(?:est\s+|a\s+[ée]t[ée]\s+|toujours\s+)?(?:[àa]\s+jour|suivi|r[ée]alis[ée]|effectu[ée]|fait)|(?:chez|en|par|dans)\s+(?:le\s+|la\s+|un\s+)?(?:concession(?:naire)?|r[ée]seau|garage\s+agr[ée][ée]))(?![a-zà-ÿ])/gi,
+  },
+];
+
+/** Négation ou absence dans les mots qui précèdent : « pas de carnet »,
+ *  « sans facture », « aucune facture ». */
+const NEGATION_PREUVE = /(?:\b(?:pas|aucune?|aucuns|sans|ni|non)\s+(?:de\s+|d['’]\s*|du\s+|des\s+|la\s+|le\s+|les\s+)?(?:\w+\s+)?)$/i;
+/** Ce qui suit et annule : « carnet perdu », « factures manquantes ». */
+const ANNULE_APRES = /^\s*(?:\w+\s+){0,2}(?:perdu|perdus|absent|absente|absents|manquant|manquante|manquants|manquantes|non\s+fourni|indisponible|incomplet)/i;
+
+export type PreuveEntretien = { preuve: string; extrait: string };
+
+/** Les preuves d'entretien ÉCRITES dans l'annonce. Une par type, la première
+ *  occurrence affirmative. Aucune inférence. */
+export function detecterPreuvesEntretien(texte: string): PreuveEntretien[] {
+  const t = String(texte ?? "");
+  if (!t.trim()) return [];
+  const out: Array<PreuveEntretien & { index: number }> = [];
+  for (const p of PREUVES) {
+    for (const m of t.matchAll(p.motif)) {
+      const index = m.index ?? 0;
+      const amont = t.slice(Math.max(0, index - 30), index);
+      const aval = t.slice(index + m[0].length, index + m[0].length + 40);
+      if (NEGATION_PREUVE.test(amont) || ANNULE_APRES.test(aval)) continue;
+      const { phrase } = phraseAutour(t, index);
+      // « facture » dans « facture de vente », « facture d'achat » : ce n'est
+      // pas une preuve d'ENTRETIEN.
+      if (p.cle === "factures" && !/entretien|r[ée]vision|vidange|distribution|garage|concession|suivi|r[ée]paration/i.test(phrase)) continue;
+      out.push({ preuve: p.libelle, extrait: extraitCourt(phrase), index });
+      break;
+    }
+  }
+  return out.sort((a, b) => a.index - b.index).map(({ preuve, extrait }) => ({ preuve, extrait }));
+}
+
+/** Les signaux d'entretien RETENUS : opérations déclarées faites + preuves
+ *  écrites. C'est la SEULE source de `signaux_entretien` depuis le sprint 22. */
+export function signauxEntretienDeterministes(texte: string): string[] {
+  const faites = detecterEntretienDeclare(texte)
+    .filter((f) => f.statut === "fait")
+    .map((f) => `${libelleDeclaration(f)} : « ${f.extrait} »`);
+  const preuves = detecterPreuvesEntretien(texte).map((p) => `${p.preuve} — mentionné dans l'annonce : « ${p.extrait} »`);
+  return [...preuves, ...faites].slice(0, 10);
 }
