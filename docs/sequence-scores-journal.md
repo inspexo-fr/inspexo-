@@ -88,3 +88,15 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
   `score`/`alertes` (libellé `silences_juge` ajouté à `alerting.ts`, jamais
   émis par elles), `verification` (`jugeStable.ts` @874761f, aucune partie
   modifiée atteinte).
+- Proposition des couvertures : `scripts/proposer-couvertures.mjs` →
+  `docs/couvertures-proposees.md` (32 entrées sur 6 fiches, 37 écartées),
+  envoyée à Utku pour relecture. RIEN n'est écrit avant son accord.
+- Merge de `sprint23-multimarques` (le lien `node_modules` commité par erreur
+  sur la branche a été retiré avant ; le premier essai de merge avait vidé une
+  partie de `node_modules`, reconstruit par `npm ci`, exclusion iCloud
+  intacte). Chaîne hors ligne verte, essai local 83/83 avec la migration.
+- Annoncé : **dump prod** hors dépôt, puis **`db push`** de
+  `20261126120000_sprint23_couverture` (colonne `couverture` = `[]` par
+  défaut : aucun score ne change), puis déploiement de `score`,
+  `admin-defect-sheets`, `sheet-builder` (code de couverture, INERTE tant
+  qu'aucune couverture n'est écrite).
