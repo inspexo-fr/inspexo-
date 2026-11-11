@@ -63,7 +63,7 @@ if (CAPTURES) {
   mkdirSync(CAPTURES, { recursive: true })
   for (const [nom, w, h] of [['ordinateur', 1440, 900], ['telephone', 390, 844]]) {
     const p = await navigateur.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 })
-    for (const [cle, r] of [['accueil', '/'], ['accueil-variante-coin', '/?extrait=coin'], ['dossier-reel', `/a/${DOSSIER}`]]) {
+    for (const [cle, r] of [['accueil', '/'], ['dossier-reel', `/a/${DOSSIER}`]]) {
       await p.goto(BASE + r, { waitUntil: 'networkidle', timeout: 60_000 }).catch(() => null)
       await p.waitForTimeout(800)
       await p.screenshot({ path: join(CAPTURES, `${cle}-${nom}.png`) })

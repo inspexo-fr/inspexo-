@@ -387,12 +387,6 @@ p.mono,.formnote,.doc-foot,.pass-note,.phone-cap,.live,.extrait-notes{font-famil
 .extrait-notes{display:grid;gap:3px;margin-top:10px;color:var(--graphite);font-size:12px}
 .extrait-num{font-family:var(--mono);font-size:11px}
 .extrait-voir{display:block;margin-top:10px;font-size:13px;font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
-/* Variante « coin de dossier » : en-tête et tampon en surimpression. */
-.extrait-coin{padding-top:0}
-.extrait-tete{display:flex;justify-content:space-between;gap:12px;margin:0 -18px 12px;padding:9px 18px;border-bottom:1px solid var(--rule-strong);font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--graphite)}
-.extrait-coin .extrait-haut{display:block;padding-right:120px}
-.extrait-coin .stamp.stamp-sm{position:absolute;right:16px;top:30px;transform:rotate(-6deg)}
-
 /* (b)(c) Héros : texte, formulaire, extrait, faits. Ordre du DOM = ordre sur
    téléphone ; sur ordinateur le formulaire occupe la colonne de droite. */
 .hero-grid{grid-template-areas:"texte" "form" "extrait" "faits"}

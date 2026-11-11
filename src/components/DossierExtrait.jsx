@@ -1,7 +1,6 @@
 import React from 'react'
 import Stamp from './Stamp'
 import { Ref, creerRegistreSources } from './Footnotes'
-import { formatRef, formatDateDossier } from './Doc'
 import { useDossierExemple, refsPourRaison, libelleSource } from './DossierApercu'
 
 // Extrait du dossier réel, au premier écran de l'accueil (chantier design,
@@ -9,15 +8,13 @@ import { useDossierExemple, refsPourRaison, libelleSource } from './DossierAperc
 // (useDossierExemple) : ligne véhicule, tampon, deux motifs avec leur appel de
 // note et la note de source. Rien n'est recopié en dur. Tout l'extrait mène à
 // la section complète.
-//
-// Deux mises en page à départager par Utku :
-//   variante « fiche »  : ligne véhicule et tampon côte à côte, motifs en liste ;
-//   variante « coin »   : en-tête de dossier, tampon en surimpression.
-export default function DossierExtrait({ variante = 'fiche' }) {
+// Mise en page « fiche » (choix d'Utku du 11 nov. 2026) : ligne véhicule et
+// tampon côte à côte, motifs en liste, notes de source en bas.
+export default function DossierExtrait() {
   const { row } = useDossierExemple()
   if (!row) {
     return (
-      <a className={`extrait extrait-${variante}`} href="#dossier" aria-busy={row === undefined ? 'true' : undefined}>
+      <a className="extrait" href="#dossier" aria-busy={row === undefined ? 'true' : undefined}>
         <span className="extrait-voir">Un dossier réel →</span>
       </a>
     )
@@ -33,16 +30,9 @@ export default function DossierExtrait({ variante = 'fiche' }) {
     vh.kilometrage != null ? `${Number(vh.kilometrage).toLocaleString('fr-FR')} km` : null,
     vh.prix_affiche != null ? `${Number(vh.prix_affiche).toLocaleString('fr-FR')} €` : null,
   ].filter(Boolean).join(' · ')
-  const numero = formatRef(row.ref_num, row.created_at)
 
   return (
-    <a className={`extrait extrait-${variante}`} href="#dossier" aria-label={`Extrait d'un dossier réel : ${ligne}. Voir le dossier complet.`}>
-      {variante === 'coin' && (
-        <span className="extrait-tete">
-          <span>{numero ? `Dossier n° ${numero}` : 'Dossier Inspexo'}</span>
-          <span>{formatDateDossier(row.created_at)}</span>
-        </span>
-      )}
+    <a className="extrait" href="#dossier" aria-label={`Extrait d'un dossier réel : ${ligne}. Voir le dossier complet.`}>
       <span className="extrait-haut">
         <span className="extrait-vehicule">{ligne}</span>
         <Stamp verdict={r.verdict} score={r.score} className="stamp-sm" />

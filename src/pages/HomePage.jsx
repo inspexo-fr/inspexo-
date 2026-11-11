@@ -6,7 +6,7 @@ import Footer from '../components/Footer'
 import AnalyseForm from '../components/AnalyseForm'
 import Rows from '../components/Rows'
 import { getFiabilite } from '../lib/scoreApi'
-import DossierApercu from '../components/DossierApercu'
+import DossierApercu, { DOSSIER_EXEMPLE_ID } from '../components/DossierApercu'
 import DossierExtrait from '../components/DossierExtrait'
 import PassCheckout from '../components/PassCheckout'
 
@@ -41,11 +41,10 @@ function EtatFiabilite() {
   )
 }
 
-// Mise en page de l'extrait du premier écran : deux variantes à départager
-// (chantier design). `?extrait=coin` affiche la seconde le temps du choix.
-function varianteExtrait() {
-  try { return new URLSearchParams(window.location.search).get('extrait') === 'coin' ? 'coin' : 'fiche' } catch (_) { return 'fiche' }
-}
+// Aperçu de partage de l'accueil : l'image du dossier épinglé, produite par
+// scripts/apercus.mjs dans le bucket public `apercus` (même dossier que
+// l'extrait du premier écran). Construite, jamais une adresse en dur.
+const IMAGE_PARTAGE = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/apercus/${DOSSIER_EXEMPLE_ID}.png`
 
 export default function HomePage() {
   return (
@@ -58,7 +57,11 @@ export default function HomePage() {
         <meta property="og:url" content="https://www.inspexo.io/" />
         <meta property="og:title" content="Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste." />
         <meta property="og:description" content="Rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
-        <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
+        <meta property="og:image" content={IMAGE_PARTAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Extrait d'un dossier Inspexo réel : véhicule, verdict et score" />
+        <meta name="twitter:image" content={IMAGE_PARTAGE} />
       </Helmet>
 
       <Navbar />
@@ -85,7 +88,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="hero-form"><AnalyseForm idPrefix="hero" /></div>
-            <div className="hero-extrait"><DossierExtrait variante={varianteExtrait()} /></div>
+            <div className="hero-extrait"><DossierExtrait /></div>
             <div className="hero-faits">
               <div className="hero-facts">
                 <div><span>Prix</span><span>Gratuit, sans inscription</span></div>
