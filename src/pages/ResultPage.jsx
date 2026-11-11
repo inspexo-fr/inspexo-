@@ -1046,6 +1046,16 @@ export default function ResultPage() {
                 <p style={{ fontSize: 15, lineHeight: 1.6, marginTop: 6 }} className="c-ink2">
                   {r.cadre_juridique.texte}
                 </p>
+                {/* « Pro déguisé » est une accusation : elle ne s'affiche
+                    jamais sans les indices relevés dans l'annonce (sprint 23). */}
+                {r.statut_vendeur === 'pro_deguise_probable' && Array.isArray(r.indices_statut) && r.indices_statut.length > 0 && (
+                  <div style={{ marginTop: 10 }}>
+                    <p style={{ fontSize: 14, lineHeight: 1.6 }} className="c-ink2">Indices relevés dans l'annonce :</p>
+                    <ul style={{ fontSize: 14, lineHeight: 1.6, margin: '4px 0 0', paddingLeft: 18 }}>
+                      {r.indices_statut.map((i, k) => <li key={k}>{i}</li>)}
+                    </ul>
+                  </div>
+                )}
                 <p style={{ fontSize: 14, lineHeight: 1.6, marginTop: 10 }}>
                   {r.cadre_juridique.histovec_conseil || 'Demandez au vendeur le rapport HistoVec gratuit (historique, sinistres, gages).'}{' '}
                   <a href={r.cadre_juridique.histovec_url || 'https://histovec.interieur.gouv.fr'} target="_blank" rel="noopener noreferrer">

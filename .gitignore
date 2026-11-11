@@ -62,3 +62,16 @@ tests/fiabilite/annonces/
 captures-sprint21/
 captures-logo/
 captures-sprint22/
+
+# iCloud (10 nov. 2026) : node_modules.nosync + lien symbolique ESSAYÉ puis
+# ANNULÉ — CRA suit le lien et refuse alors d'importer hors de src/
+# (« falls outside of the project src/ directory »). Seuls les caches Android
+# sont en .nosync (android/.gitignore).
+# ⚠️ node_modules est exclu d'iCloud par l'attribut étendu
+#    xattr -w 'com.apple.fileprovider.ignore#P' 1 node_modules
+# (macOS 26.6 : fileproviderctl evaluate → isExcludedFromSync = 1 ; l'attribut
+# survit à `npm ci`, vérifié le 10 nov. 2026). Le dossier garde son nom.
+# Un dossier node_modules.nosync (ou son lien) ne doit jamais être commité,
+# quelle que soit la branche (décision du 11 nov. 2026).
+node_modules.nosync
+node_modules.nosync/

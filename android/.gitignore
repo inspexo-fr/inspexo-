@@ -99,3 +99,10 @@ app/src/main/assets/public
 app/src/main/assets/capacitor.config.json
 app/src/main/assets/capacitor.plugins.json
 app/src/main/res/xml/config.xml
+
+# iCloud (10 nov. 2026) : caches de build déplacés dans des « .nosync »,
+# liens symboliques à leur place (un lien n'est pas un dossier pour git).
+.gradle
+.gradle.nosync/
+app/build
+app/build.nosync/
