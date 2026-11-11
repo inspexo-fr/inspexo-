@@ -494,7 +494,14 @@ const COUT_FICHIER = join(EVAL_DIR, '..', '..', '.eval-cout.json')
 // `--budget <eur>` fixe le mur de CE run. Le script s'arrête tout seul en
 // l'atteignant et dit ce qu'il n'a pas joué. Pour aller au-delà, il faut une
 // décision explicite — relancer avec un budget plus haut.
-const PLAFOND_SESSION_EUR = 5
+// --plafond-session <eur> : décision explicite d'Utku pour une séquence
+// (10 nov. 2026 : 7 € pour les six contrôles de 3 passages). Sans le drapeau,
+// le plafond reste 5 €.
+const PLAFOND_SESSION_EUR = (() => {
+  const i = process.argv.indexOf('--plafond-session')
+  const v = i >= 0 ? Number(process.argv[i + 1]) : NaN
+  return Number.isFinite(v) && v > 0 && v <= 20 ? v : 5
+})()
 const BUDGET_RUN_EUR = (() => {
   const i = process.argv.indexOf('--budget')
   const v = i >= 0 ? Number(process.argv[i + 1]) : NaN
