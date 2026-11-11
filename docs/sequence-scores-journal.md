@@ -83,3 +83,8 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
   fichier du chemin de notation). Chaîne hors ligne verte.
 - Déploiement annoncé : **`sheet-builder` et `atlas-builder`** depuis main
   (nouvelle liste d'hôtes + juge corrigé). Rien d'autre.
+- Fait : `sheet-builder` et `atlas-builder` déployés depuis main, **identiques
+  à main** après téléchargement et comparaison. Écarts restants, sans effet :
+  `score`/`alertes` (libellé `silences_juge` ajouté à `alerting.ts`, jamais
+  émis par elles), `verification` (`jugeStable.ts` @874761f, aucune partie
+  modifiée atteinte).
