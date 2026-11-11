@@ -102,3 +102,35 @@ Captures avant/après 1440×900 et 390×844 (accueil, dossier réel) ;
 `npm run eval` hors ligne et build verts ; pré-rendu intact (57 pages) ;
 `ios/` et `android/` inchangés (`git diff --stat` vide sur ces dossiers) ;
 contrastes recalculés ; audit de la chasse fixe rejoué après correction.
+
+## Résultats (branche `design-accueil`, 11 nov. 2026 — non mergée)
+- **(a)** « Lancer l'analyse » n'est plus jamais désactivé sur champ vide :
+  clic ⇒ focus sur le champ + « Collez d'abord le texte de l'annonce ».
+  Contraste des deux boutons orange : **5,20:1** (clair) et **5,53:1**
+  (sombre), inchangé et conforme ; l'état à 2,79:1 / 1,60:1 n'apparaît plus.
+- **(b)** Extrait du dossier réel au premier écran, deux variantes en capture
+  (`captures-design/apres/accueil-*`, variante « coin » via `?extrait=coin`,
+  paramètre à retirer après le choix). Dossier épinglé : S7 du 11 nov.
+  (`13391145…`), sources de presse uniquement — vérifié : aucune URL de forum
+  ni de vendeur. Titre sur 3 lignes à 1440×900. Emplacements photo vides
+  (« Photo à venir · shooting atelier ») retirés.
+- **(c)** 390×844 : le champ de l'annonce est entièrement visible sans défiler ;
+  ordre texte, formulaire, extrait, faits ; sous-titre en une phrase.
+- **(d)** Audit rejoué : **888 → 5 occurrences** (61 pages). Restent les 4
+  éléments de code de `/pro/api` (exception validée) et un code de rappel
+  « Rappel 20U6/L8 (NHTSA 13V450) » (valeur codée).
+- **(e)** Bandeau cookies : 2 lignes sur téléphone, 1 sur ordinateur, bas de
+  page réservé à sa hauteur exacte ; texte légal inchangé (le bouton dit « OK »
+  sur téléphone, « J'ai compris » au-delà de 600 px). Le bandeau n'est plus
+  figé dans le HTML pré-rendu.
+- **(f)** Accueil pré-rendu ; coquille CRA en `build/app.html` (repli SPA,
+  `vercel.json`). Contrôlé sur la préversion (`vercel curl`, protection
+  contournée) en Googlebot, facebookexternalhit et WhatsApp : h1, sous-titre,
+  extrait, bouton, 37 liens, 14 752 caractères ; `description`, `og:title`,
+  `og:description`, `og:image` (`/og-image.png` — le bucket `apercus` est
+  **vide**), `twitter:card`, `canonical`. Un dossier `/a/:id` et une route
+  inconnue reçoivent la coquille (6 185 octets), pas l'accueil.
+  ⚠️ Non mesuré : l'effet du pré-rendu sur le FCP de l'accueil (le sprint 6
+  l'avait trouvé défavorable). À mesurer sur la préversion avant le merge.
+- Tests hors ligne verts, build vert (58 pages pré-rendues), `ios/` et
+  `android/` inchangés, aucun fichier de score ou d'analyse touché.
