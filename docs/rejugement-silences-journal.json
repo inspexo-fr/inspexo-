@@ -1,0 +1,686 @@
+{
+ "entrees": {
+  "Chaîne de distribution N47 défaillante": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://en.wikipedia.org/wiki/BMW_N47"
+   ],
+   "verdicts": [
+    [
+     "https://en.wikipedia.org/wiki/BMW_N47",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:09:45.389Z"
+  },
+  "Tendeur de chaîne N20/N26 sous-dimensionné": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://static.nhtsa.gov/odi/tsbs/2017/MC-10142923-9999.pdf"
+   ],
+   "verdicts": [
+    [
+     "https://static.nhtsa.gov/odi/tsbs/2017/MC-10142923-9999.pdf",
+     "non_soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0391,
+   "le": "2026-11-11T04:09:49.105Z"
+  },
+  "Injecteurs et pompe HPFP N54": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://en.wikipedia.org/wiki/BMW_N54",
+    "https://www.theautopian.com/why-the-bmw-335i-and-other-cars-with-the-n54-engine-are-ticking-time-bombs/",
+    "https://www.threepiece.us/blog/bmw-335i-n54-problems-why-you-should-not-buy-one/"
+   ],
+   "verdicts": [
+    [
+     "https://en.wikipedia.org/wiki/BMW_N54",
+     "rang_non_portant"
+    ],
+    [
+     "https://www.theautopian.com/why-the-bmw-335i-and-other-cars-with-the-n54-engine-are-ticking-time-bombs/",
+     "rang_non_portant"
+    ],
+    [
+     "https://www.threepiece.us/blog/bmw-335i-n54-problems-why-you-should-not-buy-one/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:09:49.282Z"
+  },
+  "Consommation d'huile excessive 2.0 TFSI EA888 gen 2": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://carnews.fr/problemes-automobiles/problemes-de-voiture-audi/audi-a4/consommation-excessive-dhuile-sur-laudi-a4-tfsi/"
+   ],
+   "verdicts": [
+    [
+     "https://carnews.fr/problemes-automobiles/problemes-de-voiture-audi/audi-a4/consommation-excessive-dhuile-sur-laudi-a4-tfsi/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:09:49.436Z"
+  },
+  "Tendeur de chaîne 2.0 TFSI EA888": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://autoliva.com/blog/chaine-distribution-tendeur-2-0-tfsi-ea888-gen-2-codes-defaut",
+    "https://zonerupteur.fr/fiches-vehicules/20-tfsi-fiabilite/"
+   ],
+   "verdicts": [
+    [
+     "https://autoliva.com/blog/chaine-distribution-tendeur-2-0-tfsi-ea888-gen-2-codes-defaut",
+     "rang_non_portant"
+    ],
+    [
+     "https://zonerupteur.fr/fiches-vehicules/20-tfsi-fiabilite/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:09:49.616Z"
+  },
+  "Pompe à injection CP4 (2.0/3.0 TDI)": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://tdi-tuning.pl/3-0-tdi-awaria-pompy-cp4-i-koszt-wymiany-ukladu/"
+   ],
+   "verdicts": [
+    [
+     "https://tdi-tuning.pl/3-0-tdi-awaria-pompy-cp4-i-koszt-wymiany-ukladu/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:09:49.789Z"
+  },
+  "Courroie de distribution 1.2 PureTech dans le bain d'huile": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://chaine-courroie.com/puretech/guide-complet-puretech"
+   ],
+   "verdicts": [
+    [
+     "https://chaine-courroie.com/puretech/guide-complet-puretech",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:09:49.941Z"
+  },
+  "1.2 TCe (H5Ft) — consommation d'huile et casse moteur": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://www.quechoisir.org/actualite-moteur-1-2-renault-400-000-voitures-en-danger-n67215/",
+    "https://www.caradisiac.com/motorgate-faut-il-acheter-une-renault-equipee-du-1-2-tce-en-occasion-195804.htm"
+   ],
+   "verdicts": [
+    [
+     "https://www.quechoisir.org/actualite-moteur-1-2-renault-400-000-voitures-en-danger-n67215/",
+     "soutenue"
+    ],
+    [
+     "https://www.caradisiac.com/motorgate-faut-il-acheter-une-renault-equipee-du-1-2-tce-en-occasion-195804.htm",
+     "soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 4,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0899,
+   "le": "2026-11-11T04:09:55.901Z"
+  },
+  "Injecteurs Delphi 1.5 dCi (K9K)": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://www.otomobile.fr/pourquoi-certains-1-5-dci-sont-tres-fiables-et-dautres-cassent-tot/"
+   ],
+   "verdicts": [
+    [
+     "https://www.otomobile.fr/pourquoi-certains-1-5-dci-sont-tres-fiables-et-dautres-cassent-tot/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:09:55.964Z"
+  },
+  "Cartes mains-libres et électronique": {
+   "source": "docs/atlas-sourcing-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.largus.fr/actualite-automobile/carte-mains-libres-renault-20-ans-de-succes-et-de-difficultes-10808399.html"
+   ],
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/carte-mains-libres-renault-20-ans-de-succes-et-de-difficultes-10808399.html",
+     "non_soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0449,
+   "le": "2026-11-11T04:09:59.266Z"
+  },
+  "Boîte PowerShift DPS6 : à-coups, broutement et embrayages secs": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092576-5448.pdf",
+    "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092575-5448.pdf"
+   ],
+   "verdicts": [
+    [
+     "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092575-5448.pdf",
+     "soutenue"
+    ],
+    [
+     "https://static.nhtsa.gov/odi/tsbs/2016/SB-10092576-5448.pdf",
+     "non_soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 4,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0765,
+   "le": "2026-11-11T04:10:05.086Z"
+  },
+  "Boîte DSG DQ200 : mécatronique et embrayages secs": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://tssgp.com/en/blog/vw-dsg-transmission-problems/"
+   ],
+   "verdicts": [
+    [
+     "https://tssgp.com/en/blog/vw-dsg-transmission-problems/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:10:05.197Z"
+  },
+  "Boîte DSG DQ250 : embrayages et bain d'huile": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-de-la-boite-dsg-6348384.html"
+   ],
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-tous-les-problemes-de-la-boite-dsg-6348384.html",
+     "soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0341,
+   "le": "2026-11-11T04:10:07.900Z"
+  },
+  "Boîte automatisée Easy-R : à-coups et actionneur": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.largus.fr/actualite-automobile/essai-dacia-sandero-stepway-tce-90-easy-r-pas-vraiment-un-progres-7242384.html"
+   ],
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/essai-dacia-sandero-stepway-tce-90-easy-r-pas-vraiment-un-progres-7242384.html",
+     "non_soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0446,
+   "le": "2026-11-11T04:10:10.650Z"
+  },
+  "Boîte Easytronic : actionneur d'embrayage": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.aurel-automobile.fr/fr/tout-savoir-sur-l-opel-easytronic-diagnostic-et-reparation-de-la-tcu-et-de-l-embrayage/"
+   ],
+   "verdicts": [
+    [
+     "https://www.aurel-automobile.fr/fr/tout-savoir-sur-l-opel-easytronic-diagnostic-et-reparation-de-la-tcu-et-de-l-embrayage/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:10:10.709Z"
+  },
+  "Boîte CVT Jatco : surchauffe et broutement du variateur": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.qashqai-passion.fr/viewtopic.php?t=1727"
+   ],
+   "verdicts": [
+    [
+     "https://www.qashqai-passion.fr/viewtopic.php?t=1727",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:10:10.775Z"
+  },
+  "Boîte S tronic DL501 : mécatronique et embrayages": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://eco-torque.co.uk/blogs/news/audi-0b5-dl501-dsg-s-tronic-gearbox-common-problems-fixes"
+   ],
+   "verdicts": [
+    [
+     "https://eco-torque.co.uk/blogs/news/audi-0b5-dl501-dsg-s-tronic-gearbox-common-problems-fixes",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:10:10.833Z"
+  },
+  "Freinage électro-hydraulique SBC : défaillance de l'accumulateur": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.mbusa.com/content/dam/mb-nafta/us/customer-letters/2005110001.pdf",
+    "https://en.wikipedia.org/wiki/Sensotronic_Brake_Control",
+    "https://ecu.fr/t/mercedes/calculateurs-abs-esp-asr/abs-sbc-avec-accumulateur-de-pression-3503"
+   ],
+   "verdicts": [
+    [
+     "https://www.mbusa.com/content/dam/mb-nafta/us/customer-letters/2005110001.pdf",
+     "rang_non_portant"
+    ],
+    [
+     "https://en.wikipedia.org/wiki/Sensotronic_Brake_Control",
+     "rang_non_portant"
+    ],
+    [
+     "https://ecu.fr/t/mercedes/calculateurs-abs-esp-asr/abs-sbc-avec-accumulateur-de-pression-3503",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:10:10.894Z"
+  },
+  "Condenseur de climatisation 308 I": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.fiches-auto.fr/fiabilite-peugeot/fiabilite-185-pannes-peugeot-308.php",
+    "https://www.forum-peugeot.com/Forum/threads/pb-clim-evaporateur.27699/"
+   ],
+   "verdicts": [
+    [
+     "https://www.fiches-auto.fr/fiabilite-peugeot/fiabilite-185-pannes-peugeot-308.php",
+     "soutenue"
+    ],
+    [
+     "https://www.forum-peugeot.com/Forum/threads/pb-clim-evaporateur.27699/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0451,
+   "le": "2026-11-11T04:10:13.072Z"
+  },
+  "Corrosion des bas de caisse Berlingo I": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://www.autos-discount.fr/entretien/rouille-bas-caisse-berceau/"
+   ],
+   "verdicts": [
+    [
+     "https://www.autos-discount.fr/entretien/rouille-bas-caisse-berceau/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "le": "2026-11-11T04:10:13.137Z"
+  },
+  "Corrosion du berceau et des bas de caisse Logan I": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Dacia-Logan-en-occasion-89871.htm",
+    "https://www.caradisiac.com/commentaires/Dacia-Logan-un-rappel-qui-ne-veut-pas-dire-son-nom-21995.htm",
+    "https://logan.forumactif.com/t1020p25-corrosion"
+   ],
+   "verdicts": [
+    [
+     "https://logan.forumactif.com/t1020p25-corrosion",
+     "rang_non_portant"
+    ],
+    [
+     "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Dacia-Logan-en-occasion-89871.htm",
+     "non_soutenue"
+    ],
+    [
+     "https://www.caradisiac.com/commentaires/Dacia-Logan-un-rappel-qui-ne-veut-pas-dire-son-nom-21995.htm",
+     "non_soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 2
+   },
+   "cout_eur": 0,
+   "ecartees": [
+    {
+     "url": "https://logan.forumactif.com/t1020p25-corrosion",
+     "motif": "rang_non_portant",
+     "rang": "forum"
+    },
+    {
+     "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Dacia-Logan-en-occasion-89871.htm",
+     "motif": "non_soutenue",
+     "rang": null
+    },
+    {
+     "url": "https://www.caradisiac.com/commentaires/Dacia-Logan-un-rappel-qui-ne-veut-pas-dire-son-nom-21995.htm",
+     "motif": "non_soutenue",
+     "rang": null
+    }
+   ],
+   "le": "2026-11-11T05:27:18.755Z"
+  },
+  "Corrosion du châssis Hilux": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.farmersjournal.ie/machinery/motors/toyota-to-replace-corroded-hilux-chassis-894923"
+   ],
+   "verdicts": [
+    [
+     "https://www.farmersjournal.ie/machinery/motors/toyota-to-replace-corroded-hilux-chassis-894923",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "ecartees": [
+    {
+     "url": "https://www.farmersjournal.ie/machinery/motors/toyota-to-replace-corroded-hilux-chassis-894923",
+     "motif": "rang_non_portant",
+     "rang": "inconnu"
+    }
+   ],
+   "le": "2026-11-11T05:27:18.829Z"
+  },
+  "Corrosion des planchers et bas de caisse Punto II": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.fiatforum.com/threads/failed-mot-excessive-corrosion-on-floor-worth-repairing.455526/"
+   ],
+   "verdicts": [
+    [
+     "https://www.fiatforum.com/threads/failed-mot-excessive-corrosion-on-floor-worth-repairing.455526/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "ecartees": [
+    {
+     "url": "https://www.fiatforum.com/threads/failed-mot-excessive-corrosion-on-floor-worth-repairing.455526/",
+     "motif": "rang_non_portant",
+     "rang": "forum"
+    }
+   ],
+   "le": "2026-11-11T05:27:18.894Z"
+  },
+  "Module FRM : éclairage et lève-vitres inopérants": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": true,
+   "pages": [
+    "https://beemerpros.com/your-bmws-lights-and-windows-quit-after-a-jump-start-the-footwell-module-took-the-hit/",
+    "https://www.ecutesting.com/common-faults/bmw/bmw-and-mini-footwell-module-fault/"
+   ],
+   "verdicts": [
+    [
+     "https://beemerpros.com/your-bmws-lights-and-windows-quit-after-a-jump-start-the-footwell-module-took-the-hit/",
+     "rang_non_portant"
+    ],
+    [
+     "https://www.ecutesting.com/common-faults/bmw/bmw-and-mini-footwell-module-fault/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0,
+   "ecartees": [
+    {
+     "url": "https://beemerpros.com/your-bmws-lights-and-windows-quit-after-a-jump-start-the-footwell-module-took-the-hit/",
+     "motif": "rang_non_portant",
+     "rang": "inconnu"
+    },
+    {
+     "url": "https://www.ecutesting.com/common-faults/bmw/bmw-and-mini-footwell-module-fault/",
+     "motif": "rang_non_portant",
+     "rang": "vendeur"
+    }
+   ],
+   "le": "2026-11-11T05:27:18.965Z"
+  },
+  "Suspension pneumatique arrière : compresseur et coussins": {
+   "source": "docs/atlas-hors-moteur-resultats.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.fiches-auto.fr/fiabilite-bmw/fiabilite-316-pannes-bmw-x5.php",
+    "https://automotohebdo.fr/correcteur-assiette-bmw-panne-suspension-pneumatique-compresseur-boudin/"
+   ],
+   "verdicts": [
+    [
+     "https://www.fiches-auto.fr/fiabilite-bmw/fiabilite-316-pannes-bmw-x5.php",
+     "soutenue"
+    ],
+    [
+     "https://automotohebdo.fr/correcteur-assiette-bmw-panne-suspension-pneumatique-compresseur-boudin/",
+     "rang_non_portant"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0435,
+   "ecartees": [
+    {
+     "url": "https://automotohebdo.fr/correcteur-assiette-bmw-panne-suspension-pneumatique-compresseur-boudin/",
+     "motif": "rang_non_portant",
+     "rang": "inconnu"
+    }
+   ],
+   "le": "2026-11-11T05:27:21.854Z"
+  },
+  "Peugeot EB2DT · Encrassement de la crépine d'huile par débris de courroie et baisse de pression d'huile": {
+   "source": "docs/resourcage-fiches-journal.json",
+   "garde_avant": false,
+   "pages": [
+    "https://www.caradisiac.com/commentaires/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm"
+   ],
+   "verdicts": [
+    [
+     "https://www.caradisiac.com/commentaires/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm",
+     "non_soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 0,
+    "depuis_cache": 1
+   },
+   "cout_eur": 0,
+   "ecartees": [
+    {
+     "url": "https://www.caradisiac.com/commentaires/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm",
+     "motif": "non_soutenue",
+     "rang": null
+    }
+   ],
+   "le": "2026-11-11T05:27:22.580Z"
+  },
+  "Peugeot EB2DT · Surconsommation d'huile moteur avec le kilométrage": {
+   "source": "docs/resourcage-fiches-journal.json",
+   "garde_avant": true,
+   "pages": [
+    "https://www.largus.fr/actualite-automobile/fiabilite-stellantis-1-2-puretech-de-nouvelles-solutions-contre-la-consommation-d-huile-30034597.html"
+   ],
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/fiabilite-stellantis-1-2-puretech-de-nouvelles-solutions-contre-la-consommation-d-huile-30034597.html",
+     "soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.038,
+   "ecartees": [],
+   "le": "2026-11-11T05:27:24.669Z"
+  },
+  "Peugeot EB2DTS · Courroie de distribution « humide » : dégradation, contamination du circuit d'huile et risque de casse moteur": {
+   "source": "docs/resourcage-fiches-journal.json",
+   "garde_avant": true,
+   "pages": [
+    "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html",
+    "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-nouveau-rappel-de-grande-ampleur-pour-le-moteur-1-2-puretech-30024702.html"
+   ],
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html",
+     "soutenue"
+    ],
+    [
+     "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-nouveau-rappel-de-grande-ampleur-pour-le-moteur-1-2-puretech-30024702.html",
+     "soutenue"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 1
+   },
+   "cout_eur": 0.0452,
+   "ecartees": [],
+   "le": "2026-11-11T05:27:27.942Z"
+  },
+  "Peugeot EB2ADTS · Usure prématurée de la courroie de distribution immergée dans l'huile, colmatage de la crépine/pompe à huile": {
+   "source": "docs/resourcage-fiches-journal.json",
+   "garde_avant": true,
+   "pages": [
+    "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html"
+   ],
+   "verdicts": [
+    [
+     "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html",
+     "mauvais_moteur"
+    ]
+   ],
+   "juge": {
+    "passages": 2,
+    "depuis_cache": 0
+   },
+   "cout_eur": 0.0466,
+   "ecartees": [
+    {
+     "url": "https://www.largus.fr/actualite-automobile/citroen-ds-et-peugeot-220-000-modeles-12-puretech-rappeles-10504390.html",
+     "motif": "mauvais_moteur",
+     "rang": null
+    }
+   ],
+   "le": "2026-11-11T05:27:30.940Z"
+  }
+ }
+}

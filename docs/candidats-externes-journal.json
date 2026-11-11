@@ -548,71 +548,305 @@
     "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD"
    ],
    "le": "2026-11-10T23:25:42.625Z"
+  },
+  {
+   "n": 27,
+   "mode": "noyau",
+   "affirmations": 18,
+   "unites": 22,
+   "confirmees": 12,
+   "jugees": 18,
+   "silencieuses": 0,
+   "mauvais_moteur": 3,
+   "appels": 15,
+   "cout_eur": 0.1977,
+   "cout_par_affirmation": 0.011,
+   "arret": null,
+   "familles": [
+    "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+    "HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ",
+    "HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM",
+    "HYUNDAI-KIA-1.7-CRDI-U2-D4FD",
+    "HYUNDAI-KIA-2.0-2.4-THETA-II",
+    "HYUNDAI-KIA-BOITE-7DCT",
+    "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ"
+   ],
+   "le": "2026-11-11T01:27:42.939Z"
+  },
+  {
+   "n": 28,
+   "mode": "noyau",
+   "affirmations": 20,
+   "unites": 37,
+   "confirmees": 16,
+   "jugees": 18,
+   "silencieuses": 2,
+   "mauvais_moteur": 1,
+   "appels": 16,
+   "cout_eur": 0.8817,
+   "cout_par_affirmation": 0.0441,
+   "arret": null,
+   "familles": [
+    "JLR-INGENIUM-2.0-D",
+    "MAZDA-SKYACTIV-D-1.5",
+    "MAZDA-SKYACTIV-D-2.2",
+    "MAZDA-SKYACTIV-G",
+    "MERCEDES-4MATIC-GLA",
+    "MERCEDES-7G-DCT",
+    "MERCEDES-9G-TRONIC",
+    "MERCEDES-AIRMATIC",
+    "MERCEDES-ELV-W204",
+    "MERCEDES-M260",
+    "MERCEDES-M270"
+   ],
+   "le": "2026-11-11T02:28:20.772Z"
+  },
+  {
+   "n": 29,
+   "mode": "noyau",
+   "affirmations": 20,
+   "unites": 37,
+   "confirmees": 16,
+   "jugees": 17,
+   "silencieuses": 3,
+   "mauvais_moteur": 2,
+   "appels": 16,
+   "cout_eur": 0.7309,
+   "cout_par_affirmation": 0.0365,
+   "arret": null,
+   "familles": [
+    "MERCEDES-M270-OM651",
+    "MERCEDES-M271-M272",
+    "MERCEDES-M274",
+    "MERCEDES-OM642",
+    "MERCEDES-OM651",
+    "MERCEDES-OM651-OM654-220-D",
+    "MERCEDES-OM654"
+   ],
+   "le": "2026-11-11T03:10:40.059Z"
+  },
+  {
+   "n": 30,
+   "mode": "noyau",
+   "affirmations": 20,
+   "unites": 30,
+   "confirmees": 13,
+   "jugees": 16,
+   "silencieuses": 4,
+   "mauvais_moteur": 4,
+   "appels": 18,
+   "cout_eur": 0.6119,
+   "cout_par_affirmation": 0.0306,
+   "arret": null,
+   "familles": [
+    "MITSUBISHI-1.6-MIVEC-4A92",
+    "MITSUBISHI-1.8-DID-4N13",
+    "MITSUBISHI-2.2-DID-4N14",
+    "MITSUBISHI-OUTLANDER-PHEV",
+    "NISSAN-CVT-XTRONIC",
+    "NISSAN-MR16DDT-MR20DE",
+    "OPEL-1.4-TURBO",
+    "OPEL-1.6-CDTI"
+   ],
+   "le": "2026-11-11T03:29:53.417Z"
+  },
+  {
+   "n": 31,
+   "mode": "noyau",
+   "affirmations": 17,
+   "unites": 25,
+   "confirmees": 0,
+   "jugees": 11,
+   "silencieuses": 6,
+   "mauvais_moteur": 0,
+   "appels": 0,
+   "cout_eur": 0.189,
+   "cout_par_affirmation": 0.0111,
+   "arret": "trois appels en échec d’affilée",
+   "familles": [
+    "OPEL-1.7-CDTI",
+    "OPEL-CDTI-ASTRA-J",
+    "OPEL-M32",
+    "PHEV-HYUNDAI-KIA",
+    "PHEV-VOLVO",
+    "PSA-AL4-DP0",
+    "PSA-BMP6-ETG",
+    "PSA-EAT6",
+    "PSA-EAT8",
+    "PSA-HYDRACTIVE-III",
+    "PSA-SUSPENSION-PNEUMATIQUE-C4-PICASSO"
+   ],
+   "le": "2026-11-11T04:09:27.505Z"
   }
  ],
  "affirmations": {
   "A-NISSAN-CVT-XTRONIC-01": {
+   "mode": "noyau",
    "famille": "NISSAN-CVT-XTRONIC",
    "type": "panne",
    "intitule": "X-Tronic CVT : dysfonctionnements fréquents sur Qashqai 2 de 2013-2014 (broutements, à-coups, perte de puissance), vibrations/hésitations sur X-Trail 3, patinage rare sur Koleos 2",
-   "confirmees": [],
-   "ecartees": [
+   "noyau": "X-Tronic CVT: dysfonctionnements fréquents sur Qashqai 2 (broutements, à-coups, perte de puissance), vibrations/hésitations sur X-Trail 3, patinage rare sur Koleos 2",
+   "periodes": [
     {
-     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
-    },
-    {
-     "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
-    },
-    {
-     "url": "https://www.caradisiac.com/maxi-fiche-occasion-du-renault-koleos-2-enfin-un-modele-fiable-dans-la-gamme-du-losange-196916.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
+     "debut": 2013,
+     "fin": 2014,
+     "texte": "de 2013-2014",
+     "bornante": true
     }
    ],
-   "lot": 1
+   "details": [
+    "de 2013-2014"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "A-NISSAN-CVT-XTRONIC-01#1",
+     "partie": "X-Tronic CVT: dysfonctionnements fréquents sur Qashqai 2 (broutements, à-coups, perte de puissance)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+       "verdict": "mauvais_moteur",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page traite du X-Trail III et non du Qashqai 2, elle ne soutient donc pas ce fait pour ce véhicule précis."
+      },
+      {
+       "url": "https://www.caradisiac.com/maxi-fiche-occasion-du-renault-koleos-2-enfin-un-modele-fiable-dans-la-gamme-du-losange-196916.htm",
+       "verdict": "mauvais_moteur",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page traite du Koleos 2 et ne mentionne pas de dysfonctionnements fréquents (broutements, à-coups, perte de puissance) sur le Qashqai 2, véhicule non abordé dans cet article."
+      }
+     ],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm"
+     ]
+    },
+    {
+     "uid": "A-NISSAN-CVT-XTRONIC-01#2",
+     "partie": "X-Tronic CVT: vibrations/hésitations sur X-Trail 3",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique pour le X-Trail 3 des 'soucis potentiels de vibrations à l'accélération ainsi que d'à-coups ou hésitations' sur la boîte X-Tronic, correspondant à l'affirmation."
+      }
+     ],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm"
+     ]
+    },
+    {
+     "uid": "A-NISSAN-CVT-XTRONIC-01#3",
+     "partie": "X-Tronic CVT: patinage rare sur Koleos 2",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/maxi-fiche-occasion-du-renault-koleos-2-enfin-un-modele-fiable-dans-la-gamme-du-losange-196916.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique pour la boîte X-Tronic du Koleos 2 : 'Très rares cas de dysfonctionnement prématuré (patinage le plus souvent)', ce qui correspond au patinage rare évoqué."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+       "verdict": "mauvais_moteur",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page concerne le X-Trail III et ne mentionne pas du tout le Koleos 2 ni un patinage rare sur ce modèle."
+      }
+     ],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [
+    "X-Tronic CVT: vibrations/hésitations sur X-Trail 3",
+    "X-Tronic CVT: patinage rare sur Koleos 2"
+   ],
+   "lot": 30
   },
   "A-NISSAN-CVT-XTRONIC-02": {
+   "mode": "a_rejuger",
    "famille": "NISSAN-CVT-XTRONIC",
    "type": "campagne",
    "intitule": "Campagne de service Nissan juin 2015 : reprogrammation de la boîte automatique X-Tronic CVT des Qashqai 2 fabriqués entre le 4 novembre 2013 et le 27 novembre 2014",
-   "confirmees": [
+   "noyau": "Campagne de service Nissan: reprogrammation de la boîte automatique X-Tronic CVT des Qashqai 2",
+   "periodes": [
     {
-     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
-     "verdict": "soutenue",
-     "classe": "presse",
-     "cache": false
+     "debut": 2015,
+     "fin": 2015,
+     "texte": "juin 2015",
+     "bornante": true
+    },
+    {
+     "debut": 2013,
+     "fin": 2014,
+     "texte": "fabriqués entre le 4 novembre 2013 et le 27 novembre 2014",
+     "bornante": true
     }
    ],
-   "ecartees": [],
-   "lot": 1
+   "details": [
+    "juin 2015",
+    "fabriqués entre le 4 novembre 2013 et le 27 novembre 2014"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "A-NISSAN-CVT-XTRONIC-02",
+     "partie": "Campagne de service Nissan: reprogrammation de la boîte automatique X-Tronic CVT des Qashqai 2",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 30
   },
   "A-NISSAN-CVT-XTRONIC-03": {
+   "mode": "noyau",
    "famille": "NISSAN-CVT-XTRONIC",
    "type": "verification",
    "intitule": "Agrément et consommation : la X-Tronic fait surconsommer (Kadjar 1.6 dCi 130)",
-   "confirmees": [],
-   "ecartees": [
+   "noyau": "Agrément et consommation: la X-Tronic fait surconsommer (Kadjar 1.6 dCi 130)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
     {
-     "url": "https://www.caradisiac.com/fiabilite-du-renault-kadjar-la-maxi-fiche-occasion-de-caradisiac-186486.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
-    },
-    {
-     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf",
-     "verdict": "mauvais_moteur",
-     "classe": "consommateurs",
-     "cache": false
+     "uid": "A-NISSAN-CVT-XTRONIC-03",
+     "partie": "Agrément et consommation: la X-Tronic fait surconsommer (Kadjar 1.6 dCi 130)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-du-renault-kadjar-la-maxi-fiche-occasion-de-caradisiac-186486.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement que 'la boîte X-Tronic du 1.6 dCi 130 : cette transmission à variation continue... son agrément est moyen et elle fait surconsommer'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
     }
    ],
-   "lot": 1
+   "parties_affichables": [
+    "Agrément et consommation: la X-Tronic fait surconsommer (Kadjar 1.6 dCi 130)"
+   ],
+   "lot": 30
   },
   "A-NISSAN-HR12DDT-01": {
    "mode": "noyau",
@@ -834,155 +1068,318 @@
    "lot": 10
   },
   "A-NISSAN-MR16DDT-MR20DE-01": {
+   "mode": "a_rejuger",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "panne",
    "intitule": "Juke 1.6 DIG-T 190 : casses de boîte de vitesses ayant entraîné son remplacement",
-   "confirmees": [],
-   "ecartees": [
+   "noyau": "Juke 1.6 DIG-T 190: casses de boîte de vitesses ayant entraîné son remplacement",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
     {
-     "url": "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
+     "uid": "A-NISSAN-MR16DDT-MR20DE-01",
+     "partie": "Juke 1.6 DIG-T 190: casses de boîte de vitesses ayant entraîné son remplacement",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm"
+     ]
     }
    ],
-   "lot": 1
+   "parties_affichables": [],
+   "lot": 30
   },
   "A-NISSAN-MR16DDT-MR20DE-02": {
+   "mode": "a_rejuger",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "panne",
    "intitule": "Chaîne de distribution bruyante sur certains 1.6 DIG-T (phénomène rare)",
-   "confirmees": [
+   "noyau": "Chaîne de distribution bruyante sur certains 1.6 DIG-T (phénomène rare)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
     {
-     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
-     "verdict": "soutenue",
-     "classe": "presse",
-     "cache": false
+     "uid": "A-NISSAN-MR16DDT-MR20DE-02",
+     "partie": "Chaîne de distribution bruyante sur certains 1.6 DIG-T (phénomène rare)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm"
+     ]
     }
    ],
-   "ecartees": [],
-   "lot": 1
+   "parties_affichables": [],
+   "lot": 30
   },
   "A-NISSAN-MR16DDT-MR20DE-03": {
+   "mode": "noyau",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "entretien",
    "intitule": "Distribution par chaîne, sans remplacement périodique ; moteurs jugés globalement sans souci par la presse consultée",
-   "confirmees": [],
-   "ecartees": [
+   "noyau": "Distribution par chaîne, sans remplacement périodique",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
     {
-     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
-    },
-    {
-     "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
+     "uid": "A-NISSAN-MR16DDT-MR20DE-03",
+     "partie": "Distribution par chaîne, sans remplacement périodique",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page dit que tous les moteurs du X-Trail sont dotés d'une chaîne de distribution sans remplacement, mais ne cite aucun code moteur précis comme MR16DDT ou MR20DE ni les modèles Juke/Qashqai cités dans l'affirmation."
+      }
+     ],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm"
+     ]
     }
    ],
-   "lot": 1
+   "parties_affichables": [],
+   "lot": 30
   },
   "A-NISSAN-MR16DDT-MR20DE-04": {
+   "mode": "a_rejuger",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "rappel",
    "intitule": "Rappel décembre 2014 (Juke) : capteur de pression de carburant pouvant ne pas être serré correctement sur les 1.6 Turbo fabriqués de janvier 2012 à mai 2014",
-   "confirmees": [],
-   "ecartees": [
+   "noyau": "Rappel (Juke): capteur de pression de carburant pouvant ne pas être serré correctement sur les 1.6 Turbo",
+   "periodes": [
     {
-     "url": "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
+     "debut": 2014,
+     "fin": 2014,
+     "texte": "décembre 2014",
+     "bornante": true
+    },
+    {
+     "debut": 2012,
+     "fin": 2014,
+     "texte": "fabriqués de janvier 2012 à mai 2014",
+     "bornante": true
     }
    ],
-   "lot": 1
+   "details": [
+    "décembre 2014",
+    "fabriqués de janvier 2012 à mai 2014"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "A-NISSAN-MR16DDT-MR20DE-04",
+     "partie": "Rappel (Juke): capteur de pression de carburant pouvant ne pas être serré correctement sur les 1.6 Turbo",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/le-juke-de-premiere-generation-est-loin-d-etre-fiable-attention-en-occasion-217767.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 30
   },
   "A-NISSAN-MR16DDT-MR20DE-05": {
+   "mode": "noyau",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "campagne",
    "intitule": "Nissan Juke 2011-2013 (MR16DDT, marché nord-américain) : campagne volontaire P4213 de remplacement de la chaîne de distribution, des guides et du pignon de vilebrequin",
-   "confirmees": [],
-   "ecartees": [
+   "noyau": "Nissan Juke (MR16DDT, marché nord-américain): campagne volontaire P4213 de remplacement de la chaîne de distribution, des guides et du pignon de vilebrequin",
+   "periodes": [
     {
-     "url": "https://static.nhtsa.gov/odi/tsbs/2014/SB-10058825-3211.pdf",
-     "verdict": "non_soutenue",
-     "classe": "officiel",
-     "cache": false
-    },
-    {
-     "url": "https://static.nhtsa.gov/odi/tsbs/2015/MC-10192689-9999.pdf",
-     "verdict": "non_soutenue",
-     "classe": "officiel",
-     "cache": false
+     "debut": 2011,
+     "fin": 2013,
+     "texte": "2011-2013",
+     "bornante": true
     }
    ],
-   "lot": 1
+   "details": [
+    "2011-2013"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "A-NISSAN-MR16DDT-MR20DE-05#1",
+     "partie": "Nissan Juke (MR16DDT, marché nord-américain): campagne volontaire P4213 de remplacement de la chaîne de distribution",
+     "confirmees": [
+      {
+       "url": "https://static.nhtsa.gov/odi/tsbs/2014/SB-10058825-3211.pdf",
+       "verdict": "soutenue",
+       "classe": "officiel",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme une campagne de service volontaire Nissan P4213 pour remplacer la chaîne de distribution sur les Juke MY2011-13 équipés du MR16DDT produits à Oppama, marché nord-américain."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "A-NISSAN-MR16DDT-MR20DE-05#2",
+     "partie": "Nissan Juke (MR16DDT, marché nord-américain): des guides et du pignon de vilebrequin",
+     "confirmees": [
+      {
+       "url": "https://static.nhtsa.gov/odi/tsbs/2014/SB-10058825-3211.pdf",
+       "verdict": "soutenue",
+       "classe": "officiel",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que Nissan remplace la chaîne de distribution, les guides de chaîne ('chain guides') et le pignon de vilebrequin ('crank sprocket') dans le cadre de cette campagne."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Nissan Juke (MR16DDT, marché nord-américain): campagne volontaire P4213 de remplacement de la chaîne de distribution",
+    "Nissan Juke (MR16DDT, marché nord-américain): des guides et du pignon de vilebrequin"
+   ],
+   "lot": 30
   },
   "A-NISSAN-MR16DDT-MR20DE-06": {
+   "mode": "noyau",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "entretien",
    "intitule": "Bulletin Nissan NTB16-035 (Juke F15 2012-2016, MR16DDT) : à tout remplacement du turbo, remplacer aussi le tube d'alimentation en huile du turbocompresseur",
-   "confirmees": [],
-   "ecartees": [
+   "noyau": "Bulletin Nissan NTB16-035: à tout remplacement du turbo, remplacer aussi le tube d'alimentation en huile du turbocompresseur",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
     {
-     "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10192772-9999.pdf",
-     "verdict": "non_soutenue",
-     "classe": "officiel",
-     "cache": false
+     "uid": "A-NISSAN-MR16DDT-MR20DE-06",
+     "partie": "Bulletin Nissan NTB16-035: à tout remplacement du turbo, remplacer aussi le tube d'alimentation en huile du turbocompresseur",
+     "confirmees": [
+      {
+       "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10192772-9999.pdf",
+       "verdict": "soutenue",
+       "classe": "officiel",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "Le bulletin NTB16-035 indique bien que tout remplacement du turbocompresseur sur les Juke (F15) 2012-2016 équipés du moteur MR16DDT (y compris NISMO RS) doit s'accompagner du remplacement du tube d'alimentation en huile du turbocompresseur (Oil Supply/Inlet Tube)."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
     }
    ],
-   "lot": 1
+   "parties_affichables": [
+    "Bulletin Nissan NTB16-035: à tout remplacement du turbo, remplacer aussi le tube d'alimentation en huile du turbocompresseur"
+   ],
+   "lot": 30
   },
   "A-NISSAN-MR16DDT-MR20DE-07": {
+   "mode": "noyau",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "rappel",
    "intitule": "Rappel 08/2016 (1.6 DIG-T) : la sonde à oxygène arrière peut tomber en panne sur court-circuit sans allumer le voyant moteur — mise à jour du logiciel du calculateur moteur",
-   "confirmees": [
+   "noyau": "Rappel (1.6 DIG-T): la sonde à oxygène arrière peut tomber en panne sur court-circuit sans allumer le voyant moteur — mise à jour du logiciel du calculateur moteur",
+   "periodes": [
     {
-     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf",
-     "verdict": "soutenue",
-     "classe": "consommateurs",
-     "cache": false
+     "debut": 2016,
+     "fin": 2016,
+     "texte": "08/2016",
+     "bornante": true
     }
    ],
-   "ecartees": [
+   "details": [
+    "08/2016"
+   ],
+   "details_affichables": [],
+   "parties": [
     {
-     "url": "https://www.whatcar.com/nissan/qashqai/hatchback/used-review/advice",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
-    },
-    {
-     "url": "https://www.caradisiac.com/fiabilite-du-nissan-qashqai-2-la-maxi-fiche-occasion-de-caradisiac-165021.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
-    },
-    {
-     "url": "https://www.caradisiac.com/fiabilite-nissan-x-trail-3-la-maxi-fiche-occasion-de-caradisiac-180986.htm",
-     "verdict": "non_soutenue",
-     "classe": "presse",
-     "cache": false
+     "uid": "A-NISSAN-MR16DDT-MR20DE-07",
+     "partie": "Rappel (1.6 DIG-T): la sonde à oxygène arrière peut tomber en panne sur court-circuit sans allumer le voyant moteur — mise à jour du logiciel du calculateur moteur",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0383-nissan-qashqai-2014-2021-benziner-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme pour le moteur 1.6 DIG-T qu'en cas de court-circuit le capteur d'oxygène arrière peut tomber en panne sans déclencher ni code défaut ni voyant moteur, et que les concessionnaires effectuent une mise à jour logicielle du calculateur moteur."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
     }
    ],
-   "lot": 1
+   "parties_affichables": [
+    "Rappel (1.6 DIG-T): la sonde à oxygène arrière peut tomber en panne sur court-circuit sans allumer le voyant moteur — mise à jour du logiciel du calculateur moteur"
+   ],
+   "lot": 30
   },
   "A-NISSAN-MR16DDT-MR20DE-08": {
+   "mode": "noyau",
    "famille": "NISSAN-MR16DDT-MR20DE",
    "type": "verification",
    "intitule": "Nissan Juke I (tous moteurs) : pertes d'huile moteur et boîte, échappements défectueux relevés par le TÜV (via ADAC) ; moteurs 1.6 atmosphériques jugés largement sans problème",
-   "confirmees": [
+   "noyau": "Nissan Juke I (tous moteurs): pertes d'huile moteur et boîte, échappements défectueux relevés par le TÜV (via ADAC); moteurs 1.6 atmosphériques jugés largement sans problème",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
     {
-     "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
-     "verdict": "soutenue",
-     "classe": "consommateurs",
-     "cache": false
+     "uid": "A-NISSAN-MR16DDT-MR20DE-08#1",
+     "partie": "Nissan Juke I (tous moteurs): pertes d'huile moteur et boîte",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne explicitement 'Ölverlust an Motor und Getriebe' (pertes d'huile moteur et boîte) comme défaut connu du Juke."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "A-NISSAN-MR16DDT-MR20DE-08#2",
+     "partie": "Nissan Juke I (tous moteurs): échappements défectueux relevés par le TÜV (via ADAC)",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que le TÜV relève des 'rostende Abgasanlagen' (échappements rouillés/défectueux) comme problème connu."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "A-NISSAN-MR16DDT-MR20DE-08#3",
+     "partie": "Nissan Juke I (tous moteurs): moteurs 1.6 atmosphériques jugés largement sans problème",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page affirme que les moteurs 1.6 atmosphériques (94 à 117 PS) 'gelten aber als weitgehend unproblematisch' (jugés largement sans problème)."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
     }
    ],
-   "ecartees": [],
-   "lot": 1
+   "parties_affichables": [
+    "Nissan Juke I (tous moteurs): pertes d'huile moteur et boîte",
+    "Nissan Juke I (tous moteurs): échappements défectueux relevés par le TÜV (via ADAC)",
+    "Nissan Juke I (tous moteurs): moteurs 1.6 atmosphériques jugés largement sans problème"
+   ],
+   "lot": 30
   },
   "A-RENAULT-B4D-01": {
    "famille": "RENAULT-B4D",
@@ -25205,6 +25602,3756 @@
     "Campagne d'amélioration Transports Canada 2021204: mise à jour du module de commande moteur pour détecter une panne imminente"
    ],
    "lot": 26
+  },
+  "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-04": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "type": "entretien",
+   "intitule": "Distribution par chaîne (pas de courroie à remplacer)",
+   "noyau": "Distribution par chaîne",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-04",
+     "partie": "Distribution par chaîne",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page indique explicitement 'All the engines are chain-driven, with no cambelts to replace', ce qui couvre le 1.6 GDI."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Distribution par chaîne"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ-01": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ",
+   "type": "entretien",
+   "intitule": "Distribution par chaîne (pas de courroie à remplacer)",
+   "noyau": "Distribution par chaîne",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ-01",
+     "partie": "Distribution par chaîne",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page précise que tous les moteurs du Tucson Mk3 sont 'chain-driven', ce qui inclut le 1.6 T-GDI."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Distribution par chaîne"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ-02": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ",
+   "type": "panne",
+   "intitule": "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi : hésitations, lenteur au démarrage ; fiabilité globale du Tucson Mk3 jugée moins bonne qu'attendu",
+   "noyau": "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi: hésitations, lenteur au démarrage; fiabilité globale du Tucson Mk3 jugée moins bonne qu'attendu",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ-02#1",
+     "partie": "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi: hésitations",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page dit que la boîte double embrayage 'is easily confused and can be quite laggy', ce qui correspond à des hésitations."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "F-HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ-02#2",
+     "partie": "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi: lenteur au démarrage",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page précise que la boîte double embrayage est 'quite laggy - especially when moving off', soit une lenteur au démarrage."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "F-HYUNDAI-KIA-1.6-TGDI-GAMMA-G4FJ-02#3",
+     "partie": "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi: fiabilité globale du Tucson Mk3 jugée moins bonne qu'attendu",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page mentionne que 'reliability isn't a huge issue, it can be more of a problem on the Hyundai than you might expect', et cite aussi des critiques sur la boîte dans le Driver Power survey."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi: hésitations",
+    "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi: lenteur au démarrage",
+    "Boîte double embrayage 7 rapports (7DCT) associée au 1.6 T-GDi: fiabilité globale du Tucson Mk3 jugée moins bonne qu'attendu"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM-01": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM",
+   "type": "campagne",
+   "intitule": "Rappel Safety Gate SR/02418/25 : possible dysfonctionnement de la gestion de l'arbre à cames (moteur non précisé par la liste officielle)",
+   "noyau": "Rappel Safety Gate SR/02418/25: possible dysfonctionnement de la gestion de l'arbre à cames (moteur non précisé par la liste officielle)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-1.6-TGDI-SMARTSTREAM-01",
+     "partie": "Rappel Safety Gate SR/02418/25: possible dysfonctionnement de la gestion de l'arbre à cames (moteur non précisé par la liste officielle)",
+     "confirmees": [
+      {
+       "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/rappels%202025.pdf",
+       "verdict": "soutenue",
+       "classe": "officiel",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page cite exactement SR/02418/25 pour KIA Sportage NQ5 (08/09/2022-14/06/2023) avec la description 'Prévenir un éventuel dysfonctionnement de la gestion des arbres à cames', correspondant au véhicule indiqué."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel Safety Gate SR/02418/25: possible dysfonctionnement de la gestion de l'arbre à cames (moteur non précisé par la liste officielle)"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-1.7-CRDI-U2-D4FD-01": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-1.7-CRDI-U2-D4FD",
+   "type": "panne",
+   "intitule": "Broutement d'embrayage sur Tucson diesel à boîte manuelle (embrayage redessiné disponible) ; FAP coûteux à remplacer si encrassé (Sportage diesel)",
+   "noyau": "Broutement d'embrayage sur Tucson diesel à boîte manuelle (embrayage redessiné disponible); FAP coûteux à remplacer si encrassé (Sportage diesel)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-1.7-CRDI-U2-D4FD-01",
+     "partie": "Broutement d'embrayage sur Tucson diesel à boîte manuelle (embrayage redessiné disponible); FAP coûteux à remplacer si encrassé (Sportage diesel)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page mentionne le broutement d'embrayage sur les Tucson diesel manuels et qu'un embrayage redessiné est disponible, mais ne parle pas du tout du FAP ni du Sportage diesel."
+      },
+      {
+       "url": "https://www.whatcar.com/kia/sportage/4x4/used-review/n17426/reliability",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne un DPF coûteux à remplacer si encrassé sur les modèles diesel (ce qui soutient partiellement la partie FAP), mais elle ne parle à aucun moment d'un broutement d'embrayage ni d'un embrayage redessiné sur le Tucson, donc l'affirmation combinée n'est pas soutenue dans son ensemble."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "type": "panne",
+   "intitule": "Usure prématurée des coussinets de bielle / grippage moteur (débris d'usinage du vilebrequin dans les canaux d'huile)",
+   "noyau": "Usure prématurée des coussinets de bielle / grippage moteur (débris d'usinage du vilebrequin dans les canaux d'huile)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01",
+     "partie": "Usure prématurée des coussinets de bielle / grippage moteur (débris d'usinage du vilebrequin dans les canaux d'huile)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2015428-hyundai",
+       "verdict": "mauvais_moteur",
+       "classe": "officiel",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page décrit bien le défaut d'usure des coussinets de bielle lié aux débris d'usinage du vilebrequin, mais uniquement pour les Hyundai Sonata 2011 et 2012, sans préciser qu'il s'agit du moteur Theta II G4KD/G4KE/G4KH/G4KJ ni couvrir les autres modèles/années cités (Santa Fe, Tucson, Optima, Sorento)."
+      },
+      {
+       "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10178174-0001.pdf",
+       "verdict": "non_soutenue",
+       "classe": "officiel",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne un défaut lié à l'usure/dommage des coussinets de bielle (connecting rod bearing wear or damage) pouvant causer grippage/calage moteur, mais elle ne mentionne pas explicitement de débris d'usinage du vilebrequin dans les canaux d'huile comme cause précise."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-2.0-2.4-THETA-II-03": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "type": "campagne",
+   "intitule": "Règlement collectif US (In re: Hyundai and Kia Engine Litigation) : extension de garantie à vie TXXI + logiciel KSDS (Service Campaign 953, DTC P1326)",
+   "noyau": "Règlement collectif US (In re: Hyundai and Kia Engine Litigation): extension de garantie à vie TXXI + logiciel KSDS (Service Campaign 953, DTC P1326)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-03",
+     "partie": "Règlement collectif US (In re: Hyundai and Kia Engine Litigation): extension de garantie à vie TXXI + logiciel KSDS (Service Campaign 953, DTC P1326)",
+     "confirmees": [
+      {
+       "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10178174-0001.pdf",
+       "verdict": "soutenue",
+       "classe": "officiel",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page confirme l'extension de garantie à vie (Warranty Extension TXXI) conditionnée à la mise à jour logicielle Knock Sensor Detection System (Service Campaign 953) et au DTC P1326, pour les véhicules Theta II GDI (Sonata 2011-2018+2019, Santa Fe Sport 2013-2018+2019, Tucson 2014/2015/2018+2019) correspondant au véhicule concerné."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Règlement collectif US (In re: Hyundai and Kia Engine Litigation): extension de garantie à vie TXXI + logiciel KSDS (Service Campaign 953, DTC P1326)"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "type": "campagne",
+   "intitule": "Règlement collectif US 2022 (Engine Litigation II) : garantie étendue 15 ans/150 000 miles + KSDS gratuit sur Theta II 2.4 MPI/MPI hybride (et Nu 2.0 GDI, Gamma 1.6 GDI)",
+   "noyau": "Règlement collectif US (Engine Litigation II): garantie étendue 15 ans/150 000 miles + KSDS gratuit sur Theta II 2.4 MPI/MPI hybride (et Nu 2.0 GDI, Gamma 1.6 GDI)",
+   "periodes": [
+    {
+     "debut": 2022,
+     "fin": 2022,
+     "texte": "2022",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "2022"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
+     "partie": "Règlement collectif US (Engine Litigation II): garantie étendue 15 ans/150 000 miles + KSDS gratuit sur Theta II 2.4 MPI/MPI hybride (et Nu 2.0 GDI, Gamma 1.6 GDI)",
+     "confirmees": [
+      {
+       "url": "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation",
+       "verdict": "soutenue",
+       "classe": "officiel",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page confirme l'accord de règlement incluant une garantie étendue de 15 ans/150 000 miles et l'installation gratuite du logiciel KSDS pour les moteurs Theta II MPI (y compris MPI Hybrid), Nu GDI et Gamma GDI, ce qui correspond à l'affirmation."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Règlement collectif US (Engine Litigation II): garantie étendue 15 ans/150 000 miles + KSDS gratuit sur Theta II 2.4 MPI/MPI hybride (et Nu 2.0 GDI, Gamma 1.6 GDI)"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-2.0-2.4-THETA-II-05": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "type": "campagne",
+   "intitule": "Rappel Transports Canada 2015428 : inspection/remplacement moteur et prolongation de garantie 10 ans/200 000 km (sous-ensemble moteur)",
+   "noyau": "Rappel Transports Canada 2015428: inspection/remplacement moteur et prolongation de garantie 10 ans/200 000 km (sous-ensemble moteur)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-05",
+     "partie": "Rappel Transports Canada 2015428: inspection/remplacement moteur et prolongation de garantie 10 ans/200 000 km (sous-ensemble moteur)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2015428-hyundai",
+       "verdict": "mauvais_moteur",
+       "classe": "officiel",
+       "lecture": null,
+       "cache": true,
+       "justification": "Le rappel 2015428 ne concerne que les Hyundai Sonata 2011 et 2012 (vilebrequin mal usiné), et ne mentionne ni les codes moteur G4KD/G4KE/G4KH/G4KJ ni les autres modèles/années listés (Santa Fe Sport, Tucson, Optima, Sorento, etc.)."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-2.0-2.4-THETA-II-06": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "type": "campagne",
+   "intitule": "Rappel Hyundai 198 (dossier NHTSA EA21-003) : inspection/remplacement moteur pour usure prématurée des coussinets de bielle (Theta II 2.4 MPI & hybride, Nu 2.0 GDI hybride, Gamma 1.6 GDI)",
+   "noyau": "Rappel Hyundai 198 (dossier NHTSA EA21-003): inspection/remplacement moteur pour usure prématurée des coussinets de bielle (Theta II 2.4 MPI & hybride, Nu 2.0 GDI hybride, Gamma 1.6 GDI)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-06",
+     "partie": "Rappel Hyundai 198 (dossier NHTSA EA21-003): inspection/remplacement moteur pour usure prématurée des coussinets de bielle (Theta II 2.4 MPI & hybride, Nu 2.0 GDI hybride, Gamma 1.6 GDI)",
+     "confirmees": [
+      {
+       "url": "https://static.nhtsa.gov/odi/inv/2021/INRD-EA21003-18044.pdf",
+       "verdict": "soutenue",
+       "classe": "officiel",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page confirme le rappel 198 (EA21-003) pour inspection/remplacement moteur en raison d'usure prématurée des coussinets de bielle sur les Santa Fe 2012 (Theta II 2.4 MPI), Sonata Hybrid 2011-2013 (Theta II 2.4 MPI Hybride) et Sonata Hybrid 2016 (Nu 2.0 GDI Hybride), ainsi que Veloster 2015-2016 (Gamma 1.6 GDI)."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel Hyundai 198 (dossier NHTSA EA21-003): inspection/remplacement moteur pour usure prématurée des coussinets de bielle (Theta II 2.4 MPI & hybride, Nu 2.0 GDI hybride, Gamma 1.6 GDI)"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-2.0-2.4-THETA-II-07": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "type": "campagne",
+   "intitule": "Rappel Kia 230047 (France, sept. 2023) : contrôle des vibrations moteur et remplacement des moteurs à coussinets de bielle usés sur d'anciennes Optima Hybrid",
+   "noyau": "Rappel Kia 230047 (France): contrôle des vibrations moteur et remplacement des moteurs à coussinets de bielle usés sur d'anciennes Optima Hybrid",
+   "periodes": [
+    {
+     "debut": 2023,
+     "fin": 2023,
+     "texte": "sept. 2023",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "sept. 2023"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-07",
+     "partie": "Rappel Kia 230047 (France): contrôle des vibrations moteur et remplacement des moteurs à coussinets de bielle usés sur d'anciennes Optima Hybrid",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-kia-optima-hybrid-des-moteurs-remplaces-sur-d-anciens-exemplaires-30029484.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page confirme le rappel Kia code 230047 sur l'Optima Hybrid 2.0 (France, 323 propriétaires, production fév. 2011-fév. 2012) avec contrôle des vibrations moteur et remplacement du moteur en cas d'usure prématurée des coussinets de bielle."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel Kia 230047 (France): contrôle des vibrations moteur et remplacement des moteurs à coussinets de bielle usés sur d'anciennes Optima Hybrid"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-2.0-2.4-THETA-II-08": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "type": "entretien",
+   "intitule": "Distribution : la presse ne la documente pas spécifiquement pour le Theta II dans les pages ouvertes (les moteurs du Tucson Mk3 incluant le 2.0 CRDi sont donnés « chain-driven » mais le Tucson Mk3 UK n'a pas de Theta II)",
+   "noyau": "Distribution: la presse ne la documente pas spécifiquement pour le Theta II dans les pages ouvertes",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-08",
+     "partie": "Distribution: la presse ne la documente pas spécifiquement pour le Theta II dans les pages ouvertes",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique au contraire que les moteurs sont à chaîne sans courroie à remplacer, mais ne mentionne ni le moteur Theta II ni aucun problème de distribution spécifique à ce moteur."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-BOITE-7DCT-01": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-BOITE-7DCT",
+   "type": "panne",
+   "intitule": "Vibrations de carrosserie à très basse vitesse (jusqu'à 5 km/h) / broutement d'embrayage ; remplacement du double embrayage et reprogrammation (note technique Kia, pas de rappel)",
+   "noyau": "Vibrations de carrosserie à très basse vitesse (jusqu'à 5 km/h) / broutement d'embrayage; remplacement du double embrayage et reprogrammation (note technique Kia, pas de rappel)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-BOITE-7DCT-01",
+     "partie": "Vibrations de carrosserie à très basse vitesse (jusqu'à 5 km/h) / broutement d'embrayage; remplacement du double embrayage et reprogrammation (note technique Kia, pas de rappel)",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/kia-problemes-de-vibrations-avec-la-boite-double-embrayage-dct-7-10641403.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page confirme des vibrations de carrosserie à très basse vitesse jusqu'à 5 km/h sur la DCT-7 de plusieurs modèles Kia (Rio, Stonic, Optima, Sportage, Carens, Cee'd, Soul avant le 1er avril 2018), avec remplacement du double embrayage, reprogrammation du calculateur dans certains cas, note technique Kia et absence de rappel officiel."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Vibrations de carrosserie à très basse vitesse (jusqu'à 5 km/h) / broutement d'embrayage; remplacement du double embrayage et reprogrammation (note technique Kia, pas de rappel)"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-BOITE-7DCT-02": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-BOITE-7DCT",
+   "type": "panne",
+   "intitule": "Hésitations et lenteur de la 7DCT au démarrage (Tucson Mk3) ; passages lents et à-coups de la 6DCT des Niro hybrides (vidange d'huile de boîte recommandée)",
+   "noyau": "Hésitations et lenteur de la 7DCT au démarrage (Tucson Mk3); passages lents et à-coups de la 6DCT des Niro hybrides (vidange d'huile de boîte recommandée)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-BOITE-7DCT-02",
+     "partie": "Hésitations et lenteur de la 7DCT au démarrage (Tucson Mk3); passages lents et à-coups de la 6DCT des Niro hybrides (vidange d'huile de boîte recommandée)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.autoexpress.co.uk/hyundai/tucson/104854/used-hyundai-tucson-mk3-2015-2020-review-and-buyers-guide",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne uniquement l'option boîte double embrayage sur le 1.7 CRDi à partir de 2016 et des soucis d'embrayage sur les diesels manuels, mais ne parle ni de la 7DCT ni d'hésitations au démarrage ni de la 6DCT hybride des Niro."
+      },
+      {
+       "url": "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne des passages de vitesses 'lazy and jerky' (paresseux et saccadés) sur la 6DCT du Niro hybride, confirmant une partie de l'affirmation pour le Niro, mais elle ne parle absolument pas de la 7DCT du Tucson Mk3 ni d'hésitations au démarrage, et ne mentionne aucune recommandation de vidange d'huile de boîte."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-01": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ",
+   "type": "campagne",
+   "intitule": "Rappels Kia Niro Mk1 : actionneurs d'embrayage mal fabriqués (fuites de transmission, août 2018, ~5 012 véh. UK) et relais pouvant surchauffer dans les packs batterie HEV/PHEV (mai 2019, ~5 021 véh. UK)",
+   "noyau": "Rappels Kia Niro Mk1: actionneurs d'embrayage mal fabriqués (fuites de transmission, ~5 012 véh. UK) et relais pouvant surchauffer dans les packs batterie HEV/PHEV (~5 021 véh. UK)",
+   "periodes": [
+    {
+     "debut": 2018,
+     "fin": 2018,
+     "texte": "août 2018",
+     "bornante": true
+    },
+    {
+     "debut": 2019,
+     "fin": 2019,
+     "texte": "mai 2019",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "août 2018",
+    "mai 2019"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-01",
+     "partie": "Rappels Kia Niro Mk1: actionneurs d'embrayage mal fabriqués (fuites de transmission, ~5 012 véh. UK) et relais pouvant surchauffer dans les packs batterie HEV/PHEV (~5 021 véh. UK)",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme les deux rappels Niro Mk1 avec les mêmes chiffres : 5 012 véhicules (août 2018) pour les actionneurs d'embrayage mal fabriqués causant des fuites de transmission, et 5 021 véhicules (mai 2019) pour la surchauffe du Power Assembly Relay dans les packs batterie hybrides/PHEV, tous construits entre novembre 2016 et septembre 2017."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappels Kia Niro Mk1: actionneurs d'embrayage mal fabriqués (fuites de transmission, ~5 012 véh. UK) et relais pouvant surchauffer dans les packs batterie HEV/PHEV (~5 021 véh. UK)"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-02": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ",
+   "type": "campagne",
+   "intitule": "Rappel Safety Gate SR/00017/25 (Kia 231113) : court-circuit possible dans le circuit de l'actionneur d'embrayage hydraulique (HCA) -> incident thermique dans le compartiment moteur",
+   "noyau": "Rappel Safety Gate SR/00017/25 (Kia 231113): court-circuit possible dans le circuit de l'actionneur d'embrayage hydraulique (HCA) -> incident thermique dans le compartiment moteur",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-02",
+     "partie": "Rappel Safety Gate SR/00017/25 (Kia 231113): court-circuit possible dans le circuit de l'actionneur d'embrayage hydraulique (HCA) -> incident thermique dans le compartiment moteur",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1297-rappels-kia.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page indique pour Kia Niro (2016-2022), rappel code 231113 / SR/00017/25, produits du 26.10.2015 au 16.06.2022 : l'humidité peut pénétrer dans la PCB de l'actionneur d'embrayage hydraulique (HCA), provoquant un court-circuit et un incendie du véhicule."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/rappels%202025.pdf",
+       "verdict": "mauvais_moteur",
+       "classe": "officiel",
+       "lecture": null,
+       "cache": true,
+       "justification": "La page attribue SR/00017/25 au KIA Niro DE HEV/PHEV (26/10/2015-16/06/2022), soit une génération antérieure (DE) motorisée différemment, et non à l'Hyundai Ioniq / Kia Niro 1.6 GDI Kappa hybride visé par l'affirmation."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel Safety Gate SR/00017/25 (Kia 231113): court-circuit possible dans le circuit de l'actionneur d'embrayage hydraulique (HCA) -> incident thermique dans le compartiment moteur"
+   ],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-03": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ",
+   "type": "panne",
+   "intitule": "Batterie 12 V qui se décharge (consommation parasite) ; Niro Mk2 : vanne de dérivation du récupérateur de chaleur d'échappement pouvant fuir (liquide de refroidissement) et faire surchauffer le moteur",
+   "noyau": "Batterie 12 V qui se décharge (consommation parasite); Niro Mk2: vanne de dérivation du récupérateur de chaleur d'échappement pouvant fuir (liquide de refroidissement) et faire surchauffer le moteur",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-03",
+     "partie": "Batterie 12 V qui se décharge (consommation parasite); Niro Mk2: vanne de dérivation du récupérateur de chaleur d'échappement pouvant fuir (liquide de refroidissement) et faire surchauffer le moteur",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne bien la batterie 12V qui se décharge à cause d'un courant parasite (pompe à carburant, audio, feu de coffre, serrures), mais ne parle d'aucune 'Niro Mk2' ni d'une vanne de dérivation du récupérateur de chaleur d'échappement qui fuirait du liquide de refroidissement."
+      },
+      {
+       "url": "https://www.autoexpress.co.uk/kia/niro/370401/used-kia-niro-mk2-2022-date-buyers-guide-something-everyone",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme bien le défaut de la vanne de dérivation du HERS sur le Niro Mk2 pouvant causer une fuite de liquide de refroidissement et une surchauffe moteur, mais elle ne mentionne aucunement une batterie 12V qui se décharge à cause d'une consommation parasite."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 27
+  },
+  "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-04": {
+   "mode": "noyau",
+   "famille": "HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ",
+   "type": "campagne",
+   "intitule": "Garantie : 7 ans/100 000 miles (Kia, UK) ; hybride 1.6 GDi sans courroie de distribution ; bons scores fiabilité Driver Power (Niro Mk1)",
+   "noyau": "Garantie: 7 ans/100 000 miles (Kia, UK); hybride 1.6 GDi sans courroie de distribution; bons scores fiabilité Driver Power (Niro Mk1)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-04#1",
+     "partie": "Garantie: 7 ans/100 000 miles (Kia, UK) (Niro Mk1)",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement que les véhicules bénéficient d'une garantie de sept ans/100 000 miles ('seven-year/100k-mile warranty')."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-04#2",
+     "partie": "Garantie: hybride 1.6 GDi sans courroie de distribution (Niro Mk1)",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que tous les moteurs Niro sont équipés d'une chaîne de distribution donc sans courroie à remplacer ('All Niro engines are fitted with a timing chain so there's no cambelt to replace')."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "F-HYUNDAI-KIA-HYBRIDE-NIRO-IONIQ-04#3",
+     "partie": "Garantie: bons scores fiabilité Driver Power (Niro Mk1)",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/kia/niro/359176/used-kia-niro-mk1-2016-2022-review",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page rapporte que le Niro a obtenu de bons scores de fiabilité et de qualité de construction dans l'enquête Driver Power, avec un historique de bons classements (2e en 2018, etc.)."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Garantie: 7 ans/100 000 miles (Kia, UK) (Niro Mk1)",
+    "Garantie: hybride 1.6 GDi sans courroie de distribution (Niro Mk1)",
+    "Garantie: bons scores fiabilité Driver Power (Niro Mk1)"
+   ],
+   "lot": 27
+  },
+  "E-JLR-INGENIUM-2.0-D-01": {
+   "mode": "noyau",
+   "famille": "JLR-INGENIUM-2.0-D",
+   "type": "panne",
+   "intitule": "Casse moteur : un palier d'arbre d'équilibrage casse ou s'use, les copeaux métalliques passent dans le circuit d'huile ; la dilution de l'huile par le gazole (régénérations du FAP fréquentes ou interrompues) aggrave le risque",
+   "noyau": "Casse moteur: un palier d'arbre d'équilibrage casse ou s'use, les copeaux métalliques passent dans le circuit d'huile; la dilution de l'huile par le gazole (régénérations du FAP fréquentes ou interrompues) aggrave le risque",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-01#1",
+     "partie": "Casse moteur: un palier d'arbre d'équilibrage casse ou s'use",
+     "confirmees": [
+      {
+       "url": "https://www.auto-motor-und-sport.de/tech-zukunft/motorschaeden-durch-ingenium-technik-was-kaeufer-wissen-muessen/",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que la casse est due à un défaut de lagerung (palier) des arbres d'équilibrage qui se brise ou s'use ('Bricht oder verschleißt ein Ausgleichswellenlager')."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-01#2",
+     "partie": "Casse moteur: les copeaux métalliques passent dans le circuit d'huile",
+     "confirmees": [
+      {
+       "url": "https://www.auto-motor-und-sport.de/tech-zukunft/motorschaeden-durch-ingenium-technik-was-kaeufer-wissen-muessen/",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page explique que les copeaux métalliques issus du palier cassé se répandent dans le circuit d'huile ('entstehen Metallspäne, die in den Ölkreislauf gelangen')."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-01#3",
+     "partie": "Casse moteur: la dilution de l'huile par le gazole (régénérations du FAP fréquentes ou interrompues) aggrave le risque",
+     "confirmees": [
+      {
+       "url": "https://www.auto-motor-und-sport.de/tech-zukunft/motorschaeden-durch-ingenium-technik-was-kaeufer-wissen-muessen/",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page décrit explicitement que la dilution de l'huile par le gazole, due à des régénérations du FAP fréquentes ou interrompues, aggrave l'usure des paliers ('Ölverdünnung durch Kraftstoffeintrag, etwa infolge abgebrochener oder häufig stattfindender DPF-Regenerationsphasen')."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Casse moteur: un palier d'arbre d'équilibrage casse ou s'use",
+    "Casse moteur: les copeaux métalliques passent dans le circuit d'huile",
+    "Casse moteur: la dilution de l'huile par le gazole (régénérations du FAP fréquentes ou interrompues) aggrave le risque"
+   ],
+   "lot": 28
+  },
+  "E-JLR-INGENIUM-2.0-D-02": {
+   "mode": "noyau",
+   "famille": "JLR-INGENIUM-2.0-D",
+   "type": "panne",
+   "intitule": "Distribution : plusieurs incidents relevés sur le diesel 180 ch",
+   "noyau": "Distribution: plusieurs incidents relevés sur le diesel 180 ch",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-02",
+     "partie": "Distribution: plusieurs incidents relevés sur le diesel 180 ch",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/jaguar-xe-la-fiche-fiabilite-express-de-caradisiac-202489.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement : « Sur le bloc diesel 180 ch, on note plusieurs incidents au niveau de la distribution »."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Distribution: plusieurs incidents relevés sur le diesel 180 ch"
+   ],
+   "lot": 28
+  },
+  "E-JLR-INGENIUM-2.0-D-03": {
+   "mode": "noyau",
+   "famille": "JLR-INGENIUM-2.0-D",
+   "type": "panne",
+   "intitule": "Turbocompresseur : nombreuses casses sur le 2.0 D 180 ch de début de carrière, entraînant parfois la destruction du moteur ; vanne EGR encrassée fréquemment",
+   "noyau": "Turbocompresseur: nombreuses casses sur le 2.0 D 180 ch de début de carrière, entraînant parfois la destruction du moteur; vanne EGR encrassée fréquemment",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-03#1",
+     "partie": "Turbocompresseur: nombreuses casses sur le 2.0 D 180 ch de début de carrière",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/jaguar-f-pace-la-fiche-fiabilite-express-de-caradisiac-199234.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement « De nombreuses casses sur la version 2.0 D 180 ch de début de carrière » pour le turbo."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-03#2",
+     "partie": "Turbocompresseur: entraînant parfois la destruction du moteur",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/jaguar-f-pace-la-fiche-fiabilite-express-de-caradisiac-199234.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que ces casses du turbo entraînent « parfois la destruction du moteur »."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-03#3",
+     "partie": "Turbocompresseur: vanne EGR encrassée fréquemment",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/jaguar-f-pace-la-fiche-fiabilite-express-de-caradisiac-199234.htm",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page attribue l'encrassement fréquent de la vanne EGR à une section distincte « Vanne EGR » sur les diesels en général, et non au turbocompresseur comme l'affirme l'item."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Turbocompresseur: nombreuses casses sur le 2.0 D 180 ch de début de carrière",
+    "Turbocompresseur: entraînant parfois la destruction du moteur"
+   ],
+   "lot": 28
+  },
+  "E-JLR-INGENIUM-2.0-D-04": {
+   "mode": "noyau",
+   "famille": "JLR-INGENIUM-2.0-D",
+   "type": "rappel",
+   "intitule": "Rappel de février 2017 : fuite possible au niveau du refroidisseur de carburant ; remplacement de l'ensemble",
+   "noyau": "Rappel: fuite possible au niveau du refroidisseur de carburant; remplacement de l'ensemble",
+   "periodes": [
+    {
+     "debut": 2017,
+     "fin": 2017,
+     "texte": "de février 2017",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "de février 2017"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-04#1",
+     "partie": "Rappel: fuite possible au niveau du refroidisseur de carburant",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/jaguar-xe-la-fiche-fiabilite-express-de-caradisiac-202489.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne un rappel de février 2017 sur des XE 2.0 diesel où « une fuite au niveau du refroidisseur de carburant est possible »."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-JLR-INGENIUM-2.0-D-04#2",
+     "partie": "Rappel: remplacement de l'ensemble",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/jaguar-xe-la-fiche-fiabilite-express-de-caradisiac-202489.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise pour ce même rappel qu'il faut « remplacer l'ensemble du refroidisseur de carburant par un composant à la conception redessinée »."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel: fuite possible au niveau du refroidisseur de carburant",
+    "Rappel: remplacement de l'ensemble"
+   ],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-D-1.5-01": {
+   "mode": "noyau",
+   "famille": "MAZDA-SKYACTIV-D-1.5",
+   "type": "panne",
+   "intitule": "Dilution de l'huile par le gazole (régénérations FAP interrompues) — source éditoriale uniquement ; Caradisiac Mazda 3 ne relève aucune panne sur ce moteur",
+   "noyau": "Dilution de l'huile par le gazole (régénérations FAP interrompues) — source éditoriale uniquement; Caradisiac Mazda 3 ne relève aucune panne sur ce moteur",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-1.5-01",
+     "partie": "Dilution de l'huile par le gazole (régénérations FAP interrompues) — source éditoriale uniquement; Caradisiac Mazda 3 ne relève aucune panne sur ce moteur",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-520-pannes-mazda-2.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page indique explicitement pour le 1.5 Skyactiv-D 105 ch que lorsque les régénérations du FAP sont interrompues, le gazole peut diluer l'huile et réduire la protection du turbo, des paliers et de la distribution."
+      }
+     ],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm",
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-454-pannes-mazda-3.php"
+     ]
+    }
+   ],
+   "parties_affichables": [
+    "Dilution de l'huile par le gazole (régénérations FAP interrompues) — source éditoriale uniquement; Caradisiac Mazda 3 ne relève aucune panne sur ce moteur"
+   ],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-D-2.2-01": {
+   "mode": "noyau",
+   "famille": "MAZDA-SKYACTIV-D-2.2",
+   "type": "panne",
+   "intitule": "Dilution de l'huile par le gazole lors des régénérations FAP incomplètes : montée du niveau d'huile, perte de protection — SOURCES ÉDITORIALES UNIQUEMENT",
+   "noyau": "Dilution de l'huile par le gazole lors des régénérations FAP incomplètes: montée du niveau d'huile, perte de protection — SOURCES ÉDITORIALES UNIQUEMENT",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-01#1",
+     "partie": "Dilution de l'huile par le gazole lors des régénérations FAP incomplètes: montée du niveau d'huile",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page indique que les régénérations du FAP ajoutent du gazole dans le carter et peuvent faire grimper le niveau d'huile au-delà du maximum sur le 2.2 Skyactiv-D 175 ch."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite/s-1192-diesels-les-moins-fiables.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne une dilution de l'huile par le gazole lors des régénérations FAP fragilisant le turbo et la pompe à huile, mais ne parle pas d'une montée du niveau d'huile."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php"
+     ]
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-01#2",
+     "partie": "Dilution de l'huile par le gazole lors des régénérations FAP incomplètes: perte de protection — SOURCES ÉDITORIALES UNIQUEMENT",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite/s-1192-diesels-les-moins-fiables.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que les régénérations FAP diluent l'huile avec du gazole, ce qui 'fragilise' le turbo et les organes nécessitant une huile visqueuse plutôt qu'un mélange carburant/huile 'inefficace', correspondant à une perte de protection."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page mentionne la dilution de l'huile par le gazole et la montée du niveau, mais ne parle pas explicitement d'une 'perte de protection' de l'huile, et la demande exige des sources éditoriales uniquement alors que cette page est un site d'avis/témoignages."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php"
+     ]
+    }
+   ],
+   "parties_affichables": [
+    "Dilution de l'huile par le gazole lors des régénérations FAP incomplètes: montée du niveau d'huile",
+    "Dilution de l'huile par le gazole lors des régénérations FAP incomplètes: perte de protection — SOURCES ÉDITORIALES UNIQUEMENT"
+   ],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-D-2.2-02": {
+   "mode": "noyau",
+   "famille": "MAZDA-SKYACTIV-D-2.2",
+   "type": "panne",
+   "intitule": "Joints d'injecteurs et injecteurs fragiles : dépôts gras contaminant le circuit d'huile, colmatage, casses de turbo",
+   "noyau": "Joints d'injecteurs et injecteurs fragiles: dépôts gras contaminant le circuit d'huile, colmatage, casses de turbo",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-02#1",
+     "partie": "Joints d'injecteurs et injecteurs fragiles: dépôts gras contaminant le circuit d'huile",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3016-fiabilite-du-22-skyactiv-d-de-mazda.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que les joints d'injecteurs fragiles peuvent entraîner la formation de dépôts gras susceptibles de contaminer le circuit d'huile."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite/s-1192-diesels-les-moins-fiables.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que les joints d'injecteurs sont fragiles et peuvent mener à des suies grasses qui finissent dans le circuit d'huile."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-02#2",
+     "partie": "Joints d'injecteurs et injecteurs fragiles: colmatage",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3016-fiabilite-du-22-skyactiv-d-de-mazda.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page dit que les dépôts gras contaminant le circuit d'huile par le joint de couvre-culasse peuvent 'potentiellement provoquer son obstruction', ce qui correspond au colmatage."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite/s-1192-diesels-les-moins-fiables.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que ces suies grasses peuvent 'boucher' le circuit d'huile, ce qui correspond à un colmatage."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-02#3",
+     "partie": "Joints d'injecteurs et injecteurs fragiles: casses de turbo",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3016-fiabilite-du-22-skyactiv-d-de-mazda.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page explique que la contamination/obstruction peut entraîner des défaillances du turbo du fait de sa lubrification, d'où de nombreuses pannes de turbo."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite/s-1192-diesels-les-moins-fiables.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page affirme explicitement que cela 'peut induire des casses de turbo dont la lubrification est plus cruciale qu'ailleurs' et note 'pas mal de turbos cassés'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Joints d'injecteurs et injecteurs fragiles: dépôts gras contaminant le circuit d'huile",
+    "Joints d'injecteurs et injecteurs fragiles: colmatage",
+    "Joints d'injecteurs et injecteurs fragiles: casses de turbo"
+   ],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-D-2.2-03": {
+   "mode": "noyau",
+   "famille": "MAZDA-SKYACTIV-D-2.2",
+   "type": "panne",
+   "intitule": "Soupapes / arbre à cames (particules métalliques), joint de culasse / culasse, chaîne de pompe à huile et crépine colmatée (perte de lubrification, serrage)",
+   "noyau": "Soupapes / arbre à cames (particules métalliques), joint de culasse / culasse, chaîne de pompe à huile et crépine colmatée (perte de lubrification, serrage)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-03",
+     "partie": "Soupapes / arbre à cames (particules métalliques), joint de culasse / culasse, chaîne de pompe à huile et crépine colmatée (perte de lubrification, serrage)",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page cite explicitement arbre à cames, joint de culasse/culasse, pompe à huile et chaîne de pompe à huile avec chute de lubrification pouvant entraîner destruction du bas moteur, pour les 2.2 Skyactiv-D 150/175 ch."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3016-fiabilite-du-22-skyactiv-d-de-mazda.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page évoque bien les soupapes, l'arbre à cames (particules métalliques) et les joints de culasse/culasse, mais ne mentionne aucune chaîne de pompe à huile ni crépine colmatée."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php"
+     ]
+    }
+   ],
+   "parties_affichables": [
+    "Soupapes / arbre à cames (particules métalliques), joint de culasse / culasse, chaîne de pompe à huile et crépine colmatée (perte de lubrification, serrage)"
+   ],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-D-2.2-04": {
+   "mode": "noyau",
+   "famille": "MAZDA-SKYACTIV-D-2.2",
+   "type": "campagne",
+   "intitule": "Campagnes Mazda (source éditoriale, à vérifier sur rappelconso) : campagne arbre à cames 2014-2016 ; rappel AK016A soupape d'admission bloquée par la suie (risque de calage) ; rappel février 2022 injecteur/court-circuit (2012-2016) ; rappel janvier 2022 pompe à carburant basse pression (jusqu'à février 2020) ; rappel février 2022 faisceau SCR (CX-5 II mai 2018–sept. 2020)",
+   "noyau": "Campagnes Mazda (source éditoriale, à vérifier sur rappelconso): campagne arbre à cames; rappel AK016A soupape d'admission bloquée par la suie (risque de calage); rappel injecteur/court-circuit; rappel pompe à carburant basse pression; rappel faisceau SCR (CX-5 II)",
+   "periodes": [
+    {
+     "debut": 2012,
+     "fin": 2016,
+     "texte": "2012-2016",
+     "bornante": true
+    },
+    {
+     "debut": null,
+     "fin": 2020,
+     "texte": "jusqu'à février 2020",
+     "bornante": true
+    },
+    {
+     "debut": 2018,
+     "fin": 2020,
+     "texte": "mai 2018–sept. 2020",
+     "bornante": true
+    },
+    {
+     "debut": 2014,
+     "fin": 2016,
+     "texte": "2014-2016",
+     "bornante": true
+    },
+    {
+     "debut": 2022,
+     "fin": 2022,
+     "texte": "février 2022",
+     "bornante": true
+    },
+    {
+     "debut": 2022,
+     "fin": 2022,
+     "texte": "janvier 2022",
+     "bornante": true
+    },
+    {
+     "debut": 2022,
+     "fin": 2022,
+     "texte": "février 2022",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "2012-2016",
+    "jusqu'à février 2020",
+    "mai 2018–sept. 2020",
+    "2014-2016",
+    "février 2022",
+    "janvier 2022"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-04#1",
+     "partie": "Campagnes Mazda (source éditoriale, à vérifier sur rappelconso): campagne arbre à cames (CX-5 II)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "mauvais_moteur",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page traite du CX-5 2012-2017 (1ère génération), pas du CX-5 II 2018-2020, et ne mentionne aucune campagne de rappel officielle pour arbre à cames."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page est dédiée à la Mazda 6 et ne mentionne aucune campagne de rappel concernant un arbre à cames sur CX-5 II."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-598-pannes-mazda-cx-5-ii.php"
+     ]
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-04#2",
+     "partie": "Campagnes Mazda (source éditoriale, à vérifier sur rappelconso): rappel AK016A soupape d'admission bloquée par la suie (risque de calage) (CX-5 II)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page évoque des problèmes d'arbre à cames et de perte de puissance sur le CX-5 2.2 Skyactiv-D 150 ch mais ne mentionne aucun rappel référencé AK016A ni soupape d'admission bloquée par la suie."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page mentionne bien le rappel AK016A pour soupape d'admission bloquée par la suie, mais ce rappel est cité dans le cadre de la Mazda 6, sans référence au CX-5 II."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-598-pannes-mazda-cx-5-ii.php"
+     ]
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-04#3",
+     "partie": "Campagnes Mazda (source éditoriale, à vérifier sur rappelconso): rappel injecteur/court-circuit (CX-5 II)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page mentionne des problèmes d'injecteurs (fuite, colmatage) mais ne cite aucun rappel officiel lié à un court-circuit d'injecteur."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page évoque un rappel logiciel lié à la coupure des cylindres (AK038A) sur Mazda 6, mais ne mentionne aucun rappel injecteur/court-circuit pour le CX-5 II."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-598-pannes-mazda-cx-5-ii.php"
+     ]
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-04#4",
+     "partie": "Campagnes Mazda (source éditoriale, à vérifier sur rappelconso): rappel pompe à carburant basse pression (CX-5 II)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page ne mentionne aucun rappel concernant une pompe à carburant basse pression, seulement des statistiques générales de pannes de pompe à huile/carburant."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page mentionne un rappel de la pompe à carburant basse pression (turbine déformée) mais dans le contexte de la Mazda 6, sans mention du CX-5 II."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-598-pannes-mazda-cx-5-ii.php"
+     ]
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-04#5",
+     "partie": "Campagnes Mazda (source éditoriale, à vérifier sur rappelconso): rappel faisceau SCR (CX-5 II)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-571-pannes-mazda-cx-5.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page ne fait aucune mention d'un faisceau SCR ni d'un rappel associé."
+      },
+      {
+       "url": "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page ne mentionne aucun rappel concernant un faisceau SCR, ni pour la Mazda 6 ni pour le CX-5 II."
+      }
+     ],
+     "silences": [
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-598-pannes-mazda-cx-5-ii.php"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-D-2.2-05": {
+   "mode": "a_rejuger",
+   "famille": "MAZDA-SKYACTIV-D-2.2",
+   "type": "entretien",
+   "intitule": "Distribution : chaîne (tous moteurs Mazda 3 III) — mais chaîne d'entraînement de pompe à huile citée comme fragile (éditorial)",
+   "noyau": "Distribution: chaîne",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-D-2.2-05",
+     "partie": "Distribution: chaîne",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-G-01": {
+   "mode": "noyau",
+   "famille": "MAZDA-SKYACTIV-G",
+   "type": "entretien",
+   "intitule": "Distribution : chaîne, sans remplacement ; moteur 2.0 jugé « très fiable » (Caradisiac) ; bilan « excellent » (fiches-auto, 207 avis 2.0 / 99 avis 1.5)",
+   "noyau": "Distribution: chaîne, sans remplacement",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-G-01",
+     "partie": "Distribution: chaîne, sans remplacement",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-2481-fiabilite-des-skyactiv-g.php",
+       "verdict": "non_soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page présente des statistiques de pannes (dont une colonne 'Distribution') mais n'indique à aucun moment le type de distribution (chaîne ou courroie) ni si un remplacement est requis pour ces moteurs."
+      }
+     ],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 28
+  },
+  "D-MAZDA-SKYACTIV-G-02": {
+   "mode": "a_rejuger",
+   "famille": "MAZDA-SKYACTIV-G",
+   "type": "campagne",
+   "intitule": "Rappels : février 2015 pompe à carburant (2.0 Skyactiv-G 165, Mazda 3 octobre 2013–février 2014, risque d'arrêt moteur) ; août 2019 AK038A logiciel de coupure de cylindres (Mazda 6 / CX-5 II 2.0/2.5, mars 2018–avril 2019) ; janvier 2022 pompe à carburant basse pression (jusqu'à février 2020)",
+   "noyau": "Rappels: pompe à carburant (2.0 Skyactiv-G 165, Mazda, risque d'arrêt moteur); AK038A logiciel de coupure de cylindres (Mazda 6 / CX-5 II 2.0/2.5); pompe à carburant basse pression",
+   "periodes": [
+    {
+     "debut": 2013,
+     "fin": 2014,
+     "texte": "3 octobre 2013–février 2014",
+     "bornante": true
+    },
+    {
+     "debut": 2018,
+     "fin": 2019,
+     "texte": "mars 2018–avril 2019",
+     "bornante": true
+    },
+    {
+     "debut": null,
+     "fin": 2020,
+     "texte": "jusqu'à février 2020",
+     "bornante": true
+    },
+    {
+     "debut": 2015,
+     "fin": 2015,
+     "texte": "février 2015",
+     "bornante": true
+    },
+    {
+     "debut": 2019,
+     "fin": 2019,
+     "texte": "août 2019",
+     "bornante": true
+    },
+    {
+     "debut": 2022,
+     "fin": 2022,
+     "texte": "janvier 2022",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "3 octobre 2013–février 2014",
+    "mars 2018–avril 2019",
+    "jusqu'à février 2020",
+    "février 2015",
+    "août 2019",
+    "janvier 2022"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "D-MAZDA-SKYACTIV-G-02#1",
+     "partie": "Rappels: pompe à carburant (2.0 Skyactiv-G 165, Mazda, risque d'arrêt moteur)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm",
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php"
+     ]
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-G-02#2",
+     "partie": "Rappels: AK038A logiciel de coupure de cylindres (Mazda 6 / CX-5 II 2.0/2.5)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm",
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php"
+     ]
+    },
+    {
+     "uid": "D-MAZDA-SKYACTIV-G-02#3",
+     "partie": "Rappels: pompe à carburant basse pression",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/fiabilite-de-la-mazda-3-3e-generation-la-maxi-fiche-occasion-de-caradisiac-174617.htm",
+      "https://www.fiches-auto.fr/fiabilite-mazda/fiabilite-481-pannes-mazda-6.php"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 28
+  },
+  "E-MERCEDES-4MATIC-GLA-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-4MATIC-GLA",
+   "type": "panne",
+   "intitule": "Usure prématurée du différentiel arrière (pont), parfois avant 70 000 km",
+   "noyau": "Usure prématurée du différentiel arrière (pont), parfois avant 70 000 km",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-4MATIC-GLA-01",
+     "partie": "Usure prématurée du différentiel arrière (pont), parfois avant 70 000 km",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-du-mercedes-gla-la-maxi-fiche-occasion-de-caradisiac-187066.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que sur les modèles 220d avec transmission 4Matic, il y a une usure prématurée du différentiel arrière (pont), parfois avant 70 000 km."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Usure prématurée du différentiel arrière (pont), parfois avant 70 000 km"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-7G-DCT-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-7G-DCT",
+   "type": "panne",
+   "intitule": "Boîte 7G-DCT : dysfonctionnements pouvant au pire conduire à son remplacement (passage des rapports impossible, bruits, craquements)",
+   "noyau": "Boîte 7G-DCT: dysfonctionnements pouvant au pire conduire à son remplacement (passage des rapports impossible, bruits, craquements)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-7G-DCT-01",
+     "partie": "Boîte 7G-DCT: dysfonctionnements pouvant au pire conduire à son remplacement (passage des rapports impossible, bruits, craquements)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-du-mercedes-gla-la-maxi-fiche-occasion-de-caradisiac-187066.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne que la boîte 7G-DCT peut subir des dysfonctionnements (passage des rapports impossibles, bruits, craquements) pouvant conduire à son remplacement."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Boîte 7G-DCT: dysfonctionnements pouvant au pire conduire à son remplacement (passage des rapports impossible, bruits, craquements)"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-9G-TRONIC-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-9G-TRONIC",
+   "type": "panne",
+   "intitule": "Boîte automatique du GLC (9 rapports) : reste bloquée sur le premier rapport, à-coups — une reprogrammation peut y remédier",
+   "noyau": "Boîte automatique du GLC (9 rapports): reste bloquée sur le premier rapport, à-coups — une reprogrammation peut y remédier",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-9G-TRONIC-01#1",
+     "partie": "Boîte automatique du GLC (9 rapports): reste bloquée sur le premier rapport",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/peut-on-s-offrir-un-mercedes-glc-d-occasion-les-yeux-fermes-214142.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement que la boîte automatique du GLC 'présente de multiples défauts comme celui de rester bloquée sur le premier rapport'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-9G-TRONIC-01#2",
+     "partie": "Boîte automatique du GLC (9 rapports): à-coups — une reprogrammation peut y remédier",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/peut-on-s-offrir-un-mercedes-glc-d-occasion-les-yeux-fermes-214142.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne les à-coups de la boîte automatique, notamment lors des rétrogradages, et précise qu'une reprogrammation peut régler le problème."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Boîte automatique du GLC (9 rapports): reste bloquée sur le premier rapport",
+    "Boîte automatique du GLC (9 rapports): à-coups — une reprogrammation peut y remédier"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-AIRMATIC-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-AIRMATIC",
+   "type": "panne",
+   "intitule": "Compresseur de suspension pneumatique défaillant (réparations généralement coûteuses)",
+   "noyau": "Compresseur de suspension pneumatique défaillant (réparations généralement coûteuses)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-AIRMATIC-01",
+     "partie": "Compresseur de suspension pneumatique défaillant (réparations généralement coûteuses)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/peut-on-s-offrir-un-mercedes-glc-d-occasion-les-yeux-fermes-214142.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page affirme que sur les modèles équipés de suspension pneumatique, le compresseur peut être défectueux et que 'les réparations sont généralement coûteuses'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Compresseur de suspension pneumatique défaillant (réparations généralement coûteuses)"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-ELV-W204-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-ELV-W204",
+   "type": "panne",
+   "intitule": "Le blocage électronique de la direction dysfonctionne sur de très nombreux exemplaires (voiture immobilisée) ; Mercedes rechigne souvent à participer",
+   "noyau": "Le blocage électronique de la direction dysfonctionne sur de très nombreux exemplaires (voiture immobilisée); Mercedes rechigne souvent à participer",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-ELV-W204-01",
+     "partie": "Le blocage électronique de la direction dysfonctionne sur de très nombreux exemplaires (voiture immobilisée); Mercedes rechigne souvent à participer",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement sur la Classe C 3 (W204) que 'le blocage électronique de la direction dysfonctionne sur de très nombreux exemplaires', baptisé ELV, et que 'Mercedes rechigne souvent à participer à cette réparation'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Le blocage électronique de la direction dysfonctionne sur de très nombreux exemplaires (voiture immobilisée); Mercedes rechigne souvent à participer"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-M260-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-M260",
+   "type": "panne",
+   "intitule": "Culasse : problèmes récurrents et graves (pertes de compression, joints de culasse défectueux), fréquemment autour de 40 000 à 50 000 km ; prise en charge souvent refusée selon fiches-auto (source unique, 16 avis)",
+   "noyau": "Culasse: problèmes récurrents et graves (pertes de compression, joints de culasse défectueux), fréquemment autour de 40 000 à 50 000 km; prise en charge souvent refusée selon fiches-auto (source unique, 16 avis)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-M260-01#1",
+     "partie": "Culasse: problèmes récurrents et graves (pertes de compression, joints de culasse défectueux) (source unique, 16 avis)",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-3225-fiabilite-moteur-250-mercedes.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement que le bloc 250 224 ch rencontre des problèmes récurrents et graves de culasse, avec pertes de compression et joints de culasse défectueux."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-M260-01#2",
+     "partie": "Culasse: fréquemment autour de 40 000 à 50 000 km (source unique, 16 avis)",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-3225-fiabilite-moteur-250-mercedes.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que ces problèmes de culasse apparaissent fréquemment autour de 40 000 à 50 000 km."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-M260-01#3",
+     "partie": "Culasse: prise en charge souvent refusée selon fiches-auto (source unique, 16 avis)",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-3225-fiabilite-moteur-250-mercedes.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne que les réparations sont souvent non prises en charge par Mercedes car la marque ne veut pas admettre le vice."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Culasse: problèmes récurrents et graves (pertes de compression, joints de culasse défectueux) (source unique, 16 avis)",
+    "Culasse: fréquemment autour de 40 000 à 50 000 km (source unique, 16 avis)",
+    "Culasse: prise en charge souvent refusée selon fiches-auto (source unique, 16 avis)"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-M270-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-M270",
+   "type": "panne",
+   "intitule": "Turbocompresseur : soucis sur les versions essence (pertes de puissance)",
+   "noyau": "Turbocompresseur: soucis sur les versions essence (pertes de puissance)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-M270-01",
+     "partie": "Turbocompresseur: soucis sur les versions essence (pertes de puissance)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/mercedes-classe-a-3-la-fiche-fiabilite-express-de-caradisiac-194156.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement 'on note des soucis de turbocompresseur sur les versions essence (pertes de puissance)' pour la Classe A, ce qui correspond au véhicule et à l'organe concernés."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Turbocompresseur: soucis sur les versions essence (pertes de puissance)"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-M270-02": {
+   "mode": "noyau",
+   "famille": "MERCEDES-M270",
+   "type": "verification",
+   "intitule": "Pas de défaut chronique grave relevé sur le 250 de 211 ch par fiches-auto (50 avis ; deux casses moteur signalées)",
+   "noyau": "Pas de défaut chronique grave relevé sur le 250 de 211 ch par fiches-auto (50 avis, deux casses moteur signalées)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-M270-02",
+     "partie": "Pas de défaut chronique grave relevé sur le 250 de 211 ch par fiches-auto (50 avis, deux casses moteur signalées)",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-essence/s-3225-fiabilite-moteur-250-mercedes.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que le 250 211 ch ne présente pas de souci chronique et grave, tout en signalant deux casses moteur sur 50 avis, sans que cela reflète le bilan général."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Pas de défaut chronique grave relevé sur le 250 de 211 ch par fiches-auto (50 avis, deux casses moteur signalées)"
+   ],
+   "lot": 28
+  },
+  "E-MERCEDES-M270-OM651-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-M270-OM651",
+   "type": "rappel",
+   "intitule": "Rappel de juin-juillet 2017 (250 000 véhicules en Allemagne) : le raccord de la conduite de dépression du servofrein peut casser — effort accru à la pédale ; remplacement de la conduite",
+   "noyau": "Rappel: le raccord de la conduite de dépression du servofrein peut casser — effort accru à la pédale; remplacement de la conduite",
+   "periodes": [
+    {
+     "debut": 2017,
+     "fin": 2017,
+     "texte": "de juin-juillet 2017",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "250 000 véhicules en Allemagne",
+    "de juin-juillet 2017"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-M270-OM651-01#1",
+     "partie": "Rappel: le raccord de la conduite de dépression du servofrein peut casser — effort accru à la pédale",
+     "confirmees": [
+      {
+       "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mercedes-benz-a-klasse-276/",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page décrit le rappel de juillet 2017 : le raccord de la conduite de dépression du servofrein peut casser, entraînant un effort accru au pédale de frein, pour les véhicules avec moteur essence M270 et diesel OM651."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-M270-OM651-01#2",
+     "partie": "Rappel: remplacement de la conduite",
+     "confirmees": [
+      {
+       "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mercedes-benz-a-klasse-276/",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que la mesure corrective consiste à remplacer la conduite de dépression du servofrein (Unterdruckleitung des Bremskraftverstärkers ausgetauscht) pour les mêmes véhicules M270/OM651."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel: le raccord de la conduite de dépression du servofrein peut casser — effort accru à la pédale",
+    "Rappel: remplacement de la conduite"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-M271-M272-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-M271-M272",
+   "type": "panne",
+   "intitule": "Chaîne de distribution : claquements possibles à partir de 100 000 km, toutes motorisations confondues — à faire vérifier sous peine de dégâts moteur",
+   "noyau": "Chaîne de distribution: claquements possibles à partir de 100 000 km, toutes motorisations confondues — à faire vérifier sous peine de dégâts moteur",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-M271-M272-01#1",
+     "partie": "Chaîne de distribution: claquements possibles à partir de 100 000 km",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/mercedes-slk-2-la-fiche-fiabilite-express-de-caradisiac-199902.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que des claquements de la chaîne de distribution peuvent apparaître à partir de 100 000 km."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-M271-M272-01#2",
+     "partie": "Chaîne de distribution: toutes motorisations confondues — à faire vérifier sous peine de dégâts moteur",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/mercedes-slk-2-la-fiche-fiabilite-express-de-caradisiac-199902.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que ces claquements de chaîne concernent 'toutes motorisations confondues' et qu'il faut les faire vérifier sous peine de dégâts graves et irréversibles au moteur."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Chaîne de distribution: claquements possibles à partir de 100 000 km",
+    "Chaîne de distribution: toutes motorisations confondues — à faire vérifier sous peine de dégâts moteur"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-M274-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-M274",
+   "type": "rappel",
+   "intitule": "Rappel de mars 2021 : pont de diodes de l'alternateur défectueux, échauffement du bobinage du stator et faible risque d'incendie ; 1 291 voitures en France",
+   "noyau": "Rappel: pont de diodes de l'alternateur défectueux, échauffement du bobinage du stator et faible risque d'incendie;voitures en France",
+   "periodes": [
+    {
+     "debut": 2021,
+     "fin": 2021,
+     "texte": "de mars 2021",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "1 291 voitures",
+    "de mars 2021"
+   ],
+   "details_affichables": [
+    "1 291 voitures"
+   ],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-M274-01#1",
+     "partie": "Rappel: pont de diodes de l'alternateur défectueux",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-classe-c-risque-de-surchauffe-de-lalternateur-10573402.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement un rappel pour pont de diodes défaillant de l'alternateur sur les Classe C W205 essence M274 1.6/2.0 turbo fabriquées entre mars 2014 et février 2018."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-M274-01#2",
+     "partie": "Rappel: échauffement du bobinage du stator et faible risque d'incendie;voitures en France",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-classe-c-risque-de-surchauffe-de-lalternateur-10573402.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que le pont de diodes défaillant entraîne un échauffement du bobinage du stator avec un petit risque d'incendie, pour 1291 voitures rappelées en France, ce qui correspond exactement à l'affirmation."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel: pont de diodes de l'alternateur défectueux",
+    "Rappel: échauffement du bobinage du stator et faible risque d'incendie;voitures en France"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM642-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM642",
+   "type": "panne",
+   "intitule": "Bougies de préchauffage à remplacer prématurément (320 CDI)",
+   "noyau": "Bougies de préchauffage à remplacer prématurément (320 CDI)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM642-01",
+     "partie": "Bougies de préchauffage à remplacer prématurément (320 CDI)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique 'Bougies de préchauffage. Sur le 320 CDI, quelques cas de bougies de préchauffage à remplacer prématurément.'"
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Bougies de préchauffage à remplacer prématurément (320 CDI)"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "campagne",
+   "intitule": "Injecteurs piézoélectriques Delphi (2 000 bar) défaillants — défaut d'assemblage sur une série de pièces : remplacement des injecteurs (environ 2 h 30) dans le cadre d'une opération de satisfaction clientèle, sans rappel officiel ni courrier en France ; garantie prolongée d'un an ou 200 000 km",
+   "noyau": "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): remplacement des injecteurs dans le cadre d'une opération de satisfaction clientèle, sans rappel officiel",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-01#1",
+     "partie": "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): remplacement des injecteurs dans le cadre d'une opération de satisfaction clientèle",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mercedes-classe-c-classe-e-et-glk-rates-a-l-allumage-165454.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme un défaut d'assemblage des injecteurs piézo-électriques Delphi sur les moteurs OM651 220/250 CDI, avec remplacement pris en charge lors d'une opération de satisfaction client."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-01#2",
+     "partie": "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): sans rappel officiel",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mercedes-classe-c-classe-e-et-glk-rates-a-l-allumage-165454.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise explicitement qu'il ne s'agit pas d'une campagne de rappel officielle en France mais d'une opération de satisfaction client sans envoi de courrier."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): remplacement des injecteurs dans le cadre d'une opération de satisfaction clientèle",
+    "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): sans rappel officiel"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-02": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "panne",
+   "intitule": "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux : claquement ou cognement au démarrage ; contrôle de l'étirement (seuil 82 mm, 84 mm au-delà de 250 000 km) puis remplacement du tendeur seul ou du tendeur et de la chaîne (pignons d'arbres à cames à vérifier) ; aucun rappel officiel",
+   "noyau": "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux: claquement ou cognement au démarrage; contrôle de l'étirement (seuil 82 mm, 84 mm au-delà de 250 000 km) puis remplacement du tendeur seul ou du tendeur et de la chaîne (pignons d'arbres à cames à vérifier); aucun rappel officiel",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-02#1",
+     "partie": "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux: claquement ou cognement au démarrage",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mercedes-18-et-21-diesel-om651-souci-de-chaine-de-distribution-10431390.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page décrit exactement ce symptôme : « bruit de claquement ou de cognement au démarrage » signalant un allongement de la chaîne dû à un tendeur défectueux."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-02#2",
+     "partie": "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux: contrôle de l'étirement (seuil 82 mm, 84 mm au-delà de 250 000 km) puis remplacement du tendeur seul ou du tendeur et de la chaîne (pignons d'arbres à cames à vérifier)",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mercedes-18-et-21-diesel-om651-souci-de-chaine-de-distribution-10431390.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique précisément les seuils 82 mm (ou 84 mm au-delà de 250 000 km) et le remplacement du tendeur seul ou avec la chaîne, plus le contrôle des pignons d'arbres à cames."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-02#3",
+     "partie": "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux: aucun rappel officiel",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mercedes-18-et-21-diesel-om651-souci-de-chaine-de-distribution-10431390.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page affirme explicitement que « Mercedes n'a organisé aucun rappel officiel »."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux: claquement ou cognement au démarrage",
+    "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux: contrôle de l'étirement (seuil 82 mm, 84 mm au-delà de 250 000 km) puis remplacement du tendeur seul ou du tendeur et de la chaîne (pignons d'arbres à cames à vérifier)",
+    "Chaîne de distribution qui s'allonge à cause d'un tendeur défectueux: aucun rappel officiel"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-03": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "rappel",
+   "intitule": "Rappel de janvier 2015 : joint défectueux du tendeur de chaîne de distribution — le tendeur peut tomber en panne, la chaîne détendue sauter et le moteur casser ; remplacement du joint",
+   "noyau": "Rappel: joint défectueux du tendeur de chaîne de distribution — le tendeur peut tomber en panne, la chaîne détendue sauter et le moteur casser; remplacement du joint",
+   "periodes": [
+    {
+     "debut": 2015,
+     "fin": 2015,
+     "texte": "de janvier 2015",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "de janvier 2015"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-03#1",
+     "partie": "Rappel: joint défectueux du tendeur de chaîne de distribution — le tendeur peut tomber en panne",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique pour le rappel de janvier 2015 'Diesel-Vierzylinder OM651: Wegen einer defekten Dichtung am Steuerkettenspanner kann dieser ausfallen', ce qui correspond au joint défectueux du tendeur de chaîne pouvant tomber en panne."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-03#2",
+     "partie": "Rappel: la chaîne détendue sauter et le moteur casser",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que la défaillance 'führt zu einer gelockerten Steuerkette, die überspringen kann, was in Folge zum Motorschaden führt', ce qui correspond à la chaîne qui saute et casse le moteur."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-03#3",
+     "partie": "Rappel: remplacement du joint",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que 'Die Händler tauschen den fehlerhaften Dichtring gegen eine verbesserte Version aus', ce qui correspond au remplacement du joint."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel: joint défectueux du tendeur de chaîne de distribution — le tendeur peut tomber en panne",
+    "Rappel: la chaîne détendue sauter et le moteur casser",
+    "Rappel: remplacement du joint"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-04": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "garantie",
+   "intitule": "Tendeur de chaîne de distribution : Daimler a élargi à titre préventif sa période de geste commercial (Kulanz) et monte une pièce améliorée",
+   "noyau": "Tendeur de chaîne de distribution: Daimler a élargi à titre préventif sa période de geste commercial (Kulanz) et monte une pièce améliorée",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-04",
+     "partie": "Tendeur de chaîne de distribution: Daimler a élargi à titre préventif sa période de geste commercial (Kulanz) et monte une pièce améliorée",
+     "confirmees": [
+      {
+       "url": "https://www.autobild.de/artikel/mercedes-220-cdi-und-250-cdi-2795392.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que pour le tendeur de chaîne de distribution défaillant, Daimler 'habe den Kulanzzeitraum vorsorglich erweitert' et installe une pièce améliorée en cas de réparation, ce qui correspond exactement à l'affirmation."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Tendeur de chaîne de distribution: Daimler a élargi à titre préventif sa période de geste commercial (Kulanz) et monte une pièce améliorée"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-05": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "rappel",
+   "intitule": "Rappel d'avril 2016 : conduites haute pression de carburant des quatre-cylindres diesel — défaut de matière, fissures et fuite de gazole possibles ; remplacement des conduites",
+   "noyau": "Rappel d': conduites haute pression de carburant des quatre-cylindres diesel — défaut de matière, fissures et fuite de gazole possibles; remplacement des conduites",
+   "periodes": [
+    {
+     "debut": 2016,
+     "fin": 2016,
+     "texte": "avril 2016",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "avril 2016"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-05#1",
+     "partie": "Rappel d': conduites haute pression de carburant des quatre-cylindres diesel — défaut de matière",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page mentionne le rappel 4/2016 pour le moteur diesel 4 cylindres : 'Wegen eines Materialfehlers der Kraftstoff-Hochdruck-Leitungen' (défaut de matière sur les conduites haute pression de carburant)."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-05#2",
+     "partie": "Rappel d': fissures et fuite de gazole possibles",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page précise que ce défaut de matière peut entraîner 'Rissbildung und damit verbundenem Kraftstoffaustritt' (fissures et fuite de carburant)."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-05#3",
+     "partie": "Rappel d': remplacement des conduites",
+     "confirmees": [
+      {
+       "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+       "verdict": "soutenue",
+       "classe": "consommateurs",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page indique que 'Die Händler erneuern die betreffenden Kraftstoff-Hochdruckleitungen' (les concessionnaires remplacent les conduites concernées)."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel d': conduites haute pression de carburant des quatre-cylindres diesel — défaut de matière",
+    "Rappel d': fissures et fuite de gazole possibles",
+    "Rappel d': remplacement des conduites"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-06": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "rappel",
+   "intitule": "Rappel officiel ordonné par le KBA (juin 2018) pour dispositifs d'invalidation illicites : la mesure de service volontaire devient un rappel obligatoire, avec mise à jour du logiciel moteur — 774 000 véhicules diesel en Europe",
+   "noyau": "Rappel officiel ordonné par le KBA pour dispositifs d'invalidation illicites: la mesure de service volontaire devient un rappel obligatoire, avec mise à jour du logiciel moteur —véhicules diesel en Europe",
+   "periodes": [
+    {
+     "debut": 2018,
+     "fin": 2018,
+     "texte": "juin 2018",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "juin 2018",
+    "774 000 véhicules"
+   ],
+   "details_affichables": [
+    "774 000 véhicules"
+   ],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-06#1",
+     "partie": "Rappel officiel ordonné par le KBA pour dispositifs d'invalidation illicites: la mesure de service volontaire devient un rappel obligatoire",
+     "confirmees": [
+      {
+       "url": "https://journalauto.com/constructeurs/mercedes-benz-contraint-de-rappeler-pres-de-800-000-vehicules-diesel-en-europe/",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que le ministère allemand des Transports (KBA) a ordonné le rappel immédiat de 774 000 véhicules diesel Mercedes-Benz soupçonnés d'être équipés d'un logiciel truqueur, ce qui correspond à un rappel obligatoire pour dispositif d'invalidation illicite."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/dieselgate-de-nouveaux-soupcons-pour-mercedes-9184394.html",
+       "verdict": "mauvais_moteur",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page évoque un rappel KBA pour le Vito motorisation diesel 1.6 Euro 6 ainsi que Classe C et GLC sans préciser le moteur OM651 1.8/2.1 CDI mentionné, donc elle ne concerne pas précisément le moteur visé."
+      }
+     ],
+     "silences": [
+      "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf"
+     ]
+    },
+    {
+     "uid": "E-MERCEDES-OM651-06#2",
+     "partie": "Rappel officiel ordonné par le KBA pour dispositifs d'invalidation illicites: avec mise à jour du logiciel moteur —véhicules diesel en Europe",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/dieselgate-de-nouveaux-soupcons-pour-mercedes-9184394.html",
+       "verdict": "mauvais_moteur",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que Daimler a soumis une mise à jour logicielle suite au rappel du Vito 1.6 Euro 6 et d'autres modèles, mais ne mentionne pas spécifiquement le moteur OM651 1.8/2.1 CDI concerné par l'affirmation."
+      },
+      {
+       "url": "https://journalauto.com/constructeurs/mercedes-benz-contraint-de-rappeler-pres-de-800-000-vehicules-diesel-en-europe/",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page ne mentionne aucune mise à jour du logiciel moteur comme mesure corrective, elle évoque seulement l'ordre de rappel et le soupçon de logiciel truqueur."
+      }
+     ],
+     "silences": [
+      "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf"
+     ]
+    }
+   ],
+   "parties_affichables": [
+    "Rappel officiel ordonné par le KBA pour dispositifs d'invalidation illicites: la mesure de service volontaire devient un rappel obligatoire"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-07": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "entretien",
+   "intitule": "Distribution par chaîne (pas d'intervalle de remplacement) ; en cas de bruit au démarrage, faire mesurer l'allongement de la chaîne",
+   "noyau": "Distribution par chaîne",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-07",
+     "partie": "Distribution par chaîne",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mercedes-18-et-21-diesel-om651-souci-de-chaine-de-distribution-10431390.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page traite bien d'un problème de chaîne de distribution sur ce moteur, confirmant qu'il s'agit d'une distribution par chaîne."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Distribution par chaîne"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-08": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "panne",
+   "intitule": "Pompe à eau : fuites de liquide de refroidissement sur tous les modèles à moteur OM651 ; Mercedes a remplacé gratuitement les pompes des voitures produites de mars à juillet 2009",
+   "noyau": "Pompe à eau: fuites de liquide de refroidissement sur tous les modèles à moteur OM651; Mercedes a remplacé gratuitement les pompes des voitures",
+   "periodes": [
+    {
+     "debut": 2009,
+     "fin": 2009,
+     "texte": "produites de mars à juillet 2009",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "produites de mars à juillet 2009"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-08#1",
+     "partie": "Pompe à eau: fuites de liquide de refroidissement sur tous les modèles à moteur OM651",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique 'Pompe à eau. Sur tous les modèles dotés du moteur diesel 4 cylindre OM651 (180, 200, 220, 250 CDI), fuite de liquide de refroidissement.'"
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-08#2",
+     "partie": "Pompe à eau: Mercedes a remplacé gratuitement les pompes des voitures",
+     "confirmees": [
+      {
+       "url": "https://www.autobild.de/artikel/mercedes-220-cdi-und-250-cdi-2795392.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que pour les pompes à eau défectueuses des véhicules produits de mars à juillet 2009, 'Die Werkstatt ersetzt solche Pumpen kostenlos gegen eine neuere Version', ce qui correspond au remplacement gratuit mentionné."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page ne mentionne aucun remplacement gratuit par Mercedes des pompes à eau, elle dit seulement qu'il faut la remplacer."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Pompe à eau: fuites de liquide de refroidissement sur tous les modèles à moteur OM651",
+    "Pompe à eau: Mercedes a remplacé gratuitement les pompes des voitures"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-09": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "panne",
+   "intitule": "Volant moteur bi-masse : nombreux cas de casse prématurée ou de bruits métalliques, parfois avant 80 000 km (embrayage à remplacer avec)",
+   "noyau": "Volant moteur bi-masse: casse prématurée ou bruits métalliques, parfois avant 80 000 km",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-09#1",
+     "partie": "Volant moteur bi-masse: casse prématurée ou bruits métalliques",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique : « Volant moteur. Sur les 180/200/220 CDI (un peu moins sur le 250 CDI), nombreux cas de casse prématurée (ou bruits métalliques) »."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM651-09#2",
+     "partie": "Volant moteur bi-masse: parfois avant 80 000 km",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/fiabilite-de-la-mercedes-classe-c-3-la-maxi-fiche-occasion-de-caradisiac-167186.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que la casse du volant moteur survient 'à des kilométrages faibles (avant 80 000 km)' pour les 180/200/220 CDI."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Volant moteur bi-masse: casse prématurée ou bruits métalliques",
+    "Volant moteur bi-masse: parfois avant 80 000 km"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-10": {
+   "mode": "a_rejuger",
+   "famille": "MERCEDES-OM651",
+   "type": "panne",
+   "intitule": "Coussinets de bielle pouvant s'user prématurément, notamment sur les 250 d",
+   "noyau": "Coussinets de bielle pouvant s'user prématurément, notamment sur les 250 d",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-10",
+     "partie": "Coussinets de bielle pouvant s'user prématurément, notamment sur les 250 d",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-11": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651",
+   "type": "panne",
+   "intitule": "Refroidisseur d'huile : fuites pouvant mélanger l'huile et l'eau (réparations coûteuses) — signalé sur le 220 d 170 ch",
+   "noyau": "Refroidisseur d'huile: fuites pouvant mélanger l'huile et l'eau (réparations coûteuses) — signalé sur le 220 d 170 ch",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-11",
+     "partie": "Refroidisseur d'huile: fuites pouvant mélanger l'huile et l'eau (réparations coûteuses) — signalé sur le 220 d 170 ch",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3308-fiabilite-220d-bluetec-mercedes.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique pour le 220d 170 ch que 'des pannes au niveau du refroidisseur d'huile ont été signalées, notamment des fuites qui peuvent mélanger l'huile et l'eau, ce qui nécessite des réparations coûteuses'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Refroidisseur d'huile: fuites pouvant mélanger l'huile et l'eau (réparations coûteuses) — signalé sur le 220 d 170 ch"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-OM654-220-D-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM651-OM654-220-D",
+   "type": "panne",
+   "intitule": "Sondes NOx peu fiables (voyant moteur, remplacement) et défaillances de la sonde AdBlue / des capteurs de dépollution",
+   "noyau": "Sondes NOx peu fiables (voyant moteur, remplacement) et défaillances de la sonde AdBlue / des capteurs de dépollution",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-OM654-220-D-01",
+     "partie": "Sondes NOx peu fiables (voyant moteur, remplacement) et défaillances de la sonde AdBlue / des capteurs de dépollution",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-3308-fiabilite-220d-bluetec-mercedes.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique pour le 220d 170 ch que les capteurs NOx sont particulièrement cités avec des problèmes de gestion des émissions, et que des défaillances de la sonde AdBlue et des capteurs de dépollution sont fréquentes, provoquant l'allumage du voyant moteur."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme bien la fiabilité médiocre de la sonde Nox sur la Classe C W205, mais elle ne mentionne aucune défaillance de sonde AdBlue ni de capteurs de dépollution associés."
+      }
+     ],
+     "silences": [
+      "https://www.caradisiac.com/peut-on-s-offrir-un-mercedes-glc-d-occasion-les-yeux-fermes-214142.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [
+    "Sondes NOx peu fiables (voyant moteur, remplacement) et défaillances de la sonde AdBlue / des capteurs de dépollution"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM651-OM654-220-D-02": {
+   "mode": "a_rejuger",
+   "famille": "MERCEDES-OM651-OM654-220-D",
+   "type": "panne",
+   "intitule": "Turbocompresseur : plusieurs témoignages de casse, parfois avant 100 000 km ; vanne EGR imparfaite",
+   "noyau": "Turbocompresseur: plusieurs témoignages de casse, parfois avant 100 000 km; vanne EGR imparfaite",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM651-OM654-220-D-02#1",
+     "partie": "Turbocompresseur: plusieurs témoignages de casse",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm"
+     ]
+    },
+    {
+     "uid": "E-MERCEDES-OM651-OM654-220-D-02#2",
+     "partie": "Turbocompresseur: parfois avant 100 000 km",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm"
+     ]
+    },
+    {
+     "uid": "E-MERCEDES-OM651-OM654-220-D-02#3",
+     "partie": "Turbocompresseur: vanne EGR imparfaite",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 29
+  },
+  "E-MERCEDES-OM654-01": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM654",
+   "type": "rappel",
+   "intitule": "Rappel (janvier 2022) : défaut d'étanchéité entre le circuit de liquide de refroidissement et le circuit de dépression au niveau de la pompe de refroidissement — fuite et, dans les cas les plus graves, incendie ; plus de 800 000 voitures dans le monde, 38 897 en France ; correctif un temps suspendu faute de pièces",
+   "noyau": "Rappel: défaut d'étanchéité entre le circuit de refroidissement et le circuit de dépression au niveau de la pompe de refroidissement, avec une fuite, voire un incendie dans les cas les plus graves",
+   "periodes": [
+    {
+     "debut": 2022,
+     "fin": 2022,
+     "texte": "janvier 2022",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "janvier 2022",
+    "800 000 voitures"
+   ],
+   "details_affichables": [
+    "800 000 voitures"
+   ],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM654-01#1",
+     "partie": "Rappel: défaut d'étanchéité entre le circuit de refroidissement et le circuit de dépression au niveau de la pompe de refroidissement",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique qu'un défaut d'étanchéité entre le circuit de liquide de refroidissement et le circuit de dépression a été décelé au niveau de la pompe de refroidissement sur les moteurs OM 654/OM 656."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM654-01#2",
+     "partie": "Rappel: avec une fuite",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page parle explicitement d'une 'possible fuite de liquide de refroidissement' liée à ce défaut d'étanchéité."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "E-MERCEDES-OM654-01#3",
+     "partie": "Rappel: voire un incendie dans les cas les plus graves",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne que, dans les cas les plus graves, il existe un risque qu'un incendie se déclenche."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel: défaut d'étanchéité entre le circuit de refroidissement et le circuit de dépression au niveau de la pompe de refroidissement",
+    "Rappel: avec une fuite",
+    "Rappel: voire un incendie dans les cas les plus graves"
+   ],
+   "lot": 29
+  },
+  "E-MERCEDES-OM654-02": {
+   "mode": "a_rejuger",
+   "famille": "MERCEDES-OM654",
+   "type": "rappel",
+   "intitule": "Rappel de novembre 2021 : le bras du tendeur de courroie de la pompe à eau peut présenter un jeu trop important — risque de surchauffe du moteur",
+   "noyau": "Rappel: le bras du tendeur de courroie de la pompe à eau peut présenter un jeu trop important — risque de surchauffe du moteur",
+   "periodes": [
+    {
+     "debut": 2021,
+     "fin": 2021,
+     "texte": "de novembre 2021",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "de novembre 2021"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM654-02",
+     "partie": "Rappel: le bras du tendeur de courroie de la pompe à eau peut présenter un jeu trop important — risque de surchauffe du moteur",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 29
+  },
+  "E-MERCEDES-OM654-03": {
+   "mode": "noyau",
+   "famille": "MERCEDES-OM654",
+   "type": "entretien",
+   "intitule": "Distribution par chaîne (pas d'intervalle de remplacement) ; pas de point faible moteur relevé par l'ADAC sur le GLC",
+   "noyau": "Distribution par chaîne",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "E-MERCEDES-OM654-03",
+     "partie": "Distribution par chaîne",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+       "verdict": "non_soutenue",
+       "classe": "consommateurs",
+       "lecture": "standard",
+       "cache": false,
+       "justification": "La page mentionne un problème de chaîne de distribution (tendeur) pour le moteur OM651, mais ne confirme ni n'évoque le type de distribution (chaîne) pour l'OM654 cité dans l'affirmation."
+      }
+     ],
+     "silences": [
+      "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 29
+  },
+  "F-MITSUBISHI-1.6-MIVEC-4A92-01": {
+   "mode": "noyau",
+   "famille": "MITSUBISHI-1.6-MIVEC-4A92",
+   "type": "campagne",
+   "intitule": "Rappel 2025 : silencieux d'échappement pouvant se fissurer et se détacher (1 696 véhicules en France)",
+   "noyau": "Rappel: silencieux d'échappement pouvant se fissurer et se détacher",
+   "periodes": [
+    {
+     "debut": 2025,
+     "fin": 2025,
+     "texte": "2025",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "1 696 véhicules en France",
+    "2025"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-MITSUBISHI-1.6-MIVEC-4A92-01",
+     "partie": "Rappel: silencieux d'échappement pouvant se fissurer et se détacher",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-mitsubishi-triple-campagne-pour-les-asx-eclipse-cross-et-outlander-30044666.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme un rappel pour l'ASX GA1W 1.6 115 ch (4A92), année-modèle 2011 à 2019, concernant un risque de fissure du silencieux d'échappement pouvant entraîner son décrochage."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Rappel: silencieux d'échappement pouvant se fissurer et se détacher"
+   ],
+   "lot": 30
+  },
+  "F-MITSUBISHI-1.8-DID-4N13-01": {
+   "mode": "noyau",
+   "famille": "MITSUBISHI-1.8-DID-4N13",
+   "type": "panne",
+   "intitule": "Casse du turbo : le joint du conduit d'air se dégrade et est aspiré dans le turbo (ailettes endommagées) ; sifflement, perte de puissance, fumée noire",
+   "noyau": "Casse du turbo: le joint du conduit d'air se dégrade et est aspiré dans le turbo (ailettes endommagées); sifflement, perte de puissance, fumée noire",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-MITSUBISHI-1.8-DID-4N13-01#1",
+     "partie": "Casse du turbo: le joint du conduit d'air se dégrade et est aspiré dans le turbo (ailettes endommagées)",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/citroen-c4-aircross-mitsubishi-asx-et-peugeot-4008-casse-du-turbo-5899385.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que le joint du conduit d'air se détériore et finit par être aspiré par le turbo, pouvant entraîner des dommages sur les ailettes."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "F-MITSUBISHI-1.8-DID-4N13-01#2",
+     "partie": "Casse du turbo: sifflement",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/citroen-c4-aircross-mitsubishi-asx-et-peugeot-4008-casse-du-turbo-5899385.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne que les propriétaires peuvent se plaindre d'un sifflement du turbo à l'accélération."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "F-MITSUBISHI-1.8-DID-4N13-01#3",
+     "partie": "Casse du turbo: perte de puissance",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/citroen-c4-aircross-mitsubishi-asx-et-peugeot-4008-casse-du-turbo-5899385.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que ce symptôme peut s'accompagner d'un manque de puissance."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "F-MITSUBISHI-1.8-DID-4N13-01#4",
+     "partie": "Casse du turbo: fumée noire",
+     "confirmees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/citroen-c4-aircross-mitsubishi-asx-et-peugeot-4008-casse-du-turbo-5899385.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique que le sifflement peut s'accompagner de fumées noires à l'échappement."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Casse du turbo: le joint du conduit d'air se dégrade et est aspiré dans le turbo (ailettes endommagées)",
+    "Casse du turbo: sifflement",
+    "Casse du turbo: perte de puissance",
+    "Casse du turbo: fumée noire"
+   ],
+   "lot": 30
+  },
+  "F-MITSUBISHI-2.2-DID-4N14-01": {
+   "mode": "noyau",
+   "famille": "MITSUBISHI-2.2-DID-4N14",
+   "type": "panne",
+   "intitule": "Fuite d'huile moteur atteignant l'embrayage et le volant moteur -> remplacement des deux (réparation coûteuse)",
+   "noyau": "Fuite d'huile moteur atteignant l'embrayage et le volant moteur -> remplacement des deux (réparation coûteuse)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-MITSUBISHI-2.2-DID-4N14-01",
+     "partie": "Fuite d'huile moteur atteignant l'embrayage et le volant moteur -> remplacement des deux (réparation coûteuse)",
+     "confirmees": [
+      {
+       "url": "https://www.autoexpress.co.uk/mitsubishi/outlander/106711/used-mitsubishi-outlander-review",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement 'On diesel Outlanders, engine oil can get into the clutch and flywheel. If this happens, both parts must be replaced - an expensive job', correspondant au moteur diesel 2.2 DI-D concerné."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Fuite d'huile moteur atteignant l'embrayage et le volant moteur -> remplacement des deux (réparation coûteuse)"
+   ],
+   "lot": 30
+  },
+  "F-MITSUBISHI-OUTLANDER-PHEV-01": {
+   "mode": "noyau",
+   "famille": "MITSUBISHI-OUTLANDER-PHEV",
+   "type": "campagne",
+   "intitule": "Garantie batterie hybride 100 000 miles (UK) ; garantie constructeur 5 ans/62 500 miles ; extension de la garantie constructeur à 8 ans sur les véhicules neufs à partir du 6 mai 2024 (France)",
+   "noyau": "Garantie batterie hybride 100 000 miles (UK); garantie constructeur 5 ans/62 500 miles; extension de la garantie constructeur à 8 ans sur les véhicules neufs à partir (France)",
+   "periodes": [
+    {
+     "debut": 2024,
+     "fin": 2024,
+     "texte": "du 6 mai 2024",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "du 6 mai 2024"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-MITSUBISHI-OUTLANDER-PHEV-01",
+     "partie": "Garantie batterie hybride 100 000 miles (UK); garantie constructeur 5 ans/62 500 miles; extension de la garantie constructeur à 8 ans sur les véhicules neufs à partir (France)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.autoexpress.co.uk/mitsubishi/outlander/phev",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme bien la garantie batterie hybride de 100 000 miles (UK) et la garantie constructeur standard de 5 ans/62 500 miles, mais ne mentionne aucune extension de garantie à 8 ans pour les véhicules neufs vendus en France depuis le 06/05/2024."
+      },
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mitsubishi-etend-sa-garantie-a-8-ans-sur-ses-vehicules-neufs-30033682.html",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme l'extension de garantie constructeur à 8 ans/160 000 km pour les véhicules neufs depuis le 06/05/2024 (y compris l'Outlander PHEV à venir), mais ne mentionne ni une garantie constructeur de 5 ans/62 500 miles ni une garantie batterie hybride de 100 000 miles (UK) pour l'Outlander PHEV 2014-2021."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 30
+  },
+  "F-MITSUBISHI-OUTLANDER-PHEV-02": {
+   "mode": "noyau",
+   "famille": "MITSUBISHI-OUTLANDER-PHEV",
+   "type": "campagne",
+   "intitule": "Rappels freinage d'urgence autonome intempestif (logiciel caméra) : 7 455 véhicules en France (2021) puis campagne R30409 sur 7 707 véhicules (2025)",
+   "noyau": "Rappels freinage d'urgence autonome intempestif (logiciel caméra): véhicules en France puis campagne R30409 survéhicules",
+   "periodes": [
+    {
+     "debut": 2021,
+     "fin": 2021,
+     "texte": "2021",
+     "bornante": true
+    },
+    {
+     "debut": 2025,
+     "fin": 2025,
+     "texte": "2025",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "2021",
+    "2025",
+    "7 455 véhicules",
+    "7 707 véhicules"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "F-MITSUBISHI-OUTLANDER-PHEV-02",
+     "partie": "Rappels freinage d'urgence autonome intempestif (logiciel caméra): véhicules en France puis campagne R30409 survéhicules",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.largus.fr/actualite-automobile/rappel-mitsubishi-triple-campagne-pour-les-asx-eclipse-cross-et-outlander-30044666.html",
+       "verdict": "mauvais_moteur",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page précise que le rappel R30409 pour freinage fantôme concerne l'ASX GA0W (2018-2020), l'Eclipse Cross GK0W/GL3W et l'Outlander GF0W/GG0W, et non l'ASX GA1W 1.6 MIVEC 4A92 (2011-2019) visé par l'affirmation."
+      },
+      {
+       "url": "https://www.largus.fr/actualite-automobile/mitsubishi-outlander-asx-et-eclipse-cross-7-455-vehicules-rappeles-10661393.html",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page confirme bien le rappel pour freinage d'urgence intempestif dû à un problème logiciel de la caméra sur Outlander, ASX et Eclipse Cross, mais elle ne mentionne jamais de référence de campagne 'R30409' ni ne la cite comme telle."
+      }
+     ],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 30
+  },
+  "B-OPEL-1.4-TURBO-01": {
+   "mode": "noyau",
+   "famille": "OPEL-1.4-TURBO",
+   "type": "panne",
+   "intitule": "1.4 Turbo 100 ch : usure prématurée et fuite de la pompe à eau (Corsa E)",
+   "noyau": "1.4 Turbo 100 ch: usure prématurée et fuite de la pompe à eau (Corsa E)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-1.4-TURBO-01",
+     "partie": "1.4 Turbo 100 ch: usure prématurée et fuite de la pompe à eau (Corsa E)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-opel-corsa-5-tranquillite-assuree-205741.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement : 'Pompe à eau. Sur le 1.4 turbo 100 ch essentiellement, usure prématurée et fuite de la pompe à eau sur de nombreux exemplaires... cela arrive parfois avant 40 000 km', ce qui correspond exactement à l'affirmation pour la Corsa E 1.4 Turbo 100 ch."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "1.4 Turbo 100 ch: usure prématurée et fuite de la pompe à eau (Corsa E)"
+   ],
+   "lot": 30
+  },
+  "B-OPEL-1.4-TURBO-02": {
+   "mode": "noyau",
+   "famille": "OPEL-1.4-TURBO",
+   "type": "panne",
+   "intitule": "Bobines d'allumage : à-coups, ratés, pertes de puissance (Astra J essence, Corsa E 1.4)",
+   "noyau": "Bobines d'allumage: à-coups, ratés, pertes de puissance (Astra J essence, Corsa E 1.4)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-1.4-TURBO-02#1",
+     "partie": "Bobines d'allumage: à-coups (Astra J essence, Corsa E 1.4)",
+     "confirmees": [],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne des 'à-coups et des pertes de puissance' pour les bobines d'allumage, mais ne parle pas spécifiquement de la Corsa E, uniquement de l'Astra 4."
+      },
+      {
+       "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-opel-corsa-5-tranquillite-assuree-205741.htm",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne des 'ratés' et 'difficultés de démarrage' liés aux bobines d'allumage sur le 1.4, mais ne parle pas d'à-coups."
+      }
+     ],
+     "silences": []
+    },
+    {
+     "uid": "B-OPEL-1.4-TURBO-02#2",
+     "partie": "Bobines d'allumage: ratés (Astra J essence, Corsa E 1.4)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-opel-corsa-5-tranquillite-assuree-205741.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement 'possibles soucis de bobine d'allumage (ratés, difficultés de démarrage, parfois avant 20 000 km)' sur le 1.4, ce qui correspond à l'affirmation."
+      }
+     ],
+     "ecartees": [
+      {
+       "url": "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm",
+       "verdict": "non_soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page évoque des avaries de bobines d'allumage causant 'des à-coups et des pertes de puissance' mais ne mentionne jamais le terme 'ratés' ni la Corsa E."
+      }
+     ],
+     "silences": []
+    },
+    {
+     "uid": "B-OPEL-1.4-TURBO-02#3",
+     "partie": "Bobines d'allumage: pertes de puissance (Astra J essence, Corsa E 1.4)",
+     "confirmees": [
+      {
+       "url": "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement que les bobines d'allumage de l'Astra 4 essence provoquent 'des pertes de puissance'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Bobines d'allumage: ratés (Astra J essence, Corsa E 1.4)",
+    "Bobines d'allumage: pertes de puissance (Astra J essence, Corsa E 1.4)"
+   ],
+   "lot": 30
+  },
+  "B-OPEL-1.4-TURBO-03": {
+   "mode": "noyau",
+   "famille": "OPEL-1.4-TURBO",
+   "type": "rappel",
+   "intitule": "Astra J essence : rappel de janvier 2015 pour risque de défaillance du circuit de refroidissement (60 000 véhicules en Allemagne)",
+   "noyau": "Astra J essence: rappel pour risque de défaillance du circuit de refroidissement",
+   "periodes": [
+    {
+     "debut": 2015,
+     "fin": 2015,
+     "texte": "de janvier 2015",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "60 000 véhicules en Allemagne",
+    "de janvier 2015"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-1.4-TURBO-03",
+     "partie": "Astra J essence: rappel pour risque de défaillance du circuit de refroidissement",
+     "confirmees": [
+      {
+       "url": "https://www.autobild.de/artikel/opel-astra-j-gebrauchtwagen-test-6948145.html",
+       "verdict": "soutenue",
+       "classe": "presse",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page mentionne explicitement un rappel en janvier 2015 concernant 60 000 véhicules essence Astra J menacés d'une défaillance du système de refroidissement ('drohte bei 60.000 Benzinern in Deutschland der Ausfall des Kühlsystems')."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "Astra J essence: rappel pour risque de défaillance du circuit de refroidissement"
+   ],
+   "lot": 30
+  },
+  "B-OPEL-1.6-CDTI-01": {
+   "mode": "noyau",
+   "famille": "OPEL-1.6-CDTI",
+   "type": "panne",
+   "intitule": "1.6 CDTI : tendeur de chaîne de distribution peu endurant (bruit) — source éditoriale uniquement",
+   "noyau": "1.6 CDTI: tendeur de chaîne de distribution peu endurant (bruit) — source éditoriale uniquement",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-1.6-CDTI-01",
+     "partie": "1.6 CDTI: tendeur de chaîne de distribution peu endurant (bruit) — source éditoriale uniquement",
+     "confirmees": [
+      {
+       "url": "https://www.fiches-auto.fr/articles-auto/distribution/s-2521-distribution-les-moteurs-a-problemes.php",
+       "verdict": "soutenue",
+       "classe": "editorial",
+       "lecture": "fenetre",
+       "cache": false,
+       "justification": "La page indique explicitement pour le 1.6 CDTI Opel (Astra, Insignia, Meriva, Mokka, Zafira Tourer) que 'le tendeur de chaîne n'est pas endurant et il mène à des bruits qui alertent le conducteur'."
+      }
+     ],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [
+    "1.6 CDTI: tendeur de chaîne de distribution peu endurant (bruit) — source éditoriale uniquement"
+   ],
+   "lot": 30
+  },
+  "B-OPEL-1.7-CDTI-01": {
+   "mode": "a_rejuger",
+   "famille": "OPEL-1.7-CDTI",
+   "type": "panne",
+   "intitule": "1.7 CDTI : manque de puissance (unité de dosage de carburant, vanne EGR, turbo corrodé, rampe commune)",
+   "noyau": "1.7 CDTI: manque de puissance (unité de dosage de carburant, vanne EGR, turbo corrodé, rampe commune)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-1.7-CDTI-01",
+     "partie": "1.7 CDTI: manque de puissance (unité de dosage de carburant, vanne EGR, turbo corrodé, rampe commune)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.largus.fr/actualite-automobile/fiabilite-opel-vers-un-retour-a-la-confiance-1323368_p_6.html"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-OPEL-1.7-CDTI-02": {
+   "mode": "a_rejuger",
+   "famille": "OPEL-1.7-CDTI",
+   "type": "panne",
+   "intitule": "1.7 CDTI : colmatage du filtre à particules",
+   "noyau": "1.7 CDTI: colmatage du filtre à particules",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-1.7-CDTI-02",
+     "partie": "1.7 CDTI: colmatage du filtre à particules",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.largus.fr/actualite-automobile/fiabilite-opel-vers-un-retour-a-la-confiance-1323368_p_6.html"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-OPEL-1.7-CDTI-03": {
+   "mode": "a_rejuger",
+   "famille": "OPEL-1.7-CDTI",
+   "type": "panne",
+   "intitule": "1.7 CDTI 110/125 de 2008-2009 : difficultés de démarrage (calibrage de la vanne de recyclage des gaz)",
+   "noyau": "1.7 CDTI 110/125: difficultés de démarrage (calibrage de la vanne de recyclage des gaz)",
+   "periodes": [
+    {
+     "debut": 2008,
+     "fin": 2009,
+     "texte": "de 2008-2009",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "de 2008-2009"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-1.7-CDTI-03",
+     "partie": "1.7 CDTI 110/125: difficultés de démarrage (calibrage de la vanne de recyclage des gaz)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-l-Opel-Zafira-2-en-occasion-96224.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-OPEL-CDTI-ASTRA-J-01": {
+   "mode": "a_rejuger",
+   "famille": "OPEL-CDTI-ASTRA-J",
+   "type": "panne",
+   "intitule": "Astra J CDTI : injecteurs capricieux, encrassement du FAP et de la vanne EGR ; fuites d'huile fréquentes",
+   "noyau": "Astra J CDTI: injecteurs capricieux, encrassement du FAP et de la vanne EGR; fuites d'huile fréquentes",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-CDTI-ASTRA-J-01#1",
+     "partie": "Astra J CDTI: injecteurs capricieux",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm"
+     ]
+    },
+    {
+     "uid": "B-OPEL-CDTI-ASTRA-J-01#2",
+     "partie": "Astra J CDTI: encrassement du FAP et de la vanne EGR",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm"
+     ]
+    },
+    {
+     "uid": "B-OPEL-CDTI-ASTRA-J-01#3",
+     "partie": "Astra J CDTI: fuites d'huile fréquentes",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-OPEL-CDTI-ASTRA-J-02": {
+   "mode": "a_rejuger",
+   "famille": "OPEL-CDTI-ASTRA-J",
+   "type": "rappel",
+   "intitule": "Astra J diesel produites de 2011 à 2015 : rappel d'avril 2016 pour risque de surchauffe du carénage sous moteur et d'incendie près du FAP",
+   "noyau": "Astra J diesel: rappel d' pour risque de surchauffe du carénage sous moteur et d'incendie près du FAP",
+   "periodes": [
+    {
+     "debut": 2011,
+     "fin": 2015,
+     "texte": "produites de 2011 à 2015",
+     "bornante": true
+    },
+    {
+     "debut": 2016,
+     "fin": 2016,
+     "texte": "avril 2016",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "produites de 2011 à 2015",
+    "avril 2016"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-CDTI-ASTRA-J-02",
+     "partie": "Astra J diesel: rappel d' pour risque de surchauffe du carénage sous moteur et d'incendie près du FAP",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-OPEL-M32-01": {
+   "mode": "a_rejuger",
+   "famille": "OPEL-M32",
+   "type": "panne",
+   "intitule": "Boîte manuelle 6 rapports : roulements usés prématurément, bruit (sifflement) annonçant la casse de la boîte (Astra J)",
+   "noyau": "Boîte manuelle 6 rapports: roulements usés prématurément, bruit (sifflement) annonçant la casse de la boîte (Astra J)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-OPEL-M32-01#1",
+     "partie": "Boîte manuelle 6 rapports: roulements usés prématurément (Astra J)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm"
+     ]
+    },
+    {
+     "uid": "B-OPEL-M32-01#2",
+     "partie": "Boîte manuelle 6 rapports: bruit (sifflement) annonçant la casse de la boîte (Astra J)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": [
+      "https://www.caradisiac.com/opel-astra-4-2009-2015-la-fiche-fiabilite-express-de-caradisiac-197430.htm"
+     ]
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "G-PHEV-HYUNDAI-KIA-01": {
+   "mode": "noyau",
+   "famille": "PHEV-HYUNDAI-KIA",
+   "type": "garantie",
+   "intitule": "Hyundai : batteries HT des hybrides et hybrides rechargeables couvertes 8 ans ou 160 000 km ; Kia : batterie HT HEV/PHEV 7 ans ou 150 000 km sans condition de capacité 70 % (AM < 2026)",
+   "noyau": "Hyundai: batteries HT des hybrides et hybrides rechargeables couvertes 8 ans ou 160 000 km; Kia: batterie HT HEV/PHEV 7 ans ou 150 000 km sans condition de capacité 70 % (AM <)",
+   "periodes": [
+    {
+     "debut": 2026,
+     "fin": 2026,
+     "texte": "2026",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "2026"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "G-PHEV-HYUNDAI-KIA-01#1",
+     "partie": "Hyundai: batteries HT des hybrides et hybrides rechargeables couvertes 8 ans ou 160 000 km (AM <)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "G-PHEV-HYUNDAI-KIA-01#2",
+     "partie": "Hyundai: Kia: batterie HT HEV/PHEV 7 ans ou 150 000 km sans condition de capacité 70 % (AM <)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "G-PHEV-VOLVO-01": {
+   "mode": "noyau",
+   "famille": "PHEV-VOLVO",
+   "type": "garantie",
+   "intitule": "Volvo : seuil de remplacement de la batterie sous 55 % de capacité (source presse L'argus 2021 ; page officielle Volvo non ouverte)",
+   "noyau": "Volvo: seuil de remplacement de la batterie sous 55 % de capacité (source presse L'argus, page officielle Volvo non ouverte)",
+   "periodes": [
+    {
+     "debut": 2021,
+     "fin": 2021,
+     "texte": "2021",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "2021"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "G-PHEV-VOLVO-01",
+     "partie": "Volvo: seuil de remplacement de la batterie sous 55 % de capacité (source presse L'argus, page officielle Volvo non ouverte)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-AL4-DP0-01": {
+   "mode": "noyau",
+   "famille": "PSA-AL4-DP0",
+   "type": "panne",
+   "intitule": "Dysfonctionnement de la boîte automatique 4 rapports : électrovanne de pression",
+   "noyau": "Dysfonctionnement de la boîte automatique 4 rapports: électrovanne de pression",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-AL4-DP0-01",
+     "partie": "Dysfonctionnement de la boîte automatique 4 rapports: électrovanne de pression",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-BMP6-ETG-01": {
+   "mode": "noyau",
+   "famille": "PSA-BMP6-ETG",
+   "type": "panne",
+   "intitule": "BMP6 : à-coups, lenteur, broutage et blocages (embrayage, butée, actionneur de sélection, calculateur)",
+   "noyau": "BMP6: à-coups, lenteur, broutage et blocages (embrayage, butée, actionneur de sélection, calculateur)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-BMP6-ETG-01#1",
+     "partie": "BMP6: à-coups (embrayage, butée, actionneur de sélection, calculateur)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "B-PSA-BMP6-ETG-01#2",
+     "partie": "BMP6: lenteur (embrayage, butée, actionneur de sélection, calculateur)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "B-PSA-BMP6-ETG-01#3",
+     "partie": "BMP6: broutage et blocages (embrayage, butée, actionneur de sélection, calculateur)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-BMP6-ETG-02": {
+   "mode": "noyau",
+   "famille": "PSA-BMP6-ETG",
+   "type": "panne",
+   "intitule": "ETG6 : usure prématurée des actionneurs et de l'embrayage (blocages) ; rappel d'avril 2017 sur l'actionneur de boîte",
+   "noyau": "ETG6: usure prématurée des actionneurs et de l'embrayage (blocages); rappel d' sur l'actionneur de boîte",
+   "periodes": [
+    {
+     "debut": 2017,
+     "fin": 2017,
+     "texte": "avril 2017",
+     "bornante": true
+    }
+   ],
+   "details": [
+    "avril 2017"
+   ],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-BMP6-ETG-02#1",
+     "partie": "ETG6: usure prématurée des actionneurs et de l'embrayage (blocages)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "B-PSA-BMP6-ETG-02#2",
+     "partie": "ETG6: rappel d' sur l'actionneur de boîte",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-EAT6-01": {
+   "mode": "noyau",
+   "famille": "PSA-EAT6",
+   "type": "panne",
+   "intitule": "EAT6/BVA6 : levier de commande (position parking impossible, vibrations de console) et perte de traction par arbre de transmission",
+   "noyau": "EAT6/BVA6: levier de commande (position parking impossible, vibrations de console) et perte de traction par arbre de transmission",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-EAT6-01",
+     "partie": "EAT6/BVA6: levier de commande (position parking impossible, vibrations de console) et perte de traction par arbre de transmission",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-EAT6-02": {
+   "mode": "noyau",
+   "famille": "PSA-EAT6",
+   "type": "entretien",
+   "intitule": "EAT6 : huile annoncée « à vie » par le réseau, vidange néanmoins conseillée par la source éditoriale",
+   "noyau": "EAT6: huile annoncée « à vie » par le réseau, vidange néanmoins conseillée par la source éditoriale",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-EAT6-02",
+     "partie": "EAT6: huile annoncée « à vie » par le réseau, vidange néanmoins conseillée par la source éditoriale",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-EAT8-01": {
+   "mode": "noyau",
+   "famille": "PSA-EAT8",
+   "type": "panne",
+   "intitule": "EAT8 : à-coups et message « Défaut de la boîte de vitesses automatique » (bloc hydraulique, voire remplacement de la boîte)",
+   "noyau": "EAT8: à-coups et message « Défaut de la boîte de vitesses automatique » (bloc hydraulique, voire remplacement de la boîte)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-EAT8-01",
+     "partie": "EAT8: à-coups et message « Défaut de la boîte de vitesses automatique » (bloc hydraulique, voire remplacement de la boîte)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-HYDRACTIVE-III-01": {
+   "mode": "noyau",
+   "famille": "PSA-HYDRACTIVE-III",
+   "type": "verification",
+   "intitule": "Hydractive III : aucun défaut récurrent confirmé par une source admise ; Caradisiac juge la suspension de la C5 I peu problématique",
+   "noyau": "Hydractive III: aucun défaut récurrent confirmé par une source admise; Caradisiac juge la suspension de la C5 I peu problématique",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-HYDRACTIVE-III-01#1",
+     "partie": "Hydractive III: aucun défaut récurrent confirmé par une source admise",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    },
+    {
+     "uid": "B-PSA-HYDRACTIVE-III-01#2",
+     "partie": "Hydractive III: Caradisiac juge la suspension de la C5 I peu problématique",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-HYDRACTIVE-III-02": {
+   "mode": "noyau",
+   "famille": "PSA-HYDRACTIVE-III",
+   "type": "panne",
+   "intitule": "Hydractive III+ (C5 II) : fuite de liquide au niveau des suspensions avant",
+   "noyau": "Hydractive III+ (C5 II): fuite de liquide au niveau des suspensions avant",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-HYDRACTIVE-III-02",
+     "partie": "Hydractive III+ (C5 II): fuite de liquide au niveau des suspensions avant",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
+  },
+  "B-PSA-SUSPENSION-PNEUMATIQUE-C4-PICASSO-01": {
+   "mode": "noyau",
+   "famille": "PSA-SUSPENSION-PNEUMATIQUE-C4-PICASSO",
+   "type": "panne",
+   "intitule": "Affaissement de l'arrière : fuite des ressorts pneumatiques (boudins poreux)",
+   "noyau": "Affaissement de l'arrière: fuite des ressorts pneumatiques (boudins poreux)",
+   "periodes": [],
+   "details": [],
+   "details_affichables": [],
+   "parties": [
+    {
+     "uid": "B-PSA-SUSPENSION-PNEUMATIQUE-C4-PICASSO-01",
+     "partie": "Affaissement de l'arrière: fuite des ressorts pneumatiques (boudins poreux)",
+     "confirmees": [],
+     "ecartees": [],
+     "silences": []
+    }
+   ],
+   "parties_affichables": [],
+   "lot": 31
   }
  },
  "noyaux_a_reprendre": {}

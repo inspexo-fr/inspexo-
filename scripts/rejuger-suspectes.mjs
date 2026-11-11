@@ -62,20 +62,35 @@ if (ESTIMER) process.exit(0)
 if (!BUDGET) { console.error('--budget <eur> obligatoire (mur du run).'); process.exit(1) }
 
 const journal = existsSync(JOURNAL) ? JSON.parse(readFileSync(JOURNAL, 'utf8')) : { entrees: {} }
-let cout = 0, joues = 0
+let cout = Number(flag('--deja', '0')) || 0, joues = 0, echecs = 0, reserves = 0
 for (const u of unites) {
   if (journal.entrees[u.titre]) continue
   const mur = murAtteint({ coutRun: cout, casJoues: joues, coutSession: cout, budgetRun: BUDGET, plafondSession: BUDGET, estime: PAR_PAGE_MAX * u.pages.length })
   if (mur) { console.log(`⏸ mur atteint avant « ${u.titre.slice(0, 50)} » : non joué.`); break }
-  const res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/atlas-builder`, { method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.REACT_APP_SUPABASE_ANON_KEY}`, 'x-eval-secret': env.EVAL_BYPASS_SECRET },
-    body: JSON.stringify({ entree: u.entree, urls: u.pages }), signal: AbortSignal.timeout(240_000) })
-  const r = await res.json().catch(() => null)
+  // ⚠️ Un délai dépassé ne fait plus tomber le script (11 nov. 2026) : coût
+  // PRUDENT réservé (le serveur a pu dépenser), entrée laissée à rejouer,
+  // arrêt après trois échecs d'affilée.
+  let res = null, r = null
+  try {
+    res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/atlas-builder`, { method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.REACT_APP_SUPABASE_ANON_KEY}`, 'x-eval-secret': env.EVAL_BYPASS_SECRET },
+      body: JSON.stringify({ entree: u.entree, urls: u.pages }), signal: AbortSignal.timeout(240_000) })
+    r = await res.json().catch(() => null)
+  } catch (e) {
+    const reserve = PAR_PAGE_MAX * u.pages.length
+    cout += reserve; reserves += reserve; joues++
+    console.error(`  ⚠️ échec (${String(e?.name ?? e).slice(0, 30)}) — ${u.titre.slice(0, 50)} : à rejouer, ${reserve.toFixed(3)} € réservés`)
+    if (++echecs >= 3) { console.error('⏸ trois échecs d’affilée : arrêt.'); break }
+    continue
+  }
+  echecs = 0
   if (!res.ok || typeof r?.cout_eur !== 'number') { console.error(`⚠️ ARRÊT — ${u.titre.slice(0, 50)} : HTTP ${res.status}, coût non chiffrable.`); process.exit(1) }
   joues++; cout += r.cout_eur
   const verdicts = [...(r.sources ?? []).map((x) => [x.url, 'soutenue']), ...(r.ecartees ?? []).map((e) => [e.url, e.motif])]
-  journal.entrees[u.titre] = { source: u.source, garde_avant: u.garde_avant, pages: u.pages, verdicts, juge: r.juge, cout_eur: r.cout_eur, le: new Date().toISOString() }
+  journal.entrees[u.titre] = { source: u.source, garde_avant: u.garde_avant, pages: u.pages, verdicts, juge: r.juge, cout_eur: r.cout_eur,
+    ecartees: (r.ecartees ?? []).map((e) => ({ url: e.url, motif: e.motif, rang: e.rang ?? null })), le: new Date().toISOString() }
   writeFileSync(JOURNAL, JSON.stringify(journal, null, 1))
   console.log(`  ${u.garde_avant ? 'gardée ' : 'retirée'} → ${verdicts.some((v) => v[1] === 'soutenue') ? 'CONFIRMÉE' : 'non confirmée'}  ${u.titre.slice(0, 60)} · ${JSON.stringify(r.juge)} · ${r.cout_eur.toFixed(3)} €`)
 }
+if (reserves) console.log(`  dont ${reserves.toFixed(3)} € RÉSERVÉS pour des appels en échec (coût réel inconnu)`)
 console.log(`\n— Coût : ${cout.toFixed(3)} € / ${BUDGET.toFixed(2)} € · journal ${JOURNAL} · rien n'est écrit dans l'atlas ni les fiches.`)
