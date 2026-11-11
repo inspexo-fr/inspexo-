@@ -9,7 +9,7 @@
   --vert:#1E6B3A; --ambre:#8F4D00; --rouge:#B3122E;
   --nav-bg:#0F1B2D; --nav-fg:#F3F0E9; --nav-line:#2E3D55;
   --band-bg:#0F1B2D; --band-fg:#F3F0E9; --band-muted:#B8BFCB; --band-rule:#2E3D55;
-  --sans:'Schibsted Grotesk',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --sans:'Schibsted Grotesk','Schibsted Repli',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
   --mono:'Martian Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){
