@@ -11,8 +11,9 @@
 #      non encore vérifiées, mur 1,00 € (décision d'Utku du 8 nov. 2026), avec
 #      le rapport et ce qui manque pour atteindre 30.
 #
-# Le mur de l'éval est le reste du budget du point 3 (0,85 € annoncés,
-# 0,199 € dépensés par le rejeu).
+# Séquence des scores (décision d'Utku du 10 nov. 2026) : c'est le changement
+# (a). Chaque changement est suivi des 4 références × 3 passages (mur 1,20 €,
+# plafond de tests porté à 7 € pour la séquence).
 #
 # Usage : ADMIN_ACCESS_TOKEN posé dans .env.local, puis
 #         bash scripts/session-jeton.sh
@@ -28,7 +29,7 @@ node scripts/plans-entretien.mjs --appliquer
 
 echo "▶ 3/4 — les 4 références"
 npm run eval -- --cas audi-s7-intermediaire,308-puretech-complete,mercedes-2025-societe,revendeur-clio2-dci \
-  --sans-stabilite --budget 0.65
+  --repetitions 3 --sans-stabilite --budget 1.20 --plafond-session 7
 
 echo "▶ 4/4 — vérification indépendante des analyses réelles"
 node scripts/verifier-analyses.mjs --depuis-admin --budget 1.00 --journal docs/verification-reelles-journal.json
