@@ -263,6 +263,7 @@ articles 3 ou 4, après notification écrite.
 | `11.10` | le **statut du vendeur** est décidé par des règles serveur : intermédiaire dès que l'annonce le déclare (agence, dépôt-vente, mandataire), « professionnel déguisé probable » seulement sur des indices nommés, restitués dans `indices_statut` | **oui, les statuts et les scores peuvent changer** à texte identique |
 | `11.11` | les **signaux d'entretien** sont relevés dans le texte de l'annonce par des motifs fixes, non plus par le modèle ; une **garantie** n'est jamais une preuve d'entretien | **oui, les scores peuvent changer** à texte identique — une annonce qui ne mentionne que sa garantie n'a plus d'axe entretien évalué |
 | `11.12` | une **opération d'entretien « non faite »** n'est retenue que si l'annonce l'écrit, relevée par des motifs fixes ; ce que le modèle signale en plus devient une question au vendeur | **oui, les scores peuvent changer** à texte identique — une absence d'information n'est plus comptée comme un manquement |
+| `11.13` | une quarantaine de **sources** supplémentaires sont reconnues comme indépendantes (presse, associations de consommateurs, sites constructeurs et autorités) ; une page constructeur d'un autre pays reste une information de contexte, jamais une couverture | **oui, les scores peuvent changer** à texte identique — un défaut jusque-là présenté comme question peut désormais peser |
 
 La version `11.2` a existé brièvement et n'a jamais été servie à un client.
 

@@ -300,7 +300,7 @@ const verifiePrix = (titre, cond, detail = '') => {
   // faisait dès 15 : un dossier dont l'axe prix était « non évalué », donc
   // exclu du score, est désormais noté. Le barème lui-même n'a pas changé,
   // mais ce qu'il reçoit oui — et les clients d'API suivent ce numéro.
-  affirme('BAREME_VERSION passée à 11.12 (opérations non faites : annonce seule)', BAREME_VERSION === '11.12', BAREME_VERSION)
+  affirme('BAREME_VERSION passée à 11.13 (hôtes portants déclarés)', BAREME_VERSION === '11.13', BAREME_VERSION)
 }
 {
   // ⚠️ L'INVARIANT DU SPRINT 20 : le barème est AVEUGLE à la source de la

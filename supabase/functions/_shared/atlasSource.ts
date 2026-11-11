@@ -99,6 +99,28 @@ const HOTES_OFFICIELS = [
   "ford.com", "dacia.fr", "renault.fr", "peugeot.fr", "citroen.fr",
   "volkswagen.fr", "audi.fr", "bmw.fr", "mercedes-benz.fr", "toyota.fr",
   "opel.fr", "fiat.fr", "nissan.fr", "volvocars.com", "hyundai.fr",
+  // ⚠️ SPRINT 23 (d) — décision d'Utku du 11 nov. 2026, hôtes relevés dans
+  // `docs/sources-moteurs-2026-11.json` (classe « officiel ») : autorités,
+  // groupes et sites constructeurs à portée française ou internationale.
+  "assemblee-nationale.fr", "media.stellantis.com", "group.renault.com",
+  "hyundai.com", "kia.com", "kiamedia.com", "tesla.com", "bmwgroup.com",
+  "volkswagenag.com", "volkswagen-newsroom.com", "nissan-global.com",
+  "cupraofficial.com", "skoda.fr",
+];
+
+/** SPRINT 23 (d) — sites constructeurs D'UN AUTRE PAYS (décision d'Utku du
+ *  11 nov. 2026). Rang « officiel » : un constructeur qui décrit un défaut le
+ *  décrit contre lui-même, quel que soit le pays. Mais pour une voiture
+ *  vendue en France, une campagne, un rappel ou une garantie publiés en
+ *  Irlande ou en Suisse sont une INFORMATION DE CONTEXTE, jamais « votre
+ *  voiture est couverte ». La couverture ne lit aucune source (elle vient de
+ *  `warrantyPrograms` et de l'âge du véhicule) : `tests/atlas-source.test.mjs`
+ *  le vérifie, et `estConstructeurEtranger` permet de le dire à l'écran. */
+const HOTES_CONSTRUCTEUR_ETRANGER = [
+  "peugeot.ie", "citroen.co.uk", "dacia.co.uk", "fiat.ie", "bmw.ch",
+  "volkswagen.at", "volkswagen.es", "volkswagen.co.nz", "cupra.be",
+  "cupraofficial.ch", "nissan.be", "nissan.co.uk", "nissan.ca", "skoda.be",
+  "toyota.co.uk",
 ];
 
 /** Presse automobile et consumériste RECONNUE. Liste curée, à enrichir à la
@@ -128,6 +150,14 @@ const HOTES_PRESSE = [
   // rattraper une campagne. `autoliva.com` et `la-boite-automatique.com`
   // auraient sauvé trois entrées ; ils restent commerciaux.
   "carbuzz.com",
+  // ⚠️ SPRINT 23 (d) — décision d'Utku du 11 nov. 2026 : titres de presse
+  // relevés dans `docs/sources-moteurs-2026-11.json` (classe « presse »)…
+  "automobile-propre.com", "journalauto.com", "auto-motor-und-sport.de",
+  "carbuyer.co.uk", "insideevs.com", "caradvice.com.au",
+  // … et associations de CONSOMMATEURS, au même rang que la presse (même
+  // décision) : éditeur identifiable, revenu sans lien avec le défaut.
+  // (`adac.de`, `quechoisir.org`, `consumerreports.org` y figuraient déjà.)
+  "oeamtc.at", "tcs.ch", "which.co.uk",
 ];
 
 /** ÉDITORIAL INDÉPENDANT (décision d'Utku, 6 nov. 2026) : un guide ou un média
@@ -298,6 +328,17 @@ export const RANGS_PORTANTS: readonly RangSource[] = ["officiel", "presse", "edi
  *  peut pas porter une entrée. Un garage, un vendeur de pièces ou un site de
  *  contenu référencé ont tout intérêt à décrire un défaut — leur page n'est
  *  pas une attestation, c'est une offre. */
+/** Vrai pour la page d'un constructeur publiée dans un autre pays : rang
+ *  officiel, mais information de contexte pour une voiture française. */
+export function estConstructeurEtranger(url: unknown): boolean {
+  try {
+    const hote = new URL(String(url)).hostname.toLowerCase().replace(/^www\./, "");
+    return HOTES_CONSTRUCTEUR_ETRANGER.some((h) => hote === h || hote.endsWith(`.${h}`));
+  } catch {
+    return false;
+  }
+}
+
 export function rangSource(url: unknown): RangSource {
   let hote = "";
   let chemin = "";
@@ -313,6 +354,7 @@ export function rangSource(url: unknown): RangSource {
   const correspond = (liste: string[]) =>
     liste.some((h) => hote === h || hote.endsWith(`.${h}`));
   if (correspond(HOTES_OFFICIELS)) return "officiel";
+  if (correspond(HOTES_CONSTRUCTEUR_ETRANGER)) return "officiel";
   // Le CHEMIN d'abord : un fil de discussion reste un fil, quel que soit
   // l'hôte qui l'héberge.
   if (MOTIFS_CHEMIN_FORUM.some((re) => re.test(chemin))) return "forum";

@@ -12,6 +12,7 @@ import {
   sourcesPortentLEntree,
   sourcesPortentLEntreeLues,
 } from '../supabase/functions/_shared/atlasSource.ts'
+import { estConstructeurEtranger } from '../supabase/functions/_shared/atlasSource.ts'
 
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) { ok_++; console.log(`PASS — ${l}`) } else { ko++; console.log(`FAIL — ${l}`) } }
@@ -394,6 +395,42 @@ eq(rangSource('https://www.ford.com/support/recalls/'), 'officiel',
   // Et dans le coût sur 3 ans, une opération HORS plan n'y a pas droit.
   const c3 = readFileSync('supabase/functions/_shared/cout3ansSources.ts', 'utf8')
   ok(/function coutHorsPlan[\s\S]{0,400}viaPortante/.test(c3), 'hors plan : seuls le devis et la source portante chiffrent')
+}
+
+// ── SPRINT 23 (d) — hôtes déclarés le 11 nov. 2026 ─────────────────────────
+for (const h of ['automobile-propre.com', 'journalauto.com', 'auto-motor-und-sport.de', 'carbuyer.co.uk', 'insideevs.com', 'caradvice.com.au'])
+  eq(rangSource(`https://www.${h}/article`), 'presse', `(d) ${h} : presse`)
+// Associations de consommateurs : même rang que la presse (décision d'Utku).
+for (const h of ['oeamtc.at', 'tcs.ch', 'which.co.uk', 'adac.de', 'quechoisir.org', 'consumerreports.org'])
+  eq(rangSource(`https://www.${h}/test`), 'presse', `(d) consommateurs ${h} : rang presse`)
+for (const h of ['assemblee-nationale.fr', 'media.stellantis.com', 'cdn.group.renault.com', 'hyundai.com', 'kia.com', 'tesla.com', 'press.bmwgroup.com', 'skoda.fr'])
+  eq(rangSource(`https://${h}/doc`), 'officiel', `(d) ${h} : officiel`)
+// Constructeur d'un autre pays : officiel, mais repéré comme contexte.
+for (const h of ['peugeot.ie', 'bmw.ch', 'citroen.co.uk', 'fr.nissan.be', 'mag.toyota.co.uk', 'volkswagen.co.nz']) {
+  eq(rangSource(`https://www.${h}/rappel`), 'officiel', `(d) ${h} : officiel`)
+  ok(estConstructeurEtranger(`https://www.${h}/rappel`), `(d) ${h} : constructeur d'un autre pays`)
+}
+for (const u of ['https://www.peugeot.fr/rappel', 'https://www.toyota.fr/x', 'https://www.caradisiac.com/x', 'pas une url'])
+  ok(!estConstructeurEtranger(u), `(d) ${u} : pas un constructeur étranger`)
+// ⚠️ « Votre voiture est couverte » ne lit AUCUNE source : la couverture vient
+// de `warrantyPrograms` et de l'âge du véhicule. Une page constructeur d'un
+// autre pays reste donc structurellement une information de contexte.
+{
+  const wp = readFileSync('supabase/functions/_shared/warrantyPrograms.ts', 'utf8')
+  ok(!/atlasSource|rangSource|estConstructeurEtranger/.test(wp), '(d) warrantyPrograms ne lit aucun rang de source')
+  const sc = readFileSync('supabase/functions/score/index.ts', 'utf8')
+  const i = sc.indexOf('const estCouverte = ')
+  const bloc = sc.slice(i, sc.indexOf('};', i))
+  ok(i > 0 && !/url|source|rang|Etranger/i.test(bloc), '(d) estCouverte ne dépend d’aucune source ni d’aucun hôte')
+  const iCond = sc.indexOf('const conditionGarantie = ')
+  const cond = sc.slice(iCond, sc.indexOf(';', iCond))
+  ok(iCond > 0 && !/url|source|rang|Etranger/i.test(cond), '(d) la condition de garantie ne dépend d’aucune source')
+}
+// L'entrée d'atlas portée par (d), et seulement elle.
+{
+  const atlas = JSON.parse(readFileSync('supabase/functions/_shared/defectAtlas.json', 'utf8'))
+  const tce = Object.values(atlas).flatMap((m) => m.defects ?? []).find((e) => e.id === 'renault-1.2-tce-conso-huile')
+  ok(tce && sourcesPortentLEntree([...(tce.url_source ?? [])]), '(d) Renault 1.2 TCe H5Ft : portée par la question écrite de l’Assemblée nationale')
 }
 
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${ok_}/${ok_ + ko} contrôles passés`)

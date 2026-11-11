@@ -77,7 +77,11 @@
 //
 // 11.12 (sprint 23, c2) : une opération n'est « non faite » que si l'annonce
 // l'écrit (filet déterministe) ; ce que le modèle ajoute devient une question.
-export const BAREME_VERSION = "11.12";
+//
+// 11.13 (sprint 23, d) : ~40 hôtes déclarés portants (presse, associations de
+// consommateurs au rang presse, sites constructeurs et autorités). Le calcul
+// ne change pas ; des pannes jusque-là non portées peuvent désormais peser.
+export const BAREME_VERSION = "11.13";
 
 export type FaitsAxes = {
   annee_courante: number;

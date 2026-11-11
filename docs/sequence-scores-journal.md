@@ -50,3 +50,25 @@ Mercedes vert 71 · Clio II orange 51 · cumul tests 3,00 €.
 ## ARRÊT avant (d) — 11 nov. 2026
 Un run de (d) (≈ 1,05 €) porterait le cumul à ≈ 7,10 €, au-delà du plafond de
 7 €. Rien n'a été codé ni déployé pour (d). Décision d'Utku attendue.
+
+## (d) nouveaux hôtes dans `rangSource` — 11 nov. 2026
+Plafond de tests porté à 10 € pour toute la séquence (décision d'Utku).
+- Règles : ~40 hôtes de `docs/sources-moteurs-2026-11.json` déclarés —
+  presse (6), consommateurs au rang presse (3 nouveaux), officiel (13),
+  constructeurs d'un autre pays (15) en « officiel » mais repérés par
+  `estConstructeurEtranger` : information de contexte, jamais une couverture
+  (la couverture ne lit aucune source — verrouillé par test).
+  `BAREME_VERSION` → 11.13.
+- Effet mesuré hors ligne (export lecture seule de `defect_sheets`, 44 fiches) :
+  **0 panne de fiche ne change** (54/219 portées avant et après) — les hôtes
+  ajoutés n'y sont pas encore cités, ils viennent avec la fusion (f).
+  Atlas : **1 entrée** devient portée (Renault 1.2 TCe H5Ft, question écrite
+  de l'Assemblée nationale) — aucune référence concernée.
+- Écart annoncé : **aucun** sur les 4 références (39 · 55 · 73 · 51).
+- Déploiement annoncé : `score`, `alertes`, `comparer`, `cout-3ans`,
+  `admin-defect-sheets` (importent `atlasSource.ts`) + `api-analyses`,
+  `lecture-ct`, `lecture-histovec`, `visite` (version du barème).
+  ⚠️ PAS `sheet-builder` ni `atlas-builder` : ils tournent avec le juge corrigé
+  du sprint 23 ; les redéployer depuis main le ramènerait en arrière. Ils
+  gardent l'ancienne liste d'hôtes (plus conservatrice) jusqu'au merge de
+  sprint23.
