@@ -29,3 +29,18 @@ Mercedes vert 71 · Clio II orange 51 · cumul tests 3,00 €.
 - Déploiement annoncé : `score` + fonctions qui importent `bareme.ts`
   (`api-analyses`, `lecture-ct`, `lecture-histovec`, `visite`), liste à
   confirmer par `scripts/fonctions-a-redeployer.mjs`.
+- Résultat (c) : S7 39/39/39 · 308 55/55/55 · **Mercedes 73/73/73** (écart
+  annoncé, tenu) · Clio II 51/51/51. 1,005 € · cumul 5,05 €.
+
+## (c2) une opération n'est « non faite » que si l'annonce l'écrit — 11 nov. 2026
+- Règle : `operations_non_faites` ne vient plus que du filet déterministe
+  (`detecterEntretienDeclare`). Ce que le modèle y ajoute devient une question
+  au vendeur, sans effet sur la note. `BAREME_VERSION` → 11.12.
+- Écart annoncé (filet rejoué sur les 4 textes) : aucun. S7 0 opération (le
+  « 35 » occasionnel, venu d'une absence d'information rangée par le modèle
+  en opération non faite, disparaît) · 308 1 (« Distribution jamais faite ») ·
+  Mercedes 0 · Clio II 1 (distribution). Attendu : 39 · 55 · 73 · 51.
+- Déploiement annoncé : `score` + `api-analyses`, `lecture-ct`,
+  `lecture-histovec`, `visite` (version du barème).
+- ⚠️ Budget : après (c2) le cumul sera ≈ 6,10 €. Un run de (d) (≈ 1,05 €)
+  dépasserait 7 € : arrêt prévu AVANT l'éval de (d).

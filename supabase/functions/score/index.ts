@@ -58,6 +58,8 @@ import {
   detecterEntretienDeclare,
   signauxEntretienDeterministes,
   libelleDeclaration,
+  operationsModeleNonEtablies,
+  questionOperationModele,
   type FaitEntretien,
 } from "../_shared/entretienDeclare.ts";
 import { dedupliquerCatalogue } from "../_shared/dedupPannes.ts";
@@ -2769,9 +2771,25 @@ serve(async (req: Request) => {
     const declaresNegatifs = faitsEntretien.filter((f) => f.statut !== "fait");
     const declaresPositifs = faitsEntretien.filter((f) => f.statut === "fait");
     {
-      // Les formulations du modèle qui disent déjà la même chose ne sont pas
-      // doublées : on ne répète pas une opération déjà nommée.
-      const dejaDit = [...opsNonFaites, ...contradictionsEntretien];
+      // ⚠️ SPRINT 23 (c2) — UNE OPÉRATION N'EST « NON FAITE » QUE SI L'ANNONCE
+      // L'ÉCRIT (décision d'Utku du 11 nov. 2026). La liste ne vient plus que
+      // du filet ; ce que le modèle y avait mis devient une question au
+      // vendeur, sans effet sur la note (cf. _shared/entretienDeclare.ts).
+      const opsDuModele = opsNonFaites;
+      opsNonFaites = [];
+      const enQuestion = operationsModeleNonEtablies(opsDuModele, faitsEntretien);
+      for (const op of enQuestion.slice(0, 2)) {
+        const q = questionOperationModele(op);
+        // Placée avant la fin : le message vendeur ne reprend que 8 questions.
+        if (!questions.includes(q)) questions.splice(Math.min(5, questions.length), 0, q);
+      }
+      if (enQuestion.length > 0) {
+        await admin.from("events").insert({
+          name: "operation_modele_en_question",
+          props_json: { nombre: enQuestion.length },
+        });
+      }
+      const dejaDit = [...contradictionsEntretien];
       for (const f of declaresNegatifs) {
         if (dejaCouvert(f, dejaDit)) continue;
         opsNonFaites.push(`${libelleDeclaration(f)} : « ${f.extrait} »`);

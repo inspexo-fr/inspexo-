@@ -74,7 +74,10 @@
 // viennent de motifs fixes sur le texte, plus du modèle ; une garantie n'est
 // jamais une preuve d'entretien. (Développé sous le numéro 11.10, jamais servi
 // sous ce numéro : 11.10 désigne le statut vendeur déterministe.)
-export const BAREME_VERSION = "11.11";
+//
+// 11.12 (sprint 23, c2) : une opération n'est « non faite » que si l'annonce
+// l'écrit (filet déterministe) ; ce que le modèle ajoute devient une question.
+export const BAREME_VERSION = "11.12";
 
 export type FaitsAxes = {
   annee_courante: number;

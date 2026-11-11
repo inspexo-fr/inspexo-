@@ -385,3 +385,32 @@ export function signauxEntretienDeterministes(texte: string): string[] {
   const preuves = detecterPreuvesEntretien(texte).map((p) => `${p.preuve} — mentionné dans l'annonce : « ${p.extrait} »`);
   return [...preuves, ...faites].slice(0, 10);
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// SPRINT 23 (c2) — UNE OPÉRATION N'EST « NON FAITE » QUE SI L'ANNONCE L'ÉCRIT
+//
+// ⚠️ DÉCISION D'UTKU DU 11 NOV. 2026. Sur la S7 de référence, un passage a
+// rangé « Aucune confirmation explicite que le rappel 21H7 a été effectué »
+// parmi les opérations critiques non faites : une ABSENCE d'information,
+// comptée comme un manquement (axe entretien 15 → 11, score 39 → 35).
+// Les opérations non faites ne viennent plus que de `detecterEntretienDeclare`
+// (motifs fixes, extrait cité). Ce que le modèle y ajoute devient une QUESTION
+// au vendeur, sans effet sur la note.
+// ──────────────────────────────────────────────────────────────────────────
+
+/** Opérations du modèle que le filet n'a pas trouvées dans le texte. */
+export function operationsModeleNonEtablies(opsModele: string[], faits: FaitEntretien[]): string[] {
+  const negatifs = faits.filter((f) => f.statut !== "fait");
+  return opsModele
+    .map((op) => String(op ?? "").trim())
+    .filter((op) => op.length > 0)
+    .filter((op) => !negatifs.some((f) => dejaCouvert(f, [op])));
+}
+
+/** Question au vendeur pour une opération que le modèle signale sans que l'annonce l'écrive. */
+export function questionOperationModele(op: string): string {
+  const mots = op.replace(/\s+/g, " ").trim().replace(/[.;:]+$/, "").split(" ");
+  const court = mots.length > 20 ? mots.slice(0, 20).join(" ") + "…" : mots.join(" ");
+  const fin = court.endsWith("…") ? "" : ".";
+  return `Point à confirmer : ${court}${fin} Pouvez-vous me dire ce qui a été fait, facture à l'appui ?`;
+}
