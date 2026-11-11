@@ -100,3 +100,15 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
   défaut : aucun score ne change), puis déploiement de `score`,
   `admin-defect-sheets`, `sheet-builder` (code de couverture, INERTE tant
   qu'aucune couverture n'est écrite).
+- Fait : dump prod (`~/inspexo-backups/*-avant-couverture-20261111-1952.sql`),
+  migration `20261126120000` appliquée (1 seule en attente), `score`,
+  `admin-defect-sheets`, `sheet-builder` déployés. Contrôle : 308 en un
+  passage → **orange 55** (0,12 €, cumul 7,20 €).
+- Session (e) prête : `scripts/session-jeton-e.sh` (écriture des couvertures
+  relues, puis 4 références × 3). **Écart annoncé : aucun** — les couvertures
+  n'étendent que des fiches Hyundai, Peugeot DV5/DV6, Renault H5FT et VW
+  EA189 à d'autres marques ; aucune référence (Audi EA824, Peugeot EB2DTS,
+  Mercedes OM654, Renault K9K) n'est concernée.
+- (f) n'est PAS prêt : pas de script de fusion, l'API admin ne sait
+  qu'ajouter des sources à des pannes existantes, bloc « prises en charge »
+  non construit.
