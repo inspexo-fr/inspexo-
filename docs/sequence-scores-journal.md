@@ -72,3 +72,8 @@ Plafond de tests porté à 10 € pour toute la séquence (décision d'Utku).
   du sprint 23 ; les redéployer depuis main le ramènerait en arrière. Ils
   gardent l'ancienne liste d'hôtes (plus conservatrice) jusqu'au merge de
   sprint23.
+- Résultat (d) : S7 39/39/39 · 308 55/55/55 · Mercedes 73/73/73 · Clio II
+  51/51/51 — conformes (aucun écart). 1,017 € · cumul 7,08 € / 10 €.
+
+## ARRÊT OBLIGATOIRE avant (e) — 11 nov. 2026
+Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
