@@ -1,0 +1,640 @@
+{
+ "genere_le": "2026-11-11",
+ "regles": "scripts/proposer-couvertures.mjs",
+ "couvertures": {
+  "Hyundai G4FD": [
+   {
+    "marque": "kia",
+    "modele": "soul",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-02",
+    "source": "https://static.nhtsa.gov/odi/rcl/2019/RCMN-19V120-3267.pdf"
+   }
+  ],
+  "Hyundai G4KD": [
+   {
+    "marque": "kia",
+    "modele": "sorento",
+    "annee_debut": 2011,
+    "annee_fin": 2013,
+    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
+    "source": "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation"
+   },
+   {
+    "marque": "kia",
+    "modele": "sportage",
+    "annee_debut": 2011,
+    "annee_fin": 2013,
+    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
+    "source": "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation"
+   }
+  ],
+  "Peugeot DV5": [
+   {
+    "marque": "citroen",
+    "modele": "berlingo",
+    "annee_debut": 2025,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "citroen",
+    "modele": "berlingo",
+    "annee_debut": 2025,
+    "annee_fin": 2025,
+    "objet": "B-PSA-DV5-06",
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+   },
+   {
+    "marque": "citroen",
+    "modele": "c5 aircross",
+    "annee_debut": 2025,
+    "annee_fin": 2025,
+    "objet": "B-PSA-DV5-06",
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+   },
+   {
+    "marque": "citroen",
+    "modele": "c5 aircross",
+    "annee_debut": 2018,
+    "annee_fin": 2020,
+    "objet": "B-PSA-DV5-07",
+    "source": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-un-rappel-pour-les-risques-de-calage-du-1-5-bluehdi-eat8-30025965.html"
+   },
+   {
+    "marque": "citroen",
+    "modele": "jumpy",
+    "annee_debut": 2025,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "citroen",
+    "modele": "jumpy",
+    "annee_debut": 2025,
+    "annee_fin": 2025,
+    "objet": "B-PSA-DV5-06",
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+   },
+   {
+    "marque": "fiat",
+    "modele": "doblo",
+    "annee_debut": 2025,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "fiat",
+    "modele": "doblo",
+    "annee_debut": 2025,
+    "annee_fin": 2025,
+    "objet": "B-PSA-DV5-06",
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+   },
+   {
+    "marque": "fiat",
+    "modele": "scudo",
+    "annee_debut": 2026,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "opel",
+    "modele": "astra",
+    "annee_debut": 2025,
+    "annee_fin": 2025,
+    "objet": "B-PSA-DV5-06",
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+   },
+   {
+    "marque": "opel",
+    "modele": "astra l",
+    "annee_debut": 2025,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "opel",
+    "modele": "combo",
+    "annee_debut": 2025,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "opel",
+    "modele": "combo",
+    "annee_debut": 2025,
+    "annee_fin": 2025,
+    "objet": "B-PSA-DV5-06",
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+   },
+   {
+    "marque": "opel",
+    "modele": "corsa f",
+    "annee_debut": 2025,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "opel",
+    "modele": "vivaro",
+    "annee_debut": 2025,
+    "annee_fin": 2026,
+    "objet": "B-PSA-DV5-05",
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+   },
+   {
+    "marque": "opel",
+    "modele": "vivaro",
+    "annee_debut": 2025,
+    "annee_fin": 2025,
+    "objet": "B-PSA-DV5-06",
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+   }
+  ],
+  "Peugeot DV6": [
+   {
+    "marque": "citroen",
+    "modele": "c4 cactus",
+    "annee_debut": 2016,
+    "annee_fin": 2016,
+    "objet": "B-PSA-DV6-16",
+    "source": "https://www.caradisiac.com/fiabilite-de-la-citroen-c4-cactus-la-maxi-fiche-occasion-de-caradisiac-191983.htm"
+   },
+   {
+    "marque": "mini",
+    "modele": "cooper d",
+    "annee_debut": 2007,
+    "annee_fin": 2010,
+    "objet": "E-BMW-DV6-MINI-01",
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/"
+   },
+   {
+    "marque": "mini",
+    "modele": "one d",
+    "annee_debut": 2007,
+    "annee_fin": 2010,
+    "objet": "E-BMW-DV6-MINI-01",
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/"
+   },
+   {
+    "marque": "volvo",
+    "modele": "s40",
+    "annee_debut": 2005,
+    "annee_fin": 2012,
+    "objet": "E-VOLVO-D4162T-01",
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/"
+   },
+   {
+    "marque": "volvo",
+    "modele": "v50",
+    "annee_debut": 2005,
+    "annee_fin": 2012,
+    "objet": "E-VOLVO-D4162T-01",
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/"
+   }
+  ],
+  "Renault H5FT": [
+   {
+    "marque": "dacia",
+    "modele": "dokker",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "A-RENAULT-H5FT-01",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+   },
+   {
+    "marque": "dacia",
+    "modele": "duster",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "A-RENAULT-H5FT-01",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+   },
+   {
+    "marque": "dacia",
+    "modele": "lodgy",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "A-RENAULT-H5FT-01",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+   },
+   {
+    "marque": "mercedes",
+    "modele": "citan",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "A-RENAULT-H5FT-01",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+   },
+   {
+    "marque": "nissan",
+    "modele": "juke",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "A-RENAULT-H5FT-01",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+   },
+   {
+    "marque": "nissan",
+    "modele": "pulsar",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "A-RENAULT-H5FT-01",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+   },
+   {
+    "marque": "nissan",
+    "modele": "qashqai",
+    "annee_debut": 2012,
+    "annee_fin": 2016,
+    "objet": "A-RENAULT-H5FT-01",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+   }
+  ],
+  "Volkswagen EA189": [
+   {
+    "marque": "seat",
+    "modele": "ibiza",
+    "annee_debut": 2010,
+    "annee_fin": 2014,
+    "objet": "C-VAG-EA189-1.6-2.0TDI-15",
+    "source": "https://www.caradisiac.com/soyez-prudents-si-vous-achetez-une-seat-ibiza-4-en-occasion-218738.htm"
+   }
+  ]
+ },
+ "ecartees": [
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Juke",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-01",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Qashqai 2",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-01",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Pulsar",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-01",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Qashqai 2",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-02",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Qashqai 2",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-03",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Juke",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Qashqai 2",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Pulsar",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Nissan",
+   "modele": "Qashqai II",
+   "cle": "NISSAN-HR12DDT",
+   "objet": "A-NISSAN-HR12DDT-05",
+   "motif": "« toutes motorisations » : ne désigne pas ce moteur"
+  },
+  {
+   "fiche": "Renault H4D",
+   "marque": "Dacia",
+   "modele": "Logan II",
+   "cle": "RENAULT-B4D",
+   "objet": "A-RENAULT-B4D-01",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault H4D",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-B4D",
+   "objet": "A-RENAULT-B4D-01",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault H4BT",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-H4BT",
+   "objet": "A-RENAULT-H4BT-01",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4BT",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-H4BT",
+   "objet": "A-RENAULT-H4BT-02",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault H4BT",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-H4BT",
+   "objet": "A-RENAULT-H4BT-03",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4BT",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-H4BT",
+   "objet": "A-RENAULT-H4BT-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4M",
+   "marque": "Dacia",
+   "modele": "Duster II",
+   "cle": "RENAULT-H4M",
+   "objet": "A-RENAULT-H4M-01",
+   "annees": "2018-2018",
+   "motif": "chevauche la fiche Renault H5FT (2017-2018, A-RENAULT-H5FT-03)"
+  },
+  {
+   "fiche": "Renault H4M",
+   "marque": "Dacia",
+   "modele": "Duster II",
+   "cle": "RENAULT-H4M",
+   "objet": "A-RENAULT-H4M-02",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4M",
+   "marque": "Dacia",
+   "modele": "Logan II",
+   "cle": "RENAULT-H4M",
+   "objet": "A-RENAULT-H4M-02",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4M",
+   "marque": "Dacia",
+   "modele": "Sandero II SCe",
+   "cle": "RENAULT-H4M",
+   "objet": "A-RENAULT-H4M-02",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4M",
+   "marque": "Dacia",
+   "modele": "Duster II",
+   "cle": "RENAULT-H4M",
+   "objet": "A-RENAULT-H4M-03",
+   "motif": "« toutes motorisations » : ne désigne pas ce moteur"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Dacia",
+   "modele": "Duster II",
+   "cle": "RENAULT-H5FT",
+   "objet": "A-RENAULT-H5FT-03",
+   "annees": "2017-2018",
+   "motif": "chevauche la fiche Renault H4M (2018-2018, A-RENAULT-H4M-01)"
+  },
+  {
+   "fiche": "Renault H5FT",
+   "marque": "Dacia",
+   "modele": "Duster II",
+   "cle": "RENAULT-H5FT",
+   "objet": "A-RENAULT-H5FT-12",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot DV5",
+   "marque": "Opel",
+   "modele": "et Peugeot",
+   "cle": "PSA-DV5",
+   "objet": "B-PSA-DV5-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot DV5",
+   "marque": "Opel",
+   "modele": "sans bornes de",
+   "cle": "PSA-DV5",
+   "objet": "B-PSA-DV5-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot DW10",
+   "marque": "Citroën",
+   "modele": "Xsara Picasso",
+   "cle": "PSA-DW10",
+   "objet": "H-PSA-DW10-17",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
+   "modele": "A4 Avant",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
+   "modele": "A1",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-05",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Seat",
+   "modele": "Ibiza TDI",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-05",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
+   "modele": "A4 B8 TDI",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-10",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
+   "modele": "A1",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-16",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
+   "modele": "A3 8P",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-16",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Hyundai G4FD",
+   "marque": "Kia",
+   "modele": "Niro",
+   "cle": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-04",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Hyundai G4KD",
+   "marque": "Kia",
+   "modele": "Optima",
+   "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01",
+   "annees": "2011-2019",
+   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+  },
+  {
+   "fiche": "Hyundai G4KD",
+   "marque": "Kia",
+   "modele": "Sorento",
+   "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01",
+   "annees": "2012-2019",
+   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+  },
+  {
+   "fiche": "Hyundai G4KD",
+   "marque": "Kia",
+   "modele": "Sportage",
+   "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01",
+   "annees": "2011-2019",
+   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+  },
+  {
+   "fiche": "Hyundai G4KD",
+   "marque": "Kia",
+   "modele": "Optima Hybrid",
+   "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
+   "annees": "2011-2020",
+   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+  },
+  {
+   "fiche": "Dacia K7M",
+   "marque": "Renault",
+   "modele": "Clio II",
+   "cle": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
+   "objet": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-04",
+   "motif": "période inconnue"
+  }
+ ],
+ "non_proposees": [
+  {
+   "cle": "NISSAN-MR16DDT-MR20DE",
+   "motif": "rattachée à 2 fiches (Nissan MR16DDT, Nissan MR20DE)"
+  },
+  {
+   "cle": "RENAULT-H4DT",
+   "motif": "rattachée à 2 fiches (Renault H4DT, Renault H4D)"
+  },
+  {
+   "cle": "RENAULT-K9K",
+   "motif": "rattachée à 2 fiches (Mercedes OM607, Renault K9K)"
+  },
+  {
+   "cle": "BMW-MINI-R56-PRINCE-N12-N14-N18",
+   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
+  },
+  {
+   "cle": "PSA-EB2",
+   "motif": "rattachée à 5 fiches (Peugeot EB2DTS, Peugeot EB2DT, Peugeot EB2ADTS, Peugeot EB2, Peugeot EB2F)"
+  },
+  {
+   "cle": "PSA-EP6",
+   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
+  },
+  {
+   "cle": "VAG-EA288-1.6-2.0TDI",
+   "motif": "rattachée à 3 fiches (Volkswagen EA288, Audi EA288, Volkswagen CRBC)"
+  },
+  {
+   "cle": "BMW-N12-N16",
+   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
+  },
+  {
+   "cle": "BMW-N14-N18",
+   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
+  },
+  {
+   "cle": "BMW-N47",
+   "motif": "rattachée à 2 fiches (BMW N47, Peugeot DV6)"
+  },
+  {
+   "cle": "BMW-N47-B47",
+   "motif": "rattachée à 2 fiches (BMW N47, BMW B47)"
+  },
+  {
+   "cle": "MERCEDES-OM607",
+   "motif": "rattachée à 2 fiches (Mercedes OM607, Renault K9K)"
+  },
+  {
+   "cle": "MERCEDES-OM651-OM654-220-D",
+   "motif": "rattachée à 3 fiches (Mercedes OM651, Mercedes OM654, Mercedes-Benz OM654)"
+  },
+  {
+   "cle": "MERCEDES-OM654",
+   "motif": "rattachée à 2 fiches (Mercedes OM654, Mercedes-Benz OM654)"
+  },
+  {
+   "cle": "PSA-ESSENCE-TU-ET-EW",
+   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
+  }
+ ]
+}
