@@ -1,0 +1,381 @@
+{
+ "ecrit_le": "2026-11-11T19:15:16.187Z",
+ "ecritures": [
+  {
+   "fiche": "BMW N47",
+   "id": "ffb9cf47-ae6b-4b9b-8e2b-1e2e64878fdb",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "mini",
+     "modele": "countryman",
+     "annee_debut": 2010,
+     "annee_fin": 2014
+    }
+   ]
+  },
+  {
+   "fiche": "Peugeot DV5",
+   "id": "3b3f0c23-7ab2-4e46-9e5b-622fc172bc3d",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "citroen",
+     "modele": "berlingo",
+     "annee_debut": 2025,
+     "annee_fin": 2026
+    },
+    {
+     "marque": "citroen",
+     "modele": "berlingo",
+     "annee_debut": 2025,
+     "annee_fin": 2025
+    },
+    {
+     "marque": "citroen",
+     "modele": "c5 aircross",
+     "annee_debut": 2025,
+     "annee_fin": 2025
+    },
+    {
+     "marque": "citroen",
+     "modele": "c5 aircross",
+     "annee_debut": 2018,
+     "annee_fin": 2020
+    },
+    {
+     "marque": "citroen",
+     "modele": "jumpy",
+     "annee_debut": 2025,
+     "annee_fin": 2026
+    },
+    {
+     "marque": "citroen",
+     "modele": "jumpy",
+     "annee_debut": 2025,
+     "annee_fin": 2025
+    },
+    {
+     "marque": "fiat",
+     "modele": "doblo",
+     "annee_debut": 2025,
+     "annee_fin": 2026
+    },
+    {
+     "marque": "fiat",
+     "modele": "doblo",
+     "annee_debut": 2025,
+     "annee_fin": 2025
+    },
+    {
+     "marque": "fiat",
+     "modele": "scudo",
+     "annee_debut": 2017,
+     "annee_fin": 2023
+    },
+    {
+     "marque": "fiat",
+     "modele": "ulysse",
+     "annee_debut": 2017,
+     "annee_fin": 2023
+    },
+    {
+     "marque": "opel",
+     "modele": "astra",
+     "annee_debut": 2025,
+     "annee_fin": 2025
+    },
+    {
+     "marque": "opel",
+     "modele": "astra l",
+     "annee_debut": 2025,
+     "annee_fin": 2026
+    },
+    {
+     "marque": "opel",
+     "modele": "combo",
+     "annee_debut": 2025,
+     "annee_fin": 2026
+    },
+    {
+     "marque": "opel",
+     "modele": "combo",
+     "annee_debut": 2025,
+     "annee_fin": 2025
+    },
+    {
+     "marque": "opel",
+     "modele": "corsa",
+     "annee_debut": 2017,
+     "annee_fin": 2023
+    },
+    {
+     "marque": "opel",
+     "modele": "corsa f",
+     "annee_debut": 2025,
+     "annee_fin": 2026
+    },
+    {
+     "marque": "opel",
+     "modele": "grandland",
+     "annee_debut": 2017,
+     "annee_fin": 2023
+    },
+    {
+     "marque": "opel",
+     "modele": "mokka",
+     "annee_debut": 2017,
+     "annee_fin": 2023
+    },
+    {
+     "marque": "opel",
+     "modele": "vivaro",
+     "annee_debut": 2025,
+     "annee_fin": 2026
+    },
+    {
+     "marque": "opel",
+     "modele": "vivaro",
+     "annee_debut": 2025,
+     "annee_fin": 2025
+    },
+    {
+     "marque": "toyota",
+     "modele": "proace",
+     "annee_debut": 2017,
+     "annee_fin": 2023
+    }
+   ]
+  },
+  {
+   "fiche": "Peugeot DV6",
+   "id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "citroen",
+     "modele": "c4 cactus",
+     "annee_debut": 2016,
+     "annee_fin": 2016
+    },
+    {
+     "marque": "mini",
+     "modele": "cooper d",
+     "annee_debut": 2007,
+     "annee_fin": 2010
+    },
+    {
+     "marque": "mini",
+     "modele": "one d",
+     "annee_debut": 2007,
+     "annee_fin": 2010
+    },
+    {
+     "marque": "volvo",
+     "modele": "s40",
+     "annee_debut": 2005,
+     "annee_fin": 2012
+    },
+    {
+     "marque": "volvo",
+     "modele": "v50",
+     "annee_debut": 2005,
+     "annee_fin": 2012
+    }
+   ]
+  },
+  {
+   "fiche": "Peugeot DW10",
+   "id": "6e4ed859-f3e3-4a46-aea6-1586767246ac",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "opel",
+     "modele": "grandland",
+     "annee_debut": 2017,
+     "annee_fin": 2020
+    }
+   ]
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "id": "02cb41ca-1911-4ab8-9a7a-553a5034404f",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "citroen",
+     "modele": "c4 cactus",
+     "annee_debut": 2014,
+     "annee_fin": 2018
+    }
+   ]
+  },
+  {
+   "fiche": "Renault H4M",
+   "id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "dacia",
+     "modele": "duster",
+     "annee_debut": 2018,
+     "annee_fin": 2018
+    }
+   ]
+  },
+  {
+   "fiche": "Renault H5FT",
+   "id": "54fc6633-8b08-4457-ba4c-af20429c7454",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "dacia",
+     "modele": "dokker",
+     "annee_debut": 2012,
+     "annee_fin": 2016
+    },
+    {
+     "marque": "dacia",
+     "modele": "duster",
+     "annee_debut": 2012,
+     "annee_fin": 2016
+    },
+    {
+     "marque": "dacia",
+     "modele": "duster",
+     "annee_debut": 2017,
+     "annee_fin": 2018
+    },
+    {
+     "marque": "dacia",
+     "modele": "lodgy",
+     "annee_debut": 2012,
+     "annee_fin": 2016
+    },
+    {
+     "marque": "mercedes",
+     "modele": "citan",
+     "annee_debut": 2012,
+     "annee_fin": 2016
+    },
+    {
+     "marque": "nissan",
+     "modele": "juke",
+     "annee_debut": 2012,
+     "annee_fin": 2016
+    },
+    {
+     "marque": "nissan",
+     "modele": "pulsar",
+     "annee_debut": 2012,
+     "annee_fin": 2016
+    },
+    {
+     "marque": "nissan",
+     "modele": "qashqai",
+     "annee_debut": 2012,
+     "annee_fin": 2016
+    }
+   ]
+  },
+  {
+   "fiche": "Renault K9K",
+   "id": "5ee2f43c-51ba-453c-9f6d-7cd2e78e58fb",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "dacia",
+     "modele": "duster",
+     "annee_debut": 2018,
+     "annee_fin": 2020
+    },
+    {
+     "marque": "dacia",
+     "modele": "sandero",
+     "annee_debut": 2018,
+     "annee_fin": 2021
+    },
+    {
+     "marque": "nissan",
+     "modele": "cube",
+     "annee_debut": 2009,
+     "annee_fin": 2011
+    },
+    {
+     "marque": "nissan",
+     "modele": "juke",
+     "annee_debut": 2012,
+     "annee_fin": 2014
+    },
+    {
+     "marque": "nissan",
+     "modele": "note",
+     "annee_debut": 2009,
+     "annee_fin": 2011
+    },
+    {
+     "marque": "nissan",
+     "modele": "qashqai",
+     "annee_debut": 2009,
+     "annee_fin": 2011
+    },
+    {
+     "marque": "nissan",
+     "modele": "qashqai",
+     "annee_debut": 2012,
+     "annee_fin": 2014
+    },
+    {
+     "marque": "nissan",
+     "modele": "qashqai",
+     "annee_debut": 2010,
+     "annee_fin": 2013
+    },
+    {
+     "marque": "nissan",
+     "modele": "qashqai+2",
+     "annee_debut": 2012,
+     "annee_fin": 2014
+    }
+   ]
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "id": "4dc214bf-5d2a-45c9-928e-23c745e02170",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "audi",
+     "modele": "a3",
+     "annee_debut": 2011,
+     "annee_fin": 2012
+    },
+    {
+     "marque": "seat",
+     "modele": "ibiza",
+     "annee_debut": 2011,
+     "annee_fin": 2011
+    },
+    {
+     "marque": "seat",
+     "modele": "ibiza",
+     "annee_debut": 2010,
+     "annee_fin": 2014
+    }
+   ]
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+   "couverture_avant": [],
+   "couverture_apres": [
+    {
+     "marque": "audi",
+     "modele": "q2",
+     "annee_debut": 2016,
+     "annee_fin": 2018
+    }
+   ]
+  }
+ ]
+}

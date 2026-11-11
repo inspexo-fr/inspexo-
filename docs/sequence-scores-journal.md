@@ -112,3 +112,11 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
 - (f) n'est PAS prêt : pas de script de fusion, l'API admin ne sait
   qu'ajouter des sources à des pannes existantes, bloc « prises en charge »
   non construit.
+
+## (e) session de jeton — 11 nov. 2026
+- Couvertures relues et validées par Utku (51 entrées, fenêtres de rappel
+  comprises) écrites sur 10 fiches ; état d'avant dans
+  `docs/couvertures-ecrites-journal.json` (`--restaurer`).
+- Résultat : S7 39/39/39 · 308 55/55/55 · Mercedes 73/73/73 · Clio II
+  51/51/51 — conformes à l'annonce (aucun écart). 1,040 € · cumul 8,24 € / 10 €.
+- Jeton retiré de `.env.local` à la fin de la session.
