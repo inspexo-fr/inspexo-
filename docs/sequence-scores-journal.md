@@ -163,3 +163,16 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
   migration `20261127120000` appliquée (seule en attente), 7 fonctions
   déployées, `main` poussé. Contrôle : S7 un passage → **rouge 39** (0,147 €,
   cumul 8,38 € / 10 €). Session (f) : `bash scripts/session-jeton-f.sh`.
+
+## (f) session de jeton — 11 nov. 2026
+- Écrit : 18 sources distinctes sur 10 fiches (les 22 lignes proposées en
+  comptaient 4 en double entre parties d'une même affirmation), 1 nouvelle
+  panne (AdBlue DV6), 116 prises en charge sur 20 fiches, 3 opérations
+  d'entretien (FOX, D4204T, K7M), rappel 21H7 réécrit sur l'EA824. État
+  d'avant : `docs/fusion-ecrite-journal.json`.
+- Résultat : S7 39/39/39 · 308 55/55/55 · Mercedes 73/73/73 · Clio II
+  51/51/51 — conformes à l'annonce (aucun écart). La S7 affiche « campagne
+  constructeur mondiale 21H7 (production 2012–2017), éligibilité à vérifier
+  par le VIN », source unique auto-motor-und-sport, plafond conservé.
+  1,010 € · cumul **9,39 € / 10 €**. Jeton retiré.
+- Reste : étape atlas (condenseur 308 I, suspension BMW), séparée.
