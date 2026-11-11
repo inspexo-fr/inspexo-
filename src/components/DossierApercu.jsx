@@ -10,7 +10,12 @@ import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
 // « Un dossier réel » : la VRAIE analyse Audi S7 lue depuis la base (jamais un
 // texte en dur). Lecture non trackée (p_track=false) : l'aperçu de l'accueil
 // n'incrémente ni share_views ni result_viewed.
-export const DOSSIER_EXEMPLE_ID = '9a1c8c4d-0273-453e-a744-f0b2da0d69be'
+//
+// Épinglé le 11 nov. 2026 (décision d'Utku) : la S7 rejouée APRÈS la fusion des
+// sources — ses pannes ne citent que la presse (auto-motor-und-sport, Consumer
+// Reports), aucun forum ni vendeur de pièces. L'ancien dossier (9a1c8c4d…, du
+// 28 oct.) citait autodoc.co.uk et le forum rs246.
+export const DOSSIER_EXEMPLE_ID = '13391145-c15c-4308-b0b5-a750255528d9'
 
 const STATUT_VENDEUR = {
   particulier: 'Particulier',
@@ -53,7 +58,7 @@ export function libelleSource(url, title = null) {
 // Rattache une raison aux sources des pannes qu'elle mentionne (recouvrement
 // de mots significatifs) — jamais de source inventée : pas de recouvrement,
 // pas d'appel de note.
-function refsPourRaison(raison, pannes, registre) {
+export function refsPourRaison(raison, pannes, registre) {
   const mots = String(raison).toLowerCase().match(/[a-zà-ü0-9]{4,}/g) || []
   const nums = []
   for (const p of pannes) {
@@ -69,42 +74,53 @@ function refsPourRaison(raison, pannes, registre) {
   return [...new Set(nums)]
 }
 
-export default function DossierApercu() {
+// Chargement PARTAGÉ du dossier d'exemple : l'extrait du premier écran et la
+// section « Un dossier réel » lisent la même analyse, par une seule requête
+// (promesse mise en commun), et les mêmes données figées au pré-rendu.
+let chargement = null
+function chargerDossierExemple() {
+  if (!chargement) {
+    chargement = getPublicAnalysis(DOSSIER_EXEMPLE_ID, false)
+      .then(async (row) => {
+        if (!row) return { row: null, rappels: null }
+        const rappels = await fetchRappels({
+          marque: row.marque,
+          modele: row.modele,
+          annee: row.annee,
+          carburant: row.result_json?.vehicule?.carburant ?? null,
+          motorisation: row.result_json?.vehicule?.motorisation ?? null,
+          generation: row.result_json?.vehicule?.generation ?? null,
+          analysis_id: row.id,
+        }).catch(() => null)
+        declarerPrerendu('accueil:dossier', { row, rappels })
+        return { row, rappels }
+      })
+      .catch(() => ({ row: null, rappels: null }))
+  }
+  return chargement
+}
+
+export function useDossierExemple() {
   // L'accueil est pré-rendu : le dossier d'exemple et ses rappels sont figés
-  // dans le HTML pour que le premier rendu client soit identique (hydratation).
+  // dans le HTML pour que le premier rendu client soit identique.
   const fige = lirePrerendu('accueil:dossier')
   const [row, setRow] = useState(fige ? fige.row : undefined) // undefined = chargement, null = indisponible
   const [rappels, setRappels] = useState(fige ? fige.rappels : undefined)
-
   useEffect(() => {
     if (fige) return
     let cancelled = false
-    getPublicAnalysis(DOSSIER_EXEMPLE_ID, false)
-      .then(r => { if (!cancelled) setRow(r || null) })
-      .catch(() => { if (!cancelled) setRow(null) })
+    chargerDossierExemple().then((d) => {
+      if (cancelled) return
+      setRow(d.row)
+      setRappels(d.rappels)
+    })
     return () => { cancelled = true }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  return { row, rappels }
+}
 
-  useEffect(() => {
-    if (!row || fige) return
-    let cancelled = false
-    fetchRappels({
-      marque: row.marque,
-      modele: row.modele,
-      annee: row.annee,
-      carburant: row.result_json?.vehicule?.carburant ?? null,
-      motorisation: row.result_json?.vehicule?.motorisation ?? null,
-      generation: row.result_json?.vehicule?.generation ?? null,
-      analysis_id: row.id,
-    })
-      .then(d => {
-        if (cancelled) return
-        setRappels(d)
-        declarerPrerendu('accueil:dossier', { row, rappels: d })
-      })
-      .catch(() => { if (!cancelled) setRappels(null) })
-    return () => { cancelled = true }
-  }, [row]) // eslint-disable-line react-hooks/exhaustive-deps
+export default function DossierApercu() {
+  const { row, rappels } = useDossierExemple()
 
   if (row === undefined) {
     return (

@@ -142,7 +142,7 @@ export default function ProApiPage() {
 
             <div className="doc-sec">
               <p className="eyebrow">Erreurs</p>
-              <dl className="specs" style={{ marginTop: 8 }}>
+              <dl className="specs api-erreurs" style={{ marginTop: 8 }}>
                 {ERREURS.map(([code, nom, d]) => (
                   <div key={nom}>
                     <dt>{code} · {nom}</dt>

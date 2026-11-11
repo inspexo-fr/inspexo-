@@ -27,12 +27,24 @@ if (!existsSync(join(BUILD, 'index.html'))) {
   process.exit(1)
 }
 
-// build/index.html n'est JAMAIS écrit par ce script : il reste la sortie CRA
-// intacte, qui sert de repli à toutes les routes (vercel.json). C'est ce qui
-// rend le pré-rendu sans danger — s'il ne tourne pas, ou s'il échoue, chaque
-// page est simplement rendue par React comme avant, jamais une erreur 404.
-// Corollaire : l'accueil n'est pas pré-rendu. Mesuré, il y perdait de toute
-// façon (FCP 3,2 s contre 1,8 s) pour un contenu que Google rend déjà.
+// ⚠️ CHANTIER DESIGN (nov. 2026, décision d'Utku) — L'ACCUEIL EST PRÉ-RENDU.
+// Avant, build/index.html restait la coquille CRA et servait de repli à toutes
+// les routes ; l'accueil n'était donc PAS pré-rendu, et un lecteur sans
+// JavaScript, Facebook ou WhatsApp n'en recevaient que « Vous devez activer
+// JavaScript » — ni h1, ni lien, ni description, ni og:image.
+// Désormais la coquille CRA est COPIÉE en build/app.html AVANT tout pré-rendu,
+// et c'est elle le repli (vercel.json et le serveur local ci-dessous) : une
+// route inconnue reçoit toujours la coquille, jamais le HTML de l'accueil.
+// build/index.html devient l'accueil pré-rendu.
+const COQUILLE = join(BUILD, 'app.html')
+{
+  const index = readFileSync(join(BUILD, 'index.html'), 'utf8')
+  if (!index.includes('data-prerendu')) writeFileSync(COQUILLE, index)
+  if (!existsSync(COQUILLE)) {
+    console.error('build/app.html absent et build/index.html déjà pré-rendu : relancez `npm run build`.')
+    process.exit(1)
+  }
+}
 
 // En local les identifiants sont dans .env.local ; sur Vercel ce sont les
 // variables du projet (les mêmes que CRA utilise pour le build).
@@ -70,7 +82,7 @@ function servir() {
       let fichier = join(BUILD, chemin)
       // Toute route sans extension est servie par la coquille : on veut rendre
       // la page depuis React, jamais resservir un pré-rendu antérieur.
-      if (!existsSync(fichier) || !extname(fichier)) fichier = join(BUILD, 'index.html')
+      if (!existsSync(fichier) || !extname(fichier)) fichier = COQUILLE
       res.writeHead(200, { 'Content-Type': TYPES[extname(fichier)] || 'application/octet-stream' })
       res.end(readFileSync(fichier))
     })
@@ -143,6 +155,9 @@ console.log(`Pré-rendu — ${moteurs.length} page(s) moteur publiable(s)\n`)
 // Les routes privées (dossier, visite, admin, résultat) ne sont PAS pré-rendues :
 // elles portent des données personnelles ou changent à chaque visite.
 const ROUTES = [
+  // L'accueil : l'extrait du dossier réel est au premier écran, ses données
+  // sont donc figées (elles SONT le contenu visible).
+  { url: '/', attendre: '.extrait-haut', priorite: '1.0', figer: true },
   { url: '/score', attendre: '.formcard', priorite: '0.9' },
   { url: '/pass', attendre: '.plans', priorite: '0.8' },
   { url: '/airbags-takata', attendre: '.faq details', priorite: '0.9' },
@@ -175,6 +190,10 @@ try {
   process.exit(1)
 }
 const ctx = await nav.newContext({ viewport: { width: 1280, height: 900 } })
+// Le bandeau cookies n'a pas sa place dans le HTML statique : sans JavaScript
+// il ne fonctionne pas, et React l'affiche à l'ouverture si le choix n'est pas
+// fait. On simule donc un choix déjà fait, le temps du pré-rendu seulement.
+await ctx.addInitScript(() => { try { localStorage.setItem('inspexo_cookies_accepted', 'true') } catch (_) { /* rien */ } })
 const page = await ctx.newPage()
 const faits = []
 let echecs = 0
@@ -216,9 +235,8 @@ for (const route of ROUTES) {
     }
     // On ne fige les données que là où elles SONT le contenu de la page : sur
     // une fiche moteur, la lecture en base retarde l'affichage du texte utile.
-    // Sur l'accueil, le dossier d'exemple est sous la ligne de flottaison et
-    // ne retarde rien — l'y figer coûtait 18,6 Ko de HTML sur 54 (FCP 3,0 s
-    // contre 2,4 s), pour aucun gain visible.
+    // Sur l'accueil, l'extrait du dossier réel est désormais au PREMIER écran
+    // (chantier design, nov. 2026) : ses données sont figées elles aussi.
     const charge = route.figer ? await page.evaluate(() => window.__DONNEES_PAGE__ ?? null) : null
     if (charge) {
       // JSON.parse d'une chaîne : aucune interprétation de balise possible,
@@ -246,7 +264,7 @@ serveur.close()
 
 // ---- sitemap.xml : uniquement les pages réellement produites ----
 const aujourdhui = new Date().toISOString().slice(0, 10)
-const urls = [{ url: '/', priorite: '1.0' }, ...faits]
+const urls = faits.some((r) => r.url === '/') ? faits : [{ url: '/', priorite: '1.0' }, ...faits]
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((r) => `  <url>

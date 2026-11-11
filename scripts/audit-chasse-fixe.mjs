@@ -20,14 +20,14 @@ const args = process.argv.slice(2)
 const val = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null }
 const CAPTURES = val('--captures')
 const SORTIE = val('--json')
-const DOSSIER = '9a1c8c4d-0273-453e-a744-f0b2da0d69be' // DOSSIER_EXEMPLE_ID (DossierApercu.jsx)
+const DOSSIER = '13391145-c15c-4308-b0b5-a750255528d9' // DOSSIER_EXEMPLE_ID (DossierApercu.jsx)
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.woff2': 'font/woff2', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json', '.xml': 'application/xml', '.txt': 'text/plain' }
 const serveur = createServer((req, res) => {
   const chemin = decodeURIComponent(new URL(req.url, 'http://x').pathname)
   let f = join(BUILD, chemin)
   if (existsSync(f) && statSync(f).isDirectory()) f = join(f, 'index.html')
-  if (!existsSync(f)) f = join(BUILD, 'index.html') // repli SPA, comme vercel.json
+  if (!existsSync(f)) f = existsSync(join(BUILD, 'app.html')) ? join(BUILD, 'app.html') : join(BUILD, 'index.html') // repli SPA, comme vercel.json
   res.writeHead(200, { 'content-type': TYPES[extname(f)] ?? 'application/octet-stream' })
   res.end(readFileSync(f))
 })
@@ -63,7 +63,7 @@ if (CAPTURES) {
   mkdirSync(CAPTURES, { recursive: true })
   for (const [nom, w, h] of [['ordinateur', 1440, 900], ['telephone', 390, 844]]) {
     const p = await navigateur.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 })
-    for (const [cle, r] of [['accueil', '/'], ['dossier-reel', `/a/${DOSSIER}`]]) {
+    for (const [cle, r] of [['accueil', '/'], ['accueil-variante-coin', '/?extrait=coin'], ['dossier-reel', `/a/${DOSSIER}`]]) {
       await p.goto(BASE + r, { waitUntil: 'networkidle', timeout: 60_000 }).catch(() => null)
       await p.waitForTimeout(800)
       await p.screenshot({ path: join(CAPTURES, `${cle}-${nom}.png`) })

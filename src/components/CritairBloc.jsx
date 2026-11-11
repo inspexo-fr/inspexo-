@@ -60,7 +60,7 @@ export default function CritairBloc({ critair: bloc, vehicule }) {
 
   return (
     <div className="doc-sec" id="critair">
-      <p className="eyebrow">Vignette Crit'Air et zones à faibles émissions</p>
+      <p className="eyebrow">Crit'Air et ZFE</p>
 
       <dl className="specs">
         <div>

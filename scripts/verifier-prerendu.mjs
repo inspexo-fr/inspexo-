@@ -15,6 +15,15 @@ const BASE = (process.argv[2] || 'https://www.inspexo.io').replace(/\/$/, '')
 // de la base : un gabarit vide passerait un simple test de longueur.
 const PAGES = [
   {
+    // Accueil pré-rendu (chantier design, nov. 2026) : h1, extrait du dossier
+    // réel lu en base, et les métadonnées de partage dans le HTML servi.
+    url: '/',
+    titre: "L'annonce dit ce que le vendeur veut",
+    attendus: ['Lancer l', 'Voir le dossier complet', 'Côté acheteur'],
+    metas: ['name="description"', 'property="og:title"', 'property="og:description"', 'property="og:image"', 'name="twitter:card"', 'rel="canonical"'],
+    minTexte: 1500,
+  },
+  {
     url: '/moteur/peugeot-1-2-puretech-130',
     titre: 'Pannes connues du 1.2 PureTech 130',
     attendus: ['courroie', 'PureTech'],
@@ -105,7 +114,10 @@ for (const p of PAGES) {
   const titreOk = html.includes(p.titre)
   const manquants = p.attendus.filter((m) => !texte.includes(m))
   const assezLong = texte.length >= p.minTexte
-  const ok = statut === 200 && titreOk && manquants.length === 0 && assezLong
+  // Métadonnées de partage : lues dans le HTML BRUT (les robots d'aperçu
+  // n'exécutent pas le JavaScript).
+  const metasManquantes = (p.metas ?? []).filter((m) => !html.includes(m))
+  const ok = statut === 200 && titreOk && manquants.length === 0 && assezLong && metasManquantes.length === 0
 
   if (!ok) ko++
   console.log(`${ok ? '✓' : '✗'} ${p.url}`)
@@ -113,6 +125,7 @@ for (const p of PAGES) {
   if (!titreOk) console.log(`    titre « ${p.titre} » ABSENT du HTML`)
   if (manquants.length) console.log(`    contenu absent : ${manquants.join(', ')}`)
   if (!assezLong) console.log('    page quasi vide : le pré-rendu n\'a pas tourné sur ce déploiement')
+  if (metasManquantes.length) console.log(`    métadonnées absentes du HTML servi : ${metasManquantes.join(', ')}`)
 }
 
 console.log()
