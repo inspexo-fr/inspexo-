@@ -2,32 +2,16 @@
  "genere_le": "2026-11-11",
  "regles": "scripts/proposer-couvertures.mjs",
  "couvertures": {
-  "Hyundai G4FD": [
+  "BMW N47": [
    {
-    "marque": "kia",
-    "modele": "soul",
-    "annee_debut": 2012,
-    "annee_fin": 2016,
-    "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-02",
-    "source": "https://static.nhtsa.gov/odi/rcl/2019/RCMN-19V120-3267.pdf"
-   }
-  ],
-  "Hyundai G4KD": [
-   {
-    "marque": "kia",
-    "modele": "sorento",
-    "annee_debut": 2011,
-    "annee_fin": 2013,
-    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
-    "source": "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation"
-   },
-   {
-    "marque": "kia",
-    "modele": "sportage",
-    "annee_debut": 2011,
-    "annee_fin": 2013,
-    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
-    "source": "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation"
+    "marque": "mini",
+    "modele": "countryman",
+    "annee_debut": 2010,
+    "annee_fin": 2014,
+    "nature_periode": "production",
+    "objet": "E-BMW-N47-16",
+    "source": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-le-Mini-Countryman-en-occasion-99666.htm",
+    "raison_fiche": "code N47 écrit dans l'affirmation"
    }
   ],
   "Peugeot DV5": [
@@ -36,128 +20,210 @@
     "modele": "berlingo",
     "annee_debut": 2025,
     "annee_fin": 2026,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "citroen",
     "modele": "berlingo",
     "annee_debut": 2025,
     "annee_fin": 2025,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-06",
-    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "citroen",
     "modele": "c5 aircross",
     "annee_debut": 2025,
     "annee_fin": 2025,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-06",
-    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "citroen",
     "modele": "c5 aircross",
     "annee_debut": 2018,
     "annee_fin": 2020,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-07",
-    "source": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-un-rappel-pour-les-risques-de-calage-du-1-5-bluehdi-eat8-30025965.html"
+    "source": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-un-rappel-pour-les-risques-de-calage-du-1-5-bluehdi-eat8-30025965.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "citroen",
     "modele": "jumpy",
     "annee_debut": 2025,
     "annee_fin": 2026,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "citroen",
     "modele": "jumpy",
     "annee_debut": 2025,
     "annee_fin": 2025,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-06",
-    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "fiat",
     "modele": "doblo",
     "annee_debut": 2025,
     "annee_fin": 2026,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "fiat",
     "modele": "doblo",
     "annee_debut": 2025,
     "annee_fin": 2025,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-06",
-    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "fiat",
     "modele": "scudo",
-    "annee_debut": 2026,
-    "annee_fin": 2026,
-    "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "annee_debut": 2017,
+    "annee_fin": 2023,
+    "nature_periode": "production",
+    "objet": "B-PSA-DV5-01",
+    "source": "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
+   {
+    "marque": "fiat",
+    "modele": "ulysse",
+    "annee_debut": 2017,
+    "annee_fin": 2023,
+    "nature_periode": "production",
+    "objet": "B-PSA-DV5-01",
+    "source": "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "opel",
     "modele": "astra",
     "annee_debut": 2025,
     "annee_fin": 2025,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-06",
-    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "opel",
     "modele": "astra l",
     "annee_debut": 2025,
     "annee_fin": 2026,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "opel",
     "modele": "combo",
     "annee_debut": 2025,
     "annee_fin": 2026,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "opel",
     "modele": "combo",
     "annee_debut": 2025,
     "annee_fin": 2025,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-06",
-    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
+   {
+    "marque": "opel",
+    "modele": "corsa",
+    "annee_debut": 2017,
+    "annee_fin": 2023,
+    "nature_periode": "production",
+    "objet": "B-PSA-DV5-01",
+    "source": "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "opel",
     "modele": "corsa f",
     "annee_debut": 2025,
     "annee_fin": 2026,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
+   {
+    "marque": "opel",
+    "modele": "grandland",
+    "annee_debut": 2017,
+    "annee_fin": 2023,
+    "nature_periode": "production",
+    "objet": "B-PSA-DV5-01",
+    "source": "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
+   {
+    "marque": "opel",
+    "modele": "mokka",
+    "annee_debut": 2017,
+    "annee_fin": 2023,
+    "nature_periode": "production",
+    "objet": "B-PSA-DV5-01",
+    "source": "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "opel",
     "modele": "vivaro",
     "annee_debut": 2025,
     "annee_fin": 2026,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-05",
-    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html"
+    "source": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "opel",
     "modele": "vivaro",
     "annee_debut": 2025,
     "annee_fin": 2025,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV5-06",
-    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html"
+    "source": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
+   {
+    "marque": "toyota",
+    "modele": "proace",
+    "annee_debut": 2017,
+    "annee_fin": 2023,
+    "nature_periode": "production",
+    "objet": "B-PSA-DV5-01",
+    "source": "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    }
   ],
   "Peugeot DV6": [
@@ -166,40 +232,86 @@
     "modele": "c4 cactus",
     "annee_debut": 2016,
     "annee_fin": 2016,
+    "nature_periode": "fenetre_rappel",
     "objet": "B-PSA-DV6-16",
-    "source": "https://www.caradisiac.com/fiabilite-de-la-citroen-c4-cactus-la-maxi-fiche-occasion-de-caradisiac-191983.htm"
+    "source": "https://www.caradisiac.com/fiabilite-de-la-citroen-c4-cactus-la-maxi-fiche-occasion-de-caradisiac-191983.htm",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "mini",
     "modele": "cooper d",
     "annee_debut": 2007,
     "annee_fin": 2010,
+    "nature_periode": "production",
     "objet": "E-BMW-DV6-MINI-01",
-    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/"
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "mini",
     "modele": "one d",
     "annee_debut": 2007,
     "annee_fin": 2010,
+    "nature_periode": "production",
     "objet": "E-BMW-DV6-MINI-01",
-    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/"
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mini-mini-162/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "volvo",
     "modele": "s40",
     "annee_debut": 2005,
     "annee_fin": 2012,
+    "nature_periode": "production",
     "objet": "E-VOLVO-D4162T-01",
-    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/"
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "volvo",
     "modele": "v50",
     "annee_debut": 2005,
     "annee_fin": 2012,
+    "nature_periode": "production",
     "objet": "E-VOLVO-D4162T-01",
-    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/"
+    "source": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s40-v40-v50-452/",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   }
+  ],
+  "Peugeot DW10": [
+   {
+    "marque": "opel",
+    "modele": "grandland",
+    "annee_debut": 2017,
+    "annee_fin": 2020,
+    "nature_periode": "fenetre_rappel",
+    "objet": "B-PSA-DW10-03",
+    "source": "https://www.largus.fr/actualite-automobile/moteur-2-0-bluehdi-des-fap-a-remplacer-chez-citroen-ds-opel-peugeot-30025875.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   }
+  ],
+  "Peugeot EB2": [
+   {
+    "marque": "citroen",
+    "modele": "c4 cactus",
+    "annee_debut": 2014,
+    "annee_fin": 2018,
+    "nature_periode": "production",
+    "objet": "B-PSA-EB2-14",
+    "source": "https://www.caradisiac.com/fiabilite-de-la-citroen-c4-cactus-la-maxi-fiche-occasion-de-caradisiac-191983.htm",
+    "raison_fiche": "code EB2 écrit dans l'affirmation"
+   }
+  ],
+  "Renault H4M": [
+   {
+    "marque": "dacia",
+    "modele": "duster",
+    "annee_debut": 2018,
+    "annee_fin": 2018,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-H4M-01",
+    "source": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-renault-les-moteurs-essence-sont-ils-fiables-10319390_p_3.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    }
   ],
   "Renault H5FT": [
@@ -208,66 +320,216 @@
     "modele": "dokker",
     "annee_debut": 2012,
     "annee_fin": 2016,
+    "nature_periode": "production",
     "objet": "A-RENAULT-H5FT-01",
-    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "dacia",
     "modele": "duster",
     "annee_debut": 2012,
     "annee_fin": 2016,
+    "nature_periode": "production",
     "objet": "A-RENAULT-H5FT-01",
-    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
+   {
+    "marque": "dacia",
+    "modele": "duster",
+    "annee_debut": 2017,
+    "annee_fin": 2018,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-H5FT-03",
+    "source": "https://www.largus.fr/actualite-automobile/consommation-anormale-dhuile-la-liste-des-moteurs-a-risque-8672389.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "dacia",
     "modele": "lodgy",
     "annee_debut": 2012,
     "annee_fin": 2016,
+    "nature_periode": "production",
     "objet": "A-RENAULT-H5FT-01",
-    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "mercedes",
     "modele": "citan",
     "annee_debut": 2012,
     "annee_fin": 2016,
+    "nature_periode": "production",
     "objet": "A-RENAULT-H5FT-01",
-    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "nissan",
     "modele": "juke",
     "annee_debut": 2012,
     "annee_fin": 2016,
+    "nature_periode": "production",
     "objet": "A-RENAULT-H5FT-01",
-    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "nissan",
     "modele": "pulsar",
     "annee_debut": 2012,
     "annee_fin": 2016,
+    "nature_periode": "production",
     "objet": "A-RENAULT-H5FT-01",
-    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
    },
    {
     "marque": "nissan",
     "modele": "qashqai",
     "annee_debut": 2012,
     "annee_fin": 2016,
+    "nature_periode": "production",
     "objet": "A-RENAULT-H5FT-01",
-    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html"
+    "source": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   }
+  ],
+  "Renault K9K": [
+   {
+    "marque": "dacia",
+    "modele": "duster",
+    "annee_debut": 2018,
+    "annee_fin": 2020,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-37",
+    "source": "https://www.largus.fr/guide-achat-occasion/dacia/duster/avis-fiabilite-dacia-duster-ii-hjd-30038702.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "dacia",
+    "modele": "sandero",
+    "annee_debut": 2018,
+    "annee_fin": 2021,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-19",
+    "source": "https://www.largus.fr/actualite-automobile/renault-dacia-les-bruits-de-craquement-dembrayage-continuent-10595401.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "nissan",
+    "modele": "cube",
+    "annee_debut": 2009,
+    "annee_fin": 2011,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-01",
+    "source": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_2.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "nissan",
+    "modele": "juke",
+    "annee_debut": 2012,
+    "annee_fin": 2014,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-05",
+    "source": "https://www.largus.fr/actualite-automobile/fiabilite-nissan-juke-et-qashqai-avarie-de-turbo-sur-le-15-dci-7852395.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "nissan",
+    "modele": "note",
+    "annee_debut": 2009,
+    "annee_fin": 2011,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-01",
+    "source": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_2.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "nissan",
+    "modele": "qashqai",
+    "annee_debut": 2009,
+    "annee_fin": 2011,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-01",
+    "source": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_2.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "nissan",
+    "modele": "qashqai",
+    "annee_debut": 2012,
+    "annee_fin": 2014,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-05",
+    "source": "https://www.largus.fr/actualite-automobile/fiabilite-nissan-juke-et-qashqai-avarie-de-turbo-sur-le-15-dci-7852395.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "nissan",
+    "modele": "qashqai",
+    "annee_debut": 2010,
+    "annee_fin": 2013,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-09",
+    "source": "https://www.largus.fr/actualite-automobile/diesel-la-liste-des-pannes-recurrentes-5287380_p_3.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
+   },
+   {
+    "marque": "nissan",
+    "modele": "qashqai+2",
+    "annee_debut": 2012,
+    "annee_fin": 2014,
+    "nature_periode": "production",
+    "objet": "A-RENAULT-K9K-05",
+    "source": "https://www.largus.fr/actualite-automobile/fiabilite-nissan-juke-et-qashqai-avarie-de-turbo-sur-le-15-dci-7852395.html",
+    "raison_fiche": "code K9K écrit dans l'affirmation"
    }
   ],
   "Volkswagen EA189": [
+   {
+    "marque": "audi",
+    "modele": "a3",
+    "annee_debut": 2011,
+    "annee_fin": 2012,
+    "nature_periode": "fenetre_rappel",
+    "objet": "C-VAG-EA189-1.6-2.0TDI-14",
+    "source": "https://assets.adac.de/Autodatenbank/GWInfo/gw0174-vw-golf-vi-2008-2012-diesel-bericht.pdf",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
+   {
+    "marque": "seat",
+    "modele": "ibiza",
+    "annee_debut": 2011,
+    "annee_fin": 2011,
+    "nature_periode": "fenetre_rappel",
+    "objet": "C-VAG-EA189-1.6-2.0TDI-14",
+    "source": "https://assets.adac.de/Autodatenbank/GWInfo/gw0174-vw-golf-vi-2008-2012-diesel-bericht.pdf",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   },
    {
     "marque": "seat",
     "modele": "ibiza",
     "annee_debut": 2010,
     "annee_fin": 2014,
+    "nature_periode": "fenetre_rappel",
     "objet": "C-VAG-EA189-1.6-2.0TDI-15",
-    "source": "https://www.caradisiac.com/soyez-prudents-si-vous-achetez-une-seat-ibiza-4-en-occasion-218738.htm"
+    "source": "https://www.caradisiac.com/soyez-prudents-si-vous-achetez-une-seat-ibiza-4-en-occasion-218738.htm",
+    "raison_fiche": "seule fiche rattachée à cette famille"
+   }
+  ],
+  "Volkswagen EA288": [
+   {
+    "marque": "audi",
+    "modele": "q2",
+    "annee_debut": 2016,
+    "annee_fin": 2018,
+    "nature_periode": "production",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-09",
+    "source": "https://www.caradisiac.com/nous-avons-decortique-l-audi-q2-fiabilite-couts-point-forts-et-faibles-que-vaut-il-en-occasion-215914.htm",
+    "raison_fiche": "codes EA288 et CRBC écrits ; seul EA288 couvre la période"
    }
   ]
  },
@@ -393,13 +655,37 @@
    "motif": "période inconnue"
   },
   {
-   "fiche": "Renault H4M",
+   "fiche": "Renault H4DT",
    "marque": "Dacia",
    "modele": "Duster II",
-   "cle": "RENAULT-H4M",
-   "objet": "A-RENAULT-H4M-01",
-   "annees": "2018-2018",
-   "motif": "chevauche la fiche Renault H5FT (2017-2018, A-RENAULT-H5FT-03)"
+   "cle": "RENAULT-H4DT",
+   "objet": "A-RENAULT-H4DT-03",
+   "annees": "2019-2022",
+   "motif": "chevauche la fiche Renault H4M (2018-2024, A-RENAULT-H4M-03)"
+  },
+  {
+   "fiche": "Renault H4DT",
+   "marque": "Dacia",
+   "modele": "Duster II",
+   "cle": "RENAULT-H4DT",
+   "objet": "A-RENAULT-H4DT-07",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4DT",
+   "marque": "Dacia",
+   "modele": "Duster 2",
+   "cle": "RENAULT-H4DT",
+   "objet": "A-RENAULT-H4DT-08",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault H4DT",
+   "marque": "Dacia",
+   "modele": "ECO-G 100",
+   "cle": "RENAULT-H4DT",
+   "objet": "A-RENAULT-H4DT-08",
+   "motif": "période inconnue"
   },
   {
    "fiche": "Renault H4M",
@@ -435,12 +721,11 @@
   },
   {
    "fiche": "Renault H5FT",
-   "marque": "Dacia",
-   "modele": "Duster II",
+   "marque": "Nissan",
+   "modele": "DIG-T",
    "cle": "RENAULT-H5FT",
-   "objet": "A-RENAULT-H5FT-03",
-   "annees": "2017-2018",
-   "motif": "chevauche la fiche Renault H4M (2018-2018, A-RENAULT-H4M-01)"
+   "objet": "A-RENAULT-H5FT-09",
+   "motif": "période inconnue"
   },
   {
    "fiche": "Renault H5FT",
@@ -451,19 +736,267 @@
    "motif": "période inconnue"
   },
   {
-   "fiche": "Peugeot DV5",
-   "marque": "Opel",
-   "modele": "et Peugeot",
-   "cle": "PSA-DV5",
-   "objet": "B-PSA-DV5-04",
+   "fiche": "Renault K9K",
+   "marque": "Nissan",
+   "modele": "Juke",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-02",
    "motif": "période inconnue"
   },
   {
-   "fiche": "Peugeot DV5",
-   "marque": "Opel",
-   "modele": "sans bornes de",
-   "cle": "PSA-DV5",
-   "objet": "B-PSA-DV5-04",
+   "fiche": "Renault K9K",
+   "marque": "Nissan",
+   "modele": "Juke",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-03",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-03",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-05",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Logan II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-05",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster I",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-06",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster I dCi 85/110",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-07",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Lodgy dCi 110",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-07",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-07",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Logan II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-07",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-09",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Nissan",
+   "modele": "Qashqai 1",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-10",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-12",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-12",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Logan 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-12",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster II (01/01/2019",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-13",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-15",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-15",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Logan 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-15",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Dokker",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-15",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Lodgy Blue dCi (véhicules",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-15",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster 2",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-19",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-28",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Logan II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-28",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-29",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Logan II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-29",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-30",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster I",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-31",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-31",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Logan II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-31",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster II",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-31",
+   "motif": "période bornée d’un seul côté"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Nissan",
+   "modele": "Juke",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-35",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Nissan",
+   "modele": "Juke I turbo-diesel",
+   "cle": "RENAULT-K9K",
+   "objet": "A-RENAULT-K9K-36",
    "motif": "période inconnue"
   },
   {
@@ -472,6 +1005,94 @@
    "modele": "Xsara Picasso",
    "cle": "PSA-DW10",
    "objet": "H-PSA-DW10-17",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Citroën",
+   "modele": "C3",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Citroën",
+   "modele": "C3 Aircross",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Citroën",
+   "modele": "C4",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Citroën",
+   "modele": "C4 X",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Citroën",
+   "modele": "DS3",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Opel",
+   "modele": "Corsa",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Opel",
+   "modele": "Mokka",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Opel",
+   "modele": "Frontera",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Fiat",
+   "modele": "Grande Panda",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Jeep",
+   "modele": "Avenger",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Peugeot EB2",
+   "marque": "Alfa Romeo",
+   "modele": "Junior",
+   "cle": "PSA-EB2",
+   "objet": "B-PSA-EB2-11",
    "motif": "période inconnue"
   },
   {
@@ -501,6 +1122,31 @@
   {
    "fiche": "Volkswagen EA189",
    "marque": "Audi",
+   "modele": "Q3",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-08",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
+   "modele": "A4",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-08",
+   "annees": "2007-2015",
+   "motif": "déborde la fiche (2008-2015) : autre génération possible"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
+   "modele": "A5",
+   "cle": "VAG-EA189-1.6-2.0TDI",
+   "objet": "C-VAG-EA189-1.6-2.0TDI-08",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Volkswagen EA189",
+   "marque": "Audi",
    "modele": "A4 B8 TDI",
    "cle": "VAG-EA189-1.6-2.0TDI",
    "objet": "C-VAG-EA189-1.6-2.0TDI-10",
@@ -523,6 +1169,54 @@
    "motif": "période inconnue"
   },
   {
+   "fiche": "Peugeot EP6",
+   "marque": "Mini",
+   "modele": "II Cooper",
+   "cle": "BMW-N12-N16",
+   "objet": "E-BMW-N12-N16-02",
+   "motif": "période inconnue"
+  },
+  {
+   "fiche": "Hyundai G4FD",
+   "marque": "Kia",
+   "modele": "Soul",
+   "cle": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-01",
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
+  },
+  {
+   "fiche": "Hyundai G4FD",
+   "marque": "Kia",
+   "modele": "Forte",
+   "cle": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-01",
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
+  },
+  {
+   "fiche": "Hyundai G4FD",
+   "marque": "Kia",
+   "modele": "Forte Koup",
+   "cle": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-01",
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
+  },
+  {
+   "fiche": "Hyundai G4FD",
+   "marque": "Kia",
+   "modele": "Soul",
+   "cle": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-02",
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
+  },
+  {
+   "fiche": "Hyundai G4FD",
+   "marque": "Kia",
+   "modele": "Soul",
+   "cle": "HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD",
+   "objet": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-03",
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
+  },
+  {
    "fiche": "Hyundai G4FD",
    "marque": "Kia",
    "modele": "Niro",
@@ -536,8 +1230,7 @@
    "modele": "Optima",
    "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01",
-   "annees": "2011-2019",
-   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
   },
   {
    "fiche": "Hyundai G4KD",
@@ -545,8 +1238,7 @@
    "modele": "Sorento",
    "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01",
-   "annees": "2012-2019",
-   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
   },
   {
    "fiche": "Hyundai G4KD",
@@ -554,8 +1246,7 @@
    "modele": "Sportage",
    "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-01",
-   "annees": "2011-2019",
-   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
   },
   {
    "fiche": "Hyundai G4KD",
@@ -563,8 +1254,23 @@
    "modele": "Optima Hybrid",
    "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
    "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
-   "annees": "2011-2020",
-   "motif": "déborde la fiche (2010-2018) : autre génération possible"
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
+  },
+  {
+   "fiche": "Hyundai G4KD",
+   "marque": "Kia",
+   "modele": "Sorento",
+   "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
+  },
+  {
+   "fiche": "Hyundai G4KD",
+   "marque": "Kia",
+   "modele": "Sportage",
+   "cle": "HYUNDAI-KIA-2.0-2.4-THETA-II",
+   "objet": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
+   "motif": "sources nord-américaines seulement : moteur non garanti identique en Europe"
   },
   {
    "fiche": "Dacia K7M",
@@ -573,68 +1279,1521 @@
    "cle": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "objet": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-04",
    "motif": "période inconnue"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Nissan",
+   "modele": "Note",
+   "annees": "2009-2010",
+   "objet": "A-RENAULT-K9K-21",
+   "motif": "fenêtre de rappel remplacée par une période de production écrite"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Nissan",
+   "modele": "Cube",
+   "annees": "2009-2010",
+   "objet": "A-RENAULT-K9K-21",
+   "motif": "fenêtre de rappel remplacée par une période de production écrite"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Duster 2",
+   "annees": "2017-2018",
+   "objet": "A-RENAULT-K9K-25",
+   "motif": "fenêtre de rappel remplacée par une période de production écrite"
+  },
+  {
+   "fiche": "Renault K9K",
+   "marque": "Dacia",
+   "modele": "Sandero II",
+   "annees": "2017-2018",
+   "objet": "A-RENAULT-K9K-25",
+   "motif": "fenêtre de rappel remplacée par une période de production écrite"
+  },
+  {
+   "fiche": "Peugeot DV5",
+   "marque": "Fiat",
+   "modele": "Scudo",
+   "annees": "2026-2026",
+   "objet": "B-PSA-DV5-05",
+   "motif": "fenêtre de rappel remplacée par une période de production écrite"
   }
  ],
- "non_proposees": [
-  {
-   "cle": "NISSAN-MR16DDT-MR20DE",
-   "motif": "rattachée à 2 fiches (Nissan MR16DDT, Nissan MR20DE)"
-  },
-  {
-   "cle": "RENAULT-H4DT",
-   "motif": "rattachée à 2 fiches (Renault H4DT, Renault H4D)"
-  },
-  {
-   "cle": "RENAULT-K9K",
-   "motif": "rattachée à 2 fiches (Mercedes OM607, Renault K9K)"
-  },
-  {
-   "cle": "BMW-MINI-R56-PRINCE-N12-N14-N18",
-   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
-  },
-  {
-   "cle": "PSA-EB2",
-   "motif": "rattachée à 5 fiches (Peugeot EB2DTS, Peugeot EB2DT, Peugeot EB2ADTS, Peugeot EB2, Peugeot EB2F)"
-  },
-  {
-   "cle": "PSA-EP6",
-   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
-  },
-  {
-   "cle": "VAG-EA288-1.6-2.0TDI",
-   "motif": "rattachée à 3 fiches (Volkswagen EA288, Audi EA288, Volkswagen CRBC)"
-  },
-  {
-   "cle": "BMW-N12-N16",
-   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
-  },
-  {
-   "cle": "BMW-N14-N18",
-   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
-  },
-  {
-   "cle": "BMW-N47",
-   "motif": "rattachée à 2 fiches (BMW N47, Peugeot DV6)"
-  },
-  {
-   "cle": "BMW-N47-B47",
-   "motif": "rattachée à 2 fiches (BMW N47, BMW B47)"
-  },
-  {
-   "cle": "MERCEDES-OM607",
-   "motif": "rattachée à 2 fiches (Mercedes OM607, Renault K9K)"
-  },
-  {
-   "cle": "MERCEDES-OM651-OM654-220-D",
-   "motif": "rattachée à 3 fiches (Mercedes OM651, Mercedes OM654, Mercedes-Benz OM654)"
-  },
-  {
-   "cle": "MERCEDES-OM654",
-   "motif": "rattachée à 2 fiches (Mercedes OM654, Mercedes-Benz OM654)"
-  },
-  {
-   "cle": "PSA-ESSENCE-TU-ET-EW",
-   "motif": "rattachée à 2 fiches (Peugeot EP6, Mini N18)"
-  }
- ]
+ "non_proposees": [],
+ "familles_multi": {
+  "NISSAN-MR16DDT-MR20DE": [
+   {
+    "marque": "Nissan",
+    "modele": "Juke I",
+    "periode": "2010-2019",
+    "fiche": "Nissan MR16DDT",
+    "raison": "codes MR16DDT et MR20DE écrits ; seul MR16DDT couvre la période",
+    "objet": "A-NISSAN-MR16DDT-MR20DE-01"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai 2",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes MR16DDT et MR20DE écrits, période sans départage",
+    "objet": "A-NISSAN-MR16DDT-MR20DE-02"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai 2",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes MR16DDT et MR20DE écrits, période sans départage",
+    "objet": "A-NISSAN-MR16DDT-MR20DE-03"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke I",
+    "periode": "2012-2014",
+    "fiche": null,
+    "raison": "codes MR16DDT et MR20DE écrits, période sans départage",
+    "objet": "A-NISSAN-MR16DDT-MR20DE-04"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke",
+    "periode": "2012-2016",
+    "fiche": null,
+    "raison": "codes MR16DDT et MR20DE écrits, période sans départage",
+    "objet": "A-NISSAN-MR16DDT-MR20DE-06"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "y compris NISMO RS",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes MR16DDT et MR20DE écrits, période sans départage",
+    "objet": "A-NISSAN-MR16DDT-MR20DE-06"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke I",
+    "periode": "2010-2019",
+    "fiche": "Nissan MR16DDT",
+    "raison": "codes MR16DDT et MR20DE écrits ; seul MR16DDT couvre la période",
+    "objet": "A-NISSAN-MR16DDT-MR20DE-08"
+   }
+  ],
+  "RENAULT-H4DT": [
+   {
+    "marque": "Renault",
+    "modele": "Clio V",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio V",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-02"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio V Duster II",
+    "periode": "2019-2022",
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-03"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster II",
+    "periode": "2019-2022",
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-03"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio V",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-04"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio V",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-05"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio V",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-06"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster II",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-07"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio 5",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-08"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster 2",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-08"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "ECO-G 100",
+    "periode": null,
+    "fiche": "Renault H4DT",
+    "raison": "code H4DT écrit dans l'affirmation",
+    "objet": "A-RENAULT-H4DT-08"
+   }
+  ],
+  "RENAULT-K9K": [
+   {
+    "marque": "Renault",
+    "modele": "Clio III",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Modus",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo II",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane II/III",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Scénic II/III",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Fluence",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Laguna III",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Note",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Cube",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-01"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-02"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Scénic II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-02"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-02"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Laguna III",
+    "periode": "2007-2007",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-02"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-02"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-03"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-03"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke",
+    "periode": "2012-2014",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-05"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai",
+    "periode": "2012-2014",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-05"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai+2",
+    "periode": "2012-2014",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-05"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-05"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Logan II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-05"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster I",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-06"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster I dCi 85/110",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-07"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Lodgy dCi 110",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-07"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-07"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Logan II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-07"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane III",
+    "periode": "2009-2010",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-08"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai 1",
+    "periode": "2010-2013",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-09"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-09"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai 1",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-10"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio 5",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur 2",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kadjar",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane 4",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Scénic 4",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Talisman",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo 2",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Fluence (",
+    "periode": "2018-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-11"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio 5",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane 4",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kadjar",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Logan 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-12"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio 5",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-13"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur 2",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-13"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane 4",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-13"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kadjar",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-13"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo 2",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-13"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster II (01/01/2019",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-13"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane 4",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-14"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Scénic 4",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-14"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Talisman",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-14"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Espace 5 en",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-14"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-15"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-15"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Logan 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-15"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Dokker",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-15"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Lodgy Blue dCi (véhicules",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-15"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio 5",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-15"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Duster II (01/07/2018",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-15"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane 4",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-19"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Talisman",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-19"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kadjar",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-19"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo 2",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-19"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Koleos 2",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-19"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster 2",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-19"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero 2",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-19"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Note",
+    "periode": "2009-2010",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-21"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai",
+    "periode": "2009-2011",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-21"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Cube",
+    "periode": "2009-2010",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-21"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio 5",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-22"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur 2",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-22"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kadjar",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-22"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane 4",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-22"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo 2",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-22"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Fluence",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-22"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Qashqai 1",
+    "periode": "2010-2013",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-23"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kadjar",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-24"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster 2",
+    "periode": "2017-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-25"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": "2017-2018",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-25"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio 5",
+    "periode": "2018-2021",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-27"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur I",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-28"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-28"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Logan II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-28"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur I",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-29"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane III",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-29"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-29"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Logan II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-29"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur I",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-30"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-30"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster I",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-31"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Sandero II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-31"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Logan II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-31"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster II",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-31"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur I",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-31"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Captur I",
+    "periode": "2015-2015",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-33"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-35"
+   },
+   {
+    "marque": "Nissan",
+    "modele": "Juke I turbo-diesel",
+    "periode": null,
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-36"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio V",
+    "periode": "2018-2020",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-37"
+   },
+   {
+    "marque": "Dacia",
+    "modele": "Duster II",
+    "periode": "2018-2020",
+    "fiche": "Renault K9K",
+    "raison": "code K9K écrit dans l'affirmation",
+    "objet": "A-RENAULT-K9K-37"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio II",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "H-RENAULT-K9K-38"
+   },
+   {
+    "marque": "Renault",
+    "modele": "millésime",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "H-RENAULT-K9K-38"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio III",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "H-RENAULT-K9K-39"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Mégane II",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "H-RENAULT-K9K-39"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Scénic II",
+    "periode": "2003-2007",
+    "fiche": "Renault K9K",
+    "raison": "aucun code écrit ; seule Renault K9K couvre la période",
+    "objet": "H-RENAULT-K9K-39"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Clio II",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "H-RENAULT-K9K-40"
+   },
+   {
+    "marque": "Renault",
+    "modele": "Kangoo",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "H-RENAULT-K9K-40"
+   }
+  ],
+  "BMW-MINI-R56-PRINCE-N12-N14-N18": [
+   {
+    "marque": "Mini",
+    "modele": "moteurs",
+    "periode": null,
+    "fiche": "Mini N18",
+    "raison": "code N18 écrit dans l'affirmation",
+    "objet": "B-BMW-MINI-R56-PRINCE-N12-N14-N18-01"
+   }
+  ],
+  "PSA-EB2": [
+   {
+    "marque": "Citroën",
+    "modele": "C3",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Citroën",
+    "modele": "C3 Aircross",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Citroën",
+    "modele": "C4",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Citroën",
+    "modele": "C4 X",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Citroën",
+    "modele": "DS3",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Opel",
+    "modele": "Corsa",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Opel",
+    "modele": "Mokka",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Opel",
+    "modele": "Frontera",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Fiat",
+    "modele": "Grande Panda",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Jeep",
+    "modele": "Avenger",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Alfa Romeo",
+    "modele": "Junior",
+    "periode": null,
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-11"
+   },
+   {
+    "marque": "Citroën",
+    "modele": "C4 Cactus",
+    "periode": "2014-2018",
+    "fiche": "Peugeot EB2",
+    "raison": "code EB2 écrit dans l'affirmation",
+    "objet": "B-PSA-EB2-14"
+   }
+  ],
+  "PSA-EP6": [
+   {
+    "marque": "Citroën",
+    "modele": "C5 Aircross",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "B-PSA-EP6-06"
+   },
+   {
+    "marque": "Citroën",
+    "modele": "DS7 Crossback",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "B-PSA-EP6-06"
+   },
+   {
+    "marque": "Opel",
+    "modele": "Grandland X",
+    "periode": null,
+    "fiche": null,
+    "raison": "aucun code écrit ; aucune fiche ne couvre la période",
+    "objet": "B-PSA-EP6-06"
+   },
+   {
+    "marque": "Mini",
+    "modele": "R56 jusqu'au 10/10/2011",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EP6 et N18 écrits, période sans départage",
+    "objet": "B-PSA-EP6-10"
+   },
+   {
+    "marque": "Mini",
+    "modele": "II R56",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EP6 et N18 écrits, période sans départage",
+    "objet": "B-PSA-EP6-11"
+   }
+  ],
+  "VAG-EA288-1.6-2.0TDI": [
+   {
+    "marque": "Audi",
+    "modele": "A3 III",
+    "periode": "2012-2012",
+    "fiche": null,
+    "raison": "codes EA288 et CRBC écrits, période sans départage",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-01"
+   },
+   {
+    "marque": "Audi",
+    "modele": "A3 III",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EA288 et CRBC écrits, période sans départage",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-05"
+   },
+   {
+    "marque": "Audi",
+    "modele": "A3 III",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EA288 et CRBC écrits, période sans départage",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-06"
+   },
+   {
+    "marque": "Audi",
+    "modele": "A3 III",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EA288 et CRBC écrits, période sans départage",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-07"
+   },
+   {
+    "marque": "Audi",
+    "modele": "Q2 30 TDI",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EA288 et CRBC écrits, période sans départage",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-08"
+   },
+   {
+    "marque": "Audi",
+    "modele": "Q2",
+    "periode": "2016-2018",
+    "fiche": "Volkswagen EA288",
+    "raison": "codes EA288 et CRBC écrits ; seul EA288 couvre la période",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-09"
+   },
+   {
+    "marque": "Audi",
+    "modele": "A3 III",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EA288 et CRBC écrits, période sans départage",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-11"
+   },
+   {
+    "marque": "Audi",
+    "modele": "Q2",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes EA288 et CRBC écrits, période sans départage",
+    "objet": "C-VAG-EA288-1.6-2.0TDI-11"
+   }
+  ],
+  "BMW-N12-N16": [
+   {
+    "marque": "Mini",
+    "modele": "II Cooper",
+    "periode": null,
+    "fiche": "Peugeot EP6",
+    "raison": "code EP6 écrit dans l'affirmation",
+    "objet": "E-BMW-N12-N16-02"
+   }
+  ],
+  "BMW-N14-N18": [
+   {
+    "marque": "Mini",
+    "modele": "Cooper S",
+    "periode": null,
+    "fiche": "Mini N18",
+    "raison": "code N18 écrit dans l'affirmation",
+    "objet": "E-BMW-N14-N18-04"
+   },
+   {
+    "marque": "Mini",
+    "modele": "JCW",
+    "periode": "2007-2010",
+    "fiche": "Mini N18",
+    "raison": "code N18 écrit dans l'affirmation",
+    "objet": "E-BMW-N14-N18-04"
+   },
+   {
+    "marque": "Mini",
+    "modele": "Clubman",
+    "periode": "2011-2011",
+    "fiche": "Mini N18",
+    "raison": "code N18 écrit dans l'affirmation",
+    "objet": "E-BMW-N14-N18-09"
+   },
+   {
+    "marque": "Mini",
+    "modele": "Clubman Cooper S",
+    "periode": "2007-2010",
+    "fiche": "Mini N18",
+    "raison": "code N18 écrit dans l'affirmation",
+    "objet": "E-BMW-N14-N18-10"
+   },
+   {
+    "marque": "Mini",
+    "modele": "Countryman R60 Cooper S",
+    "periode": "2010-2014",
+    "fiche": "Mini N18",
+    "raison": "code N18 écrit dans l'affirmation",
+    "objet": "E-BMW-N14-N18-11"
+   }
+  ],
+  "BMW-N47": [
+   {
+    "marque": "BMW",
+    "modele": "à moteur N47",
+    "periode": "2007-2015",
+    "fiche": "BMW N47",
+    "raison": "code N47 écrit dans l'affirmation",
+    "objet": "E-BMW-N47-02"
+   },
+   {
+    "marque": "BMW",
+    "modele": "Série 1",
+    "periode": "2004-2013",
+    "fiche": "BMW N47",
+    "raison": "code N47 écrit dans l'affirmation",
+    "objet": "E-BMW-N47-03"
+   },
+   {
+    "marque": "BMW",
+    "modele": "X1 E84",
+    "periode": "2012-2014",
+    "fiche": "BMW N47",
+    "raison": "code N47 écrit dans l'affirmation",
+    "objet": "E-BMW-N47-14"
+   },
+   {
+    "marque": "BMW",
+    "modele": "Série 1 F20",
+    "periode": null,
+    "fiche": "BMW N47",
+    "raison": "code N47 écrit dans l'affirmation",
+    "objet": "E-BMW-N47-15"
+   },
+   {
+    "marque": "Mini",
+    "modele": "Countryman R60 Cooper D",
+    "periode": "2010-2014",
+    "fiche": "BMW N47",
+    "raison": "code N47 écrit dans l'affirmation",
+    "objet": "E-BMW-N47-16"
+   }
+  ],
+  "MERCEDES-OM651-OM654-220-D": [
+   {
+    "marque": "Mercedes",
+    "modele": "Classe C W205",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes OM651 et OM654 écrits, période sans départage",
+    "objet": "E-MERCEDES-OM651-OM654-220-D-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "GLC X253",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes OM651 et OM654 écrits, période sans départage",
+    "objet": "E-MERCEDES-OM651-OM654-220-D-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "Classe A",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes OM651 et OM654 écrits, période sans départage",
+    "objet": "E-MERCEDES-OM651-OM654-220-D-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "Classe C",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes OM651 et OM654 écrits, période sans départage",
+    "objet": "E-MERCEDES-OM651-OM654-220-D-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "GLA",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes OM651 et OM654 écrits, période sans départage",
+    "objet": "E-MERCEDES-OM651-OM654-220-D-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "GLC",
+    "periode": null,
+    "fiche": null,
+    "raison": "codes OM651 et OM654 écrits, période sans départage",
+    "objet": "E-MERCEDES-OM651-OM654-220-D-01"
+   }
+  ],
+  "MERCEDES-OM654": [
+   {
+    "marque": "Mercedes",
+    "modele": "Classe C",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "Classe E",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "Classe S",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "CLS",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "GLC",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "GLE",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "GLS G",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "Classe G",
+    "periode": "2017-2021",
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-01"
+   },
+   {
+    "marque": "Mercedes",
+    "modele": "Classe C W205",
+    "periode": null,
+    "fiche": "Mercedes OM654",
+    "raison": "code OM654 écrit dans l'affirmation (fiches de même code fusionnées à la lecture)",
+    "objet": "E-MERCEDES-OM654-03"
+   }
+  ]
+ }
 }
