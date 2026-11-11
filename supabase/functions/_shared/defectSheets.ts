@@ -43,6 +43,8 @@ export type SheetPanne = {
   rappel_code: string | null;
   rappel_date: string | null;
   rappel_vehicules: string | null;
+  /** « mondiale » : campagne publiée pour tout le marché (ex. 21H7), affichée « campagne constructeur mondiale …, éligibilité à vérifier par le VIN ». */
+  rappel_portee?: "mondiale" | null;
   // Plage de production couverte par la campagne (null = non publiée)
   rappel_annee_debut?: number | null;
   rappel_annee_fin?: number | null;
@@ -537,6 +539,7 @@ export function sanitizePannes(
       rappel_code: p.rappel_code ? String(p.rappel_code).slice(0, 40) : null,
       rappel_date: p.rappel_date ? String(p.rappel_date).slice(0, 40) : null,
       rappel_vehicules: p.rappel_vehicules ? String(p.rappel_vehicules).slice(0, 160) : null,
+      rappel_portee: p.rappel_portee === "mondiale" ? "mondiale" : null,
       rappel_annee_debut: typeof p.rappel_annee_debut === "number" && p.rappel_annee_debut > 1980 && p.rappel_annee_debut < 2100
         ? p.rappel_annee_debut : null,
       rappel_annee_fin: typeof p.rappel_annee_fin === "number" && p.rappel_annee_fin > 1980 && p.rappel_annee_fin < 2100

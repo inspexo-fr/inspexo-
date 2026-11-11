@@ -5,7 +5,7 @@
    "id": "A-NISSAN-HR12DDT-01",
    "uid": "A-NISSAN-HR12DDT-01",
    "type": "panne",
-   "famille": "NISSAN-HR12DDT",
+   "famille": "RENAULT-H5FT",
    "fiche": "Renault H5FT",
    "partie": "Surconsommation d'huile pouvant aller jusqu'à la casse moteur (même défaut de segmentation / pression collecteur que le 1.2 TCe)",
    "panne_titre": "Surconsommation d'huile liée à la segmentation des pistons, pouvant conduire à la casse moteur",
@@ -13,7 +13,8 @@
    "urls": [
     "https://www.largus.fr/actualite-automobile/renault-12-tce-et-nissan-12-dig-t-des-moteurs-gourmands-en-huile-8196384.html"
    ],
-   "portee_avant": true
+   "portee_avant": true,
+   "famille_corrigee": "l'article parle du 1.2 DIG-T, c'est-à-dire le H5Ft, pas du HR12DDT"
   },
   {
    "id": "B-PSA-EB2-01",
@@ -27,7 +28,8 @@
    "urls": [
     "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html"
    ],
-   "portee_avant": true
+   "portee_avant": true,
+   "famille_corrigee": null
   },
   {
    "id": "E-BMW-N47-10",
@@ -41,7 +43,8 @@
    "urls": [
     "https://www.caradisiac.com/fiabilite-de-la-bmw-serie-3-f30-la-maxi-fiche-occasion-de-caradisiac-172002.htm"
    ],
-   "portee_avant": true
+   "portee_avant": true,
+   "famille_corrigee": null
   },
   {
    "id": "D-FORD-1.5-1.6-TDCI-01",
@@ -55,21 +58,8 @@
    "urls": [
     "https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm"
    ],
-   "portee_avant": false
-  },
-  {
-   "id": "D-MAZDA-1.6-MZ-CD-DV6-01",
-   "uid": "D-MAZDA-1.6-MZ-CD-DV6-01#3",
-   "type": "panne",
-   "famille": "MAZDA-1.6-MZ-CD-DV6",
-   "fiche": "Peugeot DV6",
-   "partie": "Injecteurs: fuites de gazole aux joints d'injecteurs (1.4)",
-   "panne_titre": "Défaillance / fuite des injecteurs",
-   "raison": "même organe principal (injecteurs) et même défaut (fuite)",
-   "urls": [
-    "https://www.caradisiac.com/fiabilite-de-la-mazda-2-2e-generation-la-maxi-fiche-occasion-de-caradisiac-179965.htm"
-   ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "B-PSA-DV6-13",
@@ -83,7 +73,8 @@
    "urls": [
     "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quel-citroen-c4-picasso-acheter-2530370_p_2.html"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "B-PSA-DW10-11",
@@ -97,7 +88,8 @@
    "urls": [
     "https://www.largus.fr/guide-achat-occasion/peugeot/3008/avis-fiabilite-peugeot-3008-ii-30039638.html"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "A-RENAULT-H5FT-03",
@@ -111,7 +103,8 @@
    "urls": [
     "https://www.largus.fr/actualite-automobile/consommation-anormale-dhuile-la-liste-des-moteurs-a-risque-8672389.html"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "A-RENAULT-H5FT-03",
@@ -125,7 +118,8 @@
    "urls": [
     "https://www.largus.fr/actualite-automobile/consommation-anormale-dhuile-la-liste-des-moteurs-a-risque-8672389.html"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "E-BMW-N12-N16-01",
@@ -139,7 +133,8 @@
    "urls": [
     "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "E-BMW-N12-N16-02",
@@ -153,7 +148,8 @@
    "urls": [
     "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "B-PSA-DV5-01",
@@ -167,7 +163,38 @@
    "urls": [
     "https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/"
    ],
-   "portee_avant": true
+   "portee_avant": true,
+   "famille_corrigee": null
+  },
+  {
+   "id": "B-PSA-DV5-08",
+   "uid": "B-PSA-DV5-08#1",
+   "type": "panne",
+   "famille": "PSA-DV5",
+   "fiche": "Peugeot DV5",
+   "partie": "Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé): « Défaut antipollution",
+   "panne_titre": "Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer",
+   "raison": "rattachement décidé à la relecture : la panne existante couvre déjà le réservoir : ajout de source, pas une nouvelle panne",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html"
+   ],
+   "portee_avant": true,
+   "famille_corrigee": null
+  },
+  {
+   "id": "B-PSA-DV5-08",
+   "uid": "B-PSA-DV5-08#2",
+   "type": "panne",
+   "famille": "PSA-DV5",
+   "fiche": "Peugeot DV5",
+   "partie": "Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé): démarrage interdit dans XXXX km »",
+   "panne_titre": "Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer",
+   "raison": "rattachement décidé à la relecture : la panne existante couvre déjà le réservoir : ajout de source, pas une nouvelle panne",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html"
+   ],
+   "portee_avant": true,
+   "famille_corrigee": null
   },
   {
    "id": "C-VAG-EA189-1.6-2.0TDI-06",
@@ -181,7 +208,8 @@
    "urls": [
     "https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-les-problemes-du-moteur-diesel-16-tdi-6411386.html"
    ],
-   "portee_avant": true
+   "portee_avant": true,
+   "famille_corrigee": null
   },
   {
    "id": "C-VAG-EA189-1.6-2.0TDI-07",
@@ -195,7 +223,8 @@
    "urls": [
     "https://www.caradisiac.com/fiabilite-de-la-volkswagen-passat-7-la-maxi-fiche-occasion-de-caradisiac-163107.htm"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "C-VAG-EA189-1.6-2.0TDI-08",
@@ -209,21 +238,8 @@
    "urls": [
     "https://www.caradisiac.com/fiabilite-du-volkswagen-touran-2-la-maxi-fiche-occasion-de-caradisiac-167738.htm"
    ],
-   "portee_avant": false
-  },
-  {
-   "id": "C-VAG-EA189-1.6-2.0TDI-08",
-   "uid": "C-VAG-EA189-1.6-2.0TDI-08#3",
-   "type": "panne",
-   "famille": "VAG-EA189-1.6-2.0TDI",
-   "fiche": "Volkswagen EA189",
-   "partie": "Volant moteur bimasse: usure de l'embrayage",
-   "panne_titre": "Volant moteur bi-masse défaillant",
-   "raison": "même organe principal (embrayage) et même défaut (usure)",
-   "urls": [
-    "https://www.caradisiac.com/fiabilite-du-volkswagen-touran-2-la-maxi-fiche-occasion-de-caradisiac-167738.htm"
-   ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "E-BMW-N13-01",
@@ -237,7 +253,8 @@
    "urls": [
     "https://www.autobild.de/artikel/bmw-1er-gebrauchtwagen-test-14695647.html"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "E-BMW-N13-04",
@@ -251,7 +268,8 @@
    "urls": [
     "https://www.caradisiac.com/fiabilite-de-la-bmw-serie-1-f20-f21-2011-la-maxi-fiche-occasion-de-caradisiac-184091.htm"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "D-FORD-1.0-ECOBOOST-01",
@@ -265,7 +283,8 @@
    "urls": [
     "https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "D-FORD-1.0-ECOBOOST-01",
@@ -279,7 +298,8 @@
    "urls": [
     "https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "D-FORD-1.0-ECOBOOST-01",
@@ -293,7 +313,8 @@
    "urls": [
     "https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm"
    ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   },
   {
    "id": "D-FORD-1.0-ECOBOOST-04",
@@ -307,21 +328,8 @@
    "urls": [
     "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-ford-focus-3-en-occasion-106907.htm"
    ],
-   "portee_avant": false
-  },
-  {
-   "id": "E-VOLVO-D4204T-03",
-   "uid": "E-VOLVO-D4204T-03",
-   "type": "panne",
-   "famille": "VOLVO-D4204T",
-   "fiche": "Volvo D4204T",
-   "partie": "Consommation d'huile excessive relevée sur quelques diesels",
-   "panne_titre": "Surconsommation d'huile importante pouvant aller jusqu'à une défaillance de joint de culasse",
-   "raison": "même organe principal (consommation_huile) et même défaut (consommation)",
-   "urls": [
-    "https://www.caradisiac.com/les-volvo-s60-v60-sont-elles-aussi-fiables-que-leur-reputation-le-laisse-esperer-210910.htm"
-   ],
-   "portee_avant": false
+   "portee_avant": false,
+   "famille_corrigee": null
   }
  ],
  "nouvelles": [
@@ -351,36 +359,6 @@
    "uids": [
     "B-PSA-DV6-09#1",
     "B-PSA-DV6-09#2"
-   ]
-  },
-  {
-   "id": "B-PSA-DV5-08",
-   "uid": "B-PSA-DV5-08#1",
-   "type": "panne",
-   "famille": "PSA-DV5",
-   "fiche": "Peugeot DV5",
-   "partie": "Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé): « Défaut antipollution",
-   "titre": "Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé)",
-   "organe": "adblue",
-   "defauts": [
-    "grippage"
-   ],
-   "voisines": [
-    "Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer"
-   ],
-   "gravite": "majeure",
-   "cout_min": 750,
-   "cout_max": 1200,
-   "raison_gravite": "montant publié : 750-1200 €",
-   "raison_rapprochement": "même organe (adblue) mais défaut différent ou non nommé dans la panne : douteux",
-   "symptomes": "Voyant AdBlue/urée, message antipollution avec compte à rebours kilométrique avant interdiction de démarrage, remplissage impossible, sonde de niveau hors service.",
-   "libelle_moteur": "PSA/Stellantis 1.5 BlueHDi (DV5RC/DV5RD) — système SCR AdBlue",
-   "urls": [
-    "https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html"
-   ],
-   "uids": [
-    "B-PSA-DV5-08#1",
-    "B-PSA-DV5-08#2"
    ]
   }
  ],
@@ -3721,7 +3699,7 @@
    "famille": "BMW-N47",
    "fiche": "BMW N47",
    "partie": "Turbocompresseur: très rares cas de casse sur le 1.6 D 112 ch",
-   "motif": "nouvelle panne sans gravité établie (aucune panne de la fiche sur cet organe)"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.6) absente de la fiche (2.0)"
   },
   {
    "id": "D-FORD-1.5-1.6-TDCI-02",
@@ -3739,7 +3717,7 @@
    "famille": "FORD-1.5-1.6-TDCI",
    "fiche": "Peugeot DV6",
    "partie": "Cas isolés de casse moteur, turbo et calculateur PCM; fuites de gazole aux joints d'injecteurs (1.4 TDCi)",
-   "motif": "nouvelle panne sans gravité établie (aucune panne de la fiche sur cet organe)"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4) absente de la fiche (1.6)"
   },
   {
    "id": "D-FORD-1.5-1.6-TDCI-05",
@@ -3766,7 +3744,16 @@
    "famille": "MAZDA-1.6-MZ-CD-DV6",
    "fiche": "Peugeot DV6",
    "partie": "Injecteurs: plus rare sur le 1.6 que sur le 1.4",
-   "motif": "ni ajout ni nouvelle panne : défaut non identifié dans l’affirmation"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.6, 1.4) absente de la fiche (1.6)"
+  },
+  {
+   "id": "D-MAZDA-1.6-MZ-CD-DV6-01",
+   "uid": "D-MAZDA-1.6-MZ-CD-DV6-01#3",
+   "type": "panne",
+   "famille": "MAZDA-1.6-MZ-CD-DV6",
+   "fiche": "Peugeot DV6",
+   "partie": "Injecteurs: fuites de gazole aux joints d'injecteurs (1.4)",
+   "motif": "retirée à la relecture : l'extrait parle du 1.4 MZ-CD : c'est le DV4, pas le DV6"
   },
   {
    "id": "B-PSA-DV6-01",
@@ -3838,7 +3825,7 @@
    "famille": "PSA-DV6",
    "fiche": "Peugeot DV6",
    "partie": "1.6 BlueHDi: à-coups par encrassement des soupapes d'échappement (1.4 HDi / 1.6 e-HDi)",
-   "motif": "nouvelle panne sans gravité établie (aucune panne de la fiche sur cet organe)"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.6, 1.4, 1.6) absente de la fiche (1.6)"
   },
   {
    "id": "B-PSA-DV6-15",
@@ -5251,7 +5238,7 @@
    "famille": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "fiche": "Dacia K7M",
    "partie": "Capteur de point mort haut défaillant sur 1.4 MPI et 1.6 MPI: démarrage difficile ou arrêt du moteur en circulation",
-   "motif": "ni ajout ni nouvelle panne : organe non identifié dans l’affirmation"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4, 1.6) absente de la fiche (1.6)"
   },
   {
    "id": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-03",
@@ -5260,7 +5247,7 @@
    "famille": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "fiche": "Dacia K7M",
    "partie": "1.4 MPI 75 GPL: passages essence/GPL ratés (calages, à-coups)",
-   "motif": "ni ajout ni nouvelle panne : organe non identifié dans l’affirmation"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4) absente de la fiche (1.6)"
   },
   {
    "id": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-03",
@@ -5269,7 +5256,7 @@
    "famille": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "fiche": "Dacia K7M",
    "partie": "1.4 MPI 75 GPL: jauge GPL défaillante",
-   "motif": "ni ajout ni nouvelle panne : organe non identifié dans l’affirmation"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4) absente de la fiche (1.6)"
   },
   {
    "id": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-03",
@@ -5278,7 +5265,7 @@
    "famille": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "fiche": "Dacia K7M",
    "partie": "1.4 MPI 75 GPL: usure parfois rapide de l'embrayage",
-   "motif": "nouvelle panne sans gravité établie (aucune panne de la fiche sur cet organe)"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4) absente de la fiche (1.6)"
   },
   {
    "id": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-03",
@@ -5287,7 +5274,7 @@
    "famille": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "fiche": "Dacia K7M",
    "partie": "1.4 MPI 75 GPL: radiateur percé par les gravillons",
-   "motif": "ni ajout ni nouvelle panne : défaut non identifié dans l’affirmation"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4) absente de la fiche (1.6)"
   },
   {
    "id": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-04",
@@ -5296,7 +5283,7 @@
    "famille": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "fiche": "Dacia K7M",
    "partie": "1.4 8 soupapes: hausse inopinée du ralenti à partir de 30 000 km (joint de collecteur d'admission)",
-   "motif": "ni ajout ni nouvelle panne : défaut non identifié dans l’affirmation"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4) absente de la fiche (1.6)"
   },
   {
    "id": "H-RENAULT-DACIA-1.4-1.6-8V-K7J-K7M-04",
@@ -5305,7 +5292,7 @@
    "famille": "RENAULT-DACIA-1.4-1.6-8V-K7J-K7M",
    "fiche": "Dacia K7M",
    "partie": "1.4 8 soupapes: 1.6 8 soupapes: incident possible sur la pompe à essence",
-   "motif": "ni ajout ni nouvelle panne : organe non identifié dans l’affirmation"
+   "motif": "autre moteur : la partie nomme une cylindrée (1.4, 1.6) absente de la fiche (1.6)"
   },
   {
    "id": "H-RENAULT-MEGANE2-SCENIC2-ELECTRONIQUE-CHASSIS-02",
@@ -6224,6 +6211,15 @@
    "fiche": "Volkswagen EA189",
    "partie": "Volant moteur bimasse: surtout 2.0 TDI 140",
    "motif": "ni ajout ni nouvelle panne : défaut non identifié dans l’affirmation"
+  },
+  {
+   "id": "C-VAG-EA189-1.6-2.0TDI-08",
+   "uid": "C-VAG-EA189-1.6-2.0TDI-08#3",
+   "type": "panne",
+   "famille": "VAG-EA189-1.6-2.0TDI",
+   "fiche": "Volkswagen EA189",
+   "partie": "Volant moteur bimasse: usure de l'embrayage",
+   "motif": "retirée à la relecture : « usure de l'embrayage » : l'embrayage n'est pas le volant bimasse"
   },
   {
    "id": "C-VAG-EA189-1.6-2.0TDI-09",
@@ -10040,6 +10036,15 @@
    "fiche": "Volvo D4204T",
    "partie": "Vanne EGR: encrassement avec pertes de puissance et fumées noires",
    "motif": "nouvelle panne sans gravité établie (aucune panne de la fiche sur cet organe)"
+  },
+  {
+   "id": "E-VOLVO-D4204T-03",
+   "uid": "E-VOLVO-D4204T-03",
+   "type": "panne",
+   "famille": "VOLVO-D4204T",
+   "fiche": "Volvo D4204T",
+   "partie": "Consommation d'huile excessive relevée sur quelques diesels",
+   "motif": "retirée à la relecture : « quelques diesels » ne désigne pas ce moteur (les S60/V60 ont aussi le D5)"
   },
   {
    "id": "E-VOLVO-D5244T-01",

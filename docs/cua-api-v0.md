@@ -264,6 +264,8 @@ articles 3 ou 4, après notification écrite.
 | `11.11` | les **signaux d'entretien** sont relevés dans le texte de l'annonce par des motifs fixes, non plus par le modèle ; une **garantie** n'est jamais une preuve d'entretien | **oui, les scores peuvent changer** à texte identique — une annonce qui ne mentionne que sa garantie n'a plus d'axe entretien évalué |
 | `11.12` | une **opération d'entretien « non faite »** n'est retenue que si l'annonce l'écrit, relevée par des motifs fixes ; ce que le modèle signale en plus devient une question au vendeur | **oui, les scores peuvent changer** à texte identique — une absence d'information n'est plus comptée comme un manquement |
 | `11.13` | une quarantaine de **sources** supplémentaires sont reconnues comme indépendantes (presse, associations de consommateurs, sites constructeurs et autorités) ; une page constructeur d'un autre pays reste une information de contexte, jamais une couverture | **oui, les scores peuvent changer** à texte identique — un défaut jusque-là présenté comme question peut désormais peser |
+| `11.14` | des **sources confirmées par vérification indépendante** sont versées dans les fiches moteur (sources ajoutées à des défauts connus, défauts nouveaux dont la gravité est établie par la source) ; une campagne publiée pour tout le marché est présentée comme telle, éligibilité à vérifier par le VIN | **oui, les scores peuvent changer** à texte identique pour les moteurs concernés |
+
 
 La version `11.2` a existé brièvement et n'a jamais été servie à un client.
 

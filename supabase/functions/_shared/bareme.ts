@@ -81,7 +81,12 @@
 // 11.13 (sprint 23, d) : ~40 hôtes déclarés portants (presse, associations de
 // consommateurs au rang presse, sites constructeurs et autorités). Le calcul
 // ne change pas ; des pannes jusque-là non portées peuvent désormais peser.
-export const BAREME_VERSION = "11.13";
+//
+// 11.14 (sprint 23, f) : fusion des sources confirmées par le juge dans les
+// fiches moteur (sources ajoutées, nouvelles pannes à gravité établie par la
+// source, rappel 21H7 réécrit en campagne mondiale). Le calcul ne change pas ;
+// des pannes jusque-là non portées peuvent peser.
+export const BAREME_VERSION = "11.14";
 
 export type FaitsAxes = {
   annee_courante: number;

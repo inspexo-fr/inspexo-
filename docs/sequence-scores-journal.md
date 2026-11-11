@@ -135,3 +135,27 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
   `20261127120000`, rejouée en local 83/83), bloc d'affichage sur `/a/:id`,
   test d'indépendance (section 5), tests `fusion-regles` et `prises-en-charge`.
 - Session prête : `scripts/session-jeton-f.sh` (préalables listés en tête).
+
+## (f) relecture d'Utku appliquée et préalables — 11 nov. 2026
+- Décisions dans `docs/fusion-decisions.json` (lues par le script) : 3 lignes
+  retirées (Mazda 1.4 = DV4 ; « usure de l'embrayage » ≠ bimasse ; Volvo
+  « quelques diesels ») ; contrôle ajouté : une partie ou un extrait qui nomme
+  une cylindrée absente de la fiche n'appuie pas cette fiche ; famille de
+  `A-NISSAN-HR12DDT-01` corrigée en H5Ft ; AdBlue DV5 rattaché à la panne
+  existante (pas de nouvelle panne).
+- Rappel 21H7 : page auto-motor-und-sport (campagne mondiale, 76 098
+  véhicules, production 2012-2017, KBA 011729, « 21H7 » écrit) soumise au
+  juge : panne **soutenue 2/2**, campagne **soutenue 2/2** (0,047 €, budget du
+  juge). RappelConso : aucune campagne française. La page remplace autodoc,
+  le forum et la NHTSA ; libellé « campagne constructeur mondiale 21H7
+  (production 2012–2017), éligibilité à vérifier par le VIN » ; poids
+  inchangé. Action admin ciblée `modifier_rappel` (code vérifié littéralement
+  sur la page).
+- Proposition finale : 22 ajouts, 1 nouvelle panne (AdBlue DV6), 116 prises
+  en charge, 3 opérations d'entretien, 1 rappel réécrit. **Écart annoncé sur
+  les 4 références : aucun.**
+- **Préalables annoncés (sans jeton)** : dump prod hors dépôt ; migration
+  `20261127120000` (colonne `prises_en_charge`, `[]`) ; `BAREME_VERSION`
+  11.14 ; déploiement de `admin-defect-sheets`, `score`, `sheet-builder`,
+  `api-analyses`, `lecture-ct`, `lecture-histovec`, `visite`. Aucune donnée
+  de fiche n'est écrite avant la session (f).

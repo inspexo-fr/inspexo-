@@ -4,17 +4,16 @@ Généré le 2026-11-11 par `scripts/fusionner-sources.mjs` (simulation : rien n
 
 **Règles** (décisions du 11 nov. 2026) : seules les URL que le juge a déclarées « soutenue » ET de rang portant · une source n’est **ajoutée à une panne existante** que si l’affirmation désigne le **même organe ET le même défaut**, et une seule panne de la fiche ; tout cas douteux devient une **nouvelle panne proposée** · une nouvelle panne n’est écrite que si **la source établit sa gravité** (montant publié ou danger écrit dans un extrait d’une page confirmée), jamais promue en « casse » sans montant · aucune affirmation à **période bornante** n’est écrite (champ d’années à venir) · les **prises en charge** sont affichées seulement · les moteurs sans fiche restent de côté.
 
-**Totaux** : 23 ajouts de sources à des pannes existantes · 2 nouvelles pannes · 116 prises en charge (94 avec source française) · 3 opérations d’entretien · 830 parties non écrites.
+**Totaux** : 22 ajouts de sources à des pannes existantes · 1 nouvelles pannes · 116 prises en charge (94 avec source française) · 3 opérations d’entretien · 833 parties non écrites.
 
 ## 1. Sources ajoutées à des pannes EXISTANTES
 
 | Fiche | Panne existante | Affirmation (partie confirmée) | Rapprochement | URL ajoutées | Portée avant |
 |---|---|---|---|---|---|
-| Renault H5FT | Surconsommation d'huile liée à la segmentation des pistons, pouvant conduire à la casse moteur | Surconsommation d'huile pouvant aller jusqu'à la casse moteur (même défaut de segmentation / pression collecteur que le 1.2 TCe) (A-NISSAN-HR12DDT-01) | même organe principal (consommation_huile) et même défaut (rupture, consommation) | https://www.largus.fr/actualite-automobile/renault-12-tce-et-nissan-12-dig-t-des-moteurs-gourmands-en-huile-8196384.html | oui |
+| Renault H5FT | Surconsommation d'huile liée à la segmentation des pistons, pouvant conduire à la casse moteur | Surconsommation d'huile pouvant aller jusqu'à la casse moteur (même défaut de segmentation / pression collecteur que le 1.2 TCe) (A-NISSAN-HR12DDT-01 — famille corrigée : l'article parle du 1.2 DIG-T, c'est-à-dire le H5Ft, pas du HR12DDT) | même organe principal (consommation_huile) et même défaut (rupture, consommation) | https://www.largus.fr/actualite-automobile/renault-12-tce-et-nissan-12-dig-t-des-moteurs-gourmands-en-huile-8196384.html | oui |
 | Peugeot EB2 | Courroie de distribution en bain d'huile (wet belt) qui se désagrège | Dégradation prématurée de la courroie de distribution immergée dans l'huile (débris vers pompe à vide et circuit d'huile) (B-PSA-EB2-01) | même organe principal (courroie_distribution) et même défaut (usure) | https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html | oui |
 | BMW N47 | Usure et rupture de la chaîne de distribution arrière | Chaîne de distribution N47: le défaut est repris modèle par modèle dans les fiches fiabilité Caradisiac (tendeur ou guide de chaîne usé, chaîne qui s'allonge, se décale ou casse) (E-BMW-N47-10) | même organe principal (chaine_distribution) et même défaut (rupture, usure) | https://www.caradisiac.com/fiabilite-de-la-bmw-serie-3-f30-la-maxi-fiche-occasion-de-caradisiac-172002.htm | oui |
 | Peugeot DV6 | Défaillance / fuite des injecteurs | Injecteurs: fonctionnement irrégulier, grippages, à-coups et pertes de puissance; fuites aux joints d'injecteurs (D-FORD-1.5-1.6-TDCI-01) | même organe principal (injecteurs) et même défaut (fuite) | https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm | **non → portée** |
-| Peugeot DV6 | Défaillance / fuite des injecteurs | Injecteurs: fuites de gazole aux joints d'injecteurs (1.4) (D-MAZDA-1.6-MZ-CD-DV6-01#3) | même organe principal (injecteurs) et même défaut (fuite) | https://www.caradisiac.com/fiabilite-de-la-mazda-2-2e-generation-la-maxi-fiche-occasion-de-caradisiac-179965.htm | **non → portée** |
 | Peugeot DV6 | Usure prématurée du volant moteur bi-masse | Volant moteur bimasse bruyant ou usé et butée d'embrayage détruite (1.6 HDi) (B-PSA-DV6-13) | même organe principal (embrayage) et même défaut (usure) | https://www.largus.fr/actualite-automobile/voiture-d-occasion-quel-citroen-c4-picasso-acheter-2530370_p_2.html | **non → portée** |
 | Peugeot DW10 | Casse de l'axe de la pompe haute pression | 2.0 BlueHDi: calage en roulant par casse de l'axe de la pompe haute pression (B-PSA-DW10-11) | même organe principal (pompe_hp) et même défaut (rupture) | https://www.largus.fr/guide-achat-occasion/peugeot/3008/avis-fiabilite-peugeot-3008-ii-30039638.html | **non → portée** |
 | Renault H5FT | Usure prématurée de la chaîne de distribution, tendeur et déphaseurs d'arbre à cames | Chaîne de distribution: allongement (A-RENAULT-H5FT-03#1) | même organe principal (chaine_distribution) et même défaut (usure) | https://www.largus.fr/actualite-automobile/consommation-anormale-dhuile-la-liste-des-moteurs-a-risque-8672389.html | **non → portée** |
@@ -22,24 +21,29 @@ Généré le 2026-11-11 par `scripts/fusionner-sources.mjs` (simulation : rien n
 | Peugeot EP6 | Allongement puis casse de la chaîne de distribution | Chaîne de distribution: tous les moteurs essence de la Mini II connaissent le problème (tendeur qui ne compense pas l'allongement, chaînes allongées) (E-BMW-N12-N16-01) | même organe principal (chaine_distribution) et même défaut (usure) | https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm | **non → portée** |
 | Peugeot EP6 | Consommation d'huile excessive | Consommation d'huile (toutes les Mini essence) et fuites récurrentes de pompe à eau, en particulier sur la Cooper 120/122 ch (E-BMW-N12-N16-02) | même organe principal (consommation_huile) et même défaut (consommation) | https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm | **non → portée** |
 | Peugeot DV5 | Casse de la chaîne interne d'entraînement des arbres à cames | Usure prématurée puis rupture de la chaîne d'arbres à cames (chaîne de 7 mm), jusqu'à la casse moteur (B-PSA-DV5-01) | même organe principal (chaine_distribution) et même défaut (rupture) | https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/ | oui |
+| Peugeot DV5 | Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer | Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé): « Défaut antipollution (B-PSA-DV5-08#1) | rattachement décidé à la relecture : la panne existante couvre déjà le réservoir : ajout de source, pas une nouvelle panne | https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html | oui |
+| Peugeot DV5 | Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer | Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé): démarrage interdit dans XXXX km » (B-PSA-DV5-08#2) | rattachement décidé à la relecture : la panne existante couvre déjà le réservoir : ajout de source, pas une nouvelle panne | https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html | oui |
 | Volkswagen EA189 | Vanne EGR encrassée ou défaillante | Vanne EGR et radiateur EGR: encrassement (pertes de puissance, fumées noires, à-coups) (C-VAG-EA189-1.6-2.0TDI-06#1) | même organe principal (egr) et même défaut (encrassement) | https://www.largus.fr/actualite-automobile/fiabilite-volkswagen-les-problemes-du-moteur-diesel-16-tdi-6411386.html | oui |
 | Volkswagen EA189 | Pompe à eau prématurément défaillante | Pompe à eau: fuite et perte de liquide de refroidissement (son remplacement impose celui de la courroie de distribution) (C-VAG-EA189-1.6-2.0TDI-07) | même organe principal (pompe_eau) et même défaut (fuite) | https://www.caradisiac.com/fiabilite-de-la-volkswagen-passat-7-la-maxi-fiche-occasion-de-caradisiac-163107.htm | **non → portée** |
 | Volkswagen EA189 | Volant moteur bi-masse défaillant | Volant moteur bimasse: casse ou usure prématurée (parfois avant 55 000-70 000 km) (C-VAG-EA189-1.6-2.0TDI-08#1) | même organe principal (embrayage) et même défaut (usure) | https://www.caradisiac.com/fiabilite-du-volkswagen-touran-2-la-maxi-fiche-occasion-de-caradisiac-167738.htm | **non → portée** |
-| Volkswagen EA189 | Volant moteur bi-masse défaillant | Volant moteur bimasse: usure de l'embrayage (C-VAG-EA189-1.6-2.0TDI-08#3) | même organe principal (embrayage) et même défaut (usure) | https://www.caradisiac.com/fiabilite-du-volkswagen-touran-2-la-maxi-fiche-occasion-de-caradisiac-167738.htm | **non → portée** |
 | BMW N13 | Usure prématurée de la chaîne de distribution | Tendeur de chaîne de distribution: la chaîne saute et pistons et soupapes se rencontrent (casse moteur) (E-BMW-N13-01#2) | même organe principal (chaine_distribution) et même défaut (rupture) | https://www.autobild.de/artikel/bmw-1er-gebrauchtwagen-test-14695647.html | **non → portée** |
 | BMW N13 | Défaillances du circuit de refroidissement (pompe à eau, thermostat, raccords plastiques) | Fuites de liquide de refroidissement très fréquentes sur les quatre-cylindres essence, venant le plus souvent de la pompe à eau additionnelle (E-BMW-N13-04) | même organe principal (refroidissement) et même défaut (fuite) | https://www.caradisiac.com/fiabilite-de-la-bmw-serie-1-f20-f21-2011-la-maxi-fiche-occasion-de-caradisiac-184091.htm | **non → portée** |
 | Ford FOX | Courroie de distribution humide (wet belt) qui se désagrège et bouche la crépine d'huile | Dégradation de la courroie de distribution humide (baignant dans l'huile): débris obstruant la crépine/pompe à huile (D-FORD-1.0-ECOBOOST-01#1) | même organe principal (courroie_distribution) et même défaut (usure, encrassement) | https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm | **non → portée** |
 | Ford FOX | Courroie de distribution humide (wet belt) qui se désagrège et bouche la crépine d'huile | Dégradation de la courroie de distribution humide (baignant dans l'huile): perte de pression d'huile (D-FORD-1.0-ECOBOOST-01#2) | même organe principal (courroie_distribution) et même défaut (usure) | https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm | **non → portée** |
 | Ford FOX | Courroie de distribution humide (wet belt) qui se désagrège et bouche la crépine d'huile | Dégradation de la courroie de distribution humide (baignant dans l'huile): casse moteur (D-FORD-1.0-ECOBOOST-01#3) | même organe principal (courroie_distribution) et même défaut (usure) | https://www.caradisiac.com/que-vaut-le-ford-c-max-2-en-occasion-la-fiche-fiabilite-express-de-caradisiac-222571.htm | **non → portée** |
 | Ford FOX | Durite de dégazage / circuit de refroidissement fragile (millésimes 2012-2014) | Durites/flexibles de refroidissement fragiles (flexible de purge turbo–vase d'expansion): surchauffe (D-FORD-1.0-ECOBOOST-04#2) | même organe principal (refroidissement) et même défaut (surchauffe) | https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-la-ford-focus-3-en-occasion-106907.htm | **non → portée** |
-| Volvo D4204T | Surconsommation d'huile importante pouvant aller jusqu'à une défaillance de joint de culasse | Consommation d'huile excessive relevée sur quelques diesels (E-VOLVO-D4204T-03) | même organe principal (consommation_huile) et même défaut (consommation) | https://www.caradisiac.com/les-volvo-s60-v60-sont-elles-aussi-fiables-que-leur-reputation-le-laisse-esperer-210910.htm | **non → portée** |
+
+## 1 bis. Rappels réécrits (décision de relecture)
+
+| Fiche | Panne | Rappel | Libellé affiché | Source | Juge | RappelConso |
+|---|---|---|---|---|---|---|
+| Audi EA824 | Défaillance des turbocompresseurs par colmatage de la crépine d'huile | 21H7, production 2012-2017 | « campagne constructeur mondiale 21H7 (production 2012–2017), éligibilité à vérifier par le VIN » | https://www.auto-motor-und-sport.de/verkehr/rueckruf-audi-verstopfte-turbos/ (remplace autodoc, forum rs246, NHTSA) | panne soutenue (2 voix sur 2) · campagne soutenue (2 voix sur 2) | aucune campagne française trouvée (recherche A6, S6, A7, S7, A8, RS7 ; turbo, huile, crépine) le 11 nov. 2026 |
 
 ## 2. NOUVELLES pannes proposées
 
 | Fiche | Titre (une panne = un défaut) | Organe · défaut | Gravité | Établie par | Pourquoi pas un ajout | Panne voisine déjà en fiche | URL |
 |---|---|---|---|---|---|---|---|
 | Peugeot DV6 | Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé) (B-PSA-DV6-09#1, B-PSA-DV6-09#2) | adblue · grippage | **majeure** (750-1200 €) | montant publié : 750-1200 € | aucune panne de la fiche sur cet organe | — | https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html |
-| Peugeot DV5 | Défaillance du réservoir d'AdBlue (module pompe/jauge d'urée oxydé ou grippé) (B-PSA-DV5-08#1, B-PSA-DV5-08#2) | adblue · grippage | **majeure** (750-1200 €) | montant publié : 750-1200 € | même organe (adblue) mais défaut différent ou non nommé dans la panne : douteux | Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer | https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html |
 
 ## 3. Prises en charge (affichage seulement, aucun effet sur la note)
 
@@ -177,14 +181,14 @@ Généré le 2026-11-11 par `scripts/fusionner-sources.mjs` (simulation : rien n
 
 ## 6. Écart annoncé sur les 4 références
 
-- **audi-s7-intermediaire (EA824)** : aucun changement de ce qui pèse sur la note.
+- **audi-s7-intermediaire (EA824)** : rappel réécrit sur « Défaillance des turbocompresseurs par colmatage de la crépine d'huile » : libellé « campagne constructeur mondiale 21H7 (production 2012–2017), éligibilité à vérifier par le VIN », sources remplacées par la page confirmée ; POIDS INCHANGÉ (code conservé, véhicule dans la plage de production) — rien qui pèse sur la note.
 - **308-puretech-complete (EB2DTS, et EB2DT/EB2 compatibles)** : aucun changement de ce qui pèse sur la note (prises en charge ajoutées à l’affichage seulement).
 - **mercedes-2025-societe (OM654)** : aucun changement de ce qui pèse sur la note (prises en charge ajoutées à l’affichage seulement).
 - **revendeur-clio2-dci (K9K)** : aucun changement de ce qui pèse sur la note (prises en charge ajoutées à l’affichage seulement).
 
 ⇒ **Écart annoncé : aucun** — S7 rouge 39 · 308 orange 55 · Mercedes vert 73 · Clio II orange 51.
 
-Hors références : **13 pannes deviennent portées** et **2 nouvelles pannes** entrent dans des fiches (Peugeot DW10, Peugeot EP6, Volkswagen EA189, Renault H5FT, Volvo D4204T, Peugeot DV6, BMW N13, Ford FOX, Peugeot DV5) : des scores réels de ces moteurs peuvent changer à texte identique ⇒ `BAREME_VERSION` 11.14 au moment de l’écriture.
+Hors références : **12 pannes deviennent portées** et **1 nouvelles pannes** entrent dans des fiches (Peugeot DW10, Peugeot EP6, Volkswagen EA189, Renault H5FT, Peugeot DV6, BMW N13, Ford FOX) : des scores réels de ces moteurs peuvent changer à texte identique ⇒ `BAREME_VERSION` 11.14 au moment de l’écriture.
 
   - Peugeot DW10 · Casse de l'axe de la pompe haute pression
   - Peugeot EP6 · Allongement puis casse de la chaîne de distribution
@@ -192,7 +196,6 @@ Hors références : **13 pannes deviennent portées** et **2 nouvelles pannes** 
   - Volkswagen EA189 · Volant moteur bi-masse défaillant
   - Volkswagen EA189 · Pompe à eau prématurément défaillante
   - Renault H5FT · Usure prématurée de la chaîne de distribution, tendeur et déphaseurs d'arbre à cames
-  - Volvo D4204T · Surconsommation d'huile importante pouvant aller jusqu'à une défaillance de joint de culasse
   - Peugeot DV6 · Défaillance / fuite des injecteurs
   - Peugeot DV6 · Usure prématurée du volant moteur bi-masse
   - BMW N13 · Usure prématurée de la chaîne de distribution
@@ -204,13 +207,14 @@ Hors références : **13 pannes deviennent portées** et **2 nouvelles pannes** 
 
 - moteur sans fiche : 568
 - période bornante : 67
-- ni ajout ni nouvelle panne : défaut non identifié dans l’affirmation : 45
-- nouvelle panne sans gravité établie : 41
+- ni ajout ni nouvelle panne : défaut non identifié dans l’affirmation : 42
+- nouvelle panne sans gravité établie : 37
 - entretien sans intervalle écrit : 17
-- ni ajout ni nouvelle panne : organe non identifié dans l’affirmation : 17
 - plusieurs fiches, aucun code écrit : 14
 - codes EA288 et CRBC écrits : pas de départage : 14
+- ni ajout ni nouvelle panne : organe non identifié dans l’affirmation : 13
 - codes EP6 et N18 écrits : pas de départage : 12
+- autre moteur : la partie nomme une cylindrée : 11
 - type verification : non fusionné : 10
 - codes MR16DDT et MR20DE écrits : pas de départage : 9
 - déjà citée par « Usure et rupture de la chaîne de distribution arrière » : 4
@@ -218,6 +222,9 @@ Hors références : **13 pannes deviennent portées** et **2 nouvelles pannes** 
 - déjà citée par « Allongement de la chaîne de distribution / usure du tendeur » : 3
 - déjà citée par « Défaut du réservoir et de la pompe à urée AdBlue : 2
 - codes OM607 et K9K écrits : pas de départage : 1
+- retirée à la relecture : l'extrait parle du 1.4 MZ-CD : c'est le DV4, pas le DV6 : 1
 - entretien : plusieurs intervalles écrits : 1
+- retirée à la relecture : « usure de l'embrayage » : l'embrayage n'est pas le volant bimasse : 1
 - codes N47 et B47 écrits : pas de départage : 1
 - codes OM651 et OM654 écrits : pas de départage : 1
+- retirée à la relecture : « quelques diesels » ne désigne pas ce moteur : 1

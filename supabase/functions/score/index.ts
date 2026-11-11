@@ -796,6 +796,7 @@ type CatalogueEntry = {
   rappel_code: string | null;
   rappel_date: string | null;
   rappel_vehicules: string | null;
+  rappel_portee?: string | null;
   rappel_annee_debut: number | null;
   rappel_annee_fin: number | null;
 };
@@ -867,6 +868,7 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
           rappel_code: null,
           rappel_date: null,
           rappel_vehicules: null,
+          rappel_portee: null,
           rappel_annee_debut: null,
           rappel_annee_fin: null,
         });
@@ -895,6 +897,7 @@ function buildCatalogue(marque: string | null, sheet: any): CatalogueEntry[] {
         rappel_code: p.rappel_code ?? null,
         rappel_date: p.rappel_date ?? null,
         rappel_vehicules: p.rappel_vehicules ?? null,
+        rappel_portee: p.rappel_portee ?? null,
         rappel_annee_debut: typeof p.rappel_annee_debut === "number" ? p.rappel_annee_debut : null,
         rappel_annee_fin: typeof p.rappel_annee_fin === "number" ? p.rappel_annee_fin : null,
       });
@@ -1564,6 +1567,7 @@ serve(async (req: Request) => {
           rappel_code: garde.rappel_code ?? autre.rappel_code,
           rappel_date: garde.rappel_date ?? autre.rappel_date,
           rappel_vehicules: garde.rappel_vehicules ?? autre.rappel_vehicules,
+          rappel_portee: garde.rappel_portee ?? autre.rappel_portee,
           rappel_annee_debut: garde.rappel_annee_debut ?? autre.rappel_annee_debut,
           rappel_annee_fin: garde.rappel_annee_fin ?? autre.rappel_annee_fin,
           // Une entrée relue à la main reste « base Inspexo ».
@@ -2010,7 +2014,7 @@ serve(async (req: Request) => {
       source: e.source_statut === "base_inspexo" ? "base Inspexo" : "sources en ligne",
       contexte: e.contexte,
       rappel_officiel: e.rappel_code
-        ? `${e.rappel_code}${e.rappel_date ? `, ${e.rappel_date}` : ""}${e.rappel_vehicules ? `, ${e.rappel_vehicules}` : ""}${
+        ? `${e.rappel_portee === "mondiale" ? "campagne constructeur mondiale " : ""}${e.rappel_code}${e.rappel_date ? `, ${e.rappel_date}` : ""}${e.rappel_vehicules ? `, ${e.rappel_vehicules}` : ""}${e.rappel_portee === "mondiale" ? ", éligibilité à vérifier par le VIN" : ""}${
           rappelHorsPlage(e)
             ? ` — ATTENTION : production ${e.rappel_annee_debut ?? "?"}–${e.rappel_annee_fin ?? "?"}, CE véhicule (${v.annee_modele}) est HORS de la plage visée : ne cite PAS ce rappel dans les raisons principales, la panne reste valable sans lui`
             : ""
@@ -2091,7 +2095,7 @@ serve(async (req: Request) => {
       km_typique: string | null; source_statut: string; urls: string[];
       sources: Array<{ url: string; title: string | null }>;
       cout_min_eur: number | null; cout_max_eur: number | null; source_ref: string;
-      rappel_code: string | null; rappel_date: string | null; rappel_vehicules: string | null;
+      rappel_code: string | null; rappel_date: string | null; rappel_vehicules: string | null; rappel_portee?: string | null;
       rappel_annee_debut: number | null; rappel_annee_fin: number | null;
       rappel_hors_periode: boolean;
       /** L'entrée pèse-t-elle sur le score ? Faux pour une entrée d'atlas que
@@ -2130,6 +2134,7 @@ serve(async (req: Request) => {
         rappel_code: src.rappel_code,
         rappel_date: src.rappel_date,
         rappel_vehicules: src.rappel_vehicules,
+        rappel_portee: src.rappel_portee,
         rappel_annee_debut: src.rappel_annee_debut,
         rappel_annee_fin: src.rappel_annee_fin,
         // Le véhicule est-il HORS de la plage de production de la campagne ?
@@ -2175,6 +2180,7 @@ serve(async (req: Request) => {
             rappel_code: p.rappel_code ?? existante.rappel_code,
             rappel_date: p.rappel_date ?? existante.rappel_date,
             rappel_vehicules: p.rappel_vehicules ?? existante.rappel_vehicules,
+            rappel_portee: p.rappel_portee ?? existante.rappel_portee,
             rappel_annee_debut: p.rappel_annee_debut ?? existante.rappel_annee_debut,
             rappel_annee_fin: p.rappel_annee_fin ?? existante.rappel_annee_fin,
             rappel_hors_periode: p.rappel_code ? p.rappel_hors_periode : existante.rappel_hors_periode,
@@ -2189,6 +2195,7 @@ serve(async (req: Request) => {
             rappel_code: existante.rappel_code ?? p.rappel_code,
             rappel_date: existante.rappel_date ?? p.rappel_date,
             rappel_vehicules: existante.rappel_vehicules ?? p.rappel_vehicules,
+            rappel_portee: existante.rappel_portee ?? p.rappel_portee,
             rappel_annee_debut: existante.rappel_annee_debut ?? p.rappel_annee_debut,
             rappel_annee_fin: existante.rappel_annee_fin ?? p.rappel_annee_fin,
             rappel_hors_periode: existante.rappel_code ? existante.rappel_hors_periode : p.rappel_hors_periode,
@@ -2511,6 +2518,7 @@ serve(async (req: Request) => {
             rappel_code: src.rappel_code,
             rappel_date: src.rappel_date,
             rappel_vehicules: src.rappel_vehicules,
+            rappel_portee: src.rappel_portee,
             rappel_annee_debut: src.rappel_annee_debut,
             rappel_annee_fin: src.rappel_annee_fin,
             rappel_hors_periode: rappelHorsPlage(src),
@@ -3518,7 +3526,13 @@ serve(async (req: Request) => {
           // Usure attendue au-delà d'une détention moyenne (+60 000 km) :
           // affichée pour information, exclue de la note.
           usure_lointaine: pannesHorsHorizon.has(source_ref),
-          rappel_officiel: rest.rappel_code
+          // SPRINT 23 (f) — une campagne publiée hors de France pour tout le
+          // marché (21H7) se dit comme telle (décision d'Utku du 11 nov. 2026).
+          rappel_officiel: rest.rappel_code && rest.rappel_portee === "mondiale"
+            ? `campagne constructeur mondiale ${rest.rappel_code}${periode}, éligibilité à vérifier par le VIN${
+              rest.rappel_hors_periode ? " — ce véhicule est hors de la plage de production visée, à faire confirmer par le VIN" : ""
+            }`
+            : rest.rappel_code
             ? `rappel constructeur officiel : ${rest.rappel_code}${rest.rappel_date ? `, ${rest.rappel_date}` : ""}${rest.rappel_vehicules ? `, ${rest.rappel_vehicules}` : ""}${periode}${
               rest.rappel_hors_periode ? " — ce véhicule est hors de la plage de production visée, à faire confirmer par le VIN" : ""
             }`

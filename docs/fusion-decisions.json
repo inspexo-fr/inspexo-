@@ -1,0 +1,32 @@
+{
+  "decide_par": "Utku",
+  "le": "2026-11-11",
+  "retirer": {
+    "D-MAZDA-1.6-MZ-CD-DV6-01#3": "l'extrait parle du 1.4 MZ-CD : c'est le DV4, pas le DV6",
+    "C-VAG-EA189-1.6-2.0TDI-08#3": "« usure de l'embrayage » : l'embrayage n'est pas le volant bimasse",
+    "E-VOLVO-D4204T-03": "« quelques diesels » ne désigne pas ce moteur (les S60/V60 ont aussi le D5)"
+  },
+  "corrections_famille": {
+    "A-NISSAN-HR12DDT-01": { "famille": "RENAULT-H5FT", "motif": "l'article parle du 1.2 DIG-T, c'est-à-dire le H5Ft, pas du HR12DDT" }
+  },
+  "forcer_ajout": [
+    { "uids": ["B-PSA-DV5-08#1", "B-PSA-DV5-08#2"], "fiche": "Peugeot DV5",
+      "panne_titre": "Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer",
+      "motif": "la panne existante couvre déjà le réservoir : ajout de source, pas une nouvelle panne" }
+  ],
+  "rappels": [
+    { "fiche": "Audi EA824",
+      "panne_titre": "Défaillance des turbocompresseurs par colmatage de la crépine d'huile",
+      "rappel_code": "21H7",
+      "rappel_date": "mars 2022",
+      "rappel_annee_debut": 2012,
+      "rappel_annee_fin": 2017,
+      "rappel_vehicules": "Audi A6, S6, RS6, A7, S7, RS7, A8, S8 — 76 098 véhicules dans le monde, référence KBA 011729",
+      "rappel_portee": "mondiale",
+      "sources": ["https://www.auto-motor-und-sport.de/verkehr/rueckruf-audi-verstopfte-turbos/"],
+      "juge": { "le": "2026-11-11", "panne": "soutenue (2 voix sur 2)", "campagne": "soutenue (2 voix sur 2)", "cout_eur": 0.0474 },
+      "rappelconso": "aucune campagne française trouvée (recherche A6, S6, A7, S7, A8, RS7 ; turbo, huile, crépine) le 11 nov. 2026",
+      "motif": "la page remplace autodoc, le forum rs246 et la NHTSA comme source du rappel ; « 21H7 » y est écrit littéralement"
+    }
+  ]
+}

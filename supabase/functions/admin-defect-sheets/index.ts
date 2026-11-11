@@ -11,6 +11,7 @@ import { fusionnerPlan } from "../_shared/planEntretien.ts";
 import { couvertureValide } from "../_shared/couverture.ts";
 import { fusionnerPrisesEnCharge } from "../_shared/prisesEnCharge.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
+import { texteDeLaPageComplet } from "../_shared/verifSource.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -215,6 +216,52 @@ serve(async (req: Request) => {
           pannes_ajoutees: propres.length, rejetees: body.ajouter_pannes.length - propres.length,
           titres: propres.map((p) => p.titre),
         }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
+      // ── SPRINT 23 (f) — RÉÉCRITURE DU RAPPEL D'UNE PANNE (décision de relecture)
+      //
+      // Une seule panne, nommée par son titre exact. Ses sources sont
+      // REMPLACÉES par celles fournies (toutes de rang portant), le code de
+      // rappel doit figurer LITTÉRALEMENT sur l'une d'elles (même règle qu'à la
+      // génération), et tout le reste de la panne est conservé (gravité
+      // arbitrée comprise). La panne d'avant est rendue pour le retour arrière.
+      if (body.modifier_rappel && typeof body.modifier_rappel === "object") {
+        const m = body.modifier_rappel;
+        const { data: row } = await admin.from("defect_sheets").select("pannes").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const pannes = (Array.isArray(row.pannes) ? row.pannes : []) as Array<Record<string, unknown>>;
+        const idx = pannes.findIndex((p) => String(p?.titre ?? "").trim() === String(m.panne_titre ?? "").trim());
+        if (idx < 0) return new Response(JSON.stringify({ error: "panne introuvable" }), { status: 400, headers: cors });
+        const urls = (Array.isArray(m.sources) ? m.sources : [])
+          .filter((u: unknown): u is string => typeof u === "string" && /^https:\/\/\S{8,500}$/i.test(u)).slice(0, 4);
+        if (urls.length === 0 || !urls.every((u: string) => sourcesPortentLEntree([u]))) {
+          return new Response(JSON.stringify({ error: "sources non portantes" }), { status: 400, headers: cors });
+        }
+        const code = String(m.rappel_code ?? "").trim().slice(0, 40);
+        let codeVu = false;
+        // Lecture par le lecteur partagé : il refuse les sites d'annonces avant
+        // toute requête (promesse « pas de scraping »).
+        for (const u of urls) {
+          const texte = await texteDeLaPageComplet(u, 50).catch(() => null);
+          if (texte && texte.includes(code)) { codeVu = true; break; }
+        }
+        if (!code || !codeVu) return new Response(JSON.stringify({ error: "code de rappel absent des pages citées" }), { status: 400, headers: cors });
+        const an = (n: unknown) => (typeof n === "number" && n > 1980 && n < 2100 ? n : null);
+        const avant = pannes[idx];
+        pannes[idx] = {
+          ...avant,
+          sources: urls.map((url: string) => ({ url, title: null })),
+          url_source: urls,
+          rappel_code: code,
+          rappel_date: m.rappel_date ? String(m.rappel_date).slice(0, 40) : null,
+          rappel_vehicules: m.rappel_vehicules ? String(m.rappel_vehicules).slice(0, 160) : null,
+          rappel_annee_debut: an(m.rappel_annee_debut),
+          rappel_annee_fin: an(m.rappel_annee_fin),
+          rappel_portee: m.rappel_portee === "mondiale" ? "mondiale" : null,
+        };
+        const { error: e7 } = await admin.from("defect_sheets").update({ ...fields, pannes }).eq("id", body.id);
+        if (e7) return new Response(JSON.stringify({ error: e7.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ modifiee: avant.titre, panne_avant: avant }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
 
       // ── SPRINT 23 (f) — PRISES EN CHARGE (affichage seulement) ───────────

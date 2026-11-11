@@ -27,6 +27,9 @@ const JOURNAL = new URL('../docs/fusion-ecrite-journal.json', import.meta.url)
 const J = JSON.parse(readFileSync(new URL('../docs/sources-moteurs-2026-11.json', import.meta.url), 'utf8'))
 const K = JSON.parse(readFileSync(new URL('../docs/candidats-externes-journal.json', import.meta.url), 'utf8'))
 const C = JSON.parse(readFileSync(new URL('../docs/correspondance-familles.json', import.meta.url), 'utf8'))
+// Décisions de relecture d'Utku (retraits, rattachements forcés, familles
+// corrigées, rappels) : appliquées par le script, donc traçables et rejouables.
+const D = JSON.parse(readFileSync(new URL('../docs/fusion-decisions.json', import.meta.url), 'utf8'))
 
 if (APPLIQUER) { await appliquer(); process.exit(0) }
 
@@ -34,7 +37,24 @@ const fichesPath = val('--fiches')
 if (!fichesPath) { console.error('--fiches <export defect_sheets.json> est obligatoire en simulation.'); process.exit(1) }
 const FICHES = JSON.parse(readFileSync(fichesPath, 'utf8'))
 const ficheParNom = new Map(FICHES.map((f) => [`${f.marque} ${f.famille_moteur}`, f]))
-const objet = new Map(J.objets.map((o) => [o.id, o]))
+const objet = new Map(J.objets.map((o) => [o.id, D.corrections_famille?.[o.id] ? { ...o, famille: D.corrections_famille[o.id].famille, famille_corrigee: D.corrections_famille[o.id].motif } : o]))
+
+// ── Contrôle de relecture (11 nov. 2026) : un extrait qui nomme une CYLINDRÉE
+// ou un MOTEUR différents de la fiche n'appuie pas cette fiche. (Cas réel : la
+// ligne Mazda « 1.4 MZ-CD », c'est-à-dire le DV4, rattachée à la fiche DV6.)
+// « Euro 6.2 » est une norme, « 6,5 Nm » un couple : ni l'un ni l'autre n'est une cylindrée.
+const cylindrees = (t) => [...String(t ?? '').matchAll(/(?<!euro\s?)(?<!euro\s?\d?)\b([0-6])[.,](\d)\b(?!\s*(?:nm|bar|mm|%|kw|v\b|kg|mois|ans?\b))/gi)].map((m) => `${m[1]}.${m[2]}`)
+function autreMoteurNomme(partie, extraits, fiche) {
+  const f = ficheParNom.get(fiche)
+  const label = `${f?.moteur_label ?? ''} ${f?.famille_moteur ?? ''}`
+  const cylFiche = new Set(cylindrees(label))
+  if (cylFiche.size === 0) return null
+  const cylPartie = cylindrees(partie)
+  if (cylPartie.length && cylPartie.some((c) => !cylFiche.has(c))) return `la partie nomme une cylindrée (${cylPartie.join(', ')}) absente de la fiche (${[...cylFiche].join(', ')})`
+  const cylExtraits = cylindrees(extraits.join(' '))
+  if (!cylPartie.length && cylExtraits.length && !cylExtraits.some((c) => cylFiche.has(c))) return `l'extrait nomme une cylindrée (${cylExtraits.join(', ')}) absente de la fiche (${[...cylFiche].join(', ')})`
+  return null
+}
 
 // ── Fiche cible : mêmes règles que les couvertures, sans période ───────────
 const codeDe = (f) => f.split(' ').slice(1).join(' ').toUpperCase()
@@ -63,6 +83,7 @@ for (const [id, a] of Object.entries(K.affirmations)) {
   const ligne = ligneDe.get(o.famille)
   const { fiche, raison: raisonFiche } = ligne ? ficheCible(ligne, o) : { fiche: null, raison: 'famille absente de la correspondance' }
   for (const p of a.parties) {
+    if (D.retirer?.[p.uid] || D.retirer?.[id]) { nonEcrites.push({ id, uid: p.uid, type: o.type, famille: o.famille, fiche, partie: p.partie, motif: `retirée à la relecture : ${D.retirer[p.uid] ?? D.retirer[id]}` }); continue }
     const urls = (p.confirmees ?? []).filter((c) => c.verdict === 'soutenue' || !c.verdict).map((c) => c.url)
       .filter((u) => sourcesPortentLEntree([u]))
     const base = { id, uid: p.uid, type: o.type, famille: o.famille, fiche, partie: p.partie }
@@ -88,12 +109,17 @@ for (const [id, a] of Object.entries(K.affirmations)) {
     if (o.type !== 'panne') { nonEcrites.push({ ...base, motif: `type ${o.type} : non fusionné` }); continue }
     const f = ficheParNom.get(fiche)
     if (!f) { nonEcrites.push({ ...base, motif: 'fiche absente de l’export' }); continue }
-    const r = rapprocher(p.partie, f.pannes ?? [])
+    const extraitsPartie = (o.sources ?? []).filter((s) => urls.includes(s.url)).flatMap((s) => (s.extraits ?? []).map((e) => e.texte))
+    const autre = autreMoteurNomme(p.partie, extraitsPartie, fiche)
+    if (autre) { nonEcrites.push({ ...base, motif: `autre moteur : ${autre}` }); continue }
+    const force = (D.forcer_ajout ?? []).find((x) => x.uids.includes(p.uid) && x.fiche === fiche)
+    const r = force ? { panne: (f.pannes ?? []).find((q) => q.titre === force.panne_titre) ?? null, raison: `rattachement décidé à la relecture : ${force.motif}`, voisines: [] } : rapprocher(p.partie, f.pannes ?? [])
+    if (force && !r.panne) { console.error(`⚠️ ARRÊT — panne « ${force.panne_titre} » introuvable dans ${fiche}`); process.exit(1) }
     if (r.panne) {
       const deja = new Set([...(r.panne.sources ?? []).map((s) => s.url), ...(r.panne.url_source ?? [])])
       const neuves = urls.filter((u) => !deja.has(u))
       if (neuves.length === 0) { nonEcrites.push({ ...base, motif: `déjà citée par « ${r.panne.titre} »` }); continue }
-      ajouts.push({ ...base, panne_titre: r.panne.titre, raison: r.raison, urls: neuves, portee_avant: sourcesPortentLEntree([...deja]) })
+      ajouts.push({ ...base, panne_titre: r.panne.titre, raison: r.raison, urls: neuves, portee_avant: sourcesPortentLEntree([...deja]), famille_corrigee: o.famille_corrigee ?? null })
       continue
     }
     // Nouvelle panne : il faut un organe ET un défaut nommés (« Chaîne : coûts
@@ -138,7 +164,9 @@ L.push('# Fusion des sources confirmées — proposition à relire avant toute �
   '**Règles** (décisions du 11 nov. 2026) : seules les URL que le juge a déclarées « soutenue » ET de rang portant · une source n’est **ajoutée à une panne existante** que si l’affirmation désigne le **même organe ET le même défaut**, et une seule panne de la fiche ; tout cas douteux devient une **nouvelle panne proposée** · une nouvelle panne n’est écrite que si **la source établit sa gravité** (montant publié ou danger écrit dans un extrait d’une page confirmée), jamais promue en « casse » sans montant · aucune affirmation à **période bornante** n’est écrite (champ d’années à venir) · les **prises en charge** sont affichées seulement · les moteurs sans fiche restent de côté.', '',
   `**Totaux** : ${ajouts.length} ajouts de sources à des pannes existantes · ${nouvelles.length} nouvelles pannes · ${prises.length} prises en charge (${prises.filter((x) => x.fr).length} avec source française) · ${entretien.length} opérations d’entretien · ${nonEcrites.length} parties non écrites.`, '')
 L.push('## 1. Sources ajoutées à des pannes EXISTANTES', '', '| Fiche | Panne existante | Affirmation (partie confirmée) | Rapprochement | URL ajoutées | Portée avant |', '|---|---|---|---|---|---|')
-for (const x of ajouts) L.push(`| ${x.fiche} | ${tdc(x.panne_titre)} | ${tdc(x.partie)} (${x.uid}) | ${x.raison} | ${x.urls.join('<br>')} | ${x.portee_avant ? 'oui' : '**non → portée**'} |`)
+for (const x of ajouts) L.push(`| ${x.fiche} | ${tdc(x.panne_titre)} | ${tdc(x.partie)} (${x.uid}${x.famille_corrigee ? ` — famille corrigée : ${tdc(x.famille_corrigee)}` : ''}) | ${tdc(x.raison)} | ${x.urls.join('<br>')} | ${x.portee_avant ? 'oui' : '**non → portée**'} |`)
+L.push('', '## 1 bis. Rappels réécrits (décision de relecture)', '', '| Fiche | Panne | Rappel | Libellé affiché | Source | Juge | RappelConso |', '|---|---|---|---|---|---|---|')
+for (const x of D.rappels ?? []) L.push(`| ${x.fiche} | ${tdc(x.panne_titre)} | ${x.rappel_code}, production ${x.rappel_annee_debut}-${x.rappel_annee_fin} | « campagne constructeur mondiale ${x.rappel_code} (production ${x.rappel_annee_debut}–${x.rappel_annee_fin}), éligibilité à vérifier par le VIN » | ${x.sources.join('<br>')} (remplace autodoc, forum rs246, NHTSA) | panne ${x.juge.panne} · campagne ${x.juge.campagne} | ${tdc(x.rappelconso)} |`)
 L.push('', '## 2. NOUVELLES pannes proposées', '', '| Fiche | Titre (une panne = un défaut) | Organe · défaut | Gravité | Établie par | Pourquoi pas un ajout | Panne voisine déjà en fiche | URL |', '|---|---|---|---|---|---|---|---|')
 for (const x of nouvelles) L.push(`| ${x.fiche} | ${tdc(x.titre)} (${x.uids.join(', ')}) | ${x.organe} · ${x.defauts.join(', ')} | **${x.gravite}**${x.cout_max ? ` (${x.cout_min}-${x.cout_max} €)` : ''} | ${tdc(x.raison_gravite)} | ${tdc(x.raison_rapprochement)} | ${x.voisines.length ? tdc(x.voisines.join(' / ')) : '—'} | ${x.urls.join('<br>')} |`)
 L.push('', '## 3. Prises en charge (affichage seulement, aucun effet sur la note)', '', '| Fiche | Type | Texte | Période | Pays | URL |', '|---|---|---|---|---|---|')
@@ -164,8 +192,10 @@ for (const [ref, fs] of Object.entries(REFS)) {
     for (const d of devenues.filter((x) => x.startsWith(n + ' · '))) effets.push(`panne qui devient portée : ${d}`)
     for (const x of nouvelles.filter((x) => x.fiche === n)) effets.push(`nouvelle panne : ${x.titre}`)
     for (const x of entretien.filter((x) => x.fiche === n)) effets.push(`opération d'entretien : ${x.operation}`)
+    for (const x of (D.rappels ?? []).filter((x) => x.fiche === n)) effets.push(`rappel réécrit sur « ${x.panne_titre} » : libellé « campagne constructeur mondiale ${x.rappel_code} (production ${x.rappel_annee_debut}–${x.rappel_annee_fin}), éligibilité à vérifier par le VIN », sources remplacées par la page confirmée ; POIDS INCHANGÉ (code conservé, véhicule dans la plage de production)`)
   }
-  L.push(`- **${ref}** : ${effets.length ? effets.join(' ; ') : 'aucun changement de ce qui pèse sur la note'}${prises.some((x) => fs.includes(x.fiche)) ? ' (prises en charge ajoutées à l’affichage seulement)' : ''}.`)
+  const pese = effets.filter((e) => !/POIDS INCHANGÉ/.test(e))
+  L.push(`- **${ref}** : ${effets.length ? effets.join(' ; ') : 'aucun changement de ce qui pèse sur la note'}${effets.length && !pese.length ? ' — rien qui pèse sur la note' : ''}${prises.some((x) => fs.includes(x.fiche)) ? ' (prises en charge ajoutées à l’affichage seulement)' : ''}.`)
 }
 L.push('', `⇒ **Écart annoncé : ${Object.values(REFS).some((fs) => fs.some((n) => devenues.some((d) => d.startsWith(n + ' · ')) || nouvelles.some((x) => x.fiche === n) || entretien.some((x) => x.fiche === n))) ? 'à préciser (voir ci-dessus)' : 'aucun'}** — S7 rouge 39 · 308 orange 55 · Mercedes vert 73 · Clio II orange 51.`,
   '', `Hors références : **${devenues.length} pannes deviennent portées** et **${nouvelles.length} nouvelles pannes** entrent dans des fiches (${[...new Set([...devenues.map((d) => d.split(' · ')[0]), ...nouvelles.map((x) => x.fiche)])].join(', ')}) : des scores réels de ces moteurs peuvent changer à texte identique ⇒ \`BAREME_VERSION\` 11.14 au moment de l’écriture.`, '')
@@ -198,7 +228,8 @@ async function appliquer() {
   const { sheets } = await appel('GET')
   const idDe = (nom) => { const t = sheets.filter((s) => `${s.marque} ${s.famille_moteur}` === nom); if (t.length !== 1) { console.error(`  ⚠️ ARRÊT — « ${nom} » : ${t.length} fiche(s)`); process.exit(1) } return t[0] }
   // Sauvegarde AVANT toute écriture : pannes, plan, prises en charge de chaque fiche touchée.
-  const touchees = [...new Set([...P.ajouts, ...P.nouvelles, ...P.prises, ...P.entretien].map((x) => x.fiche))]
+  const D = JSON.parse(readFileSync(new URL('../docs/fusion-decisions.json', import.meta.url), 'utf8'))
+  const touchees = [...new Set([...P.ajouts, ...P.nouvelles, ...P.prises, ...P.entretien, ...(D.rappels ?? [])].map((x) => x.fiche))]
   writeFileSync(JOURNAL, JSON.stringify({ sauvegarde_le: new Date().toISOString(), avant: touchees.map((n) => { const s = idDe(n); return { fiche: n, id: s.id, pannes: s.pannes, plan_entretien: s.plan_entretien, prises_en_charge: s.prises_en_charge ?? [] } }) }, null, 1) + '\n')
   for (const nom of touchees) {
     const s = idDe(nom)
@@ -210,6 +241,11 @@ async function appliquer() {
       sources: x.urls.map((url) => ({ url, vehicule_concerne: x.libelle_moteur, nomme_moteur: true })) })) }); console.log(`  ${nom} : ${r.pannes_ajoutees} panne(s) ajoutée(s)${r.rejetees ? `, ⚠️ ${r.rejetees} rejetée(s)` : ''}`) }
     const pc = P.prises.filter((x) => x.fiche === nom)
     if (pc.length) { const r = await appel('PATCH', { id: s.id, ajouter_prises_en_charge: pc.map((x) => ({ type: x.type, texte: x.partie, periode: x.periode, pays: x.pays, urls: x.urls })) }); console.log(`  ${nom} : ${r.ajoutees} prise(s) en charge`) }
+    for (const rp of (D.rappels ?? []).filter((x) => x.fiche === nom)) {
+      const { fiche: _f, juge: _j, rappelconso: _r, motif: _m, ...m } = rp
+      const r = await appel('PATCH', { id: s.id, modifier_rappel: m })
+      console.log(`  ${nom} : rappel réécrit sur « ${r.modifiee} »`)
+    }
     const en = P.entretien.filter((x) => x.fiche === nom)
     if (en.length) { const r = await appel('PATCH', { id: s.id, ajouter_plan: en.map((x) => ({ operation: x.operation, intervalle_km: x.intervalle_km ?? 0, intervalle_annees: x.intervalle_annees ?? 0, url_source: x.urls })) }); console.log(`  ${nom} : plan ${JSON.stringify(r).slice(0, 80)}`) }
   }
