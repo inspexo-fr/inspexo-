@@ -229,7 +229,17 @@ if (a('--candidats-externes')) {
   let coutRun = 0, affirmationsJouees = 0
   // Une UNITÉ = une partie de noyau (un défaut). `groupe` est une liste
   // d'unités de la MÊME page.
+  // ⚠️ UN DÉLAI DÉPASSÉ NE FAIT PLUS TOMBER LE RUN (11 nov. 2026 : TimeoutError
+  // non attrapée au lot 27, après 23 lots complets). L'appel rend null ; le
+  // lanceur réserve un coût PRUDENT (le serveur a pu dépenser sans le dire),
+  // marque les unités « à rejuger », et s'arrête après trois échecs d'affilée.
   const appelJuge = async (url, groupe) => {
+    try { return await appelJugeBrut(url, groupe) } catch (e) {
+      console.error(`\n  ⚠️ appel en échec (${String(e?.name ?? e).slice(0, 40)}) sur ${url.slice(0, 80)} — unités à rejuger, coût réservé`)
+      return null
+    }
+  }
+  const appelJugeBrut = async (url, groupe) => {
     const res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/sources-externes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ANON}`, 'x-eval-secret': EVAL_SECRET },
@@ -272,6 +282,7 @@ if (a('--candidats-externes')) {
   console.log(`  ${Object.keys(journal.noyaux_a_reprendre).length} noyau(x) mis de côté (forme à reprendre), jamais envoyés`)
 
   const SEUIL_SILENCE = 0.2
+  let echecsDAffilee = 0, echecsEstimes = 0
   for (let k = 0; k < NB_LOTS && objets.length; k++) {
     const lot = (k === 0 ? premierLot() : objets.splice(0, 20)).filter((o) => sourcesDe(o).length > 0)
     if (lot.length === 0) continue
@@ -297,12 +308,21 @@ if (a('--candidats-externes')) {
       }
       if (parPage.size === 0) break
       for (const [url, groupe] of parPage) {
-        for (let i = 0; i < groupe.length; i += 8) {
-          const sous = groupe.slice(i, i + 8)
+        // 6 par appel : 8 approchaient les 150 s d'une fonction edge.
+        for (let i = 0; i < groupe.length; i += 6) {
+          const sous = groupe.slice(i, i + 6)
           const reserve = appels ? coutLot / appels : 0.063
           if (coutLot + reserve > MUR_LOT) { arretLot = `mur du lot (${MUR_LOT.toFixed(2)} €)`; break }
           if (coutRun + reserve > BUDGET) { arretLot = `mur du run (${BUDGET.toFixed(2)} €)`; break }
           const j = await appelJuge(url, sous)
+          if (!j) {
+            const RESERVE_ECHEC = 0.063
+            coutLot += RESERVE_ECHEC; coutRun += RESERVE_ECHEC; echecsEstimes += RESERVE_ECHEC
+            for (const u of sous) etat[u.uid].silences.push(url)
+            if (++echecsDAffilee >= 3) { arretLot = 'trois appels en échec d’affilée'; break }
+            continue
+          }
+          echecsDAffilee = 0
           appels++; coutLot += j.cout_eur; coutRun += j.cout_eur
           for (const u of sous) {
             const r = j.verdicts?.[u.uid] ?? {}
@@ -355,11 +375,12 @@ if (a('--candidats-externes')) {
     console.log(`  lot ${journal.lots.length} · ${lot.length} affirmations, ${unites.length} unités (${[...new Set(lot.map((o) => o.famille))].join(', ')})`)
     console.log(`    confirmées ${confirmees}/${jugees} jugées (${Math.round(taux * 100)} %) · silencieuses ${silencieuses} (${Math.round(partSilence * 100)} %) · mauvais moteur ${mauvaisMoteur} · ${appels} appel(s) · ${coutLot.toFixed(3)} € · ${coutParAff.toFixed(4)} €/affirmation`)
     console.log(`    projection : ${projete.toFixed(2)} € cumulés (plafond ${PLAFOND_PROJETE} €)${arretLot ? ` · ARRÊT : ${arretLot}` : ''}`)
-    if (arretLot?.startsWith('mur du run')) { console.log('\n⏸ Mur du run atteint : le reste n’est pas joué.'); break }
+    if (arretLot?.startsWith('mur du run') || arretLot?.startsWith('trois appels')) { console.log(`\n⏸ ${arretLot} : le reste n’est pas joué.`); break }
     if (partSilence > SEUIL_SILENCE) { console.log(`\n⏹ ARRÊT : plus de ${SEUIL_SILENCE * 100} % du lot est resté silencieux.`); break }
     if (taux < SEUIL_LOT) { console.log(`\n⏹ ARRÊT IMMÉDIAT : le lot confirme moins de ${SEUIL_LOT * 100} % de ce qui a été jugé.`); break }
     if (projete > PLAFOND_PROJETE) { console.log(`\n⏹ ARRÊT : la projection dépasse ${PLAFOND_PROJETE} € cumulés. Décision d’Utku requise.`); break }
   }
+  if (echecsEstimes) console.log(`  dont ${echecsEstimes.toFixed(3)} € RÉSERVÉS pour des appels en échec (coût réel inconnu)`)
   console.log(`\n— Coût du run : ${coutRun.toFixed(3)} € / ${BUDGET.toFixed(2)} € · journal ${JOURNAL_EXT} · rien n’est écrit dans les fiches.`)
   process.exit(0)
 }
