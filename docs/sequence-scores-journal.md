@@ -120,3 +120,18 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
 - Résultat : S7 39/39/39 · 308 55/55/55 · Mercedes 73/73/73 · Clio II
   51/51/51 — conformes à l'annonce (aucun écart). 1,040 € · cumul 8,24 € / 10 €.
 - Jeton retiré de `.env.local` à la fin de la session.
+
+## (f) préparé — 11 nov. 2026 (rien d'écrit, rien de déployé)
+- `scripts/fusionner-sources.mjs` + règles pures `scripts/fusion-regles.mjs`
+  (même organe principal ET même défaut ; douteux ⇒ nouvelle panne ; gravité
+  établie par la source, jamais « casse » sans montant ; pas de panne bornée).
+  Proposition : `docs/fusion-proposee.md` — 23 ajouts de sources, 2 nouvelles
+  pannes, 116 prises en charge, 3 opérations d'entretien.
+- **Écart annoncé sur les 4 références : aucun.** Hors références, 13 pannes
+  deviennent portées et 2 entrent (moteurs DV5, DV6, DW10, EP6, EA189, H5FT,
+  D4204T, N13, FOX) ⇒ `BAREME_VERSION` 11.14 à l'écriture.
+- Code prêt, non déployé : `ajouter_pannes`, `ajouter_prises_en_charge`
+  (admin-defect-sheets), colonne `prises_en_charge` (migration
+  `20261127120000`, rejouée en local 83/83), bloc d'affichage sur `/a/:id`,
+  test d'indépendance (section 5), tests `fusion-regles` et `prises-en-charge`.
+- Session prête : `scripts/session-jeton-f.sh` (préalables listés en tête).

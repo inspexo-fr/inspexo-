@@ -298,5 +298,39 @@ for (const [quoi, extrait] of [
 titre('4. Version du barème')
 ok(/^\d+\.\d+$/.test(BAREME_VERSION), `BAREME_VERSION est une version lisible (${BAREME_VERSION})`)
 
+titre('5. Prises en charge : affichage seulement (sprint 23 f, décision du 11 nov. 2026)')
+{
+  const PEC = /prises_en_charge|prisesEnCharge|prisesAffichables|PriseEnCharge/
+  // Aucun fichier du chemin de notation ne les lit — sauf `score` (qui les
+  // RECOPIE dans le résultat affiché) et `defectSheets` (qui les transporte
+  // avec la fiche, sans jamais les mêler aux pannes).
+  for (const f of CHEMIN_NOTATION.filter((x) => !/score\/index\.ts$|defectSheets\.ts$/.test(x))) {
+    ok(!PEC.test(readFileSync(f, 'utf8')), `${f} ne lit pas les prises en charge`)
+  }
+  // Dans score : exactement l'import et la ligne du résultat affiché.
+  const lignesCode = (src) => src.split('\n').filter((l) => PEC.test(l) && !/^\s*\/\//.test(l))
+  const autorisee = (l) => /^import \{ prisesAffichables \} from "\.\.\/_shared\/prisesEnCharge\.ts";$/.test(l.trim()) ||
+    /^prises_en_charge: prisesAffichables\(sheet\?\.prises_en_charge \?\? \[\], v\.annee_modele \?\? null\),$/.test(l.trim())
+  const verifierScore = (src) => { const l = lignesCode(src); return l.length === 2 && l.every(autorisee) }
+  ok(verifierScore(readFileSync('supabase/functions/score/index.ts', 'utf8')), 'score : seulement l’import et la ligne du résultat affiché')
+  // Contre-épreuve : une lecture par la note serait détectée.
+  ok(!verifierScore(readFileSync('supabase/functions/score/index.ts', 'utf8') + '\n    faits.prises = prisesAffichables(sheet.prises_en_charge, null);'),
+    'le contrôle MORD : une lecture des prises en charge par les faits est détectée')
+  // defectSheets : les prises ne touchent jamais les pannes.
+  const ds = readFileSync('supabase/functions/_shared/defectSheets.ts', 'utf8')
+  ok(lignesCode(ds).every((l) => !/pannes|gravite|fusionnees/.test(l) || /return \{ \.\.\.base, pannes: fusionnees, prises_en_charge: prises \}/.test(l)),
+    'defectSheets : les prises en charge ne sont jamais mêlées aux pannes')
+  // Le module est pur : aucun import, donc rien du barème.
+  ok(!/^import /m.test(readFileSync('supabase/functions/_shared/prisesEnCharge.ts', 'utf8')), 'prisesEnCharge.ts est pur (aucun import)')
+  // Et le barème rend le même score, qu'une fiche ait ou non des prises en charge.
+  const faits = { statut_vendeur: 'particulier', annee: 2018, annee_courante: 2026, kilometrage: 90000, prix_affiche: 12000,
+    pannes: [{ gravite: 'majeure', rappel_officiel: false, couverte_garantie: false, rappel_confirme_effectue: false }],
+    incoherences: 0, signaux_entretien: 1, entretien_renseigne: true, operations_critiques_non_faites: 0, contradictions_entretien: 0,
+    famille_identifiee: true, catalogue_vide: false, comparables_count: 0, fourchette: null, fourchette_n: 0, fourchette_decalage_km: 0,
+    juridique_grave: false, fraude_suspectee: false, compteur_contredit: false, rappel_stop_drive: false, condition_garantie: null }
+  ok(calculerAxes(faits).score === calculerAxes({ ...faits, prises_en_charge: [{ type: 'garantie', texte: 'Extension 10 ans', pays: ['FR'] }] }).score,
+    'barème : même score avec ou sans prises en charge dans les faits')
+}
+
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${total - ko}/${total} contrôles passés`)
 process.exit(ko === 0 ? 0 : 1)

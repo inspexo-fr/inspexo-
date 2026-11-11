@@ -9,6 +9,7 @@ import { sourcesPortentLEntree } from "../_shared/atlasSource.ts";
 import { sanitizePannes } from "../_shared/defectSheets.ts";
 import { fusionnerPlan } from "../_shared/planEntretien.ts";
 import { couvertureValide } from "../_shared/couverture.ts";
+import { fusionnerPrisesEnCharge } from "../_shared/prisesEnCharge.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 
 const cors = {
@@ -188,6 +189,50 @@ serve(async (req: Request) => {
       // canonisés, bornes plausibles. La couverture d'avant est renvoyée pour
       // le retour arrière (même jeton). Écrire une couverture CHANGE DES
       // SCORES : c'est le changement (e) de la séquence, jamais en douce.
+      // ── SPRINT 23 (f) — AJOUT DE PANNES NOUVELLES (fusion des sources) ───
+      //
+      // ADDITIF, comme `ajouter_sources` : une panne présente n'est jamais
+      // remplacée, une panne absente du corps n'est pas touchée. Chaque panne
+      // passe par `sanitizePannes` (règle d'or : source portante, attribution
+      // au moteur, gravité jugée sur le remède). Un titre déjà présent est
+      // refusé, jamais fusionné en douce.
+      if (Array.isArray(body.ajouter_pannes)) {
+        const { data: row } = await admin
+          .from("defect_sheets").select("pannes, marque, famille_moteur").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const existantes = (Array.isArray(row.pannes) ? row.pannes : []) as Array<{ titre?: string }>;
+        const titres = new Set(existantes.map((p) => String(p?.titre ?? "").trim().toLowerCase()));
+        const candidates = body.ajouter_pannes.slice(0, 10)
+          .filter((p: { titre?: unknown }) => !titres.has(String(p?.titre ?? "").trim().toLowerCase()));
+        const { pannes: propres } = sanitizePannes(candidates, row.famille_moteur, row.marque);
+        if (propres.length === 0) {
+          return new Response(JSON.stringify({ error: "aucune panne ajoutable", rejetees: body.ajouter_pannes.length }), { status: 400, headers: cors });
+        }
+        const { error: e5 } = await admin.from("defect_sheets")
+          .update({ ...fields, pannes: [...existantes, ...propres] }).eq("id", body.id);
+        if (e5) return new Response(JSON.stringify({ error: e5.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({
+          pannes_ajoutees: propres.length, rejetees: body.ajouter_pannes.length - propres.length,
+          titres: propres.map((p) => p.titre),
+        }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
+      // ── SPRINT 23 (f) — PRISES EN CHARGE (affichage seulement) ───────────
+      // Additif ; URL recontrôlées : seules les sources de rang portant entrent.
+      if (Array.isArray(body.ajouter_prises_en_charge)) {
+        const { data: row } = await admin
+          .from("defect_sheets").select("prises_en_charge").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const ajouts = body.ajouter_prises_en_charge.slice(0, 60).map((x: { urls?: unknown }) => ({
+          ...x, urls: (Array.isArray(x?.urls) ? x.urls : []).filter((u: unknown) => typeof u === "string" && sourcesPortentLEntree([u])),
+        }));
+        const { liste, ajoutees } = fusionnerPrisesEnCharge(row.prises_en_charge ?? [], ajouts);
+        const { error: e6 } = await admin.from("defect_sheets")
+          .update({ ...fields, prises_en_charge: liste }).eq("id", body.id);
+        if (e6) return new Response(JSON.stringify({ error: e6.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ ajoutees, total: liste.length }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
       if (Array.isArray(body.definir_couverture)) {
         const { data: row } = await admin
           .from("defect_sheets").select("couverture").eq("id", body.id).maybeSingle();

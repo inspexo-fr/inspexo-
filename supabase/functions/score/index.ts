@@ -67,6 +67,8 @@ import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
 import { estAppelApi } from "../_shared/apiClients.ts";
 import { deciderStatut } from "../_shared/statutVendeur.ts";
+// Affichage seulement : jamais lu par la note (tests/independance-score.test.mjs).
+import { prisesAffichables } from "../_shared/prisesEnCharge.ts";
 import {
   boiteDe,
   fondreReleves,
@@ -3616,6 +3618,8 @@ serve(async (req: Request) => {
         famille: vehiculePublic.famille_moteur,
         cache: sheetResult.cacheStatus,
       },
+      // SPRINT 23 (f) — prises en charge connues du moteur, AFFICHAGE SEULEMENT.
+      prises_en_charge: prisesAffichables(sheet?.prises_en_charge ?? [], v.annee_modele ?? null),
       critique: critiqueApplied
         ? { total: claims.length, supprimees: dropped.length }
         : { total: claims.length, supprimees: 0, indisponible: true },

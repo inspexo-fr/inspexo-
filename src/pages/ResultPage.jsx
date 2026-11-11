@@ -1204,6 +1204,33 @@ export default function ResultPage() {
               </div>
             )}
 
+            {/* Prises en charge connues du moteur (sprint 23 f) — AFFICHAGE
+                SEULEMENT : aucune n'entre dans la note. Jamais « votre voiture
+                est couverte » : chaque élément porte sa mention (programme
+                publié en France à vérifier par le VIN, ou information de
+                contexte publiée ailleurs). */}
+            {Array.isArray(r.prises_en_charge) && r.prises_en_charge.length > 0 && (
+              <div className="doc-sec">
+                <p className="eyebrow">Prises en charge connues pour ce moteur</p>
+                <p style={{ fontSize: 14, lineHeight: 1.6, marginTop: 6 }} className="c-ink2">
+                  Garanties étendues, campagnes et rappels publiés pour ce moteur. Ils ne disent pas si ce véhicule y a droit, et n'entrent pas dans la note.
+                </p>
+                <ul style={{ fontSize: 14, lineHeight: 1.6, margin: '8px 0 0', paddingLeft: 18 }}>
+                  {r.prises_en_charge.map((x, k) => (
+                    <li key={k} style={{ marginBottom: 8 }}>
+                      <span style={{ textTransform: 'capitalize' }}>{x.type}</span> — {x.texte}
+                      {x.periode && x.periode.texte ? ` (${x.periode.texte})` : ''}
+                      <br />
+                      <span className="c-ink2">{x.mention}{x.periode_inconnue ? ' Période de production non précisée par la source.' : ''}</span>
+                      {Array.isArray(x.urls) && x.urls.length > 0 && (
+                        <> {' '}<a href={x.urls[0]} target="_blank" rel="noopener noreferrer">Source</a></>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Marge de négociation — le détail au-delà de 2 postes est RETENU
                 côté serveur sans Pass (negociation.masque) : le flou couvre un
                 gabarit factice, jamais la vraie donnée. Avec Pass, tout vient. */}

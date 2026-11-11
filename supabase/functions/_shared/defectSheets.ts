@@ -192,6 +192,8 @@ export type DefectSheet = {
   pannes: SheetPanne[];
   programmes?: WarrantyProgram[];
   plan_entretien?: PlanEntretienOp[];
+  /** Affichage seulement (sprint 23 f) : jamais lu par la note. */
+  prises_en_charge?: unknown[];
 };
 
 export function normFamille(f: string): string {
@@ -767,7 +769,18 @@ export async function lookupDefectSheet(
       }
     }
   }
-  return { ...base, pannes: fusionnees };
+  // Prises en charge (affichage seulement) : union des fiches compatibles,
+  // dédoublonnée par texte. Jamais lue par la note.
+  const vuesPec = new Set<string>();
+  const prises: unknown[] = [];
+  for (const row of valides as DefectSheet[]) {
+    for (const x of (row.prises_en_charge ?? []) as Array<{ texte?: string }>) {
+      const k = String(x?.texte ?? "").toLowerCase();
+      if (!k || vuesPec.has(k)) continue;
+      vuesPec.add(k); prises.push(x);
+    }
+  }
+  return { ...base, pannes: fusionnees, prises_en_charge: prises };
 }
 
 /** Un montant n'est « sourcé » pour repair_costs que s'il figure LITTÉRALEMENT
