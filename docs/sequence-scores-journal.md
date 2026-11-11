@@ -159,3 +159,7 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
   11.14 ; déploiement de `admin-defect-sheets`, `score`, `sheet-builder`,
   `api-analyses`, `lecture-ct`, `lecture-histovec`, `visite`. Aucune donnée
   de fiche n'est écrite avant la session (f).
+- Préalables FAITS : dump (`~/inspexo-backups/*-avant-fusion-20261111-2229.sql`),
+  migration `20261127120000` appliquée (seule en attente), 7 fonctions
+  déployées, `main` poussé. Contrôle : S7 un passage → **rouge 39** (0,147 €,
+  cumul 8,38 € / 10 €). Session (f) : `bash scripts/session-jeton-f.sh`.
