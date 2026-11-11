@@ -2178,10 +2178,10 @@ erreur JS. ⚠️ Le site (bloc, `/comparer`) n'est en ligne qu'après le merge.
 |---|---|---|
 | `audi-s7-intermediaire` | **rouge 39** | 5 nov. 2026 (sprint 17.1) |
 | `308-puretech-complete` | **orange 55** | 28 oct. 2026 |
-| `mercedes-2025-societe` | **vert 71** (dérive mesurée 71-75) | 4 nov. 2026 (sprint 13) |
+| `mercedes-2025-societe` | **vert 73** | 11 nov. 2026 (sprint 22d : la garantie n'est plus une preuve d'entretien) |
 | `revendeur-clio2-dci` | **orange 51** | 5 nov. 2026 (sprint 20a) |
 
-⚠️ **`BAREME_VERSION` 11.9** depuis le sprint 21.1 : une panne ne pèse que si
+⚠️ **`BAREME_VERSION` 11.12** depuis le 11 nov. 2026 (11.10 statut vendeur déterministe, 11.11 signaux d'entretien par motifs fixes, 11.12 opérations « non faites » écrites dans l'annonce seulement — journal : `docs/sequence-scores-journal.md`). Avant : **11.9** depuis le sprint 21.1 : une panne ne pèse que si
 une source indépendante la porte. Les quatre verdicts sont **inchangés**, et
 pour une raison qu'il faut dire — dans ces quatre dossiers, les pannes qui
 pesaient citaient déjà au moins une page de presse ou officielle. La règle n'y
@@ -2197,9 +2197,10 @@ présent — c'est ce tableau qui fait foi pour l'état courant.
 (7 comparables retenus sur 10) là où il était « non évalué », donc exclu du
 score. C'est l'effet voulu, mesuré, pas une dérive.
 
-⚠️ **La Mercedes dérive entre 71 et 75** selon que l'identification déduit ou
-non `code_famille` : sans famille, l'axe risques sort du score et le verdict
-monte. Cause établie le 5 nov. 2026, correctif NON fait.
+⚠️ La Mercedes est passée de 71 à **73** le 11 nov. 2026 (effet annoncé de 22d :
+sans signal d'entretien écrit, l'axe entretien n'est plus évalué). Les dérives
+71-75 relevées avant venaient de la famille moteur (corrigée au sprint 20.1)
+et des signaux d'entretien du modèle (corrigés par 22d).
 
 ⚠️ **La S7 est à un point de l'orange** (seuil à 40). C'est le cas le plus
 près d'une bascule de couleur : toute modification du barème ou des filtres

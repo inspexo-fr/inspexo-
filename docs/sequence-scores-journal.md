@@ -44,3 +44,9 @@ Mercedes vert 71 · Clio II orange 51 · cumul tests 3,00 €.
   `lecture-histovec`, `visite` (version du barème).
 - ⚠️ Budget : après (c2) le cumul sera ≈ 6,10 €. Un run de (d) (≈ 1,05 €)
   dépasserait 7 € : arrêt prévu AVANT l'éval de (d).
+- Résultat (c2) : S7 39/39/39 · 308 55/55/55 · Mercedes 73/73/73 · Clio II
+  51/51/51 — conformes. 1,012 € · cumul 6,06 €.
+
+## ARRÊT avant (d) — 11 nov. 2026
+Un run de (d) (≈ 1,05 €) porterait le cumul à ≈ 7,10 €, au-delà du plafond de
+7 €. Rien n'a été codé ni déployé pour (d). Décision d'Utku attendue.
