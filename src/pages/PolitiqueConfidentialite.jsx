@@ -620,6 +620,28 @@ export default function PolitiqueConfidentialite() {
             </li>
           </ul>
 
+          <h2 className="legal-h2">6 quindecies. Alerte rappel sur un modèle, sans compte</h2>
+          <p className="legal-p">
+            Depuis un dossier, vous pouvez demander à être prévenu par e-mail si un nouveau rappel
+            constructeur est publié dans la base officielle RappelConso pour ce modèle.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>Double confirmation</strong>&nbsp;: rien ne vous est envoyé, hormis le message de
+              confirmation, tant que vous n'avez pas confirmé votre adresse. Une demande non confirmée
+              est <strong>effacée sous 7 jours</strong>.
+            </li>
+            <li>
+              Sont conservés votre adresse, la marque, le modèle et l'année du véhicule, et le nombre de
+              rappels déjà publiés (pour ne vous écrire que s'il augmente). Seule une empreinte du lien
+              de confirmation est enregistrée.
+            </li>
+            <li>
+              <strong>Désinscription en un clic</strong> dans chaque e-mail&nbsp;: votre adresse n'est alors
+              plus utilisée, et vos alertes sont effacées au passage suivant de notre tâche quotidienne.
+            </li>
+          </ul>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">

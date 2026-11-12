@@ -274,3 +274,24 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   réponse collée ⇒ 2 faits déclarés, score inchangé ; facture conforme ⇒
   justifiée par l'immatriculation, **plafond 55 levé, orange 55 → 60**.
   Dépense du lot : **0,460 € / 0,60 €**. Branche `sprint23-lot2`, non mergée.
+
+## Sprint 23, lot 3 — mise en service annoncée (12 nov. 2026)
+- **Aucune modification du score** (barème 11.16 inchangé, `score` redéployé
+  seulement parce qu'il importe `notify.ts`) ⇒ **aucune éval payante prévue,
+  0 € sur les 0,60 € autorisés.** Références attendues inchangées.
+- **Migration** `20261128120000_sprint23_alertes_modele` (table
+  `alertes_modele`, RLS sans policy, aucun droit public) — essai local :
+  38 migrations depuis une base vide, 83/83.
+- **Fonctions** : `alerte-modele`, `modele-public`, `prelecture` (nouvelles),
+  `alertes` (dossiers « achetés », passage des alertes sans compte,
+  RappelConso indisponible ≠ zéro rappel), et 15 fonctions qui importent
+  `notify.ts` (dont `desinscription`, `pass-webhook`, `inspection-webhook`
+  en `--no-verify-jwt`).
+- Dump prod hors dépôt avant `db push`. Merge de `sprint23-lot3` : en attente
+  du feu vert d'Utku.
+- **Fait (12 nov., 23:40)** : dumps `~/inspexo-backups/*-avant-sprint23-lot3-20261112-233428.sql`,
+  migration appliquée (seule en attente), 19 fonctions déployées
+  (`verify_jwt` des trois sensibles conservé, vérifié). Surface : pré-lecture
+  403 sans secret, alerte-modele 400 sur confirmation forgée, table
+  `alertes_modele` 401 à anon, 48 pages modèle. Build : 107 pages
+  pré-rendues. **Dépense : 0 €.** Merge en attente.

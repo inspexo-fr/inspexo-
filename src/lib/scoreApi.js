@@ -336,6 +336,26 @@ export const lectureCt = (analysisId, images, constatsPrecedents = []) =>
 export const reponseVendeur = (analysisId, { texte = '', images = [] } = {}) =>
   callFunction('reponse-vendeur', { analysis_id: analysisId, texte, images })
 
+/** SPRINT 23 lot 3 — alerte « rappel sur ce modèle », double opt-in. */
+export const alerteModeleInscrire = (email, analysisId) =>
+  callFunction('alerte-modele', { action: 'inscrire', email, analysis_id: analysisId })
+export const alerteModeleConfirmer = (id, jeton) =>
+  callFunction('alerte-modele', { action: 'confirmer', id, jeton })
+
+/** SPRINT 23 lot 3 — pages modèle (fonction en lecture seule, GET). */
+async function getFonction(nom, params) {
+  const base = process.env.REACT_APP_SUPABASE_URL
+  const cle = process.env.REACT_APP_SUPABASE_ANON_KEY
+  const res = await fetch(`${base}/functions/v1/${nom}?${new URLSearchParams(params)}`, {
+    headers: { apikey: cle, Authorization: `Bearer ${cle}` },
+  })
+  if (res.status === 404) return null
+  if (!res.ok) throw new Error(`${nom} ${res.status}`)
+  return res.json()
+}
+export const getModelePublic = (marque, modele) => getFonction('modele-public', { marque, modele })
+export const listeModelesPublies = async () => ((await getFonction('modele-public', { liste: '1' }))?.pages ?? [])
+
 /** Lead email — source ∈ pass_waitlist | expert_waitlist | rapport */
 export async function submitLead(email, source, analysisId = null) {
   const { error } = await supabase.rpc('submit_lead', {

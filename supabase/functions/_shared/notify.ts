@@ -129,6 +129,52 @@ export async function emailRetourSigne(
   );
 }
 
+/** SPRINT 23 lot 3 — Double opt-in de l'alerte « rappel sur ce modèle ».
+ *  Le lien mène à une page qui demande de CONFIRMER par un bouton : un
+ *  scanner de messagerie qui précharge le lien ne confirme rien. */
+export async function emailConfirmationAlerteModele(
+  to: string,
+  vehicule: string,
+  id: string,
+  token: string,
+): Promise<boolean> {
+  const lien = `https://www.inspexo.io/alerte/confirmer?i=${id}&t=${token}`;
+  return await sendMail(
+    to,
+    `Confirmez votre alerte rappel — ${vehicule}`,
+    `<p>Vous avez demandé à être prévenu si un nouveau rappel constructeur est publié dans la base
+     officielle RappelConso pour : <strong>${vehicule.replace(/[<>]/g, "")}</strong>.</p>
+     <p><a href="${lien}">Confirmer l'alerte</a></p>
+     <p>Sans confirmation, rien ne vous sera envoyé et cette adresse sera effacée sous 7 jours.
+     Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message.</p>
+     <p style="color:#6B7280;font-size:12px">Inspexo — contact@inspexo.io</p>`,
+  );
+}
+
+/** Nouveau rappel publié sur un modèle suivi SANS compte (alerte confirmée). */
+export async function emailRappelModele(
+  to: string,
+  vehicule: string,
+  titres: string[],
+  analysisId: string | null,
+  emailHash: string,
+  essai = false,
+): Promise<boolean> {
+  const lienUnsub = await lienDesinscriptionEmail(emailHash);
+  const lienAnalyse = analysisId ? `<a href="https://www.inspexo.io/a/${analysisId}">Revoir l'analyse et le bloc rappels</a> — ` : "";
+  return await sendMail(
+    to,
+    `${essai ? "[ESSAI] " : ""}Nouveau rappel constructeur — ${vehicule}`,
+    `${essai ? "<p><strong>Message d'essai</strong> : aucun nouveau rappel n'a été publié, ce message sert à vérifier l'envoi et le lien de désinscription.</p>" : ""}<p>Un rappel constructeur vient d'être publié dans la base officielle RappelConso pour le modèle
+     que vous avez demandé à suivre (${vehicule.replace(/[<>]/g, "")}) :</p>
+     <ul>${titres.slice(0, 5).map((t) => `<li>${t.replace(/[<>]/g, "")}</li>`).join("")}</ul>
+     <p>${lienAnalyse}seul le numéro de série (VIN), auprès du réseau du constructeur, dit si un véhicule précis est concerné.</p>
+     <p style="color:#6B7280;font-size:12px">Vous recevez cet email parce que vous avez confirmé une alerte rappel sur ce modèle.
+     ${lienUnsub ? `<a href="${lienUnsub}">Vous désinscrire en un clic</a>, ou ` : ""}répondez « STOP » à ce message.</p>`,
+    enTetesDesinscription(lienUnsub),
+  );
+}
+
 async function lienDesinscription(userId: string): Promise<string | null> {
   const t = await signatureDesinscription(userId);
   return t ? `${SUPABASE_URL_PUB}/functions/v1/desinscription?u=${userId}&t=${t}` : null;
@@ -268,15 +314,23 @@ export async function emailNouveauRappel(
   vehicule: string,
   titres: string[],
   userId: string,
+  achete = false,
 ): Promise<boolean> {
   const lienUnsub = await lienDesinscription(userId);
+  // SPRINT 23 lot 3 : après l'achat, le message parle du véhicule de
+  // l'acheteur et de ce qu'il doit faire, pas d'un modèle « suivi ».
+  const intro = achete
+    ? `Un rappel constructeur vient d'être publié dans la base officielle RappelConso pour le modèle du véhicule que vous avez acheté :`
+    : `Un rappel constructeur vient d'être publié dans la base officielle RappelConso pour un modèle suivi dans votre dossier d'achat :`;
+  const suite = achete
+    ? `Contactez le réseau du constructeur avec le numéro de série (VIN) inscrit sur votre carte grise : lui seul peut dire si votre véhicule est concerné.`
+    : `Confirmez toujours avec le VIN auprès du constructeur.`;
   return await sendMail(
     to,
     `Nouveau rappel constructeur — ${vehicule}`,
-    `<p>Un rappel constructeur vient d'être publié dans la base officielle RappelConso pour un modèle suivi dans votre dossier d'achat :</p>
+    `<p>${intro}</p>
      <ul>${titres.slice(0, 5).map((t) => `<li>${t.replace(/[<>]/g, "")}</li>`).join("")}</ul>
-     <p><a href="https://www.inspexo.io/a/${analysisId}">Revoir l'analyse et le bloc rappels</a> —
-     confirmez toujours avec le VIN auprès du constructeur.</p>
+     <p><a href="https://www.inspexo.io/a/${analysisId}">Revoir l'analyse et le bloc rappels</a> — ${suite}</p>
      ${piedDossier(lienUnsub)}`,
     enTetesDesinscription(lienUnsub),
   );

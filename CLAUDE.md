@@ -2236,6 +2236,55 @@ erreur JS. ⚠️ Le site (bloc, `/comparer`) n'est en ligne qu'après le merge.
   par `generer-factures.mjs`, données inventées). Captures :
   `node scripts/captures-lot2.mjs` → `captures-sprint23/`.
 
+## Sprint 23, lot 3 — Premier écran, alertes, pages modèle, batterie, pré-lecture (12 nov. 2026)
+
+**Aucune modification du score** (barème 11.16 inchangé), aucune éval payante.
+- **Alertes après l'achat** : le cron `alertes` inclut les dossiers « achete »
+  (texte propre au véhicule acheté) ; « abandonne » reste exclu. ⚠️ Défaut
+  corrigé au passage : RappelConso **indisponible** était compté comme « 0
+  rappel », la référence tombait à 0 et le passage suivant aurait alerté sur
+  tous les rappels déjà connus. Une réponse `indisponible` ne touche plus la
+  référence.
+- **Premier écran de `/a/:id`** : titre, verdict, les 3 motifs (`#motifs`), LA
+  prochaine action (`src/data/prochaineAction.js`, pure : signal d'arnaque
+  d'abord, puis rouge → questions, orange → message, vert → checklist ;
+  jamais un partenaire), puis fiche détaillée, critères, points rassurants.
+  Les blocs du dessous sont des fragments différés (`differe()` + Suspense).
+- **Alerte rappel sans compte, double opt-in** : table `alertes_modele`
+  (migration `20261128120000`, RLS sans policy, aucun droit public), fonction
+  `alerte-modele` (limite IP AVANT le corps ; réponse IDENTIQUE quelle que
+  soit l'adresse ; marque/modèle relus dans l'analyse ; seule l'empreinte du
+  jeton stockée). Confirmation par BOUTON sur `/alerte/confirmer` (POST) :
+  un scanner qui précharge le lien ne confirme rien. Le cron efface les
+  inscriptions non confirmées sous 7 jours et celles d'une adresse
+  désinscrite (`desinscriptions`).
+- **Garanties batterie** (`src/data/garantiesBatterie.js`, affichage seul) :
+  UNIQUEMENT les parties confirmées par le juge (groupe G,
+  `docs/candidats-externes-journal.json`), avec URL, pays et date repris tels
+  quels — un test compare chaque URL à celles du juge (deux URL recopiées
+  d'un affichage tronqué étaient fausses). Source hors de France ⇒
+  « information de contexte ». BMW (hors i3), MINI, Mercedes : pages
+  officielles illisibles depuis la session ⇒ repère presse 2021 seulement.
+  Questions au vendeur (certificat SoH, livret, batterie louée, bilan Toyota).
+- **Pages modèle** `/modele/<marque>/<modele>-<generation>` (+ index
+  `/modele`) : fonction `modele-public` (GET, lecture seule) — et non une RPC,
+  car `rangSource` n'existe qu'en TypeScript. Module pur `_shared/modeles.ts` :
+  découpe « Clio III/IV », « Fiesta/Focus » (2 modèles), finitions RS/ST/GT
+  gardées dans le nom, Mk4 = IV ; pannes PORTÉES seulement, prises en charge
+  DATÉES seulement ; ⚠️ une ligne qui NOMME un autre véhicule (« Rappel
+  (Captur) » sur la Clio IV) est écartée — noms numériques et mots courants
+  (série, classe, expert, mini…) jamais cherchés. Seuil 3 pannes portées :
+  **48 pages** publiées, pré-rendues, au sitemap. Chaque section renvoie à la
+  page `/moteur` (référence ; rien n'est recopié au-delà du titre). Le
+  pré-rendu ARRÊTE le build si `modele-public?liste=1` ne répond pas.
+- **Pré-lecture de l'extension** (1.2.0) : fonction `prelecture` sans IA
+  (rappels, Crit'Air, prix observés au seuil du score, signaux d'arnaque),
+  derrière `/api/prelecture` (secret `INTAKE_PROXY_SECRET` existant). ⚠️
+  Envoyée AU CLIC, en parallèle de l'analyse — la promesse « rien n'est lu ni
+  envoyé avant un clic » reste vraie ; les deux pages de confidentialité de
+  l'extension le disent. Panneau construit en `textContent`. ⬜ Publication
+  Web Store : geste d'Utku (`extension/inspexo-extension-1.2.0.zip`).
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |

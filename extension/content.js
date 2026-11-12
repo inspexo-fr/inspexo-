@@ -55,6 +55,11 @@ async function onClick () {
   }
 
   setState('Analyse en cours… (moins d’une minute)', true)
+  // Pré-lecture sans IA, au même clic : affichée en une seconde, pendant que
+  // l'analyse complète tourne.
+  chrome.runtime.sendMessage({ type: 'inspexo_prelecture', data })
+    .then((r) => { if (r && r.ok) afficherPrelecture(r.pre) })
+    .catch(() => {})
   try {
     const reponse = await chrome.runtime.sendMessage({ type: 'inspexo_analyser', data })
     if (reponse && reponse.ok) {
@@ -76,6 +81,42 @@ async function onClick () {
     window.open(`${INSPEXO_BASE}/score?texte=${encodeURIComponent(texte)}`, '_blank')
     setState('Analyser avec Inspexo', false)
   }
+}
+
+// Panneau de pré-lecture (sprint 23, lot 3) : rappels, Crit'Air, prix observés,
+// signaux d'arnaque. Construit avec textContent : aucun HTML venu du serveur.
+function ligne (parent, texte, couleur) {
+  const p = document.createElement('p')
+  p.textContent = texte
+  if (couleur) p.style.color = couleur
+  parent.appendChild(p)
+}
+function afficherPrelecture (pre) {
+  if (!pre || typeof pre !== 'object') return
+  const ancien = document.getElementById('inspexo-prelecture')
+  if (ancien) ancien.remove()
+  const box = document.createElement('div')
+  box.id = 'inspexo-prelecture'
+  box.setAttribute('role', 'status')
+  const fermer = document.createElement('button')
+  fermer.type = 'button'
+  fermer.textContent = '×'
+  fermer.setAttribute('aria-label', 'Fermer la pré-lecture')
+  fermer.addEventListener('click', () => box.remove())
+  box.appendChild(fermer)
+  ligne(box, 'Pré-lecture Inspexo')
+  const signaux = Array.isArray(pre.signaux_arnaque) ? pre.signaux_arnaque : []
+  for (const s of signaux.slice(0, 3)) ligne(box, `Signal d’arnaque : ${s.libelle} « ${s.extrait} »`, '#FF6B5B')
+  if (pre.rappels) {
+    if (pre.rappels.indisponible) ligne(box, 'Rappels : vérification RappelConso indisponible, réessayez plus tard.')
+    else ligne(box, pre.rappels.n > 0 ? `Rappels publiés sur ce modèle : ${pre.rappels.n} (à vérifier avec le VIN).` : 'Aucun rappel RappelConso trouvé pour ce modèle à cette date.')
+  }
+  if (pre.critair && pre.critair.classe && pre.critair.classe !== 'inconnu') ligne(box, `${pre.critair.libelle} (déduit de l’année-modèle).`)
+  if (pre.prix && pre.prix.evalue) {
+    ligne(box, `Prix observés : ${pre.prix.p25} € – ${pre.prix.p75} € sur ${pre.prix.n} annonces${pre.prix.position ? ` ; ce prix est ${pre.prix.position}` : ''}.`)
+  }
+  ligne(box, pre.mention || 'Pré-lecture sans intelligence artificielle. L’analyse complète suit.')
+  document.body.appendChild(box)
 }
 
 // Page de résultats : bouton « Ajouter ces annonces comme comparables ».

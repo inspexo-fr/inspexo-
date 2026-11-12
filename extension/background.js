@@ -2,13 +2,15 @@
 // Rôle : au clic utilisateur uniquement — télécharger les photos de l'annonce
 // (hôtes autorisés par host_permissions), les redimensionner à 1 600 px et les
 // ré-encoder en JPEG (ce qui supprime les métadonnées EXIF), puis envoyer le
-// tout à https://www.inspexo.io/api/intake. AUCUNE autre requête, aucune
+// tout à https://www.inspexo.io/api/intake (et, au même clic, une pré-lecture
+// sans IA à https://www.inspexo.io/api/prelecture). AUCUNE autre requête, aucune
 // collecte, aucun stockage : les photos ne quittent la mémoire que vers Inspexo
 // et n'y sont jamais conservées.
 'use strict'
 
 const INTAKE_URL = 'https://www.inspexo.io/api/intake'
 const MARCHE_URL = 'https://www.inspexo.io/api/marche'
+const PRELECTURE_URL = 'https://www.inspexo.io/api/prelecture'
 const RESULT_BASE = 'https://www.inspexo.io/a/'
 const MAX_DIM = 1600
 const MAX_PHOTOS = 6
@@ -69,6 +71,25 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (res.ok && body && body.ok) sendResponse({ ok: true, retenus: body.retenus })
       else sendResponse({ ok: false, error: (body && body.error) || `http_${res.status}` })
     })().catch((e) => sendResponse({ ok: false, error: String((e && e.message) || e) }))
+    return true
+  }
+  // Pré-lecture SANS IA (sprint 23, lot 3) : envoyée au MÊME clic que
+  // l'analyse, jamais avant. Texte de l'annonce seulement, aucune photo.
+  if (message && message.type === 'inspexo_prelecture') {
+    ;(async () => {
+      const d = message.data || {}
+      const res = await fetch(PRELECTURE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          titre: d.titre, texte: d.description, prix: d.prix, annee: d.annee,
+          km: d.kilometrage, carburant: d.carburant, code_postal: d.code_postal || '',
+        }),
+        signal: AbortSignal.timeout(15000),
+      })
+      const body = await res.json().catch(() => null)
+      sendResponse(res.ok && body ? { ok: true, pre: body } : { ok: false })
+    })().catch(() => sendResponse({ ok: false }))
     return true
   }
   if (!message || message.type !== 'inspexo_analyser') return false
