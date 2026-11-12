@@ -328,7 +328,7 @@ d'aller au-delà. Sans exception.**
 ### Pages publiques SEO
 - `/moteur/<slug>` (42 publiées), `/moteur` (index), `/airbags-takata` (liste officielle par marque + champ « mon modèle est-il concerné ? », date de liste et lien ministère). Seuil de publication : **≥ 3 pannes toutes sourcées** (RPC `get_moteur_public`, `list_moteurs_publies`) — pas de page sans preuves.
 - **Pré-rendu statique** (`scripts/prerendu.mjs`, lancé par `postbuild`) : Playwright visite chaque route publique et écrit `build/<route>/index.html` ; 52 pages + l'accueil au sitemap (53 URL), robots.txt dressé à partir des pages RÉELLEMENT produites. `vercel.json` porte `buildCommand: npx playwright install chromium && npm run build` — le conteneur de build de Vercel n'a pas de navigateur.
-- ⚠️ **`build/index.html` n'est JAMAIS écrit par le pré-rendu** : il reste la sortie CRA intacte et sert de repli universel. C'est ce qui rend le dispositif sans danger — une route non pré-rendue est simplement rendue par React, jamais une 404. Corollaire assumé : **l'accueil n'est pas pré-rendu** (mesuré, il y perdait : FCP 3,2 s contre 1,4 s, pour un contenu que Google rend déjà).
+- ⚠️ **RÈGLE REMPLACÉE le 12 nov. 2026 (chantier design)** : la coquille CRA est désormais **copiée en `build/app.html`** avant tout pré-rendu, et c'est **elle** le repli universel (`vercel.json` → `/app.html`, serveur local du pré-rendu idem). `build/index.html` est **l'accueil pré-rendu**. Une route non pré-rendue reçoit toujours la coquille (vérifié sur préversion : `/a/:id` et une route inconnue → 6 185 octets), jamais le HTML de l'accueil. Avant, l'accueil n'était pas pré-rendu et un robot d'aperçu n'en recevait que « Vous devez activer JavaScript ».
 - **Le pré-rendu ne se tait jamais** : playwright absent, navigateur qui ne démarre pas, une route en échec ou moins de 10 pages produites ⇒ **code de sortie 1, build en échec**. Un déploiement qui s'arrête se voit ; une page vide servie à Google se découvre des semaines plus tard. `scripts/verifier-prerendu.mjs <url>` contrôle un déploiement **sans exécuter de JavaScript** (éprouvé dans les deux sens : une coquille vide fait 117 caractères). Chaîne et replis : `docs/prerendu.md`.
 - ⚠️ **Mesuré le 29/10, contre-intuitif** : Vercel n'applique PAS les parenthèses de négation d'un `rewrites.source` au-delà de la première — deux formulations essayées en préversion, `/photos/absent.jpg` renvoie dans les deux cas la coquille en 200. Un fichier absent reçoit donc 6 Ko de HTML au lieu d'un 404. Sans conséquence depuis que `PhotoSlot` ne demande plus un fichier absent, mais **ne pas réécrire ce motif en croyant que ça marche** : il faudrait passer à la syntaxe `routes` historique, ce qui n'en vaut pas le risque. `(?!api/)` est conservé tel quel (les fonctions sont de toute façon résolues avant les réécritures).
 - ⚠️ Les identifiants moteur portent la **puissance** : `/moteur/peugeot-1-2-puretech-130`, pas `/moteur/peugeot-1-2-puretech` (qui renvoie à l'index).
@@ -2171,6 +2171,37 @@ session, `verif_cache` 401 à anon, `cout-3ans` total seul sans Pass.
 Clio II orange 51 (0,356 €). Dépense du sprint : **0,568 € / 0,90 €**.
 Captures 390 px : `captures-sprint22/` (gitignoré), zéro débordement, zéro
 erreur JS. ⚠️ Le site (bloc, `/comparer`) n'est en ligne qu'après le merge.
+
+## Chantier design « Accueil et lisibilité » (12 nov. 2026)
+
+- **Accueil pré-rendu** (voir la règle remplacée du sprint 6) : h1, sous-titre,
+  extrait du dossier réel et liens dans le HTML servi ; `description`, `og:*`,
+  `twitter:card`, `canonical`. `og:image` = l'aperçu du dossier épinglé dans le
+  bucket `apercus` (produit par `scripts/apercus.mjs`), URL construite depuis
+  `REACT_APP_SUPABASE_URL` et `DOSSIER_EXEMPLE_ID`. Le bandeau cookies n'est
+  plus figé dans le HTML pré-rendu.
+- ⚠️ **LCP et police de repli** : pas d'hydratation possible, donc React
+  REMPLACE le DOM pré-rendu ; si le premier h1 (police de secours) est plus
+  petit que le h1 recréé (vraie police), le second devient le LCP, peint tard
+  (mesuré : 1 924 ms contre 1 700 ms avant pré-rendu). Corrigé par la police
+  **« Schibsted Repli »** (Arial `size-adjust:112%`, `public/index.html`,
+  placée après Schibsted dans `--sans`) : le premier h1 est au moins aussi grand.
+  ⚠️ Un `preload` de la police avait été essayé : il **retardait le FCP** des
+  fiches moteur (+108 ms) en concurrençant le CSS critique — retiré.
+  Mesuré (téléphone, 4G simulée, CPU ×4, médianes) : accueil FCP 832→624 ms,
+  LCP 1 708→624 ms, CLS 0,024→0,002 ; fiche moteur LCP 1 696→632 ms ;
+  `/score` LCP 1 580→576 ms. Mesure : Playwright + en-tête
+  `x-vercel-protection-bypass` (obtenu par `vercel curl`) pour la préversion.
+- **Dossier d'exemple** épinglé sur la S7 du 11 nov. (`13391145…`) : ses pannes
+  ne citent que la presse. Extrait au premier écran (variante « fiche »), même
+  hook de chargement que la section « Un dossier réel ».
+- « Lancer l'analyse » n'est **jamais** désactivé sur champ vide (2,79:1 en
+  désactivé) : clic ⇒ focus + « Collez d'abord le texte de l'annonce ».
+- **Chasse fixe** réservée aux étiquettes de 3 mots au plus et aux valeurs :
+  `scripts/audit-chasse-fixe.mjs` (888 → 5 occurrences ; restent le code de
+  `/pro/api`, exception validée, et un code de rappel).
+- Bandeau cookies : 2 lignes au plus sur téléphone, bas de page réservé à sa
+  hauteur.
 
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
