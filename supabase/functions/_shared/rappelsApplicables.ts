@@ -12,7 +12,19 @@
 //      véhicule n'est PAS AFFICHÉ du tout. (Cas réel : 20U6/L8, « millésimes
 //      2013-2014 », affiché sur une S7 de 2015.)
 //
-// Module PUR, aucun import (tests/rappels-applicables.test.mjs).
+//   3. (décision du 12 nov. 2026) SEULES LES SOURCES DE RANG PORTANT DÉCIDENT
+//      DU PAYS. Un rappel qui n'a AUCUNE source portante (forum, vendeur de
+//      pièces, compilation, site inconnu) n'est pas affiché comme rappel : il
+//      devient la question « Rappels constructeur faits ? » (cas JMK, NSC,
+//      61DT02). Le présenter comme « étranger » aurait été faux : le rappel EGR
+//      BMW de 2018 et le 61DT02 de l'i20 ont aussi touché la France.
+//
+// Module PUR (tests/rappels-applicables.test.mjs) ; seule dépendance : le
+// classement des sources, pour qu'il n'en existe qu'un.
+import { sourcesPortentLEntree } from "./atlasSource.ts"
+
+export const QUESTION_RAPPEL_VIN =
+  "Les rappels constructeur ont-ils été faits ? À vérifier avec le numéro de série (VIN) auprès du constructeur."
 
 /** Pays d'une source, d'après son hôte. null = inconnu (jamais deviné). */
 const HOTES_PAYS: Record<string, string> = {
@@ -51,9 +63,15 @@ export function paysDeSource(url: unknown): string | null {
   return TLD_PAYS[tld] ?? null
 }
 
-/** Toutes les sources sont-elles CONNUES et d'un autre pays que la France/UE ? */
+/** Sources de rang portant seulement : elles seules décident du pays. */
+export function sourcesPortantes(urls: unknown[]): string[] {
+  return ((urls ?? []).filter((u) => typeof u === "string") as string[]).filter((u) => sourcesPortentLEntree([u]))
+}
+
+/** Toutes les sources PORTANTES sont-elles d'un pays connu autre que la France/UE ?
+ *  Aucune source portante ⇒ pas « étrangère » (c'est un autre cas : sans source). */
 export function sourcesToutesEtrangeres(urls: unknown[]): { etrangeres: boolean; pays: string[] } {
-  const liste = (urls ?? []).filter((u) => typeof u === "string") as string[]
+  const liste = sourcesPortantes(urls)
   if (liste.length === 0) return { etrangeres: false, pays: [] }
   const pays = liste.map(paysDeSource)
   const connus = pays.filter((p): p is string => p !== null)
@@ -100,12 +118,20 @@ type AvecRappel = {
 }
 
 /** Applique les deux règles à une entrée de catalogue (panne de fiche). */
-export function appliquerReglesRappel<T extends AvecRappel>(e: T, annee: number | null): T & { rappel_contexte: string | null; rappel_ecarte: null | "hors_periode" | "etranger" } {
+export function appliquerReglesRappel<T extends AvecRappel>(e: T, annee: number | null): T & { rappel_contexte: string | null; rappel_ecarte: null | "hors_periode" | "etranger" | "sans_source_portante" } {
   const vide = { rappel_code: null, rappel_date: null, rappel_vehicules: null, rappel_portee: null, rappel_annee_debut: null, rappel_annee_fin: null }
   if (!e.rappel_code) return { ...e, rappel_contexte: e.rappel_contexte ?? null, rappel_ecarte: null }
   // Règle 2 d'abord : un rappel qui ne concerne pas ce millésime ne s'affiche pas.
   if (horsPeriode(e, annee)) return { ...e, ...vide, rappel_contexte: null, rappel_ecarte: "hors_periode" }
-  // Règle 1 : sources toutes étrangères, hors campagne mondiale établie.
+  // Règle 3 : aucune source portante ⇒ ce n'est pas un rappel affichable.
+  if (sourcesPortantes(e.urls ?? []).length === 0) {
+    return {
+      ...e, ...vide,
+      ...(typeof e.titre === "string" ? { titre: titreSansRappelOfficiel(e.titre) } : {}),
+      rappel_contexte: null, rappel_ecarte: "sans_source_portante",
+    }
+  }
+  // Règle 1 : sources (portantes) toutes étrangères, hors campagne mondiale établie.
   const s = sourcesToutesEtrangeres(e.urls ?? [])
   if (e.rappel_portee !== "mondiale" && (e.rappel_portee === "etranger" || s.etrangeres)) {
     const ou = s.pays.length === 1 && NOMS_PAYS[s.pays[0]] ? NOMS_PAYS[s.pays[0]] : "hors de France"

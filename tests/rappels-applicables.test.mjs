@@ -1,7 +1,7 @@
 // Tests hors ligne des deux règles de rappel (sprint 23, point 3).
 // Usage : node tests/rappels-applicables.test.mjs
 import fs from 'node:fs'
-import { paysDeSource, sourcesToutesEtrangeres, anneesDuRappel, horsPeriode, appliquerReglesRappel } from '../supabase/functions/_shared/rappelsApplicables.ts'
+import { paysDeSource, sourcesToutesEtrangeres, sourcesPortantes, anneesDuRappel, horsPeriode, appliquerReglesRappel, QUESTION_RAPPEL_VIN } from '../supabase/functions/_shared/rappelsApplicables.ts'
 
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) { ok_++; console.log(`PASS — ${l}`) } else { ko++; console.log(`FAIL — ${l}`) } }
@@ -18,8 +18,10 @@ eq(paysDeSource('pas une url'), null, 'URL invalide : inconnu')
 
 // Toutes étrangères
 ok(sourcesToutesEtrangeres(['https://amp.consumerreports.org/a']).etrangeres, 'une seule source US : étrangère')
-ok(!sourcesToutesEtrangeres(['https://www.bimmergarage.co.uk/a', 'https://www.euroracingparts.fr/b']).etrangeres, 'UK + FR : pas toutes étrangères')
-ok(!sourcesToutesEtrangeres(['https://www.peugeotforums.com/a']).etrangeres, 'pays inconnu : pas requalifié sur une supposition')
+ok(!sourcesToutesEtrangeres(['https://www.which.co.uk/a', 'https://www.largus.fr/b']).etrangeres, 'presse UK + presse FR : pas toutes étrangères')
+ok(sourcesToutesEtrangeres(['https://www.which.co.uk/a', 'https://www.euroracingparts.fr/b']).etrangeres, 'un vendeur de pièces .fr ne compte pas dans le pays : UK seul décide')
+eq(sourcesPortantes(['https://www.bimmergarage.co.uk/a', 'https://www.euroracingparts.fr/b', 'https://bimmer.ai/x']).length, 0, 'NSC B47 : aucune source portante')
+ok(!sourcesToutesEtrangeres(['https://www.peugeotforums.com/a']).etrangeres, 'forum seul : pas « étranger » (cas sans source)')
 ok(!sourcesToutesEtrangeres([]).etrangeres, 'aucune source : pas étrangère')
 ok(!sourcesToutesEtrangeres(['https://ec.europa.eu/safety-gate/x']).etrangeres, 'source UE : vaut pour la France')
 
@@ -55,15 +57,26 @@ const r3 = appliquerReglesRappel(p21h7, 2015)
 eq(r3.rappel_code, '21H7', 'campagne mondiale confirmée : reste un rappel malgré une source allemande')
 eq(r3.rappel_ecarte, null, '21H7 : rien d’écarté')
 eq(appliquerReglesRappel(p21h7, 2020).rappel_code, null, 'campagne mondiale : la période s’applique quand même')
-const qualifie = appliquerReglesRappel({ rappel_code: 'X1', rappel_portee: 'etranger', urls: ['https://www.peugeotforums.com/a'] }, 2015)
+const qualifie = appliquerReglesRappel({ rappel_code: 'X1', rappel_portee: 'etranger', urls: ['https://www.which.co.uk/a', 'https://www.largus.fr/b'] }, 2015)
 eq(qualifie.rappel_ecarte, 'etranger', 'qualification « etranger » en fiche : appliquée')
 eq(qualifie.rappel_portee, null, 'les champs de rappel sont vidés, rien ne peut peser')
 const fr = appliquerReglesRappel({ rappel_code: 'MXX', rappel_annee_debut: 2022, rappel_annee_fin: 2024, urls: ['https://rappel.conso.gouv.fr/x'] }, 2023)
 eq(fr.rappel_code, 'MXX', 'rappel français dans sa période : inchangé')
 eq(appliquerReglesRappel({ titre: 't' }, 2015).rappel_ecarte, null, 'sans rappel : rien')
 const g3 = appliquerReglesRappel({ titre: 'Rappel officiel : durit de dépression du servofrein (i20)', rappel_code: '61DT02', rappel_annee_debut: 2015, rappel_annee_fin: 2020, urls: ['https://enginescope.gr/x'] }, 2018)
-eq(g3.titre, 'Durit de dépression du servofrein (i20)', 'titre « Rappel officiel : » retiré quand le rappel devient contexte')
-ok(/Grèce/.test(g3.rappel_contexte), 'source grecque : dite comme telle')
+eq(g3.titre, 'Durit de dépression du servofrein (i20)', 'titre « Rappel officiel : » retiré')
+eq(g3.rappel_ecarte, 'sans_source_portante', '61DT02 (compilation seule) : pas un rappel affichable')
+eq(g3.rappel_code, null, 'sans source portante : champs de rappel vidés')
+eq(g3.rappel_contexte, null, 'sans source portante : pas même « étranger » (le rappel a touché la France)')
+const jmk = appliquerReglesRappel({ titre: 'Rappel logiciel - campagne JMK', rappel_code: 'JMK', rappel_annee_debut: 2015, rappel_annee_fin: 2016, urls: ['https://www.peugeotforums.com/a'] }, 2015)
+eq(jmk.rappel_ecarte, 'sans_source_portante', 'JMK (forum seul) : retiré des rappels')
+eq(appliquerReglesRappel({ titre: 'x', rappel_code: '0D9F', rappel_annee_fin: 2019, urls: ['https://carverif.fr/a'] }, 2016).rappel_ecarte, 'sans_source_portante', '0D9F (vendeur seul) : retiré')
+const hp = appliquerReglesRappel({ titre: 'x', rappel_code: 'JMK', rappel_annee_debut: 2015, rappel_annee_fin: 2016, urls: ['https://www.peugeotforums.com/a'] }, 2020)
+eq(hp.rappel_ecarte, 'hors_periode', 'hors période passe avant : rien, pas même une question')
+const uk = appliquerReglesRappel({ titre: 'EGR', rappel_code: 'R1', urls: ['https://www.which.co.uk/a', 'https://www.euroracingparts.fr/b'] }, 2016)
+ok(uk.rappel_ecarte === 'etranger' && /Royaume-Uni/.test(uk.rappel_contexte), 'presse UK + vendeur .fr : contexte Royaume-Uni')
+ok(/VIN/.test(QUESTION_RAPPEL_VIN) && !/couvert/i.test(QUESTION_RAPPEL_VIN), 'la question renvoie au VIN, sans affirmer de couverture')
+ok(/rappelSansSourcePortante && !questions\.includes\(QUESTION_RAPPEL_VIN\)/.test(fs.readFileSync(new URL('../supabase/functions/score/index.ts', import.meta.url), 'utf8')), 'score : la question VIN est ajoutée quand un rappel est retiré')
 eq(appliquerReglesRappel({ titre: 'Rappel officiel : x', rappel_code: 'MXX', urls: ['https://rappel.conso.gouv.fr/x'] }, 2023).titre, 'Rappel officiel : x', 'rappel français : titre intact')
 
 // Câblage dans score : la règle passe AVANT le prompt et le barème

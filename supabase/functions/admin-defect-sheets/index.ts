@@ -12,7 +12,7 @@ import { couvertureValide } from "../_shared/couverture.ts";
 import { fusionnerPrisesEnCharge } from "../_shared/prisesEnCharge.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 import { texteDeLaPageComplet } from "../_shared/verifSource.ts";
-import { sourcesToutesEtrangeres } from "../_shared/rappelsApplicables.ts";
+import { sourcesPortantes, sourcesToutesEtrangeres, titreSansRappelOfficiel } from "../_shared/rappelsApplicables.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -288,6 +288,34 @@ serve(async (req: Request) => {
         const { error: e8 } = await admin.from("defect_sheets").update({ ...fields, pannes }).eq("id", body.id);
         if (e8) return new Response(JSON.stringify({ error: e8.message }), { status: 500, headers: cors });
         return new Response(JSON.stringify({ qualifiee: avant.titre, rappel_code: avant.rappel_code }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
+      // ── SPRINT 23 (point 3) — RETIRER UN RAPPEL SANS SOURCE PORTANTE ────
+      // La panne et ses sources restent ; seuls les champs de rappel sont
+      // vidés. Refusé si la panne cite au moins une source portante.
+      if (body.retirer_rappel && typeof body.retirer_rappel === "object") {
+        const q = body.retirer_rappel;
+        const { data: row } = await admin.from("defect_sheets").select("pannes").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const pannes = (Array.isArray(row.pannes) ? row.pannes : []) as Array<Record<string, unknown>>;
+        const idx = pannes.findIndex((p) =>
+          String(p?.titre ?? "").trim() === String(q.panne_titre ?? "").trim() &&
+          String(p?.rappel_code ?? "").trim() === String(q.rappel_code ?? "").trim() && Boolean(p?.rappel_code)
+        );
+        if (idx < 0) return new Response(JSON.stringify({ error: "panne ou code introuvable" }), { status: 400, headers: cors });
+        const urls = Array.isArray(pannes[idx].url_source) ? pannes[idx].url_source as unknown[] : [];
+        if (sourcesPortantes(urls).length > 0) {
+          return new Response(JSON.stringify({ error: "la panne cite une source portante" }), { status: 400, headers: cors });
+        }
+        const avant = pannes[idx];
+        pannes[idx] = {
+          ...avant, titre: titreSansRappelOfficiel(avant.titre),
+          rappel_code: null, rappel_date: null, rappel_vehicules: null, rappel_portee: null,
+          rappel_annee_debut: null, rappel_annee_fin: null,
+        };
+        const { error: e9 } = await admin.from("defect_sheets").update({ ...fields, pannes }).eq("id", body.id);
+        if (e9) return new Response(JSON.stringify({ error: e9.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ retire: avant.rappel_code, panne: pannes[idx].titre }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
 
       // ── SPRINT 23 (f) — PRISES EN CHARGE (affichage seulement) ───────────

@@ -67,7 +67,7 @@ import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
 import { estAppelApi } from "../_shared/apiClients.ts";
 import { deciderStatut } from "../_shared/statutVendeur.ts";
-import { appliquerReglesRappel } from "../_shared/rappelsApplicables.ts";
+import { appliquerReglesRappel, QUESTION_RAPPEL_VIN } from "../_shared/rappelsApplicables.ts";
 // Affichage seulement : jamais lu par la note (tests/independance-score.test.mjs).
 import { prisesAffichables } from "../_shared/prisesEnCharge.ts";
 import {
@@ -1673,12 +1673,14 @@ serve(async (req: Request) => {
     // de contexte (jamais rappel officiel, jamais de poids, jamais dans les
     // raisons) ; un rappel dont les millésimes ou la période écrits excluent
     // l'année du véhicule n'est pas affiché du tout.
+    let rappelSansSourcePortante = false;
     {
       const anneeV = typeof v.annee_modele === "number" ? v.annee_modele : null;
       const requalifies: Array<{ ref: string; code: string; regle: string }> = [];
       catalogue = catalogue.map((e) => {
         const r = appliquerReglesRappel(e, anneeV);
         if (r.rappel_ecarte && e.rappel_code) requalifies.push({ ref: e.ref, code: e.rappel_code, regle: r.rappel_ecarte });
+        if (r.rappel_ecarte === "sans_source_portante") rappelSansSourcePortante = true;
         const { rappel_ecarte: _x, ...reste } = r;
         return reste as CatalogueEntry;
       });
@@ -2794,6 +2796,11 @@ serve(async (req: Request) => {
     if (ageVehicule != null && ageVehicule < dureeGarantie) {
       questions = questions.filter((q) => !/garantie constructeur/i.test(q));
       questions.unshift(GARANTIE_QUESTION);
+    }
+    // Un rappel sans source portante n'est pas affiché : il devient une question
+    // (placée avant la coupe : le message vendeur ne reprend que 8 questions).
+    if (rappelSansSourcePortante && !questions.includes(QUESTION_RAPPEL_VIN)) {
+      questions.splice(Math.min(4, questions.length), 0, QUESTION_RAPPEL_VIN);
     }
     questions = questions.slice(0, 8);
 

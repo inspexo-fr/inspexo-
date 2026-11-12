@@ -207,3 +207,27 @@ appliqué au catalogue dans `score` AVANT le prompt et le barème :
 - Session de jeton : `bash scripts/session-jeton-rappels.sh` — qualification
   « etranger » de 20U6/L8 et 61DT02 (la fonction re-vérifie la règle ; liste
   différente de celle relue ⇒ arrêt), puis 4 références × 3, plafond 12,50 €.
+
+### Point 3 bis — seules les sources portantes décident (12 nov. 2026)
+Décision d'Utku : un vendeur de pièces, un forum ou une compilation ne
+compte pas dans le test du pays. Appliquée à la lettre, elle change le
+traitement prévu pour deux rappels, et ce changement vient des données :
+- **NSC R/2018/151 (B47)** : AUCUNE de ses 4 sources n'est portante
+  (bimmergarage = vendeur, euroracingparts.fr et bimmer.ai = inconnus). Et
+  « Royaume-Uni seulement » serait faux : le rappel EGR BMW de 2018 était
+  européen (motor1 fr : ~23 500 voitures en France).
+- **61DT02 (i20)** : seule source enginescope.gr (compilation) ; le rappel a
+  touché la France (~8 000 selon letribunaldunet.fr, rang inconnu).
+- **JMK (DV6)** : forum seul. Recherche faite : aucune page portante
+  (caradisiac, quechoisir, fiches-auto) ne porte le code ni ne nomme ce
+  rappel ⇒ rien à soumettre au juge (0 €).
+- **0D9F (H4BT)** : carverif.fr seul (rang vendeur) — trouvé par la règle.
+⇒ Règle 3 ajoutée à `_shared/rappelsApplicables.ts` : aucune source portante
+⇒ pas un rappel affiché, question « Les rappels constructeur ont-ils été
+faits ? À vérifier avec le numéro de série (VIN) ». Session : 20U6/L8 →
+contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
+`retirer_rappel`, qui refuse si la panne cite une source portante).
+- **Écart annoncé inchangé** : aucun score ne bouge sur les 4 références
+  (21H7, 20U6/L8 et KGH ont des sources portantes ; OM654 et K9K n'ont aucun
+  rappel). Une question au vendeur ne pèse jamais sur la note.
+- **Déploiement annoncé** : `score`, `admin-defect-sheets` ; `main` poussé.

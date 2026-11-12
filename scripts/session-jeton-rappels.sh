@@ -3,12 +3,13 @@
 # PRÉALABLES (sans jeton, annoncés au journal, faits AVANT) : BAREME_VERSION
 # 11.15, déploiement de score et admin-defect-sheets (+ fonctions nommées par
 # fonctions-a-redeployer.mjs).
-# 1. qualification « etranger » des 2 rappels relus ; 2. les 4 références × 3.
+# 1. 20U6/L8 → contexte ; JMK, NSC R/2018/151, 61DT02, 0D9F (aucune source portante)
+#    → retirés des rappels ; 2. les 4 références × 3.
 # ⚠️ Retirer ADMIN_ACCESS_TOKEN de .env.local après.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo "▶ 1/2 — rappels aux sources toutes étrangères → contexte (20U6/L8, 61DT02)"
+echo "▶ 1/2 — 20U6/L8 → contexte ; JMK, NSC, 61DT02, 0D9F → retirés des rappels"
 node scripts/qualifier-rappels.mjs --appliquer
 
 echo "▶ 2/2 — les 4 références × 3"
