@@ -70,6 +70,8 @@ import { deciderStatut } from "../_shared/statutVendeur.ts";
 import { appliquerReglesRappel, QUESTION_RAPPEL_VIN } from "../_shared/rappelsApplicables.ts";
 // Affichage seulement : jamais lu par la note (tests/independance-score.test.mjs).
 import { prisesAffichables } from "../_shared/prisesEnCharge.ts";
+// SPRINT 23 lot 2 — signaux d'arnaque : AFFICHAGE SEULEMENT, jamais dans les faits du barème.
+import { detecterSignauxArnaque } from "../_shared/securiteTransaction.ts";
 import {
   boiteDe,
   fondreReleves,
@@ -3088,6 +3090,9 @@ serve(async (req: Request) => {
           gravite: p.gravite,
           rappel_officiel: Boolean(p.rappel_code) && !p.rappel_hors_periode,
           rappel_confirme_effectue: false, // l'annonce ne prouve jamais qu'un rappel a été fait
+          // Code de campagne : permet à une pièce du vendeur (attestation de
+          // rappel justifiée) de dire QUEL rappel elle confirme. Ignoré par le calcul.
+          rappel_code: Boolean(p.rappel_code) && !p.rappel_hors_periode ? String(p.rappel_code) : null,
           couverte_garantie: estCouverte(p.titre, p.organe),
         })),
         condition_garantie: conditionGarantie,
@@ -3576,6 +3581,15 @@ serve(async (req: Request) => {
         };
       }),
       incoherences,
+      // Sécurité de la transaction : motifs fixes relus sur l'annonce, chacun
+      // cité. Sans effet sur la note (décision d'Utku du 12 nov. 2026).
+      securite_transaction: {
+        signaux_arnaque: detecterSignauxArnaque(
+          text,
+          typeof prixAffiche === "number" ? prixAffiche : null,
+          fourchette ? { p25: fourchette.p25 } : null,
+        ),
+      },
       constats_photo: constatsPhoto,
       defauts_annonce: defautsAnnonce,
       negociation,

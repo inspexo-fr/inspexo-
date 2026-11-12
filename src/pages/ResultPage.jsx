@@ -10,6 +10,8 @@ import Stamp from '../components/Stamp'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
 import LectureCtBloc from '../components/LectureCtBloc'
+import SecuriteTransactionBloc from '../components/SecuriteTransactionBloc'
+import FaitsVendeurBloc from '../components/FaitsVendeurBloc'
 import RevendeurBloc from '../components/RevendeurBloc'
 import HistovecBloc from '../components/HistovecBloc'
 import VisioBloc from '../components/VisioBloc'
@@ -1066,6 +1068,10 @@ export default function ResultPage() {
               </div>
             )}
 
+            {/* Sécurité de la transaction (sprint 23, lot 2) — gratuit : signaux
+                d'arnaque cités, documents du jour J, règles de paiement sourcées. */}
+            {!enCours && r.type === 'vehicule' && <SecuriteTransactionBloc result={r} />}
+
             {/* Crit'Air et ZFE (sprint 20) — après le cadre juridique, parce que
                 c'est une contrainte réglementaire d'usage, et avant le message
                 au vendeur, dont elle peut nourrir une question. */}
@@ -1397,6 +1403,15 @@ export default function ResultPage() {
             {/* PV de contrôle technique (sprint 7 — fonction du Pass, démo annoncée) */}
             {!enCours && r.type === 'vehicule' && (
               <LectureCtBloc
+                analysisId={id}
+                result={r}
+                onMaj={(maj) => setAnalysis(prev => prev ? { ...prev, result: adaptResult(maj) } : prev)}
+              />
+            )}
+
+            {/* Réponses et justificatifs du vendeur (sprint 23, lot 2 — Pass). */}
+            {!enCours && r.type === 'vehicule' && (
+              <FaitsVendeurBloc
                 analysisId={id}
                 result={r}
                 onMaj={(maj) => setAnalysis(prev => prev ? { ...prev, result: adaptResult(maj) } : prev)}

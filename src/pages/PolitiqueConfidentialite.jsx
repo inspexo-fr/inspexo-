@@ -591,6 +591,35 @@ export default function PolitiqueConfidentialite() {
             </li>
           </ul>
 
+          <h2 className="legal-h2">6 quaterdecies. Réponses et justificatifs du vendeur</h2>
+          <p className="legal-p">
+            Avec le Pass, vous pouvez coller la réponse d'un vendeur ou photographier une pièce qu'il
+            vous a remise (facture, attestation de rappel).
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>La réponse collée</strong> est relue par notre serveur avec des règles fixes,
+              sans intelligence artificielle. Seuls les faits relevés, avec un extrait de quinze mots
+              au plus, sans numéro de téléphone ni adresse électronique, sont conservés avec le dossier
+              si vous le suivez dans votre espace.
+            </li>
+            <li>
+              <strong>La photo de la pièce</strong> est transmise à Anthropic pour être lue (voir la
+              section 6), puis oubliée&nbsp;: <strong>nous ne la conservons pas</strong>. Sont conservés
+              la date, le kilométrage, les opérations et, le cas échéant, le code de la campagne de rappel.
+            </li>
+            <li>
+              <strong>Le numéro de série (VIN) et l'immatriculation</strong> lus sur la pièce servent
+              uniquement à vérifier qu'elle concerne le véhicule de l'annonce. La comparaison se fait
+              <strong> en mémoire</strong>, le VIN par une empreinte salée (section 6 undecies)&nbsp;:
+              ni l'un ni l'autre n'est enregistré, renvoyé à votre navigateur ou journalisé.
+            </li>
+            <li>
+              Sans dossier suivi, le résultat vous est seulement affiché&nbsp;: rien n'est enregistré
+              avec l'analyse.
+            </li>
+          </ul>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">

@@ -332,6 +332,10 @@ export const lectureCt = (analysisId, images, constatsPrecedents = []) =>
     analysis_id: analysisId, images, constats_precedents: constatsPrecedents,
   })
 
+/** SPRINT 23 lot 2 — réponse collée ou photo d'une pièce du vendeur (Pass). */
+export const reponseVendeur = (analysisId, { texte = '', images = [] } = {}) =>
+  callFunction('reponse-vendeur', { analysis_id: analysisId, texte, images })
+
 /** Lead email — source ∈ pass_waitlist | expert_waitlist | rapport */
 export async function submitLead(email, source, analysisId = null) {
   const { error } = await supabase.rpc('submit_lead', {
