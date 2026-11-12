@@ -1,0 +1,67 @@
+{
+ "sauvegarde_le": "2026-11-12T19:53:10.107Z",
+ "avant": [
+  {
+   "id": "2e990b40-7f8e-499d-a3e0-008f6c32d5f6",
+   "fiche": "Renault H4BT",
+   "panne_titre": "Rappel officiel - défaut de borne de batterie sur moteurs H4Bt",
+   "rappel_code": "0D9F",
+   "sources": [
+    "https://carverif.fr/blogs/fiabilite-voitures/dacia-sandero-ii-0-9-tce-90-fiabilite-performance",
+    "https://carverif.fr/blogs/fiabilite-voitures/dacia-sandero-ii-stepway-essence-09-tce"
+   ],
+   "action": "retirer",
+   "pays": []
+  },
+  {
+   "id": "88886caf-8f1b-42ff-b037-5af5337e82e3",
+   "fiche": "Peugeot DV6",
+   "panne_titre": "Rappel logiciel calculateur moteur - campagne JMK (recalibration émissions NOx)",
+   "rappel_code": "JMK",
+   "sources": [
+    "https://www.peugeotforums.com/threads/safety-recall-jmk-1-6-blue-hdi.342322/",
+    "https://www.peugeotforums.com/threads/safety-recall-jmk-1-6-blue-hdi.342322/page-2"
+   ],
+   "action": "retirer",
+   "pays": []
+  },
+  {
+   "id": "5055e2bc-e31c-4e60-b5a0-73cab5508d63",
+   "fiche": "Hyundai G3LC",
+   "panne_titre": "Rappel officiel : durit de dépression du servofrein pouvant se fissurer (i20)",
+   "rappel_code": "61DT02",
+   "sources": [
+    "https://enginescope.gr/engine/hk-kappa-10/"
+   ],
+   "action": "retirer",
+   "pays": []
+  },
+  {
+   "id": "e9f9a303-84ee-402b-934e-9abc7c88c97e",
+   "fiche": "BMW B47",
+   "panne_titre": "Encrassement et fissuration du refroidisseur/vanne EGR (risque de fuite de liquide de refroidissement, rappel sécurité incendie)",
+   "rappel_code": "NSC R/2018/151",
+   "sources": [
+    "https://www.bimmergarage.co.uk/bmw-b47-common-issues/",
+    "https://www.bimmergarage.co.uk/bmw-b47-engine-problems/",
+    "https://www.euroracingparts.fr/en/blogs/guide-dachat-pour-bmw/guide-dachat-moteur-bmw-b47-quelle-fiabilite",
+    "https://bimmer.ai/bmw-engines/b47/"
+   ],
+   "action": "retirer",
+   "pays": []
+  },
+  {
+   "id": "99c695b2-2e42-4d6b-b5f4-9bb08d949bcb",
+   "fiche": "Audi EA824",
+   "panne_titre": "Fuite de carburant par durite défectueuse",
+   "rappel_code": "20U6/L8 (NHTSA 13V450)",
+   "sources": [
+    "https://amp.consumerreports.org/cars/audi/a7/2013/reliability"
+   ],
+   "action": "etranger",
+   "pays": [
+    "US"
+   ]
+  }
+ ]
+}

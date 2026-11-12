@@ -2192,9 +2192,10 @@ erreur JS. ⚠️ Le site (bloc, `/comparer`) n'est en ligne qu'après le merge.
   LCP 1 708→624 ms, CLS 0,024→0,002 ; fiche moteur LCP 1 696→632 ms ;
   `/score` LCP 1 580→576 ms. Mesure : Playwright + en-tête
   `x-vercel-protection-bypass` (obtenu par `vercel curl`) pour la préversion.
-- **Dossier d'exemple** épinglé sur la S7 du 11 nov. (`13391145…`) : ses pannes
-  ne citent que la presse. Extrait au premier écran (variante « fiche »), même
-  hook de chargement que la section « Un dossier réel ».
+- **Dossier d'exemple** épinglé sur la S7 du 12 nov. (`54e2dc3c…`, barème
+  11.15 : 20U6/L8 n'y figure plus) : ses pannes ne citent que la presse.
+  Extrait au premier écran (variante « fiche »), même hook de chargement que la
+  section « Un dossier réel ». Aperçu de partage régénéré dans `apercus`.
 - « Lancer l'analyse » n'est **jamais** désactivé sur champ vide (2,79:1 en
   désactivé) : clic ⇒ focus + « Collez d'abord le texte de l'annonce ».
 - **Chasse fixe** réservée aux étiquettes de 3 mots au plus et aux valeurs :

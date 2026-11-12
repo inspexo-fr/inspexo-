@@ -231,3 +231,17 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   (21H7, 20U6/L8 et KGH ont des sources portantes ; OM654 et K9K n'ont aucun
   rappel). Une question au vendeur ne pèse jamais sur la note.
 - **Déploiement annoncé** : `score`, `admin-defect-sheets` ; `main` poussé.
+
+## Point 3 — session de jeton (12 nov. 2026)
+- Juge (avant la session, 0,056 €) : fr.motor1.com (NSC) **non soutenue** —
+  page illisible pour le lecteur ; autohaus.de (61DT02) **non soutenue** —
+  confirme le rappel i20 2015-2020 mais une durite mal posée, pas fissurée,
+  sans nommer le G3LC (et rang inconnu). Les deux restent en question VIN.
+- Écrit : 20U6/L8 → contexte (US) ; 0D9F, JMK, 61DT02, NSC R/2018/151 →
+  champs de rappel retirés. État d'avant : `docs/rappels-qualifies-journal.json`.
+- Résultat : S7 39/39/39 · 308 55/55/55 · Mercedes 73/73/73 · Clio II
+  51/51/51 — conformes à l'annonce (aucun écart). 1,002 € · cumul **10,40 € /
+  12,50 €** (+ 0,056 € de juge hors compteur d'éval). Jeton retiré.
+- S7 de la session `54e2dc3c` (rouge 39) : 20U6/L8 absent, KGH absent, 21H7
+  en campagne mondiale, sources toutes de rang presse ⇒ **épinglée sur
+  l'accueil**, aperçu de partage régénéré (`apercus/54e2dc3c….png`).

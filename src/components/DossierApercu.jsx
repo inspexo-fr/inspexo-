@@ -15,7 +15,7 @@ import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
 // sources — ses pannes ne citent que la presse (auto-motor-und-sport, Consumer
 // Reports), aucun forum ni vendeur de pièces. L'ancien dossier (9a1c8c4d…, du
 // 28 oct.) citait autodoc.co.uk et le forum rs246.
-export const DOSSIER_EXEMPLE_ID = '13391145-c15c-4308-b0b5-a750255528d9'
+export const DOSSIER_EXEMPLE_ID = '54e2dc3c-5691-4b6b-9524-6ab67af6044e'
 
 const STATUT_VENDEUR = {
   particulier: 'Particulier',
