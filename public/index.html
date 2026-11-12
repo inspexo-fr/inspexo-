@@ -8,10 +8,6 @@
     <!-- Polices auto-hébergées : aucun appel à un tiers avant d'afficher un
          titre, et rien ne concurrence le CSS critique. -->
 
-    <!-- Chantier design (nov. 2026) : l'accueil est pré-rendu, son h1 se peint
-         tôt dans la police de secours puis se REPEINT à l'arrivée de la police —
-         ce repeint fixait le LCP. La police de texte est donc préchargée. -->
-    <link rel="preload" href="/fonts/schibsted-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
     <style>
       /* @font-face inline : une feuille séparée ajouterait une requête
          bloquante avant même de connaître les polices à charger. */
