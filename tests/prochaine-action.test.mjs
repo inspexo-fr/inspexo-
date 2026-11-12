@@ -22,6 +22,6 @@ for (const id of ['transaction', 'message', 'checklist', 'motifs']) {
   ok(new RegExp(`id="${id}"`).test(n), `l'ancre #${id} existe`)
 }
 const iVerdict = page.indexOf('{/* Verdict */}'), iMotifs = page.indexOf('id="motifs"'), iAction = page.indexOf('prochaineAction('), iSpecs = page.indexOf('<dl className="specs">')
-ok(iVerdict > 0 && iVerdict < iMotifs && iMotifs < iAction && iAction < iSpecs, 'premier écran : verdict, puis motifs, puis prochaine action, puis le reste')
+ok(iVerdict > 0 && iVerdict < iAction && iAction < iMotifs && iMotifs < iSpecs, 'premier écran : verdict, puis prochaine action, puis motifs, puis le reste')
 console.log(`\n${ok_} PASS, ${ko} FAIL`)
 if (ko > 0) process.exit(1)

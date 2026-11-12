@@ -248,6 +248,85 @@ async function recompterPannesPortees(
   return compte;
 }
 
+// ===== Alertes « rappel sur ce modèle » SANS compte (sprint 23, lot 3) =====
+// Fonction à part : appelée par le passage quotidien ET par la tâche
+// `alertes_modele` (ce passage seul, sans les autres envois du cron).
+type EtatVehicule = { count: number; titres: string[] } | null;
+async function passeAlertesModele(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+  parVehicule: Map<string, EtatVehicule>,
+  bilan: { alertes_rappel: number; alertes_modele_envoyees: number; alertes_modele_purgees: number; vehicules_verifies: number; erreurs: number },
+): Promise<void> {
+  const cle = (m: string, mo: string, a: number | null) => `${m}|${mo}|${a ?? ""}`.toLowerCase();
+    // Double opt-in : seules les inscriptions CONFIRMÉES reçoivent quelque
+    // chose ; une adresse désinscrite (`desinscriptions`) n'en reçoit plus et
+    // ses inscriptions sont effacées ; une inscription non confirmée sous
+    // 7 jours est effacée.
+    try {
+      const septJours = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+      const { count: purgees } = await admin.from("alertes_modele")
+        .delete({ count: "exact" }).is("confirme_le", null).lt("jeton_envoye_le", septJours);
+      bilan.alertes_modele_purgees = purgees ?? 0;
+
+      const { data: abonnes } = await admin.from("alertes_modele")
+        .select("id, email, email_hash, marque, modele, annee, analysis_id, rappels_vus")
+        .not("confirme_le", "is", null).limit(300);
+      const liste = (abonnes ?? []) as Array<{ id: string; email: string; email_hash: string; marque: string; modele: string; annee: number | null; analysis_id: string | null; rappels_vus: number | null }>;
+      const hashes = [...new Set(liste.map((x) => x.email_hash))];
+      const opposes = new Set<string>();
+      for (let i = 0; i < hashes.length; i += 100) {
+        const { data: op } = await admin.from("desinscriptions").select("email_hash").in("email_hash", hashes.slice(i, i + 100));
+        for (const o of op ?? []) opposes.add(o.email_hash);
+      }
+      if (opposes.size > 0) {
+        const { count: eff } = await admin.from("alertes_modele").delete({ count: "exact" }).in("email_hash", [...opposes]);
+        bilan.alertes_modele_purgees += eff ?? 0;
+      }
+      for (const x of liste) {
+        if (opposes.has(x.email_hash)) continue;
+        if (bilan.alertes_rappel + bilan.alertes_modele_envoyees >= MAX_EMAILS_PAR_RUN) break;
+        const k = cle(x.marque, x.modele, x.annee);
+        if (!parVehicule.has(k)) {
+          if (parVehicule.size >= MAX_VEHICULES_PAR_RUN) continue;
+          try {
+            const res = await fetch(`${SUPABASE_URL}/functions/v1/rappels`, {
+              method: "POST", signal: AbortSignal.timeout(30_000),
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
+              body: JSON.stringify({ marque: x.marque, modele: x.modele, annee: x.annee }),
+            });
+            const json = await res.json().catch(() => null);
+            if (!res.ok || !Array.isArray(json?.rappels) || json?.indisponible === true) {
+              parVehicule.set(k, null); bilan.erreurs += 1;
+            } else {
+              parVehicule.set(k, { count: json.rappels.length, titres: json.rappels.map((r: { titre?: string }) => String(r.titre ?? "").slice(0, 160)).filter(Boolean) });
+              bilan.vehicules_verifies += 1;
+            }
+          } catch (err) {
+            console.error("alertes modele fetch:", err);
+            parVehicule.set(k, null); bilan.erreurs += 1;
+          }
+        }
+        const etat = parVehicule.get(k);
+        if (!etat) continue;
+        if (x.rappels_vus == null) {
+          await admin.from("alertes_modele").update({ rappels_vus: etat.count }).eq("id", x.id);
+          continue;
+        }
+        if (etat.count <= x.rappels_vus) continue;
+        const vehicule = [x.marque, x.modele, x.annee].filter(Boolean).join(" ");
+        const envoye = await emailRappelModele(x.email, vehicule, etat.titres.slice(0, 5), x.analysis_id, x.email_hash);
+        await admin.from("events").insert({ name: "alerte_modele_envoyee", analysis_id: x.analysis_id, props_json: { avant: x.rappels_vus, apres: etat.count, envoye } });
+        if (envoye) bilan.alertes_modele_envoyees += 1;
+        await admin.from("alertes_modele").update({ rappels_vus: etat.count }).eq("id", x.id);
+      }
+    } catch (err) {
+      console.error("alertes modele:", err);
+      bilan.erreurs += 1;
+    }
+
+}
+
 serve(async (req: Request) => {
   if (!(await secretOk(req))) {
     return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
@@ -323,6 +402,43 @@ serve(async (req: Request) => {
         // fichier, donc un ReferenceError sur ce seul chemin.
         headers: { "Content-Type": "application/json" },
       });
+    }
+
+    // SPRINT 23 lot 3 — le passage des alertes sans compte, SEUL (aucun autre
+    // envoi du cron : ni invitations, ni bilan). Sert à purger une adresse
+    // désinscrite sans attendre le lendemain, et aux essais.
+    if (corps?.tache === "alertes_modele") {
+      const b = { alertes_rappel: 0, alertes_modele_envoyees: 0, alertes_modele_purgees: 0, vehicules_verifies: 0, erreurs: 0 };
+      await passeAlertesModele(admin, new Map(), b);
+      return new Response(JSON.stringify({ tache: "alertes_modele", ...b }), { headers: { "Content-Type": "application/json" } });
+    }
+
+    // SPRINT 23 lot 3 — ESSAI de l'e-mail d'alerte : l'envoie à UNE inscription
+    // CONFIRMÉE de l'adresse donnée, avec les rappels actuels du modèle, SANS
+    // rien modifier. Objet marqué « [ESSAI] » : un essai qui ressemble à une
+    // vraie alerte apprend à ignorer les vraies.
+    if (corps?.tache === "alerte_modele_essai") {
+      const email = String(corps?.email ?? "").trim().toLowerCase();
+      const hash = email ? await empreinteEmail(email) : null;
+      const { data: rows } = hash
+        ? await admin.from("alertes_modele").select("email, email_hash, marque, modele, annee, analysis_id")
+          .eq("email_hash", hash).not("confirme_le", "is", null).limit(1)
+        : { data: [] };
+      const x = (rows ?? [])[0];
+      if (!x) {
+        return new Response(JSON.stringify({ tache: "alerte_modele_essai", envoye: false, raison: "aucune_inscription_confirmee" }), { headers: { "Content-Type": "application/json" } });
+      }
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/rappels`, {
+        method: "POST", signal: AbortSignal.timeout(30_000),
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
+        body: JSON.stringify({ marque: x.marque, modele: x.modele, annee: x.annee }),
+      });
+      const j = await res.json().catch(() => null);
+      const titres = Array.isArray(j?.rappels) ? j.rappels.slice(0, 5).map((r: { titre?: string }) => String(r.titre ?? "").slice(0, 160)) : [];
+      const vehicule = [x.marque, x.modele, x.annee].filter(Boolean).join(" ");
+      const envoye = await emailRappelModele(x.email, vehicule, titres.length ? titres : ["(essai : aucun rappel publié à ce jour pour ce modèle)"], x.analysis_id, x.email_hash, true);
+      await admin.from("events").insert({ name: "alerte_modele_essai", props_json: { envoye, rappels: titres.length } });
+      return new Response(JSON.stringify({ tache: "alerte_modele_essai", envoye, vehicule, rappels: titres.length }), { headers: { "Content-Type": "application/json" } });
     }
 
     if (corps?.tache === "sante") {
@@ -459,71 +575,7 @@ serve(async (req: Request) => {
     }
 
     // ===== 1 bis. Alertes « rappel sur ce modèle » SANS compte (sprint 23) ====
-    // Double opt-in : seules les inscriptions CONFIRMÉES reçoivent quelque
-    // chose ; une adresse désinscrite (`desinscriptions`) n'en reçoit plus et
-    // ses inscriptions sont effacées ; une inscription non confirmée sous
-    // 7 jours est effacée.
-    try {
-      const septJours = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
-      const { count: purgees } = await admin.from("alertes_modele")
-        .delete({ count: "exact" }).is("confirme_le", null).lt("jeton_envoye_le", septJours);
-      bilan.alertes_modele_purgees = purgees ?? 0;
-
-      const { data: abonnes } = await admin.from("alertes_modele")
-        .select("id, email, email_hash, marque, modele, annee, analysis_id, rappels_vus")
-        .not("confirme_le", "is", null).limit(300);
-      const liste = (abonnes ?? []) as Array<{ id: string; email: string; email_hash: string; marque: string; modele: string; annee: number | null; analysis_id: string | null; rappels_vus: number | null }>;
-      const hashes = [...new Set(liste.map((x) => x.email_hash))];
-      const opposes = new Set<string>();
-      for (let i = 0; i < hashes.length; i += 100) {
-        const { data: op } = await admin.from("desinscriptions").select("email_hash").in("email_hash", hashes.slice(i, i + 100));
-        for (const o of op ?? []) opposes.add(o.email_hash);
-      }
-      if (opposes.size > 0) {
-        const { count: eff } = await admin.from("alertes_modele").delete({ count: "exact" }).in("email_hash", [...opposes]);
-        bilan.alertes_modele_purgees += eff ?? 0;
-      }
-      for (const x of liste) {
-        if (opposes.has(x.email_hash)) continue;
-        if (bilan.alertes_rappel + bilan.alertes_modele_envoyees >= MAX_EMAILS_PAR_RUN) break;
-        const k = cle(x.marque, x.modele, x.annee);
-        if (!parVehicule.has(k)) {
-          if (parVehicule.size >= MAX_VEHICULES_PAR_RUN) continue;
-          try {
-            const res = await fetch(`${SUPABASE_URL}/functions/v1/rappels`, {
-              method: "POST", signal: AbortSignal.timeout(30_000),
-              headers: { "Content-Type": "application/json", Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
-              body: JSON.stringify({ marque: x.marque, modele: x.modele, annee: x.annee }),
-            });
-            const json = await res.json().catch(() => null);
-            if (!res.ok || !Array.isArray(json?.rappels) || json?.indisponible === true) {
-              parVehicule.set(k, null); bilan.erreurs += 1;
-            } else {
-              parVehicule.set(k, { count: json.rappels.length, titres: json.rappels.map((r: Rappel) => String(r.titre ?? "").slice(0, 160)).filter(Boolean) });
-              bilan.vehicules_verifies += 1;
-            }
-          } catch (err) {
-            console.error("alertes modele fetch:", err);
-            parVehicule.set(k, null); bilan.erreurs += 1;
-          }
-        }
-        const etat = parVehicule.get(k);
-        if (!etat) continue;
-        if (x.rappels_vus == null) {
-          await admin.from("alertes_modele").update({ rappels_vus: etat.count }).eq("id", x.id);
-          continue;
-        }
-        if (etat.count <= x.rappels_vus) continue;
-        const vehicule = [x.marque, x.modele, x.annee].filter(Boolean).join(" ");
-        const envoye = await emailRappelModele(x.email, vehicule, etat.titres.slice(0, 5), x.analysis_id, x.email_hash);
-        await admin.from("events").insert({ name: "alerte_modele_envoyee", analysis_id: x.analysis_id, props_json: { avant: x.rappels_vus, apres: etat.count, envoye } });
-        if (envoye) bilan.alertes_modele_envoyees += 1;
-        await admin.from("alertes_modele").update({ rappels_vus: etat.count }).eq("id", x.id);
-      }
-    } catch (err) {
-      console.error("alertes modele:", err);
-      bilan.erreurs += 1;
-    }
+    await passeAlertesModele(admin, parVehicule, bilan);
 
     // ===== 2. (RETIRÉ au sprint 10) J+30 après « acheté » =====
     // Cet envoi doublonnait désormais l'invitation J+21 ci-dessous : un

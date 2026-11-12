@@ -838,8 +838,23 @@ export default function ResultPage() {
               </>
             )}
 
-            {/* PREMIER ÉCRAN (sprint 23, lot 3) : verdict, les 3 motifs, la
-                prochaine action. Le détail du dossier vient ensuite. */}
+            {/* La prochaine action, juste sous le verdict (décision d'Utku du 12 nov.
+                2026 : sur téléphone, trois motifs longs la repoussaient sous la
+                ligne de flottaison). Une seule, gratuite, faisable tout de suite. */}
+            {!enCours && !enErreur && (() => {
+              const action = prochaineAction(r)
+              return action ? (
+                <div className="doc-sec" id="prochaine-action">
+                  <p className="eyebrow">Prochaine action</p>
+                  <p style={{ fontSize: 16, lineHeight: 1.6, fontWeight: 600, marginTop: 6 }}>
+                    {action.texte}{' '}<a href={action.ancre}>{action.lien}</a>
+                  </p>
+                </div>
+              ) : null
+            })()}
+
+            {/* PREMIER ÉCRAN (sprint 23, lot 3) : verdict, prochaine action, les 3
+                motifs. Le détail du dossier vient ensuite. */}
             {(r.raisons_principales || []).length > 0 && (
               <div className="doc-sec" id="motifs">
                 <p className="eyebrow">Motifs principaux</p>
@@ -854,18 +869,6 @@ export default function ResultPage() {
               </div>
             )}
 
-            {/* La prochaine action : une seule, gratuite, faisable tout de suite. */}
-            {!enCours && !enErreur && (() => {
-              const action = prochaineAction(r)
-              return action ? (
-                <div className="doc-sec" id="prochaine-action">
-                  <p className="eyebrow">Prochaine action</p>
-                  <p style={{ fontSize: 16, lineHeight: 1.6, fontWeight: 600, marginTop: 6 }}>
-                    {action.texte}{' '}<a href={action.ancre}>{action.lien}</a>
-                  </p>
-                </div>
-              ) : null
-            })()}
 
             {/* Fiche détaillée du véhicule */}
             <dl className="specs" style={{ marginTop: 22 }}>

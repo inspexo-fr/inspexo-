@@ -158,13 +158,14 @@ export async function emailRappelModele(
   titres: string[],
   analysisId: string | null,
   emailHash: string,
+  essai = false,
 ): Promise<boolean> {
   const lienUnsub = await lienDesinscriptionEmail(emailHash);
   const lienAnalyse = analysisId ? `<a href="https://www.inspexo.io/a/${analysisId}">Revoir l'analyse et le bloc rappels</a> — ` : "";
   return await sendMail(
     to,
-    `Nouveau rappel constructeur — ${vehicule}`,
-    `<p>Un rappel constructeur vient d'être publié dans la base officielle RappelConso pour le modèle
+    `${essai ? "[ESSAI] " : ""}Nouveau rappel constructeur — ${vehicule}`,
+    `${essai ? "<p><strong>Message d'essai</strong> : aucun nouveau rappel n'a été publié, ce message sert à vérifier l'envoi et le lien de désinscription.</p>" : ""}<p>Un rappel constructeur vient d'être publié dans la base officielle RappelConso pour le modèle
      que vous avez demandé à suivre (${vehicule.replace(/[<>]/g, "")}) :</p>
      <ul>${titres.slice(0, 5).map((t) => `<li>${t.replace(/[<>]/g, "")}</li>`).join("")}</ul>
      <p>${lienAnalyse}seul le numéro de série (VIN), auprès du réseau du constructeur, dit si un véhicule précis est concerné.</p>
