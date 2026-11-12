@@ -152,6 +152,23 @@ async function lancerNavigateur() {
 const moteurs = await famillesPubliees()
 console.log(`Pré-rendu — ${moteurs.length} page(s) moteur publiable(s)\n`)
 
+/** Pages modèle publiables (sprint 23, lot 3), d'après la fonction serveur
+ *  qui applique le classement des sources. Un échec ARRÊTE le build : une
+ *  liste vide servie en silence retirerait les pages du sitemap. */
+async function modelesPublies() {
+  const res = await fetch(`${env.REACT_APP_SUPABASE_URL}/functions/v1/modele-public?liste=1`, {
+    headers: { apikey: env.REACT_APP_SUPABASE_ANON_KEY, Authorization: `Bearer ${env.REACT_APP_SUPABASE_ANON_KEY}` },
+  }).catch((e) => ({ ok: false, status: String(e) }))
+  const json = res.ok ? await res.json().catch(() => null) : null
+  if (!Array.isArray(json?.pages)) {
+    console.error(`\n✗ modele-public?liste=1 injoignable (${res.status}) : pré-rendu des pages modèle impossible.`)
+    process.exit(1)
+  }
+  return json.pages
+}
+const modeles = await modelesPublies()
+console.log(`Pré-rendu — ${modeles.length} page(s) modèle publiable(s)\n`)
+
 // Les routes privées (dossier, visite, admin, résultat) ne sont PAS pré-rendues :
 // elles portent des données personnelles ou changent à chaque visite.
 const ROUTES = [
@@ -174,6 +191,8 @@ const ROUTES = [
   { url: '/politique-de-confidentialite', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/extension/confidentialite', attendre: '.rows', priorite: '0.3' },
   ...moteurs.map((f) => ({ url: `/moteur/${f.slug}`, attendre: '#pannes .row', priorite: '0.8', figer: true })),
+  { url: '/modele', attendre: '#modeles li', priorite: '0.7', figer: true },
+  ...modeles.map((m) => ({ url: `/modele/${m.slug_marque}/${m.slug}`, attendre: '#pannes .row', priorite: '0.7', figer: true })),
 ]
 
 const serveur = await servir()
