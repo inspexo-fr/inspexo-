@@ -61,6 +61,11 @@ const COLLECTES = [
     marqueurs: ['Réponses et justificatifs du vendeur', 'nous ne la conservons pas', 'en mémoire', 'ni l\'un ni l\'autre n\'est enregistré'],
   },
   {
+    nom: 'alerte rappel sur un modèle, sans compte (double opt-in)',
+    presentDansLeCode: () => /alertes_modele/.test(lire('../supabase/functions/alerte-modele/index.ts')),
+    marqueurs: ['Alerte rappel sur un modèle, sans compte', 'Double confirmation', 'effacée sous 7 jours', 'Désinscription en un clic'],
+  },
+  {
     nom: 'texte de l’annonce envoyé à Anthropic',
     presentDansLeCode: () => /api\.anthropic\.com/.test(SCORE),
     marqueurs: ['Anthropic', '30 jours'],

@@ -336,6 +336,12 @@ export const lectureCt = (analysisId, images, constatsPrecedents = []) =>
 export const reponseVendeur = (analysisId, { texte = '', images = [] } = {}) =>
   callFunction('reponse-vendeur', { analysis_id: analysisId, texte, images })
 
+/** SPRINT 23 lot 3 — alerte « rappel sur ce modèle », double opt-in. */
+export const alerteModeleInscrire = (email, analysisId) =>
+  callFunction('alerte-modele', { action: 'inscrire', email, analysis_id: analysisId })
+export const alerteModeleConfirmer = (id, jeton) =>
+  callFunction('alerte-modele', { action: 'confirmer', id, jeton })
+
 /** Lead email — source ∈ pass_waitlist | expert_waitlist | rapport */
 export async function submitLead(email, source, analysisId = null) {
   const { error } = await supabase.rpc('submit_lead', {

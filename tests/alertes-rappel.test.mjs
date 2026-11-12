@@ -1,0 +1,40 @@
+// Test hors ligne : alertes de rappel, élargies aux dossiers « achetés » (sprint 23, lot 3).
+// Usage : node tests/alertes-rappel.test.mjs
+import fs from 'node:fs'
+let ok_ = 0, ko = 0
+const ok = (c, l) => { if (c) { ok_++; console.log(`PASS — ${l}`) } else { ko++; console.log(`FAIL — ${l}`) } }
+const al = fs.readFileSync(new URL('../supabase/functions/alertes/index.ts', import.meta.url), 'utf8')
+const no = fs.readFileSync(new URL('../supabase/functions/_shared/notify.ts', import.meta.url), 'utf8')
+const filtre = al.match(/\.in\("statut", \[([^\]]*)\]\)/)
+ok(filtre, 'le filtre de statut des alertes de rappel existe (contre-épreuve)')
+const statuts = filtre ? filtre[1].split(',').map((s) => s.trim().replace(/"/g, '')) : []
+ok(statuts.includes('achete'), 'les dossiers « achetés » reçoivent les alertes de rappel')
+ok(statuts.includes('a_voir') && statuts.includes('visite'), 'les dossiers en cours les reçoivent toujours')
+ok(!statuts.includes('abandonne'), 'un dossier abandonné n’en reçoit pas')
+ok(/\.eq\("alertes", true\)/.test(al), 'le choix de l’utilisateur (alertes) est toujours respecté')
+const fn = no.slice(no.indexOf('export async function emailNouveauRappel'), no.indexOf('// RETIRÉ au sprint 10'))
+ok(/lienDesinscription\(userId\)/.test(fn) && /enTetesDesinscription\(lienUnsub\)/.test(fn), 'désinscription en un clic dans chaque alerte')
+ok(/véhicule que vous avez acheté/.test(fn), 'texte propre au véhicule acheté')
+ok(!/gratuit/i.test(fn), 'aucune promesse de gratuité non sourcée')
+// ---------- Alerte « rappel sur ce modèle » sans compte (double opt-in)
+const am = fs.readFileSync(new URL('../supabase/functions/alerte-modele/index.ts', import.meta.url), 'utf8')
+ok(am.indexOf('alerte_modele_tentative') > 0 && am.indexOf('alerte_modele_tentative') < am.indexOf('await req.json('), 'limite par IP vérifiée AVANT la lecture du corps')
+ok(/req\.method !== "POST"/.test(am), 'aucune action sur GET : un scanner qui précharge le lien ne confirme rien')
+ok(/from\("analyses"\)\.select\("id, marque, modele, annee"\)/.test(am), 'marque, modèle et année relus dans l’analyse, jamais pris du client')
+ok((am.match(/return jsonResponse\(REPONSE_INSCRIPTION\)/g) || []).length >= 4, 'même réponse quelle que soit l’adresse (connue, désinscrite, en attente)')
+ok(/from\("desinscriptions"\)/.test(am), 'une adresse désinscrite ne reçoit rien')
+ok(/jeton_hash: jetonHash/.test(am) && !/jeton: jeton[,\s}]/.test(am.replace(/action: "confirmer", id, jeton/g, '')), 'seule l’empreinte du jeton est stockée')
+ok(/indisponible !== true/.test(am), 'référence posée seulement si RappelConso a répondu')
+const sec = al.slice(al.indexOf('1 bis. Alertes « rappel sur ce modèle »'), al.indexOf('// ===== 2. (RETIRÉ'))
+ok(sec.length > 100, 'passage du cron pour les alertes sans compte (contre-épreuve)')
+ok(/\.not\("confirme_le", "is", null\)/.test(sec), 'seules les inscriptions CONFIRMÉES reçoivent une alerte')
+ok(/\.is\("confirme_le", null\)\.lt\("jeton_envoye_le", septJours\)/.test(sec), 'inscription non confirmée effacée sous 7 jours')
+ok(/from\("desinscriptions"\)/.test(sec) && /opposes\.has\(x\.email_hash\)/.test(sec), 'le cron respecte la désinscription et efface les inscriptions de l’adresse')
+ok((al.match(/indisponible === true/g) || []).length >= 2, 'RappelConso indisponible n’est jamais compté comme « zéro rappel » (les deux passages)')
+const fnm = no.slice(no.indexOf('export async function emailRappelModele'), no.indexOf('async function lienDesinscription('))
+ok(/lienDesinscriptionEmail\(emailHash\)/.test(fnm) && /enTetesDesinscription\(lienUnsub\)/.test(fnm), 'désinscription en un clic dans chaque alerte sans compte')
+const mig = fs.readFileSync(new URL('../supabase/migrations/20261128120000_sprint23_alertes_modele.sql', import.meta.url), 'utf8')
+ok(/enable row level security/.test(mig) && /revoke all on table public\.alertes_modele from anon, authenticated/.test(mig) && !/create policy/i.test(mig), 'table : RLS active, zéro policy, aucun droit public')
+
+console.log(`\n${ok_} PASS, ${ko} FAIL`)
+if (ko > 0) process.exit(1)

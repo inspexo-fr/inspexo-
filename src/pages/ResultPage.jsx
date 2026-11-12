@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
@@ -9,21 +9,11 @@ import Doc, { formatRef, formatDateDossier } from '../components/Doc'
 import Stamp from '../components/Stamp'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import EmailCapture, { CONSENT_TEXT } from '../components/EmailCapture'
-import LectureCtBloc from '../components/LectureCtBloc'
-import SecuriteTransactionBloc from '../components/SecuriteTransactionBloc'
-import FaitsVendeurBloc from '../components/FaitsVendeurBloc'
-import RevendeurBloc from '../components/RevendeurBloc'
-import HistovecBloc from '../components/HistovecBloc'
-import VisioBloc from '../components/VisioBloc'
-import VinBloc from '../components/VinBloc'
-import CritairBloc from '../components/CritairBloc'
-import EtMaintenant from '../components/EtMaintenant'
-import Cout3AnsBloc from '../components/Cout3AnsBloc'
-import RapportInspection from '../components/RapportInspection'
 import { libelleSource } from '../components/DossierApercu'
 import { familleParCode } from '../data/famillesMoteur'
 import { LIBELLES_REGION, SEUIL_FOURCHETTE } from '../data/marche'
 import { SEUIL_COMPARABLES } from '../data/revendeur.gen'
+import { prochaineAction } from '../data/prochaineAction'
 
 import {
   getPublicAnalysis, getAnalysisEtape, fetchRappels, getDefectSheet,
@@ -32,6 +22,31 @@ import {
 
 // SPRINT 20 — pourquoi un comparable a été écarté, en français.
 // Les clés sont celles de `filtrerComparables` (_shared/revendeur.ts).
+
+// SPRINT 23, LOT 3 — Le premier écran (verdict, motifs, prochaine action) ne
+// doit pas attendre les blocs placés dessous : ils sont chargés en fragments
+// séparés, chacun dans sa propre frontière Suspense (rien ne s'affiche à leur
+// place pendant le chargement, et le premier écran ne bouge pas).
+const differe = (charger) => {
+  const L = React.lazy(charger)
+  return function BlocDiffere(props) {
+    return <Suspense fallback={null}><L {...props} /></Suspense>
+  }
+}
+const LectureCtBloc = differe(() => import('../components/LectureCtBloc'))
+const SecuriteTransactionBloc = differe(() => import('../components/SecuriteTransactionBloc'))
+const FaitsVendeurBloc = differe(() => import('../components/FaitsVendeurBloc'))
+const RevendeurBloc = differe(() => import('../components/RevendeurBloc'))
+const HistovecBloc = differe(() => import('../components/HistovecBloc'))
+const VisioBloc = differe(() => import('../components/VisioBloc'))
+const VinBloc = differe(() => import('../components/VinBloc'))
+const CritairBloc = differe(() => import('../components/CritairBloc'))
+const EtMaintenant = differe(() => import('../components/EtMaintenant'))
+const Cout3AnsBloc = differe(() => import('../components/Cout3AnsBloc'))
+const RapportInspection = differe(() => import('../components/RapportInspection'))
+const AlerteModeleBloc = differe(() => import('../components/AlerteModeleBloc'))
+const BatterieBloc = differe(() => import('../components/BatterieBloc'))
+
 const LIBELLES_ECART = {
   modele: 'autre modèle',
   energie: 'autre énergie',
@@ -781,22 +796,6 @@ export default function ResultPage() {
             {(vh.motorisation || vh.boite) && (
               <p className="sub">{[vh.motorisation, vh.boite].filter(Boolean).join(' · ')}</p>
             )}
-            <dl className="specs">
-              {analysis.annee != null && <div><dt>Année</dt><dd className="num">{analysis.annee}</dd></div>}
-              {vh.kilometrage != null && <div><dt>Kilométrage</dt><dd className="num">{Number(vh.kilometrage).toLocaleString('fr-FR')} km</dd></div>}
-              {vh.prix_affiche != null && <div><dt>Prix affiché</dt><dd className="num">{euros1(vh.prix_affiche)}</dd></div>}
-              {/* Montant total réellement dû (frais obligatoires inclus) : affiché
-                  uniquement s'il diffère du prix affiché — pas de case vide. */}
-              {vh.prix_reel != null && vh.prix_reel !== vh.prix_affiche && (
-                <div><dt>Prix réel</dt><dd className="num c-ambre">{euros1(vh.prix_reel)}</dd></div>
-              )}
-              {r.prix?.mediane_comparables != null && (
-                <div><dt>Médiane comparables</dt><dd className="num">{euros1(r.prix.mediane_comparables)}</dd></div>
-              )}
-              {r.statut_vendeur && (
-                <div className="wide"><dt>Vendeur</dt><dd>{STATUT_VENDEUR_LABELS[r.statut_vendeur] || r.statut_vendeur}</dd></div>
-              )}
-            </dl>
 
             {/* Verdict */}
             <p className="eyebrow" style={{ marginTop: 26 }}>Verdict</p>
@@ -839,6 +838,53 @@ export default function ResultPage() {
               </>
             )}
 
+            {/* PREMIER ÉCRAN (sprint 23, lot 3) : verdict, les 3 motifs, la
+                prochaine action. Le détail du dossier vient ensuite. */}
+            {(r.raisons_principales || []).length > 0 && (
+              <div className="doc-sec" id="motifs">
+                <p className="eyebrow">Motifs principaux</p>
+                {r.raisons_principales.map((raison, i) => (
+                  <div className="motif" key={i}>
+                    <span className={`n ${r.verdict === 'vert' ? 'vert' : r.verdict === 'orange' ? 'ambre' : ''}`}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <p>{raison}<Ref nums={refsMotifs[i]} /></p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* La prochaine action : une seule, gratuite, faisable tout de suite. */}
+            {!enCours && !enErreur && (() => {
+              const action = prochaineAction(r)
+              return action ? (
+                <div className="doc-sec" id="prochaine-action">
+                  <p className="eyebrow">Prochaine action</p>
+                  <p style={{ fontSize: 16, lineHeight: 1.6, fontWeight: 600, marginTop: 6 }}>
+                    {action.texte}{' '}<a href={action.ancre}>{action.lien}</a>
+                  </p>
+                </div>
+              ) : null
+            })()}
+
+            {/* Fiche détaillée du véhicule */}
+            <dl className="specs" style={{ marginTop: 22 }}>
+              {analysis.annee != null && <div><dt>Année</dt><dd className="num">{analysis.annee}</dd></div>}
+              {vh.kilometrage != null && <div><dt>Kilométrage</dt><dd className="num">{Number(vh.kilometrage).toLocaleString('fr-FR')} km</dd></div>}
+              {vh.prix_affiche != null && <div><dt>Prix affiché</dt><dd className="num">{euros1(vh.prix_affiche)}</dd></div>}
+              {/* Montant total réellement dû (frais obligatoires inclus) : affiché
+                  uniquement s'il diffère du prix affiché — pas de case vide. */}
+              {vh.prix_reel != null && vh.prix_reel !== vh.prix_affiche && (
+                <div><dt>Prix réel</dt><dd className="num c-ambre">{euros1(vh.prix_reel)}</dd></div>
+              )}
+              {r.prix?.mediane_comparables != null && (
+                <div><dt>Médiane comparables</dt><dd className="num">{euros1(r.prix.mediane_comparables)}</dd></div>
+              )}
+              {r.statut_vendeur && (
+                <div className="wide"><dt>Vendeur</dt><dd>{STATUT_VENDEUR_LABELS[r.statut_vendeur] || r.statut_vendeur}</dd></div>
+              )}
+            </dl>
+
             {/* Critères à pointillés (commentaire au déplié) */}
             {axes.length > 0 && (
               <div className="crit" aria-label="Notation par critère">
@@ -861,29 +907,16 @@ export default function ResultPage() {
               </div>
             )}
 
-            {/* Motifs principaux + points rassurants */}
-            {(r.raisons_principales || []).length > 0 && (
+            {/* Points rassurants — après le premier écran */}
+            {(r.points_rassurants || []).length > 0 && (
               <div className="doc-sec">
-                <p className="eyebrow">Motifs principaux</p>
-                {r.raisons_principales.map((raison, i) => (
+                <p className="eyebrow c-vert" style={{ color: 'var(--vert)' }}>Points rassurants</p>
+                {r.points_rassurants.map((x, i) => (
                   <div className="motif" key={i}>
-                    <span className={`n ${r.verdict === 'vert' ? 'vert' : r.verdict === 'orange' ? 'ambre' : ''}`}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <p>{raison}<Ref nums={refsMotifs[i]} /></p>
+                    <span className="n vert">+</span>
+                    <p className="c-ink2">{x}</p>
                   </div>
                 ))}
-                {(r.points_rassurants || []).length > 0 && (
-                  <div style={{ marginTop: 14 }}>
-                    <p className="eyebrow c-vert" style={{ color: 'var(--vert)' }}>Points rassurants</p>
-                    {r.points_rassurants.map((x, i) => (
-                      <div className="motif" key={i}>
-                        <span className="n vert">+</span>
-                        <p className="c-ink2">{x}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
 
@@ -991,6 +1024,11 @@ export default function ResultPage() {
               )}
             </div>
 
+            {/* Alerte rappel sur ce modèle (sprint 23, lot 3) — sans compte, double opt-in. */}
+            {!enCours && r.type === 'vehicule' && analysis.marque && (
+              <AlerteModeleBloc analysisId={id} vehicule={vehiculeLabel} />
+            )}
+
             {/* Entretien */}
             {(r.entretien && ((r.entretien.du || []).length > 0 || (r.entretien.prouve || []).length > 0 || (r.entretien.a_exiger || []).length > 0)) && (
               <div className="doc-sec">
@@ -1079,9 +1117,15 @@ export default function ResultPage() {
               <CritairBloc critair={r.critair} vehicule={vh} />
             )}
 
+            {/* Batterie (sprint 23, lot 3) — électrique ou hybride seulement ;
+                garanties confirmées par le juge, sans effet sur la note. */}
+            {!enCours && r.type === 'vehicule' && (
+              <BatterieBloc vehicule={{ ...vh, marque: vh.marque ?? analysis.marque, modele: vh.modele ?? analysis.modele }} annee={analysis.annee} />
+            )}
+
             {/* Message vendeur */}
             {r.message_vendeur && (
-              <div className="doc-sec">
+              <div className="doc-sec" id="message">
                 <p className="eyebrow">Message au vendeur</p>
                 <div className="msg">{r.message_vendeur}</div>
                 <CopyButton text={r.message_vendeur} label="Copier le message" />
@@ -1090,7 +1134,7 @@ export default function ResultPage() {
 
             {/* Checklist sur place */}
             {checklistAffichee.length > 0 && (
-              <div className="doc-sec">
+              <div className="doc-sec" id="checklist">
                 <p className="eyebrow">Liste de contrôle sur place</p>
                 {checklistAffichee.map((c, i) => (
                   <div className="motif" key={i}>
