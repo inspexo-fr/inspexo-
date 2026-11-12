@@ -8,9 +8,9 @@ import { SOURCES_JOUR_J, documentsJourJ, reglesPaiement } from '../data/jourJ'
 // 3. « Comment payer » : chaque règle juridique avec son article.
 
 function Sources({ cles }) {
-  if (!cles?.length) return <span className="mono c-graphite" style={{ fontSize: 11 }}>[conseil pratique, sans obligation légale]</span>
+  if (!cles?.length) return <span className="c-graphite" style={{ fontSize: 13 }}>(conseil pratique, sans obligation légale)</span>
   return (
-    <span className="mono c-graphite" style={{ fontSize: 11 }}>
+    <span className="c-graphite" style={{ fontSize: 13 }}>
       {cles.map((k, i) => (
         <React.Fragment key={k}>
           {i > 0 ? ' · ' : ''}
@@ -31,7 +31,7 @@ export default function SecuriteTransactionBloc({ result }) {
 
   return (
     <div className="doc-sec" id="transaction">
-      <p className="eyebrow">Sécurité de la transaction</p>
+      <p className="eyebrow">Transaction</p>
 
       {result?.securite_transaction && (
         signaux.length > 0 ? (
@@ -59,7 +59,7 @@ export default function SecuriteTransactionBloc({ result }) {
         )
       )}
 
-      <p className="eyebrow" style={{ marginTop: 18 }}>Le jour J — les documents à exiger</p>
+      <p className="eyebrow" style={{ marginTop: 18 }}>Le jour J</p>
       <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 14, lineHeight: 1.6 }}>
         {documents.map((d) => (
           <li key={d.id} style={{ marginBottom: 8 }}>
@@ -69,7 +69,7 @@ export default function SecuriteTransactionBloc({ result }) {
         ))}
       </ul>
 
-      <p className="eyebrow" style={{ marginTop: 18 }}>Comment payer</p>
+      <p className="eyebrow" style={{ marginTop: 18 }}>Paiement</p>
       <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 14, lineHeight: 1.6 }}>
         {paiement.map((r) => (
           <li key={r.id} style={{ marginBottom: 8 }}>

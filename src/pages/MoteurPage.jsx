@@ -307,10 +307,13 @@ export default function MoteurPage() {
                         {p.km_typique && <span className="duree">{p.km_typique}</span>}
                         {cout && <span className="tag">{cout}</span>}
                         {p.rappel_code && p.rappel_portee !== 'etranger' && <span className="tag ambre">Rappel {p.rappel_code}</span>}
-                        {p.rappel_code && p.rappel_portee === 'etranger' && (
-                          <span className="tag muted">Campagne publiée hors de France ({p.rappel_code}) : information de contexte</span>
-                        )}
+                        {p.rappel_code && p.rappel_portee === 'etranger' && <span className="tag muted">Contexte étranger</span>}
                       </div>
+                      {p.rappel_code && p.rappel_portee === 'etranger' && (
+                        <p className="c-graphite" style={{ fontSize: 13, lineHeight: 1.6, marginTop: 4 }}>
+                          Campagne publiée hors de France ({p.rappel_code}) : information de contexte, aucune campagne connue en France.
+                        </p>
+                      )}
                     </dd>
                   </div>
                 )

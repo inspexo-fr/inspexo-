@@ -95,7 +95,7 @@ export default function FaitsVendeurBloc({ analysisId, result, onMaj }) {
 
   return (
     <div className="doc-sec" id="vendeur">
-      <p className="eyebrow">Réponses et justificatifs du vendeur</p>
+      <p className="eyebrow">Pièces du vendeur</p>
       <p style={{ fontSize: 14, lineHeight: 1.7, marginTop: 8 }}>
         Collez la réponse du vendeur ou photographiez une facture, une attestation de rappel. Ce que le vendeur
         déclare est rangé à part des faits de l'annonce et ne change rien à la note. Une pièce ne compte que si elle
@@ -104,7 +104,7 @@ export default function FaitsVendeurBloc({ analysisId, result, onMaj }) {
 
       {(declares.length > 0 || pieces.length > 0) && (
         <div style={{ marginTop: 12 }}>
-          <p className="mono c-graphite" style={{ fontSize: 11, letterSpacing: '.04em' }}>
+          <p className="c-graphite" style={{ fontSize: 13 }}>
             {registre?.mention || 'Pièce fournie par le vendeur, non authentifiée par Inspexo.'}
           </p>
           {leves.length > 0 && (
@@ -115,7 +115,7 @@ export default function FaitsVendeurBloc({ analysisId, result, onMaj }) {
           {pieces.map((p, i) => <Piece key={i} p={p} />)}
           {declares.length > 0 && (
             <div style={{ paddingTop: 10, borderTop: '1px solid var(--filet)' }}>
-              <div className="mono c-graphite" style={{ fontSize: 11, letterSpacing: '.04em' }}>DÉCLARÉ PAR LE VENDEUR, SANS PIÈCE</div>
+              <div className="mono c-graphite" style={{ fontSize: 11, letterSpacing: '.04em' }}>DÉCLARÉ, SANS PIÈCE</div>
               <ul style={{ fontSize: 14, lineHeight: 1.6, margin: '4px 0 0', paddingLeft: 18 }}>
                 {declares.map((d, i) => <li key={i}>{d.fait} — <span className="c-graphite">« {d.extrait} »</span></li>)}
               </ul>

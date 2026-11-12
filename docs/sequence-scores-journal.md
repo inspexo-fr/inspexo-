@@ -266,3 +266,11 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   barème). Aucune migration.
 - **Dépense annoncée : 0,60 €, mur dur** — références ×1 (≈ 0,36 €, mur
   0,40 €) puis éval des pièces sur une facture fabriquée (≈ 0,15 €, mur 0,20 €).
+- **Résultat (12 nov.)** : références ×1 **S7 rouge 39 · 308 orange 55 ·
+  Mercedes vert 73 · Clio II orange 51** — aucun écart, conforme à l'annonce
+  (0,370 € ; cumul compteur d'éval 10,77 € / 12,50 €). Pièces du vendeur
+  (`tests/eval-facture/`, Clio IV fabriquée, 0,090 € hors compteur d'éval) :
+  facture d'un autre véhicule ⇒ déclarée, incohérence signalée, rien levé ;
+  réponse collée ⇒ 2 faits déclarés, score inchangé ; facture conforme ⇒
+  justifiée par l'immatriculation, **plafond 55 levé, orange 55 → 60**.
+  Dépense du lot : **0,460 € / 0,60 €**. Branche `sprint23-lot2`, non mergée.

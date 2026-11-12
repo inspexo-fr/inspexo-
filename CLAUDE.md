@@ -2204,6 +2204,38 @@ erreur JS. ⚠️ Le site (bloc, `/comparer`) n'est en ligne qu'après le merge.
 - Bandeau cookies : 2 lignes au plus sur téléphone, bas de page réservé à sa
   hauteur.
 
+## Sprint 23, lot 2 — Sécurité de la transaction et pièces du vendeur (12 nov. 2026)
+
+- **Signaux d'arnaque** (`_shared/securiteTransaction.ts`, pur) : motifs fixes
+  (paiement à distance, vendeur à l'étranger, transporteur/séquestre, visite
+  refusée, acompte, contact hors téléphone, prix < 60 % du P25 observé),
+  chacun cité (≤ 15 mots, nettoyé). **AUCUN effet sur le score** — le barème
+  ne l'importe pas, et aucune ligne de `score` portant les signaux ne touche
+  aux faits (test). Sans fourchette observée, jamais de signal de prix.
+- **Blocs gratuits « Le jour J » et « Paiement »** : `src/data/jourJ.js` est la
+  liste UNIQUE des documents, partagée avec le kit signature. Paiement vérifié
+  le 12/11/2026 : entre particuliers **pas de plafond d'espèces** (L112-6 CMF)
+  mais un **écrit au-delà de 1 500 €** (art. 1359 C. civ., décret 80-533) ;
+  **1 000 €** face à un professionnel (L112-6, D112-3 CMF). ⚠️ « Jamais
+  d'espèces au-delà de la limite légale » est FAUX entre particuliers : ne pas
+  l'écrire.
+- **Pièces du vendeur** (`_shared/faitsVendeur.ts`, fonction `reponse-vendeur`,
+  Pass, mêmes deux régimes que `lecture-ct`) : registre
+  `result_json.faits_vendeur`, séparé des faits de l'annonce. Justifiée
+  SEULEMENT si même VIN (empreinte salée contre `vin_empreinte`) ou même plaque
+  (annonce relue en mémoire), date passée et ≥ 1re immatriculation (à défaut
+  année-modèle − 1, dit à l'écran), km ≤ annonce, et pas un devis. **Une
+  incohérence ⇒ rien levé, signalée.** Plafonds levables : **48, 55, 65 —
+  rien d'autre** (compteur, HistoVec, sécurité hors d'atteinte, contrôlé
+  statiquement). Le 55 ne tombe que si TOUTES les familles critiques déclarées
+  non faites sont couvertes. ⚠️ Le VIN et la plaque lus ne servent qu'à une
+  empreinte puis sont mis à `null` : jamais renvoyés, stockés ni journalisés
+  (test statique). `faits.pannes[].rappel_code` ajouté (ignoré par le calcul)
+  pour rattacher une attestation au bon rappel. **`BAREME_VERSION` 11.16.**
+- Éval : `node tests/eval-facture/run.mjs --budget <eur>` (factures FABRIQUÉES
+  par `generer-factures.mjs`, données inventées). Captures :
+  `node scripts/captures-lot2.mjs` → `captures-sprint23/`.
+
 ## ⚠️ Verdicts de référence de l'éval (état COURANT)
 
 | Cas | Verdict | Depuis |
@@ -2213,7 +2245,7 @@ erreur JS. ⚠️ Le site (bloc, `/comparer`) n'est en ligne qu'après le merge.
 | `mercedes-2025-societe` | **vert 73** | 11 nov. 2026 (sprint 22d : la garantie n'est plus une preuve d'entretien) |
 | `revendeur-clio2-dci` | **orange 51** | 5 nov. 2026 (sprint 20a) |
 
-⚠️ **`BAREME_VERSION` 11.12** depuis le 11 nov. 2026 (11.10 statut vendeur déterministe, 11.11 signaux d'entretien par motifs fixes, 11.12 opérations « non faites » écrites dans l'annonce seulement — journal : `docs/sequence-scores-journal.md`). Avant : **11.9** depuis le sprint 21.1 : une panne ne pèse que si
+⚠️ **`BAREME_VERSION` 11.16** depuis le 12 nov. 2026 (11.15 rappels étrangers ou hors période, 11.16 pièces justifiées du vendeur). Avant : **11.12** depuis le 11 nov. 2026 (11.10 statut vendeur déterministe, 11.11 signaux d'entretien par motifs fixes, 11.12 opérations « non faites » écrites dans l'annonce seulement — journal : `docs/sequence-scores-journal.md`). Avant : **11.9** depuis le sprint 21.1 : une panne ne pèse que si
 une source indépendante la porte. Les quatre verdicts sont **inchangés**, et
 pour une raison qu'il faut dire — dans ces quatre dossiers, les pannes qui
 pesaient citaient déjà au moins une page de presse ou officielle. La règle n'y
