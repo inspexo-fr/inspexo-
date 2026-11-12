@@ -1,0 +1,9 @@
+{
+  "_doc": "Facture fabriquée (données inventées). Plafond 55 (distribution déclarée non faite) levé par la facture conforme ; rien levé par la facture d'un autre véhicule ni par la réponse collée.",
+  "plafond_initial_max": 55,
+  "etapes": [
+    { "type": "photo", "fichier": "facture-autre-vehicule.png", "statut": "declare", "incoherence": true, "leves": [] },
+    { "type": "texte", "texte": "Bonjour, la distribution a été faite en 2024 chez un garage, factures disponibles.", "leves": [] },
+    { "type": "photo", "fichier": "facture-conforme.png", "statut": "justifie", "incoherence": false, "leves": ["operation_critique_55"] }
+  ]
+}

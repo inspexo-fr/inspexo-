@@ -92,7 +92,14 @@
 // information de contexte, jamais rappel officiel ni poids ; millésimes ou
 // période écrits excluant l'année du véhicule ⇒ rappel non affiché. Le calcul
 // du barème ne change pas ; ce qui entre dans `rappel_officiel` change.
-export const BAREME_VERSION = "11.15";
+// 11.16 (sprint 23, lot 2) : une PIÈCE fournie par le vendeur et JUSTIFIÉE
+// (même VIN ou même immatriculation, date passée et postérieure à la 1re
+// immatriculation, kilométrage ≤ annonce, opération correspondante, aucune
+// incohérence) peut lever TROIS plafonds seulement : 48 (rappel), 55
+// (opération critique déclarée non faite), 65 (aucune information
+// d'entretien) — `_shared/faitsVendeur.ts`. Un fait seulement déclaré ne lève
+// rien. Le calcul du barème ne change pas : sans pièce, score identique.
+export const BAREME_VERSION = "11.16";
 
 export type FaitsAxes = {
   annee_courante: number;
@@ -156,6 +163,9 @@ export type FaitsAxes = {
     rappel_officiel: boolean;
     rappel_confirme_effectue: boolean;
     couverte_garantie?: boolean;
+    /** Code de campagne, ignoré par le calcul : sert à rattacher une pièce
+     *  justifiée du vendeur au bon rappel (sprint 23, lot 2). */
+    rappel_code?: string | null;
   }>;
   // Ce que l'acheteur doit fournir pour activer cette couverture.
   condition_garantie?: string | null;

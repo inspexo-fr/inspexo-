@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { getKitSignature } from '../lib/scoreApi'
 import { supabase } from '../lib/supabaseClient'
+import { SOURCES_JOUR_J, documentsJourJ } from '../data/jourJ'
 
 // SPRINT 7 — Kit signature : « Avant de signer » (fonction du Pass achat,
 // déblocage vérifié CÔTÉ SERVEUR par la RPC get_kit_signature).
@@ -13,15 +14,8 @@ import { supabase } from '../lib/supabaseClient'
 // dossier (imprimable — il COMPLÈTE le cerfa 15776*02 officiel, il ne le
 // remplace pas), et démarches ANTS pas à pas.
 
-const SOURCES = {
-  vente: { url: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F1707', titre: 'Service-public — Vendre ou donner son véhicule (F1707)' },
-  csa: { url: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F1360', titre: 'Service-public — Certificat de situation administrative (F1360)' },
-  histovec: { url: 'https://www.service-public.gouv.fr/particuliers/vosdroits/R52957', titre: 'Service-public — Obtenir le certificat de situation administrative sur HistoVec (R52957)' },
-  ct: { url: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F2878', titre: 'Service-public — Contrôle technique d\'une voiture (F2878)' },
-  cerfa: { url: 'https://www.service-public.gouv.fr/particuliers/vosdroits/R20300', titre: 'Service-public — Certificat de cession, cerfa 15776*02 (R20300)' },
-  immat: { url: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F1050', titre: 'Service-public — Immatriculer un véhicule d\'occasion (F1050)' },
-  ants: { url: 'https://immatriculation.ants.gouv.fr', titre: 'ANTS — téléservice immatriculation' },
-}
+// Sources et documents : module commun avec le bloc gratuit « Le jour J ».
+const SOURCES = SOURCES_JOUR_J
 
 function Src({ k }) {
   return (
@@ -61,55 +55,9 @@ export default function KitSignaturePage() {
   const plusDe4Ans = typeof vh.annee === 'number' ? anneeCourante - vh.annee >= 4 : true
   const vehiculeLabel = [vh.marque, vh.modele, vh.motorisation].filter(Boolean).join(' ')
 
-  const DOCUMENTS = useMemo(() => [
-    {
-      id: 'carte_grise',
-      titre: 'Carte grise barrée, datée et signée',
-      detail: 'Barrée avec la mention « Vendu le JJ/MM/AAAA à HH h MM » et signée par le (ou les) titulaire(s). Vérifiez que le nom du vendeur est bien celui de la carte grise.',
-      source: 'vente',
-    },
-    {
-      id: 'cerfa',
-      titre: 'Certificat de cession — cerfa 15776*02, 2 exemplaires',
-      detail: 'Rempli et signé par le vendeur ET par vous, en deux exemplaires (un chacun). C\'est le document officiel de la vente, exigé pour la nouvelle carte grise.',
-      source: 'cerfa',
-    },
-    {
-      id: 'csa',
-      titre: 'Certificat de situation administrative de moins de 15 jours',
-      detail: 'Dit « non-gage et non-opposition » : il prouve qu\'aucun gage ni opposition n\'empêche le transfert. Le vendeur l\'obtient gratuitement et immédiatement sur HistoVec.',
-      source: 'csa',
-    },
-    ...(plusDe4Ans ? [{
-      id: 'ct',
-      titre: 'PV de contrôle technique de moins de 6 mois',
-      detail: 'Obligatoire pour un véhicule de plus de 4 ans (moins de 2 mois s\'il s\'agit d\'une contre-visite). Faites-le lire par le Pass (bloc « PV de contrôle technique » du dossier).',
-      source: 'ct',
-    }] : [{
-      id: 'ct',
-      titre: 'Documents du véhicule (moins de 4 ans : pas de contrôle technique exigé)',
-      detail: 'Le contrôle technique n\'est pas requis avant 4 ans — exigez en revanche le carnet et les justificatifs de garantie constructeur.',
-      source: 'ct',
-    }]),
-    {
-      id: 'code_cession',
-      titre: 'Code de cession ANTS',
-      detail: 'Le vendeur déclare la cession en ligne (sous 15 jours) et vous remet le code de cession : il vous simplifie la demande de carte grise.',
-      source: 'vente',
-    },
-    {
-      id: 'factures',
-      titre: 'Factures d\'entretien et carnet — recommandé',
-      detail: 'Pas une obligation légale, mais c\'est la preuve de l\'entretien annoncé : exigez au minimum les factures des opérations citées dans l\'annonce.',
-      source: null,
-    },
-    {
-      id: 'cles',
-      titre: 'Double des clés — recommandé',
-      detail: 'Un double manquant, c\'est 150 à 400 € chez le concessionnaire : un argument de plus si le vendeur ne l\'a pas.',
-      source: null,
-    },
-  ], [plusDe4Ans])
+  const DOCUMENTS = useMemo(() => documentsJourJ(plusDe4Ans).map((d) => (
+    d.id === 'ct' && plusDe4Ans ? { ...d, detail: `${d.detail} Faites-le lire par le Pass (bloc « PV de contrôle technique » du dossier).` } : d
+  )), [plusDe4Ans])
 
   const imprimerContrat = () => {
     const dateJour = new Date().toLocaleDateString('fr-FR')
@@ -283,7 +231,7 @@ export default function KitSignaturePage() {
                 {/* Sources */}
                 <div className="doc-sec">
                   <p className="eyebrow">Sources officielles</p>
-                  {Object.values(SOURCES).map((s, i) => (
+                  {['vente', 'csa', 'histovec', 'ct', 'cerfa', 'immat', 'ants'].map((k) => SOURCES[k]).map((s, i) => (
                     <p key={i} className="mono" style={{ fontSize: 11, lineHeight: 1.9 }}>
                       [{i + 1}] <a href={s.url} target="_blank" rel="noreferrer">{s.titre}</a>
                     </p>

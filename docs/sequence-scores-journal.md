@@ -245,3 +245,24 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
 - S7 de la session `54e2dc3c` (rouge 39) : 20U6/L8 absent, KGH absent, 21H7
   en campagne mondiale, sources toutes de rang presse ⇒ **épinglée sur
   l'accueil**, aperçu de partage régénéré (`apercus/54e2dc3c….png`).
+
+## Sprint 23, lot 2 — sécurité de la transaction et pièces du vendeur (12 nov. 2026)
+- **Signaux d'arnaque** (`_shared/securiteTransaction.ts`) : motifs fixes,
+  chacun cité, **sans effet sur le score** (décision d'Utku). Blocs gratuits
+  « Le jour J » et « Comment payer » : liste de documents commune avec le kit
+  (`src/data/jourJ.js`) ; paiement sourcé — entre particuliers pas de plafond
+  d'espèces (art. L112-6 CMF) mais un écrit au-delà de 1 500 € (art. 1359
+  C. civ., décret n° 80-533) ; 1 000 € face à un professionnel (L112-6,
+  D112-3 CMF) ; service-public F10999 vérifié le 26/06/2026, F2403.
+- **Pièces du vendeur** (`_shared/faitsVendeur.ts`, fonction `reponse-vendeur`,
+  Pass) : justifiée seulement si même VIN (empreinte salée) ou même plaque,
+  date passée et ≥ 1re immatriculation, km ≤ annonce, opération
+  correspondante ; une incohérence ⇒ rien levé, signalée. Plafonds levables :
+  48, 55, 65 — rien d'autre. **`BAREME_VERSION` 11.16** (calcul inchangé).
+- **Écart annoncé : aucun** sur les 4 références (39 / 55 / 73 / 51) : sans
+  pièce, les faits sont strictement identiques (prouvé hors ligne).
+- **Déploiement annoncé** : `score`, `reponse-vendeur` (nouvelle),
+  `api-analyses`, `lecture-ct`, `lecture-histovec`, `visite` (importent le
+  barème). Aucune migration.
+- **Dépense annoncée : 0,60 €, mur dur** — références ×1 (≈ 0,36 €, mur
+  0,40 €) puis éval des pièces sur une facture fabriquée (≈ 0,15 €, mur 0,20 €).

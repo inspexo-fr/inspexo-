@@ -56,6 +56,11 @@ const COLLECTES = [
     marqueurs: ['code postal'],
   },
   {
+    nom: 'réponses et pièces du vendeur (photo lue, VIN et plaque comparés en mémoire)',
+    presentDansLeCode: () => /FACTURE_TOOL/.test(lire('../supabase/functions/reponse-vendeur/index.ts')),
+    marqueurs: ['Réponses et justificatifs du vendeur', 'nous ne la conservons pas', 'en mémoire', 'ni l\'un ni l\'autre n\'est enregistré'],
+  },
+  {
     nom: 'texte de l’annonce envoyé à Anthropic',
     presentDansLeCode: () => /api\.anthropic\.com/.test(SCORE),
     marqueurs: ['Anthropic', '30 jours'],
