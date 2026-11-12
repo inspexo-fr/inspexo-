@@ -43,7 +43,7 @@ export default function ExtensionPage() {
                 <p>Un clic sur la page de l'annonce : texte et photos partent tout seuls.</p>
                 <ol>
                   {etapesExtension.map((e, i) => (
-                    <li key={i}><span>{i + 1}</span><span><b>{e.titre}.</b> {e.texte}</span></li>
+                    <li key={i}><span>{i + 1}</span><span className="phrase"><b>{e.titre}.</b> {e.texte}</span></li>
                   ))}
                 </ol>
                 {STORE_URL ? (
@@ -51,7 +51,7 @@ export default function ExtensionPage() {
                     Installer depuis le Chrome Web Store
                   </a>
                 ) : (
-                  <span className="state">Bientôt sur le Chrome Web Store</span>
+                  <span className="state phrase">Bientôt sur le Chrome Web Store</span>
                 )}
               </div>
               <div className="channel">
@@ -59,10 +59,10 @@ export default function ExtensionPage() {
                 <p>Depuis l'appli Leboncoin, touchez Partager puis Inspexo.</p>
                 <ol>
                   {etapesAppli.map((e, i) => (
-                    <li key={i}><span>{i + 1}</span><span><b>{e.titre}.</b> {e.texte}</span></li>
+                    <li key={i}><span>{i + 1}</span><span className="phrase"><b>{e.titre}.</b> {e.texte}</span></li>
                   ))}
                 </ol>
-                <span className="state">En préparation</span>
+                <span className="state phrase">En préparation</span>
               </div>
               <div className="channel">
                 <h2>Sur le site</h2>
@@ -82,7 +82,7 @@ export default function ExtensionPage() {
               Aucune collecte, aucun suivi : l'extension ne lit la page qu'au moment où
               vous cliquez, n'envoie les données qu'à inspexo.io, et les photos — EXIF
               supprimé — ne sont jamais conservées.{' '}
-              <Link to="/extension/confidentialite">Politique de confidentialité de l'extension</Link>.
+              <Link className="phrase" to="/extension/confidentialite">Politique de confidentialité de l'extension</Link>.
             </p>
           </div>
         </section>

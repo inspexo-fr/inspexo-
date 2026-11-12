@@ -348,3 +348,72 @@ fieldset{margin:0;padding:0;border:0;min-width:0}
 /* Même règle pour les liens de la ligne légale, en 11 px mono. */
 .footer .legal a{display:inline-flex;align-items:center;min-height:44px}
 .footer .col p.baseline{text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:15px;color:var(--band-muted)}
+
+/* ── CHANTIER DESIGN « Accueil et lisibilité » (nov. 2026) ─────────────────
+   On corrige, on ne refait pas : mêmes tokens, mêmes filets, même tampon. */
+
+/* (a) Champ vide au clic : le message se lit sous le champ. */
+.champ-msg{margin:8px 0 0;font-size:14px;line-height:1.4;color:var(--rouge);font-weight:600}
+.textarea[aria-invalid="true"]{border-color:var(--rouge);outline:2px solid var(--rouge);outline-offset:-2px}
+
+/* (d) Capitales à chasse fixe : étiquettes de 3 mots au plus et valeurs
+   chiffrées. Toute phrase passe dans la police de texte, en minuscules. */
+.lbl-note{font-family:var(--sans);font-size:13px;letter-spacing:0;text-transform:none;color:var(--graphite);font-weight:400;margin-left:6px}
+fieldset legend .lbl-note{margin-left:6px}
+p.mono,.formnote,.doc-foot,.pass-note,.phone-cap,.live,.extrait-notes{font-family:var(--sans);font-size:13px;letter-spacing:0;text-transform:none}
+.sources{font-family:var(--sans);font-size:13px}
+.sources .src-n{font-family:var(--mono);font-size:11px;color:var(--graphite)}
+.footer .legal{font-family:var(--sans);font-size:13px}
+.duree{display:inline-block;font-size:13px;line-height:1.4;color:var(--graphite);padding:3px 0}
+.row dt .num-titre{font-family:var(--mono)}
+.row dt .titre-panne{font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:15px;font-weight:700;color:var(--ink)}
+.phrase{font-family:var(--sans) !important;text-transform:none !important;letter-spacing:0 !important}
+.api-erreurs dd{font-family:var(--sans)}
+.phone .live{font-family:var(--sans);font-size:12px}
+
+/* (b) Extrait du dossier réel au premier écran — même données que la
+   section « Un dossier réel », cliquable vers elle. */
+.extrait{display:block;margin-top:26px;border:1px solid var(--rule-strong);background:var(--field);padding:16px 18px 14px;text-decoration:none;color:var(--ink);position:relative}
+.extrait:hover{background:var(--paper-2)}
+.extrait-haut{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.extrait-vehicule{font-weight:700;font-size:15px;line-height:1.35}
+.stamp.stamp-sm{margin-top:0;padding:6px 10px 5px;border-width:4px;flex:none}
+.stamp.stamp-sm .lab{font-size:10px;letter-spacing:.14em}
+.stamp.stamp-sm .score{font-size:26px}
+.stamp.stamp-sm .score small{font-size:11px}
+.extrait-motifs{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px;border-top:1px solid var(--rule);padding-top:12px}
+.extrait-motifs li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.extrait-n{font-family:var(--mono);font-size:11px;color:var(--rouge);padding-top:2px}
+.extrait-notes{display:grid;gap:3px;margin-top:10px;color:var(--graphite);font-size:12px}
+.extrait-num{font-family:var(--mono);font-size:11px}
+.extrait-voir{display:block;margin-top:10px;font-size:13px;font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+/* (b)(c) Héros : texte, formulaire, extrait, faits. Ordre du DOM = ordre sur
+   téléphone ; sur ordinateur le formulaire occupe la colonne de droite. */
+.hero-grid{grid-template-areas:"texte" "form" "extrait" "faits"}
+.hero-texte{grid-area:texte}.hero-form{grid-area:form}.hero-extrait{grid-area:extrait}.hero-faits{grid-area:faits}
+.hero-extrait .extrait{margin-top:0}
+.lead-court{display:inline}.lead-long{display:none}
+@media (max-width:899px){
+  .hero{padding-block:24px 40px}
+  .hero h1{font-size:clamp(32px,8.6vw,40px);margin-top:12px}
+  .hero .lead{margin-top:12px;font-size:16px}
+  .hero-faits .hero-facts{margin-top:0}
+}
+@media (min-width:900px){
+  .hero-grid{grid-template-areas:"texte form" "extrait form" "faits form";grid-template-rows:auto auto 1fr;row-gap:28px}
+  .hero h1{font-size:clamp(40px,4.4vw,64px)}
+  .lead-court{display:none}.lead-long{display:inline}
+  .hero-faits .hero-facts{margin-top:0}
+}
+
+/* (e) Bandeau cookies compact : il ne recouvre plus rien (marge réservée en
+   bas de page par le composant, à sa hauteur exacte). */
+.cookies{position:fixed;left:0;right:0;bottom:0;z-index:9998;background:var(--nav-bg);color:var(--nav-fg);border-top:1px solid var(--nav-line);padding:6px max(16px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px))}
+.cookies p{margin:0;font-size:12px;line-height:1.45}
+.cookies a{color:var(--nav-fg);text-underline-offset:3px}
+.cookies button{display:inline-flex;align-items:center;vertical-align:middle;margin-left:10px;min-height:44px;min-width:44px;padding:0 14px;background:transparent;color:var(--nav-fg);border:1px solid var(--nav-line);font-family:var(--sans);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+.cookies-long{display:none}
+@media (min-width:600px){
+  .cookies p{font-size:13px}
+  .cookies-long{display:inline}.cookies-court{display:none}
+}

@@ -1,0 +1,6771 @@
+{
+ "le": "2026-11-11",
+ "pages": 61,
+ "textes": [
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "span",
+   "classe": "val na",
+   "majuscules": false,
+   "texte": "intervalle à vérifier dans le carnet",
+   "routes": [
+    "/moteur/renault-1-5-dci",
+    "/moteur/renault-1-5-dci",
+    "/moteur/renault-1-5-dci",
+    "/moteur/renault-1-2-tce",
+    "/moteur/renault-1-2-tce",
+    "/moteur/renault-0-9-tce",
+    "/moteur/renault-0-9-tce",
+    "/moteur/renault-0-9-tce",
+    "/moteur/renault-1-0-sce",
+    "/moteur/renault-1-0-tce",
+    "/moteur/renault-1-0-tce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/dacia-1-6-8v",
+    "/moteur/dacia-1-6-8v",
+    "/moteur/dacia-1-6-8v",
+    "/moteur/nissan-2-0-essence",
+    "/moteur/nissan-2-0-essence",
+    "/moteur/nissan-2-0-essence",
+    "/moteur/nissan-1-6-dig-t",
+    "/moteur/nissan-1-6-dig-t",
+    "/moteur/peugeot-1-6-hdi",
+    "/moteur/peugeot-1-6-hdi",
+    "/moteur/peugeot-1-6-hdi",
+    "/moteur/peugeot-1-6-hdi",
+    "/moteur/peugeot-1-6-hdi",
+    "/moteur/peugeot-1-5-bluehdi",
+    "/moteur/peugeot-1-2-puretech-110",
+    "/moteur/peugeot-1-2-puretech-110",
+    "/moteur/peugeot-1-2-puretech-130",
+    "/moteur/peugeot-1-2-puretech-130",
+    "/moteur/peugeot-1-2-puretech-130",
+    "/moteur/peugeot-1-2-puretech-130",
+    "/moteur/peugeot-1-2-puretech-82-atmospherique",
+    "/moteur/peugeot-1-2-puretech-82-atmospherique",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-2-0-bluehdi",
+    "/moteur/peugeot-2-2-bluehdi",
+    "/moteur/peugeot-2-2-bluehdi",
+    "/moteur/peugeot-2-2-bluehdi",
+    "/moteur/peugeot-2-2-bluehdi",
+    "/moteur/fiat-0-9-twinair",
+    "/moteur/fiat-0-9-twinair",
+    "/moteur/fiat-0-9-twinair",
+    "/moteur/fiat-0-9-twinair",
+    "/moteur/audi-2-0-tdi-ea288",
+    "/moteur/audi-2-0-tdi-ea288",
+    "/moteur/audi-2-0-tdi-ea288",
+    "/moteur/audi-2-0-tdi-ea288",
+    "/moteur/volkswagen-1-6-tdi-crbc",
+    "/moteur/volkswagen-1-6-tdi-crbc",
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+    "/moteur/bmw-2-0-diesel-b47",
+    "/moteur/bmw-2-0-diesel-b47",
+    "/moteur/bmw-2-0-diesel-b47",
+    "/moteur/bmw-2-0-diesel-n47",
+    "/moteur/bmw-2-0-diesel-n47",
+    "/moteur/bmw-1-6-essence-n13",
+    "/moteur/mini-1-6-cooper-s-prince",
+    "/moteur/mini-1-6-cooper-s-prince",
+    "/moteur/mercedes-2-1-cdi-om651",
+    "/moteur/mercedes-1-5-cdi-om607",
+    "/moteur/toyota-1-8-hybride",
+    "/moteur/toyota-1-8-hybride",
+    "/moteur/toyota-1-8-hybride",
+    "/moteur/toyota-1-8-essence",
+    "/moteur/ford-1-0-ecoboost",
+    "/moteur/ford-1-0-ecoboost",
+    "/moteur/ford-1-5-ecoboost-dragon",
+    "/moteur/ford-1-5-ecoboost-dragon",
+    "/moteur/hyundai-1-4-t-gdi",
+    "/moteur/hyundai-1-4-t-gdi",
+    "/moteur/hyundai-1-6-gdi",
+    "/moteur/hyundai-1-6-gdi",
+    "/moteur/hyundai-1-6-gdi",
+    "/moteur/hyundai-2-0-essence-theta-ii",
+    "/moteur/hyundai-2-0-essence-theta-ii",
+    "/moteur/hyundai-2-0-essence-theta-ii",
+    "/moteur/volvo-2-0-diesel-vea",
+    "/moteur/volvo-2-0-diesel-vea",
+    "/moteur/volvo-2-0-essence-vea",
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "DUPLEX SAS · SIREN 941 962 060 · Toulouse · 2026",
+   "routes": [
+    "/",
+    "/score",
+    "/pass",
+    "/airbags-takata",
+    "/moteur",
+    "/extension",
+    "/pro",
+    "/pro/api",
+    "/fiabilite",
+    "/cgu",
+    "/cgv-pass",
+    "/cgv-inspection",
+    "/cgv-visio",
+    "/mentions-legales",
+    "/politique-de-confidentialite",
+    "/extension/confidentialite",
+    "/moteur/renault-1-5-dci",
+    "/moteur/renault-1-2-tce",
+    "/moteur/renault-0-9-tce",
+    "/moteur/renault-1-0-sce",
+    "/moteur/renault-1-0-tce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/dacia-1-6-8v",
+    "/moteur/nissan-2-0-essence",
+    "/moteur/nissan-1-6-dig-t",
+    "/moteur/peugeot-1-6-hdi",
+    "/moteur/peugeot-1-5-bluehdi",
+    "/moteur/peugeot-1-2-puretech-110",
+    "/moteur/peugeot-1-2-puretech-130",
+    "/moteur/peugeot-1-2-puretech-100",
+    "/moteur/peugeot-1-2-puretech-82-atmospherique",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-2-0-bluehdi",
+    "/moteur/peugeot-2-2-bluehdi",
+    "/moteur/fiat-0-9-twinair",
+    "/moteur/volkswagen-2-0-tdi-ea288",
+    "/moteur/audi-2-0-tdi-ea288",
+    "/moteur/volkswagen-1-6-tdi-crbc",
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+    "/moteur/audi-4-0-v8-tfsi",
+    "/moteur/bmw-2-0-diesel-b47",
+    "/moteur/bmw-2-0-diesel-n47",
+    "/moteur/bmw-1-6-essence-n13",
+    "/moteur/mini-1-6-cooper-s-prince",
+    "/moteur/mercedes-2-1-cdi-om651",
+    "/moteur/mercedes-2-0-diesel-om654",
+    "/moteur/mercedes-1-5-cdi-om607",
+    "/moteur/toyota-1-8-hybride",
+    "/moteur/toyota-1-8-essence",
+    "/moteur/ford-1-0-ecoboost",
+    "/moteur/ford-1-5-ecoboost-dragon",
+    "/moteur/ford-1-6-ecoboost-sigma",
+    "/moteur/hyundai-1-0-t-gdi",
+    "/moteur/hyundai-1-4-t-gdi",
+    "/moteur/hyundai-1-6-gdi",
+    "/moteur/hyundai-2-0-essence-theta-ii",
+    "/moteur/volvo-2-0-diesel-vea",
+    "/moteur/volvo-2-0-essence-vea",
+    "/dossier",
+    "/comparer",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Analyse automatique. Ne remplace pas l'examen du véhicule par un professionnel.",
+   "routes": [
+    "/",
+    "/score",
+    "/pass",
+    "/airbags-takata",
+    "/moteur",
+    "/extension",
+    "/pro",
+    "/pro/api",
+    "/fiabilite",
+    "/cgu",
+    "/cgv-pass",
+    "/cgv-inspection",
+    "/cgv-visio",
+    "/mentions-legales",
+    "/politique-de-confidentialite",
+    "/extension/confidentialite",
+    "/moteur/renault-1-5-dci",
+    "/moteur/renault-1-2-tce",
+    "/moteur/renault-0-9-tce",
+    "/moteur/renault-1-0-sce",
+    "/moteur/renault-1-0-tce",
+    "/moteur/renault-1-6-sce",
+    "/moteur/dacia-1-6-8v",
+    "/moteur/nissan-2-0-essence",
+    "/moteur/nissan-1-6-dig-t",
+    "/moteur/peugeot-1-6-hdi",
+    "/moteur/peugeot-1-5-bluehdi",
+    "/moteur/peugeot-1-2-puretech-110",
+    "/moteur/peugeot-1-2-puretech-130",
+    "/moteur/peugeot-1-2-puretech-100",
+    "/moteur/peugeot-1-2-puretech-82-atmospherique",
+    "/moteur/peugeot-1-6-thp",
+    "/moteur/peugeot-2-0-bluehdi",
+    "/moteur/peugeot-2-2-bluehdi",
+    "/moteur/fiat-0-9-twinair",
+    "/moteur/volkswagen-2-0-tdi-ea288",
+    "/moteur/audi-2-0-tdi-ea288",
+    "/moteur/volkswagen-1-6-tdi-crbc",
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+    "/moteur/audi-4-0-v8-tfsi",
+    "/moteur/bmw-2-0-diesel-b47",
+    "/moteur/bmw-2-0-diesel-n47",
+    "/moteur/bmw-1-6-essence-n13",
+    "/moteur/mini-1-6-cooper-s-prince",
+    "/moteur/mercedes-2-1-cdi-om651",
+    "/moteur/mercedes-2-0-diesel-om654",
+    "/moteur/mercedes-1-5-cdi-om607",
+    "/moteur/toyota-1-8-hybride",
+    "/moteur/toyota-1-8-essence",
+    "/moteur/ford-1-0-ecoboost",
+    "/moteur/ford-1-5-ecoboost-dragon",
+    "/moteur/ford-1-6-ecoboost-sigma",
+    "/moteur/hyundai-1-0-t-gdi",
+    "/moteur/hyundai-1-4-t-gdi",
+    "/moteur/hyundai-1-6-gdi",
+    "/moteur/hyundai-2-0-essence-theta-ii",
+    "/moteur/volvo-2-0-diesel-vea",
+    "/moteur/volvo-2-0-essence-vea",
+    "/dossier",
+    "/comparer",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/pro",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "En laissant votre email, vous acceptez d'être recontacté par Inspexo à ce sujet. Lien de désinscription dans chaque email.",
+   "routes": [
+    "/pro",
+    "/pro",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Coûts indicatifs à faire chiffrer par un garage. À utiliser comme arguments, pas comme une remise garantie.",
+   "routes": [
+    "/moteur/renault-1-0-sce",
+    "/moteur/dacia-1-6-8v",
+    "/moteur/peugeot-1-2-puretech-110",
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Ce point concerne d'autres années ou une autre génération que ce véhicule.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "lbl",
+   "majuscules": true,
+   "texte": "Photos de l'annonce · facultatif",
+   "routes": [
+    "/",
+    "/score"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "summary",
+   "classe": "lbl",
+   "majuscules": true,
+   "texte": "Annonces comparables · facultatif — affine l'avis sur le prix +",
+   "routes": [
+    "/",
+    "/score"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "p",
+   "classe": "formnote",
+   "majuscules": false,
+   "texte": "Gratuit · Sans inscription · 5 analyses par jourNe remplace pas l'examen du véhicule par un professionnel.",
+   "routes": [
+    "/",
+    "/score"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] autodoc.co.uk — problems with the audi s6",
+   "routes": [
+    "/",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] forum.rs246.com — 4.0TFSI Turbo failure - RS246.com Forum :: The World's #1 Audi R, S and RS En…",
+   "routes": [
+    "/",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "price",
+   "majuscules": false,
+   "texte": "29 € · 30 JOURSANNONCES ILLIMITÉES",
+   "routes": [
+    "/",
+    "/pass"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "p",
+   "classe": "pass-note",
+   "majuscules": false,
+   "texte": "Sortie prévue en décembre 2026. Remboursé sans condition pendant 14 jours. Aucune reconduction automatique.",
+   "routes": [
+    "/",
+    "/pass"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "state",
+   "majuscules": true,
+   "texte": "Bientôt sur le Chrome Web Store",
+   "routes": [
+    "/",
+    "/extension"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] docteurmoteurs.com — renault h4dt 1 0 tce 100 ch dacia",
+   "routes": [
+    "/moteur/renault-1-0-sce",
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Circuit de refroidissement",
+   "routes": [
+    "/moteur/fiat-0-9-twinair",
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] autoscore.pro — 2.0 TDI (EA288 Evo) Reliability & Problems | Autoscore",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288",
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "sources en ligne, à confirmer sur place",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "p",
+   "classe": "eyebrow",
+   "majuscules": true,
+   "texte": "Voitures d'occasion · 100 % côté acheteur",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "",
+   "majuscules": true,
+   "texte": "Photo à venir · shooting atelier",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Tampons, factures, dates : ce qu'on vous apprend à lire avant de payer.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "b",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Le carnet d'entretien, pas la brochure.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Le kilométrage lu est comparé à celui de l'annonce.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Chaque défaut relevé, relié aux pannes connues du moteur.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] Ministère de la Transition écologique, liste Takata du 18/10/2026.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] RappelConso, data.economie.gouv.fr, vérifié le 11/11/2026.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "div",
+   "classe": "doc-foot",
+   "majuscules": false,
+   "texte": "5 affirmations écartées faute de source. Analyse automatique : ne remplace pas l'examen du véhicule par un professionnel.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "div",
+   "classe": "shoot",
+   "majuscules": false,
+   "texte": "PHOTOGRAPHIER · ANALYSÉ SUR PLACE",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "p",
+   "classe": "live",
+   "majuscules": false,
+   "texte": "À la fin : acheter, négocier ou ne pas acheter, avec les points qui ont pesé.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "b",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Verdict mis à jour après chaque réponse.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/",
+   "tag": "p",
+   "classe": "phone-cap",
+   "majuscules": false,
+   "texte": "Le mode visite, devant la voiture. Quinze points dans l'ordre d'une vraie inspection, démarrage à froid en premier.",
+   "routes": [
+    "/"
+   ]
+  },
+  {
+   "route": "/score",
+   "tag": "p",
+   "classe": "eyebrow",
+   "majuscules": true,
+   "texte": "Analyse d'annonce · gratuit, sans inscription",
+   "routes": [
+    "/score"
+   ]
+  },
+  {
+   "route": "/airbags-takata",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Saisissez une marque et un modèle pour interroger la liste.",
+   "routes": [
+    "/airbags-takata"
+   ]
+  },
+  {
+   "route": "/airbags-takata",
+   "tag": "p",
+   "classe": "eyebrow",
+   "majuscules": true,
+   "texte": "La liste officielle, marque par marque",
+   "routes": [
+    "/airbags-takata"
+   ]
+  },
+  {
+   "route": "/airbags-takata",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] Ministère de la Transition écologique — rappel des airbags Takata, liste du 18/10/2026.",
+   "routes": [
+    "/airbags-takata"
+   ]
+  },
+  {
+   "route": "/airbags-takata",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Cette page reprend la liste publiée par le ministère à la date indiquée, sans ajout ni interprétation. Elle ne remplace pas la vérification du numéro de série a",
+   "routes": [
+    "/airbags-takata"
+   ]
+  },
+  {
+   "route": "/moteur",
+   "tag": "span",
+   "classe": "tag",
+   "majuscules": true,
+   "texte": "1.2 PureTech 82 atmosphérique",
+   "routes": [
+    "/moteur"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Sur Leboncoin, La Centrale ou AutoScout24, affichez la page d'une voiture d'occasion.",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "« Analyser avec Inspexo » apparaît en bas de page. Un clic suffit : titre, prix, kilométrage, description et jusqu'à 6 photos sont envoyés pour analyse.",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Rappels constructeur, airbags Takata, pannes connues du moteur, incohérences et questions à poser au vendeur — en moins d'une minute.",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Dans l'appli Leboncoin ou La Centrale, sur la page de l'annonce.",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "b",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Ouvrez l'annonce dans Leboncoin.",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Le menu Partager du téléphone propose Inspexo. L'annonce est lue sur votre téléphone, jamais par nos serveurs.",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Même analyse gratuite que sur le site, photos comprises.",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Aucune collecte, aucun suivi : l'extension ne lit la page qu'au moment où vous cliquez, n'envoie les données qu'à inspexo.io, et les photos — EXIF supprimé — ne",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/extension",
+   "tag": "a",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Politique de confidentialité de l'extension",
+   "routes": [
+    "/extension"
+   ]
+  },
+  {
+   "route": "/pro",
+   "tag": "p",
+   "classe": "eyebrow",
+   "majuscules": true,
+   "texte": "Abonnement pro — liste d'attente",
+   "routes": [
+    "/pro"
+   ]
+  },
+  {
+   "route": "/pro",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Ni prix ni date : la formule n'existe pas encore. S'inscrire n'engage à rien et ne réserve rien.",
+   "routes": [
+    "/pro"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "pre",
+   "classe": "mono",
+   "majuscules": false,
+   "texte": "curl -X POST https://www.inspexo.io/api/v1/analyses \\ -H \"Authorization: Bearer ix_live_…\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"texte\": \"Peugeot 308 1",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "obligatoire (40 caractères minimum) · et facultatifs, en euros et en kilomètres.",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "pre",
+   "classe": "mono",
+   "majuscules": false,
+   "texte": "{ \"id\": \"9f9e54c4-5630-4173-92b1-9bcec68fad1a\", \"url\": \"https://www.inspexo.io/a/9f9e54c4-…\", \"verdict\": \"orange\", \"score\": 55, \"bareme_version\": \"11.0\", \"cache",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "401 · cle_manquante / cle_inconnue",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "dd",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Clé absente, mal formée ou inconnue.",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "429 · quota_mensuel / plafond_journalier",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "dd",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Un des deux plafonds est atteint.",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "dd",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Le champ « texte » fait moins de 40 caractères.",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/pro/api",
+   "tag": "dd",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Fournisseur d'IA indisponible. L'appel n'est pas décompté.",
+   "routes": [
+    "/pro/api"
+   ]
+  },
+  {
+   "route": "/fiabilite",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Publier un taux sur un échantillon trop petit serait trompeur : un seul dossier malheureux déplacerait le chiffre de plusieurs points. En attendant, chaque anal",
+   "routes": [
+    "/fiabilite"
+   ]
+  },
+  {
+   "route": "/extension/confidentialite",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Dernière mise à jour : 26 octobre 2026 — s'applique à l'extension « Inspexo — Analyser une annonce auto ».",
+   "routes": [
+    "/extension/confidentialite"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Coussinets de bielle / vilebrequin",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "avant 180 000 km, surtout sur véhicules antérieurs à 2006",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Système d'injection (pompe haute pression Delphi, injecteurs)",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Échangeur de suralimentation (intercooler)",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Pompe à huile / filtre à huile",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "surtout avant 2007, aggravé en usage urbain",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] carverif.fr — Clio 3 1.5 dCi 70-105 : fiabilité et problèmes par année",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] icarcheck.net — Clio 2 1.5 dCi fiabilité, pannes connues et prix en 2026",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] largus.fr — Diesels PSA/Renault : la liste des pannes récurrentes depuis 2010 - L'argus",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] planeterenault.com — Discussion Fiabilit� du 1.5 dCi (K9K) ? -P0",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] carverif.fr — Clio 4 1.5 dCi 90-110 : fiabilité et pannes connues",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-5-dci",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche K9K vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/renault-1-5-dci"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Segments de piston / lubrification",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès les premiers kilomètres dans les cas sévères, défaut surtout documenté sur les blocs produits en",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Distribution (chaîne, tendeur, déphaseurs VVT)",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "chaîne pouvant commencer à s'étirer dès 100 000 km en usage sportif/haut régime fréquent",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Calculateur moteur / cartographie turbo",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] planeterenault.com — Moteur 1.2 TCe 120 H5FT",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] quechoisir.org — Moteur 1.2 Renault - 400 000 voitures en danger - Actualité - Que Choisir Ens…",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] docteurmoteurs.com — moteur renault h5ft 1 2 tce",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] chaine-courroie.com — 1.2 TCe Renault-Dacia : 3 Moteurs, 3 degrés de fiabilité | Chaine-courroie.com",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] forum-auto.caradisiac.com — 567410 changement distribution 12 tce 130 h5ft suite à mo…",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-2-tce",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche H5FT vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/renault-1-2-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Circuit électrique (borne de batterie)",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Circuit de refroidissement (boîtier thermostatique)",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Gestion moteur / turbocompresseur",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "span",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Véhicules Renault/Dacia équipés du moteur H4Bt assemblés avant le 26 juillet 2019 (ex. Dacia Sandero II, Sandero II Stepway)",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] carverif.fr — Sandero 2 0.9 TCe 90 : fiabilité du moteur et pannes",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] carverif.fr — Sandero II Stepway 0.9 TCe 90 : fiabilité et défauts",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] forum-auto.caradisiac.com — 530197 fuite boitier deau moteur 09 tce",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] auto-doc.fr — fuites du thermostat 0 9 tce un defaut recurrent non reco…",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] carverif.fr — Renault Clio IV 0.9 TCe 90 : fiabilité et conseils",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] garageraymond.fr — Fiabilité du moteur 0.9 TCe 90 ch : verdict et conseils d'achat",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] autoscore.pro — 0.9 TCe (H4Bt) Reliability & Problems | Autoscore",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] drivisual.tv — Renault 0.9 TCe (H4Bt) Engine Review: The Hidden Hero That Breaks Prejudices",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] espace-collection.fr — Moteur 0.9 TCe fiabilité : problèmes, avis et solutions clés",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] garagelgb.fr — 0.9 TCE Fiabilité : Avis, Défauts et Durée de Vie Réelle",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] autoscoop.fr — Fiabilité des moteurs Renault TCe en occasion : le guide complet - Auto Scoop",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[12] ct-auto-63.fr — fiabilite 09 tce millesimes 2012 2016",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-0-9-tce",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche H4BT vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/renault-0-9-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · calculateur moteur / injection",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · bloc moteur / segmentation",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] forum-auto.caradisiac.com — 2",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] docteurmoteurs.com — moteur renault h4d 1 0 sce",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] mymotorlist.com — Engine Renault H4D: specifications, characteristics, oil, performance",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] garagevoltaire.fr — Moteur 1.0 TCe 90 : quelle fiabilité réelle ?",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] en.avtotachki.com — Коды ошибок OBD2: таблица P0000–U0999 с расшифровкой",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-sce",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche H4D vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/renault-1-0-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Calculateur moteur / gestion électronique",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Couvre-culasse / joint de cache-culbuteurs",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Courroie accessoires / alternateur",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Supports moteur (silentblocs)",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] fiches-auto.fr — Fiabilit� du 1.0 TCE (Dacia / Renault / Nissan)",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] autolisa.fr — Fiabilité du moteur 1.0 TCE 100 : avis et résultats d’essai",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] garagevoltaire.fr — Moteur 1.0 TCe 90 : quelle fiabilité réelle ?",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] carverif.fr — Renault Captur II 1.0 TCe 100 : fiabilité et conseils",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] motoranimal.com — Renault/Dacia 1.0 TCe (H4Dt) engine common problems and lifespan",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] drivisual.tv — Renault 1.0 TCe (H4Dt) Engine Chronic Problems: A Detailed Look",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-0-tce",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche H4DT vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/renault-1-0-tce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Moteur (segments de piston / joints de soupapes)",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "120 000 - 150 000 km (parfois plus tôt)",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Distribution (tendeur de chaîne)",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Gestion du ralenti (boîtier papillon, capteur MAP, EGR)",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Thermostat / circuit de refroidissement",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Distribution (jeu aux soupapes)",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "07 · Boîte de vitesses hybride multimode (DB1)",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] uvoz.info — Održavanje i servis Renault motora 1.6 SCe H4M - Uvoz.info",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] autoinsight.com.ua — Ресурс двигуна Renault H4M 1.6 скільки служить мотор та які має проблеми - Ав…",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] motobenzyna.pl — Silnik Renault 1.6 16V SCe 102KM H4M - opinie, wady, zalety",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] engineexplained.com — renault h4m 1 6l engine review and insights",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] motorist.expert — Двигатель Renault H4M (1.6 л. 16V): обзор, характеристики, надежность, слабые…",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] francuskie.pl — 1.6 16V SCe H4M – jeden z ostatnich wolnossących silników w gamie Renault. Op…",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] carverif.fr — Renault Arkana 1.6 E-Tech Hybrid 145 : fiabilité et conseils",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] carverif.fr — Renault Clio V 1.6 E-Tech Hybrid 145 : fiabilité et conseils",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] motohybryda.pl — Silnik Renault 1.6 16V E-TECH Full Hybrid 141/143KM H4M - opinie, usterki, se…",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] malykh.blogspot.com — malykh.com notes: Renault E-Tech 1.6 Hybrid deadly trouble",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/renault-1-6-sce",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche H4M vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/renault-1-6-sce"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Système d'admission / régulation du ralenti",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 30 000 km, observé aussi vers 95 000-330 000 km",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "60 000 à 120 000 km / 5 à 6 ans (remplacement préventif préconisé)",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Culasse / collecteur d'admission",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Culasse / distribution (soupapes)",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] forum-auto.caradisiac.com — 210353 moteur16e 8v type k7m ralenti instablebroutement r…",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] planeterenault.com — Sc�nic I Ralenti oscillant sur k7m R�gl� -P0",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] forum-auto.caradisiac.com — 110877 longévité du k7m donnez votre kilométrage",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] planeterenault.com — Clio II .I Perte de puissance (K7M - 1.6 8v) -P0",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] docteurmoteurs.com — revue du moteur renault k7m",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] dacia.fr — Courroie de distribution - Entretien et après-vente - Dacia",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] planeterenault.com — Clio II soucis cylindres moteur K7m 1.6 8V -P0",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] caradisiac.com — Maxi fiche fiabilite que vaut la Dacia Logan en occasion …",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/dacia-1-6-8v",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche K7M vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/dacia-1-6-8v"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Bloc moteur / segmentation des pistons",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "à partir d'environ 150 000 km, plus fréquent sur les moteurs produits avant 2010",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Distribution (chaîne, tendeur, guides)",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Collecteur d'admission / actionneur électrique",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 50 000 km, contrôle recommandé tous les 60 000 miles (~96 000 km)",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] dailydriven.ro — sur le moteur mr20de de nissan",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] moteurgarage.com — moteur nissan mr20de 2 0 l problemes et fiabilite",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] docteurmoteurs.com — moteur nissan renault mr20de m4r 2 0",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] autopartswd.com — Nissan MR20 Engine Guide: Specs, Reliability & Problems",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] enginecode.uk — Nissan MR20DE Engine Specs, Issues & Identification | Specs, Issues, Models |…",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] motorreviewer.com — Nissan 2.0L MR20DE Engine Specs, Problems, Reliability, Oil, Info",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] globusks.ru — problemy dvigatelya mr20 nissan qashqai j11 rastyazhenie …",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] mywikimotors.com — Nissan MR20DE Engine | Oil capacity, reliability, tuning",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] mymotorlist.com — Engine Nissan MR20DE: specifications, characteristics, oil, performance",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] cararac.com — nissan sentra 2 l engine problems durability",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-2-0-essence",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche MR20DE vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace",
+   "routes": [
+    "/moteur/nissan-2-0-essence"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Distribution (chaîne et tendeur)",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Culasse / soupapes d'admission",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Pompe à carburant (réservoir)",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Capteur de débit d'air massique",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Joints d'admission et de rampe de carburant",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] carchecker.pro — nissan qashqai j11 1.6 digt",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] docteurmoteurs.com — moteur nissan mr16ddt 1 6 dig t",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] enginefinders.co.uk — Rebuilt Nissan 1.6L DIG-T Turbo Petrol Engine for Sale",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] mymotorlist.com — Engine Nissan MR16DDT: specifications, characteristics, oil, performance",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] enginecrux.com — nissan 1 6l turbocharged engine specs reliability",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] torquecars.com — All you need to know about tuning the Nissan MR16DDT engine!",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] silnikologia.com — silnik nissan mr16ddt 1 6 dig t",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/nissan-1-6-dig-t",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche MR16DDT vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplac",
+   "routes": [
+    "/moteur/nissan-1-6-dig-t"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Calculateur moteur / logiciel de gestion injection",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Turbocompresseur / circuit de lubrification",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Culasse / demi-culasse (carter de distribution côté culasse)",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Courroie de distribution",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "120 000 - 240 000 km selon version",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "07 · Circuit d'alimentation carburant / boîtier d'injection",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "span",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Peugeot 308 et Partner 1.6 BlueHDi (DV6FD), modèles 2015-2016 environ",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] peugeotforums.com — Safety Recall JMK - 1.6 Blue HDi | Peugeot Forums",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] peugeotforums.com — Safety Recall JMK - 1.6 Blue HDi | Page 2 | Peugeot Forums",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] forums.motorlegend.com — 49604 fiabilité 1 6 hdi dv6 psa",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] forum-peugeot.com — fiabiliter turbo 1.6 hdi | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] chaine-courroie.com — Moteur PSA 1.6 HDi (DV6) : caractéristiques, fiabilité et entretien | Chaine-…",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] forum-peugeot.com — Enquête Fuite d'Huile Joint demie-culasse 1.6HDI (DV6) | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] forum-auto.caradisiac.com — 80931 fiabilité 16 hdi 112ch",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] forum-auto.caradisiac.com — 559715 point dur distribution 16 hdi dv6ted4 9hz",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] odopass.fr — Programme d&#x27;entretien Peugeot 207 Essence, Diesel - Guide complet",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] peugeotforums.com — DV6 Major Engine Recall | Peugeot Forums",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] peugeotforums.com — Total Recall | Peugeot Forums",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[12] peugeotforums.com — Recall to check engine components | Peugeot Forums",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[13] largus.fr — fiabilite bluehdi occasion tout savoir sur les defauts du…",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-hdi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche DV6 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/peugeot-1-6-hdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution - chaîne interne entre arbres à cames (7 mm)",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Poulie de pompe à eau / synchronisation distribution",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Système SCR / réservoir et injecteur AdBlue",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Demi-culasse / plan de joint",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] largus.fr — Peugeot, Citroën, DS, Opel. Problème de casse sur le 1.5 diesel (DV5) - L'argus",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] fiches-auto.fr — Fiabilit� 1.5 BlueHDI",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] forum-peugeot.com — distribution 308 1.5 hdi 130 | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] forum-auto.caradisiac.com — 556655 chaine distribution 5008 15 hdi 130 cv hs",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] puissancedgarage.fr — Fiabilité du 1.5 BlueHDi : casse moteur, AdBlue et prise en charge | Xtrem Ga…",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] caradisiac.com — Fiabilité du 1.5 BlueHDi : si mauvaise qu'on le dit ?",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] planete-citroen.com — 143332 tutoriel modernisation du moteur 15 bluehdi dv5 – …",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] largus.fr — fiabilite 1 5 bluehdi la liste des citroen ds opel et peu…",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-5-bluehdi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche DV5 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/peugeot-1-5-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution (courroie immergée dans l'huile moteur)",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "60 000 à 150 000 km (premiers symptômes fréquents entre 60 000 et 100 000 km)",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Circuit de lubrification (crépine / pompe à huile)",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Bloc moteur (segments de piston)",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Culasse / soupapes d'admission",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] docteurmoteurs.com — citroen peugeot eb2dt 1 2 puretech 110",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] chaine-courroie.com — Courroie distribution 208 PureTech : EB2F ou EB2DT, tout change | Chaine-cour…",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] chaine-courroie.com — Changement préventif PureTech : à quel kilométrage intervenir ? | Chaine-cour…",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] carverif.fr — Peugeot 2008 I 1.2 PureTech 110 : fiabilité et conseils",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] citymotoclub.fr — Moteur PureTech : fiabilité, pannes et ce qu'il faut savoir",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] forum-peugeot.com — véracité des problèmes de courroie eb2adt s.27996",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-110",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EB2DT vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-110"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution (courroie + crépine d'huile)",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 60 000 km sur véhicules à usage urbain/petits trajets mal entretenus, risque élevé jusqu'à 100 0",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Segmentation pistons / circuit de lubrification",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] forum-peugeot.com — Problème de courroie distribution 1.2 Puretech 130 | Page 2 | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] docteurmoteurs.com — citroen peugeot eb2dts 1 2 puretech 130",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] ntn-snr.com — TECHinfo 1.2 PureTech Turbo",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] carverif.fr — Peugeot 308 II 1.2 PureTech 130 : fiabilité et conseils",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-130",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EB2DTS vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-130"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Courroie de distribution (bain d'huile) / crépine et pompe à huile",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Canister (filtre à charbon actif) / réservoir carburant",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Niveau d'huile moteur / procédure de vidange",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] forum-peugeot.com — Véracité des problèmes de courroie EB2ADT(S) | Page 3 | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] forum-peugeot.com — Véracité des problèmes de courroie EB2ADT(S) | Page 7 | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] forum-peugeot.com — Véracité des problèmes de courroie EB2ADT(S) | Page 2 | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] forum-peugeot.com — Véracité des problèmes de courroie EB2ADT(S) | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] forum-peugeot.com — Véracité des problèmes de courroie EB2ADT(S) | Page 8 | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] forum-peugeot.com — Choix Moteur | Forum Peugeot",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-100",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EB2ADTS vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplac",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-100"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution / courroie bain d'huile",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Capteurs moteur / gestion électronique",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] autotonic.org — peugeot 208 puretech fiabilite",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] club.auto-doc.fr — probleme de moteur 12 puretech 82",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] mastercovering.fr — Fiabilité Du 1.2 PureTech 82 : Faut-Il Craindre Ce Moteur PSA ?",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] ntn-snr.com — TECHinfo 1.2 PureTech Atmo",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] moninspection.fr — Avis et fiabilité du moteur 1.2 PureTech 82 cv",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] garagegine.fr — Peugeot 208 1.2 PureTech 82 fiabilité : défauts et conseils",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-2-puretech-82-atmospherique",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EB2F vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/peugeot-1-2-puretech-82-atmospherique"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Chaîne de distribution / tendeur hydraulique / patins plastique",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "60 000 à 120 000 km, parfois dès 40 000-60 000 km sur les premières séries 2006-2010",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Segmentation des pistons / circuit de retour d'huile du turbo",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès les premières années d'usage, plus marqué sur les séries 2006-2011",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Soupapes d'admission / circuit de ventilation carter",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Pompe à carburant haute pression",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Turbocompresseur à géométrie variable",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Pompe à eau / boîtier d'eau (thermostat)",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] autocopilot.fr — 1.6 THP Prince EP6 : chaîne, conso huile, fiabilité (2026)",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] megaturbo.fr — Fiabilité 1.6 THP : faut-il fuir ce moteur PSA-BMW ?",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] odopass.fr — Programme d&#x27;entretien Peugeot 207 Essence, Diesel - Guide complet",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] occasion-moteur.com — moteur 1 6 thp ep6 prince d occasion fiabilité et pièges",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] mytracks.fr — Moteur 1.6 thp fiabilité et problèmes",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] essaisduclub.fr — Moteur 1.6 THP : est-il vraiment fiable ? Notre bilan complet",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] journal-auto-moto.fr — Moteur 1.6 THP : Fiabilité et problèmes courants &#8211; Journal Auto Moto",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] carverif.fr — Peugeot 208 I GTi 1.6 THP : Fiabilité et Avis",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-1-6-thp",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EP6 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/peugeot-1-6-thp"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Dépollution SCR / réservoir AdBlue",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Volant moteur bi-masse / embrayage",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Poulie damper / vilebrequin",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Pompe d'injection haute pression",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "07 · Culasse / circuit de refroidissement",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "span",
+   "classe": "tag ambre",
+   "majuscules": true,
+   "texte": "entretien exigé : Non précisé dans la source",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "span",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Peugeot Traveller et Expert, moteur BlueHDi 2.0 DW10F Euro 6.4, assemblés entre le 17 mai 2022 et le 29 janvier 2024",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] largus.fr — Fiabilité Peugeot, Citroën, DS... Tout savoir sur les défauts du réservoir d’…",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] carverif.fr — Stellantis moteur 2.0 BlueHDi 180 EAT8 : fiabilité, problèmes connus et conse…",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] rappel.conso.gouv.fr — Rappel Consommateur - D&#xE9;tail Traveller, Expert Van de passagers Peugeot",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] largus.fr — Rappel AdBlue Peugeot. Plus de 13 000 véhicules concernés par un défaut de co…",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] carchecker.pro — peugeot 508 2.0 bluehdi",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] carchecker.pro — peugeot 308 t9 2.0 bluehdi",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] forum-auto.caradisiac.com — 120770 problèmes sur 20 hdi dw10td only",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] forum-auto.caradisiac.com — sujet90063 35",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] docteurmoteurs.com — moteur citroen peugeot 2 0 dw10fcted4 dw10fc bluehdi 180",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] circuitkarting.fr — Moteur DW10 (2.0 HDi) : pannes courantes, joint de culasse, démarrage, suppor…",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-0-bluehdi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche DW10 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/peugeot-2-0-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution - chaîne reliant les arbres à cames",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Injection - injecteurs diesel",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Suralimentation - turbocompresseur et doseur d'air",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Admission - volets de turbulence (swirl) et collecteur d'admission",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Dépollution - FAP et réservoir d'additif Cérine",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "autour de 160 000 km pour le remplacement du FAP",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] docteurmoteurs.com — moteur peugeot citroen 2 2 hdi dw12",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] docteurmoteurs.com — moteur citroen peugeot dw12ted4 dw12ated4 2 2 hdi",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] auto-platinium.com — Moteur 2.2 HDi : Fiabilité & Durée de vie",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] moteurgarage.com — moteur peugeot dw12uted 2 2 hdi problemes et statistiques",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] gebrauchtwagenberater.de — PSA HDi (DW-12): Wie haltbar ist der Peugeot-Diesel?",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/peugeot-2-2-bluehdi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche DW12 vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/peugeot-2-2-bluehdi"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Embrayage / volant moteur",
+   "routes": [
+    "/moteur/fiat-0-9-twinair"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Distribution / carter moteur",
+   "routes": [
+    "/moteur/fiat-0-9-twinair"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] fiches-auto.fr — Tous les probl�mes sur Fiat 500 2007 (331 t�moignages)",
+   "routes": [
+    "/moteur/fiat-0-9-twinair"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] fiches-auto.fr — Avis Fiat 500 0.9 TwinAir 105 ch Bo�te m�canique, ann�e 2018 , 64500kms 7 pla…",
+   "routes": [
+    "/moteur/fiat-0-9-twinair"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] recalls-rappels.canada.ca — numero rappel transports canada 2016217 fiat chrysli auto…",
+   "routes": [
+    "/moteur/fiat-0-9-twinair"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] nouvelle-fiat500.fr — topic7161 20",
+   "routes": [
+    "/moteur/fiat-0-9-twinair"
+   ]
+  },
+  {
+   "route": "/moteur/fiat-0-9-twinair",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche TWINAIR vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplac",
+   "routes": [
+    "/moteur/fiat-0-9-twinair"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Vanne EGR et refroidisseur EGR",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "100 000 - 150 000 km (usage urbain intensif)",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · FAP / système de régénération",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Système SCR / AdBlue (capteur NOx, dosing module, pompe AdBlue)",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Pompe à eau mécanique interruptible et vanne de liquide de refroidissement pour culasse N489",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Turbocompresseur à géométrie variable (actionneur, wastegate)",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "07 · Pompe haute pression d'injection CP4",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "08 · Joint spi d'arbre à cames / courroie de distribution",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] vag-perf.fr — moteur 2 0 tdi ea288 guide complet fiabilite problemes et…",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] enginefinders.co.uk — VW 2.0 TDI Engine Problems: Reliability & Common Failures UK",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] autoscore.pro — 2.0 tdi ea288",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] moto-a2.fr — Fiabilité moteur 2.0 TDI 150 Volkswagen : générations et pannes",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] torquecars.com — Common EA288 VW 2.0 TDi Did They Sort The Probelms",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] autocopilot.fr — 2.0 TDI EA288 : fiabilité, problèmes, à éviter (2026)",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] etoilecollections.fr — Tout sur le Moteur 2.0 TDI : Fiabilité vraiment légendaire ?!",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] vag-technique.fr — Question - Pompe à eau interruptible sur 1.6 où 2.0TDI - VAG-Technique.fr",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] vag-technique.fr — SSP 514 La nouvelle gamme de moteurs diesel EA288",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] tauntonautomobiles.com — Taunton Automobiles | VW Finance, Remapping & Repairs",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[12] keramotor.fr — Fiabilité du moteur 2.0 TDI 150 Volkswagen : ce qu'il faut savoir",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[13] docteurmoteurs.com — moteurs diesel 2 0 tdi de la serie ea288 audi vw",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-2-0-tdi-ea288",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EA288 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/volkswagen-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution / joint spi arbre à cames",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Circuit de refroidissement / pompe à eau",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Filtre à particules (FAP/DPF)",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Système SCR / AdBlue (capteur NOx, injecteur de dosage d'urée)",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Pompe haute pression Bosch CP4",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] docteurmoteurs.com — moteurs diesel 2 0 tdi de la serie ea288 audi vw",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] largus.fr — L'argus - L'argus",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] autocopilot.fr — 2.0 TDI EA288 : fiabilité, problèmes, à éviter (2026)",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] vag-perf.fr — moteur 2 0 tdi ea288 guide complet fiabilite problemes et…",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] enginescope.gr — Volkswagen EA288 2.0 TDI (CRBC/CRLB/CUNA/DFGA/DFHA/DETA/CUAA/DTTA/DTUA/DTIA) …",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] torquecars.com — Common EA288 VW 2.0 TDi Did They Sort The Probelms",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/audi-2-0-tdi-ea288",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EA288 vérifiée le 26/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/audi-2-0-tdi-ea288"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Circuit de refroidissement",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Filtre à particules / capteur de pression différentielle",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Distribution / ligne d'échappement-turbo",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] forums.audipassion.com — Surpressions LDR sur TDI 150 (2013) - A3 8V / A3 Sportback / A3 Cabriolet - (…",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] forum-audi.com — Problème perte de liquide de refroidissement (Page 1) / A3 8V / Forum-audi.com",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] forumgolf7.fr — Problème capteur pression de fap golf 7 tdi 150 - Forum Golf 7",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] auto-doc.fr — problemes du moteur 20 tdi 150 ch",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] vwaudiforum.co.uk — 201607 A3 2 0 TDi CRBC timing amongst other issues",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] tlemcen-electronic.com — 99458 question moteur crbc 2 0 tdi 150 a",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] forumgolf7.fr — Bruit moteur au démarrage tdi 150. - Forum Golf 7",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-tdi-crbc",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche CRBC vérifiée le 26/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/volkswagen-1-6-tdi-crbc"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Système de dépollution - vanne/refroidisseur EGR",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Injection Common Rail - injecteurs",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Circuit d'injection - pompe haute pression",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Transmission - volant moteur bi-masse",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Circuit de refroidissement - pompe à eau",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Ligne d'échappement - FAP et capteur de pression différentielle",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "kilométrage élevé, aggravé en usage urbain",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "07 · Distribution - courroie, galets, pompe à eau associée",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "120 000 km (contrôle recommandé dès 90 000 km)",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "span",
+   "classe": "tag ambre",
+   "majuscules": true,
+   "texte": "entretien exigé : Non précisé dans les sources consultées",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] vag-perf.fr — moteur 2 0 tdi ea189 guide complet fiabilite problemes et…",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] auto-platinium.com — Moteur 1.6 TDI : Fiabilité & Durée de vie",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] largus.fr — Fiabilité TDI Volkswagen. 15 défauts pris en charge par le groupe VW - L'argus",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] autoscore.pro — EA189 Reliability & Problems | Autoscore",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] megaturbo.fr — Moteur 1.6 TDI (VW, Audi, Skoda) : fiabilité, pannes et longévité",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] docteurmoteurs.com — moteurs diesel 2 0 tdi ea189 vw audi",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] moteurgarage.com — moteur audi ea189 1 6 tdi cayc problemes et statistiques",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] autocopilot.fr — 2.0 TDI EA189 Dieselgate : rappel, pompe HP, fiabilité (2026)",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] etoilecollections.fr — Tout sur le Moteur 2.0 TDI : Fiabilité vraiment légendaire ?!",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] chaine-courroie.com — Moteur TDI EA189 : fiabilité, problèmes et entretien | Chaine-courroie.com",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] docteurmoteurs.com — moteurs 2 0 tdi ea189 volkswagen golf 6 passat b6 b7",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/volkswagen-1-6-et-2-0-tdi-ea189",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EA189 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/volkswagen-1-6-et-2-0-tdi-ea189"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Turbocompresseurs / crépine d'huile dans la vallée du V",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "env. 60 000 à 100 000 km (cas documentés dès ~65 000 km)",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Circuit d'alimentation carburant / durite haute pression",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "span",
+   "classe": "tag ambre",
+   "majuscules": true,
+   "texte": "Rappel 20U6/L8 (NHTSA 13V450)",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Durite de refroidissement du turbocompresseur",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Séparateur d'huile (PCV) monté au-dessus de la crépine d'huile des turbos",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "aux alentours de 80 000 km (50 000 miles)",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Arbres à cames / déphaseurs de distribution variable",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Refroidisseur d'air de suralimentation (charge air cooler)",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "span",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Audi A6, S6, RS6, A7, S7, RS7, A8, S8 — 76 098 véhicules dans le monde, référence KBA 011729",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "span",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Audi S6 et S7 millésimes 2013-2014 équipés du moteur 4.0L EA824",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] auto-motor-und-sport.de — rueckruf audi verstopfte turbos",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] amp.consumerreports.org — reliability",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] audiworld.com — any s6 engine problems out there 2897208",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] 6speedonline.com — 421805 4 0 liter v8 turbo engine potential problems",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] audizine.com — 847519 4 0 TFSI Misfire and problems",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/audi-4-0-v8-tfsi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche EA824 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/audi-4-0-v8-tfsi"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Vanne et refroidisseur EGR",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Chaîne de distribution, tendeur et patins",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "80 000 à 150 000 km (surtout sur les premiers blocs B47 2014-2016)",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Filtre à particules diesel",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "au-delà de 200 000 km dans les cas rapportés comme marginaux",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "span",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Véhicules BMW équipés du moteur diesel B47 (selon la source, rappel lié au refroidisseur EGR, risque d'incendie)",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] bimmergarage.co.uk — BMW b47 common issues | Bimmer Garage",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] bimmergarage.co.uk — Bmw b47 engine problems | Bimmer Garage",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] euroracingparts.fr — (BUYING GUIDE) BMW B47 engine: How reliable is it? &ndash; Euro Racing Parts",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] bimmer.ai — BMW B47 Engine Reliability Guide: Common Problems & UK Buyer Advice | Bimmer.AI",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] quickenginesolution.co.uk — BMW B47 Engine Reliability, Longevity & Known Issues - UK",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] bimmer-mag.com — Top 7 Common Issues With N47 and B47 Engines and How to Fix Them - Bimmer Mag",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] quarrymotors.co.uk — BMW B47 Engine: A Breakdown | Specs, Issues & Repairs",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] bmwblog.com — BMW B47 Engine Guide: Reliability, Efficiency, Tuning, Pros and Cons",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-b47",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche B47 vérifiée le 27/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-b47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution (chaîne, patins/guides, tendeur hydraulique)",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "40 000 à 150 000 km (défaillances les plus fréquentes avant 75 000 km sur les premières générations)",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Vanne de recyclage des gaz d'échappement (EGR)",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "environ 160 000 km (observé par un utilisateur, pouvant survenir plus tôt en usage urbain)",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Filtre à particules (FAP/DPF)",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] f30.bimmerpost.com — N47 timing chain recall - BMW F30/F32 Forum - BIMMERPOST",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] g42.bimmerpost.com — Recall N47 timing chain",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] 7post.com — N47 timing chain recall - Page 12",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] pistonheads.com — N47 Timing Chain failure --- how common is it still? - Page 1 - BMW General -…",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] club.auto-doc.fr — moteur n47 sans probleme",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-2-0-diesel-n47",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche N47 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/bmw-2-0-diesel-n47"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution (chaîne, tendeur hydraulique, guides plastiques)",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Moteur (segments/anneaux de piston, joint de cache-culbuteurs, joint de carter, vanne PCV)",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Culasse (sièges de soupapes)",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 20 000-25 000 km pour certains cas de raccord fissuré, variable pour pompe à eau/thermostat",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Boîte de vitesses automatique (convertisseur de couple)",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Allumage / injection (bobines, bougies, injecteurs haute pression)",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "07 · Direction (boîtier électrique de la crémaillère)",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] wheele.fr — Fiabilité du moteur N13 de la BMW Série 1 F21 118i - Wheele",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] cars-one.fr — BMW Série F21 118i moteur N13 : fiabilité réelle ?",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] vendmonauto.fr — Fiabilité du moteur N13 dans la BMW Série 1 F21 118i : Analyse approfondie",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] pistonheads.com — BMW N13 vs B38 - Page 1 - BMW General - PistonHeads UK",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] drivisual.tv — BMW N13 Engine: Common Problems, Buying Guide & What to Look For",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] getusedengine.com — bmw n13 engine problems insights and owner feedback",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] citroen-cotedazur.fr — Fiabilité du moteur n13 de BMW : analyse des problèmes les plus courants",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] f20.1addicts.com — BMW N13 engine, any issues? (114i, 116i, 118i, 316i) - BMW 1-Series Forum (F2…",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] f20.1addicts.com — Problems with my 116i N13 F21 - BMW 1-Series Forum (F20) - BIMMERPOST",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] babybmw.net — What do I need to know about the N13B16 engine? | Baby BMW Forum",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] babybmw.net — Thoughts on my departing N13 Engine | Baby BMW Forum",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[12] fiches-auto.fr — Avis Bmw Serie 1 116i 136 ch BMW 116i 136 (N13) Pack M 04/2012, 17 pouces, x�…",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/bmw-1-6-essence-n13",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche N13 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/bmw-1-6-essence-n13"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Chaîne de distribution, tendeur hydraulique, guides plastiques, pignons",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Pompe d'injection haute pression",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "variable, pannes rapportées y compris autour de 120 000 km et avant",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Thermostat, capteur de température, pompe à eau",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] lohen.co.uk — Timing Chain Death Rattle Fix for MINI N18 Engines &ndash; Lohen - Mini Tunin…",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] pscautocentre.co.uk — MINI N18 Engine Timing Chain Guide Failure & Replacement - PSC Exclusively Ge…",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] northamericanmotoring.com — 344784 n18 timing chain",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] accessoirement.fr — Mini Cooper S 184 : comprendre les vrais problèmes moteur - Accessoirement",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] static.nhtsa.gov — MC 10146720 9999",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] northamericanmotoring.com — 325329 n18 engine important maintenance items and common …",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] go-parts.com — direct injection high pressure fuel pump mini cooper mini…",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mini-1-6-cooper-s-prince",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche N18 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/mini-1-6-cooper-s-prince"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Tendeur de chaîne de distribution (joint/bague d'étanchéité)",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Injecteurs diesel Delphi (common rail)",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Chaîne de distribution et tendeur",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Support de filtre à gasoil (passage de liquide de refroidissement intégré, en plastique)",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Collecteur d'admission (plastique)",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] static.nhtsa.gov — RCMN 15V351 5763",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] static.nhtsa.gov — RCMN 14V762 6169",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] static.nhtsa.gov — SB 10071492 2280",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] forum-mercedes.com — topic 23 le moteur om651 fiable ou pas fiable",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] forum-mercedes.com — topic 10 presentation du moteur om651",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] forum-mercedes.com — topic 4386 les secrets du moteur om651 problemes connus e…",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] largus.fr — Mercedes 1.8 et 2.1 diesel (OM651). Souci de chaîne de distribution - L'argus",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-1-cdi-om651",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche OM651 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/mercedes-2-1-cdi-om651"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Culbuterie (linguets/culbuteurs à rouleau et galet côté échappement) et arbres à cames",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Injecteurs / système d'injection haute pression",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Capteur NOx / système SCR",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès les premiers km (cas observé vers 7 000 km)",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] largus.fr — Fiabilité Mercedes 2.0 diesel (OM654). Usure des culbuteurs - L'argus",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] mercedes-benz.forumactif.com — Probléme recurant moteur OM654",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] mbworld.org — 811582 om654 very rough low throttle input",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] forums.mbclub.co.uk — Checking your browser",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] aclassclub.co.uk — OM654 200d 2022 misfiring/shaking after cold start? | Mercedes A-Class Forum",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-2-0-diesel-om654",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche OM654 vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/mercedes-2-0-diesel-om654"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "100 000 km et plus, séries 2012–2015 les plus citées",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Courroie de distribution",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] garage-pouget.fr — Mercedes Classe A éviter: Pannes Coûteuses & Problèmes",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] equiperegal.com — Moteurs mercedes a eviter : 5 blocs à connaître",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] larevueautomobile.com — Mercedes Classe A > Fiabilité Mercedes Classe A : Quel modèle choisir ? Moteu…",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] chaine-courroie.com — Moteur Mercedes 180 CDI / 180d : Chaîne ou Courroie ?",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] oscarpermis.fr — Quand changer la courroie de distribution mercedes classe a 180 ?",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] forum-mercedes.com — topic 1985 classe a w176 assyst plus et moteurs m270 om 6…",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/mercedes-1-5-cdi-om607",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche OM607 vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/mercedes-1-5-cdi-om607"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "environ 185 000 km (cas documenté)",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Vanne et refroidisseur EGR",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Vanne VSV de purge / circuit PCV",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Batterie hybride haute tension",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] priuschat.com — tsb on excessive oil consumption for 2zr fxe engine.198649",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] toyota-club.net — Toyota ZR series engines",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] bobistheoilguy.com — 2011 prius head gasket failure at 185k summary.305542",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] oscar-racing.fr — Fiabilité Toyota Corolla Hybride : Les 3 Moteurs à éviter",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-hybride",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche 2ZR-FXE vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplac",
+   "routes": [
+    "/moteur/toyota-1-8-hybride"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Circuit d'assistance de freinage / collecteur d'admission",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "100 000 - 200 000 km (plus fréquent en haut kilométrage)",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Pompe à eau / circuit de refroidissement",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Chaîne de distribution et guides",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] static.nhtsa.gov — RCONL 09V338 0123",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] 8020automotive.com — The 3 Most Common Toyota 2ZR-FE Engine Problems",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] low-offset.com — Toyota 2ZR-FE Engine: Common Problems & Reliability | Low Offset",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] toyotanation.com — Block issues with 2zrfe (no explanation from Toyota) | Toyota Forum",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] corollaforum.com — 2zr fe oil consumption fixed.6279",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] enginescope.gr — Toyota 2ZR-FE/2ZR-FAE Reliability — BUY 82/100 | EngineScope",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] toyotanation.com — 2010 Matrix 2ZR-FE lost compression | Toyota Forum",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] toyotaownersclub.com — 204685 2zr fe",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/toyota-1-8-essence",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche 2ZR-FE vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace",
+   "routes": [
+    "/moteur/toyota-1-8-essence"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Distribution / lubrification",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 50 000 km (cas documentés) jusqu'à 150-200 000 km avec entretien rigoureux",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Pompe à huile / lubrification",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 80 000 km (environ 50 000 miles)",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Circuit de refroidissement",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès les premiers milliers de km sur véhicules 2012-2014",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Culasse / joint de culasse",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 44 000 km dans certains cas documentés, plus fréquemment au-delà de 100 000 km",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Circuit de refroidissement",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Ligne d'échappement / dépollution",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] megaturbo.fr — Fiabilité 1.0 Ecoboost : Faut-il acheter une Ford essence ?",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] auto-platinium.com — Moteur 1.0 EcoBoost : Fiabilité & durée de vie",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] forum-auto.caradisiac.com — 570475 c max distribution moteur ecoboost",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] largus.fr — moteur - Ford - Focus - - Auto Evasion | Forum Auto",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] thedrive.com — Ford's Self-Clogging EcoBoost Engine Is Finally Getting Recalled",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] motor1.com — Ford Recalls 1.0L EcoBoost Engine In Focus, EcoSport For Oil Pressure Issues",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] autos.yahoo.com — Ford 1.0L EcoBoost Timing Belt Failures Trigger NHTSA Engineering Analysis",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] renauto.fr — Fiabilité Ford Fiesta : les points faibles des différents moteurs - Renauto",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] rachat-cash-voiture.fr — Moteur EcoBoost, Problèmes Connus, Joint de Culasse et Coûts Réels",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] hellomybusiness.fr — Moteur 1.0 ecoboost 125 cv : fiabilité et avis utilisateurs",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] preparateurautomobile.fr — fiabilite 1 0 ecoboost 125",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[12] caradisiac.com — fiabilite du ford ecosport la maxi fiche occasion de cara…",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-0-ecoboost",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche FOX vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace pa",
+   "routes": [
+    "/moteur/ford-1-0-ecoboost"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Injecteurs de carburant / système d'injection directe",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Séparateur d'huile / reniflard moteur",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Circuit de refroidissement / bloc moteur et culasse",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "environ 100 000 - 115 000 km (retours d'expérience propriétaires)",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Courroie de distribution interne / pompe à huile",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Système de désactivation de cylindres / volant moteur bi-masse / supports moteur",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Culasse - soupapes d'admission",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "span",
+   "classe": "tag ambre",
+   "majuscules": true,
+   "texte": "entretien exigé : Aucune condition d'entretien spécifique mentionnée ; couverture liée à la campagne de rappel sécurité.",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] broncosportforum.com — ⚠️ 2021-2023 Bronco Sport Fuel Injector Recall For 1.5L EcoBoost Engine [Upda…",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] recalls-rappels.canada.ca — Transport Canada Recall - 2022658 - FORD - Canada.ca",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] ford.com — 24s16 bronco sport and escape 2022 2024 fuel injector lea…",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] static.nhtsa.gov — RCLRPT 25V467 3548",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] carbuzz.com — The Largest Ford EcoBoost Recalls In 15 Years Of Production",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] fordescape.org — What's Your Experience With The 1.5L Dragon Engine? | Ford Escape Forum",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] realtruck.com — Ford 1.5L EcoBoost Dragon Engine: Specs, Reliability, and Performance Review …",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] fordengines.co.uk — Ford 1.5 EcoBoost Engine: Problems, Reliability & Fixes | Ford Engines",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[9] fordescape.org — 1.5 L Ecoboost - anyone with a longevity story? | Ford Escape Forum",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[10] fordescape.org — failed engine 1.5l ecoboost, is a 2020 the same long block as a 2019? | Ford …",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[11] autoscore.pro — 1.5 EcoBoost (Dragon) Reliability & Problems | Autoscore",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[12] broncosportforum.com — 1.5L Dragon Reliability | Page 7 | 2021+ Ford Bronco Sport Forum - Broncospor…",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[13] broncosportforum.com — 1.5L Dragon Reliability | Page 6 | 2021+ Ford Bronco Sport Forum - Broncospor…",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[14] cararac.com — Ford 1.5L EcoBoost Dragon Engine: Longevity, Problems, And Specs",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-5-ecoboost-dragon",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche DRAGON vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace",
+   "routes": [
+    "/moteur/ford-1-5-ecoboost-dragon"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Culasse / circuit de refroidissement",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Circuit de refroidissement (durites, boîtier de thermostat)",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "span",
+   "classe": "tag ambre",
+   "majuscules": true,
+   "texte": "entretien exigé : Aucun entretien préalable exigé ; remplacement/installation effectué gratuitement chez un concessionnaire Ford.",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] largus.fr — Rappel Ford 1.6 Ecoboost/SCTi. Risque de surchauffe de culasse - L'argus",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] ford.oemdtc.com — safety recall 17s09 coolant level sensor system installat…",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] pistonheads.com — Ford 1.6 Ecoboost engine issues - Page 1 - Ford - PistonHeads UK",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] slashgear.com — Every Ford EcoBoost Engine Ranked Worst To Best",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] go-parts.com — thermostat housing ford fiesta ford escape ford transit c…",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] lesechos-agera.fr — Moteur EcoBoost Ford : Quel bilan en terme de fiabilité? - Les echos de l'éco…",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] cararac.com — 2011-2019 Ford Fiesta 1.6L Sigma Engine: Longevity, Problems, and Specs",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[8] justanswer.co.uk — 8k795 reliable ford engine sigma 1595cc i4",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/ford-1-6-ecoboost-sigma",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche SIGMA vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace ",
+   "routes": [
+    "/moteur/ford-1-6-ecoboost-sigma"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "jusqu'à ~100 000 km pour un usage soutenu",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "span",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Hyundai i20 1.0 T-GDi, véhicules produits du 18 août 2015 au 21 septembre 2020 (42 095 véhicules rappelés, EU Safety Gate)",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] enginescope.gr — Hyundai/Kia Kappa 1.0 T-GDI (G3LC) Reliability — BUY 84/100 | EngineScope",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] carchecker.pro — hyundai kona os 1.0 tgdi",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] mymotorlist.com — Engine Hyundai-Kia G3LC: specifications, characteristics, oil, performance",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] engineexplained.com — hyundai g3lc 1 0 l engine review",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] otomoto.pl — 1.0 T-GDi (G3LC): usterki, opinie, problemy | OTOMOTO News",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] autoscore.pro — 1.0 T-GDI (Kappa) Reliability & Problems | Autoscore",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-0-t-gdi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche G3LC vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/hyundai-1-0-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Bloc moteur / segmentation / joint de culasse",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Circuit de refroidissement / turbocompresseur",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Injection directe essence",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "06 · Transmission DCT7 (double embrayage, associée au 1.4 T-GDi)",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "dès 50 000 km, embrayage vers 90 000 km",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] otoba.ru — G4LD - двигатель Hyundai 1.4 T-GDI | Otoba.ru",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] ma-voiture-doccasion.fr — Fiabilité Hyundai : guide occasion pour acheter en confiance | Ma Voiture d&#…",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] moteurgarage.com — moteur hyundai g4ld 1 4 l problemes et fiabilite",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] vousconduire.fr — Account Suspended",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] carverif.fr — Hyundai i30 PD Essence 1.4 T-GDi 140 : fiabilité",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] carverif.fr — Hyundai i30 (PD) Essence 1.4 T-GDi : fiabilité",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-4-t-gdi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche G4LD vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/hyundai-1-4-t-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Admission / injection directe",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "environ 65 000 à 130 000 km (40 000-80 000 miles)",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Distribution (chaîne et tendeur hydraulique)",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Bloc moteur / cylindres, catalyseur",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] v-trade.nl — Hyundai/Kia 1.6 GDI Engine (G4FD): Features and Tips",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] mymotorlist.com — Engine Hyundai-Kia G4FD: specifications, characteristics, oil, performance",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] autopartswd.com — Hyundai G4FD Engine: Specs, Problems & Reliability Guide",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] en.1xmatch.com — 1xmatch - ставки на спорт и спортивные справочники",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] gaga.ba — Hyundai i30 GD 1.6 CRDi - common faults and tips",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-1-6-gdi",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche G4FD vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/hyundai-1-6-gdi"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Bloc moteur / cylindres - segmentation pistons",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "100 000 - 150 000 km, parfois plus tôt",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · Distribution - chaîne et tendeur",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "span",
+   "classe": "tag muted",
+   "majuscules": true,
+   "texte": "avant 100 000 km sur les blocs les plus anciens (2010-2014)",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Distribution variable (CVVT) et collecteur d'admission",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Cache-culbuteurs / joint de cache-culbuteurs",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Compresseur de climatisation",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] docteurmoteurs.com — moteur kia hyundai g4kd 2 0",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] motordinamico.com — motor kia hyundai g4kd 2 0",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] enginedna.com — kia hyundai g4kd 2 0 engine",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] autopartswd.com — G4KD Engine: Specs, Problems, Reliability & Applications",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] enginecode.uk — Hyundai G4KD Engine Specs, Issues & Identification | Specs, Issues, Models | …",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] enginefinder.co.za — G4KD Engine Problems: Complete Hyundai-Kia 2.0L Troubleshooting Guide",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/hyundai-2-0-essence-theta-ii",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche G4KD vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace p",
+   "routes": [
+    "/moteur/hyundai-2-0-essence-theta-ii"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · Filtre à particules / post-traitement",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · Durites turbocompresseur / intercooler / système PowerPulse",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · Joint de cache-soupapes / joint turbo",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "05 · Joint de culasse / étanchéité cylindres",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] engineexplained.com — volvo d4204t8 2 0 l engine review",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] docteurmoteurs.com — moteur volvo d4204t8 2 0",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] docteurmoteurs.com — moteur volvo d4204t23 2 0",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] docteurmoteurs.com — moteur volvo d4204t14 2 0 d bi turbo",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] caradisiac.com — fiabilite de la volvo s60 v60 la maxi fiche occasion de c…",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-diesel-vea",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche D4204T vérifiée le 11/11/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace",
+   "routes": [
+    "/moteur/volvo-2-0-diesel-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "01 · bloc moteur - segmentation des pistons",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "02 · distribution - courroie humide",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "03 · système d'injection directe",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "dt",
+   "classe": "",
+   "majuscules": true,
+   "texte": "04 · système d'alimentation - capteur de pression de rampe",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[1] volvov40club.com — 2015 T5 Engine Serial | Volvo V40 Forums",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[2] volvoforums.com — engine rebuild engine replace small budget 108502",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] swedespeed.com — Highest Miles on a B4204T11 2.0T | SwedeSpeed - Volvo Performance Forum",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] aepspieces.com — moteur volvo 2 0 b4204t d occasion versions drive e appli…",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] volvoforums.com — b4204t11 fuel injector replace 117066",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] truedelta.com — engine problems 906",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/moteur/volvo-2-0-essence-vea",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche B4204T vérifiée le 29/10/2026. Chaque panne listée cite au moins une source consultable ; ce qui n'est pas sourcé n'est pas publié. Cette page ne remplace",
+   "routes": [
+    "/moteur/volvo-2-0-essence-vea"
+   ]
+  },
+  {
+   "route": "/dossier",
+   "tag": "p",
+   "classe": "eyebrow",
+   "majuscules": true,
+   "texte": "Connectez-vous par lien magique",
+   "routes": [
+    "/dossier"
+   ]
+  },
+  {
+   "route": "/dossier",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Connexion par lien magique, sans mot de passe. En laissant votre email, vous acceptez de recevoir les alertes de votre dossier (désactivables à tout moment). Li",
+   "routes": [
+    "/dossier"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "En laissant votre email, vous acceptez d'être recontacté par Inspexo à ce sujet. Lien de désinscription dans chaque email. Le code postal sert uniquement à savo",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Airbags Takata : modèle non listé dans la campagne officielle (liste du 18/10/2026).",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono",
+   "majuscules": true,
+   "texte": "Prouvé ou annoncé dans l'annonce",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "eyebrow",
+   "majuscules": true,
+   "texte": "Vignette Crit'Air et zones à faibles émissions",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Reste dans votre navigateur. Rien n'est envoyé.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Classement d'après l'arrêté du 21 juin 2016. Zones relevées le 2026-11-05 — elles évoluent par arrêté local : vérifiez auprès de la métropole concernée. Cette i",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "span",
+   "classe": "tag ambre",
+   "majuscules": true,
+   "texte": "rappel constructeur officiel : 21H7 (NHTSA 22V-178), mars 2022, Audi A8, S6 Sedan, S7, S8 (2013-2017) et RS7 (2014-2017) équipés du V8 4.0 TFSI biturbo",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Fiche moteur EA824 : 5 sources vérifiées le 11/11/2026 — 2 pannes sources en ligne",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "eyebrow",
+   "majuscules": true,
+   "texte": "Incohérences relevées dans l'annonce",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Décodage normatif (ISO 3779) : structure, constructeur, année probable. Le moteur exact et les équipements d'origine exigent une base constructeur — en préparat",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Coût prévisible sur 3 ans à partir du prix demandé, du plan d'entretien publié pour ce moteur, de la carte grise et des contrôles techniques obligatoires. Hors ",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[3] static.nhtsa.gov — RCAK 22V178 9203",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[4] Ministère de la Transition écologique, liste Takata du 18/10/2026.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[5] RappelConso, data.economie.gouv.fr, vérifié le 11/11/2026. Couvre les rappels publiés depuis avril 2021.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[6] HistoVec, ministère de l'Intérieur — historique officiel du véhicule.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "li",
+   "classe": "",
+   "majuscules": false,
+   "texte": "[7] audizine.com — 847519 4 0 TFSI Misfire and problems",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "doc-foot",
+   "majuscules": false,
+   "texte": "Analyse automatique à partir du texte de l'annonce. Ne remplace pas un examen du véhicule.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "span",
+   "classe": "",
+   "majuscules": false,
+   "texte": "5 affirmations écartées faute de source.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Le rappel constructeur 20U6/L8 (durite de carburant) a-t-il été effectué sur ce véhicule ?",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Fuite de carburant par durite défectueuse [rappel officiel 20U6/L8 (NHTSA 13V450)]",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Usure des poussoirs/galets de distribution variable (cam adjusters)",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Cette panne concerne un autre moteur que celui de ce véhicule.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Preuve du rappel 20U6/L8 — signal rouge : Absence de trace du rappel durite carburant",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Odeur d'essence — signal rouge : Odeur de carburant détectable",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "div",
+   "classe": "",
+   "majuscules": false,
+   "texte": "Non prouvé par l'annonce ni par la fiche moteur.",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  },
+  {
+   "route": "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be",
+   "tag": "p",
+   "classe": "mono c-graphite",
+   "majuscules": false,
+   "texte": "Mode visite guidé (liste de contrôle pas à pas, photos analysées sur place) — fonction du Pass achat, démo libre : 2 photos analysées. Les photos ne sont jamais",
+   "routes": [
+    "/a/9a1c8c4d-0273-453e-a744-f0b2da0d69be"
+   ]
+  }
+ ]
+}

@@ -239,7 +239,7 @@ export default function ProPage() {
 
         <section className="sec">
           <div className="wrap-doc">
-            <p className="eyebrow">Abonnement pro — liste d'attente</p>
+            <p className="eyebrow">Abonnement pro</p>
             <h2 style={{ fontSize: 'clamp(24px,3vw,34px)', marginTop: 10 }}>
               Vous analysez des annonces toute la journée.
             </h2>

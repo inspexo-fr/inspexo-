@@ -65,7 +65,7 @@ export default function DemandeZone({ title, analysisId = null, codePostalInitia
           Email invalide ou erreur réseau — réessayez.
         </div>
       )}
-      <div className="mono c-graphite" style={{ marginTop: 8, fontSize: 11, lineHeight: 1.6 }}>
+      <div className="phrase c-graphite" style={{ marginTop: 8, fontSize: 12, lineHeight: 1.6 }}>
         {CONSENT_TEXT} Le code postal sert uniquement à savoir où ouvrir le service.
       </div>
     </form>

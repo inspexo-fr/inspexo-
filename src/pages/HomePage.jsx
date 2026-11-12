@@ -4,10 +4,10 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import AnalyseForm from '../components/AnalyseForm'
-import PhotoSlot from '../components/PhotoSlot'
 import Rows from '../components/Rows'
 import { getFiabilite } from '../lib/scoreApi'
-import DossierApercu from '../components/DossierApercu'
+import DossierApercu, { DOSSIER_EXEMPLE_ID } from '../components/DossierApercu'
+import DossierExtrait from '../components/DossierExtrait'
 import PassCheckout from '../components/PassCheckout'
 
 // Accueil — reproduction de docs/design/maquette-v1.html (référence absolue).
@@ -41,6 +41,11 @@ function EtatFiabilite() {
   )
 }
 
+// Aperçu de partage de l'accueil : l'image du dossier épinglé, produite par
+// scripts/apercus.mjs dans le bucket public `apercus` (même dossier que
+// l'extrait du premier écran). Construite, jamais une adresse en dur.
+const IMAGE_PARTAGE = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/apercus/${DOSSIER_EXEMPLE_ID}.png`
+
 export default function HomePage() {
   return (
     <>
@@ -52,7 +57,11 @@ export default function HomePage() {
         <meta property="og:url" content="https://www.inspexo.io/" />
         <meta property="og:title" content="Inspexo — L'annonce dit ce que le vendeur veut. On lit le reste." />
         <meta property="og:description" content="Rappels constructeur, airbags Takata, pannes connues du moteur, statut réel du vendeur. Chaque affirmation renvoie à sa source. Gratuit, 100 % côté acheteur." />
-        <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
+        <meta property="og:image" content={IMAGE_PARTAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Extrait d'un dossier Inspexo réel : véhicule, verdict et score" />
+        <meta name="twitter:image" content={IMAGE_PARTAGE} />
       </Helmet>
 
       <Navbar />
@@ -60,42 +69,33 @@ export default function HomePage() {
       <main id="top">
         {/* HERO */}
         <section className="hero" id="analyser">
+          {/* Ordre du DOM = ordre sur téléphone : texte, formulaire, extrait
+              du dossier réel, faits. Sur ordinateur, le formulaire occupe la
+              colonne de droite (grille nommée, chantier design nov. 2026). */}
           <div className="wrap hero-grid">
-            <div>
-              <p className="eyebrow">Voitures d'occasion · 100 % côté acheteur</p>
+            <div className="hero-texte">
+              <p className="eyebrow">Côté acheteur</p>
               <h1>L'annonce dit ce que le vendeur veut. On lit le reste.</h1>
               <p className="lead">
-                Collez une annonce Leboncoin, La Centrale ou AutoScout24. En une minute :
-                rappels constructeur, airbags Takata, pannes connues du moteur, statut réel
-                du vendeur, questions à lui poser. Chaque affirmation renvoie à sa source.
+                <span className="lead-long">
+                  Collez une annonce Leboncoin, La Centrale ou AutoScout24. En une minute :
+                  rappels constructeur, airbags Takata, pannes connues du moteur, statut réel
+                  du vendeur, questions à lui poser. Chaque affirmation renvoie à sa source.
+                </span>
+                <span className="lead-court">
+                  Collez une annonce : rappels, pannes connues du moteur et statut du vendeur, chacun avec sa source.
+                </span>
               </p>
+            </div>
+            <div className="hero-form"><AnalyseForm idPrefix="hero" /></div>
+            <div className="hero-extrait"><DossierExtrait /></div>
+            <div className="hero-faits">
               <div className="hero-facts">
                 <div><span>Prix</span><span>Gratuit, sans inscription</span></div>
                 <div><span>Durée</span><span>Environ 1 minute</span></div>
                 <div><span>Sources</span><span>Affichées, une par une</span></div>
                 <div><span>Lien avec les vendeurs</span><span>Aucun</span></div>
               </div>
-            </div>
-            <AnalyseForm idPrefix="hero" />
-          </div>
-        </section>
-
-        {/* PHOTOS */}
-        <section className="strip" aria-label="Photographies">
-          <div className="wrap">
-            <div className="frames">
-              <figure className="frame">
-                <PhotoSlot src="carnet.jpg" legende="Photo à venir · shooting atelier" alt="Carnet d'entretien tamponné" />
-                <figcaption><span>01</span><span><b>Le carnet d'entretien, pas la brochure.</b> Tampons, factures, dates : ce qu'on vous apprend à lire avant de payer.</span></figcaption>
-              </figure>
-              <figure className="frame">
-                <PhotoSlot src="compteur.jpg" legende="Photo à venir" alt="Compteur kilométrique, contact mis" />
-                <figcaption><span>02</span><span><b>Le compteur, contact mis.</b> Le kilométrage lu est comparé à celui de l'annonce.</span></figcaption>
-              </figure>
-              <figure className="frame">
-                <PhotoSlot src="controle-technique.jpg" legende="Photo à venir" alt="Procès-verbal de contrôle technique" />
-                <figcaption><span>03</span><span><b>Le PV de contrôle technique.</b> Chaque défaut relevé, relié aux pannes connues du moteur.</span></figcaption>
-              </figure>
             </div>
           </div>
         </section>
@@ -162,7 +162,7 @@ export default function HomePage() {
                     <h4>Compteur kilométrique</h4>
                     <p className="how">Contact mis, photographiez le compteur. Le kilométrage lu est comparé à celui de l'annonce.</p>
                     <p className="red">Signal rouge : kilométrage différent de celui annoncé.</p>
-                    <div className="shoot">PHOTOGRAPHIER · ANALYSÉ SUR PLACE</div>
+                    <div className="shoot">PHOTOGRAPHIER</div>
                     <div className="tri"><span className="y">Oui</span><span className="d">Doute</span><span className="n">Non</span></div>
                     <p className="live"><b>Verdict mis à jour après chaque réponse.</b> À la fin : acheter, négocier ou ne pas acheter, avec les points qui ont pesé.</p>
                   </div>
@@ -235,7 +235,7 @@ export default function HomePage() {
                 <h3>Extension Chrome</h3>
                 <p>Un bouton « Analyser avec Inspexo » sur chaque annonce Leboncoin, La Centrale et AutoScout24. Texte et photos partent tout seuls.</p>
                 <ol><li><span>1</span>Installez l'extension</li><li><span>2</span>Ouvrez une annonce</li><li><span>3</span>Appuyez sur le bouton</li></ol>
-                <span className="state">Bientôt sur le Chrome Web Store</span>
+                <span className="state phrase">Bientôt sur le Chrome Web Store</span>
               </div>
               <div className="channel">
                 <h3>Appli iPhone et Android</h3>
@@ -289,7 +289,7 @@ export function PlansPass({ analysisId = null }) {
       <div className="plan pass">
         <div className="plan-head">
           <span className="name">Pass achat</span>
-          <span className="price">29 € · 30 JOURS<br />ANNONCES ILLIMITÉES</span>
+          <span className="price">29 € · 30 JOURS<br /><span className="phrase">annonces illimitées</span></span>
         </div>
         <ul>
           <li><span className="m">+</span>Tout ce que contient l'analyse gratuite, sans limite</li>

@@ -37,6 +37,10 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
   const [loading, setLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
   const [error, setError] = useState(null)
+  // Champ vide au clic : le bouton n'est JAMAIS désactivé pour ce motif (un
+  // bouton éteint ne dit pas quoi faire) ; on montre le champ et on le dit.
+  const [videSignale, setVideSignale] = useState(false)
+  const champRef = useRef(null)
   const [usage, setUsage] = useState(null) // ville | mixte | route | null
   const [indispo, setIndispo] = useState(null) // message si service IA indisponible
   const [waitEmail, setWaitEmail] = useState('')
@@ -74,7 +78,13 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!text.trim() || loading) return
+    if (loading) return
+    if (!text.trim()) {
+      setVideSignale(true)
+      champRef.current?.focus()
+      return
+    }
+    if (text.length > MAX_TEXT) { champRef.current?.focus(); return }
     setError(null)
     setLoading(true)
     try {
@@ -178,9 +188,17 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
             name="annonce"
             placeholder="Collez ici tout le texte : titre, prix, kilométrage, description, équipements."
             value={text}
-            onChange={e => setText(e.target.value)}
+            onChange={e => { setText(e.target.value); if (videSignale && e.target.value.trim()) setVideSignale(false) }}
             maxLength={MAX_TEXT + 500}
+            ref={champRef}
+            aria-invalid={videSignale || undefined}
+            aria-describedby={videSignale ? `${idPrefix}-annonce-vide` : undefined}
           />
+          {videSignale && (
+            <p id={`${idPrefix}-annonce-vide`} className="champ-msg" role="alert">
+              Collez d'abord le texte de l'annonce
+            </p>
+          )}
           <div
             className="mono"
             style={{
@@ -193,7 +211,7 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
         </div>
 
         <div>
-          <span className="lbl" id={`${idPrefix}-photos-lbl`}>Photos de l'annonce · facultatif</span>
+          <span className="lbl" id={`${idPrefix}-photos-lbl`}>Photos <span className="lbl-note">facultatif</span></span>
           <label className="photo" htmlFor={`${idPrefix}-photos`} aria-labelledby={`${idPrefix}-photos-lbl`}>
             <span>Ajouter jusqu'à 6 photos{images.length > 0 ? ` (${images.length}/${MAX_IMAGES})` : ''}</span>
             <span className="mono">JAMAIS CONSERVÉES</span>
@@ -231,7 +249,7 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
         </div>
 
         <fieldset>
-          <legend>Votre usage · facultatif</legend>
+          <legend>Votre usage <span className="lbl-note">facultatif</span></legend>
           <div className="seg">
             {[['ville', 'Surtout ville'], ['mixte', 'Mixte'], ['route', 'Surtout route']].map(([val, label]) => (
               <label key={val} className={usage === val ? 'coche' : ''} style={usage === val ? { background: 'var(--ink)', color: 'var(--paper)' } : undefined}>
@@ -250,7 +268,7 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
         {/* Comparables (facultatif) */}
         <details open={showComparables} onToggle={e => setShowComparables(e.currentTarget.open)}>
           <summary className="lbl" style={{ cursor: 'pointer', listStyle: 'none', minHeight: 24 }}>
-            Annonces comparables · facultatif — affine l'avis sur le prix {showComparables ? '−' : '+'}
+            Annonces comparables <span className="lbl-note">facultatif, affine l'avis sur le prix</span> {showComparables ? '−' : '+'}
           </summary>
           <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
             {(comparables.length === 0 ? [''] : comparables).map((c, i) => (
@@ -298,7 +316,7 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
                     {waitState === 'sending' ? 'Envoi…' : 'Me prévenir'}
                   </button>
                 </div>
-                <div className="mono c-graphite" style={{ fontSize: 11, marginTop: 6, lineHeight: 1.6 }}>
+                <div className="phrase c-graphite" style={{ fontSize: 12, marginTop: 6, lineHeight: 1.5 }}>
                   En laissant votre email, vous acceptez d'être recontacté par Inspexo à ce sujet.
                   Lien de désinscription dans chaque email.
                 </div>
@@ -327,7 +345,9 @@ export default function AnalyseForm({ idPrefix = 'analyse' }) {
 
         {captchaRequis && <Turnstile onToken={setCaptchaToken} action="score" />}
 
-        <button className="btn" type="submit" disabled={!text.trim() || overLimit}>Lancer l'analyse</button>
+        {/* Jamais désactivé sur champ vide (le contraste tombait à 2,79:1) :
+            le clic montre le champ et dit quoi faire. */}
+        <button className="btn" type="submit">Lancer l'analyse</button>
         <p className="formnote">
           Gratuit · Sans inscription · 5 analyses par jour<br />
           Ne remplace pas l'examen du véhicule par un professionnel.

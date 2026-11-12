@@ -1134,7 +1134,7 @@ export default function ResultPage() {
                         </span>
                         <span className={`tag ${g.classe}`}>{g.label}</span>
                         {p.usure_lointaine && <span className="tag muted">au-delà d'une détention moyenne</span>}
-                        {p.rappel_officiel && <span className="tag ambre">{p.rappel_officiel}</span>}
+                        {p.rappel_officiel && <span className="tag ambre phrase">{p.rappel_officiel}</span>}
                       </div>
                       {p.usure_lointaine && (
                         <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginBottom: 6 }}>
@@ -1350,7 +1350,7 @@ export default function ResultPage() {
             {/* Incohérences */}
             {(r.incoherences || []).length > 0 && (
               <div className="doc-sec">
-                <p className="eyebrow" style={{ color: 'var(--ambre)' }}>Incohérences relevées dans l'annonce</p>
+                <p className="eyebrow" style={{ color: 'var(--ambre)' }}>Incohérences</p>
                 {r.incoherences.map((inc, i) => (
                   <div className="motif" key={i}>
                     <span className="n ambre">{String(i + 1).padStart(2, '0')}</span>

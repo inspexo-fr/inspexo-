@@ -220,7 +220,7 @@ export default function TakataPage() {
 
             {/* Liste intégrale, par marque */}
             <div style={{ marginTop: 'clamp(36px,5vw,56px)' }}>
-              <p className="eyebrow">La liste officielle, marque par marque</p>
+              <p className="eyebrow">Liste officielle</p>
               <div className="faq" style={{ marginTop: 14 }}>
                 {marques.map(([marque, entrees]) => (
                   <details key={marque}>

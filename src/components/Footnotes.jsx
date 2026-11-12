@@ -33,7 +33,7 @@ export default function Footnotes({ sources, titre = 'Sources' }) {
       <ol className="sources">
         {sources.map(s => (
           <li key={s.n}>
-            [{s.n}] {s.libelle}
+            <span className="src-n">[{s.n}]</span> {s.libelle}
             {s.url && (
               <>
                 {' '}

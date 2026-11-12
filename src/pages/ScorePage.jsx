@@ -22,7 +22,7 @@ export default function ScorePage() {
       <main>
         <section className="sec" style={{ borderTop: 'none' }}>
           <div className="wrap-doc">
-            <p className="eyebrow">Analyse d'annonce · gratuit, sans inscription</p>
+            <p className="eyebrow">Analyse d'annonce</p>
             <h1 style={{ fontSize: 'clamp(30px,6vw,46px)', marginTop: 14 }}>
               Cette annonce cache-t-elle un problème ?
             </h1>

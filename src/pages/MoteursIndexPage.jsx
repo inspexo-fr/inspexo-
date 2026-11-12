@@ -79,7 +79,7 @@ export default function MoteursIndexPage() {
                       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                         {liste.map((f) => (
                           <Link key={f.slug} to={`/moteur/${f.slug}`} style={{ textDecoration: 'none' }}>
-                            <span className="tag" style={{ cursor: 'pointer' }}>
+                            <span className="tag phrase" style={{ cursor: 'pointer' }}>
                               {f.nom_commercial}
                               <span className="c-graphite"> · {pannesPar.get(cle(f.marque, f.famille))} pannes</span>
                             </span>

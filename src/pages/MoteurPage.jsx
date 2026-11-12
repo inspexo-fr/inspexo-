@@ -296,13 +296,13 @@ export default function MoteurPage() {
                 const cout = euros(p.cout_indicatif_eur_min, p.cout_indicatif_eur_max)
                 return (
                   <div className="row" key={i}>
-                    <dt>{String(i + 1).padStart(2, '0')}{p.organe ? ` · ${p.organe}` : ''}</dt>
+                    <dt><span className="num-titre">{String(i + 1).padStart(2, '0')}</span>{p.organe ? <span className="phrase"> · {p.organe}</span> : ''}</dt>
                     <dd>
                       <b>{p.titre}<Ref nums={refsPanne[i]} /></b>
                       <p>{p.symptomes}</p>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
                         <span className={`tag ${g.classe}`}>{g.label}</span>
-                        {p.km_typique && <span className="tag muted">{p.km_typique}</span>}
+                        {p.km_typique && <span className="duree">{p.km_typique}</span>}
                         {cout && <span className="tag">{cout}</span>}
                         {p.rappel_code && <span className="tag ambre">Rappel {p.rappel_code}</span>}
                       </div>
@@ -331,7 +331,7 @@ export default function MoteurPage() {
                       {op.critique && <span className="tag rouge" style={{ marginLeft: 8 }}>critique</span>}
                     </span>
                     <span className="leader" aria-hidden="true"></span>
-                    <span className={`val ${op.a_verifier_carnet ? 'na' : ''}`}>{intervalle(op)}</span>
+                    <span className={`val ${op.a_verifier_carnet ? 'na phrase' : ''}`}>{intervalle(op)}</span>
                   </div>
                 ))}
               </div>
@@ -362,7 +362,7 @@ export default function MoteurPage() {
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
                         {pr.age_max_ans != null && <span className="tag">jusqu'à {pr.age_max_ans} ans</span>}
                         {pr.km_max != null && <span className="tag">jusqu'à {Number(pr.km_max).toLocaleString('fr-FR')} km</span>}
-                        {pr.entretien_exige && <span className="tag ambre">entretien exigé : {pr.entretien_exige}</span>}
+                        {pr.entretien_exige && <span className="duree">Entretien exigé : {pr.entretien_exige}</span>}
                       </div>
                     </dd>
                   </div>
@@ -385,7 +385,7 @@ export default function MoteurPage() {
                   <span>
                     {p.rappel_code} — {p.titre}
                     {p.rappel_vehicules && (
-                      <span className="mono c-graphite" style={{ display: 'block', fontSize: 11, marginTop: 2 }}>
+                      <span className="phrase c-graphite" style={{ display: 'block', fontSize: 13, marginTop: 2 }}>
                         {p.rappel_vehicules}
                       </span>
                     )}

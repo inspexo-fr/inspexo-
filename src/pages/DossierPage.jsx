@@ -179,7 +179,7 @@ export default function DossierPage() {
                   </div>
                 ) : (
                   <form onSubmit={envoyerLien}>
-                    <p className="eyebrow" style={{ marginBottom: 10 }}>Connectez-vous par lien magique</p>
+                    <p className="eyebrow" style={{ marginBottom: 10 }}>Connexion</p>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                       <input
                         type="email" required placeholder="votre@email.com" value={email}
