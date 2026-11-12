@@ -143,7 +143,9 @@ export default function MoteurPage() {
 
   const plan = (fiche.plan_entretien ?? [])
   const programmes = (fiche.programmes ?? [])
-  const rappels = pannes.filter((p) => p.rappel_code)
+  // Une campagne publiée hors de France seulement n'est pas un rappel pour un
+  // acheteur français : information de contexte (sprint 23, point 3).
+  const rappels = pannes.filter((p) => p.rappel_code && p.rappel_portee !== 'etranger')
   const maj = fiche.updated_at ? new Date(fiche.updated_at).toLocaleDateString('fr-FR') : null
 
   // Registre des sources : numérotation unique dans l'ordre d'apparition.
@@ -298,13 +300,16 @@ export default function MoteurPage() {
                   <div className="row" key={i}>
                     <dt><span className="num-titre">{String(i + 1).padStart(2, '0')}</span>{p.organe ? <span className="phrase"> · {p.organe}</span> : ''}</dt>
                     <dd>
-                      <b>{p.titre}<Ref nums={refsPanne[i]} /></b>
+                      <b>{p.rappel_portee === 'etranger' ? p.titre.replace(/^\s*rappel\s+officiel\s*[:—–-]\s*/i, '').replace(/^./, (c) => c.toUpperCase()) : p.titre}<Ref nums={refsPanne[i]} /></b>
                       <p>{p.symptomes}</p>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
                         <span className={`tag ${g.classe}`}>{g.label}</span>
                         {p.km_typique && <span className="duree">{p.km_typique}</span>}
                         {cout && <span className="tag">{cout}</span>}
-                        {p.rappel_code && <span className="tag ambre">Rappel {p.rappel_code}</span>}
+                        {p.rappel_code && p.rappel_portee !== 'etranger' && <span className="tag ambre">Rappel {p.rappel_code}</span>}
+                        {p.rappel_code && p.rappel_portee === 'etranger' && (
+                          <span className="tag muted">Campagne publiée hors de France ({p.rappel_code}) : information de contexte</span>
+                        )}
                       </div>
                     </dd>
                   </div>

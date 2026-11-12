@@ -67,6 +67,7 @@ import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
 import { estAppelApi } from "../_shared/apiClients.ts";
 import { deciderStatut } from "../_shared/statutVendeur.ts";
+import { appliquerReglesRappel } from "../_shared/rappelsApplicables.ts";
 // Affichage seulement : jamais lu par la note (tests/independance-score.test.mjs).
 import { prisesAffichables } from "../_shared/prisesEnCharge.ts";
 import {
@@ -799,6 +800,9 @@ type CatalogueEntry = {
   rappel_portee?: string | null;
   rappel_annee_debut: number | null;
   rappel_annee_fin: number | null;
+  /** SPRINT 23 — campagne publiée à l'étranger seulement : information de
+   *  contexte, jamais un rappel (`_shared/rappelsApplicables.ts`). */
+  rappel_contexte?: string | null;
 };
 
 function extractCostRange(text: string): { min: number | null; max: number | null } {
@@ -1663,6 +1667,28 @@ serve(async (req: Request) => {
       }
     }
 
+    // SPRINT 23 (point 3, décision d'Utku du 12 nov. 2026) — deux règles
+    // DÉTERMINISTES sur les rappels du catalogue, AVANT que le modèle ne le
+    // voie : un rappel aux sources toutes étrangères devient une information
+    // de contexte (jamais rappel officiel, jamais de poids, jamais dans les
+    // raisons) ; un rappel dont les millésimes ou la période écrits excluent
+    // l'année du véhicule n'est pas affiché du tout.
+    {
+      const anneeV = typeof v.annee_modele === "number" ? v.annee_modele : null;
+      const requalifies: Array<{ ref: string; code: string; regle: string }> = [];
+      catalogue = catalogue.map((e) => {
+        const r = appliquerReglesRappel(e, anneeV);
+        if (r.rappel_ecarte && e.rappel_code) requalifies.push({ ref: e.ref, code: e.rappel_code, regle: r.rappel_ecarte });
+        const { rappel_ecarte: _x, ...reste } = r;
+        return reste as CatalogueEntry;
+      });
+      if (requalifies.length > 0) {
+        await admin.from("events").insert(
+          requalifies.map((x) => ({ name: "rappel_requalifie", props_json: { ...x, annee: anneeV } })),
+        );
+      }
+    }
+
     // ---- Constats photo : validation serveur stricte ----
     let constatsPhoto: ConstatPhoto[] = [];
     let kmCompteur: number | null = null;
@@ -2098,6 +2124,7 @@ serve(async (req: Request) => {
       rappel_code: string | null; rappel_date: string | null; rappel_vehicules: string | null; rappel_portee?: string | null;
       rappel_annee_debut: number | null; rappel_annee_fin: number | null;
       rappel_hors_periode: boolean;
+      rappel_contexte?: string | null;
       /** L'entrée pèse-t-elle sur le score ? Faux pour une entrée d'atlas que
        *  l'annonce ne confirme pas : elle reste affichée, en question. */
       compte_score?: boolean;
@@ -2137,6 +2164,7 @@ serve(async (req: Request) => {
         rappel_portee: src.rappel_portee,
         rappel_annee_debut: src.rappel_annee_debut,
         rappel_annee_fin: src.rappel_annee_fin,
+        rappel_contexte: src.rappel_contexte ?? null,
         // Le véhicule est-il HORS de la plage de production de la campagne ?
         // Côté début : STRICT — un véhicule immatriculé AVANT le début de la
         // plage a forcément été produit avant elle (la production précède
@@ -2522,6 +2550,7 @@ serve(async (req: Request) => {
             rappel_annee_debut: src.rappel_annee_debut,
             rappel_annee_fin: src.rappel_annee_fin,
             rappel_hors_periode: rappelHorsPlage(src),
+            rappel_contexte: src.rappel_contexte ?? null,
           });
         }
         if (manquantes.length > 0 || ecartees.length > 0) {

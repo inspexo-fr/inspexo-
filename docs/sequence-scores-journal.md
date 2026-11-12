@@ -176,3 +176,34 @@ Rapport complet remis à Utku ; (e) et (f) attendent sa validation.
   par le VIN », source unique auto-motor-und-sport, plafond conservé.
   1,010 € · cumul **9,39 € / 10 €**. Jeton retiré.
 - Reste : étape atlas (condenseur 308 I, suspension BMW), séparée.
+
+## Point 3 — rappels étrangers et hors période (12 nov. 2026)
+Décision d'Utku, règle générale. Module PUR `_shared/rappelsApplicables.ts`,
+appliqué au catalogue dans `score` AVANT le prompt et le barème :
+1. rappel dont TOUTES les sources sont d'un pays connu autre que la France
+   (hors campagne `mondiale` confirmée) ⇒ information de contexte : champs de
+   rappel vidés, jamais `rappel_officiel`, jamais de poids, jamais dans les
+   raisons ; un titre « Rappel officiel : … » perd ce préfixe. Pays inconnu ⇒
+   pas de requalification ;
+2. millésimes ou période ÉCRITS excluant l'année du véhicule ⇒ rappel non
+   affiché (champs de la fiche : début strict, fin + 1 ; millésimes écrits
+   dans le texte : bornes strictes).
+- `BAREME_VERSION` **11.15**, ligne CUA, `tests/rappels-applicables.test.mjs`
+  (43 contrôles, chaîné dans `npm run eval`).
+- Inventaire des 8 rappels de fiche : 21H7 (EA824, DE, mondiale) reste ;
+  **20U6/L8** (EA824, Consumer Reports US, millésimes 2013-2014) ⇒ masqué sur
+  la S7 2015 ; **61DT02** (G3LC, enginescope.gr) ⇒ contexte ; KGH (EB2,
+  production 2017-2018) ⇒ masqué sur la 308 2016 (il ne pesait déjà pas) ;
+  MXX, 0D9F, NSC (B47 : une source .fr), JMK (DV6 : peugeotforums.com, pays
+  inconnu) ⇒ inchangés.
+- **Écart annoncé : aucun changement de score.** S7 rouge 39 (20U6/L8 ne
+  pesait pas au-delà du plafond, rejoué hors ligne), 308 orange 55, Mercedes
+  vert 73, Clio II orange 51. Ce qui change à l'écran : 20U6/L8 disparaît du
+  dossier S7, KGH du dossier 308.
+- **Déploiement annoncé** (avant d'être fait) : `score`, `admin-defect-sheets`
+  (action `qualifier_rappel`), `sheet-builder` (`rappel_portee` « etranger »
+  conservé), `api-analyses`, `lecture-ct`, `lecture-histovec`, `visite`
+  (numéro de barème) ; puis `main` poussé (affichage `/a/:id` et `/moteur`).
+- Session de jeton : `bash scripts/session-jeton-rappels.sh` — qualification
+  « etranger » de 20U6/L8 et 61DT02 (la fonction re-vérifie la règle ; liste
+  différente de celle relue ⇒ arrêt), puis 4 références × 3, plafond 12,50 €.

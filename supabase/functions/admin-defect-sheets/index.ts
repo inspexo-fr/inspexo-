@@ -12,6 +12,7 @@ import { couvertureValide } from "../_shared/couverture.ts";
 import { fusionnerPrisesEnCharge } from "../_shared/prisesEnCharge.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
 import { texteDeLaPageComplet } from "../_shared/verifSource.ts";
+import { sourcesToutesEtrangeres } from "../_shared/rappelsApplicables.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -262,6 +263,31 @@ serve(async (req: Request) => {
         const { error: e7 } = await admin.from("defect_sheets").update({ ...fields, pannes }).eq("id", body.id);
         if (e7) return new Response(JSON.stringify({ error: e7.message }), { status: 500, headers: cors });
         return new Response(JSON.stringify({ modifiee: avant.titre, panne_avant: avant }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
+      // ── SPRINT 23 (point 3) — QUALIFIER UN RAPPEL « ÉTRANGER » ──────────
+      // Correction de donnée seulement : la panne, ses sources et son code ne
+      // bougent pas. Refusé si une source n'est pas d'un pays CONNU autre que
+      // la France : on ne requalifie pas sur une supposition.
+      if (body.qualifier_rappel && typeof body.qualifier_rappel === "object") {
+        const q = body.qualifier_rappel;
+        const { data: row } = await admin.from("defect_sheets").select("pannes").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const pannes = (Array.isArray(row.pannes) ? row.pannes : []) as Array<Record<string, unknown>>;
+        const idx = pannes.findIndex((p) =>
+          String(p?.titre ?? "").trim() === String(q.panne_titre ?? "").trim() &&
+          String(p?.rappel_code ?? "").trim() === String(q.rappel_code ?? "").trim() && Boolean(p?.rappel_code)
+        );
+        if (idx < 0) return new Response(JSON.stringify({ error: "panne ou code introuvable" }), { status: 400, headers: cors });
+        const urls = Array.isArray(pannes[idx].url_source) ? pannes[idx].url_source as unknown[] : [];
+        if (q.rappel_portee !== "etranger" || !sourcesToutesEtrangeres(urls).etrangeres || pannes[idx].rappel_portee === "mondiale") {
+          return new Response(JSON.stringify({ error: "sources non toutes étrangères" }), { status: 400, headers: cors });
+        }
+        const avant = pannes[idx];
+        pannes[idx] = { ...avant, rappel_portee: "etranger" };
+        const { error: e8 } = await admin.from("defect_sheets").update({ ...fields, pannes }).eq("id", body.id);
+        if (e8) return new Response(JSON.stringify({ error: e8.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ qualifiee: avant.titre, rappel_code: avant.rappel_code }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
 
       // ── SPRINT 23 (f) — PRISES EN CHARGE (affichage seulement) ───────────

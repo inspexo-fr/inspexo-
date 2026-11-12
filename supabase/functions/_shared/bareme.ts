@@ -86,7 +86,13 @@
 // fiches moteur (sources ajoutées, nouvelles pannes à gravité établie par la
 // source, rappel 21H7 réécrit en campagne mondiale). Le calcul ne change pas ;
 // des pannes jusque-là non portées peuvent peser.
-export const BAREME_VERSION = "11.14";
+//
+// 11.15 (sprint 23, point 3) : deux règles déterministes sur les rappels du
+// catalogue (`_shared/rappelsApplicables.ts`) — sources toutes étrangères ⇒
+// information de contexte, jamais rappel officiel ni poids ; millésimes ou
+// période écrits excluant l'année du véhicule ⇒ rappel non affiché. Le calcul
+// du barème ne change pas ; ce qui entre dans `rappel_officiel` change.
+export const BAREME_VERSION = "11.15";
 
 export type FaitsAxes = {
   annee_courante: number;

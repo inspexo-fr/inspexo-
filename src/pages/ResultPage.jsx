@@ -1136,6 +1136,11 @@ export default function ResultPage() {
                         {p.usure_lointaine && <span className="tag muted">au-delà d'une détention moyenne</span>}
                         {p.rappel_officiel && <span className="tag ambre phrase">{p.rappel_officiel}</span>}
                       </div>
+                      {p.rappel_contexte && (
+                        <p className="c-graphite" style={{ fontSize: 13, lineHeight: 1.6, marginBottom: 6 }}>
+                          {p.rappel_contexte}
+                        </p>
+                      )}
                       {p.usure_lointaine && (
                         <p className="mono c-graphite" style={{ fontSize: 11, lineHeight: 1.6, marginBottom: 6 }}>
                           Usure documentée bien au-delà du kilométrage actuel (plus de 60 000 km de
