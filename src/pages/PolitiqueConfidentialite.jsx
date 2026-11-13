@@ -642,6 +642,22 @@ export default function PolitiqueConfidentialite() {
             </li>
           </ul>
 
+          <h2 className="legal-h2">6 sexdecies. Facture à prévoir et fin de prise en charge</h2>
+          <p className="legal-p">
+            La <strong>facture à prévoir</strong> d'un dossier est calculée à l'affichage, à partir de l'analyse
+            déjà faite&nbsp;: rien de plus n'est collecté ni enregistré pour la produire.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              Si vous suivez un véhicule dans votre dossier et l'indiquez comme <strong>acheté</strong>, avec les
+              alertes actives, nous vous écrivons 6 mois puis 1 mois avant la fin d'une prise en charge publiée
+              par le constructeur pour son moteur. Nous enregistrons seulement quelle alerte a été envoyée (le
+              dossier, le programme, l'échéance), pour ne jamais l'envoyer deux fois&nbsp;; ces traces sont
+              effacées avec le dossier.
+            </li>
+            <li>Chaque e-mail contient un lien de désinscription en un clic&nbsp;; les alertes se coupent aussi depuis le dossier.</li>
+          </ul>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">

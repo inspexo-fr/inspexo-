@@ -194,5 +194,115 @@
   },
   "cout_eur": 0.2128,
   "le": "2026-11-08T22:19:38.234Z"
+ },
+ {
+  "marque": "Audi",
+  "famille": "EA824",
+  "fiche": "Audi EA824",
+  "fiche_id": "99c695b2-2e42-4d6b-b5f4-9bb08d949bcb",
+  "plan_existant": 0,
+  "operations": [],
+  "ecartees": [],
+  "proposees": 0,
+  "recherches": 3,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.2366,
+  "le": "2026-11-12T23:19:24.422Z"
+ },
+ {
+  "marque": "Peugeot",
+  "famille": "EB2DTS",
+  "fiche": "Peugeot EB2DTS",
+  "fiche_id": "36e03f2c-cd4d-49de-b206-c7db679e9593",
+  "plan_existant": 4,
+  "operations": [],
+  "ecartees": [
+   {
+    "operation": "Vidange moteur (huile + filtre à huile)",
+    "motif": "aucune_source_portante",
+    "url": "https://www.forum-peugeot.com/wp-content/uploads/2017/03/planentretien5008puretech130eat6.pdf [forum]"
+   },
+   {
+    "operation": "Remplacement de la courroie de distribution (+ pompe à eau)",
+    "motif": "aucune_source_portante",
+    "url": "https://www.forum-peugeot.com/wp-content/uploads/2017/03/planentretien5008puretech130eat6.pdf [forum] ; https://chaine-courroie.com/puretech/peugeot-2008-i-1-2-puretech [vendeur]"
+   },
+   {
+    "operation": "Remplacement des bougies d'allumage",
+    "motif": "aucune_source_portante",
+    "url": "https://www.forum-peugeot.com/wp-content/uploads/2017/03/planentretien5008puretech130eat6.pdf [forum]"
+   },
+   {
+    "operation": "Remplacement du filtre à air",
+    "motif": "aucune_source_portante",
+    "url": "https://www.forum-peugeot.com/wp-content/uploads/2017/03/planentretien5008puretech130eat6.pdf [forum]"
+   },
+   {
+    "operation": "Remplacement du liquide de frein",
+    "motif": "aucune_source_portante",
+    "url": "https://www.forum-peugeot.com/wp-content/uploads/2017/03/planentretien5008puretech130eat6.pdf [forum]"
+   }
+  ],
+  "proposees": 5,
+  "recherches": 3,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.3312,
+  "le": "2026-11-12T23:20:15.224Z"
+ },
+ {
+  "marque": "Mercedes",
+  "famille": "OM654",
+  "fiche": "Mercedes OM654",
+  "fiche_id": "6e88f5bf-6de7-495b-94b7-5a8bf9c00f86",
+  "plan_existant": 0,
+  "operations": [],
+  "ecartees": [
+   {
+    "operation": "vidange moteur (huile + filtre)",
+    "motif": "aucune_source_portante",
+    "url": "https://chaine-courroie.com/moteurs/guides/chaine-ou-courroie-par-moteur/moteur-mercedes-220-cdi [vendeur]"
+   },
+   {
+    "operation": "vidange moteur (huile + filtre) - variante diesel GLA 220d (OM654)",
+    "motif": "aucune_source_portante",
+    "url": "https://www.odopass.fr/blog/plan-entretien-mercedes-gla-programme-carnet-guide-complet [inconnu]"
+   },
+   {
+    "operation": "filtre à gazole",
+    "motif": "aucune_source_portante",
+    "url": "https://www.odopass.fr/blog/plan-entretien-mercedes-gla-programme-carnet-guide-complet [inconnu]"
+   },
+   {
+    "operation": "vidange boîte automatique (non prévue par Mercedes mais recommandée par la presse spécialisée)",
+    "motif": "aucune_source_portante",
+    "url": "https://ma-voiture-doccasion.fr/blog/fiabilite-mercedes [inconnu]"
+   },
+   {
+    "operation": "distribution (chaîne) - aucun intervalle de remplacement calendaire publié",
+    "motif": "aucun_intervalle_publie"
+   },
+   {
+    "operation": "liquide de frein",
+    "motif": "aucun_intervalle_publie"
+   },
+   {
+    "operation": "filtre à air",
+    "motif": "aucun_intervalle_publie"
+   }
+  ],
+  "proposees": 7,
+  "recherches": 2,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.1941,
+  "le": "2026-11-12T23:20:59.510Z"
  }
 ]

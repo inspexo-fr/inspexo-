@@ -336,6 +336,32 @@ export async function emailNouveauRappel(
   );
 }
 
+/** SPRINT 24 lot 2 — Fin de prise en charge constructeur sur un véhicule
+ *  ACHETÉ : 6 mois puis 1 mois avant la date de fin calculée. */
+export async function emailFinPriseEnCharge(
+  to: string,
+  analysisId: string,
+  vehicule: string,
+  programme: { titre: string; fin: string; km_max: number | null; entretien_exige: string | null },
+  palier: "6_mois" | "1_mois",
+  userId: string,
+): Promise<boolean> {
+  const lienUnsub = await lienDesinscription(userId);
+  const fin = programme.fin.split("-").reverse().join("/");
+  const delai = palier === "6_mois" ? "dans moins de 6 mois" : "dans moins d'un mois";
+  return await sendMail(
+    to,
+    `Fin de prise en charge ${delai} — ${vehicule}`,
+    `<p>La prise en charge « ${programme.titre.replace(/[<>]/g, "")} » publiée pour le moteur de votre ${vehicule.replace(/[<>]/g, "")}
+     prend fin ${delai}, le <strong>${fin}</strong>${programme.km_max ? ` (ou à ${programme.km_max.toLocaleString("fr-FR")} km, au premier terme atteint)` : ""}.</p>
+     <p>Si un symptôme couvert apparaît, faites-le constater par le réseau du constructeur avant cette date${programme.entretien_exige ? `, avec ${programme.entretien_exige.replace(/[<>]/g, "")}` : ""}.
+     Seul le réseau, avec le numéro de série (VIN), confirme l'éligibilité de votre véhicule.</p>
+     <p><a href="https://www.inspexo.io/a/${analysisId}">Revoir le dossier et la facture à prévoir</a></p>
+     ${piedDossier(lienUnsub)}`,
+    enTetesDesinscription(lienUnsub),
+  );
+}
+
 // RETIRÉ au sprint 10 : `emailRetourIssue` (J+30 après « acheté ») faisait
 // doublon avec l'invitation signée J+21, qui couvre toutes les sources et ne
 // se répète jamais. Deux emails pour le même véhicule contrediraient la règle

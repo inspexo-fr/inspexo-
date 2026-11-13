@@ -295,3 +295,62 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   403 sans secret, alerte-modele 400 sur confirmation forgée, table
   `alertes_modele` 401 à anon, 48 pages modèle. Build : 107 pages
   pré-rendues. **Dépense : 0 €.** Merge en attente.
+
+## Sprint 24 — compteurs remis à zéro (13 nov. 2026, décision d'Utku)
+- Total de sprint tenu face à **25 €**. Cumuls avant remise à zéro :
+  éval 10,77 € · couverture 13,21 € · plans 1,39 €.
+- **Lot 1 annoncé** : 6 fiches (H5HT, K4M, SDE, FIREFLY, M282, D4FB) ≈ 1,80 €,
+  mur 2,40 € ; plans EA824/EB2DTS/OM654 ≈ 1,26 €, mur 1,50 €, arrêt si aucun
+  des 3 ne sort avec une échéance établie ; juge batterie BMW/MINI/Mercedes
+  ≈ 0,15 €, mur 0,30 € ; 4 références × 1 ≈ 0,37 €, mur 0,45 €.
+  **Total ≈ 3,60 €, mur 4,65 €.** Écart sur les références donné AVANT toute
+  écriture de plan.
+- **Lot 1, étape 1 (13 nov.)** : 6 familles tentées, **1 fiche créée (Fiat
+  FIREFLY, 3 pannes, 1 entretien)**, 5 sous le seuil qualité de `sheet-builder`
+  (H5HT, K4M, SDE, M282, D4FB : moins de 4 sources distinctes dont 2 nommant le
+  moteur, ou aucune panne retenue — non enregistrées). **1,98 € / 2,40 €.**
+- **Étape 3 (gratuite, pré-contrôle)** : pages officielles BMW (certificat PDF,
+  page technologie) et Mercedes (certificat EQS, page utilitaires)
+  INJOIGNABLES depuis nos fonctions ; pages MINI joignables mais sans la durée
+  ni le kilométrage dans le texte lisible ⇒ rien à soumettre au juge, 0 €.
+- **Lot 1, étape 2 (plans)** : 0 moteur sur 3 avec une échéance établie —
+  RÈGLE D'ARRÊT (EB2DTS : PDF hébergé sur un forum ; OM654 : vendeurs et sites
+  non identifiés ; EA824 : aucune proposition). Rien d'écrit. **0,762 €.**
+  Références non rejouées (rien d'écrit ne les touche ; décision d'Utku).
+
+## Sprint 24 — barème 11.17 : pannes d'une autre version (13 nov. 2026)
+- Règle d'Utku : une panne qui nomme une cylindrée ou une puissance différente
+  de celle du véhicule ne s'applique ni au score, ni au dossier, ni à la page
+  modèle ; version inconnue ⇒ question au vendeur (`_shared/variantes.ts`).
+- **Écart annoncé : aucun** sur les 4 références (mesuré sur leurs fiches et
+  l'atlas : seules 4 entrées d'atlas sont touchées, déjà écartées par leur
+  code moteur). Attendu S7 39, 308 55, Mercedes 73, Clio II 51.
+- Pages Fiat 500 Hybrid et Panda Hybrid : retombent sous le seuil (2 pannes
+  FIREFLY sur 3 d'une autre version) ⇒ non publiées.
+- **Déploiement annoncé** : fonctions important `bareme.ts`, `variantes.ts`
+  ou `modeles.ts`. **4 références × 1 : ≈ 0,37 €, mur 0,45 €.**
+- **Fait** : 7 fonctions déployées ; **références S7 39 · 308 55 · Mercedes 73
+  · Clio II 51, conformes à l'annonce (0,360 €)**. Pages Fiat 500 Hybrid et
+  Panda Hybrid : 404 (sous le seuil). Total sprint : **3,10 € / 25 €**.
+- **Essai plans « domaines constructeur » (décision d'Utku)** : EB2DTS seul,
+  recherche limitée à peugeot.fr, citroen.fr, opel.fr (les seuls domaines
+  Stellantis déjà classés « officiel » ; peugeot.com, stellantis.com,
+  dsautomobiles.fr ne le sont pas). Déploiement annoncé : `sheet-builder`.
+  **Mur 0,40 €.** Rien ne donne ⇒ arrêt des plans pour ce sprint.
+- **Essai EB2DTS non joué, 0 €** : le mur RÉSERVE l'estimation prudente d'un
+  moteur (0,42 €) > 0,40 € accordés. Décision demandée à Utku (mur 0,45 € ?).
+
+## Sprint 24, lot 2 — facture à prévoir (13 nov. 2026)
+- `_shared/factureAPrevoir.ts` (pur, hors score) branché sur `cout-3ans` :
+  entretien dû (distribution d'abord), défauts portés dont le kilométrage
+  tombe dans les 12 mois, prises en charge valables/expirées/à vérifier ;
+  montant seulement si une source portante le cite ; phrase vendeur et
+  justificatif par ligne. **Gratuite** (sort aussi sans Pass).
+- Prises en charge du dossier filtrées (autre version, autre véhicule nommé) :
+  affichage seul (cas réel : campagne « Qashqai 1 1.5 dCi 110 » sur la Clio II
+  1.5 dCi 65).
+- Alertes de fin de prise en charge (dossiers achetés) : table
+  `alertes_fin_prise` (migration `20261129120000`, essai local 83/83),
+  palier réservé avant envoi.
+- **Dépense : 0 €** (aucun changement de score). Déploiement annoncé : migration,
+  `cout-3ans`, `alertes`, `score` et les fonctions qui importent `notify.ts`.

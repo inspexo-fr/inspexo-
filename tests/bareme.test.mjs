@@ -300,7 +300,7 @@ const verifiePrix = (titre, cond, detail = '') => {
   // faisait dès 15 : un dossier dont l'axe prix était « non évalué », donc
   // exclu du score, est désormais noté. Le barème lui-même n'a pas changé,
   // mais ce qu'il reçoit oui — et les clients d'API suivent ce numéro.
-  affirme('BAREME_VERSION passée à 11.16 (pièces justifiées du vendeur)', BAREME_VERSION === '11.16', BAREME_VERSION)
+  affirme('BAREME_VERSION passée à 11.17 (variantes de cylindrée et de puissance)', BAREME_VERSION === '11.17', BAREME_VERSION)
 }
 {
   // ⚠️ L'INVARIANT DU SPRINT 20 : le barème est AVEUGLE à la source de la

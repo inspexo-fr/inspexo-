@@ -24,6 +24,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { executerDecision } from "../_shared/inspectionArgent.ts";
 import { compterPannesPortees, entreesAtlasAPlat } from "../_shared/atlasSource.ts";
 import defectAtlas from "../_shared/defectAtlas.json" with { type: "json" };
+import { dateDepart, finProgramme, paliersAlerte } from "../_shared/factureAPrevoir.ts";
+import { programmesPourFamille, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
 import { alerterUneFoisParHeure, bilanHtml, sujetAlerte, sujetBilan } from "../_shared/alerting.ts";
 import {
   alerteExploitant,
@@ -31,6 +33,7 @@ import {
   emailAutorisationExpiree,
   emailNouveauRappel,
   emailRappelModele,
+  emailFinPriseEnCharge,
   emailRetourSigne,
   empreinteEmail,
   empreinteJeton,
@@ -477,6 +480,7 @@ serve(async (req: Request) => {
     coordonnees_vendeur_purgees: 0,
     alertes_modele_envoyees: 0,
     alertes_modele_purgees: 0,
+    alertes_fin_prise: 0,
     bilan_envoye: false,
     erreurs: 0,
   };
@@ -576,6 +580,49 @@ serve(async (req: Request) => {
 
     // ===== 1 bis. Alertes « rappel sur ce modèle » SANS compte (sprint 23) ====
     await passeAlertesModele(admin, parVehicule, bilan);
+
+    // ===== 1 ter. Fin de prise en charge constructeur (sprint 24, lot 2) =====
+    // Dossiers ACHETÉS dont le choix d'alertes est actif : pour chaque
+    // programme publié avec une durée, 6 mois puis 1 mois avant sa fin. Le
+    // palier est RÉSERVÉ en base avant l'envoi (unicité dossier/programme/
+    // palier) : deux passages concurrents ne peuvent pas envoyer deux fois.
+    try {
+      const aujourdhui = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
+      const { data: achetes } = await admin.from("dossier")
+        .select("id, user_id, analysis_id, analyses!inner(marque, modele, annee, result_json, is_eval)")
+        .eq("alertes", true).eq("statut", "achete").eq("analyses.is_eval", false).limit(300);
+      // deno-lint-ignore no-explicit-any
+      for (const d of ((achetes ?? []) as any[])) {
+        if (bilan.alertes_fin_prise >= MAX_EMAILS_PAR_RUN) break;
+        const rj = d.analyses?.result_json ?? {};
+        const famille = rj?.vehicule?.famille_moteur ?? null;
+        if (!famille) continue;
+        const { data: f } = await admin.from("defect_sheets").select("programmes")
+          .eq("famille_norm", String(famille).toUpperCase().replace(/[^A-Z0-9]/g, "")).limit(1);
+        const progs = programmesPourFamille(famille, (Array.isArray(f?.[0]?.programmes) ? f![0].programmes : null) as WarrantyProgram[] | null);
+        const depart = dateDepart(rj?.critair?.premiere_immatriculation ?? null, d.analyses?.annee ?? null);
+        for (const pr of progs) {
+          const fin = finProgramme(pr, depart);
+          if (!fin) continue;
+          for (const palier of paliersAlerte(fin, aujourdhui)) {
+            const { error: dejaPris } = await admin.from("alertes_fin_prise")
+              .insert({ dossier_id: d.id, programme: pr.titre.slice(0, 200), palier, fin });
+            if (dejaPris) continue; // déjà réservé : déjà envoyé (ou en cours)
+            const { data: userData } = await admin.auth.admin.getUserById(d.user_id);
+            const email: string | undefined = userData?.user?.email;
+            const vehicule = [d.analyses?.marque, d.analyses?.modele, d.analyses?.annee].filter(Boolean).join(" ");
+            const envoye = email
+              ? await emailFinPriseEnCharge(email, d.analysis_id, vehicule, { titre: pr.titre, fin, km_max: pr.km_max, entretien_exige: pr.entretien_exige }, palier, d.user_id)
+              : false;
+            await admin.from("alertes_fin_prise").update({ envoye }).eq("dossier_id", d.id).eq("programme", pr.titre.slice(0, 200)).eq("palier", palier);
+            if (envoye) bilan.alertes_fin_prise += 1;
+          }
+        }
+      }
+    } catch (err) {
+      console.error("alertes fin de prise en charge:", err);
+      bilan.erreurs += 1;
+    }
 
     // ===== 2. (RETIRÉ au sprint 10) J+30 après « acheté » =====
     // Cet envoi doublonnait désormais l'invitation J+21 ci-dessous : un

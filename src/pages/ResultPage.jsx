@@ -43,6 +43,7 @@ const VinBloc = differe(() => import('../components/VinBloc'))
 const CritairBloc = differe(() => import('../components/CritairBloc'))
 const EtMaintenant = differe(() => import('../components/EtMaintenant'))
 const Cout3AnsBloc = differe(() => import('../components/Cout3AnsBloc'))
+const FactureBloc = differe(() => import('../components/FactureBloc'))
 const RapportInspection = differe(() => import('../components/RapportInspection'))
 const AlerteModeleBloc = differe(() => import('../components/AlerteModeleBloc'))
 const BatterieBloc = differe(() => import('../components/BatterieBloc'))
@@ -1488,6 +1489,9 @@ export default function ResultPage() {
                 le bloc de commande, c'est le livrable que l'acheteur a payé. */}
             {!enCours && r.type === 'vehicule' && <RapportInspection analysisId={id} />}
 
+
+            {/* Facture à prévoir (sprint 24, lot 2) — gratuite, hors score. */}
+            {!enCours && r.type === 'vehicule' && <FactureBloc analysisId={id} />}
 
             {/* Coût réel sur 3 ans (sprint 22). Total gratuit ; le détail
                 ligne à ligne est RETENU côté serveur sans Pass. */}

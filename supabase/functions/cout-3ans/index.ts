@@ -14,6 +14,17 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { passDepuisReq } from "../_shared/passAuth.ts";
 import { calculerCout3Ans, chargerContexteCout } from "../_shared/cout3ansSources.ts";
 import { coutTroisAnsPublic } from "../_shared/cout3ans.ts";
+import { factureAPrevoir } from "../_shared/factureAPrevoir.ts";
+import { programmesPourFamille, type WarrantyProgram } from "../_shared/warrantyPrograms.ts";
+import { varianteVehicule } from "../_shared/variantes.ts";
+import { indexerModeles, nommeUnAutreVehicule, type FamilleMoteur } from "../_shared/modeles.ts";
+import { expandBrand } from "../_shared/brandAliases.ts";
+import { normFamille } from "../_shared/defectSheets.ts";
+import TABLE from "../_shared/famillesMoteur.json" with { type: "json" };
+
+// Noms des véhicules connus : une prise en charge qui en nomme un autre que
+// celui du dossier n'entre pas dans sa facture.
+const CATALOGUE = indexerModeles((TABLE as { familles: FamilleMoteur[] }).familles).map((p) => ({ marque: p.marque, modele: p.modele }));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -51,10 +62,49 @@ serve(async (req: Request) => {
       cv: body?.cv,
     });
 
-    if (!acces.passActif) return json({ pass: false, cout: coutTroisAnsPublic(cout) });
+    // SPRINT 24 lot 2 — LA FACTURE À PRÉVOIR, gratuite pour tous (lignes
+    // sourcées et datées, sans montant quand aucune source n'est confirmée).
+    // Hors score : calculée ici, à la lecture, jamais dans `score`.
+    let facture = null;
+    try {
+      const v = rj.vehicule ?? {};
+      const famille = typeof v.famille_moteur === "string" ? v.famille_moteur : null;
+      let programmesFiche: WarrantyProgram[] | null = null;
+      let ficheMaj: string | null = null;
+      if (famille) {
+        const { data: f } = await admin.from("defect_sheets")
+          .select("programmes, updated_at, statut")
+          .in("marque_norm", expandBrand(String(v.marque ?? "")))
+          .eq("famille_norm", normFamille(famille))
+          .order("updated_at", { ascending: false })
+          .limit(3);
+        // deno-lint-ignore no-explicit-any
+        const fiches = ((f ?? []) as any[]).sort((a, b) => Number(b.statut === "validee") - Number(a.statut === "validee"));
+        programmesFiche = Array.isArray(fiches[0]?.programmes) ? fiches[0].programmes : null;
+        ficheMaj = fiches[0]?.updated_at ?? null;
+      }
+      const page = { marque: String(v.marque ?? ""), modele: String(v.modele ?? ""), generation: null, slug_marque: "", slug: "", familles: [] };
+      facture = factureAPrevoir({
+        aujourdhui: new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date()),
+        kilometrage: typeof v.kilometrage === "number" ? v.kilometrage : null,
+        premiere_immat: rj.critair?.premiere_immatriculation ?? null,
+        annee: typeof v.annee === "number" ? v.annee : null,
+        version: varianteVehicule({ cylindree: v.cylindree, motorisation: v.motorisation }),
+        cout3ans: cout,
+        pannes: Array.isArray(rj.pannes_connues) ? rj.pannes_connues : [],
+        prises: Array.isArray(rj.prises_en_charge) ? rj.prises_en_charge : [],
+        programmes: programmesPourFamille(famille, programmesFiche),
+        fiche_maj: ficheMaj,
+        nommeUnAutreVehicule: page.marque && page.modele ? (t: string) => nommeUnAutreVehicule(t, page, CATALOGUE) : undefined,
+      });
+    } catch (e) {
+      console.error("cout-3ans facture:", e);
+    }
+
+    if (!acces.passActif) return json({ pass: false, cout: coutTroisAnsPublic(cout), facture });
     // Avec Pass : l'ENTRÉE accompagne le résultat, pour que le navigateur
     // recalcule (kilométrage annuel, corrections) avec le même module.
-    return json({ pass: true, cout, entree });
+    return json({ pass: true, cout, entree, facture });
   } catch (e) {
     console.error("cout-3ans:", e);
     return json({ error: "internal" }, 500);

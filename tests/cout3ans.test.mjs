@@ -177,8 +177,12 @@ eq(div, 0, `parité serveur / navigateur sur ${n} cas tirés`)
 
 // ── Garde-fous statiques ────────────────────────────────────────────────────
 const fn = readFileSync('supabase/functions/cout-3ans/index.ts', 'utf8')
-ok(/if \(!acces\.passActif\) return json\(\{ pass: false, cout: coutTroisAnsPublic\(cout\) \}\)/.test(fn),
-  'cout-3ans : sans Pass, SEULE la version publique sort')
+// Sprint 24 : la facture à prévoir est GRATUITE (décision d'Utku, lot 2) ;
+// elle sort aussi sans Pass. Le reste du verrou ne bouge pas : ni les lignes
+// complètes du coût sur 3 ans, ni l'entrée de recalcul.
+ok(/if \(!acces\.passActif\) return json\(\{ pass: false, cout: coutTroisAnsPublic\(cout\), facture \}\)/.test(fn),
+  'cout-3ans : sans Pass, SEULES la version publique et la facture sortent')
+ok(!/pass: false[^\n]*entree/.test(fn), 'cout-3ans : sans Pass, jamais l’entrée de recalcul')
 ok(fn.indexOf('passDepuisReq(') < fn.indexOf('await req.json('), 'cout-3ans : le droit est lu avant le corps')
 ok(!/insert|upsert|update\(/.test(fn), 'cout-3ans n’écrit rien')
 
