@@ -1,7 +1,7 @@
 // Tests hors ligne : chantier SEO (sprint 24) — seuil d'indexation, anti-doublon, balises.
 // Usage : node tests/seo.test.mjs
 import fs from 'node:fs'
-import { estIndexable as indexableHtml, ajouterNoindex, uneSeuleBaliseRobots, metaDe, pairesProches, gardee, doublonsMeta, RANG_PARC } from '../scripts/seo.mjs'
+import { estIndexable as indexableHtml, ajouterNoindex, uneSeuleBaliseRobots, metaDe, pairesProches, gardee, doublonsMeta } from '../scripts/seo.mjs'
 import { estIndexable, verdictIndexationMoteur, verdictIndexationModele, prisesDateesPropres, principale } from '../supabase/functions/_shared/indexation.ts'
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) { ok_++; console.log(`PASS — ${l}`) } else { ko++; console.log(`FAIL — ${l}`) } }
@@ -49,9 +49,11 @@ const commun = 'courroie de distribution humide qui se désagrège et bouche la 
 const pages = [{ url: '/modele/bmw/serie-1-f20', html: corps(commun + 'serie un') }, { url: '/modele/bmw/serie-3-f30', html: corps(commun + 'serie trois') }, { url: '/modele/x/y', html: corps('tout autre texte sans rapport avec la distribution ni le turbo ni rien du tout ici') }]
 const pr = pairesProches(pages, 0.8)
 ok(pr.length === 1 && pr[0].a.includes('serie-1') && pr[0].b.includes('serie-3'), 'paire trop proche détectée, et elle seule')
-eq(gardee('/modele/renault/clio-iv', '/modele/renault/megane-iv', {}).garde, '/modele/renault/clio-iv', 'rang sourcé : la Clio (1re du parc) reste indexée')
-eq(gardee('/modele/bmw/serie-1-f20', '/modele/bmw/serie-3-f30', { '/modele/bmw/serie-1-f20': { n_portees: 9 }, '/modele/bmw/serie-3-f30': { n_portees: 9, n_prises_datees: 2 } }).garde, '/modele/bmw/serie-3-f30', 'sans rang sourcé : le contenu propre le plus riche')
-ok(Object.keys(RANG_PARC).length === 8, 'rangs : seulement ceux que publie la source (8)')
+eq(gardee('/modele/renault/megane-iii', '/modele/renault/megane-iv', { '/modele/renault/megane-iii': { annee_recente: 2008 }, '/modele/renault/megane-iv': { annee_recente: 2018 } }).garde, '/modele/renault/megane-iv', 'paire restée trop proche : la génération la plus récente reste indexée')
+eq(gardee('/modele/a/x', '/modele/a/y', { '/modele/a/x': { annee_recente: 2015 }, '/modele/a/y': { annee_recente: 2015 } }), null, 'année égale : aucun choix, les deux restent indexées')
+eq(gardee('/modele/a/x', '/modele/a/y', {}), null, 'année inconnue : aucun choix au hasard')
+const pr2 = fs.readFileSync(new URL('../scripts/prerendu.mjs', import.meta.url), 'utf8')
+ok(/if \(!g\) \{ nonDepartagees\.push\(pr\); continue \}/.test(pr2), 'le pré-rendu laisse indexées les paires non départagées et les signale')
 
 // Balises
 const d = doublonsMeta([{ url: '/a', meta: { titre: 'T', description: 'D' } }, { url: '/b', meta: { titre: 'T', description: 'E' } }, { url: '/c', meta: { titre: 'U', description: '' } }])

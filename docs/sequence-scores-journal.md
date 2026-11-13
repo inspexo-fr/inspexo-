@@ -390,3 +390,19 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   double. Sitemap : 73 URL. Rapport : `docs/seo-rapport-2026-11-13.json`.
 - Core Web Vitals : mesure locale (serveur sans CDN) et références de prod ;
   la mesure fiable se fera en production après merge.
+- **Merge `sprint24-suite` (d0cd47b), main = production vérifié.** CWV en
+  production (téléphone simulé, médiane de 3) : accueil LCP 656 ms CLS 0,002 ;
+  /moteur/renault-1-5-dci LCP 1 696 ms CLS 0 ; /methode LCP 516 ms ;
+  /moteur LCP 588 ms ; **/modele/renault/clio-iv CLS 0,156 (régression :
+  0,055 avant)** — long paragraphe d'en-tête qui perd une ligne au chargement
+  de la police. Corrigé sur `sprint24-modeles` (en-tête court).
+
+## Sprint 24 — pages modèle rendues propres au modèle (13 nov. 2026)
+- Décision d'Utku : avant tout noindex, données propres au modèle, sans IA :
+  moteurs montés et années, Crit'Air par plage d'années et ZFE qui
+  l'interdisent, rappels RappelConso du modèle, prix observés du segment
+  (`_shared/donneesModele.ts`, servis par `modele-public`).
+- Paire encore ≥ 0,80 : la génération la plus récente reste indexée (année
+  du moteur le plus récent) ; à année égale ou inconnue, les deux restent et
+  la paire est signalée. Plus de classement par le parc.
+- Déploiement annoncé : `modele-public`. Coût : 0 €.
