@@ -354,3 +354,39 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   palier réservé avant envoi.
 - **Dépense : 0 €** (aucun changement de score). Déploiement annoncé : migration,
   `cout-3ans`, `alertes`, `score` et les fonctions qui importent `notify.ts`.
+- **Essai EB2DTS, domaines constructeur (mur 0,45 €)** : 0 échéance établie,
+  0,212 € (catalogue PDF peugeot.fr illisible ; page courroie sans intervalle).
+  **Plans d'entretien arrêtés pour le sprint.** Total sprint : 3,31 € / 85 €.
+
+## Sprint 24 — Points signalés par des propriétaires (13 nov. 2026)
+- Panne non portée citée par ≥ 3 SITES distincts (forums, garages ; sous-domaines
+  confondus) ⇒ point « à contrôler » (quoi, quand, signe, nombre de sources),
+  sans « panne connue » ni montant, mention fixe ; il remplace sa question.
+- Mesuré sur les fiches en base : 153 non portées, 109 citent forums/garages,
+  **10 passent le seuil de 3**.
+- **Hors note** : `pannes_non_verifiables` inchangé (plafond identique). Écart
+  annoncé : aucun. Déploiement : `score` (+ importeurs). **4 références × 1,
+  ≈ 0,36 €, mur 0,45 €.**
+- **Fait** : `score` déployé ; références S7 39 · 308 55 · Mercedes 73 ·
+  Clio II 51, inchangées (0,366 €). Total sprint : **3,68 € / 85 €**.
+
+## Sprint 24 — chantier SEO (13 nov. 2026, sans dépense IA)
+- Seuil d'indexation (`_shared/indexation.ts`) : pannes portées + prises en
+  charge datées propres ≥ 3, dont ≥ 1 panne portée ; sinon noindex et hors
+  sitemap, page accessible. Règle des versions appliquée aux pages /moteur
+  (FIREFLY). Vrai doublon EA288 Audi ⇒ canonique vers Volkswagen.
+- Anti-doublon au pré-rendu (`scripts/seo.mjs`) : paires de pages modèle ≥ 0,80
+  ⇒ noindex de la moins présente dans le parc, SANS canonique ; rang sourcé
+  seulement (top 30 L'Argus 2023 : 8 rangs publiés), sinon contenu propre le
+  plus riche.
+- Pages /methode et /qui-sommes-nous ; BreadcrumbList partout ; FAQPage retiré
+  des pages moteur ; build en échec si titre ou description en double.
+- **Déploiement annoncé** : `moteur-public` (nouvelle), `modele-public`.
+  Fenêtre avant merge : pages modèle sous le seuil accessibles sans noindex
+  côté site en ligne, liées par aucune page et hors sitemap.
+- **Fait (build local)** : 172 pages pré-rendues ; **indexables 73** (avant :
+  108, toutes) ; 99 en noindex ou canonisées : sous le seuil, trop proches
+  (anti-doublon), 1 vrai doublon (EA288 Audi). Aucun titre ni description en
+  double. Sitemap : 73 URL. Rapport : `docs/seo-rapport-2026-11-13.json`.
+- Core Web Vitals : mesure locale (serveur sans CDN) et références de prod ;
+  la mesure fiable se fera en production après merge.

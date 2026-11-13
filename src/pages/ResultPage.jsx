@@ -44,6 +44,7 @@ const CritairBloc = differe(() => import('../components/CritairBloc'))
 const EtMaintenant = differe(() => import('../components/EtMaintenant'))
 const Cout3AnsBloc = differe(() => import('../components/Cout3AnsBloc'))
 const FactureBloc = differe(() => import('../components/FactureBloc'))
+const PointsProprietairesBloc = differe(() => import('../components/PointsProprietairesBloc'))
 const RapportInspection = differe(() => import('../components/RapportInspection'))
 const AlerteModeleBloc = differe(() => import('../components/AlerteModeleBloc'))
 const BatterieBloc = differe(() => import('../components/BatterieBloc'))
@@ -1262,6 +1263,10 @@ export default function ResultPage() {
                 })()}
               </div>
             )}
+
+            {/* Points signalés par des propriétaires (sprint 24) — contrôles,
+                jamais une panne affirmée ; sans effet sur la note. */}
+            {!enCours && r.type === 'vehicule' && <PointsProprietairesBloc points={r.points_proprietaires} />}
 
             {/* Prises en charge connues du moteur (sprint 23 f) — AFFICHAGE
                 SEULEMENT : aucune n'entre dans la note. Jamais « votre voiture

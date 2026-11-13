@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import { getFiabilite } from '../lib/scoreApi'
 import { tauxLisible } from '../lib/intervalle'
 import PannesPortees from '../components/PannesPortees'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 15 — La mesure publiée change de méthode.
 //
@@ -57,6 +58,7 @@ export default function FiabilitePage() {
         <meta name="description" content="Chaque affirmation de nos analyses est confrontée à la source qu'elle cite par une vérification indépendante : taux d'affirmations non soutenues, mesuré et publié." />
         <link rel="canonical" href="https://www.inspexo.io/fiabilite" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Fiabilité', url: '/fiabilite' }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none', minHeight: '70vh' }}>

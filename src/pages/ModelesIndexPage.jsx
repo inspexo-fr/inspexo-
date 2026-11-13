@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { listeModelesPublies } from '../lib/scoreApi'
 import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 23, LOT 3 — Index des pages modèle publiées (au moins 3 pannes
 // confirmées par une source indépendante). La liste vient du serveur.
@@ -23,6 +24,7 @@ export default function ModelesIndexPage() {
         <meta name="description" content="Les pannes connues des voitures d'occasion, modèle par modèle, uniquement quand une source indépendante les confirme." />
         <link rel="canonical" href="https://www.inspexo.io/modele" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Pannes par modèle', url: '/modele' }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none' }}>

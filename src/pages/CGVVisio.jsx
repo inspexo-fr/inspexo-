@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { getVisioConfig } from '../lib/inspectionApi'
 import { IDENTITE } from '../data/identite'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 14 — CGV de la visio guidée (/cgv-visio).
 //
@@ -40,6 +41,7 @@ export default function CGVVisio() {
         <meta name="description" content="Conditions générales de vente de la visio guidée Inspexo : prix, déroulement de l'appel, ce qui ne se vérifie pas à distance, annulation, droit de rétractation, aucun enregistrement." />
         <link rel="canonical" href="https://www.inspexo.io/cgv-visio" />
       </Helmet>
+      <FilAriane items={[{ nom: 'CGV de la visio', url: '/cgv-visio' }]} />
       <Navbar />
       <div className="legal-container">
         <div className="wrap-doc">

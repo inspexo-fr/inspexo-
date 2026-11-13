@@ -304,5 +304,42 @@
   },
   "cout_eur": 0.1941,
   "le": "2026-11-12T23:20:59.510Z"
+ },
+ {
+  "marque": "Peugeot",
+  "famille": "EB2DTS",
+  "fiche": "Peugeot EB2DTS",
+  "fiche_id": "36e03f2c-cd4d-49de-b206-c7db679e9593",
+  "plan_existant": 4,
+  "operations": [],
+  "ecartees": [
+   {
+    "operation": "Courroie de distribution (+ pompe à eau)",
+    "motif": "aucun_intervalle_publie"
+   },
+   {
+    "operation": "Vidange moteur (huile + filtre à huile)",
+    "motif": "page_illisible",
+    "url": "https://www.peugeot.fr/content/dam/peugeot/france/b2c/documentation/catalogues/2302/208.pdf"
+   },
+   {
+    "operation": "Vidange moteur (huile + filtre à huile)",
+    "motif": "page_illisible",
+    "url": "https://www.peugeot.fr/content/dam/peugeot/france/b2c/documentation/catalogues/2403/CT_-_SUV_3008_-_Applicable_au_01_fevrier_2024.pdf"
+   }
+  ],
+  "proposees": 2,
+  "recherches": 3,
+  "juge": {
+   "passages": 0,
+   "depuis_cache": 0
+  },
+  "cout_eur": 0.2118,
+  "le": "2026-11-13T09:30:02.110Z",
+  "domaines": [
+   "peugeot.fr",
+   "citroen.fr",
+   "opel.fr"
+  ]
  }
 ]

@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { CONSENT_TEXT } from '../components/EmailCapture'
 import { submitLeadPro } from '../lib/scoreApi'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 11 — /pro : ce qu'Inspexo peut faire pour un professionnel.
 // AUCUN PRIX N'EST AFFICHÉ : tarif sur devis, et aucune facturation
@@ -170,6 +171,7 @@ export default function ProPage() {
         <meta name="description" content="Analyse automatique d'annonces de voitures d'occasion pour les professionnels : pannes connues sourcées, rappels constructeur, incohérences. API de scoring, tarif sur devis." />
         <link rel="canonical" href="https://www.inspexo.io/pro" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Professionnels', url: '/pro' }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none' }}>

@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { getInspectionConfig } from '../lib/inspectionApi'
 import { IDENTITE } from '../data/identite'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 12 — CGV de l'inspection à la demande (/cgv-inspection).
 //
@@ -44,6 +45,7 @@ export default function CGVInspection() {
         <meta name="description" content="Conditions générales de vente de l'inspection à la demande Inspexo : prix, zone, créneau, annulation, droit de rétractation, conservation des photos du rapport, indépendance de l'inspecteur." />
         <link rel="canonical" href="https://www.inspexo.io/cgv-inspection" />
       </Helmet>
+      <FilAriane items={[{ nom: 'CGV de l’inspection', url: '/cgv-inspection' }]} />
       <Navbar />
       <div className="legal-container">
         <div className="wrap-doc">

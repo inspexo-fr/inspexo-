@@ -25,6 +25,9 @@ export default function Footer() {
             <Link to="/moteur">Pannes par moteur</Link>
             <Link to="/airbags-takata">Airbags Takata</Link>
             <Link to="/fiabilite">Fiabilité</Link>
+            <Link to="/modele">Pannes par modèle</Link>
+            <Link to="/methode">Méthode</Link>
+            <Link to="/qui-sommes-nous">Qui sommes-nous</Link>
           </div>
           <div className="col">
             <p>Société</p>

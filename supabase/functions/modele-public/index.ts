@@ -12,6 +12,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import TABLE from "../_shared/famillesMoteur.json" with { type: "json" };
 import { composerPage, indexerModeles, type FamilleMoteur, type FicheMoteur } from "../_shared/modeles.ts";
+import { verdictIndexationModele } from "../_shared/indexation.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -58,24 +59,36 @@ serve(async (req: Request) => {
     const fiches = ((data ?? []) as Array<FicheMoteur & { statut: string }>)
       .sort((a, b) => Number(b.statut === "validee") - Number(a.statut === "validee"));
 
+    // SPRINT 24 — une page est ACCESSIBLE dès qu'elle a du contenu propre ;
+    // elle n'est INDEXABLE qu'au-dessus du seuil (`_shared/indexation.ts`).
+    const resume = (c: ReturnType<typeof composerPage>) => {
+      const v = verdictIndexationModele(c.sections);
+      const sources = new Set(c.sections.flatMap((s) => [...s.pannes.flatMap((x) => x.sources), ...s.prises.flatMap((x) => x.urls)]));
+      const maj = c.sections.map((s) => s.maj).filter((x): x is string => !!x).sort().pop() ?? null;
+      return { ...v, n_sources: sources.size, maj };
+    };
+    const accessible = (c: ReturnType<typeof composerPage>) => c.sections.length > 0 && c.n_pannes >= 1;
+
     if (liste) {
       const publiables = pages
         .map((p) => ({ p, c: composerPage(p, fiches, CATALOGUE) }))
-        .filter((x) => x.c.publiable)
+        .filter((x) => accessible(x.c))
         .map(({ p, c }) => ({
           marque: p.marque, modele: p.modele, generation: p.generation,
           slug_marque: p.slug_marque, slug: p.slug, n_pannes: c.n_pannes,
           familles: c.sections.map((s) => s.famille),
+          ...resume(c),
         }));
       return jsonResponse({ pages: publiables, seuil: 3 });
     }
 
     const p = pages[0];
     const c = composerPage(p, fiches, CATALOGUE);
-    if (!c.publiable) return jsonResponse({ error: "not_found", n_pannes: c.n_pannes }, 404);
+    if (!accessible(c)) return jsonResponse({ error: "not_found", n_pannes: c.n_pannes }, 404);
     return jsonResponse({
       marque: p.marque, modele: p.modele, generation: p.generation,
       slug_marque: p.slug_marque, slug: p.slug, n_pannes: c.n_pannes, sections: c.sections,
+      ...resume(c),
     });
   } catch (error) {
     console.error("modele-public error:", error);

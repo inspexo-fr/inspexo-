@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { PlansPass } from './HomePage'
+import FilAriane from '../components/FilAriane'
 
 // /pass — le Pass achat (29 € vente / 19 € précommande, selon le serveur).
 // Même contenu que la section Pass de l'accueil, dans la même DA.
@@ -19,6 +20,7 @@ export default function PassPage() {
         <meta name="description" content="Visite guidée devant la voiture, marge de négociation sourcée, lecture du PV de contrôle technique, dossier d'achat et kit signature. 29 € pour 30 jours, annonces illimitées." />
         <link rel="canonical" href="https://www.inspexo.io/pass" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Pass achat', url: '/pass' }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none' }}>

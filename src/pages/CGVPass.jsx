@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { getPassConfig } from '../lib/scoreApi'
 import { IDENTITE } from '../data/identite'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 7 — CGV du Pass achat (/cgv-pass). Présentées AVANT paiement : la
 // page /pass exige une case d'acceptation dédiée. Le médiateur de la
@@ -26,6 +27,7 @@ export default function CGVPass() {
         <meta name="description" content="Conditions générales de vente du Pass achat Inspexo : objet, prix, durée de 30 jours, droit de rétractation, médiation de la consommation." />
         <link rel="canonical" href="https://www.inspexo.io/cgv-pass" />
       </Helmet>
+      <FilAriane items={[{ nom: 'CGV du Pass achat', url: '/cgv-pass' }]} />
       <Navbar />
       <div className="legal-container">
         <div className="wrap-doc">

@@ -21,6 +21,8 @@ const RetourPage = lazy(() => import('./pages/RetourPage'))
 const AlerteConfirmerPage = lazy(() => import('./pages/AlerteConfirmerPage'))
 const ModelePage = lazy(() => import('./pages/ModelePage'))
 const ModelesIndexPage = lazy(() => import('./pages/ModelesIndexPage'))
+const MethodePage = lazy(() => import('./pages/MethodePage'))
+const QuiSommesNousPage = lazy(() => import('./pages/QuiSommesNousPage'))
 const ProPage = lazy(() => import('./pages/ProPage'))
 const ProApiPage = lazy(() => import('./pages/ProApiPage'))
 const KitSignaturePage = lazy(() => import('./pages/KitSignaturePage'))
@@ -131,6 +133,8 @@ export default function App() {
           <Route path="/retour/:id" element={<RetourPage />} />
           <Route path="/alerte/confirmer" element={<AlerteConfirmerPage />} />
           <Route path="/modele" element={<ModelesIndexPage />} />
+          <Route path="/methode" element={<MethodePage />} />
+          <Route path="/qui-sommes-nous" element={<QuiSommesNousPage />} />
           <Route path="/modele/:marque/:modele" element={<ModelePage />} />
           <Route path="/pro" element={<ProPage />} />
           <Route path="/pro/api" element={<ProApiPage />} />

@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { createServer } from 'node:http'
 import { extname } from 'node:path'
 import { FAMILLES_MOTEUR } from '../src/data/famillesMoteur.js'
+import { ajouterNoindex, uneSeuleBaliseRobots, doublonsMeta, estIndexable, gardee, metaDe, pairesProches, SEUIL_SIMILARITE, SOURCE_RANG_PARC } from './seo.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILD = join(ROOT, 'build')
@@ -192,6 +193,8 @@ const ROUTES = [
   { url: '/extension/confidentialite', attendre: '.rows', priorite: '0.3' },
   ...moteurs.map((f) => ({ url: `/moteur/${f.slug}`, attendre: '#pannes .row', priorite: '0.8', figer: true })),
   { url: '/modele', attendre: '#modeles li', priorite: '0.7', figer: true },
+  { url: '/methode', attendre: '.legal-h1', priorite: '0.6' },
+  { url: '/qui-sommes-nous', attendre: '.legal-h1', priorite: '0.4' },
   ...modeles.map((m) => ({ url: `/modele/${m.slug_marque}/${m.slug}`, attendre: '#pannes .row', priorite: '0.7', figer: true })),
 ]
 
@@ -266,6 +269,7 @@ for (const route of ROUTES) {
         `<script>window.__PRERENDU__=JSON.parse(${litteral})</script></head>`,
       )
     }
+    html = uneSeuleBaliseRobots(html)
     const dossier = join(BUILD, route.url)
     mkdirSync(dossier, { recursive: true })
     writeFileSync(join(dossier, 'index.html'), html)
@@ -281,9 +285,54 @@ for (const route of ROUTES) {
 await nav.close()
 serveur.close()
 
+// ---- SPRINT 24 (SEO) : anti-doublon, indexabilité, unicité des balises ----
+const lireHtml = (url) => readFileSync(join(BUILD, url, 'index.html'), 'utf8')
+const infosModele = Object.fromEntries(modeles.map((m) => [`/modele/${m.slug_marque}/${m.slug}`, m]))
+const candidatesModele = faits
+  .filter((r) => r.url.startsWith('/modele/'))
+  .map((r) => ({ url: r.url, html: lireHtml(r.url) }))
+  .filter((p) => estIndexable(p.html, `${SITE}${p.url}`))
+const paires = pairesProches(candidatesModele, SEUIL_SIMILARITE)
+const ecartees = new Map()
+for (const pr of paires) {
+  if (ecartees.has(pr.a) || ecartees.has(pr.b)) continue
+  const g = gardee(pr.a, pr.b, infosModele)
+  const perdante = g.garde === pr.a ? pr.b : pr.a
+  ecartees.set(perdante, { ...pr, gardee: g.garde, motif: g.motif })
+}
+for (const url of ecartees.keys()) {
+  const chemin = join(BUILD, url, 'index.html')
+  writeFileSync(chemin, ajouterNoindex(readFileSync(chemin, 'utf8')))
+}
+const indexables = faits.filter((r) => estIndexable(lireHtml(r.url === '/' ? '' : r.url), `${SITE}${r.url === '/' ? '/' : r.url}`))
+const nonIndexees = faits.filter((r) => !indexables.includes(r)).map((r) => {
+  const m = metaDe(lireHtml(r.url === '/' ? '' : r.url))
+  const e = ecartees.get(r.url)
+  return { url: r.url, raison: e ? `trop proche de ${e.gardee} (${e.similarite}) — ${e.motif}` : m.canonique && m.canonique !== `${SITE}${r.url}` ? `vrai doublon : canonique vers ${m.canonique}` : 'sous le seuil d\'indexation' }
+})
+const doublons = doublonsMeta(indexables.map((r) => ({ url: r.url, meta: metaDe(lireHtml(r.url === '/' ? '' : r.url)) })))
+writeFileSync(join(BUILD, 'seo-rapport.json'), JSON.stringify({
+  genere_le: new Date().toISOString(),
+  pages_pre_rendues: faits.length,
+  pages_indexables: indexables.length,
+  non_indexees: nonIndexees,
+  paires_trop_proches: paires,
+  seuil_similarite: SEUIL_SIMILARITE,
+  source_rang_parc: SOURCE_RANG_PARC,
+  doublons_balises: doublons,
+  sitemap: `${SITE}/sitemap.xml`,
+}, null, 1))
+console.log(`\n— SEO : ${indexables.length} page(s) indexable(s) sur ${faits.length} · ${nonIndexees.length} en noindex ou canonisée(s) · ${paires.length} paire(s) ≥ ${SEUIL_SIMILARITE}`)
+if (doublons.titres.length || doublons.descriptions.length || doublons.sans_description.length) {
+  console.error('\n✗ Titres ou descriptions en double (ou absents) parmi les pages indexables :')
+  console.error(JSON.stringify(doublons, null, 1).slice(0, 2000))
+  process.exit(1)
+}
+
 // ---- sitemap.xml : uniquement les pages réellement produites ----
 const aujourdhui = new Date().toISOString().slice(0, 10)
-const urls = faits.some((r) => r.url === '/') ? faits : [{ url: '/', priorite: '1.0' }, ...faits]
+// Le sitemap ne liste que les pages INDEXABLES (ni noindex, ni canonique ailleurs).
+const urls = indexables.some((r) => r.url === '/') ? indexables : [{ url: '/', priorite: '1.0' }, ...indexables]
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((r) => `  <url>

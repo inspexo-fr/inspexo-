@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import takata from '../data/takataModels.json'
+import FilAriane from '../components/FilAriane'
 
 // /airbags-takata — liste officielle du ministère, telle quelle. Rien n'est
 // ajouté ni interprété : les modèles, les périodes et la date de la liste
@@ -112,6 +113,7 @@ export default function TakataPage() {
           })),
         })}</script>
       </Helmet>
+      <FilAriane items={[{ nom: 'Airbags Takata', url: '/airbags-takata' }]} />
 
       <Navbar />
 
