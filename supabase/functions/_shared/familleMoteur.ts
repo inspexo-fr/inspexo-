@@ -26,6 +26,8 @@ export type FamilleTable = {
   marque: string;
   famille: string;
   nom_commercial: string;
+  /** Codes complets déclarés, ramenés à `famille` (sprint 24). */
+  codes?: string[];
   modeles: string[];
   debut: number;
   /** Dernière année ATTESTÉE par la source, pas une fin de production. */
@@ -124,14 +126,25 @@ export type EntreeResolution = {
  *  3. Sinon on garde ce que le modèle a dit, même inconnu de la table (elle ne
  *     couvre que 48 familles), et à défaut : null, assumé.
  */
-export function resoudreFamille(e: EntreeResolution): Resolution {
+export function resoudreFamille(e: EntreeResolution, familles: FamilleTable[] = FAMILLES): Resolution {
   const marques = new Set(expandBrand(String(e.marque ?? "")).map((m) => norm(m)));
   const propose = String(e.propose ?? "").trim().toUpperCase();
-  const deLaMarque = FAMILLES.filter((f) => marques.has(norm(f.marque)));
+  const deLaMarque = familles.filter((f) => marques.has(norm(f.marque)));
 
   // 1. Proposition du modèle, connue de la table pour cette marque : gardée.
   if (propose && deLaMarque.some((f) => f.famille.toUpperCase() === propose)) {
     return { famille: propose, origine: "modele", motif: "code proposé et attesté pour cette marque", candidats: [] };
+  }
+  // 1 bis. Code complet DÉCLARÉ par une entrée (« 1AD-FTV » → « AD ») : la
+  // fiche est rangée sous la famille, pas sous chacun de ses codes. Accepte
+  // aussi le début d'un code déclaré (« 2AD »), jamais moins de 3 caractères.
+  const cle = (x: string) => x.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const p = cle(propose);
+  if (p.length >= 3) {
+    const declaree = deLaMarque.find((f) => (f.codes ?? []).some((c) => cle(c) === p || cle(c).startsWith(p)));
+    if (declaree) {
+      return { famille: declaree.famille, origine: "modele", motif: `code proposé (${propose}) déclaré pour la famille ${declaree.famille}`, candidats: [] };
+    }
   }
 
   // 2. La table tranche-t-elle ?

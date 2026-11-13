@@ -51,7 +51,7 @@ export const SEGMENTS_PAR_SLUG = {
     { marque: 'fiat', modele: 'panda', libelle: 'Panda' },
     { marque: 'fiat', modele: '500l', libelle: '500L' },
   ],
-  'fiat-1-0-firefly': [
+  'fiat-1-0-firefly-70': [
     { marque: 'fiat', modele: '500', libelle: '500' },
     { marque: 'fiat', modele: 'panda', libelle: 'Panda' },
     { marque: 'lancia', modele: 'ypsilon', libelle: 'Ypsilon' },

@@ -170,7 +170,10 @@ const brut = [
   { marque: 'Fiat', nom_commercial: '0.9 TwinAir', famille: 'TWINAIR',
     modeles: ['Fiat 500', 'Fiat Panda III', 'Fiat 500L'],
     millesimes: '2010-2022', source_code: S.FIAT_TWINAIR },
-  { marque: 'Fiat', nom_commercial: '1.0 FireFly', famille: 'FIREFLY',
+  // 70 ch : puissance du 1.0 FireFly hybride de ces trois modèles, lue sur la
+  // page source le 13 nov. 2026. Elle écarte de la fiche les pannes du T3
+  // 120 ch et du 1.3 T4 (règle des variantes). Ancienne adresse redirigée.
+  { marque: 'Fiat', nom_commercial: '1.0 FireFly 70', famille: 'FIREFLY',
     modeles: ['Fiat 500 Hybrid', 'Fiat Panda Hybrid', 'Lancia Ypsilon'],
     millesimes: '2020-2022', source_code: S.FIAT_FIREFLY },
 
@@ -308,6 +311,12 @@ export function familleParCode(marque, code) {
 // • EA211 (1.0/1.2/1.4/1.5 TSI) : code attesté (de.wikipedia, VW EA211 et
 //   EA211 evo), mais la fiche du 1.5 TSI n'a pas atteint le seuil de 4 sources
 //   (chantier A, 13 nov. 2026) : pas d'entrée sans fiche. EA888 : ajouté.
+// • Toyota AD (1AD-FTV, 2AD-FTV, 2AD-FHV — en.wikipedia « Toyota AD engine ») :
+//   le mécanisme des codes déclarés (`codes`, ramenés à la famille par le
+//   résolveur) est prêt, mais la fiche n'a pas atteint le seuil de 4 sources
+//   (13 nov. 2026). ⚠️ Une entrée SANS fiche ferait monter des scores : une
+//   famille identifiée sans fiche sort l'axe risques du calcul (« non évalué »)
+//   au lieu du plafond 55 d'un moteur non identifié.
 // • Codes Opel propres (B14XFT, B16DTH…), codes internes Fiat/Alfa.
 // • Codes de boîtes de vitesses (DQ200, DQ381, EAT8, DC4…) : aucun attesté.
 //   Le filtre serveur refuse déjà toute panne nommant un code de boîte qui

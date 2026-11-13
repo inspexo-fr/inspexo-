@@ -21,7 +21,7 @@ const COUT_ESTIME = 0.08
 const TYPES = new Set(['panne', 'rappel', 'campagne'])
 
 // Lot 1, par fréquence dans le parc. `relevé` = familles du relevé externe.
-const LOT = [
+const TOUT = [
   { marque: 'Renault', famille: 'R9M', nom: '1.6 dCi', releve: ['RENAULT-R9M'] },
   { marque: 'Fiat', famille: 'SDE', nom: '1.3 Multijet', releve: ['FIAT-1.3-MULTIJET'] },
   { marque: 'Volkswagen', famille: 'EA188', nom: '1.9 et 2.0 TDI PD', releve: ['VAG-EA188-TDI-PD'] },
@@ -29,11 +29,16 @@ const LOT = [
   // EA211 : 1.5 TSI seul. Une page réunissant 1.0 à 1.5 masquerait chaque
   // panne propre à une cylindrée (règle des variantes, barème 11.17).
   { marque: 'Volkswagen', famille: 'EA211', nom: '1.5 TSI', releve: ['VAG-EA211-1.5TSI'] },
-  // Toyota 1AD/2AD écarté de ce lot : aucun code de famille sûr pour la
-  // recherche par préfixe (« AD » ne prolonge pas « 1AD-FTV »).
+  // Toyota AD : codes complets 1AD-FTV / 2AD-FTV / 2AD-FHV déclarés dans la
+  // table et ramenés à « AD » par le résolveur (décision d'Utku, 13 nov. 2026).
+  { marque: 'Toyota', famille: 'AD', nom: '2.0 et 2.2 D-4D', releve: ['TOYOTA-2.0-2.2-D4D-1AD-2AD'] },
   { marque: 'Renault', famille: 'K4M', nom: '1.6 16V', releve: ['RENAULT-D4F-K4M', 'RENAULT-1.4-1.6-16V-K4J-K4M'] },
   { marque: 'Renault', famille: 'H5HT', nom: '1.3 TCe', releve: ['RENAULT-H5HT'] },
 ]
+
+// `--familles R9M,AD` : ne joue que ces familles (une fiche déjà créée est
+// renvoyée telle quelle, jamais remplacée).
+const LOT = flag('--familles') ? TOUT.filter((f) => flag('--familles').split(',').includes(f.famille)) : TOUT
 
 const env = {}
 for (const l of (existsSync('.env.local') ? readFileSync('.env.local', 'utf8') : '').split('\n')) {

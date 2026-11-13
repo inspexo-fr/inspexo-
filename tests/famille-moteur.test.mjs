@@ -123,5 +123,19 @@ titre('Rien de tranché quand il n’y a rien à trancher')
   ok(sansRien.famille === null, 'entrée vide → null')
 }
 
+// Sprint 24 — codes complets déclarés (Toyota AD).
+{
+  // Table d'essai : l'entrée AD n'est pas dans la vraie table tant qu'elle n'a
+  // pas de fiche (une famille sans fiche ferait monter des scores).
+  const ESSAI = [...FAMILLES, { marque: 'Toyota', famille: 'AD', nom_commercial: '2.0 et 2.2 D-4D', codes: ['1AD-FTV', '2AD-FTV', '2AD-FHV'], modeles: ['Toyota Avensis II/III'], debut: 2005, derniere_attestee: 2015 }]
+  const r = (propose, modele = 'Avensis', motorisation = '2.2 D-4D') => resoudreFamille({ marque: 'Toyota', modele, motorisation, carburant: 'diesel', annee: 2010, propose }, ESSAI)
+  ok(!FAMILLES.some((f) => f.famille === 'AD'), 'la vraie table ne contient pas AD (pas de fiche)')
+  for (const c of ['1AD-FTV', '2AD-FTV', '2AD-FHV', '2ad-fhv', '1AD']) ok(r(c).famille === 'AD', `« ${c} » ramené à la famille AD`)
+  ok(r('AD').famille === 'AD', '« AD » gardé tel quel')
+  ok(r('A').famille !== 'AD' || r('A').origine !== 'modele', 'moins de 3 caractères : pas de rapprochement par code déclaré')
+  ok(r('2ZR-FXE', 'Auris', '1.8 Hybride').famille === '2ZR-FXE', 'un autre code Toyota reste inchangé')
+  ok(resoudreFamille({ marque: 'Lexus', modele: 'IS', motorisation: '2.2 D-4D', carburant: 'diesel', annee: 2010, propose: '2AD-FHV' }, ESSAI).famille === '2AD-FHV', 'code déclaré pour Toyota seulement : une autre marque n’en hérite pas')
+}
+
 console.log(`\n${ko === 0 ? 'OK' : 'ÉCHEC'} — ${total - ko}/${total} contrôles passés`)
 process.exit(ko === 0 ? 0 : 1)

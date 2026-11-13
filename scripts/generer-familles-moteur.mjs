@@ -32,6 +32,9 @@ const sortie = FAMILLES_MOTEUR.map((f) => {
     marque: f.marque,
     famille: f.famille,
     nom_commercial: f.nom_commercial,
+    // Codes complets déclarés pour une famille (Toyota AD : 1AD-FTV, 2AD-FTV,
+    // 2AD-FHV) : le résolveur les ramène à `famille`.
+    ...(Array.isArray(f.codes) && f.codes.length ? { codes: f.codes } : {}),
     modeles: f.modeles,
     debut: Number(m[1]),
     // ⚠️ « fin » est la DERNIÈRE ANNÉE ATTESTÉE par la source, pas une fin de

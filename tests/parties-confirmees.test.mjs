@@ -54,4 +54,18 @@ const gen = ds.slice(ds.indexOf('async function generateSheetDepuisParties'), ds
 ok(!/web_search/.test(gen), 'aucune recherche web dans la génération depuis les parties')
 ok(ds.indexOf('restreindreSources(generated.input.pannes') < ds.indexOf('sanitizePannes(\n    generated.input.pannes'), 'la restriction précède le contrôle de qualité')
 
+// 6. Retrait des pannes d'une autre version (session de jeton, FIREFLY).
+const adm = fs.readFileSync('supabase/functions/admin-defect-sheets/index.ts', 'utf8')
+const bloc = adm.slice(adm.indexOf('body.retirer_autre_version === true'), adm.indexOf("SPRINT 22 — AJOUT D'UN PLAN"))
+ok(/statut === "exclue"/.test(bloc) && !/"question"\)/.test(bloc.replace(/\/\/.*$/gm, '')), 'seules les pannes « exclue » sont retirées, jamais une « question »')
+ok(/JSON\.stringify\(titres\) !== JSON\.stringify\(attendus\)/.test(bloc) && /status: 409/.test(bloc), 'ensemble différent de celui attendu ⇒ 409, rien n’est écrit')
+ok(bloc.indexOf('body.simuler === true') < bloc.indexOf('.update('), 'la simulation répond avant toute écriture')
+const sess = fs.readFileSync('scripts/session-jeton-sprint24.mjs', 'utf8')
+ok(/aRetirer\.length !== 2/.test(sess), 'session : exactement 2 pannes FIREFLY, sinon arrêt')
+ok(!/rappel_code: '[^']/.test(sess) && !/C-HR|Corolla 12 fabriqu/.test(sess.slice(sess.indexOf('const ONDULEUR'))), 'session : aucun rappel de modèle rattaché à la fiche moteur')
+const { varianteVehicule: vv, decisionVariante: dv } = await import('../supabase/functions/_shared/variantes.ts')
+const vf = vv({ motorisation: '1.0 FireFly 70' })
+ok(dv('Panne moteur sévère (1.0 FireFly T3 120 ch)', vf).statut === 'exclue' && dv('Refus de démarrage (1.3 FireFly T4 150 ch)', vf).statut === 'exclue', 'FIREFLY 70 : les pannes 120 ch et 1.3 sont « exclue »')
+ok(dv('Usure prématurée des supports moteur', vf).statut === 'applicable', 'FIREFLY 70 : une panne sans version reste')
+
 if (ko) { console.log(`\n${ko} échec(s), ${ok_} réussite(s)`); process.exit(1) } else console.log(`\nTous les tests passent (${ok_})`)
