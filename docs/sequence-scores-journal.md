@@ -436,3 +436,12 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   d'éval). Les autres fonctions qui importent `defectSheets.ts` (ajouts sans
   effet sur leur comportement) seront redéployées au merge.
 - Budget du run : **0,60 €** (estimation 0,56 €), mur du chantier 45 €.
+- **Résultat du lot 1** : 3 fiches utiles sur 7 (R9M 6 pannes portées,
+  SDE 3, EA888 5 ; toutes publiées et indexables), 0,38 € / 0,60 €.
+  EA188, EA211, K4M, H5HT : échec au seuil de qualité (4 sources distinctes
+  dont 2 propres au moteur). **Règle d'arrêt atteinte (< 5) : le chantier A
+  s'arrête.** R9M et EA888 ajoutées à la table (code attesté :
+  en.wikipedia Renault R-Type, de.wikipedia VW EA888) ; SDE y était déjà.
+- 4 références × 1 annoncées : mur **0,45 €**.
+- **Références inchangées** : S7 rouge 39, 308 orange 55, Mercedes vert 73,
+  Clio II orange 51 (0,357 €). Total du sprint : ≈ 4,42 € / 85 €.

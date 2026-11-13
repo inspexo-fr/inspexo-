@@ -255,6 +255,13 @@ export const SEGMENTS_PAR_SLUG = {
     { marque: 'renault', modele: 'kangoo', libelle: 'Kangoo' },
     { marque: 'dacia', modele: 'logan', libelle: 'Logan' },
   ],
+  'renault-1-6-dci': [
+    { marque: 'renault', modele: 'scenic', libelle: 'Scénic' },
+    { marque: 'renault', modele: 'megane', libelle: 'Mégane' },
+    { marque: 'renault', modele: 'kadjar', libelle: 'Kadjar' },
+    { marque: 'renault', modele: 'espace', libelle: 'Espace' },
+    { marque: 'renault', modele: 'talisman', libelle: 'Talisman' },
+  ],
   'renault-1-6-sce': [
     { marque: 'renault', modele: 'captur', libelle: 'Captur' },
     { marque: 'renault', modele: 'megane', libelle: 'Mégane' },
@@ -284,6 +291,12 @@ export const SEGMENTS_PAR_SLUG = {
     { marque: 'volkswagen', modele: 'caddy', libelle: 'Caddy' },
     { marque: 'skoda', modele: 'octavia', libelle: 'Octavia' },
     { marque: 'seat', modele: 'leon', libelle: 'Leon' },
+  ],
+  'volkswagen-1-8-et-2-0-tsi': [
+    { marque: 'volkswagen', modele: 'golf', libelle: 'Golf' },
+    { marque: 'audi', modele: 'a3', libelle: 'A3' },
+    { marque: 'audi', modele: 'a4', libelle: 'A4' },
+    { marque: 'audi', modele: 'q5', libelle: 'Q5' },
   ],
   'volkswagen-2-0-tdi-ea288': [
     { marque: 'volkswagen', modele: 'golf', libelle: 'Golf' },

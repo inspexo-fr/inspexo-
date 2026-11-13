@@ -92,6 +92,20 @@
     },
     {
       "marque": "Renault",
+      "famille": "R9M",
+      "nom_commercial": "1.6 dCi",
+      "modeles": [
+        "Renault Scénic III",
+        "Renault Mégane III",
+        "Renault Kadjar",
+        "Renault Espace V",
+        "Renault Talisman"
+      ],
+      "debut": 2011,
+      "derniere_attestee": 2018
+    },
+    {
+      "marque": "Renault",
       "famille": "K4M",
       "nom_commercial": "1.6 16V",
       "modeles": [
@@ -352,6 +366,20 @@
       ],
       "debut": 2008,
       "derniere_attestee": 2015
+    },
+    {
+      "marque": "Volkswagen",
+      "famille": "EA888",
+      "nom_commercial": "1.8 et 2.0 TSI",
+      "modeles": [
+        "VW Golf VI",
+        "VW Golf VII",
+        "Audi A3",
+        "Audi A4",
+        "Audi Q5"
+      ],
+      "debut": 2007,
+      "derniere_attestee": 2022
     },
     {
       "marque": "Audi",
