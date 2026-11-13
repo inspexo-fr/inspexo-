@@ -168,3 +168,36 @@ de défendeurs ou d'appel en garantie.
       client, et une trésorerie en moins pour nous.
 - [ ] Mettre en place le rappel des mentions de l'art. L441-9 sur le gabarit
       de facture avant la première facturation.
+
+
+---
+
+## Annexe B — Formule pro par abonnement (contrôle d'entrée en stock) — BROUILLON
+
+> Ajoutée le 13 nov. 2026 pour préparer la vente, **non publiée, non active**.
+> ⚠️ Écart à trancher avec l'avocat : l'article 3.1 prévoit une facturation
+> **à terme échu** (API) ; un abonnement Stripe est prélevé **à terme à échoir**
+> (en début de période). Les deux régimes doivent être distingués.
+
+B.1. **Objet.** Accès, pour un professionnel identifié par son SIRET, à l'outil
+de contrôle d'entrée en stock : défauts confirmés par une source indépendante,
+contrôles sur place, facture à prévoir, risque de retour sur 12 mois, prix
+d'achat plafond, tri de lot (20 véhicules au plus par tri), export CSV.
+
+B.2. **Prix.** `[MONTANT MENSUEL HT À FIXER]`, TVA en sus, prélevé chaque mois
+par carte via Stripe, à terme à échoir. Le prix en vigueur est celui affiché au
+moment de la souscription.
+
+B.3. **Durée et résiliation.** Abonnement mensuel sans engagement, résiliable
+à tout moment ; la résiliation prend effet à la fin de la période payée. Un
+défaut de paiement suspend l'accès jusqu'à régularisation.
+
+B.4. **Nature des résultats.** Les montants sont des prix observés et des coûts
+publiés, combinés par une soustraction affichée ligne par ligne. Ce n'est ni
+une détermination de la valeur d'un véhicule (art. L326-4 du code de la route),
+ni une expertise, ni une garantie de revente. Les résultats sont réservés au
+professionnel abonné et ne doivent pas être remis à un acheteur final comme
+une évaluation du véhicule.
+
+B.5. **Données.** Photo de carte grise jamais stockée ; nom et adresse du
+titulaire jamais lus (politique de confidentialité, section 6 septdecies).

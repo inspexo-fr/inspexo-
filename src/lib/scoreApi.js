@@ -438,3 +438,9 @@ export const coutTroisAnsDossier = (analysisId, { kmAn, region, cv } = {}) =>
 // SPRINT 22 — comparateur de dossiers (Pass, dossiers de l'appelant seulement).
 export const comparerDossiers = (ids, { kmAn, region, cv } = {}) =>
   callFunction('comparer', { ids, km_an: kmAn, region: region || null, cv: cv ? Number(cv) : null })
+
+// SPRINT 24 lot 3 — contrôle d'entrée en stock (formule pro ; drapeau serveur).
+export const stockVin = (vin) => callFunction('stock', { mode: 'vin', vin })
+export const stockCarteGrise = (photo) => callFunction('stock', { mode: 'carte_grise', photo })
+export const stockFiche = (vehicule, margeVisee) => callFunction('stock', { mode: 'fiche', vehicule, marge_visee: margeVisee })
+export const stockLot = (lignes, margeVisee) => callFunction('stock', { mode: 'lot', lignes, marge_visee: margeVisee })

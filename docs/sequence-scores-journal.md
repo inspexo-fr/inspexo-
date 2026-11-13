@@ -543,3 +543,27 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   du pré-rendu). Correctif : attendre `#pannes` (section rendue dès que les
   données sont là). Build local contre la fonction déployée : 181 pages,
   0 échec, sitemap 111.
+- **Fait** : build Vercel de 6a5f401 réussi ; /moteur affiche « Les pannes
+  confirmées » ; sitemap 111. main = production.
+
+## Sprint 24 lot 3 — contrôle d'entrée en stock (13 nov. 2026, branche `sprint24-stock`)
+- Décisions d'Utku : facture = le certain (entretien dû, opération déclarée
+  non faite), risque = le possible (défauts confirmés), aucun montant compté
+  deux fois (testé, avec contre-épreuve) ; prix de revente réaliste sur le
+  relevé agrégé (seuil 15), sinon pas de plafond et le motif est dit ; accès
+  par une FORMULE PRO distincte du Pass, drapeau `stock_revendeur` réservé à
+  l'admin ; formule pro (abonnement Stripe mensuel) préparée, ÉTEINTE ;
+  extension 1.3.0 plus tard.
+- Module pur `_shared/stock.ts`, fonction `stock` (vin, carte grise, fiche,
+  lot), page /stock (noindex, hors robots), export CSV sur l'appareil.
+  `revendeur.ts` : fin de calcul factorisée (`prixReventeDepuisMarche`), sans
+  changement du calcul existant (131 contrôles inchangés).
+- Formule pro : table `abonnements_pro` (RLS, aucun droit public), drapeaux
+  `stock_revendeur` (admin_uniquement) et `formule_pro` (eteint),
+  `pro-checkout` (vente impossible sans drapeau + clé + PRO_PRICE_ID, aucun
+  posé), `pro-webhook` (--no-verify-jwt, signature avant tout effet).
+- Aucun effet sur le score : `score` n'est pas touché. Pas de références.
+- Déploiement annoncé : dump prod, migration `20261130120000` (additive),
+  fonctions `stock`, `pro-checkout`, `pro-webhook` (--no-verify-jwt).
+  Éval : carte grise FABRIQUÉE (données inventées), une fiche, un lot —
+  mur **0,30 €**.
