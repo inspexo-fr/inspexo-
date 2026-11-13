@@ -254,6 +254,22 @@ export function rjSynthetique(v: VehiculeStock, fiche: any, confirmees: PanneSto
   };
 }
 
+/** Parmi plusieurs moteurs possibles, retient celui que la motorisation
+ *  SAISIE désigne sans ambiguïté (même cylindrée ET même puissance écrites
+ *  que le nom de la table). Ce n'est pas une supposition : c'est une lecture
+ *  du texte saisi. Sinon null, et l'écran demande. */
+export function choisirParMotorisation<T extends { nom_commercial: string }>(candidats: T[], motorisation: string, lire: (t: string) => Variante): T | null {
+  const v = lire(motorisation);
+  if (!v.puissances.length && !v.cylindrees.length) return null;
+  const ok = candidats.filter((c) => {
+    const n = lire(c.nom_commercial);
+    const cyl = !v.cylindrees.length || n.cylindrees.some((x) => v.cylindrees.includes(x));
+    const pui = v.puissances.length > 0 && n.puissances.some((x) => v.puissances.some((y) => Math.abs(x - y) <= 3));
+    return cyl && pui;
+  });
+  return ok.length === 1 ? ok[0] : null;
+}
+
 // ───────────────────────── Facture / risque ────────────────────────────────
 export type LigneRisque = {
   libelle: string; min: number; max: number; seuil: string | null; source: string | null; url: string | null;
@@ -284,7 +300,9 @@ export function separerFactureRisque(f: FactureAPrevoir): Separation {
   const sansCout: string[] = [];
   const deja: string[] = [];
   for (const d of defauts) {
-    if (facture.some((l) => l.rubrique === "entretien" && memeFait(l.libelle, d.libelle))) { deja.push(d.libelle); continue; }
+    // Retiré du risque seulement si la facture CHIFFRE déjà ce remède : sinon
+    // le montant disparaîtrait des deux côtés.
+    if (chiffreesF.some((l) => l.rubrique === "entretien" && memeFait(l.libelle, d.libelle))) { deja.push(d.libelle); continue; }
     if (d.statut === "a_prevoir" && d.min != null && d.max != null) {
       lignes.push({ libelle: d.libelle, min: d.min, max: d.max, seuil: d.echeance, source: d.source?.libelle ?? null, url: d.source?.url ?? null });
     } else sansCout.push(d.libelle);

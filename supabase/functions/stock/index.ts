@@ -28,7 +28,13 @@ import { accesProDepuisReq } from "../_shared/proAuth.ts";
 import {
   CG_SYSTEM, CG_TOOL, classerLot, controlesSurPlace, MAX_LOT, MENTION_STOCK, pannesDeLaFiche, prixPlafond,
   type ResumeLot, rjSynthetique, separerFactureRisque, validerCarteGrise, vehiculeDepuisEntree, type VehiculeStock,
+  choisirParMotorisation,
 } from "../_shared/stock.ts";
+import TABLE from "../_shared/famillesMoteur.json" with { type: "json" };
+import { indexerModeles, nommeUnAutreVehicule, type FamilleMoteur } from "../_shared/modeles.ts";
+
+const CATALOGUE = indexerModeles((TABLE as { familles: Array<FamilleMoteur & { modeles: string[] }> }).familles)
+  .map((p) => ({ marque: p.marque, modele: p.modele }));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -101,6 +107,10 @@ function resoudre(v: VehiculeStock) {
   const connue = r.famille && deLaMarque.some((f) => f.famille.toUpperCase() === String(r.famille).toUpperCase());
   const candidats = (r.candidats.length ? deLaMarque.filter((f) => r.candidats.includes(f.famille)) : [])
     .map((f) => ({ famille: f.famille, nom_commercial: f.nom_commercial, annees: `${f.debut}–${f.derniere_attestee}` }));
+  if (!connue && candidats.length > 1) {
+    const lu = choisirParMotorisation(candidats, v.motorisation, (t) => varianteVehicule({ motorisation: t }));
+    if (lu) return { famille: lu.famille, candidats: [], motif: "motorisation saisie" };
+  }
   return { famille: connue ? r.famille : null, candidats, motif: r.motif };
 }
 
@@ -150,6 +160,9 @@ async function evaluer(admin: any, ctx: any, v: VehiculeStock, margeVisee: numbe
     prises: rj.prises_en_charge,
     programmes: programmesPourFamille(v.famille, (Array.isArray(fiche?.programmes) ? fiche!.programmes : null) as WarrantyProgram[] | null),
     fiche_maj: (fiche as { updated_at?: string } | null)?.updated_at ?? null,
+    // Même filtre que la facture du dossier : une prise en charge qui nomme
+    // un AUTRE véhicule (Kadjar, Captur, Juke…) n'est pas affichée.
+    nommeUnAutreVehicule: (t: string) => nommeUnAutreVehicule(t, { marque: v.marque, modele: v.modele, generation: null, slug_marque: "", slug: "", familles: [] }, CATALOGUE),
   });
   const sep = separerFactureRisque(facture);
   const ref = await prixMarche(admin, v);

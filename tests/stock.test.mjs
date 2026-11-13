@@ -3,7 +3,7 @@
 import fs from 'node:fs'
 import {
   validerCarteGrise, energieDuCode, vehiculeDepuisEntree, pannesDeLaFiche, separerFactureRisque,
-  prixPlafond, classerLot, controlesSurPlace, CG_TOOL, CG_SYSTEM, MENTION_STOCK, MAX_LOT,
+  prixPlafond, classerLot, controlesSurPlace, CG_TOOL, CG_SYSTEM, MENTION_STOCK, MAX_LOT, choisirParMotorisation,
 } from '../supabase/functions/_shared/stock.ts'
 import { factureAPrevoir } from '../supabase/functions/_shared/factureAPrevoir.ts'
 import { varianteVehicule } from '../supabase/functions/_shared/variantes.ts'
@@ -58,6 +58,20 @@ ok(sep.facture.total_max + sep.risque.total_max === totalUnique, `facture + risq
 ok(sep.facture.total_max === 750 && sep.risque.total_max === 1600, 'totaux attendus : 750 € (facture) + 1 600 € (risque)')
 // Contre-épreuve : sans la déduplication, la courroie serait comptée deux fois.
 ok(f.lignes.filter((l) => /courroie|distribution/i.test(l.libelle) && l.max != null).length === 2, 'contre-épreuve : la facture brute porte bien la distribution DEUX fois')
+
+// Une ligne de facture SANS montant ne retire pas le défaut chiffré du risque
+// (sinon le montant disparaîtrait des deux côtés — cas réel de la Clio K9K).
+const fSans = factureAPrevoir({ aujourdhui: '2026-11-13', kilometrage: v.kilometrage, premiere_immat: v.premiere_immat, annee: v.annee, version, cout3ans: { lignes: [], non_etablies: [] }, pannes: confirmees, prises: [], programmes: [], fiche_maj: null })
+const sepSans = separerFactureRisque(fSans)
+ok(sepSans.risque.lignes.some((l) => /courroie/i.test(l.libelle)) && sepSans.deja_dans_facture.length === 0, 'facture non chiffrée : la courroie reste dans le risque, comptée une fois')
+ok(sepSans.facture.total_max === 0 && sepSans.risque.total_max === 900 + 1600, 'totaux : 0 € facture, 2 500 € risque')
+
+// Moteur : la puissance SAISIE désigne un seul candidat ⇒ retenu ; sinon on demande.
+const cands = [{ famille: 'EB2DT', nom_commercial: '1.2 PureTech 110' }, { famille: 'EB2DTS', nom_commercial: '1.2 PureTech 130' }, { famille: 'EB2ADTS', nom_commercial: '1.2 PureTech 100' }]
+const lire = (t) => varianteVehicule({ motorisation: t })
+ok(choisirParMotorisation(cands, '1.2 PureTech 130', lire)?.famille === 'EB2DTS', '« 1.2 PureTech 130 » ⇒ EB2DTS')
+ok(choisirParMotorisation(cands, '1.2 PureTech', lire) === null, 'sans puissance : on demande')
+ok(choisirParMotorisation(cands, '1.2 PureTech 150', lire) === null, 'puissance inconnue de la table : on demande')
 
 // 5. Plafond, ligne par ligne.
 const rv = prixReventeDepuisMarche({ mediane: 9000, n: 22, ajustement_eur: -400 }, 15, PARAMETRES_DEFAUT)

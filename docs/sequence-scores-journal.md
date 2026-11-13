@@ -567,3 +567,21 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   fonctions `stock`, `pro-checkout`, `pro-webhook` (--no-verify-jwt).
   Éval : carte grise FABRIQUÉE (données inventées), une fiche, un lot —
   mur **0,30 €**.
+- **Fait** : dumps prod hors dépôt, migration `20261130120000` appliquée,
+  `stock`, `pro-checkout`, `pro-webhook` (--no-verify-jwt) déployées.
+  Surfaces : `stock` sans accès → 403 ; `pro-checkout` GET `actif:false`,
+  POST 409 ; `pro-webhook` 503 (non configuré) ; `abonnements_pro` 401 à anon.
+- Éval (`tests/eval-stock/run.mjs`, carte grise FABRIQUÉE) : lecture exacte
+  (marque, dénomination, date, énergie, kW, CV, VIN), **ni nom, ni adresse,
+  ni plaque** dans la réponse ; K9K résolu ; Classe C 2018 diesel ⇒ moteur à
+  choisir (OM651/OM654) ; lot classé. Coût **0,017 € / 0,30 €** (2 passages).
+- Corrigé après le premier passage : prises en charge d'autres véhicules
+  (Kadjar, Captur, Juke) filtrées comme dans le dossier ; un défaut ne sort
+  du risque que si la facture CHIFFRE son remède ; la puissance saisie
+  désigne le moteur quand un seul candidat correspond (308 1.2 PureTech 130).
+- ⚠️ Constats de données, pas de code : aucun segment testé n'atteint 15
+  prix relevés ⇒ pas de plafond aujourd'hui ; la fiche K9K ne porte aucun
+  coût ⇒ risque de retour à 0 €, défauts listés « sans coût publié ».
+  Les entrées sourcées de l'ATLAS (ex. injecteurs Delphi 1 000-1 600 €) ne
+  sont pas reprises : les intégrer suppose d'extraire de `score` la
+  construction du catalogue (chemin de notation) — à décider.
