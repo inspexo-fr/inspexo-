@@ -585,3 +585,18 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   Les entrées sourcées de l'ATLAS (ex. injecteurs Delphi 1 000-1 600 €) ne
   sont pas reprises : les intégrer suppose d'extraire de `score` la
   construction du catalogue (chemin de notation) — à décider.
+- Merge `sprint24-stock` (38a8c3c, feu vert d'Utku), CGV pro 3.1 aligné sur
+  l'abonnement payé d'avance (API à terme échu en 3.1 bis). Contrôle main =
+  production : `revendeur.ts` (fin de calcul factorisée, sans effet) n'était
+  pas redéployé dans `score`, `comparer`, `cout-3ans`, `revendeur-cibles`.
+  Redéploiement annoncé de ces quatre fonctions.
+- **Fait** : 4 fonctions redéployées, main = production (9 fonctions, 0
+  migration en écart) ; build Vercel de 38a8c3c réussi. Point 4 vérifié en
+  production : les 13 pages /moteur sans panne confirmée sont en noindex et
+  hors sitemap.
+- Relevés (lecture seule, 0 €) : sur 12 segments courants, **au plus 1 prix
+  relevé sur 3 mois** (Clio 1, 308 1, 3008 1, les autres 0). 116 prises en
+  charge (62 rappels, 34 campagnes, 20 garanties), toutes à source portante,
+  94 publiées en France, ~17 avec des conditions écrites. Moteurs courants :
+  **36 pannes confirmées sur 45 sans coût**. Pages /moteur sous le seuil
+  d'indexation : 26 sur 45.
