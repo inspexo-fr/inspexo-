@@ -63,6 +63,7 @@ import {
   type FaitEntretien,
 } from "../_shared/entretienDeclare.ts";
 import { dedupliquerCatalogue } from "../_shared/dedupPannes.ts";
+import { affirmePanneNonConfirmee, CONSIGNE_NON_CONFIRMEE } from "../_shared/raisonsPortees.ts";
 import { alerteAnnonceModifiee } from "../_shared/notify.ts";
 import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } from "../_shared/photo.ts";
 import { estAppelApi } from "../_shared/apiClients.ts";
@@ -2059,7 +2060,15 @@ serve(async (req: Request) => {
           ((e.rappel_annee_debut != null && v.annee_modele < e.rappel_annee_debut) ||
             (e.rappel_annee_fin != null && v.annee_modele > e.rappel_annee_fin + 1)),
       );
+    // SPRINT 24 (audit) — les entrées sans source indépendante sont MARQUÉES
+    // pour le modèle, et retirées des raisons et du budget par le serveur.
+    const nonConfirmees = catalogue.filter((e) => sansSourceIndependante(e.urls, sourcesPortentLEntree))
+      .map((e) => ({ ref: String(e.ref), titre: String(e.titre ?? "") }));
+    const confirmees = catalogue.filter((e) => !sansSourceIndependante(e.urls, sourcesPortentLEntree))
+      .map((e) => ({ ref: String(e.ref), titre: String(e.titre ?? "") }));
+    const refsNonConfirmees = new Set(nonConfirmees.map((e) => e.ref));
     const catalogueForPrompt = catalogue.map((e) => ({
+      ...(refsNonConfirmees.has(String(e.ref)) ? { confirmation: CONSIGNE_NON_CONFIRMEE } : {}),
       ref: e.ref,
       titre: e.titre,
       organe: e.organe,
@@ -2289,6 +2298,8 @@ serve(async (req: Request) => {
       .map((b) => {
         const src = catalogueByRef.get(normRef(b.source_ref));
         if (!src || (src.cout_min_eur == null && src.cout_max_eur == null)) return null;
+        // Une panne non confirmée n'est jamais un poste du budget (audit sprint 24).
+        if (refsNonConfirmees.has(String(src.ref))) return null;
         return {
           poste: String(b.poste ?? src.titre).slice(0, 150),
           cout_min_eur: src.cout_min_eur,
@@ -2318,7 +2329,17 @@ serve(async (req: Request) => {
       scrubInterne(s.replace(/\s*\((?:catalogue\s+|r[ée]f\.?\s*)?[AF]\d{1,2}\)/gi, "")).replace(/\s{2,}/g, " ").trim();
 
     // Raisons : statut intermédiaire/pro déguisé obligatoirement en 1 ou 2.
-    let raisons: string[] = (analyse.raisons_principales ?? []).map((r: unknown) => scrubRefs(String(r))).slice(0, 3);
+    // Une raison qui affirme une panne non confirmée est retirée (audit sprint
+    // 24) : elle reste, le cas échéant, une question au vendeur.
+    const raisonsBrutes = ((analyse.raisons_principales ?? []) as unknown[]).map((r) => String(r));
+    const raisonsGardees = raisonsBrutes.filter((r) => !affirmePanneNonConfirmee(r, nonConfirmees, confirmees));
+    if (raisonsGardees.length < raisonsBrutes.length) {
+      await admin.from("events").insert({
+        name: "raison_non_confirmee_retiree",
+        props_json: { nb: raisonsBrutes.length - raisonsGardees.length },
+      });
+    }
+    let raisons: string[] = raisonsGardees.map((r) => scrubRefs(r)).slice(0, 3);
     if (RAISON_STATUT[statutVendeur]) {
       const mentionne = raisons.slice(0, 2).some((r) =>
         /interm[eé]diaire|d[eé]guis|d[eé]p[oô]t[- ]vente|mandataire|agence|garantie l[eé]gale/i.test(r),

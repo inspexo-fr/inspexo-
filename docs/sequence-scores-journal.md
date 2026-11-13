@@ -505,3 +505,32 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   si une redirection interne de vercel.json mène vers une page qu'il n'a pas
   produite. Build local : 2 redirections vérifiées, 181 pages, sitemap 111 ;
   contre-épreuve : l'ancienne destination est bien refusée. Coût : 0 €.
+
+## Sprint 24 — audit de cohérence (13 nov. 2026, branche `sprint24-audit`, NON déployée)
+Règle vérifiée : une panne n'est affirmée que si une source portante la
+confirme ; sinon question au vendeur ou point signalé par des propriétaires.
+Écarts trouvés et corrigés sur la branche :
+- **Raisons du dossier (et donc `motifs` de l'API)** : le modèle voyait les
+  pannes non confirmées sans distinction ; 2 dossiers de référence sur 4 les
+  affirmaient (Mercedes : injecteurs ; 308 : surconsommation d'huile).
+  Correctif : entrées marquées dans le catalogue du modèle + retrait
+  déterministe des raisons qui les affirment (`_shared/raisonsPortees.ts`).
+- **Budget 12 mois** : poste 308 « surconsommation d'huile » (200-300 €) sur
+  une panne non confirmée. Correctif : filtre par référence.
+- **Pages /moteur** : toutes les pannes de la fiche présentées comme « pannes
+  connues ». Correctif : `moteur-public` ne renvoie en `pannes` que les
+  confirmées ; les autres en points des propriétaires (≥ 3 sites) ou en
+  questions. Question « VIN pour consulter HistoVec » remplacée (un acheteur
+  ne le peut pas).
+- `api/og.js` : code mort qui aurait recopié les raisons dans l'aperçu, retiré.
+Sans écart : /modele, API (`points`), négociation, message vendeur, visite et
+checklist (contrôles formulés comme gestes), facture à prévoir, e-mails,
+image de partage, pré-lecture, revendeur ; règle des versions et rappels
+étrangers appliqués là où des pannes ou rappels sont affichés.
+Effet sur le score : aucun sur le barème (raisons et budget n'y entrent pas) ;
+la consigne ajoutée au modèle peut faire varier ses sorties ⇒ 4 références × 1
+après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
+`score`, `moteur-public`.
+- Feu vert d'Utku : merge de `sprint24-audit`, déploiement de `score` et
+  `moteur-public`, main = production (statut Vercel compris), puis 4
+  références × 1 (mur 0,45 €).

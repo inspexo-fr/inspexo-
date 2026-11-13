@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import { libelleSource } from '../components/DossierApercu'
 import { getMoteurPublic, getPrixSegments } from '../lib/scoreApi'
+import PointsProprietairesBloc from '../components/PointsProprietairesBloc'
 import { FAMILLES_MOTEUR, familleParSlug, slugifier } from '../data/famillesMoteur'
 import FilAriane from '../components/FilAriane'
 import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
@@ -110,9 +111,14 @@ export default function MoteurPage() {
   // Seuil de publication : au moins 3 pannes, toutes sourcées (même règle que
   // la RPC list_moteurs_publies qui alimente le sitemap).
   const pannes = (fiche?.pannes ?? []).filter((p) => (p.url_source ?? []).length > 0)
+  // SPRINT 24 (audit) — le serveur ne renvoie dans `pannes` que les pannes
+  // CONFIRMÉES par une source indépendante ; les autres arrivent en points
+  // « signalés par des propriétaires » ou en questions au vendeur.
+  const pointsProprietaires = Array.isArray(fiche?.points_proprietaires) ? fiche.points_proprietaires : []
+  const questionsNonConfirmees = Array.isArray(fiche?.questions_non_confirmees) ? fiche.questions_non_confirmees : []
   // SPRINT 24 — le serveur décide si la page existe (`moteur-public`, 404 sinon) ;
   // une page sous le seuil reste accessible, en noindex, avec ses pannes.
-  if (!fiche || pannes.length === 0) {
+  if (!fiche || pannes.length + pointsProprietaires.length + questionsNonConfirmees.length === 0) {
     return (
       <>
         <Helmet><meta name="robots" content="noindex" /></Helmet>
@@ -165,9 +171,12 @@ export default function MoteurPage() {
 
   const questions = [
     ...pannes.slice(0, 4).map((p) => `${p.titre} : l'organe a-t-il déjà été remplacé ? Pouvez-vous m'envoyer la facture (date, kilométrage, pièces) ?`),
+    ...questionsNonConfirmees.slice(0, 3),
     ...plan.filter((op) => op.critique).slice(0, 2).map((op) => `${op.operation} : à quel kilométrage a-t-elle été faite, et par qui ?`),
-    'Pouvez-vous m\'envoyer le numéro VIN et la carte grise, pour consulter HistoVec ?',
-  ].slice(0, 7)
+    // Un acheteur ne consulte pas HistoVec avec un VIN : seul le titulaire
+    // génère le document (sprint 13). On demande donc le document lui-même.
+    'Pouvez-vous m\'envoyer le « Certificat de situation administrative détaillé » (bouton « Imprimer le CSA » sur HistoVec) ?',
+  ].slice(0, 8)
 
   const faq = [
     {
@@ -188,10 +197,10 @@ export default function MoteurPage() {
     <>
       <Helmet>
         <title>{titre} | Inspexo</title>
-        <meta name="description" content={`${pannes.length} pannes connues du ${nom}, chacune avec sa source : symptômes, kilométrage typique, coût de réparation, plan d'entretien et questions à poser au vendeur avant d'acheter.`} />
+        <meta name="description" content={`${pannes.length} panne${pannes.length > 1 ? 's' : ''} du ${nom} confirmée${pannes.length > 1 ? 's' : ''} par une source indépendante : symptômes, kilométrage typique, coût de réparation, plan d'entretien et questions à poser au vendeur avant d'acheter.`} />
         <link rel="canonical" href={fiche.canonique ? `https://www.inspexo.io/moteur/${slugifier(fiche.canonique.marque, fiche.canonique.nom_commercial)}` : url} />
         <meta property="og:title" content={titre} />
-        <meta property="og:description" content={`${pannes.length} pannes documentées, le plan d'entretien et les questions à poser au vendeur.`} />
+        <meta property="og:description" content={`${pannes.length} panne${pannes.length > 1 ? 's' : ''} confirmée${pannes.length > 1 ? 's' : ''} par une source indépendante, le plan d'entretien et les questions à poser au vendeur.`} />
         <meta property="og:url" content={url} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
@@ -216,13 +225,13 @@ export default function MoteurPage() {
               <p>
                 {famille.marque} — famille moteur {fiche.famille_moteur}
                 {famille.millesimes ? `, ${famille.millesimes}` : ''}.
-                {' '}{pannes.length} défaillance{pannes.length > 1 ? 's' : ''} documentée{pannes.length > 1 ? 's' : ''},
-                chacune rattachée à sa source.
+                {' '}{pannes.length} défaillance{pannes.length > 1 ? 's' : ''} confirmée{pannes.length > 1 ? 's' : ''} par
+                une source indépendante, chacune rattachée à sa source.
               </p>
             </div>
             <div className="hero-facts" style={{ marginTop: 0 }}>
               <div><span>Modèles concernés</span><span>{famille.modeles?.length ?? 0}</span></div>
-              <div><span>Pannes documentées</span><span className="num">{pannes.length}</span></div>
+              <div><span>Pannes confirmées</span><span className="num">{pannes.length}</span></div>
               <div><span>Sources citées</span><span className="num">{registre.liste.length || '—'}</span></div>
               <div><span>Vérifié le</span><span className="num">{maj ?? '—'}</span></div>
             </div>
@@ -293,9 +302,12 @@ export default function MoteurPage() {
         <section className="sec" id="pannes">
           <div className="wrap">
             <div className="sec-head">
-              <h2>Les pannes connues, une par une.</h2>
-              <p>Pas d'avis général sur le moteur : des défaillances précises, avec leurs symptômes, le kilométrage auquel elles apparaissent et, quand une source le publie, le coût de la réparation.</p>
+              <h2>Les pannes confirmées, une par une.</h2>
+              <p>Pas d'avis général sur le moteur : des défaillances précises, confirmées par une source indépendante (constructeur, rappel, presse), avec leurs symptômes, le kilométrage auquel elles apparaissent et, quand une source le publie, le coût de la réparation. Ce que seuls des garages ou des forums signalent n'est pas affirmé ici : c'est un point à contrôler ou une question au vendeur.</p>
             </div>
+            {pannes.length === 0 && (
+              <p className="lead">Aucune panne de ce moteur n'est encore confirmée par une source indépendante.</p>
+            )}
             <dl className="rows">
               {pannes.map((p, i) => {
                 const g = GRAVITE[p.gravite] ?? GRAVITE.mineure
@@ -323,6 +335,9 @@ export default function MoteurPage() {
                 )
               })}
             </dl>
+            {pointsProprietaires.length > 0 && (
+              <div style={{ marginTop: 28 }}><PointsProprietairesBloc points={pointsProprietaires} /></div>
+            )}
           </div>
         </section>
 

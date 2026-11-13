@@ -24,6 +24,9 @@ import { verdictIndexationMoteur, type FamilleMoteur } from "../_shared/indexati
 import { expandBrand } from "../_shared/brandAliases.ts";
 import { normFamille } from "../_shared/defectSheets.ts";
 import { composerPage, indexerModeles, type FicheMoteur } from "../_shared/modeles.ts";
+import { sourcesPortentLEntree, urlsDeLaPanne } from "../_shared/atlasSource.ts";
+import { pointProprietaire } from "../_shared/pointsProprietaires.ts";
+import { questionSansSourceIndependante } from "../_shared/pannesApplicables.ts";
 
 const PAGES_MODELE = indexerModeles((TABLE as { familles: Array<FamilleMoteur & { modeles: string[] }> }).familles);
 const CATALOGUE = PAGES_MODELE.map((p) => ({ marque: p.marque, modele: p.modele }));
@@ -93,6 +96,24 @@ serve(async (req: Request) => {
       .filter((p) => p.familles.some((f) => f.marque === fam.marque && f.famille === fam.famille))
       .filter((p) => { const c = composerPage(p, fiches, CATALOGUE); return c.sections.length > 0 && c.n_pannes >= 1; })
       .map((p) => ({ slug_marque: p.slug_marque, slug: p.slug, libelle: [p.marque, p.modele, p.generation].filter(Boolean).join(" ") }));
+    // SPRINT 24 (audit de cohérence) — la page n'AFFIRME que les pannes
+    // confirmées par une source indépendante (officielle, presse, éditoriale).
+    // Les autres : point « signalé par des propriétaires » si au moins 3 sites
+    // distincts les citent, sinon question à poser au vendeur. Même règle que
+    // le dossier /a/:id.
+    // deno-lint-ignore no-explicit-any
+    const confirmees = v.pannes.filter((p: any) => sourcesPortentLEntree(urlsDeLaPanne(p)));
+    // deno-lint-ignore no-explicit-any
+    const nonConfirmees = v.pannes.filter((p: any) => !sourcesPortentLEntree(urlsDeLaPanne(p)));
+    const pointsProprietaires = [];
+    const questionsNonConfirmees: string[] = [];
+    for (const p of nonConfirmees) {
+      // deno-lint-ignore no-explicit-any
+      const q = p as any;
+      const pt = pointProprietaire({ titre: q.titre, organe: q.organe, symptome: q.symptomes ?? q.symptome, km_typique: q.km_typique, urls: urlsDeLaPanne(p) });
+      if (pt) pointsProprietaires.push(pt);
+      else if (q.titre) questionsNonConfirmees.push(questionSansSourceIndependante(String(q.titre)));
+    }
     return jsonResponse({
       modeles,
       marque: d.marque,
@@ -101,7 +122,9 @@ serve(async (req: Request) => {
       annee_debut: d.annee_debut,
       annee_fin: d.annee_fin,
       statut: d.statut,
-      pannes: v.pannes,
+      pannes: confirmees,
+      points_proprietaires: pointsProprietaires,
+      questions_non_confirmees: questionsNonConfirmees,
       plan_entretien: d.plan_entretien ?? [],
       programmes: d.programmes ?? [],
       updated_at: d.updated_at,

@@ -77,10 +77,9 @@ export default async function handler(req, res) {
     const vehicule =
       [row.marque, row.modele].filter(Boolean).join(' ') || 'véhicule d\'occasion'
     title = `Verdict Inspexo : ${row.verdict} — ${vehicule}`
-    const raisons = row.result_json?.raisons
-    if (Array.isArray(raisons) && raisons.length > 0) {
-      description = raisons.join(' · ')
-    }
+    // Audit sprint 24 : la description d'aperçu ne recopie pas les raisons du
+    // dossier (ce code lisait un champ `raisons` qui n'existe pas, il n'a donc
+    // jamais servi). Un aperçu voyage plus loin que la page : il en dit moins.
   }
 
   // Aperçu propre au dossier s'il existe DÉJÀ, image statique sinon.
