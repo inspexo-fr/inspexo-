@@ -43,8 +43,30 @@ export type Rappel = { titre: string; date: string | null; lien: string | null }
 
 /** Rappels du modèle publiés à partir de l'année où le plus ancien moteur de
  *  la page a commencé (un an de marge) ; 8 au plus, les plus récents d'abord. */
-export function rappelsDuModele(liste: unknown, anneeMin: number | null): Rappel[] {
-  const arr = Array.isArray(liste) ? liste : [];
+const ROMAINS: Record<string, number> = { i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8 };
+const numeroGeneration = (g: string | null | undefined): number | null => {
+  const t = String(g ?? "").toLowerCase().trim();
+  if (/^\d$/.test(t)) return Number(t);
+  return ROMAINS[t] ?? null;
+};
+
+/** Le titre nomme-t-il une AUTRE génération de ce modèle (« clio 5 » sur la
+ *  page Clio IV) ? RappelConso ne distingue pas les générations. */
+export function autreGeneration(titre: string, modele: string, generation: string | null): boolean {
+  const g = numeroGeneration(generation);
+  if (g == null || !modele) return false;
+  const m = modele.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+  const t = ` ${titre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ")} `;
+  const re = new RegExp(` ${m.replace(/ /g, "\\s+")}\\s+(\\d|i{1,3}|iv|v|vi{0,3})(?= )`, "g");
+  for (const x of t.matchAll(re)) {
+    const n = numeroGeneration(x[1]);
+    if (n != null && n !== g) return true;
+  }
+  return false;
+}
+
+export function rappelsDuModele(liste: unknown, anneeMin: number | null, modele = "", generation: string | null = null): Rappel[] {
+  const arr = (Array.isArray(liste) ? liste : []).filter((r) => !autreGeneration(String((r as { titre?: unknown })?.titre ?? ""), modele, generation));
   // deno-lint-ignore no-explicit-any
   return arr.map((r: any) => ({ titre: String(r?.titre ?? "").slice(0, 160), date: typeof r?.date === "string" ? r.date.slice(0, 10) : null, lien: typeof r?.lien === "string" ? r.lien : null }))
     .filter((r) => r.titre && (anneeMin == null || !r.date || Number(r.date.slice(0, 4)) >= anneeMin - 1))

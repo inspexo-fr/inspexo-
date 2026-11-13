@@ -103,7 +103,7 @@ serve(async (req: Request) => {
       if (r.ok && Array.isArray(j?.rappels) && j?.indisponible !== true) {
         // Rappels publiés depuis l'apparition du plus ancien moteur de la page.
         const debuts = p.familles.map((f) => f.debut).filter((y): y is number => typeof y === "number");
-        rappels = { liste: rappelsDuModele(j.rappels, debuts.length ? Math.min(...debuts) : null), indisponible: false };
+        rappels = { liste: rappelsDuModele(j.rappels, debuts.length ? Math.min(...debuts) : null, p.modele, p.generation), indisponible: false };
       }
     } catch (e) {
       console.error("modele-public rappels:", e);
