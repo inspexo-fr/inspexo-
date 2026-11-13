@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { createServer } from 'node:http'
 import { extname } from 'node:path'
 import { FAMILLES_MOTEUR } from '../src/data/famillesMoteur.js'
-import { ajouterNoindex, uneSeuleBaliseRobots, doublonsMeta, estIndexable, gardee, metaDe, pairesProches, SEUIL_SIMILARITE, SOURCE_RANG_PARC } from './seo.mjs'
+import { ajouterNoindex, uneSeuleBaliseRobots, doublonsMeta, estIndexable, gardee, metaDe, pairesProches, SEUIL_SIMILARITE } from './seo.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILD = join(ROOT, 'build')
@@ -294,9 +294,11 @@ const candidatesModele = faits
   .filter((p) => estIndexable(p.html, `${SITE}${p.url}`))
 const paires = pairesProches(candidatesModele, SEUIL_SIMILARITE)
 const ecartees = new Map()
+const nonDepartagees = []
 for (const pr of paires) {
   if (ecartees.has(pr.a) || ecartees.has(pr.b)) continue
   const g = gardee(pr.a, pr.b, infosModele)
+  if (!g) { nonDepartagees.push(pr); continue } // année égale ou inconnue : les deux restent
   const perdante = g.garde === pr.a ? pr.b : pr.a
   ecartees.set(perdante, { ...pr, gardee: g.garde, motif: g.motif })
 }
@@ -318,7 +320,7 @@ writeFileSync(join(BUILD, 'seo-rapport.json'), JSON.stringify({
   non_indexees: nonIndexees,
   paires_trop_proches: paires,
   seuil_similarite: SEUIL_SIMILARITE,
-  source_rang_parc: SOURCE_RANG_PARC,
+  paires_non_departagees: nonDepartagees,
   doublons_balises: doublons,
   sitemap: `${SITE}/sitemap.xml`,
 }, null, 1))

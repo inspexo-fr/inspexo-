@@ -1,7 +1,7 @@
 {
- "genere_le": "2026-11-13T10:02:23.437Z",
+ "genere_le": "2026-11-13T10:47:01.945Z",
  "pages_pre_rendues": 172,
- "pages_indexables": 73,
+ "pages_indexables": 101,
  "non_indexees": [
   {
    "url": "/moteur/renault-0-9-tce",
@@ -116,10 +116,6 @@
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/audi/a3-8p",
-   "raison": "trop proche de /modele/volkswagen/golf-vi (0.87) — rang 4 du parc (L'Argus 2023)"
-  },
-  {
    "url": "/modele/audi/a3-8v",
    "raison": "sous le seuil d'indexation"
   },
@@ -156,20 +152,8 @@
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/bmw/serie-3-e90",
-   "raison": "trop proche de /modele/bmw/serie-1-e87 (0.87) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/bmw/serie-3-f30",
-   "raison": "trop proche de /modele/bmw/serie-1-f20 (0.93) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
    "url": "/modele/bmw/serie-3-g20",
    "raison": "sous le seuil d'indexation"
-  },
-  {
-   "url": "/modele/bmw/serie-5-f10",
-   "raison": "trop proche de /modele/bmw/serie-1-e87 (0.87) — aucun rang sourcé, contenu égal : ordre des adresses"
   },
   {
    "url": "/modele/bmw/serie-5-g30",
@@ -200,20 +184,12 @@
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/dacia/sandero-iii",
-   "raison": "trop proche de /modele/renault/clio-v (0.81) — rang 1 du parc (L'Argus 2023)"
-  },
-  {
    "url": "/modele/ds/7-crossback",
    "raison": "sous le seuil d'indexation"
   },
   {
    "url": "/modele/fiat/500-hybrid",
    "raison": "sous le seuil d'indexation"
-  },
-  {
-   "url": "/modele/fiat/500l",
-   "raison": "trop proche de /modele/fiat/500 (0.81) — aucun rang sourcé, contenu égal : ordre des adresses"
   },
   {
    "url": "/modele/fiat/panda-hybrid",
@@ -228,60 +204,16 @@
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/ford/kuga-iii",
-   "raison": "trop proche de /modele/ford/fiesta-st (0.83) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
    "url": "/modele/ford/mondeo-iv",
    "raison": "sous le seuil d'indexation"
-  },
-  {
-   "url": "/modele/ford/puma",
-   "raison": "trop proche de /modele/ford/ecosport (0.86) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/ford/puma-st",
-   "raison": "trop proche de /modele/ford/fiesta-st (0.86) — aucun rang sourcé, contenu égal : ordre des adresses"
   },
   {
    "url": "/modele/lancia/ypsilon",
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/mercedes/classe-e-w212",
-   "raison": "trop proche de /modele/mercedes/classe-c-w204 (0.9) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/mercedes/classe-e-w213",
-   "raison": "trop proche de /modele/mercedes/classe-a-w177 (0.85) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/mercedes/glc-x253",
-   "raison": "trop proche de /modele/mercedes/classe-a-w177 (0.84) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/mercedes/sprinter",
-   "raison": "trop proche de /modele/mercedes/classe-c-w204 (0.9) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/mercedes/vito",
-   "raison": "trop proche de /modele/mercedes/sprinter (0.92) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/mini/countryman-r60",
-   "raison": "trop proche de /modele/mini/clubman-r55 (0.86) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/nissan/qashqai-i",
-   "raison": "trop proche de /modele/renault/clio-iii (0.85) — rang 1 du parc (L'Argus 2023)"
-  },
-  {
    "url": "/modele/opel/corsa-f",
    "raison": "sous le seuil d'indexation"
-  },
-  {
-   "url": "/modele/opel/grandland",
-   "raison": "trop proche de /modele/opel/astra (0.92) — aucun rang sourcé, contenu égal : ordre des adresses"
   },
   {
    "url": "/modele/peugeot/2008-i",
@@ -292,56 +224,16 @@
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/peugeot/207",
-   "raison": "trop proche de /modele/citroen/berlingo (0.88) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/peugeot/208-ii",
-   "raison": "trop proche de /modele/citroen/c3-iii (0.87) — rang 2 du parc (L'Argus 2023)"
-  },
-  {
    "url": "/modele/peugeot/308-gt",
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/peugeot/308-i",
-   "raison": "trop proche de /modele/citroen/berlingo (0.87) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/peugeot/508-ii",
-   "raison": "trop proche de /modele/peugeot/508-i (0.93) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/renault/captur-ii",
-   "raison": "trop proche de /modele/renault/clio-v (0.82) — rang 1 du parc (L'Argus 2023)"
-  },
-  {
-   "url": "/modele/renault/kadjar",
-   "raison": "trop proche de /modele/renault/captur-i (0.91) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/renault/megane-iii",
-   "raison": "trop proche de /modele/renault/clio-iii (0.88) — rang 1 du parc (L'Argus 2023)"
-  },
-  {
-   "url": "/modele/renault/megane-iv",
-   "raison": "trop proche de /modele/renault/megane-iii (0.92) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/renault/scenic-iii",
-   "raison": "trop proche de /modele/renault/clio-iii (0.88) — rang 1 du parc (L'Argus 2023)"
+   "url": "/modele/peugeot/508-i",
+   "raison": "trop proche de /modele/peugeot/508-ii (0.86) — même modèle : génération la plus récente"
   },
   {
    "url": "/modele/renault/twingo-iii",
    "raison": "sous le seuil d'indexation"
-  },
-  {
-   "url": "/modele/seat/ibiza-iv",
-   "raison": "trop proche de /modele/audi/a3-8p (0.87) — aucun rang sourcé, contenu égal : ordre des adresses"
-  },
-  {
-   "url": "/modele/skoda/octavia-ii",
-   "raison": "trop proche de /modele/audi/a3-8p (0.87) — aucun rang sourcé, contenu égal : ordre des adresses"
   },
   {
    "url": "/modele/toyota/auris-hsd",
@@ -380,10 +272,6 @@
    "raison": "sous le seuil d'indexation"
   },
   {
-   "url": "/modele/volkswagen/passat-b7",
-   "raison": "trop proche de /modele/volkswagen/golf-vi (0.88) — rang 4 du parc (L'Argus 2023)"
-  },
-  {
    "url": "/modele/volvo/v40",
    "raison": "sous le seuil d'indexation"
   },
@@ -402,253 +290,44 @@
  ],
  "paires_trop_proches": [
   {
-   "a": "/modele/bmw/serie-1-f20",
-   "b": "/modele/bmw/serie-3-f30",
-   "similarite": 0.93
+   "a": "/modele/mercedes/sprinter",
+   "b": "/modele/mercedes/vito",
+   "similarite": 0.86
   },
   {
    "a": "/modele/peugeot/508-i",
    "b": "/modele/peugeot/508-ii",
-   "similarite": 0.93
-  },
-  {
-   "a": "/modele/mercedes/sprinter",
-   "b": "/modele/mercedes/vito",
-   "similarite": 0.92
-  },
-  {
-   "a": "/modele/opel/astra",
-   "b": "/modele/opel/grandland",
-   "similarite": 0.92
-  },
-  {
-   "a": "/modele/renault/megane-iii",
-   "b": "/modele/renault/megane-iv",
-   "similarite": 0.92
-  },
-  {
-   "a": "/modele/renault/captur-i",
-   "b": "/modele/renault/kadjar",
-   "similarite": 0.91
+   "similarite": 0.86
   },
   {
    "a": "/modele/mercedes/classe-c-w204",
    "b": "/modele/mercedes/classe-e-w212",
-   "similarite": 0.9
-  },
-  {
-   "a": "/modele/mercedes/classe-c-w204",
-   "b": "/modele/mercedes/sprinter",
-   "similarite": 0.9
-  },
-  {
-   "a": "/modele/mercedes/classe-c-w204",
-   "b": "/modele/mercedes/vito",
-   "similarite": 0.9
-  },
-  {
-   "a": "/modele/mercedes/classe-e-w212",
-   "b": "/modele/mercedes/sprinter",
-   "similarite": 0.9
-  },
-  {
-   "a": "/modele/mercedes/classe-e-w212",
-   "b": "/modele/mercedes/vito",
-   "similarite": 0.9
-  },
-  {
-   "a": "/modele/citroen/berlingo",
-   "b": "/modele/peugeot/207",
-   "similarite": 0.88
-  },
-  {
-   "a": "/modele/peugeot/207",
-   "b": "/modele/peugeot/308-i",
-   "similarite": 0.88
-  },
-  {
-   "a": "/modele/renault/clio-iii",
-   "b": "/modele/renault/megane-iii",
-   "similarite": 0.88
-  },
-  {
-   "a": "/modele/renault/clio-iii",
-   "b": "/modele/renault/scenic-iii",
-   "similarite": 0.88
-  },
-  {
-   "a": "/modele/renault/megane-iii",
-   "b": "/modele/renault/scenic-iii",
-   "similarite": 0.88
-  },
-  {
-   "a": "/modele/volkswagen/golf-vi",
-   "b": "/modele/volkswagen/passat-b7",
-   "similarite": 0.88
-  },
-  {
-   "a": "/modele/audi/a3-8p",
-   "b": "/modele/seat/ibiza-iv",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/audi/a3-8p",
-   "b": "/modele/skoda/octavia-ii",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/audi/a3-8p",
-   "b": "/modele/volkswagen/golf-vi",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/audi/a3-8p",
-   "b": "/modele/volkswagen/passat-b7",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/bmw/serie-1-e87",
-   "b": "/modele/bmw/serie-3-e90",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/bmw/serie-1-e87",
-   "b": "/modele/bmw/serie-5-f10",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/bmw/serie-3-e90",
-   "b": "/modele/bmw/serie-5-f10",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/citroen/berlingo",
-   "b": "/modele/peugeot/308-i",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/citroen/c3-iii",
-   "b": "/modele/peugeot/208-ii",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/seat/ibiza-iv",
-   "b": "/modele/skoda/octavia-ii",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/seat/ibiza-iv",
-   "b": "/modele/volkswagen/golf-vi",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/seat/ibiza-iv",
-   "b": "/modele/volkswagen/passat-b7",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/skoda/octavia-ii",
-   "b": "/modele/volkswagen/golf-vi",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/skoda/octavia-ii",
-   "b": "/modele/volkswagen/passat-b7",
-   "similarite": 0.87
-  },
-  {
-   "a": "/modele/ford/ecosport",
-   "b": "/modele/ford/puma",
-   "similarite": 0.86
-  },
-  {
-   "a": "/modele/ford/fiesta-st",
-   "b": "/modele/ford/puma-st",
-   "similarite": 0.86
-  },
-  {
-   "a": "/modele/mini/clubman-r55",
-   "b": "/modele/mini/countryman-r60",
-   "similarite": 0.86
-  },
-  {
-   "a": "/modele/renault/clio-iii",
-   "b": "/modele/renault/megane-iv",
-   "similarite": 0.86
-  },
-  {
-   "a": "/modele/renault/megane-iv",
-   "b": "/modele/renault/scenic-iii",
-   "similarite": 0.86
-  },
-  {
-   "a": "/modele/mercedes/classe-a-w177",
-   "b": "/modele/mercedes/classe-e-w213",
-   "similarite": 0.85
-  },
-  {
-   "a": "/modele/nissan/qashqai-i",
-   "b": "/modele/renault/clio-iii",
-   "similarite": 0.85
-  },
-  {
-   "a": "/modele/nissan/qashqai-i",
-   "b": "/modele/renault/megane-iii",
-   "similarite": 0.85
-  },
-  {
-   "a": "/modele/nissan/qashqai-i",
-   "b": "/modele/renault/megane-iv",
-   "similarite": 0.85
-  },
-  {
-   "a": "/modele/nissan/qashqai-i",
-   "b": "/modele/renault/scenic-iii",
-   "similarite": 0.85
-  },
-  {
-   "a": "/modele/mercedes/classe-a-w177",
-   "b": "/modele/mercedes/glc-x253",
-   "similarite": 0.84
-  },
-  {
-   "a": "/modele/mercedes/classe-e-w213",
-   "b": "/modele/mercedes/glc-x253",
-   "similarite": 0.84
-  },
-  {
-   "a": "/modele/ford/fiesta-st",
-   "b": "/modele/ford/kuga-iii",
    "similarite": 0.83
   },
   {
-   "a": "/modele/ford/kuga-iii",
-   "b": "/modele/ford/puma-st",
-   "similarite": 0.83
-  },
-  {
-   "a": "/modele/renault/captur-ii",
-   "b": "/modele/renault/clio-v",
-   "similarite": 0.82
-  },
-  {
-   "a": "/modele/dacia/sandero-iii",
-   "b": "/modele/renault/captur-ii",
-   "similarite": 0.81
-  },
-  {
-   "a": "/modele/dacia/sandero-iii",
-   "b": "/modele/renault/clio-v",
-   "similarite": 0.81
-  },
-  {
-   "a": "/modele/fiat/500",
-   "b": "/modele/fiat/500l",
-   "similarite": 0.81
+   "a": "/modele/bmw/serie-1-f20",
+   "b": "/modele/bmw/serie-3-f30",
+   "similarite": 0.8
   }
  ],
  "seuil_similarite": 0.8,
- "source_rang_parc": "https://www.largus.fr/actualite-automobile/voitures-d-occasion-le-top-30-des-modeles-les-plus-vendus-en-2023-30028302.html",
+ "paires_non_departagees": [
+  {
+   "a": "/modele/mercedes/sprinter",
+   "b": "/modele/mercedes/vito",
+   "similarite": 0.86
+  },
+  {
+   "a": "/modele/mercedes/classe-c-w204",
+   "b": "/modele/mercedes/classe-e-w212",
+   "similarite": 0.83
+  },
+  {
+   "a": "/modele/bmw/serie-1-f20",
+   "b": "/modele/bmw/serie-3-f30",
+   "similarite": 0.8
+  }
+ ],
  "doublons_balises": {
   "titres": [],
   "descriptions": [],

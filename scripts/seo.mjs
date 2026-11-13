@@ -3,22 +3,13 @@
 //   - indexabilité d'une page d'après SON HTML : ni `noindex`, ni canonique
 //     vers une autre adresse ⇒ elle va au sitemap ;
 //   - anti-doublon : similarité du texte PROPRE (gabarit retiré) entre pages
-//     modèle ; au-delà du seuil, la page la moins présente dans le parc passe
-//     en `noindex`, SANS canonique vers l'autre — ce ne sont pas les mêmes
+//     modèle ; au-delà du seuil, la génération la moins récente passe en
+//     `noindex`, SANS canonique vers l'autre — ce ne sont pas les mêmes
 //     voitures (décision d'Utku du 13 nov. 2026). Le canonique est réservé
 //     aux vrais doublons (même code moteur sous deux marques) ;
 //   - titres et descriptions uniques parmi les pages indexables.
 
 export const SEUIL_SIMILARITE = 0.8
-
-/** Rang dans le parc d'occasion, d'après la SEULE source du projet : top 30
- *  L'Argus 2023 (données NGC-Data), page qui ne nomme que ces rangs. Un
- *  modèle absent n'a pas de rang : on ne l'invente pas. */
-export const RANG_PARC = {
-  'renault/clio': 1, 'citroen/c3': 2, 'peugeot/208': 3, 'volkswagen/golf': 4,
-  'renault/twingo': 5, 'renault/scenic': 9, 'dacia/sandero': 15, 'toyota/yaris': 16,
-}
-export const SOURCE_RANG_PARC = 'https://www.largus.fr/actualite-automobile/voitures-d-occasion-le-top-30-des-modeles-les-plus-vendus-en-2023-30028302.html'
 
 export function metaDe(html) {
   return {
@@ -80,21 +71,32 @@ export function pairesProches(pages, seuil = SEUIL_SIMILARITE) {
   return out.sort((x, y) => y.similarite - x.similarite)
 }
 
-/** Laquelle des deux pages reste indexée ? Rang sourcé dans le parc d'abord ;
- *  à défaut, la page au contenu propre le plus riche (pannes portées + prises
- *  datées, puis nombre de sources), puis l'adresse (ordre stable). */
+/** Laquelle des deux pages reste indexée ? Décision d'Utku du 13 nov. 2026 :
+ *  APRÈS l'enrichissement des pages par des données propres au modèle, une
+ *  paire encore au-dessus du seuil garde la GÉNÉRATION LA PLUS RÉCENTE
+ *  (année d'apparition du plus récent moteur de la page). À année égale ou
+ *  inconnue : null — les deux restent indexées et la paire est signalée.
+ *  Jamais de choix au hasard. */
+const ROMAINS = { i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8 }
+/** Même modèle, générations en chiffres romains : « 508-i » / « 508-ii ». */
+function memeModeleGenerations(a, b) {
+  const m = (u) => u.match(/^\/modele\/([^/]+)\/(.+)-(i{1,3}|iv|v|vi{1,3})$/)
+  const x = m(a), y = m(b)
+  if (!x || !y || x[1] !== y[1] || x[2] !== y[2]) return null
+  return { ga: ROMAINS[x[3]], gb: ROMAINS[y[3]] }
+}
+
 export function gardee(a, b, infos) {
-  const cle = (u) => u.replace(/^\/modele\//, '').split('/').slice(0, 1).concat((u.split('/')[3] || '').split('-')[0]).join('/')
-  const ra = RANG_PARC[cle(a)], rb = RANG_PARC[cle(b)]
-  if (ra != null || rb != null) {
-    if (ra != null && (rb == null || ra < rb)) return { garde: a, motif: `rang ${ra} du parc (L'Argus 2023)` }
-    if (rb != null && (ra == null || rb < ra)) return { garde: b, motif: `rang ${rb} du parc (L'Argus 2023)` }
+  const ya = infos[a]?.annee_recente, yb = infos[b]?.annee_recente
+  if (typeof ya !== 'number' || typeof yb !== 'number' || ya === yb) {
+    // Même modèle, deux générations numérotées : la plus haute est la plus récente.
+    const g = memeModeleGenerations(a, b)
+    if (g && g.ga !== g.gb) return { garde: g.ga > g.gb ? a : b, motif: 'même modèle : génération la plus récente' }
+    return null
   }
-  const ia = infos[a] || {}, ib = infos[b] || {}
-  const va = (ia.n_portees || 0) + (ia.n_prises_datees || 0), vb = (ib.n_portees || 0) + (ib.n_prises_datees || 0)
-  if (va !== vb) return { garde: va > vb ? a : b, motif: 'aucun rang sourcé : contenu propre le plus riche' }
-  if ((ia.n_sources || 0) !== (ib.n_sources || 0)) return { garde: (ia.n_sources || 0) > (ib.n_sources || 0) ? a : b, motif: 'aucun rang sourcé : plus de sources' }
-  return { garde: a < b ? a : b, motif: 'aucun rang sourcé, contenu égal : ordre des adresses' }
+  return ya > yb
+    ? { garde: a, motif: `génération la plus récente (moteur apparu en ${ya} contre ${yb})` }
+    : { garde: b, motif: `génération la plus récente (moteur apparu en ${yb} contre ${ya})` }
 }
 
 /** Titres et descriptions en double parmi les pages indexables. */

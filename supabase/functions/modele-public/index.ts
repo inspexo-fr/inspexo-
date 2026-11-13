@@ -13,6 +13,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import TABLE from "../_shared/famillesMoteur.json" with { type: "json" };
 import { composerPage, indexerModeles, type FamilleMoteur, type FicheMoteur } from "../_shared/modeles.ts";
 import { verdictIndexationModele } from "../_shared/indexation.ts";
+import { anneeRecente, moteursMontes, rappelsDuModele, ZFE_DATE } from "../_shared/donneesModele.ts";
+import { fourchetteDepuisAgregats, marqueCanonique, modeleCanonique, moisRecents, SEUIL_FOURCHETTE, type LigneAgregat } from "../_shared/marche.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -77,6 +79,7 @@ serve(async (req: Request) => {
           marque: p.marque, modele: p.modele, generation: p.generation,
           slug_marque: p.slug_marque, slug: p.slug, n_pannes: c.n_pannes,
           familles: c.sections.map((s) => s.famille),
+          annee_recente: anneeRecente(p.familles),
           ...resume(c),
         }));
       return jsonResponse({ pages: publiables, seuil: 3 });
@@ -85,10 +88,49 @@ serve(async (req: Request) => {
     const p = pages[0];
     const c = composerPage(p, fiches, CATALOGUE);
     if (!accessible(c)) return jsonResponse({ error: "not_found", n_pannes: c.n_pannes }, 404);
+    // SPRINT 24 — données PROPRES au modèle, sans IA : ce qui distingue cette
+    // page d'une autre page qui monte les mêmes moteurs.
+    const annee = new Date().getFullYear();
+    const moteurs = moteursMontes(p.familles, annee);
+    let rappels: { liste: ReturnType<typeof rappelsDuModele>; indisponible: boolean } = { liste: [], indisponible: true };
+    try {
+      const r = await fetch(`${SUPABASE_URL}/functions/v1/rappels`, {
+        method: "POST", signal: AbortSignal.timeout(15_000),
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
+        body: JSON.stringify({ marque: p.marque, modele: p.modele }),
+      });
+      const j = await r.json().catch(() => null);
+      if (r.ok && Array.isArray(j?.rappels) && j?.indisponible !== true) {
+        // Rappels publiés depuis l'apparition du plus ancien moteur de la page.
+        const debuts = p.familles.map((f) => f.debut).filter((y): y is number => typeof y === "number");
+        rappels = { liste: rappelsDuModele(j.rappels, debuts.length ? Math.min(...debuts) : null, p.modele, p.generation), indisponible: false };
+      }
+    } catch (e) {
+      console.error("modele-public rappels:", e);
+    }
+    let prix = null;
+    try {
+      const { data: rows } = await admin.from("marche_agregats")
+        .select("generation_norm, techno, cyl, boite, annee, km_tranche, region, prix_tranche, effectif, parts_api")
+        .eq("marque_norm", marqueCanonique(p.marque)).eq("modele_norm", modeleCanonique(p.modele))
+        .in("mois", moisRecents(new Date())).limit(5000);
+      // deno-lint-ignore no-explicit-any
+      const lignes: LigneAgregat[] = ((rows ?? []) as any[]).map((r) => ({
+        generation_norm: String(r.generation_norm ?? ""), techno: String(r.techno ?? ""), cyl: String(r.cyl ?? ""),
+        boite: String(r.boite ?? ""), annee: Number(r.annee ?? 0), km_tranche: Number(r.km_tranche ?? -1),
+        region: String(r.region ?? ""), prix_tranche: Number(r.prix_tranche ?? 0), effectif: Number(r.effectif ?? 0),
+        parts_api: (r.parts_api ?? {}) as Record<string, number>,
+      }));
+      const f = fourchetteDepuisAgregats(lignes, { techno: "", cyl: "", annee: null, km: null }, SEUIL_FOURCHETTE);
+      if (f) prix = { p25: f.p25, mediane: f.mediane, p75: f.p75, n: f.n };
+    } catch (e) {
+      console.error("modele-public prix:", e);
+    }
     return jsonResponse({
       marque: p.marque, modele: p.modele, generation: p.generation,
       slug_marque: p.slug_marque, slug: p.slug, n_pannes: c.n_pannes, sections: c.sections,
       ...resume(c),
+      donnees: { moteurs, rappels, prix, zfe_releve_le: ZFE_DATE },
     });
   } catch (error) {
     console.error("modele-public error:", error);
