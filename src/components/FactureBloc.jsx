@@ -56,7 +56,7 @@ export default function FactureBloc({ analysisId }) {
                     </span>
                   </div>
                   {l.echeance && <p className="c-graphite" style={{ fontSize: 13, marginTop: 2 }}>{l.echeance}</p>}
-                  <p style={{ fontSize: 14, lineHeight: 1.6, marginTop: 4 }}>À dire : « {l.phrase_vendeur} »</p>
+                  <p style={{ fontSize: 14, lineHeight: 1.6, marginTop: 4 }}>À dire : {l.phrase_vendeur}</p>
                   <p style={{ fontSize: 14, lineHeight: 1.6 }}>À demander : {l.justificatif}.</p>
                   <p className="c-graphite" style={{ fontSize: 13, lineHeight: 1.6 }}>
                     {l.source

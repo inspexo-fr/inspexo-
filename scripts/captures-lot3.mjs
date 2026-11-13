@@ -41,6 +41,7 @@ p = await page('batterie', `/a/${ID}`, async (pg) => {
   })
 })
 await p.pg.waitForSelector('#batterie', { timeout: 30000 }); await p.fin('#batterie')
+p = await page('facture-308', '/a/d7bed262-48b0-4b14-b266-37e5b6e33497'); await p.pg.waitForSelector('#facture', { timeout: 30000 }); await p.fin('#facture')
 p = await page('modele', '/modele/renault/clio-iv'); await p.fin(null, true)
 p = await page('confirmer', '/alerte/confirmer?i=00000000-0000-0000-0000-000000000000&t=abc'); await p.fin(null)
 // Panneau de l'extension, rendu par son propre code avec une réponse type.

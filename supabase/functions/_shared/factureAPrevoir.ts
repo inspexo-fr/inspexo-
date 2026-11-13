@@ -76,6 +76,12 @@ const jour = (iso: string | null) => (iso ? iso.slice(0, 10).split("-").reverse(
 const km = (n: number) => `${n.toLocaleString("fr-FR").replace(/ /g, " ")} km`;
 const slug = (t: string) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").slice(0, 60);
 const DISTRIBUTION = /distribution|courroie|cha[îi]ne/i;
+/** Libellé ramené à son nom (« Distribution — déclarée non faite… » ⇒
+ *  « Distribution »), pour une phrase qu'on peut dire telle quelle. */
+const court = (t: string) => {
+  const n = String(t).split(/\s[—–:(]\s?|,\s/)[0].trim();
+  return (n.length > 70 ? `${n.slice(0, 70).trimEnd()}…` : n) || t;
+};
 const REMPLACER_DISTRIBUTION = /^distribution\b|(?:remplacement|changement|remplacer|kit)[^.]{0,40}(?:courroie|distribution)/i;
 // Une action en justice n'est pas une prise en charge du véhicule.
 const PAS_UNE_PRISE = /action collective|actions? judiciaires?|plaintes?|contentieux|motorgate|référé|class action/i;
@@ -121,7 +127,7 @@ export function factureAPrevoir(e: EntreeFacture): FactureAPrevoir {
     max: l.chiffree ? l.max : null,
     echeance: l.echeance,
     source: l.source ? { libelle: l.source.libelle, url: l.source.urls[0] ?? null, date: null } : null,
-    phrase_vendeur: `L'opération « ${l.libelle} » est due d'après ce que dit l'annonce ou le plan d'entretien : a-t-elle été faite ? Sinon, j'en tiendrai compte dans le prix.`,
+    phrase_vendeur: `${court(l.libelle)} : est-ce fait ? D'après l'annonce ou le plan d'entretien, c'est dû maintenant. Sinon, j'en tiendrai compte dans le prix.`,
     justificatif: `Facture de l'opération (date, kilométrage, garage)`,
   }));
   if (!entretien.some((l) => DISTRIBUTION.test(l.libelle))) {
@@ -147,7 +153,7 @@ export function factureAPrevoir(e: EntreeFacture): FactureAPrevoir {
       min: null, max: null,
       echeance: null,
       source: null,
-      phrase_vendeur: `À quel kilométrage « ${n.operation} » a-t-elle été faite pour la dernière fois ?`,
+      phrase_vendeur: `${court(n.operation)} : à quel kilométrage a-t-elle été faite pour la dernière fois ?`,
       justificatif: "Facture ou carnet d'entretien",
     });
   }
@@ -184,7 +190,7 @@ export function factureAPrevoir(e: EntreeFacture): FactureAPrevoir {
       max: chiffre ? p.cout_max_eur : null,
       echeance: seuil != null ? `à partir de ${km(seuil)}` : null,
       source: portante ? { libelle: `${hote(portante)} (${rangSource(portante)})`, url: portante, date: jour(e.fiche_maj) } : null,
-      phrase_vendeur: `« ${titre} » est un défaut connu de ce moteur${seuil != null ? ` à partir de ${km(seuil)}` : ""} : l'organe a-t-il déjà été contrôlé ou remplacé ?`,
+      phrase_vendeur: `${court(titre)} : c'est un défaut connu de ce moteur${seuil != null ? ` à partir de ${km(seuil)}` : ""}. L'organe a-t-il déjà été contrôlé ou remplacé ?`,
       justificatif: "Facture du contrôle ou du remplacement (date, kilométrage, pièces)",
     });
   }
@@ -205,7 +211,8 @@ export function factureAPrevoir(e: EntreeFacture): FactureAPrevoir {
       statut,
       min: null, max: null,
       echeance: statut === "expiree" ? `expirée${dateDepassee ? ` le ${jour(fin)}` : ` (plus de ${km(pr.km_max!)})`}` : limites || null,
-      source: pr.url_source[0] ? { libelle: hote(pr.url_source[0]), url: pr.url_source[0], date: pr.date_vigueur ? jour(pr.date_vigueur) : null } : null,
+      // La date d'un programme est sa date d'ENTRÉE EN VIGUEUR, pas un relevé.
+      source: pr.url_source[0] ? { libelle: `${hote(pr.url_source[0])}${pr.date_vigueur ? `, programme en vigueur depuis le ${jour(pr.date_vigueur)}` : ""}`, url: pr.url_source[0], date: null } : null,
       phrase_vendeur: statut === "expiree"
         ? `La prise en charge « ${pr.titre} » ne couvre plus ce véhicule : les réparations concernées seraient à ma charge.`
         : `Le véhicule entre dans « ${pr.titre} »${limites ? ` (${limites})` : ""} : avez-vous ${pr.entretien_exige ?? "les justificatifs d'entretien exigés par le constructeur"} ?`,
