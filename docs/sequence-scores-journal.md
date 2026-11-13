@@ -445,3 +445,44 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
 - 4 références × 1 annoncées : mur **0,45 €**.
 - **Références inchangées** : S7 rouge 39, 308 orange 55, Mercedes vert 73,
   Clio II orange 51 (0,357 €). Total du sprint : ≈ 4,42 € / 85 €.
+
+## Sprint 24 — Toyota 1AD/2AD (13 nov. 2026, décision d'Utku)
+- Codes complets déclarés dans la table : famille « AD », `codes`
+  1AD-FTV / 2AD-FTV / 2AD-FHV (attestés : en.wikipedia « Toyota AD engine »).
+  Le résolveur ramène un code proposé (ou son début, ≥ 3 caractères) à « AD »,
+  pour Toyota seulement. Effet sur le score : seulement pour une Toyota dont
+  l'identification lit l'un de ces codes (elle trouvera la fiche AD).
+- Fiche par le mode « parties » (6 parties, 4 URL), même règle d'arrêt.
+  Budget **0,10 €**. `sheet-builder` déjà en place ; `score` (résolveur) et
+  les fonctions qui lisent la table seront redéployées au merge, puis 4
+  références × 1 (mur 0,45 €).
+- **Résultat AD** : fiche refusée au seuil de qualité (4 sources dont 2
+  propres au moteur), 0,039 €. Règle d'arrêt : on s'arrête.
+- ⚠️ **Entrée AD RETIRÉE de la table** : une famille identifiée SANS fiche
+  sort l'axe risques du score (« non évalué ») au lieu du plafond 55 d'un
+  moteur non identifié — une Avensis diesel sans code dans l'annonce aurait
+  vu son score MONTER. Le mécanisme des codes déclarés (`codes`, résolveur)
+  reste en place, testé sur une table d'essai ; l'entrée reviendra avec une
+  fiche. Aucun effet sur le score tant qu'aucune entrée ne porte `codes`.
+
+## Sprint 24 — session de jeton préparée (13 nov. 2026)
+- FIREFLY : nom de table « 1.0 FireFly 70 » (70 ch lus sur la page source :
+  500, Panda, Ypsilon hybrides) ; sans la puissance, la panne « T3 120 ch »
+  restait une question et ne pouvait pas être retirée. Adresse
+  /moteur/fiat-1-0-firefly → /moteur/fiat-1-0-firefly-70 (301).
+  Nouvelle opération admin `retirer_autre_version` : le serveur désigne les
+  pannes « exclue », simulation, `titres_attendus` exact sinon 409, pannes
+  retirées rendues pour le retour arrière.
+- 2ZR-FXE : source Caradisiac Auris 2 ajoutée à la consommation d'huile ;
+  panne nouvelle « onduleur du système hybride (Prius 3) », 2 500-3 200 €
+  (page relue en session). Les 3 rappels confirmés (faisceau C-HR/Prius 4,
+  pompe Corolla 12, Lexus CT) visent des MODÈLES : pas de filtre par modèle
+  dans une fiche moteur, ils pèseraient sur toute Toyota 1.8 hybride
+  (plafond 48). Non rattachés.
+- Déploiement annoncé : `admin-defect-sheets` (opération ajoutée). Script :
+  `scripts/session-jeton-sprint24.mjs` (simulation par défaut, `--ecrire`).
+  Après écriture : 4 références × 1, mur 0,45 €.
+- Merge de `sprint24-toyota-ad` (feu vert d'Utku) : redéploiement annoncé de
+  `admin-defect-sheets`, `cout-3ans`, `modele-public`, `moteur-public`,
+  `score` (table à 50 familles, FIREFLY 70, résolveur avec codes déclarés,
+  sans effet sur le score). Puis panne onduleur soumise au juge avant écriture.

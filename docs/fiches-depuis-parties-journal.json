@@ -109,5 +109,17 @@
   "utile": false,
   "cout_eur": 0.0516,
   "le": "2026-11-13T12:39:22.954Z"
+ },
+ {
+  "marque": "Toyota",
+  "famille": "AD",
+  "nom": "2.0 et 2.2 D-4D",
+  "parties": 6,
+  "status": "failed",
+  "pannes": 0,
+  "indexation": null,
+  "utile": false,
+  "cout_eur": 0.039,
+  "le": "2026-11-13T13:24:03.094Z"
  }
 ]

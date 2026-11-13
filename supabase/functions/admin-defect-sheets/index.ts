@@ -11,6 +11,8 @@ import { fusionnerPlan } from "../_shared/planEntretien.ts";
 import { couvertureValide } from "../_shared/couverture.ts";
 import { fusionnerPrisesEnCharge } from "../_shared/prisesEnCharge.ts";
 import { verifierAdmin } from "../_shared/adminAuth.ts";
+import { decisionVariante, varianteVehicule } from "../_shared/variantes.ts";
+import TABLE_FAMILLES from "../_shared/famillesMoteur.json" with { type: "json" };
 import { texteDeLaPageComplet } from "../_shared/verifSource.ts";
 import { sourcesPortantes, sourcesToutesEtrangeres, titreSansRappelOfficiel } from "../_shared/rappelsApplicables.ts";
 
@@ -143,6 +145,42 @@ serve(async (req: Request) => {
           JSON.stringify({ pannes_touchees: touchees, sources_ajoutees: ajoutees, inconnues }),
           { headers: { ...cors, "Content-Type": "application/json" } },
         );
+      }
+
+      // ── SPRINT 24 — RETIRER LES PANNES D'UNE AUTRE VERSION ─────────────
+      //
+      // Décision d'Utku du 13 nov. 2026 (FIREFLY) : une panne qui nomme une
+      // cylindrée ou une puissance DIFFÉRENTE de la famille (règle des
+      // variantes, barème 11.17) sort de la fiche. Le serveur décide lui-même
+      // lesquelles, par `decisionVariante` contre le nom de la table : seules
+      // les pannes « exclue » partent, jamais une « question ». `titres_attendus`
+      // est OBLIGATOIRE et doit désigner EXACTEMENT cet ensemble, sinon rien
+      // n'est écrit (409). `simuler: true` n'écrit rien. Les pannes retirées
+      // sont rendues pour le retour arrière.
+      if (body.retirer_autre_version === true) {
+        const { data: row } = await admin.from("defect_sheets").select("pannes, marque, famille_moteur").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const norm = (x: unknown) => String(x ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+        // deno-lint-ignore no-explicit-any
+        const fam = ((TABLE_FAMILLES as any).familles as Array<{ marque: string; famille: string; nom_commercial: string }>)
+          .find((f) => norm(f.famille) === norm(row.famille_moteur) && f.marque.toLowerCase() === String(row.marque).toLowerCase());
+        if (!fam) return new Response(JSON.stringify({ error: "famille absente de la table" }), { status: 400, headers: cors });
+        const version = varianteVehicule({ motorisation: fam.nom_commercial });
+        const pannes = (Array.isArray(row.pannes) ? row.pannes : []) as Array<Record<string, unknown>>;
+        const exclue = (p: Record<string, unknown>) =>
+          decisionVariante(`${p?.titre ?? ""} ${p?.symptomes ?? ""}`, version).statut === "exclue";
+        const retirees = pannes.filter(exclue);
+        const titres = retirees.map((p) => String(p.titre ?? "").trim()).sort();
+        const attendus = (Array.isArray(body.titres_attendus) ? body.titres_attendus : []).map((t: unknown) => String(t).trim()).sort();
+        if (retirees.length === 0 || JSON.stringify(titres) !== JSON.stringify(attendus)) {
+          return new Response(JSON.stringify({ error: "ensemble différent de celui attendu", a_retirer: titres, version: fam.nom_commercial }), { status: 409, headers: cors });
+        }
+        if (body.simuler === true) {
+          return new Response(JSON.stringify({ simulation: true, a_retirer: titres, restantes: pannes.length - retirees.length }), { headers: { ...cors, "Content-Type": "application/json" } });
+        }
+        const { error: e10 } = await admin.from("defect_sheets").update({ ...fields, pannes: pannes.filter((p) => !exclue(p)) }).eq("id", body.id);
+        if (e10) return new Response(JSON.stringify({ error: e10.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ retirees, restantes: pannes.length - retirees.length, version: fam.nom_commercial }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
 
       // ── SPRINT 22 — AJOUT D'UN PLAN D'ENTRETIEN SOURCÉ ─────────────────
