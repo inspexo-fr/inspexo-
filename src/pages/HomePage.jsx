@@ -9,6 +9,7 @@ import { getFiabilite } from '../lib/scoreApi'
 import DossierApercu, { DOSSIER_EXEMPLE_ID } from '../components/DossierApercu'
 import DossierExtrait from '../components/DossierExtrait'
 import PassCheckout from '../components/PassCheckout'
+import FilAriane from '../components/FilAriane'
 
 // Accueil — reproduction de docs/design/maquette-v1.html (référence absolue).
 // Structure et textes mot pour mot ; le formulaire du hero est le VRAI
@@ -63,6 +64,7 @@ export default function HomePage() {
         <meta property="og:image:alt" content="Extrait d'un dossier Inspexo réel : véhicule, verdict et score" />
         <meta name="twitter:image" content={IMAGE_PARTAGE} />
       </Helmet>
+      <FilAriane items={[]} />
 
       <Navbar />
 

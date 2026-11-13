@@ -7,6 +7,7 @@ import { getModelePublic } from '../lib/scoreApi'
 import { slugifier } from '../data/famillesMoteur'
 import { libelleSource } from '../components/DossierApercu'
 import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 23, LOT 3 (point 5) — /modele/<marque>/<modele>-<generation>.
 // Agrège les fiches des familles moteur montées sur ce modèle. UNIQUEMENT les
@@ -55,7 +56,10 @@ export default function ModelePage() {
         <title>{`${nom} d'occasion : pannes connues et sources — Inspexo`}</title>
         <meta name="description" content={`${p.n_pannes} pannes du ${nom} confirmées par une source indépendante (constructeur, rappel, presse), moteur par moteur, avec les prises en charge datées.`} />
         <link rel="canonical" href={url} />
+        {/* Sous le seuil d'indexation (sprint 24) : accessible, non indexée. */}
+        {p.indexable === false && <meta name="robots" content="noindex, follow" />}
       </Helmet>
+      <FilAriane items={[{ nom: 'Pannes par modèle', url: '/modele' }, { nom, url: `/modele/${p.slug_marque}/${p.slug}` }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none', paddingBottom: 'clamp(28px,4vw,48px)' }}>
@@ -66,6 +70,9 @@ export default function ModelePage() {
                 {p.n_pannes} panne{p.n_pannes > 1 ? 's' : ''} confirmée{p.n_pannes > 1 ? 's' : ''} par une source
                 indépendante (constructeur, rappel, presse), réparties sur {p.sections.length} moteur{p.sections.length > 1 ? 's' : ''}.
                 Les signalements que seuls des garages ou des forums rapportent ne figurent pas ici : ce sont des questions à poser au vendeur.
+              </p>
+              <p className="c-graphite" style={{ fontSize: 14, marginTop: 8 }}>
+                {p.maj ? `Mis à jour le ${jour(p.maj)}` : 'Date de mise à jour non disponible'} · {p.n_sources ?? 0} source{(p.n_sources ?? 0) > 1 ? 's' : ''} citée{(p.n_sources ?? 0) > 1 ? 's' : ''} · <Link to="/methode">notre méthode</Link> · <Link to="/fiabilite">mesure de fiabilité</Link>
               </p>
             </div>
           </div>

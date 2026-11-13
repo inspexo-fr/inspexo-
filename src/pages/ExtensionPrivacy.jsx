@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import Rows from '../components/Rows'
+import FilAriane from '../components/FilAriane'
 
 const sections = [
   {
@@ -47,6 +48,7 @@ export default function ExtensionPrivacy() {
         <meta name="description" content="Politique de confidentialité de l'extension Chrome Inspexo : aucune collecte sans votre action, contribution aux prix de marché sur demande et en agrégats, photos jamais stockées, données envoyées uniquement à inspexo.io." />
         <link rel="canonical" href="https://www.inspexo.io/extension/confidentialite" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Confidentialité de l’extension', url: '/extension/confidentialite' }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none' }}>

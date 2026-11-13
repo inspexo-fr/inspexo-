@@ -367,3 +367,20 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
 - **Hors note** : `pannes_non_verifiables` inchangé (plafond identique). Écart
   annoncé : aucun. Déploiement : `score` (+ importeurs). **4 références × 1,
   ≈ 0,36 €, mur 0,45 €.**
+- **Fait** : `score` déployé ; références S7 39 · 308 55 · Mercedes 73 ·
+  Clio II 51, inchangées (0,366 €). Total sprint : **3,68 € / 85 €**.
+
+## Sprint 24 — chantier SEO (13 nov. 2026, sans dépense IA)
+- Seuil d'indexation (`_shared/indexation.ts`) : pannes portées + prises en
+  charge datées propres ≥ 3, dont ≥ 1 panne portée ; sinon noindex et hors
+  sitemap, page accessible. Règle des versions appliquée aux pages /moteur
+  (FIREFLY). Vrai doublon EA288 Audi ⇒ canonique vers Volkswagen.
+- Anti-doublon au pré-rendu (`scripts/seo.mjs`) : paires de pages modèle ≥ 0,80
+  ⇒ noindex de la moins présente dans le parc, SANS canonique ; rang sourcé
+  seulement (top 30 L'Argus 2023 : 8 rangs publiés), sinon contenu propre le
+  plus riche.
+- Pages /methode et /qui-sommes-nous ; BreadcrumbList partout ; FAQPage retiré
+  des pages moteur ; build en échec si titre ou description en double.
+- **Déploiement annoncé** : `moteur-public` (nouvelle), `modele-public`.
+  Fenêtre avant merge : pages modèle sous le seuil accessibles sans noindex
+  côté site en ligne, liées par aucune page et hors sitemap.

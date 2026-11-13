@@ -6,7 +6,8 @@ import Footer from '../components/Footer'
 import Footnotes, { Ref, creerRegistreSources } from '../components/Footnotes'
 import { libelleSource } from '../components/DossierApercu'
 import { getMoteurPublic, getPrixSegments } from '../lib/scoreApi'
-import { FAMILLES_MOTEUR, familleParSlug } from '../data/famillesMoteur'
+import { FAMILLES_MOTEUR, familleParSlug, slugifier } from '../data/famillesMoteur'
+import FilAriane from '../components/FilAriane'
 import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
 import { CIBLE_MODELE, fourchetteDepuisAgregats, SEUIL_FOURCHETTE } from '../data/marche'
 import { segmentsPourFamille } from '../data/segmentsModeles'
@@ -186,20 +187,21 @@ export default function MoteurPage() {
       <Helmet>
         <title>{titre} | Inspexo</title>
         <meta name="description" content={`${pannes.length} pannes connues du ${nom}, chacune avec sa source : symptômes, kilométrage typique, coût de réparation, plan d'entretien et questions à poser au vendeur avant d'acheter.`} />
-        <link rel="canonical" href={url} />
+        <link rel="canonical" href={fiche.canonique ? `https://www.inspexo.io/moteur/${slugifier(fiche.canonique.marque, fiche.canonique.nom_commercial)}` : url} />
         <meta property="og:title" content={titre} />
         <meta property="og:description" content={`${pannes.length} pannes documentées, le plan d'entretien et les questions à poser au vendeur.`} />
         <meta property="og:url" content={url} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
-        <script type="application/ld+json">{JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: faq.map(({ q, r }) => ({
-            '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: r },
-          })),
-        })}</script>
+        {/* SPRINT 24 (SEO) — pas de FAQPage ici : les mêmes questions sur
+            chaque page moteur ne sont pas de vraies questions-réponses. */}
+        {/* Sous le seuil d'indexation : la page reste accessible mais n'est
+            pas indexée (et sort du sitemap). Un VRAI doublon, lui, porte
+            seulement le canonique vers la page principale — jamais les deux
+            signaux à la fois, que Google lit comme contradictoires. */}
+        {fiche.indexable === false && !fiche.canonique && <meta name="robots" content="noindex, follow" />}
       </Helmet>
+      <FilAriane items={[{ nom: 'Pannes par moteur', url: '/moteur' }, { nom: nom, url: `/moteur/${famille.slug}` }]} />
 
       <Navbar />
 
@@ -319,6 +321,24 @@ export default function MoteurPage() {
                 )
               })}
             </dl>
+          </div>
+        </section>
+
+        {/* Liens internes (sprint 24) : les modèles qui montent ce moteur, la
+            méthode et la mesure de fiabilité. */}
+        <section className="sec" id="liens">
+          <div className="wrap">
+            <div className="sec-head">
+              <h2>Pour aller plus loin.</h2>
+              <p>
+                {Array.isArray(fiche.modeles) && fiche.modeles.length > 0 && (
+                  <>Les modèles qui montent ce moteur :{' '}
+                    {fiche.modeles.map((m, i) => <React.Fragment key={m.slug_marque + m.slug}>{i > 0 ? ', ' : ''}<Link to={`/modele/${m.slug_marque}/${m.slug}`}>{m.libelle}</Link></React.Fragment>)}.{' '}
+                  </>
+                )}
+                D'où viennent ces pannes : <Link to="/methode">notre méthode</Link>. Ce que vaut une analyse : <Link to="/fiabilite">la mesure de fiabilité</Link>.
+              </p>
+            </div>
           </div>
         </section>
 

@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import { listMoteursPublies } from '../lib/scoreApi'
 import { FAMILLES_MOTEUR } from '../data/famillesMoteur'
 import { declarerPrerendu, lirePrerendu } from '../lib/prerendu'
+import FilAriane from '../components/FilAriane'
 
 // /moteur — index des familles dont la fiche atteint le seuil de publication.
 // La liste vient de la base (list_moteurs_publies), jamais d'une liste en dur :
@@ -51,6 +52,7 @@ export default function MoteursIndexPage() {
         <meta property="og:url" content="https://www.inspexo.io/moteur" />
         <meta property="og:image" content="https://www.inspexo.io/og-image.png" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Pannes par moteur', url: '/moteur' }]} />
 
       <Navbar />
 

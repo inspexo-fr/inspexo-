@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { IDENTITE } from '../data/identite'
+import FilAriane from '../components/FilAriane'
 
 export default function CGU() {
   return (
@@ -13,6 +14,7 @@ export default function CGU() {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.inspexo.io/cgu" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Conditions d’utilisation', url: '/cgu' }]} />
       <Navbar />
       <div className="legal-container">
         <div className="wrap-doc">

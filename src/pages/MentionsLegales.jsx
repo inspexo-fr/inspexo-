@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { IDENTITE } from '../data/identite'
+import FilAriane from '../components/FilAriane'
 
 export default function MentionsLegales() {
   return (
@@ -13,6 +14,7 @@ export default function MentionsLegales() {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.inspexo.io/mentions-legales" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Mentions légales', url: '/mentions-legales' }]} />
       <Navbar />
       <div className="legal-container">
         <div className="wrap-doc">

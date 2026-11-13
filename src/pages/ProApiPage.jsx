@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import FilAriane from '../components/FilAriane'
 
 // SPRINT 11 — /pro/api : la documentation de l'API de scoring v0.
 // Aucun prix affiché (tarif sur devis). Les limites sont annoncées ici, pas
@@ -80,6 +81,7 @@ export default function ProApiPage() {
         <meta name="description" content="API de scoring d'annonces automobiles : un POST, un JSON avec verdict, score, notes par critère, points sourcés et version du barème. Limites, erreurs, exemple de réponse." />
         <link rel="canonical" href="https://www.inspexo.io/pro/api" />
       </Helmet>
+      <FilAriane items={[{ nom: 'API', url: '/pro/api' }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none' }}>

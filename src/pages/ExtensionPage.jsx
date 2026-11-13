@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import FilAriane from '../components/FilAriane'
 
 // Renseigner l'URL du Chrome Web Store après validation de la soumission.
 const STORE_URL = null
@@ -27,6 +28,7 @@ export default function ExtensionPage() {
         <meta name="description" content="L'extension Chrome Inspexo ajoute un bouton « Analyser avec Inspexo » sur Leboncoin, La Centrale et AutoScout24. Verdict gratuit en un clic, photos comprises." />
         <link rel="canonical" href="https://www.inspexo.io/extension" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Extension Chrome', url: '/extension' }]} />
       <Navbar />
       <main>
         <section className="sec" style={{ borderTop: 'none' }}>

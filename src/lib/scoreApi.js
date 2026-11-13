@@ -159,9 +159,9 @@ export async function getPublicAnalysis(id, track = true) {
 
 /** Fiche complète d'une famille moteur pour sa page publique /moteur/<slug>. */
 export async function getMoteurPublic(marque, famille) {
-  const { data, error } = await supabase.rpc('get_moteur_public', { p_marque: marque, p_famille: famille })
-  if (error) throw error
-  return data
+  // SPRINT 24 — la fonction serveur applique la règle des versions et rend le
+  // verdict d'indexation ; même forme que l'ancienne RPC, plus ces champs.
+  return getFonction('moteur-public', { marque, famille })
 }
 
 /** Histogrammes de prix pour une liste de couples { marque, modele }.

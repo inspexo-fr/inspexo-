@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import AnalyseForm from '../components/AnalyseForm'
+import FilAriane from '../components/FilAriane'
 
 // /score — le même formulaire que le hero de l'accueil (composant partagé),
 // présenté seul, en colonne de lecture.
@@ -16,6 +17,7 @@ export default function ScorePage() {
         <meta name="description" content="Collez le texte d'une annonce de véhicule d'occasion et recevez en une minute un verdict vert / orange / rouge : défauts connus du modèle, rappels constructeur, questions à poser au vendeur. Gratuit, sans inscription." />
         <link rel="canonical" href="https://www.inspexo.io/score" />
       </Helmet>
+      <FilAriane items={[{ nom: 'Analyser une annonce', url: '/score' }]} />
 
       <Navbar />
 
