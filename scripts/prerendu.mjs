@@ -191,7 +191,7 @@ const ROUTES = [
   { url: '/mentions-legales', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/politique-de-confidentialite', attendre: '.legal-h1', priorite: '0.3' },
   { url: '/extension/confidentialite', attendre: '.rows', priorite: '0.3' },
-  ...moteurs.map((f) => ({ url: `/moteur/${f.slug}`, attendre: '#pannes .row', priorite: '0.8', figer: true })),
+  ...moteurs.map((f) => ({ url: `/moteur/${f.slug}`, attendre: '#pannes', priorite: '0.8', figer: true })),
   { url: '/modele', attendre: '#modeles li', priorite: '0.7', figer: true },
   { url: '/methode', attendre: '.legal-h1', priorite: '0.6' },
   { url: '/qui-sommes-nous', attendre: '.legal-h1', priorite: '0.4' },

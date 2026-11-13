@@ -534,3 +534,12 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
 - Feu vert d'Utku : merge de `sprint24-audit`, déploiement de `score` et
   `moteur-public`, main = production (statut Vercel compris), puis 4
   références × 1 (mur 0,45 €).
+- **Références inchangées** après déploiement : S7 rouge 39, 308 orange 55,
+  Mercedes vert 73, Clio II orange 51 (0,367 €). Raisons vérifiées : la 308
+  ne cite plus la surconsommation d'huile, la Mercedes plus les injecteurs.
+- ⚠️ **Build Vercel de 30dca8f en échec** : 13 pages /moteur sans panne
+  confirmée n'avaient plus de `#pannes .row`, que le pré-rendu attendait
+  (délai dépassé). La production est restée sur le build précédent (garde-fou
+  du pré-rendu). Correctif : attendre `#pannes` (section rendue dès que les
+  données sont là). Build local contre la fonction déployée : 181 pages,
+  0 échec, sitemap 111.
