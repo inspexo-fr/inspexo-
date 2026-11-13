@@ -354,3 +354,16 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   palier réservé avant envoi.
 - **Dépense : 0 €** (aucun changement de score). Déploiement annoncé : migration,
   `cout-3ans`, `alertes`, `score` et les fonctions qui importent `notify.ts`.
+- **Essai EB2DTS, domaines constructeur (mur 0,45 €)** : 0 échéance établie,
+  0,212 € (catalogue PDF peugeot.fr illisible ; page courroie sans intervalle).
+  **Plans d'entretien arrêtés pour le sprint.** Total sprint : 3,31 € / 85 €.
+
+## Sprint 24 — Points signalés par des propriétaires (13 nov. 2026)
+- Panne non portée citée par ≥ 3 SITES distincts (forums, garages ; sous-domaines
+  confondus) ⇒ point « à contrôler » (quoi, quand, signe, nombre de sources),
+  sans « panne connue » ni montant, mention fixe ; il remplace sa question.
+- Mesuré sur les fiches en base : 153 non portées, 109 citent forums/garages,
+  **10 passent le seuil de 3**.
+- **Hors note** : `pannes_non_verifiables` inchangé (plafond identique). Écart
+  annoncé : aucun. Déploiement : `score` (+ importeurs). **4 références × 1,
+  ≈ 0,36 €, mur 0,45 €.**

@@ -69,6 +69,7 @@ import { estAppelApi } from "../_shared/apiClients.ts";
 import { deciderStatut } from "../_shared/statutVendeur.ts";
 import { appliquerReglesRappel, QUESTION_RAPPEL_VIN } from "../_shared/rappelsApplicables.ts";
 import { decisionVariante, questionVariante, varianteVehicule } from "../_shared/variantes.ts";
+import { pointProprietaire, type PointProprietaire } from "../_shared/pointsProprietaires.ts";
 import { indexerModeles, nommeUnAutreVehicule, type FamilleMoteur } from "../_shared/modeles.ts";
 import TABLE_FAMILLES from "../_shared/famillesMoteur.json" with { type: "json" };
 // Noms des véhicules connus, pour écarter une prise en charge qui en nomme un autre.
@@ -2911,6 +2912,8 @@ serve(async (req: Request) => {
 
     // Faits du barème conservés dans le résultat : le mode visite recalcule le
     // verdict avec les mêmes règles quand de nouveaux constats photo arrivent.
+    // SPRINT 24 — affichage seul, jamais lu par le barème.
+    let pointsProprietaires: PointProprietaire[] = [];
     let faitsBareme: FaitsAxes | null = null;
     {
       const opsCritiquesNonFaites = opsNonFaites.filter((op) => {
@@ -2994,6 +2997,7 @@ serve(async (req: Request) => {
         });
       }
 
+      pointsProprietaires = [];
       // ⚠️ SPRINT 21.1 — UNE PANNE NE PÈSE QUE SI UNE SOURCE INDÉPENDANTE LA
       // PORTE (officielle, presse ou éditoriale). Décision d'Utku du
       // 6 nov. 2026, après l'audit : 192 des 219 pannes de fiches et 7 des 10
@@ -3025,7 +3029,17 @@ serve(async (req: Request) => {
           pannesJoined.length = 0;
           pannesJoined.push(...portees);
           pannesJoined.forEach((p, i) => { p.id = `P${i + 1}`; });
-          for (const p of nonPortees.slice(0, 3)) {
+          // SPRINT 24 — au moins 3 sites indépendants (forums, garages) : la panne
+          // devient un point « signalé par des propriétaires », formulé comme
+          // un contrôle. Il REMPLACE sa question générique (une seule fois dans
+          // le dossier). Le décompte ci-dessus, qui plafonne l'axe, ne bouge pas.
+          const restantes: typeof nonPortees = [];
+          for (const p of nonPortees) {
+            const pt = pointProprietaire(p);
+            if (pt) pointsProprietaires.push(pt);
+            else restantes.push(p);
+          }
+          for (const p of restantes.slice(0, 3)) {
             questions.push(questionSansSourceIndependante(p.titre));
           }
           await admin.from("events").insert({
@@ -3610,6 +3624,8 @@ serve(async (req: Request) => {
         };
       }),
       incoherences,
+      // Points signalés par des propriétaires (sprint 24) : affichage seul.
+      points_proprietaires: pointsProprietaires,
       // Sécurité de la transaction : motifs fixes relus sur l'annonce, chacun
       // cité. Sans effet sur la note (décision d'Utku du 12 nov. 2026).
       securite_transaction: {
