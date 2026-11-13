@@ -332,3 +332,8 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
 - **Fait** : 7 fonctions déployées ; **références S7 39 · 308 55 · Mercedes 73
   · Clio II 51, conformes à l'annonce (0,360 €)**. Pages Fiat 500 Hybrid et
   Panda Hybrid : 404 (sous le seuil). Total sprint : **3,10 € / 25 €**.
+- **Essai plans « domaines constructeur » (décision d'Utku)** : EB2DTS seul,
+  recherche limitée à peugeot.fr, citroen.fr, opel.fr (les seuls domaines
+  Stellantis déjà classés « officiel » ; peugeot.com, stellantis.com,
+  dsautomobiles.fr ne le sont pas). Déploiement annoncé : `sheet-builder`.
+  **Mur 0,40 €.** Rien ne donne ⇒ arrêt des plans pour ce sprint.

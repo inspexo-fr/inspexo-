@@ -48,6 +48,9 @@ const LOT = flag('--familles')
   : PILOTE
 const SEUIL = Number(flag('--seuil', String(SEUIL_PILOTE))) || SEUIL_PILOTE
 const NOM_LOT = flag('--familles') ? 'LOT' : 'LOT PILOTE'
+// SPRINT 24 — `--domaines a.fr,b.fr` limite la recherche à ces domaines, et
+// rejoue une famille déjà tentée (c'est un autre essai, pas une répétition).
+const DOMAINES = flag('--domaines') ? flag('--domaines').split(',').map((d) => d.trim()).filter(Boolean) : []
 
 const env = {}
 for (const l of (existsSync('.env.local') ? readFileSync('.env.local', 'utf8') : '').split('\n')) {
@@ -130,7 +133,7 @@ let coutRun = 0, joues = 0
 
 console.log(`\n${NOM_LOT} — mur ${BUDGET.toFixed(2)} € · cumul déjà dépensé ${cumul.toFixed(2)} €\n`)
 for (const p of LOT) {
-  if (faits.has(`${p.marque}|${p.famille}`)) { console.log(`  déjà joué   ${p.marque} ${p.famille}`); continue }
+  if (DOMAINES.length === 0 && faits.has(`${p.marque}|${p.famille}`)) { console.log(`  déjà joué   ${p.marque} ${p.famille}`); continue }
   const mur = murAtteint({ coutRun, casJoues: joues, coutSession: cumul + coutRun, budgetRun: BUDGET, plafondSession: PLAFOND_CUMUL, estime: COUT_MOTEUR_ESTIME })
   if (mur) { console.log(`\n⏸ mur atteint (${mur}) avant ${p.marque} ${p.famille} : non joué.`); break }
   let r = null, erreur = null
@@ -138,7 +141,7 @@ for (const p of LOT) {
     const res = await fetch(`${U}/functions/v1/sheet-builder`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${ANON}`, 'x-eval-secret': EVAL },
-      body: JSON.stringify({ mode: 'plan', marque: p.marque, famille_moteur: p.famille }),
+      body: JSON.stringify({ mode: 'plan', marque: p.marque, famille_moteur: p.famille, ...(DOMAINES.length ? { domaines: DOMAINES } : {}) }),
       signal: AbortSignal.timeout(170_000),
     })
     const t = await res.text()
@@ -158,7 +161,7 @@ for (const p of LOT) {
     ? { marque: p.marque, famille: p.famille, fiche: `${p.marque} ${p.famille}`, erreur, operations: [] }
     : { marque: p.marque, famille: p.famille, fiche: r.fiche, fiche_id: r.fiche_id, plan_existant: r.plan_existant,
         operations: r.operations, ecartees: r.ecartees, proposees: r.proposees, recherches: r.recherches,
-        juge: r.juge, cout_eur: r.cout_eur, le: new Date().toISOString() }
+        juge: r.juge, cout_eur: r.cout_eur, le: new Date().toISOString(), ...(DOMAINES.length ? { domaines: DOMAINES } : {}) }
   journal.push(ligne)
   writeFileSync(JOURNAL, JSON.stringify(journal, null, 1))
   writeFileSync(COMPTEUR, JSON.stringify({ eur: Number((cumul + coutRun).toFixed(4)), maj: new Date().toISOString() }))

@@ -60,6 +60,9 @@ serve(async (req: Request) => {
       const annees = [fiche.annee_debut, fiche.annee_fin].filter((x: unknown) => x != null).join("-");
       const r = await genererPlan(ANTHROPIC_API_KEY!, admin, {
         marque: fiche.marque, famille: fiche.famille_moteur, label: fiche.moteur_label ?? null, annees,
+        // Domaines de recherche optionnels : noms d'hôte seulement, 10 au plus.
+        domaines: (Array.isArray(body?.domaines) ? body.domaines : [])
+          .filter((d: unknown): d is string => typeof d === "string" && /^[a-z0-9.-]{3,80}\.[a-z]{2,12}$/i.test(d)).slice(0, 10),
       });
       return new Response(JSON.stringify({
         fiche_id: fiche.id,

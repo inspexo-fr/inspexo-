@@ -67,9 +67,14 @@ async function appelAnthropic(cle: string, corps: any, ms: number): Promise<any 
   return await res.json();
 }
 
-async function proposer(cle: string, marque: string, famille: string, label: string | null, annees: string) {
+async function proposer(cle: string, marque: string, famille: string, label: string | null, annees: string, domaines: string[] = []) {
   const system = systemPlan(marque, famille, label, annees);
-  const tools = [{ type: "web_search_20250305", name: "web_search", max_uses: MAX_SEARCHES }, PLAN_TOOL];
+  // SPRINT 24 — recherche limitée aux domaines donnés (essai « carnets
+  // constructeur » : seuls les domaines du constructeur sont interrogés).
+  const recherche = domaines.length > 0
+    ? { type: "web_search_20250305", name: "web_search", max_uses: MAX_SEARCHES, allowed_domains: domaines }
+    : { type: "web_search_20250305", name: "web_search", max_uses: MAX_SEARCHES };
+  const tools = [recherche, PLAN_TOOL];
   // deno-lint-ignore no-explicit-any
   let messages: any[] = [{ role: "user", content: `Relève le plan d'entretien publié du moteur ${famille} (${marque}). Recherche, puis appelle rendre_plan.` }];
   const usage: Usage = { input_tokens: 0, output_tokens: 0 };
@@ -124,13 +129,13 @@ export async function genererPlan(
   cleApi: string,
   // deno-lint-ignore no-explicit-any
   db: any,
-  p: { marque: string; famille: string; label: string | null; annees: string },
+  p: { marque: string; famille: string; label: string | null; annees: string; domaines?: string[] },
 ): Promise<ResultatPlan> {
   let usd = 0;
   const ecartees: ResultatPlan["ecartees"] = [];
   const juge = { passages: 0, depuis_cache: 0 };
 
-  const prop = await proposer(cleApi, p.marque, p.famille, p.label, p.annees);
+  const prop = await proposer(cleApi, p.marque, p.famille, p.label, p.annees, p.domaines ?? []);
   usd += usdDe(prop.usage) + prop.recherches * USD_PAR_RECHERCHE;
   const cands = candidats(prop.input?.operations);
 
