@@ -531,3 +531,6 @@ Effet sur le score : aucun sur le barème (raisons et budget n'y entrent pas) ;
 la consigne ajoutée au modèle peut faire varier ses sorties ⇒ 4 références × 1
 après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
 `score`, `moteur-public`.
+- Feu vert d'Utku : merge de `sprint24-audit`, déploiement de `score` et
+  `moteur-public`, main = production (statut Vercel compris), puis 4
+  références × 1 (mur 0,45 €).
