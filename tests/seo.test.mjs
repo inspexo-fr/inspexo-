@@ -1,7 +1,7 @@
 // Tests hors ligne : chantier SEO (sprint 24) — seuil d'indexation, anti-doublon, balises.
 // Usage : node tests/seo.test.mjs
 import fs from 'node:fs'
-import { estIndexable as indexableHtml, ajouterNoindex, metaDe, pairesProches, gardee, doublonsMeta, RANG_PARC } from '../scripts/seo.mjs'
+import { estIndexable as indexableHtml, ajouterNoindex, uneSeuleBaliseRobots, metaDe, pairesProches, gardee, doublonsMeta, RANG_PARC } from '../scripts/seo.mjs'
 import { estIndexable, verdictIndexationMoteur, verdictIndexationModele, prisesDateesPropres, principale } from '../supabase/functions/_shared/indexation.ts'
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) { ok_++; console.log(`PASS — ${l}`) } else { ko++; console.log(`FAIL — ${l}`) } }
@@ -37,6 +37,11 @@ ok(!indexableHtml(page('A', 'a', '<meta name="robots" content="noindex, follow">
 ok(!indexableHtml(page('A', 'a', '', 'https://www.inspexo.io/y'), 'https://www.inspexo.io/x'), 'canonique ailleurs : hors sitemap')
 const n = ajouterNoindex(page('A', 'a'))
 ok(metaDe(n).noindex && metaDe(n).canonique === 'https://www.inspexo.io/x', 'anti-doublon : noindex ajouté SANS canonique vers l’autre page')
+
+const deux = '<head><meta name="robots" content="index, follow"><meta name="robots" content="noindex, follow" data-rh="true"></head>'
+eq((uneSeuleBaliseRobots(deux).match(/name="robots"/g) || []).length, 1, 'une seule balise robots : celle de la page')
+ok(/noindex/.test(uneSeuleBaliseRobots(deux)), '… et c’est le noindex qui reste')
+eq(uneSeuleBaliseRobots('<head><meta name="robots" content="index, follow"></head>'), '<head><meta name="robots" content="index, follow"></head>', 'page sans balise propre : gabarit conservé')
 
 // Similarité et choix de la page gardée
 const corps = (mots) => `<html><head><title>x</title></head><body><main>${mots}</main></body></html>`

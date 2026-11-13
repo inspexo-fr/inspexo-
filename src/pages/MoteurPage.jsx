@@ -110,7 +110,9 @@ export default function MoteurPage() {
   // Seuil de publication : au moins 3 pannes, toutes sourcées (même règle que
   // la RPC list_moteurs_publies qui alimente le sitemap).
   const pannes = (fiche?.pannes ?? []).filter((p) => (p.url_source ?? []).length > 0)
-  if (!fiche || pannes.length < 3) {
+  // SPRINT 24 — le serveur décide si la page existe (`moteur-public`, 404 sinon) ;
+  // une page sous le seuil reste accessible, en noindex, avec ses pannes.
+  if (!fiche || pannes.length === 0) {
     return (
       <>
         <Helmet><meta name="robots" content="noindex" /></Helmet>

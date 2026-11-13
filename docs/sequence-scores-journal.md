@@ -384,3 +384,9 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
 - **Déploiement annoncé** : `moteur-public` (nouvelle), `modele-public`.
   Fenêtre avant merge : pages modèle sous le seuil accessibles sans noindex
   côté site en ligne, liées par aucune page et hors sitemap.
+- **Fait (build local)** : 172 pages pré-rendues ; **indexables 73** (avant :
+  108, toutes) ; 99 en noindex ou canonisées : sous le seuil, trop proches
+  (anti-doublon), 1 vrai doublon (EA288 Audi). Aucun titre ni description en
+  double. Sitemap : 73 URL. Rapport : `docs/seo-rapport-2026-11-13.json`.
+- Core Web Vitals : mesure locale (serveur sans CDN) et références de prod ;
+  la mesure fiable se fera en production après merge.

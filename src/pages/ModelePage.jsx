@@ -71,7 +71,9 @@ export default function ModelePage() {
                 indépendante (constructeur, rappel, presse), réparties sur {p.sections.length} moteur{p.sections.length > 1 ? 's' : ''}.
                 Les signalements que seuls des garages ou des forums rapportent ne figurent pas ici : ce sont des questions à poser au vendeur.
               </p>
-              <p className="c-graphite" style={{ fontSize: 14, marginTop: 8 }}>
+              {/* Hauteur réservée (2 lignes) : sans elle, le passage de la police de
+                  repli à la police finale fait sauter le contenu dessous (CLS). */}
+              <p className="c-graphite" style={{ fontSize: 14, lineHeight: 1.6, marginTop: 8, minHeight: '3.2em' }}>
                 {p.maj ? `Mis à jour le ${jour(p.maj)}` : 'Date de mise à jour non disponible'} · {p.n_sources ?? 0} source{(p.n_sources ?? 0) > 1 ? 's' : ''} citée{(p.n_sources ?? 0) > 1 ? 's' : ''} · <Link to="/methode">notre méthode</Link> · <Link to="/fiabilite">mesure de fiabilité</Link>
               </p>
             </div>

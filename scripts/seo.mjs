@@ -34,6 +34,14 @@ export function estIndexable(html, urlAbsolue) {
   return !m.noindex && (!m.canonique || m.canonique === urlAbsolue)
 }
 
+/** Une seule balise robots : celle que la page déclare (Helmet, `data-rh`)
+ *  l'emporte sur la balise fixe du gabarit `public/index.html`. Deux balises
+ *  contradictoires ne doivent jamais coexister. */
+export function uneSeuleBaliseRobots(html) {
+  const declaree = /<meta[^>]+name="robots"[^>]+data-rh="true"[^>]*>/i.test(html)
+  return declaree ? html.replace(/<meta name="robots" content="[^"]*">(?![^<]*data-rh)/i, '') : html
+}
+
 /** Ajoute `noindex, follow` à une page (sans toucher à son canonique). */
 export function ajouterNoindex(html) {
   if (/<meta[^>]+name="robots"/i.test(html)) {

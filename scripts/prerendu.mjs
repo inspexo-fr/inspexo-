@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { createServer } from 'node:http'
 import { extname } from 'node:path'
 import { FAMILLES_MOTEUR } from '../src/data/famillesMoteur.js'
-import { ajouterNoindex, doublonsMeta, estIndexable, gardee, metaDe, pairesProches, SEUIL_SIMILARITE, SOURCE_RANG_PARC } from './seo.mjs'
+import { ajouterNoindex, uneSeuleBaliseRobots, doublonsMeta, estIndexable, gardee, metaDe, pairesProches, SEUIL_SIMILARITE, SOURCE_RANG_PARC } from './seo.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILD = join(ROOT, 'build')
@@ -269,6 +269,7 @@ for (const route of ROUTES) {
         `<script>window.__PRERENDU__=JSON.parse(${litteral})</script></head>`,
       )
     }
+    html = uneSeuleBaliseRobots(html)
     const dossier = join(BUILD, route.url)
     mkdirSync(dossier, { recursive: true })
     writeFileSync(join(dossier, 'index.html'), html)
