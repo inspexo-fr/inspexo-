@@ -34,7 +34,7 @@
     },
     {
       "source": "/moteur/fiat-1-0-firefly",
-      "destination": "/moteur/fiat-1-0-firefly-70",
+      "destination": "/moteur",
       "statusCode": 301
     }
   ],

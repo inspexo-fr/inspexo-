@@ -499,3 +499,9 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   indexable (seuil 3). Jeton retiré de `.env.local`.
 - **Références inchangées** : S7 rouge 39, 308 orange 55, Mercedes vert 73,
   Clio II orange 51 (0,366 €). Sprint ≈ 4,86 € / 85 €.
+- **Redirection FIREFLY corrigée** (décision d'Utku) : /moteur/fiat-1-0-firefly
+  → **/moteur** (301), jamais une page absente. Garde-fou au build :
+  `redirectionsVersAbsentes` (scripts/seo.mjs) — le pré-rendu ARRÊTE le build
+  si une redirection interne de vercel.json mène vers une page qu'il n'a pas
+  produite. Build local : 2 redirections vérifiées, 181 pages, sitemap 111 ;
+  contre-épreuve : l'ancienne destination est bien refusée. Coût : 0 €.

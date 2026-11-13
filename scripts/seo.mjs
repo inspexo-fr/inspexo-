@@ -109,3 +109,15 @@ export function doublonsMeta(pages) {
   const sansDescription = pages.filter((p) => !p.meta.description).map((p) => p.url)
   return { titres: par('titre'), descriptions: par('description'), sans_description: sansDescription }
 }
+
+/** Redirections internes dont la destination n'est pas une page générée
+ *  (décision d'Utku du 13 nov. 2026 : une redirection ne mène jamais vers une
+ *  page absente). Les destinations externes ou dynamiques (`:param`, motif)
+ *  ne sont pas jugées ici. `existe(chemin)` dit si le build a produit la page. */
+export function redirectionsVersAbsentes(redirections, existe) {
+  return (Array.isArray(redirections) ? redirections : [])
+    .filter((r) => typeof r?.destination === 'string' && r.destination.startsWith('/'))
+    .filter((r) => !/[:(*]/.test(r.destination))
+    .filter((r) => !existe(r.destination.split(/[?#]/)[0]))
+    .map((r) => ({ source: r.source, destination: r.destination }))
+}

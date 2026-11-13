@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 import { createServer } from 'node:http'
 import { extname } from 'node:path'
 import { FAMILLES_MOTEUR } from '../src/data/famillesMoteur.js'
-import { ajouterNoindex, uneSeuleBaliseRobots, doublonsMeta, estIndexable, gardee, metaDe, pairesProches, SEUIL_SIMILARITE } from './seo.mjs'
+import { redirectionsVersAbsentes, ajouterNoindex, uneSeuleBaliseRobots, doublonsMeta, estIndexable, gardee, metaDe, pairesProches, SEUIL_SIMILARITE } from './seo.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILD = join(ROOT, 'build')
@@ -329,6 +329,22 @@ if (doublons.titres.length || doublons.descriptions.length || doublons.sans_desc
   console.error('\n✗ Titres ou descriptions en double (ou absents) parmi les pages indexables :')
   console.error(JSON.stringify(doublons, null, 1).slice(0, 2000))
   process.exit(1)
+}
+
+// ---- Redirections : jamais vers une page absente ----
+// Une 301 vers une page que ce build n'a pas produite enverrait le visiteur
+// (et Google) sur la coquille ou un 404. Cas réel du 13 nov. 2026 : la page
+// FIREFLY a cessé d'être publiée sous sa redirection.
+{
+  const config = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'))
+  const existe = (chemin) => chemin === '/' || existsSync(join(BUILD, chemin, 'index.html')) || existsSync(join(BUILD, chemin))
+  const absentes = redirectionsVersAbsentes(config.redirects, existe)
+  if (absentes.length) {
+    console.error('\n✗ Redirection(s) vers une page non générée par ce build :')
+    for (const r of absentes) console.error(`  ${r.source} → ${r.destination}`)
+    process.exit(1)
+  }
+  console.log(`— redirections : ${(config.redirects ?? []).length} vérifiée(s), toutes vers une page générée`)
 }
 
 // ---- sitemap.xml : uniquement les pages réellement produites ----

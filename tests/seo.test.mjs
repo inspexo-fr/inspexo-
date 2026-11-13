@@ -2,6 +2,7 @@
 // Usage : node tests/seo.test.mjs
 import fs from 'node:fs'
 import { estIndexable as indexableHtml, ajouterNoindex, uneSeuleBaliseRobots, metaDe, pairesProches, gardee, doublonsMeta } from '../scripts/seo.mjs'
+import { redirectionsVersAbsentes } from '../scripts/seo.mjs'
 import { estIndexable, verdictIndexationMoteur, verdictIndexationModele, prisesDateesPropres, principale } from '../supabase/functions/_shared/indexation.ts'
 let ok_ = 0, ko = 0
 const ok = (c, l) => { if (c) { ok_++; console.log(`PASS — ${l}`) } else { ko++; console.log(`FAIL — ${l}`) } }
@@ -67,4 +68,23 @@ ok(!/'@type': 'FAQPage'/.test(moteur), 'pages moteur : plus de FAQPage (question
 ok(/<FilAriane/.test(moteur), 'pages moteur : fil d’Ariane')
 ok(!/AggregateRating|"Review"|'Review'/.test(fs.readFileSync(new URL('../src/components/FilAriane.jsx', import.meta.url), 'utf8') + moteur), 'ni avis ni note en étoiles')
 console.log(`\n${ok_} PASS, ${ko} FAIL`)
+// Redirections : jamais vers une page absente (13 nov. 2026).
+{
+  const pages = new Set(['/moteur', '/airbags-takata'])
+  const existe = (c) => pages.has(c)
+  const r = redirectionsVersAbsentes([
+    { source: '/takata', destination: '/airbags-takata' },
+    { source: '/moteur/fiat-1-0-firefly', destination: '/moteur/fiat-1-0-firefly-70' },
+    { source: '/x', destination: 'https://exemple.fr/y' },
+    { source: '/a/:id', destination: '/b/:id' },
+    { source: '/q', destination: '/moteur?x=1' },
+  ], existe)
+  ok(r.length === 1 && r[0].destination === '/moteur/fiat-1-0-firefly-70', 'seule la redirection vers une page absente est signalée')
+  const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'))
+  const ff = (vercel.redirects ?? []).find((x) => x.source === '/moteur/fiat-1-0-firefly')
+  ok(ff?.destination === '/moteur' && ff?.statusCode === 301, 'FIREFLY : 301 de l’ancienne adresse vers l’index /moteur')
+  const pr = fs.readFileSync('scripts/prerendu.mjs', 'utf8')
+  ok(/redirectionsVersAbsentes\(config\.redirects/.test(pr) && /absentes\.length\) \{[\s\S]{0,200}process\.exit\(1\)/.test(pr), 'le pré-rendu arrête le build sur une redirection vers une page absente')
+}
+
 if (ko > 0) process.exit(1)
