@@ -76,6 +76,17 @@ const jour = (iso: string | null) => (iso ? iso.slice(0, 10).split("-").reverse(
 const km = (n: number) => `${n.toLocaleString("fr-FR").replace(/ /g, " ")} km`;
 const slug = (t: string) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").slice(0, 60);
 const DISTRIBUTION = /distribution|courroie|cha[îi]ne/i;
+const REMPLACER_DISTRIBUTION = /^distribution\b|(?:remplacement|changement|remplacer|kit)[^.]{0,40}(?:courroie|distribution)/i;
+// Une action en justice n'est pas une prise en charge du véhicule.
+const PAS_UNE_PRISE = /action collective|actions? judiciaires?|plaintes?|contentieux|motorgate|référé|class action/i;
+const motsSignificatifs = (t: string) => new Set(t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z0-9]+/).filter((w) => w.length >= 4));
+/** Même prise en charge dite deux fois (programme curé et ligne de fiche) :
+ *  au moins 3 mots significatifs communs. */
+function memePrise(a: string, b: string): boolean {
+  const A = motsSignificatifs(a); let n = 0;
+  for (const w of motsSignificatifs(b)) if (A.has(w)) n++;
+  return n >= 3;
+}
 
 /** Date de 1re mise en circulation (ou à défaut le 1er juillet de l'année-modèle). */
 export function dateDepart(premiereImmat: string | null, annee: number | null): string | null {
@@ -141,7 +152,15 @@ export function factureAPrevoir(e: EntreeFacture): FactureAPrevoir {
     });
   }
   entretien.sort((a, b) => Number(DISTRIBUTION.test(b.libelle)) - Number(DISTRIBUTION.test(a.libelle)));
-  lignes.push(...entretien);
+  // Une seule ligne « remplacer la distribution » : le plan et l'annonce la
+  // disent parfois chacun à leur manière.
+  let distributionVue = false;
+  lignes.push(...entretien.filter((l) => {
+    if (!REMPLACER_DISTRIBUTION.test(l.libelle)) return true;
+    if (distributionVue) return false;
+    distributionVue = true;
+    return true;
+  }));
 
   // ---- 2. Défauts connus dont le kilométrage couvre la voiture -----------
   for (const brut of e.pannes) {
@@ -200,7 +219,9 @@ export function factureAPrevoir(e: EntreeFacture): FactureAPrevoir {
     if (!texte || x?.portee === "contexte") continue;
     if (decisionVariante(texte, e.version).statut !== "applicable") continue;
     if (e.nommeUnAutreVehicule?.(texte)) continue;
-    if (lignes.some((l) => l.rubrique === "prise_en_charge" && slug(l.libelle) === slug(texte))) continue;
+    if (PAS_UNE_PRISE.test(texte)) continue;
+    if (lignes.some((l) => l.rubrique === "prise_en_charge" && (slug(l.libelle) === slug(texte) || memePrise(l.libelle, texte)))) continue;
+    const garantie = x?.type === "garantie";
     const url = Array.isArray(x?.urls) && typeof x.urls[0] === "string" ? x.urls[0] : null;
     lignes.push({
       id: `prise-${slug(texte)}`,
@@ -210,8 +231,10 @@ export function factureAPrevoir(e: EntreeFacture): FactureAPrevoir {
       min: null, max: null,
       echeance: x?.periode?.texte ? `période : ${x.periode.texte}` : null,
       source: url ? { libelle: hote(url), url, date: null } : null,
-      phrase_vendeur: `Cette campagne a-t-elle été faite sur le véhicule ? Le réseau du constructeur peut le vérifier avec le numéro de série (VIN).`,
-      justificatif: "Attestation ou facture du passage en atelier pour cette campagne",
+      phrase_vendeur: garantie
+        ? `Le véhicule entre-t-il encore dans cette prise en charge ? Le réseau du constructeur peut le vérifier avec le numéro de série (VIN).`
+        : `Cette campagne a-t-elle été faite sur le véhicule ? Le réseau du constructeur peut le vérifier avec le numéro de série (VIN).`,
+      justificatif: garantie ? "Justificatifs d'entretien exigés par le constructeur" : "Attestation ou facture du passage en atelier pour cette campagne",
     });
   }
 

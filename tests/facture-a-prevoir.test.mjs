@@ -72,6 +72,19 @@ const prises = [
 const fc = factureAPrevoir({ ...base, version: varianteVehicule({ motorisation: '1.5 dCi 65' }), prises, nommeUnAutreVehicule: (t) => nommeUnAutreVehicule(t, clio, catalogue) })
 eq(fc.lignes.filter((l) => l.rubrique === 'prise_en_charge').map((l) => [l.statut, l.libelle.slice(0, 30)]), [['a_verifier', 'Rappel Renault : remplacement ']], 'Clio II : la campagne du Qashqai 110 ch et l’information de contexte sont écartées')
 
+// Doublons et faux amis (vus sur les vraies données du 13 nov.)
+const dbl = factureAPrevoir({ ...base, premiere_immat: '2019-02', programmes: [prog], prises: [
+  { type: 'garantie', texte: 'Extension de garantie Stellantis 10 ans / 175 000 km (courroie et consommation d’huile)', portee: 'france', urls: [presse] },
+  { type: 'campagne', texte: 'Actions judiciaires PureTech : action collective et plaintes', portee: 'france', urls: [presse] },
+] })
+eq(dbl.lignes.filter((l) => l.rubrique === 'prise_en_charge').map((l) => l.libelle), [prog.titre], 'même extension dite deux fois : une ligne ; action en justice : pas une prise en charge')
+const dist = factureAPrevoir({ ...base, cout3ans: { lignes: [
+  { poste: 'entretien_du', libelle: "Distribution — déclarée non faite dans l'annonce", chiffree: false, min: null, max: null, echeance: '', source: null },
+  { poste: 'entretien_du', libelle: 'Remplacement préventif de la courroie de distribution (kit)', chiffree: false, min: null, max: null, echeance: '', source: null },
+  { poste: 'entretien_du', libelle: 'Contrôle visuel de la courroie de distribution', chiffree: false, min: null, max: null, echeance: '', source: null },
+], non_etablies: [] } })
+eq(dist.lignes.filter((l) => l.rubrique === 'entretien').map((l) => l.libelle.slice(0, 20)), ['Distribution — décla', 'Contrôle visuel de l'], 'une seule ligne « remplacer la distribution » ; le contrôle visuel reste')
+
 // Total
 f = factureAPrevoir({ ...base, pannes: [panne({}), panne({ titre: 'Thermostat', km_typique: null, cout_min_eur: 300, cout_max_eur: 400 })] })
 eq([f.total_min, f.total_max], [1150, 1900], 'total : seulement les lignes chiffrées')
