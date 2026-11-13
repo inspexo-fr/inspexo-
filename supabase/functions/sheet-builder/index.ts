@@ -7,6 +7,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getOrCreateDefectSheet, normFamille, refreshProgrammes } from "../_shared/defectSheets.ts";
 import { expandBrand } from "../_shared/brandAliases.ts";
 import { genererPlan } from "../_shared/planBuilder.ts";
+import { verdictIndexationMoteur } from "../_shared/indexation.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
@@ -86,8 +87,25 @@ serve(async (req: Request) => {
     // après une génération réussie).
     const force = body?.mode === "regenerer";
 
+    // SPRINT 24, chantier A — Mode « parties » : fiche construite à partir des
+    // seules parties confirmées par le juge (aucune recherche web). Réservé au
+    // secret d'éval. JAMAIS d'écrasement : une fiche existante est renvoyée
+    // telle quelle (`hit`), et son complément passe par l'admin.
+    // deno-lint-ignore no-explicit-any
+    const parties = body?.mode === "parties" && Array.isArray(body?.parties)
+      ? (body.parties as any[]).slice(0, 30).map((p) => ({
+        texte: String(p?.texte ?? "").slice(0, 600),
+        urls: (Array.isArray(p?.urls) ? p.urls : []).filter((u: unknown): u is string => typeof u === "string" && /^https?:\/\/\S+$/.test(u)).slice(0, 6),
+        extraits: (Array.isArray(p?.extraits) ? p.extraits : []).filter((e: unknown): e is string => typeof e === "string").map((e: string) => e.slice(0, 400)).slice(0, 8),
+      })).filter((p) => p.texte && p.urls.length > 0)
+      : undefined;
+    if (body?.mode === "parties" && (!evalOk || !parties?.length)) {
+      return new Response(JSON.stringify({ error: !evalOk ? "forbidden" : "invalid_input" }), { status: !evalOk ? 403 : 400 });
+    }
+
     const result = await getOrCreateDefectSheet(admin, ANTHROPIC_API_KEY!, {
-      force,
+      force: parties ? false : force,
+      parties,
       marque,
       famille_moteur: famille,
       moteur_label: typeof body?.moteur_label === "string" ? body.moteur_label : null,
@@ -107,6 +125,15 @@ serve(async (req: Request) => {
         pannes: result.sheet?.pannes?.length ?? 0,
         plan_entretien: result.sheet?.plan_entretien?.length ?? 0,
         searches: result.searches,
+        // Mode « parties » : la fiche serait-elle publiée et indexable ? (règle
+        // du 13 nov. 2026, même calcul que les pages /moteur)
+        ...(parties && result.sheet
+          ? { indexation: (() => {
+            const fam = { marque, famille: famille.toUpperCase(), nom_commercial: typeof body?.nom_commercial === "string" ? body.nom_commercial : (result.sheet.moteur_label ?? famille) };
+            const v = verdictIndexationMoteur(fam, result.sheet, []);
+            return { publiee: v.publiee, ...v.resume };
+          })() }
+          : {}),
         cout_eur: Math.round(usd * 0.92 * 10000) / 10000,
       }),
       { headers: { "Content-Type": "application/json" } },

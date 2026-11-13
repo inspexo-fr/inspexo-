@@ -413,3 +413,26 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   **Indexables : 101** (73 au premier passage, 108 avant le chantier).
   CLS /modele/renault/clio-iv : 0,156 → **0,017** (local, mêmes conditions).
   Rappels d'une autre génération écartés (« clio 5 » sur la page Clio IV).
+- **Déploiement Vercel de 9c5ced6 en échec** (13 nov., 11:09 UTC) : pré-rendu
+  de l'accueil en délai dépassé (20 s, première page après le démarrage du
+  navigateur) ; garde-fou du build ⇒ arrêt, production restée sur d0cd47b.
+  Relance du même commit annoncée.
+- **Relance réussie** (Ready en 7 min) : l'échec était passager. En production :
+  CLS /modele/renault/clio-iv **0,017** (médiane de 3 ; 0,156 avant), LCP 608 ms ;
+  sitemap 101 URL.
+
+## Sprint 24, chantier A — fiches depuis les parties confirmées (13 nov. 2026)
+- Méthode validée : aucune recherche web ; le modèle ne reçoit que les parties
+  déclarées « soutenue » par le juge sur une source portante (officiel, presse,
+  éditorial), avec leurs extraits mot pour mot, et ne peut citer QUE ces URL
+  (`restreindreSources`, appliquée avant le seuil de qualité). Plan et
+  programmes vides. Une fiche existante n'est jamais remplacée.
+- Lot 1 (7 moteurs) : Renault R9M, Fiat SDE, VW EA188, VW EA888, VW EA211
+  (1.5 TSI seul), Renault K4M, Renault H5HT. Toyota 1AD/2AD écarté (pas de
+  code de famille sûr pour la recherche par préfixe). H5HT n'a que 3 URL : le
+  seuil de 4 sources le fera probablement échouer.
+- Règle d'arrêt : moins de 5 fiches utiles (publiées ET indexables) sur le lot.
+- Déploiement annoncé : `sheet-builder` (mode « parties », réservé au secret
+  d'éval). Les autres fonctions qui importent `defectSheets.ts` (ajouts sans
+  effet sur leur comportement) seront redéployées au merge.
+- Budget du run : **0,60 €** (estimation 0,56 €), mur du chantier 45 €.
