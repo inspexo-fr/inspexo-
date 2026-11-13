@@ -68,6 +68,7 @@ import { PHOTO_SYSTEM, PHOTO_TOOL, validerConstatsPhoto, type ConstatPhoto } fro
 import { estAppelApi } from "../_shared/apiClients.ts";
 import { deciderStatut } from "../_shared/statutVendeur.ts";
 import { appliquerReglesRappel, QUESTION_RAPPEL_VIN } from "../_shared/rappelsApplicables.ts";
+import { decisionVariante, questionVariante, varianteVehicule } from "../_shared/variantes.ts";
 // Affichage seulement : jamais lu par la note (tests/independance-score.test.mjs).
 import { prisesAffichables } from "../_shared/prisesEnCharge.ts";
 // SPRINT 23 lot 2 — signaux d'arnaque : AFFICHAGE SEULEMENT, jamais dans les faits du barème.
@@ -1693,6 +1694,27 @@ serve(async (req: Request) => {
       }
     }
 
+    // SPRINT 24 (décision d'Utku du 13 nov. 2026) — une panne qui nomme une
+    // CYLINDRÉE ou une PUISSANCE différente de celle du véhicule ne
+    // s'applique pas : retirée du catalogue AVANT le modèle, donc ni dans le
+    // score, ni dans le dossier. Version du véhicule inconnue ⇒ question au
+    // vendeur, sans effet sur la note (`_shared/variantes.ts`).
+    const questionsVariante: string[] = [];
+    {
+      const vv = varianteVehicule({ cylindree: moteur.cylindree, motorisation: vehiculePublic.motorisation ?? moteur.label });
+      const touchees: Array<Record<string, unknown>> = [];
+      catalogue = catalogue.filter((e) => {
+        const d = decisionVariante(`${e.titre} ${e.symptome ?? ""}`, vv);
+        if (d.statut === "applicable") return true;
+        touchees.push({ ref: e.ref, titre: e.titre.slice(0, 120), statut: d.statut, motif: d.motif });
+        if (d.statut === "question" && questionsVariante.length < 2) questionsVariante.push(questionVariante(e.titre, d.motif ?? ""));
+        return false;
+      });
+      if (touchees.length > 0) {
+        await admin.from("events").insert(touchees.map((x) => ({ name: "panne_variante_ecartee", props_json: x })));
+      }
+    }
+
     // ---- Constats photo : validation serveur stricte ----
     let constatsPhoto: ConstatPhoto[] = [];
     let kmCompteur: number | null = null;
@@ -2801,6 +2823,9 @@ serve(async (req: Request) => {
     }
     // Un rappel sans source portante n'est pas affiché : il devient une question
     // (placée avant la coupe : le message vendeur ne reprend que 8 questions).
+    for (const q of questionsVariante) {
+      if (!questions.includes(q)) questions.splice(Math.min(4, questions.length), 0, q);
+    }
     if (rappelSansSourcePortante && !questions.includes(QUESTION_RAPPEL_VIN)) {
       questions.splice(Math.min(4, questions.length), 0, QUESTION_RAPPEL_VIN);
     }

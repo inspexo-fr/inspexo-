@@ -99,7 +99,11 @@
 // (opération critique déclarée non faite), 65 (aucune information
 // d'entretien) — `_shared/faitsVendeur.ts`. Un fait seulement déclaré ne lève
 // rien. Le calcul du barème ne change pas : sans pièce, score identique.
-export const BAREME_VERSION = "11.16";
+// 11.17 (sprint 24) : une panne qui nomme une cylindrée ou une puissance
+// différente de celle du véhicule ne s'applique pas (catalogue filtré avant le
+// modèle, `_shared/variantes.ts`) ; version inconnue ⇒ question au vendeur.
+// Le calcul du barème ne change pas ; ce qui entre dans le catalogue change.
+export const BAREME_VERSION = "11.17";
 
 export type FaitsAxes = {
   annee_courante: number;

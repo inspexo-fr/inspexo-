@@ -110,6 +110,7 @@ export default function ModelePage() {
                   )}
                   <p style={{ fontSize: 14, lineHeight: 1.6, marginTop: 8 }}>
                     {s.pannes_non_portees > 0 && <>{s.pannes_non_portees} autre{s.pannes_non_portees > 1 ? 's' : ''} signalement{s.pannes_non_portees > 1 ? 's' : ''} sans source indépendante. </>}
+                    {s.pannes_autre_version > 0 && <>{s.pannes_autre_version} défaut{s.pannes_autre_version > 1 ? 's' : ''} d'une autre version de ce moteur (cylindrée ou puissance) non repris ici. </>}
                     {lienMoteur
                       ? <Link to={lienMoteur}>Symptômes, kilométrages et coûts sur la page du {s.nom_commercial}</Link>
                       : 'La fiche complète de ce moteur n\'est pas encore publiée.'}

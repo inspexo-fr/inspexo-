@@ -75,7 +75,9 @@ eq(composerPage(clio, [k9kb], [...cat, serie, expert]).sections[0].prises.length
 
 // La page ne recopie pas les fiches : aucun symptôme, coût ou kilométrage
 const src = fs.readFileSync(new URL('../supabase/functions/_shared/modeles.ts', import.meta.url), 'utf8')
-ok(!/symptome|cout_indicatif|km_typique/.test(src), 'le module ne reprend ni symptômes, ni coûts, ni kilométrages (page /moteur = référence)')
+const typePanne = src.slice(src.indexOf('export type PanneModele'), src.indexOf('\n', src.indexOf('export type PanneModele')))
+const pousse = src.slice(src.indexOf('pannes.push({'), src.indexOf('});', src.indexOf('pannes.push({')))
+ok(typePanne.length > 0 && pousse.length > 0 && !/symptome|cout|km/.test(typePanne + pousse), 'la page ne restitue ni symptômes, ni coûts, ni kilométrages (page /moteur = référence)')
 ok(/import \{ sourcesPortentLEntree, urlsDeLaPanne \} from "\.\/atlasSource\.ts"/.test(src), 'même classement des sources que le score (aucune seconde liste d’hôtes)')
 console.log(`\n${ok_} PASS, ${ko} FAIL`)
 if (ko > 0) process.exit(1)

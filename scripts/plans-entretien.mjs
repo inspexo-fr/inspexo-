@@ -40,6 +40,15 @@ const PILOTE = [
   { marque: 'Peugeot', famille: 'EP6' },
 ]
 
+// SPRINT 24 — `--familles Marque:FAMILLE,…` joue un autre lot que le pilote,
+// et `--seuil N` fixe sa règle d'arrêt (moteurs avec au moins une échéance
+// établie). Sans ces options, le comportement du pilote est inchangé.
+const LOT = flag('--familles')
+  ? flag('--familles').split(',').map((x) => { const [marque, famille] = x.split(':'); return { marque, famille } }).filter((x) => x.marque && x.famille)
+  : PILOTE
+const SEUIL = Number(flag('--seuil', String(SEUIL_PILOTE))) || SEUIL_PILOTE
+const NOM_LOT = flag('--familles') ? 'LOT' : 'LOT PILOTE'
+
 const env = {}
 for (const l of (existsSync('.env.local') ? readFileSync('.env.local', 'utf8') : '').split('\n')) {
   const m = l.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/)
@@ -104,10 +113,10 @@ if (RESTAURER) {
 
 // ── Estimation ──────────────────────────────────────────────────────────────
 if (ESTIMER) {
-  console.log(`\nLOT PILOTE — ${PILOTE.length} moteurs, ${COUT_MOTEUR_ESTIME.toFixed(2)} € estimés chacun au plus`)
-  for (const p of PILOTE) console.log(`  ${p.marque} ${p.famille}`)
-  console.log(`  ATTENDU : jusqu’à ${(PILOTE.length * COUT_MOTEUR_ESTIME).toFixed(2)} € · mur ${BUDGET.toFixed(2)} €`)
-  console.log(`  Arrêt si moins de ${SEUIL_PILOTE} moteurs sur ${PILOTE.length} sortent avec une échéance établie.`)
+  console.log(`\n${NOM_LOT} — ${LOT.length} moteurs, ${COUT_MOTEUR_ESTIME.toFixed(2)} € estimés chacun au plus`)
+  for (const p of LOT) console.log(`  ${p.marque} ${p.famille}`)
+  console.log(`  ATTENDU : jusqu’à ${(LOT.length * COUT_MOTEUR_ESTIME).toFixed(2)} € · mur ${BUDGET.toFixed(2)} €`)
+  console.log(`  Arrêt si moins de ${SEUIL} moteur(s) sur ${LOT.length} sortent avec une échéance établie.`)
   process.exit(0)
 }
 
@@ -119,8 +128,8 @@ const journal = (existsSync(JOURNAL) ? JSON.parse(readFileSync(JOURNAL, 'utf8'))
 const faits = new Set(journal.map((j) => `${j.marque}|${j.famille}`))
 let coutRun = 0, joues = 0
 
-console.log(`\nLOT PILOTE — mur ${BUDGET.toFixed(2)} € · cumul déjà dépensé ${cumul.toFixed(2)} €\n`)
-for (const p of PILOTE) {
+console.log(`\n${NOM_LOT} — mur ${BUDGET.toFixed(2)} € · cumul déjà dépensé ${cumul.toFixed(2)} €\n`)
+for (const p of LOT) {
   if (faits.has(`${p.marque}|${p.famille}`)) { console.log(`  déjà joué   ${p.marque} ${p.famille}`); continue }
   const mur = murAtteint({ coutRun, casJoues: joues, coutSession: cumul + coutRun, budgetRun: BUDGET, plafondSession: PLAFOND_CUMUL, estime: COUT_MOTEUR_ESTIME })
   if (mur) { console.log(`\n⏸ mur atteint (${mur}) avant ${p.marque} ${p.famille} : non joué.`); break }
@@ -160,10 +169,12 @@ for (const p of PILOTE) {
       (r.operations.length ? `\n              ${r.operations.map((o) => `${o.operation} (${[o.intervalle_km && `${o.intervalle_km} km`, o.intervalle_annees && `${o.intervalle_annees} ans`].filter(Boolean).join(' / ')})`).join(' ; ')}` : ''))
 }
 
-const reussis = journal.filter((j) => !j.erreur && (j.operations ?? []).length > 0).length
-const tentes = journal.length
+// La règle d'arrêt porte sur CE lot, pas sur tout le journal.
+const duLot = journal.filter((j) => LOT.some((p) => p.marque === j.marque && p.famille === j.famille))
+const reussis = duLot.filter((j) => !j.erreur && (j.operations ?? []).length > 0).length
+const tentes = duLot.length
 console.log(`\n— ${reussis} moteur(s) sur ${tentes} avec au moins une échéance établie · coût du run ${coutRun.toFixed(3)} € / ${BUDGET.toFixed(2)} €`)
-if (tentes >= PILOTE.length && reussis < SEUIL_PILOTE) {
-  console.log(`⏹ RÈGLE D’ARRÊT : moins de ${SEUIL_PILOTE} sur ${PILOTE.length}. La campagne ne va pas plus loin.`)
+if (tentes >= LOT.length && reussis < SEUIL) {
+  console.log(`⏹ RÈGLE D’ARRÊT : moins de ${SEUIL} sur ${LOT.length}. La campagne ne va pas plus loin.`)
 }
 console.log('  Écriture : node scripts/plans-entretien.mjs --appliquer (jeton admin).')

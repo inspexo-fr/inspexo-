@@ -17,6 +17,7 @@
 import { sourcesPortentLEntree, urlsDeLaPanne } from "./atlasSource.ts";
 import { sanitizePrisesEnCharge, MENTION_CONTEXTE, MENTION_FRANCE } from "./prisesEnCharge.ts";
 import { titreSansRappelOfficiel } from "./rappelsApplicables.ts";
+import { decisionVariante, varianteVehicule } from "./variantes.ts";
 
 export const SEUIL_PANNES_MODELE = 3;
 
@@ -139,6 +140,9 @@ export type SectionFamille = {
   page_moteur_publiee: boolean;
   pannes: PanneModele[];
   pannes_non_portees: number;
+  /** Pannes d'une autre cylindrée ou puissance que celle de la famille, ou
+   *  qu'on ne peut pas départager (règle du sprint 24) : jamais montrées. */
+  pannes_autre_version: number;
   prises: Array<{ type: string; texte: string; periode: string; portee: "france" | "contexte"; mention: string; urls: string[] }>;
   maj: string | null;
 };
@@ -196,11 +200,14 @@ export function composerPage(
     const brutes = Array.isArray(fiche.pannes) ? fiche.pannes : [];
     const pannes: PanneModele[] = [];
     let nonPortees = 0;
+    let autreVersion = 0;
+    const versionFamille = varianteVehicule({ motorisation: fam.nom_commercial });
     for (const p of brutes) {
       const urls = urlsDeLaPanne(p);
       // deno-lint-ignore no-explicit-any
       const q = p as any;
       if (nommeUnAutreVehicule(String(q?.titre ?? ""), page, catalogue)) continue;
+      if (decisionVariante(`${q?.titre ?? ""} ${q?.symptomes ?? q?.symptome ?? ""}`, versionFamille).statut !== "applicable") { autreVersion++; continue; }
       if (!sourcesPortentLEntree(urls)) { nonPortees++; continue; }
       pannes.push({
         titre: titreSansRappelOfficiel(q?.titre).slice(0, 200),
@@ -228,6 +235,7 @@ export function composerPage(
       page_moteur_publiee: fichePubliee(fiche),
       pannes,
       pannes_non_portees: nonPortees,
+      pannes_autre_version: autreVersion,
       prises,
       maj: fiche.updated_at ?? null,
     });
