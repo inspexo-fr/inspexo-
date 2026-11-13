@@ -482,3 +482,7 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
 - Déploiement annoncé : `admin-defect-sheets` (opération ajoutée). Script :
   `scripts/session-jeton-sprint24.mjs` (simulation par défaut, `--ecrire`).
   Après écriture : 4 références × 1, mur 0,45 €.
+- Merge de `sprint24-toyota-ad` (feu vert d'Utku) : redéploiement annoncé de
+  `admin-defect-sheets`, `cout-3ans`, `modele-public`, `moteur-public`,
+  `score` (table à 50 familles, FIREFLY 70, résolveur avec codes déclarés,
+  sans effet sur le score). Puis panne onduleur soumise au juge avant écriture.
