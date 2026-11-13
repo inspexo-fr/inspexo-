@@ -486,3 +486,16 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   `admin-defect-sheets`, `cout-3ans`, `modele-public`, `moteur-public`,
   `score` (table à 50 familles, FIREFLY 70, résolveur avec codes déclarés,
   sans effet sur le score). Puis panne onduleur soumise au juge avant écriture.
+- Fait : merge b45546a, 5 fonctions déployées, main = production (aucun écart).
+- Panne onduleur soumise au juge (`sources-externes`, mode « juger », même
+  juge que /fiabilite) avec sa page Prius 3 : mur **0,10 €**. Non confirmée ⇒
+  non écrite.
+- **Juge** : onduleur Prius 3 « soutenue » 2 voix sur 2 (0,031 €).
+- **Session de jeton faite** (sauvegarde `~/inspexo-backups/fiches-session-sprint24-2026-11-13T17-50-04-554Z.json`) :
+  FIREFLY — 2 pannes retirées (1.0 T3 120 ch, 1.3 T4 150 ch), 1 restante ;
+  la fiche n'a plus les 3 pannes exigées pour une page : /moteur FIREFLY
+  n'est plus publiée (elle était déjà hors index). 2ZR-FXE — source Auris 2
+  ajoutée, panne onduleur ajoutée : 7 pannes, 2 portées, toujours non
+  indexable (seuil 3). Jeton retiré de `.env.local`.
+- **Références inchangées** : S7 rouge 39, 308 orange 55, Mercedes vert 73,
+  Clio II orange 51 (0,366 €). Sprint ≈ 4,86 € / 85 €.
