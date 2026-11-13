@@ -28,7 +28,7 @@ const cas = (p) => resoudreFamille({
 
 // ---------------------------------------------------------------------------
 titre('La table est lisible et complète')
-eq(FAMILLES.length, 48, '48 familles')
+eq(FAMILLES.length, 50, '50 familles (R9M et EA888 ajoutées le 13 nov. 2026)')
 ok(FAMILLES.every((f) => f.famille && f.marque && Array.isArray(f.modeles) && f.debut > 1990 && f.derniere_attestee >= f.debut),
   'chaque entrée porte marque, famille, modèles et des bornes cohérentes')
 

@@ -82,6 +82,9 @@ const S = {
   DV5_FIABILITE: 'https://www.fiches-auto.fr/articles-auto/chiffres-fiabilite-diesel/s-2526-fiabilite-15-bluehdi.php',
   DV5_PRISE_EN_CHARGE: 'https://www.quechoisir.org/actualite-moteur-diesel-1-5-bluehdi-de-stellantis-la-grogne-monte-n132914/',
   DIESELS_FIABILITE: 'https://www.fiches-auto.fr/articles-auto/enquete-fiabilite/s-1192-diesels-les-moins-fiables.php',
+  // Sprint 24, chantier A (13 nov. 2026) : code lu sur la page le jour même.
+  RENAULT_R: 'https://en.wikipedia.org/wiki/Renault_R-Type_engine',
+  VW_EA888: 'https://de.wikipedia.org/wiki/VW_EA888',
 }
 
 const brut = [
@@ -109,6 +112,11 @@ const brut = [
   { marque: 'Renault', nom_commercial: '1.6 SCe', famille: 'H4M',
     modeles: ['Renault Captur', 'Renault Mégane IV', 'Dacia Duster II', 'Nissan Qashqai'],
     millesimes: '2004-2022', source_code: S.NISSAN_HR },
+  // R9M : la page cite le Scénic (2011), la Mégane (2012), le Kadjar (2015),
+  // l'Espace (2015) et le Talisman (2016) ; remplacé par le R9N en 2018.
+  { marque: 'Renault', nom_commercial: '1.6 dCi', famille: 'R9M',
+    modeles: ['Renault Scénic III', 'Renault Mégane III', 'Renault Kadjar', 'Renault Espace V', 'Renault Talisman'],
+    millesimes: '2011-2018', source_code: S.RENAULT_R },
   { marque: 'Renault', nom_commercial: '1.6 16V', famille: 'K4M',
     modeles: ['Renault Mégane II/III', 'Dacia Duster I', 'Renault Kangoo II', 'Dacia Logan'],
     millesimes: '1999-2016', source_code: S.RENAULT_K },
@@ -180,6 +188,11 @@ const brut = [
     modeles: ['VW Golf VI', 'VW Passat B7', 'Audi A3 8P', 'Skoda Octavia II', 'Seat Ibiza IV'],
     millesimes: '2008-2015', source_code: S.DIESELGATE,
     note: 'Famille visée par le scandale des émissions : 948 064 véhicules concernés en France.' },
+  // EA888 : depuis 2007, GTI à partir de la Golf VI, Audi A3, A4, A5, Q5
+  // (page citée). Les années de fin ne sont pas publiées : 2022 = relevé.
+  { marque: 'Volkswagen', nom_commercial: '1.8 et 2.0 TSI', famille: 'EA888',
+    modeles: ['VW Golf VI', 'VW Golf VII', 'Audi A3', 'Audi A4', 'Audi Q5'],
+    millesimes: '2007-2022', source_code: S.VW_EA888 },
   { marque: 'Audi', nom_commercial: '4.0 V8 TFSI', famille: 'EA824',
     modeles: ['Audi S6 C7', 'Audi S7 C7', 'Audi S8 D4', 'Audi RS6 C7'],
     millesimes: '2012-2018', source_code: S.AUDI_NHTSA },
@@ -292,8 +305,9 @@ export function familleParCode(marque, code) {
 //   de 1,4 l. Les articles de fiabilité décrivent bien le 1.4 HDi mais sans
 //   jamais nommer son code interne. Famille écartée tant que ce lien n'est
 //   pas établi. (DV6 et DV5 sont désormais couverts : voir plus haut.)
-// • EA211 (1.0/1.2/1.4/1.5 TSI) et EA888 (1.8/2.0 TSI) : la liste Wikipedia
-//   des moteurs du groupe VW ne couvre que les diesels.
+// • EA211 (1.0/1.2/1.4/1.5 TSI) : code attesté (de.wikipedia, VW EA211 et
+//   EA211 evo), mais la fiche du 1.5 TSI n'a pas atteint le seuil de 4 sources
+//   (chantier A, 13 nov. 2026) : pas d'entrée sans fiche. EA888 : ajouté.
 // • Codes Opel propres (B14XFT, B16DTH…), codes internes Fiat/Alfa.
 // • Codes de boîtes de vitesses (DQ200, DQ381, EAT8, DC4…) : aucun attesté.
 //   Le filtre serveur refuse déjà toute panne nommant un code de boîte qui

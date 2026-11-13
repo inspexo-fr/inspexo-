@@ -1,0 +1,113 @@
+[
+ {
+  "marque": "Renault",
+  "famille": "R9M",
+  "nom": "1.6 dCi",
+  "parties": 12,
+  "status": "created",
+  "pannes": 6,
+  "indexation": {
+   "publiee": true,
+   "indexable": true,
+   "n_portees": 6,
+   "n_prises_datees": 0,
+   "n_sources": 4,
+   "pannes_autre_version": 0,
+   "canonique": null,
+   "maj": "2026-11-13T12:37:10.874+00:00"
+  },
+  "utile": true,
+  "cout_eur": 0.0776,
+  "le": "2026-11-13T12:37:11.482Z"
+ },
+ {
+  "marque": "Fiat",
+  "famille": "SDE",
+  "nom": "1.3 Multijet",
+  "parties": 9,
+  "status": "created",
+  "pannes": 5,
+  "indexation": {
+   "publiee": true,
+   "indexable": true,
+   "n_portees": 3,
+   "n_prises_datees": 0,
+   "n_sources": 4,
+   "pannes_autre_version": 2,
+   "canonique": null,
+   "maj": "2026-11-13T12:37:32.8+00:00"
+  },
+  "utile": true,
+  "cout_eur": 0.0459,
+  "le": "2026-11-13T12:37:33.472Z"
+ },
+ {
+  "marque": "Volkswagen",
+  "famille": "EA188",
+  "nom": "1.9 et 2.0 TDI PD",
+  "parties": 15,
+  "status": "failed",
+  "pannes": 0,
+  "indexation": null,
+  "utile": false,
+  "cout_eur": 0.0652,
+  "le": "2026-11-13T12:38:02.098Z"
+ },
+ {
+  "marque": "Volkswagen",
+  "famille": "EA888",
+  "nom": "1.8 et 2.0 TSI",
+  "parties": 17,
+  "status": "created",
+  "pannes": 5,
+  "indexation": {
+   "publiee": true,
+   "indexable": true,
+   "n_portees": 5,
+   "n_prises_datees": 0,
+   "n_sources": 5,
+   "pannes_autre_version": 0,
+   "canonique": null,
+   "maj": "2026-11-13T12:38:34.155+00:00"
+  },
+  "utile": true,
+  "cout_eur": 0.0725,
+  "le": "2026-11-13T12:38:35.035Z"
+ },
+ {
+  "marque": "Volkswagen",
+  "famille": "EA211",
+  "nom": "1.5 TSI",
+  "parties": 4,
+  "status": "failed",
+  "pannes": 0,
+  "indexation": null,
+  "utile": false,
+  "cout_eur": 0.0364,
+  "le": "2026-11-13T12:38:51.374Z"
+ },
+ {
+  "marque": "Renault",
+  "famille": "K4M",
+  "nom": "1.6 16V",
+  "parties": 6,
+  "status": "failed",
+  "pannes": 0,
+  "indexation": null,
+  "utile": false,
+  "cout_eur": 0.031,
+  "le": "2026-11-13T12:39:02.959Z"
+ },
+ {
+  "marque": "Renault",
+  "famille": "H5HT",
+  "nom": "1.3 TCe",
+  "parties": 12,
+  "status": "failed",
+  "pannes": 0,
+  "indexation": null,
+  "utile": false,
+  "cout_eur": 0.0516,
+  "le": "2026-11-13T12:39:22.954Z"
+ }
+]
