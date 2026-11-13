@@ -329,3 +329,6 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   FIREFLY sur 3 d'une autre version) ⇒ non publiées.
 - **Déploiement annoncé** : fonctions important `bareme.ts`, `variantes.ts`
   ou `modeles.ts`. **4 références × 1 : ≈ 0,37 €, mur 0,45 €.**
+- **Fait** : 7 fonctions déployées ; **références S7 39 · 308 55 · Mercedes 73
+  · Clio II 51, conformes à l'annonce (0,360 €)**. Pages Fiat 500 Hybrid et
+  Panda Hybrid : 404 (sous le seuil). Total sprint : **3,10 € / 25 €**.
