@@ -36,7 +36,7 @@ const FONCTIONS = join(RACINE, 'supabase', 'functions')
 // les liens de désinscription déjà envoyés.
 // Source : CLAUDE.md (sprints 7, 8 et 3.1). Si un nom disparaît du dépôt, le
 // script s'arrête : cette liste ne doit pas pourrir en silence.
-const SANS_VERIFICATION_JWT = ['pass-webhook', 'inspection-webhook', 'desinscription']
+const SANS_VERIFICATION_JWT = ['pass-webhook', 'inspection-webhook', 'desinscription', 'pro-webhook']
 
 const args = process.argv.slice(2)
 const JUSTE_LA_COMMANDE = args.includes('--commande')

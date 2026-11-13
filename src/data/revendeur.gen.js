@@ -151,6 +151,13 @@ export function prixRevente(comparables, v, p, interditZfe = false) {
         if (kmMedian != null)
             ajustement = Math.round(pente * (v.km - kmMedian));
     }
+    return reventeDepuisBase(med, comparables.length, ajustement, pente, p, interditZfe);
+}
+/** Fin COMMUNE du calcul : base = médiane + ajustement kilométrique, moins la
+ *  marge que l'acheteur final négociera, moins la décote ZFE. Partagée par
+ *  `prixRevente` (comparables de la recherche) et `prixReventeDepuisMarche`
+ *  (relevé agrégé) : un seul calcul, deux sources. */
+function reventeDepuisBase(med, n, ajustement, pente, p, interditZfe) {
     const base = med + ajustement;
     const retrait = Math.round(base * (p.marge_negociation_pct / 100));
     const apresNego = base - retrait;
@@ -158,12 +165,20 @@ export function prixRevente(comparables, v, p, interditZfe = false) {
     return {
         valeur: Math.max(0, apresNego - decote),
         mediane_observee: med,
-        nb_comparables: comparables.length,
+        nb_comparables: n,
         ajustement_km_eur: ajustement,
         retrait_negociation_eur: retrait,
         decote_zfe_eur: decote,
         pente_eur_par_km: pente,
     };
+}
+/** SPRINT 24 lot 3 — prix de revente réaliste depuis le RELEVÉ AGRÉGÉ (seuil
+ *  15, `referencePrix` de marche.ts), pour le contrôle d'entrée en stock où il
+ *  n'y a pas de recherche. `null` sous le seuil : pas de plafond. */
+export function prixReventeDepuisMarche(ref, seuil, p, interditZfe = false) {
+    if (!(ref.n >= seuil) || !(ref.mediane > 0))
+        return null;
+    return reventeDepuisBase(ref.mediane, ref.n, ref.ajustement_eur ?? 0, null, p, interditZfe);
 }
 /** PRIX D'ACHAT MAXIMUM POUR LA MARGE VISÉE.
  *

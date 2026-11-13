@@ -368,6 +368,7 @@ Allow: /
 Disallow: /a/
 Disallow: /dossier
 Disallow: /admin
+Disallow: /stock
 Disallow: /dashboard
 Disallow: /expert
 

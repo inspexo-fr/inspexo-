@@ -660,6 +660,35 @@ export default function PolitiqueConfidentialite() {
             <li>Chaque e-mail contient un lien de désinscription en un clic&nbsp;; les alertes se coupent aussi depuis le dossier.</li>
           </ul>
 
+          <h2 className="legal-h2">6 septdecies. Contrôle d'entrée en stock (formule pro)</h2>
+          <p className="legal-p">
+            Cet outil, réservé aux professionnels abonnés à la formule pro, calcule pour un véhicule sans annonce
+            les défauts confirmés, la facture à prévoir, le risque de retour et un prix d'achat plafond.
+          </p>
+          <ul className="legal-ul">
+            <li>
+              <strong>Photo de carte grise</strong>&nbsp;: elle est transmise à notre prestataire d'analyse
+              (Anthropic) puis oubliée — <strong>jamais stockée</strong> par Inspexo. Seuls en sont lus la marque,
+              le type, la dénomination commerciale, la date de 1re immatriculation, le numéro de série, l'énergie
+              et la puissance. Le <strong>nom</strong>, l'<strong>adresse</strong> du titulaire et le numéro
+              d'immatriculation ne sont <strong>jamais</strong> lus ni conservés.
+            </li>
+            <li>
+              Le résultat (et le tri d'un lot) est calculé à la demande et rendu au seul professionnel qui l'a
+              demandé&nbsp;: il n'est ni enregistré ni publié, et rien n'est remis à un acheteur. L'export CSV est
+              composé sur votre appareil.
+            </li>
+            <li>
+              Pour limiter les abus, chaque lecture de carte grise laisse une trace technique (nom de l'opération,
+              empreinte salée de l'adresse IP, date), sans aucun contenu du document.
+            </li>
+            <li>
+              <strong>Abonnement</strong>&nbsp;: nous conservons l'email du compte, le SIRET, les identifiants
+              Stripe de l'abonnement, son statut et sa date de fin, pour la durée de l'abonnement puis le temps
+              des obligations comptables. Le paiement est traité par Stripe&nbsp;; nous ne voyons jamais la carte.
+            </li>
+          </ul>
+
           <h2 className="legal-h2">7. Vos droits</h2>
           <p className="legal-p">Conformément au RGPD, vous disposez des droits suivants :</p>
           <ul className="legal-ul">

@@ -52,8 +52,23 @@ d'engagement, avec un préavis de **trente jours**.
 
 ## 3. Facturation et paiement
 
-3.1. La facturation est **mensuelle, à terme échu**, sur la base du quota
-souscrit et des éventuels avenants.
+3.1. **Formule pro par abonnement** (contrôle d'entrée en stock, annexe B) :
+l'abonnement est **payé d'avance, en début de période**, par carte bancaire via
+notre prestataire de paiement Stripe. Le premier paiement intervient à la
+souscription ; les suivants sont prélevés automatiquement à chaque date
+anniversaire mensuelle. La facture correspondante est émise et mise à
+disposition au moment de chaque paiement. Les articles 3.2 et 3.3 ne
+s'appliquent pas à l'abonnement, réglé à la souscription puis à chaque
+échéance.
+
+3.1 bis. **API sur devis** : la facturation est **mensuelle, à terme échu**, sur
+la base du quota souscrit et des éventuels avenants.
+
+> ⚠️ Note pour l'avocat (13 nov. 2026) : deux régimes coexistent désormais —
+> abonnement payé d'avance (Stripe, 3.1) et API à terme échu (3.1 bis). À
+> valider : l'articulation avec les délais de L441-10 (3.2), la mention des
+> pénalités (art. 4) pour un abonnement prélevé d'avance, et la suspension
+> d'accès en cas d'échec de prélèvement (annexe B.3).
 
 3.2. **Délai de paiement : trente jours** à compter de la date d'émission de la
 facture.
@@ -168,3 +183,36 @@ de défendeurs ou d'appel en garantie.
       client, et une trésorerie en moins pour nous.
 - [ ] Mettre en place le rappel des mentions de l'art. L441-9 sur le gabarit
       de facture avant la première facturation.
+
+
+---
+
+## Annexe B — Formule pro par abonnement (contrôle d'entrée en stock) — BROUILLON
+
+> Ajoutée le 13 nov. 2026 pour préparer la vente, **non publiée, non active**.
+> Article 3.1 aligné le 13 nov. 2026 (abonnement payé d'avance via Stripe) ;
+> l'API sur devis reste à terme échu (3.1 bis). Note pour l'avocat conservée
+> sous l'article 3.1.
+
+B.1. **Objet.** Accès, pour un professionnel identifié par son SIRET, à l'outil
+de contrôle d'entrée en stock : défauts confirmés par une source indépendante,
+contrôles sur place, facture à prévoir, risque de retour sur 12 mois, prix
+d'achat plafond, tri de lot (20 véhicules au plus par tri), export CSV.
+
+B.2. **Prix.** `[MONTANT MENSUEL HT À FIXER]`, TVA en sus, prélevé chaque mois
+par carte via Stripe, à terme à échoir. Le prix en vigueur est celui affiché au
+moment de la souscription.
+
+B.3. **Durée et résiliation.** Abonnement mensuel sans engagement, résiliable
+à tout moment ; la résiliation prend effet à la fin de la période payée. Un
+défaut de paiement suspend l'accès jusqu'à régularisation.
+
+B.4. **Nature des résultats.** Les montants sont des prix observés et des coûts
+publiés, combinés par une soustraction affichée ligne par ligne. Ce n'est ni
+une détermination de la valeur d'un véhicule (art. L326-4 du code de la route),
+ni une expertise, ni une garantie de revente. Les résultats sont réservés au
+professionnel abonné et ne doivent pas être remis à un acheteur final comme
+une évaluation du véhicule.
+
+B.5. **Données.** Photo de carte grise jamais stockée ; nom et adresse du
+titulaire jamais lus (politique de confidentialité, section 6 septdecies).

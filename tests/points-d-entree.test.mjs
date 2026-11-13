@@ -56,7 +56,7 @@ let controlees = 0
 // (`constructEventAsync(corps, signature, secret)`). Lire le corps d'abord est
 // donc la seule façon de faire. L'invariant qui les concerne est différent et
 // il est contrôlé plus bas : AUCUN effet de bord avant la signature.
-const WEBHOOKS = new Set(['pass-webhook', 'inspection-webhook'])
+const WEBHOOKS = new Set(['pass-webhook', 'inspection-webhook', 'pro-webhook'])
 for (const f of fonctions) {
   const s = source(f)
   if (SANS_GARDE_ASSUME.has(f) || WEBHOOKS.has(f)) continue
@@ -84,7 +84,7 @@ for (const f of WEBHOOKS) {
     `${f} : rien n'est écrit, envoyé ni appelé avant la vérification de signature`,
     `signature à ${iSignature}, premier effet à ${iPremierEffet}`)
   // Et le secret doit venir de l'environnement, jamais du code.
-  ok(/Deno\.env\.get\("(?:PASS|INSPECTION)_WEBHOOK_SECRET"\)/.test(s),
+  ok(/Deno\.env\.get\("(?:PASS|INSPECTION|PRO)_WEBHOOK_SECRET"\)/.test(s),
     `${f} : le secret de signature vient des variables d'environnement`)
 }
 
