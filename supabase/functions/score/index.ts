@@ -69,6 +69,10 @@ import { estAppelApi } from "../_shared/apiClients.ts";
 import { deciderStatut } from "../_shared/statutVendeur.ts";
 import { appliquerReglesRappel, QUESTION_RAPPEL_VIN } from "../_shared/rappelsApplicables.ts";
 import { decisionVariante, questionVariante, varianteVehicule } from "../_shared/variantes.ts";
+import { indexerModeles, nommeUnAutreVehicule, type FamilleMoteur } from "../_shared/modeles.ts";
+import TABLE_FAMILLES from "../_shared/famillesMoteur.json" with { type: "json" };
+// Noms des véhicules connus, pour écarter une prise en charge qui en nomme un autre.
+const CATALOGUE_VEHICULES = indexerModeles((TABLE_FAMILLES as { familles: FamilleMoteur[] }).familles).map((p) => ({ marque: p.marque, modele: p.modele }));
 // Affichage seulement : jamais lu par la note (tests/independance-score.test.mjs).
 import { prisesAffichables } from "../_shared/prisesEnCharge.ts";
 // SPRINT 23 lot 2 — signaux d'arnaque : AFFICHAGE SEULEMENT, jamais dans les faits du barème.
@@ -3708,7 +3712,13 @@ serve(async (req: Request) => {
         cache: sheetResult.cacheStatus,
       },
       // SPRINT 23 (f) — prises en charge connues du moteur, AFFICHAGE SEULEMENT.
-      prises_en_charge: prisesAffichables(sheet?.prises_en_charge ?? [], v.annee_modele ?? null),
+      // SPRINT 24 — une prise en charge qui nomme une autre version (cylindrée,
+      // puissance) ou un autre véhicule n'est pas affichée sur CE dossier.
+      // Affichage seul : `prisesEnCharge` reste hors du chemin de notation.
+      prises_en_charge: prisesAffichables(sheet?.prises_en_charge ?? [], v.annee_modele ?? null).filter((x) =>
+        decisionVariante(x.texte, varianteVehicule({ cylindree: moteur.cylindree, motorisation: vehiculePublic.motorisation ?? moteur.label })).statut === "applicable" &&
+        !nommeUnAutreVehicule(x.texte, { marque: String(vehiculePublic.marque ?? ""), modele: String(vehiculePublic.modele ?? ""), generation: null, slug_marque: "", slug: "", familles: [] }, CATALOGUE_VEHICULES)
+      ),
       critique: critiqueApplied
         ? { total: claims.length, supprimees: dropped.length }
         : { total: claims.length, supprimees: 0, indisponible: true },

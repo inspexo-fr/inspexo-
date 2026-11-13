@@ -310,7 +310,9 @@ titre('5. Prises en charge : affichage seulement (sprint 23 f, décision du 11 n
   // Dans score : exactement l'import et la ligne du résultat affiché.
   const lignesCode = (src) => src.split('\n').filter((l) => PEC.test(l) && !/^\s*\/\//.test(l))
   const autorisee = (l) => /^import \{ prisesAffichables \} from "\.\.\/_shared\/prisesEnCharge\.ts";$/.test(l.trim()) ||
-    /^prises_en_charge: prisesAffichables\(sheet\?\.prises_en_charge \?\? \[\], v\.annee_modele \?\? null\),$/.test(l.trim())
+    // Sprint 24 : la même ligne, filtrée (autre version, autre véhicule) — elle
+    // alimente toujours le seul champ affiché `prises_en_charge`.
+    /^prises_en_charge: prisesAffichables\(sheet\?\.prises_en_charge \?\? \[\], v\.annee_modele \?\? null\)(?:\.filter\(\(x\) =>)?,?$/.test(l.trim())
   const verifierScore = (src) => { const l = lignesCode(src); return l.length === 2 && l.every(autorisee) }
   ok(verifierScore(readFileSync('supabase/functions/score/index.ts', 'utf8')), 'score : seulement l’import et la ligne du résultat affiché')
   // Contre-épreuve : une lecture par la note serait détectée.

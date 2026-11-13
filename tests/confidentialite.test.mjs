@@ -66,6 +66,11 @@ const COLLECTES = [
     marqueurs: ['Alerte rappel sur un modèle, sans compte', 'Double confirmation', 'effacée sous 7 jours', 'Désinscription en un clic'],
   },
   {
+    nom: 'alertes de fin de prise en charge (dossiers achetés)',
+    presentDansLeCode: () => /alertes_fin_prise/.test(lire('../supabase/functions/alertes/index.ts')),
+    marqueurs: ['Facture à prévoir et fin de prise en charge', '6 mois puis 1 mois avant', 'effacées avec le dossier'],
+  },
+  {
     nom: 'texte de l’annonce envoyé à Anthropic',
     presentDansLeCode: () => /api\.anthropic\.com/.test(SCORE),
     marqueurs: ['Anthropic', '30 jours'],

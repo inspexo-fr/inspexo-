@@ -337,3 +337,20 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   Stellantis déjà classés « officiel » ; peugeot.com, stellantis.com,
   dsautomobiles.fr ne le sont pas). Déploiement annoncé : `sheet-builder`.
   **Mur 0,40 €.** Rien ne donne ⇒ arrêt des plans pour ce sprint.
+- **Essai EB2DTS non joué, 0 €** : le mur RÉSERVE l'estimation prudente d'un
+  moteur (0,42 €) > 0,40 € accordés. Décision demandée à Utku (mur 0,45 € ?).
+
+## Sprint 24, lot 2 — facture à prévoir (13 nov. 2026)
+- `_shared/factureAPrevoir.ts` (pur, hors score) branché sur `cout-3ans` :
+  entretien dû (distribution d'abord), défauts portés dont le kilométrage
+  tombe dans les 12 mois, prises en charge valables/expirées/à vérifier ;
+  montant seulement si une source portante le cite ; phrase vendeur et
+  justificatif par ligne. **Gratuite** (sort aussi sans Pass).
+- Prises en charge du dossier filtrées (autre version, autre véhicule nommé) :
+  affichage seul (cas réel : campagne « Qashqai 1 1.5 dCi 110 » sur la Clio II
+  1.5 dCi 65).
+- Alertes de fin de prise en charge (dossiers achetés) : table
+  `alertes_fin_prise` (migration `20261129120000`, essai local 83/83),
+  palier réservé avant envoi.
+- **Dépense : 0 €** (aucun changement de score). Déploiement annoncé : migration,
+  `cout-3ans`, `alertes`, `score` et les fonctions qui importent `notify.ts`.
