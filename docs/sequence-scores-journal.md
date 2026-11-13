@@ -600,3 +600,19 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   94 publiées en France, ~17 avec des conditions écrites. Moteurs courants :
   **36 pannes confirmées sur 45 sans coût**. Pages /moteur sous le seuil
   d'indexation : 26 sur 45.
+
+## Sprint 24 — campagne 0 : catalogue sorti de `score` (13 nov. 2026, branche `sprint24-atlas`)
+- Méthode validée par Utku : diff OCTET PAR OCTET du catalogue avant/après,
+  puis 4 références × 1 (score et verdict identiques). Une sortie complète de
+  `score` ne peut pas être identique au bit près : le modèle varie d'un
+  passage à l'autre à code constant.
+- `buildCatalogue`, `extractCostRange`, `CatalogueEntry` déplacés de `score`
+  vers `_shared/catalogue.ts`, corps recopié à l'identique (seuls trois mots
+  `export` ajoutés — vérifié par diff du code).
+- Diff du résultat : 10 cas (les 4 références avec leur fiche réelle, tirée de
+  la sauvegarde de prod du soir, les 4 marques sans fiche, Mercedes-Benz,
+  sans marque) ⇒ **sortie IDENTIQUE octet pour octet**, sha256
+  `c806069de353bc6d9e1cc462e41589abbef6ed857e78e0f4bfbf6cce3726f320` avant
+  comme après.
+- Déploiement annoncé : `score` ; puis 4 références × 1, mur 0,45 € (budget du
+  chantier : 1 €).

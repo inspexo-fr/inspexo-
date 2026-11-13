@@ -130,7 +130,11 @@ ok(affirmationSansCout('T', 'x'.repeat(900)).length <= 500, 'l’affirmation est
   ok(!/x\.source_statut === 'base_inspexo'\)\.length/.test(page),
     'le décompte des pannes suit lui aussi les sources réelles')
 
-  const score = readFileSync(new URL('../supabase/functions/score/index.ts', import.meta.url), 'utf8')
+  // Sprint 24 : la construction du catalogue est sortie de `score` à
+  // l'identique, dans `_shared/catalogue.ts` (que `score` importe).
+  const score = readFileSync(new URL('../supabase/functions/_shared/catalogue.ts', import.meta.url), 'utf8')
+  ok(/import \{ buildCatalogue, type CatalogueEntry \} from "\.\.\/_shared\/catalogue\.ts"/.test(readFileSync(new URL('../supabase/functions/score/index.ts', import.meta.url), 'utf8')),
+    'score construit son catalogue avec le module partagé')
   ok(/source_statut: atlasUrls\.length > 0 \? "en_ligne" : "base_inspexo"/.test(score),
     'côté serveur, une entrée d’atlas sourcée n’est plus étiquetée « base Inspexo »')
 }
