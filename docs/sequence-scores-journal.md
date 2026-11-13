@@ -616,3 +616,18 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   comme après.
 - Déploiement annoncé : `score` ; puis 4 références × 1, mur 0,45 € (budget du
   chantier : 1 €).
+- **Fait** : `score` déployée (refactor seul). **4 références identiques** :
+  S7 rouge 39, 308 orange 55, Mercedes vert 73, Clio II orange 51 (0,357 €).
+- Stock : reprend l'atlas par la MÊME construction (`buildCatalogue`) et les
+  mêmes filtres que le dossier (doublons fusionnés — fusion identique mot
+  pour mot à celle de `score`, testé —, code moteur ou caisse étranger écarté,
+  atlas sans source publique ou non visé par la saisie ⇒ question). Chaque
+  montant porte « selon <source> ». Testé : la Clio IV 1.5 dCi K9K reprend
+  « injecteurs Delphi » avec son coût sourcé.
+- Journal des retours (A) : table `retours_stock` (RLS, aucune policy, aucun
+  droit direct), RPC filtrées sur le compte, vue agrégée admin seulement,
+  aucune statistique affichée ; bouton « Qui paie cette panne ? » présent,
+  inactif jusqu'au sprint 25. Essai local : 12/12 (dont « un autre pro ne
+  voit rien », « sans formule pro : refusé »).
+- Déploiement annoncé : dump prod, migration `20261201120000`, fonction
+  `stock`. Sans effet sur le score.

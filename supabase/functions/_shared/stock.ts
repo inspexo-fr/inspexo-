@@ -28,6 +28,9 @@ import { organesDe } from "./negociation.ts";
 import { memeDefaut } from "./dedupPannes.ts";
 import { seuilKmPanne } from "./bareme.ts";
 import type { FactureAPrevoir, LigneFacture } from "./factureAPrevoir.ts";
+import { buildCatalogue, fusionnerEntrees } from "./catalogue.ts";
+import { dedupliquerCatalogue } from "./dedupPannes.ts";
+import { atlasConfirme, codeEtranger, questionSansSource, sansSourcePublique } from "./pannesApplicables.ts";
 
 export const MAX_LOT = 20;
 export const MENTION_STOCK =
@@ -182,6 +185,8 @@ const ageAns = (v: VehiculeStock, aujourdhui: Date): number | null => {
 export type PanneStock = {
   titre: string; organe: string | null; symptome: string; km_typique: string | null;
   gravite: string; cout_min_eur: number | null; cout_max_eur: number | null; urls: string[];
+  /** « selon <source> » : hôte de la première page PORTANTE. */
+  source: string | null;
 };
 
 /** Pannes de la fiche, classées : confirmées (affirmées), points des
@@ -215,9 +220,46 @@ export function pannesDeLaFiche(fiche: { pannes?: unknown[] } | null, version: V
       cout_min_eur: typeof p0?.cout_indicatif_eur_min === "number" ? p0.cout_indicatif_eur_min : (typeof p0?.cout_min_eur === "number" ? p0.cout_min_eur : null),
       cout_max_eur: typeof p0?.cout_indicatif_eur_max === "number" ? p0.cout_indicatif_eur_max : (typeof p0?.cout_max_eur === "number" ? p0.cout_max_eur : null),
       urls,
+      source: (() => { const u = urls.find((x) => sourcesPortentLEntree([x])); try { return u ? new URL(u).hostname.replace(/^www\./, "") : null; } catch { return null; } })(),
     });
   }
   return { confirmees, points, questions };
+}
+
+/** Catalogue du véhicule : atlas de marque + fiche moteur (même construction
+ *  que `score`, `_shared/catalogue.ts`), mêmes filtres que le dossier :
+ *  doublons fusionnés, code moteur ou caisse étranger écarté, entrée d'atlas
+ *  sans source publique ⇒ question, entrée d'atlas dont la saisie ne
+ *  mentionne pas ce qu'elle vise ⇒ question. Rend des entrées au format
+ *  « fiche » pour `pannesDeLaFiche`. */
+export function entreesStock(
+  marque: string,
+  // deno-lint-ignore no-explicit-any
+  fiche: any,
+  v: { famille: string | null; modele: string; motorisation: string },
+): { pannes: unknown[]; questions: string[] } {
+  let cat = buildCatalogue(marque, fiche ?? null);
+  cat = dedupliquerCatalogue(cat, fusionnerEntrees).gardees;
+  const designation = `${v.modele} ${v.motorisation}`.trim();
+  cat = cat.filter((e) => !codeEtranger(e.titre, e.symptome, { famille_moteur: v.famille ?? "", designation }));
+  const texte = `${v.modele} ${v.motorisation} ${v.famille ?? ""}`;
+  const pannes: unknown[] = [];
+  const questions: string[] = [];
+  for (const e of cat) {
+    if (sansSourcePublique(e.ref, e.urls)) { questions.push(questionSansSource(e.titre)); continue; }
+    if (/^A/i.test(e.ref) && !atlasConfirme(e, texte)) {
+      questions.push(`« ${e.titre.slice(0, 120)} » : ce défaut vise un équipement ou une version que la saisie ne précise pas. Le véhicule est-il concerné ?`);
+      continue;
+    }
+    pannes.push({
+      titre: e.titre, organe: e.organe, symptomes: e.symptome, km_typique: e.km_typique, gravite: e.gravite,
+      cout_indicatif_eur_min: e.cout_min_eur, cout_indicatif_eur_max: e.cout_max_eur,
+      url_source: e.urls, sources: e.sources,
+      rappel_code: e.rappel_code, rappel_date: e.rappel_date, rappel_vehicules: e.rappel_vehicules,
+      rappel_portee: e.rappel_portee ?? null, rappel_annee_debut: e.rappel_annee_debut, rappel_annee_fin: e.rappel_annee_fin,
+    });
+  }
+  return { pannes, questions: questions.slice(0, 3) };
 }
 
 /** Dossier SYNTHÉTIQUE au format de `result_json`, pour réutiliser tels quels

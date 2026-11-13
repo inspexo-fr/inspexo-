@@ -444,3 +444,23 @@ export const stockVin = (vin) => callFunction('stock', { mode: 'vin', vin })
 export const stockCarteGrise = (photo) => callFunction('stock', { mode: 'carte_grise', photo })
 export const stockFiche = (vehicule, margeVisee) => callFunction('stock', { mode: 'fiche', vehicule, marge_visee: margeVisee })
 export const stockLot = (lignes, margeVisee) => callFunction('stock', { mode: 'lot', lignes, marge_visee: margeVisee })
+
+// SPRINT 24 lot 3 (A) — journal des retours (formule pro ; RPC filtrées sur le compte).
+export async function retoursStockLister() {
+  const { data, error } = await supabase.rpc('retours_stock_lister')
+  if (error) throw error
+  return Array.isArray(data) ? data : []
+}
+export async function retourStockAjouter(r) {
+  const { data, error } = await supabase.rpc('retour_stock_ajouter', {
+    p_stock_ref: r.stock_ref, p_date: r.date, p_km: Number(r.km), p_famille: r.famille, p_piece: r.piece,
+    p_cout_ttc: Number(r.cout_ttc), p_paye_par: r.paye_par, p_commentaire: r.commentaire || null,
+  })
+  if (error) throw error
+  return data
+}
+export async function retourStockSupprimer(id) {
+  const { data, error } = await supabase.rpc('retour_stock_supprimer', { p_id: id })
+  if (error) throw error
+  return data
+}

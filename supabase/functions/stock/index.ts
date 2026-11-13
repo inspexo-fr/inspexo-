@@ -28,7 +28,7 @@ import { accesProDepuisReq } from "../_shared/proAuth.ts";
 import {
   CG_SYSTEM, CG_TOOL, classerLot, controlesSurPlace, MAX_LOT, MENTION_STOCK, pannesDeLaFiche, prixPlafond,
   type ResumeLot, rjSynthetique, separerFactureRisque, validerCarteGrise, vehiculeDepuisEntree, type VehiculeStock,
-  choisirParMotorisation,
+  choisirParMotorisation, entreesStock,
 } from "../_shared/stock.ts";
 import TABLE from "../_shared/famillesMoteur.json" with { type: "json" };
 import { indexerModeles, nommeUnAutreVehicule, type FamilleMoteur } from "../_shared/modeles.ts";
@@ -145,7 +145,10 @@ async function evaluer(admin: any, ctx: any, v: VehiculeStock, margeVisee: numbe
   v.famille = res.famille;
   const fiche = (await lookupDefectSheet(admin, { marque: v.marque, famille_moteur: v.famille, annee: v.annee, modele: v.modele }));
   const version = varianteVehicule({ motorisation: v.motorisation });
-  const { confirmees, points, questions } = pannesDeLaFiche(fiche, version, v.annee);
+  // Atlas + fiche, mêmes filtres que le dossier (sprint 24, campagne 0).
+  const cat = entreesStock(v.marque, fiche, { famille: v.famille, modele: v.modele, motorisation: v.motorisation });
+  const { confirmees, points, questions: q0 } = pannesDeLaFiche({ pannes: cat.pannes }, version, v.annee);
+  const questions = [...q0, ...cat.questions];
   const aujourdhui = new Date();
   const rj = rjSynthetique(v, fiche, confirmees, aujourdhui);
   const { cout } = calculerCout3Ans(rj, ctx, {});
@@ -180,7 +183,7 @@ async function evaluer(admin: any, ctx: any, v: VehiculeStock, margeVisee: numbe
     statut: "ok",
     vehicule: { marque: v.marque, modele: v.modele, annee: v.annee, kilometrage: v.kilometrage, motorisation: v.motorisation, famille: v.famille },
     fiche: fiche ? { famille: v.famille, maj: (fiche as { updated_at?: string }).updated_at ?? null } : null,
-    defauts_confirmes: confirmees.map((p) => ({ titre: p.titre, organe: p.organe, gravite: p.gravite, km_typique: p.km_typique, cout_min_eur: p.cout_min_eur, cout_max_eur: p.cout_max_eur, urls: p.urls.slice(0, 3) })),
+    defauts_confirmes: confirmees.map((p) => ({ titre: p.titre, organe: p.organe, gravite: p.gravite, km_typique: p.km_typique, cout_min_eur: p.cout_min_eur, cout_max_eur: p.cout_max_eur, source: p.source, urls: p.urls.slice(0, 3) })),
     controles: controlesSurPlace(confirmees, points, v.kilometrage),
     points_proprietaires: points,
     questions,

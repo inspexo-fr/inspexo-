@@ -139,3 +139,29 @@ export function buildCatalogue(marque: string | null, sheet: any): CatalogueEntr
   return entries;
 }
 
+
+/** Fusion de deux entrées décrivant le même défaut (atlas et fiche), pour
+ *  `dedupliquerCatalogue`. COPIE CONFORME de la fusion écrite dans `score`
+ *  (laissée en place pour ne pas retoucher le chemin de notation) :
+ *  tests/stock.test.mjs vérifie que les deux corps restent identiques. */
+export const fusionnerEntrees = (garde: CatalogueEntry, autre: CatalogueEntry): CatalogueEntry => ({
+          ...garde,
+          symptome: garde.symptome || autre.symptome,
+          organe: garde.organe ?? autre.organe,
+          km_typique: garde.km_typique ?? autre.km_typique,
+          cout_min_eur: garde.cout_min_eur ?? autre.cout_min_eur,
+          cout_max_eur: garde.cout_max_eur ?? autre.cout_max_eur,
+          urls: [...new Set([...(garde.urls ?? []), ...(autre.urls ?? [])])],
+          sources: [...(garde.sources ?? []), ...(autre.sources ?? [])],
+          contexte: garde.contexte ?? autre.contexte,
+          rappel_code: garde.rappel_code ?? autre.rappel_code,
+          rappel_date: garde.rappel_date ?? autre.rappel_date,
+          rappel_vehicules: garde.rappel_vehicules ?? autre.rappel_vehicules,
+          rappel_portee: garde.rappel_portee ?? autre.rappel_portee,
+          rappel_annee_debut: garde.rappel_annee_debut ?? autre.rappel_annee_debut,
+          rappel_annee_fin: garde.rappel_annee_fin ?? autre.rappel_annee_fin,
+          // Une entrée relue à la main reste « base Inspexo ».
+          source_statut: garde.source_statut === "base_inspexo" || autre.source_statut === "base_inspexo"
+            ? "base_inspexo"
+            : garde.source_statut,
+        });

@@ -96,6 +96,25 @@ const lot = classerLot([
 ok(lot.map((l) => l.id).join('') === 'cab' && lot[0].marge_nette === 3000, 'lot classé par marge nette, lignes incomplètes en fin')
 ok(MAX_LOT === 20, 'lot plafonné à 20')
 
+// 6 bis. Atlas repris (campagne 0) : même construction et même fusion que score.
+{
+  const { entreesStock } = await import('../supabase/functions/_shared/stock.ts')
+  const score = fs.readFileSync('supabase/functions/score/index.ts', 'utf8')
+  const cat = fs.readFileSync('supabase/functions/_shared/catalogue.ts', 'utf8')
+  const corps = (t, debut) => { const i = t.indexOf(debut); const fin = ': garde.source_statut,'; const j = t.indexOf(fin, i); return i < 0 || j < 0 ? `absent:${Math.random()}` : t.slice(i, j + fin.length).replace(/\s+/g, ' ') }
+  ok(corps(score, '...garde,') === corps(cat, '...garde,'), 'la fusion des doublons du stock est identique, mot pour mot, à celle de score')
+  const k9k = { pannes: [{ titre: 'Casse de la courroie de distribution', organe: 'Distribution', symptomes: 'x', gravite: 'casse', url_source: ['https://www.largus.fr/a'] }] }
+  const r = entreesStock('Renault', k9k, { famille: 'K9K', modele: 'Clio IV', motorisation: '1.5 dCi 90' })
+  const titres = r.pannes.map((p) => p.titre).join(' | ')
+  ok(/Delphi/i.test(titres), `l’entrée d’atlas sourcée « injecteurs Delphi » est reprise pour une Clio IV 1.5 dCi K9K (${titres.slice(0, 120)})`)
+  const delphi = r.pannes.find((p) => /Delphi/i.test(p.titre))
+  ok(delphi && delphi.cout_indicatif_eur_min > 0, 'avec son coût sourcé')
+  const autre = entreesStock('Renault', null, { famille: 'H5FT', modele: 'Clio IV', motorisation: '1.2 TCe 120' })
+  ok(!autre.pannes.some((p) => /K9K|dCi/i.test(`${p.titre} ${p.symptomes}`)), 'aucune entrée K9K / dCi pour un moteur essence H5FT')
+  const { confirmees } = pannesDeLaFiche({ pannes: r.pannes }, varianteVehicule({ motorisation: '1.5 dCi 90' }), 2016)
+  ok(confirmees.filter((p) => p.cout_min_eur != null).every((p) => p.source), 'chaque montant porte sa source (« selon … »)')
+}
+
 // 7. Vocabulaire et accès.
 const src = fs.readFileSync('supabase/functions/_shared/stock.ts', 'utf8') + fs.readFileSync('supabase/functions/stock/index.ts', 'utf8')
 const sansCommentaires = src.replace(/\/\/.*$/gm, '').replace(MENTION_STOCK, '')

@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import PointsProprietairesBloc from '../components/PointsProprietairesBloc'
+import JournalRetours from '../components/JournalRetours'
 import { stockCarteGrise, stockFiche, stockLot, stockVin } from '../lib/scoreApi'
 import { resizeImageToDataUrl } from '../lib/imageUtils'
 import { decoderVin } from '../lib/vin'
@@ -61,7 +62,7 @@ function Resultat({ r }) {
         {r.defauts_confirmes.length === 0 ? <p>Aucun défaut confirmé par une source indépendante pour ce moteur.</p> : (
           <dl className="rows">{r.defauts_confirmes.map((d, i) => (
             <Ligne key={i} libelle={d.organe || '—'} valeur={d.titre}
-              detail={[d.km_typique, d.cout_min_eur != null && d.cout_max_eur != null ? `${eur(d.cout_min_eur)} à ${eur(d.cout_max_eur)}` : null].filter(Boolean).join(' · ') || null} />
+              detail={[d.km_typique, d.cout_min_eur != null && d.cout_max_eur != null ? `${eur(d.cout_min_eur)} à ${eur(d.cout_max_eur)}${d.source ? `, selon ${d.source}` : ''}` : null].filter(Boolean).join(' · ') || null} />
           ))}</dl>
         )}
       </div>
@@ -71,7 +72,7 @@ function Resultat({ r }) {
         <p className="c-graphite" style={{ fontSize: 13 }}>Défauts confirmés qui peuvent survenir à ce kilométrage, avec leur coût cité. Une liste, pas une probabilité.</p>
         {r.risque.lignes.length === 0 ? <p>Aucun défaut chiffré à ce kilométrage.</p> : (
           <dl className="rows">{r.risque.lignes.map((l, i) => (
-            <Ligne key={i} libelle={l.seuil || '—'} valeur={`${l.libelle} : ${eur(l.min)} à ${eur(l.max)}`} detail={l.source ? `Source : ${l.source}` : null} />
+            <Ligne key={i} libelle={l.seuil || '—'} valeur={`${l.libelle} : ${eur(l.min)} à ${eur(l.max)}`} detail={l.source ? `selon ${l.source}` : null} />
           ))}</dl>
         )}
         {r.risque.sans_cout.length > 0 && <p className="c-graphite" style={{ fontSize: 13 }}>Sans coût publié (hors total) : {r.risque.sans_cout.join(' · ')}</p>}
@@ -81,7 +82,7 @@ function Resultat({ r }) {
       <div className="doc-sec">
         <h2>Facture à prévoir</h2>
         <dl className="rows">{r.facture.lignes.filter((l) => l.rubrique === 'entretien').map((l) => (
-          <Ligne key={l.id} libelle={l.libelle} valeur={l.min != null ? `${eur(l.min)} à ${eur(l.max)}` : 'à vérifier'} detail={l.echeance} />
+          <Ligne key={l.id} libelle={l.libelle} valeur={l.min != null ? `${eur(l.min)} à ${eur(l.max)}` : 'à vérifier'} detail={[l.echeance, l.min != null && l.source?.libelle ? `selon ${l.source.libelle}` : null].filter(Boolean).join(' · ') || null} />
         ))}</dl>
       </div>
 
@@ -253,6 +254,7 @@ export default function StockPage() {
                 <button type="button" className="btn-ghost btn-auto" style={{ marginTop: 12 }} onClick={telecharger}>Exporter en CSV</button>
               </div>
             )}
+            <JournalRetours />
           </div>
         </section>
       </main>
