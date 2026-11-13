@@ -52,6 +52,8 @@ ok(pr.length === 1 && pr[0].a.includes('serie-1') && pr[0].b.includes('serie-3')
 eq(gardee('/modele/renault/megane-iii', '/modele/renault/megane-iv', { '/modele/renault/megane-iii': { annee_recente: 2008 }, '/modele/renault/megane-iv': { annee_recente: 2018 } }).garde, '/modele/renault/megane-iv', 'paire restée trop proche : la génération la plus récente reste indexée')
 eq(gardee('/modele/a/x', '/modele/a/y', { '/modele/a/x': { annee_recente: 2015 }, '/modele/a/y': { annee_recente: 2015 } }), null, 'année égale : aucun choix, les deux restent indexées')
 eq(gardee('/modele/a/x', '/modele/a/y', {}), null, 'année inconnue : aucun choix au hasard')
+eq(gardee('/modele/peugeot/508-i', '/modele/peugeot/508-ii', { '/modele/peugeot/508-i': { annee_recente: 2010 }, '/modele/peugeot/508-ii': { annee_recente: 2010 } })?.garde, '/modele/peugeot/508-ii', 'même modèle, même année : la génération II est la plus récente')
+eq(gardee('/modele/bmw/serie-1-f20', '/modele/bmw/serie-3-f30', { '/modele/bmw/serie-1-f20': { annee_recente: 2011 }, '/modele/bmw/serie-3-f30': { annee_recente: 2011 } }), null, 'modèles différents, même année : non départagés')
 const pr2 = fs.readFileSync(new URL('../scripts/prerendu.mjs', import.meta.url), 'utf8')
 ok(/if \(!g\) \{ nonDepartagees\.push\(pr\); continue \}/.test(pr2), 'le pré-rendu laisse indexées les paires non départagées et les signale')
 

@@ -77,9 +77,23 @@ export function pairesProches(pages, seuil = SEUIL_SIMILARITE) {
  *  (année d'apparition du plus récent moteur de la page). À année égale ou
  *  inconnue : null — les deux restent indexées et la paire est signalée.
  *  Jamais de choix au hasard. */
+const ROMAINS = { i: 1, ii: 2, iii: 3, iv: 4, v: 5, vi: 6, vii: 7, viii: 8 }
+/** Même modèle, générations en chiffres romains : « 508-i » / « 508-ii ». */
+function memeModeleGenerations(a, b) {
+  const m = (u) => u.match(/^\/modele\/([^/]+)\/(.+)-(i{1,3}|iv|v|vi{1,3})$/)
+  const x = m(a), y = m(b)
+  if (!x || !y || x[1] !== y[1] || x[2] !== y[2]) return null
+  return { ga: ROMAINS[x[3]], gb: ROMAINS[y[3]] }
+}
+
 export function gardee(a, b, infos) {
   const ya = infos[a]?.annee_recente, yb = infos[b]?.annee_recente
-  if (typeof ya !== 'number' || typeof yb !== 'number' || ya === yb) return null
+  if (typeof ya !== 'number' || typeof yb !== 'number' || ya === yb) {
+    // Même modèle, deux générations numérotées : la plus haute est la plus récente.
+    const g = memeModeleGenerations(a, b)
+    if (g && g.ga !== g.gb) return { garde: g.ga > g.gb ? a : b, motif: 'même modèle : génération la plus récente' }
+    return null
+  }
   return ya > yb
     ? { garde: a, motif: `génération la plus récente (moteur apparu en ${ya} contre ${yb})` }
     : { garde: b, motif: `génération la plus récente (moteur apparu en ${yb} contre ${ya})` }

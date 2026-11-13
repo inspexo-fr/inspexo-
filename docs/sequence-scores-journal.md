@@ -406,3 +406,10 @@ contexte ; JMK, NSC, 61DT02, 0D9F → champs de rappel retirés (action
   du moteur le plus récent) ; à année égale ou inconnue, les deux restent et
   la paire est signalée. Plus de classement par le parc.
 - Déploiement annoncé : `modele-public`. Coût : 0 €.
+- **Fait (build local)** : après enrichissement, paires ≥ 0,80 : **49 → 4**.
+  508 I / 508 II : même modèle, la II reste indexée. Non départagées (modèles
+  différents, mêmes moteurs, même année) : Sprinter/Vito, Classe C W204 /
+  Classe E W212, Série 1 F20 / Série 3 F30 — laissées indexées et signalées.
+  **Indexables : 101** (73 au premier passage, 108 avant le chantier).
+  CLS /modele/renault/clio-iv : 0,156 → **0,017** (local, mêmes conditions).
+  Rappels d'une autre génération écartés (« clio 5 » sur la page Clio IV).
