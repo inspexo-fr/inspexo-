@@ -1,0 +1,3241 @@
+[
+ {
+  "id": "2e990b40-7f8e-499d-a3e0-008f6c32d5f6",
+  "marque": "Renault",
+  "famille_moteur": "H4BT",
+  "famille_norm": "H4BT",
+  "annee_debut": 2012,
+  "annee_fin": 2020,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Défaut de borne de batterie sur moteurs H4Bt",
+    "organe": "Circuit électrique (borne de batterie)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/dacia-sandero-ii-0-9-tce-90-fiabilite-performance",
+      "title": "Sandero 2 0.9 TCe 90 : fiabilité du moteur et pannes"
+     },
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/dacia-sandero-ii-stepway-essence-09-tce",
+      "title": "Sandero II Stepway 0.9 TCe 90 : fiabilité et défauts"
+     }
+    ],
+    "symptomes": "Défaut identifié sur la borne de batterie des véhicules équipés du moteur H4Bt assemblés avant le 26 juillet 2019, ayant fait l'objet d'une fiche officielle RappelConso (campagne 0D9F). Le détail du risque précis n'est pas publié dans les sources consultées ; une mise à jour ou un remplacement est à réaliser chez le réseau Renault/Dacia.",
+    "km_typique": null,
+    "url_source": [
+     "https://carverif.fr/blogs/fiabilite-voitures/dacia-sandero-ii-0-9-tce-90-fiabilite-performance",
+     "https://carverif.fr/blogs/fiabilite-voitures/dacia-sandero-ii-stepway-essence-09-tce"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "rappel_portee": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Fuite du boîtier d'eau / thermostat en plastique",
+    "organe": "Circuit de refroidissement (boîtier thermostatique)",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://forum-auto.caradisiac.com/topic/530197-fuite-boitier-deau-moteur-09-tce/",
+      "title": null
+     },
+     {
+      "url": "https://www.auto-doc.fr/info/fuites-du-thermostat-0-9-tce-un-defaut-recurrent-non-reconnu-officiellement",
+      "title": null
+     },
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/renault-clio-iv-0-9-tce-90",
+      "title": "Renault Clio IV 0.9 TCe 90 : fiabilité et conseils"
+     },
+     {
+      "url": "https://www.garageraymond.fr/Blog/0-9-tce-fiabilite",
+      "title": "Fiabilité du moteur 0.9 TCe 90 ch : verdict et conseils d'achat"
+     }
+    ],
+    "symptomes": "Baisse inexpliquée du niveau de liquide de refroidissement, traces blanchâtres ou rosées autour du boîtier d'eau situé sur le flanc du moteur ; le boîtier en plastique se fissure ou son joint se dégrade avec les cycles de chaleur. Si la fuite n'est pas traitée et que le niveau de liquide chute fortement : risque de surchauffe pouvant endommager le joint de culasse.",
+    "km_typique": "50 000 à 80 000 km",
+    "url_source": [
+     "https://forum-auto.caradisiac.com/topic/530197-fuite-boitier-deau-moteur-09-tce/",
+     "https://www.auto-doc.fr/info/fuites-du-thermostat-0-9-tce-un-defaut-recurrent-non-reconnu-officiellement",
+     "https://carverif.fr/blogs/fiabilite-voitures/renault-clio-iv-0-9-tce-90",
+     "https://www.garageraymond.fr/Blog/0-9-tce-fiabilite"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 450,
+    "cout_indicatif_eur_min": 150
+   },
+   {
+    "titre": "À-coups à froid / réactivité du turbo sur les premiers millésimes",
+    "organe": "Gestion moteur / turbocompresseur",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.garagelgb.fr/actus/0-9-tce-fiabilite/",
+      "title": "0.9 TCE Fiabilité : Avis, Défauts et Durée de Vie Réelle"
+     },
+     {
+      "url": "https://autoscoop.fr/fiabilite-des-moteurs-renault-tce-en-occasion-le-guide-complet/",
+      "title": "Fiabilité des moteurs Renault TCe en occasion : le guide complet - Auto Scoop"
+     },
+     {
+      "url": "https://ct-auto-63.fr/fiabilite-09-tce-millesimes-2012-2016/",
+      "title": null
+     }
+    ],
+    "symptomes": "À-coups ou saccades perceptibles dans les premières minutes de conduite à froid sur les modèles antérieurs à 2016-2017, liés à la cartographie moteur et au temps de réponse du turbo sur ce petit 3 cylindres. Le phénomène disparaît généralement une fois le moteur chaud ; une mise à jour logicielle du calculateur chez Renault atténue le défaut sur de nombreux cas.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.garagelgb.fr/actus/0-9-tce-fiabilite/",
+     "https://autoscoop.fr/fiabilite-des-moteurs-renault-tce-en-occasion-le-guide-complet/",
+     "https://ct-auto-63.fr/fiabilite-09-tce-millesimes-2012-2016/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "1167124e-89dd-4e15-b3be-9eb696b070d5",
+  "marque": "Renault",
+  "famille_moteur": "H4D",
+  "famille_norm": "H4D",
+  "annee_debut": 2014,
+  "annee_fin": null,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Usure prématurée de la chaîne de distribution",
+    "organe": "distribution (chaîne)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://forum-auto.caradisiac.com/topic/537986-qualit%C3%A9-du-moteur-tce-90-ch/page/2/",
+      "title": null
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+      "title": null
+     },
+     {
+      "url": "https://mymotorlist.com/engines/renault/h4d/",
+      "title": "Engine Renault H4D: specifications, characteristics, oil, performance"
+     }
+    ],
+    "symptomes": "Chaîne de distribution qui se détend avec le kilométrage, bruit métallique à froid ; remplacement parfois nécessaire dès 100 000-120 000 km alors qu'elle est annoncée pour durer la vie du véhicule. Si elle n'est pas remplacée à temps : risque de saut de dents et de casse moteur.",
+    "km_typique": "100 000-120 000 km",
+    "url_source": [
+     "https://forum-auto.caradisiac.com/topic/537986-qualit%C3%A9-du-moteur-tce-90-ch/page/2/",
+     "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+     "https://mymotorlist.com/engines/renault/h4d/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 2500,
+    "cout_indicatif_eur_min": 1700
+   },
+   {
+    "titre": "Fuite au boîtier d'eau / circuit de refroidissement",
+    "organe": "refroidissement",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://forum-auto.caradisiac.com/topic/537986-qualit%C3%A9-du-moteur-tce-90-ch/page/2/",
+      "title": null
+     },
+     {
+      "url": "https://mymotorlist.com/engines/renault/h4d/",
+      "title": "Engine Renault H4D: specifications, characteristics, oil, performance"
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+      "title": null
+     }
+    ],
+    "symptomes": "Fuite de liquide de refroidissement au niveau du boîtier d'eau, signalée comme quasi systématique sur ce moteur ; surveillance recommandée du fait de l'implantation arrière du moteur sur certains modèles (Twingo/Smart) qui complique le refroidissement.",
+    "km_typique": "environ 60 000 km",
+    "url_source": [
+     "https://forum-auto.caradisiac.com/topic/537986-qualit%C3%A9-du-moteur-tce-90-ch/page/2/",
+     "https://mymotorlist.com/engines/renault/h4d/",
+     "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 250,
+    "cout_indicatif_eur_min": 250
+   },
+   {
+    "titre": "Défaut de traction corrigé par mise à jour du calculateur (ECU)",
+    "organe": "calculateur moteur / injection",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://en.avtotachki.com/dvigateli-renault-h4d-h4dt/",
+      "title": "Коды ошибок OBD2: таблица P0000–U0999 с расшифровкой"
+     },
+     {
+      "url": "https://docteurmoteurs.com/renault-h4dt-1-0-tce-100-ch-dacia/",
+      "title": null
+     }
+    ],
+    "symptomes": "Défaillances de traction/motricité rapportées la première année de commercialisation du H4Dt, corrigées par une mise à jour du micrologiciel de l'ECU fin 2019 selon les sources consultées.",
+    "km_typique": null,
+    "url_source": [
+     "https://en.avtotachki.com/dvigateli-renault-h4d-h4dt/",
+     "https://docteurmoteurs.com/renault-h4dt-1-0-tce-100-ch-dacia/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Surconsommation d'huile après 100 000 km",
+    "organe": "bloc moteur / segmentation",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+      "title": null
+     },
+     {
+      "url": "https://mymotorlist.com/engines/renault/h4d/",
+      "title": "Engine Renault H4D: specifications, characteristics, oil, performance"
+     }
+    ],
+    "symptomes": "Augmentation de la consommation d'huile au-delà de 100 000 km, attribuée par les sources consultées à une usure des segments racleurs d'huile ; nécessite une surveillance régulière du niveau.",
+    "km_typique": "au-delà de 100 000 km",
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+     "https://mymotorlist.com/engines/renault/h4d/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille_moteur": "H4M",
+  "famille_norm": "H4M",
+  "annee_debut": 2012,
+  "annee_fin": 2023,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Surconsommation d'huile moteur",
+    "organe": "Moteur (segments de piston / joints de soupapes)",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+      "title": "Održavanje i servis Renault motora 1.6 SCe H4M - Uvoz.info"
+     },
+     {
+      "url": "https://autoinsight.com.ua/resurs-dviguna-renault-h4m-1-6-skilki-sluzhit-motor-ta-yaki-mae-problemi/",
+      "title": "Ресурс двигуна Renault H4M 1.6 скільки служить мотор та які має проблеми - АвтоІнсайт"
+     },
+     {
+      "url": "https://www.motobenzyna.pl/silniki/5405-silnik-1-6-16v-sce-102km.html",
+      "title": "Silnik Renault 1.6 16V SCe 102KM H4M - opinie, wady, zalety"
+     },
+     {
+      "url": "https://www.engineexplained.com/renault-h4m-1-6l-engine-review-and-insights/",
+      "title": null
+     }
+    ],
+    "symptomes": "Appoint d'huile plus fréquent qu'attendu entre deux vidanges ; chez certains véhicules le phénomène apparaît dès un kilométrage modéré, chez d'autres plutôt après 120 000-150 000 km. Cause évoquée : particularité de construction sur certaines séries (notamment avant 2019) ou usure des joints de soupapes et segments de piston.",
+    "km_typique": "120 000 - 150 000 km (parfois plus tôt)",
+    "url_source": [
+     "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+     "https://autoinsight.com.ua/resurs-dviguna-renault-h4m-1-6-skilki-sluzhit-motor-ta-yaki-mae-problemi/",
+     "https://www.motobenzyna.pl/silniki/5405-silnik-1-6-16v-sce-102km.html",
+     "https://www.engineexplained.com/renault-h4m-1-6l-engine-review-and-insights/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Tendeur de chaîne de distribution",
+    "organe": "Distribution (tendeur de chaîne)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+      "title": "Održavanje i servis Renault motora 1.6 SCe H4M - Uvoz.info"
+     },
+     {
+      "url": "https://motorist.expert/renault/h4m.html",
+      "title": "Двигатель Renault H4M (1.6 л. 16V): обзор, характеристики, надежность, слабые места, ремонтопригодность"
+     }
+    ],
+    "symptomes": "Le tendeur hydraulique ne monte pas immédiatement en pression au démarrage ; la chaîne de distribution elle-même est réputée durable (constructeur annonce au moins 150 000 km, retours d'usage évoquant plus de 250 000 km), mais le tendeur peut créer des bruits et des dysfonctionnements à kilométrage élevé.",
+    "km_typique": null,
+    "url_source": [
+     "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+     "https://motorist.expert/renault/h4m.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement / dysfonctionnement de la vanne EGR",
+    "organe": "Vanne EGR",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+      "title": "Održavanje i servis Renault motora 1.6 SCe H4M - Uvoz.info"
+     }
+    ],
+    "symptomes": "À-coups à l'accélération, perte de puissance, codes défaut calculateur ; cause généralement l'encrassement par la calamine, favorisé par un usage urbain répété.",
+    "km_typique": null,
+    "url_source": [
+     "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Ralenti instable",
+    "organe": "Gestion du ralenti (boîtier papillon, capteur MAP, EGR)",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+      "title": "Održavanje i servis Renault motora 1.6 SCe H4M - Uvoz.info"
+     }
+    ],
+    "symptomes": "Oscillations de régime moteur et vibrations perceptibles au ralenti, généralement liées à un papillon encrassé, un capteur MAP défaillant ou une vanne EGR colmatée.",
+    "km_typique": null,
+    "url_source": [
+     "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Thermostat défaillant",
+    "organe": "Thermostat / circuit de refroidissement",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+      "title": "Održavanje i servis Renault motora 1.6 SCe H4M - Uvoz.info"
+     }
+    ],
+    "symptomes": "Chauffage habitacle insuffisant et montée en température du moteur anormalement lente, le thermostat restant bloqué en position ouverte.",
+    "km_typique": null,
+    "url_source": [
+     "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Réglage du jeu aux soupapes accéléré sur véhicules équipés GPL",
+    "organe": "Distribution (jeu aux soupapes)",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://francuskie.pl/1-6-16v-sce-h4m-jeden-z-ostatnich-wolnossacych-silnikow-w-gamie-renault-opinie-eksploatacja-awaryjnosc/",
+      "title": "1.6 16V SCe H4M – jeden z ostatnich wolnossących silników w gamie Renault. Opinie, eksploatacja, awaryjność | Francuskie.pl - Dziennik Motoryzacyjny"
+     },
+     {
+      "url": "https://www.motobenzyna.pl/silniki/5405-silnik-1-6-16v-sce-102km.html",
+      "title": "Silnik Renault 1.6 16V SCe 102KM H4M - opinie, wady, zalety"
+     }
+    ],
+    "symptomes": "Sur les véhicules fonctionnant au GPL (y compris installation d'origine), le jeu aux soupapes se dérègle plus rapidement qu'en usage essence pur, nécessitant des contrôles/réglages plus fréquents ; une source polonaise chiffre l'opération à environ 1000 PLN (frais non convertis faute de taux fiable à la date de la source).",
+    "km_typique": null,
+    "url_source": [
+     "https://francuskie.pl/1-6-16v-sce-h4m-jeden-z-ostatnich-wolnossacych-silnikow-w-gamie-renault-opinie-eksploatacja-awaryjnosc/",
+     "https://www.motobenzyna.pl/silniki/5405-silnik-1-6-16v-sce-102km.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Fuite/défaillance de la boîte hybride multimode (E-Tech, groupe motopropulseur basé sur H4M)",
+    "organe": "Boîte de vitesses hybride multimode (DB1)",
+    "gravite": "casse",
+    "sources": [
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/renault-arkana-1-6-e-tech-hybrid-145-h4m",
+      "title": "Renault Arkana 1.6 E-Tech Hybrid 145 : fiabilité et conseils"
+     },
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/renault-clio-v-1-6-e-tech-hybrid-145-h4m",
+      "title": "Renault Clio V 1.6 E-Tech Hybrid 145 : fiabilité et conseils"
+     },
+     {
+      "url": "https://www.motohybryda.pl/silniki/silnik-renault-1-6-16v-e-tech-hybrid-143km-h4m.html",
+      "title": "Silnik Renault 1.6 16V E-TECH Full Hybrid 141/143KM H4M - opinie, usterki, serwisowanie"
+     },
+     {
+      "url": "https://malykh.blogspot.com/2024/11/renault-e-tech-16-hybrid-deadly-trouble.html",
+      "title": "malykh.com notes: Renault E-Tech 1.6 Hybrid deadly trouble"
+     }
+    ],
+    "symptomes": "Un joint (simmering) mal réalisé entre la boîte hybride et le moteur électrique laisse passer l'huile en interne ; au mieux seul le capteur de température est endommagé, au pire le moteur électrique peut tomber en panne et immobiliser le véhicule. Signes à surveiller : voyant hybride, perte de motricité, odeur d'huile chaude, mode dégradé. Renault a mis en place des opérations de contrôle d'étanchéité en atelier.",
+    "km_typique": "5 000 - 90 000 km",
+    "url_source": [
+     "https://carverif.fr/blogs/fiabilite-voitures/renault-arkana-1-6-e-tech-hybrid-145-h4m",
+     "https://carverif.fr/blogs/fiabilite-voitures/renault-clio-v-1-6-e-tech-hybrid-145-h4m",
+     "https://www.motohybryda.pl/silniki/silnik-renault-1-6-16v-e-tech-hybrid-143km-h4m.html",
+     "https://malykh.blogspot.com/2024/11/renault-e-tech-16-hybrid-deadly-trouble.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 6500,
+    "cout_indicatif_eur_min": 0
+   }
+  ]
+ },
+ {
+  "id": "ad19a407-3381-4842-a67b-372d4371cde6",
+  "marque": "Dacia",
+  "famille_moteur": "K7M",
+  "famille_norm": "K7M",
+  "annee_debut": 1996,
+  "annee_fin": 2020,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Ralenti instable / régime de ralenti défaillant (collecteur d'admission, capteur papillon, moteur de ralenti)",
+    "organe": "Système d'admission / régulation du ralenti",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://forum-auto.caradisiac.com/topic/210353-moteur16e-8v-type-k7m-ralenti-instablebroutement-rat%C3%A9s-d%C3%A9tails/",
+      "title": null
+     },
+     {
+      "url": "https://www.planeterenault.com/forum/scenic-i-ralenti-oscillant-sur-k7m-regle-t36746.html",
+      "title": "Sc�nic I Ralenti oscillant sur k7m R�gl� -P0"
+     },
+     {
+      "url": "https://forum-auto.caradisiac.com/topic/110877-long%C3%A9vit%C3%A9-du-k7m-donnez-votre-kilom%C3%A9trage/",
+      "title": null
+     },
+     {
+      "url": "https://www.planeterenault.com/forum/clio-ii-i-perte-de-puissance-k7m-1-6-8v-t47433.html",
+      "title": "Clio II .I Perte de puissance (K7M - 1.6 8v) -P0"
+     }
+    ],
+    "symptomes": "Oscillations du régime moteur au ralenti (variations à la hausse comme à la baisse), calage en décélération (ex. à l'approche d'un rond-point), ralenti qui se bloque à haut régime, voyant injection qui s'allume. Causes évoquées : joint du collecteur d'admission (prise d'air), moteur de ralenti défaillant, capteur de position papillon, sonde lambda ou sonde de température défectueuse.",
+    "km_typique": "dès 30 000 km, observé aussi vers 95 000-330 000 km",
+    "url_source": [
+     "https://forum-auto.caradisiac.com/topic/210353-moteur16e-8v-type-k7m-ralenti-instablebroutement-rat%C3%A9s-d%C3%A9tails/",
+     "https://www.planeterenault.com/forum/scenic-i-ralenti-oscillant-sur-k7m-regle-t36746.html",
+     "https://forum-auto.caradisiac.com/topic/110877-long%C3%A9vit%C3%A9-du-k7m-donnez-votre-kilom%C3%A9trage/",
+     "https://www.planeterenault.com/forum/clio-ii-i-perte-de-puissance-k7m-1-6-8v-t47433.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": 260
+   },
+   {
+    "titre": "Infiltration de carburant/liquide dans l'huile moteur - défaut d'étanchéité joint de culasse ou collecteur d'admission",
+    "organe": "Culasse / collecteur d'admission",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.forum-clio.com/index.php?topic=32299.0",
+      "title": null
+     },
+     {
+      "url": "https://www.planeterenault.com/forum/clio-ii-soucis-cylindres-moteur-k7m-1-6-8v-t37811.html",
+      "title": "Clio II soucis cylindres moteur K7m 1.6 8V -P0"
+     }
+    ],
+    "symptomes": "Moteur qui broute, odeur d'essence détectée dans l'huile moteur après intervention sur joint de culasse, fonctionnement irrégulier sur un cylindre au ralenti (cylindre qui ne « tire » pas), suspicion de fuite de liquide de refroidissement dans un cylindre ou de joint de collecteur d'admission mal monté.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.forum-clio.com/index.php?topic=32299.0",
+     "https://www.planeterenault.com/forum/clio-ii-soucis-cylindres-moteur-k7m-1-6-8v-t37811.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Usure nécessitant un réglage périodique du jeu aux soupapes (absence d'hydrocompensateurs)",
+    "organe": "Culasse / distribution (soupapes)",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/revue-du-moteur-renault-k7m/",
+      "title": null
+     }
+    ],
+    "symptomes": "Le K7M ne dispose pas de poussoirs hydrauliques (hydrocompensateurs) : le jeu aux soupapes doit être contrôlé et réglé manuellement et périodiquement, sous peine de bruit moteur et d'usure prématurée.",
+    "km_typique": "tous les 20 000 à 30 000 km",
+    "url_source": [
+     "https://docteurmoteurs.com/revue-du-moteur-renault-k7m/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "4acf9ae6-3ffa-4e68-a724-d6960555cd78",
+  "marque": "Nissan",
+  "famille_moteur": "MR20DE",
+  "famille_norm": "MR20DE",
+  "annee_debut": 2005,
+  "annee_fin": 2018,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Consommation d'huile excessive",
+    "organe": "Bloc moteur / segmentation des pistons",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://dailydriven.ro/fr/sur-le-moteur-mr20de-de-nissan",
+      "title": null
+     },
+     {
+      "url": "https://moteurgarage.com/moteur-nissan-mr20de-2-0-l-problemes-et-fiabilite/",
+      "title": null
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-nissan-renault-mr20de-m4r-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://autopartswd.com/nissan-mr20-engine-guide/",
+      "title": "Nissan MR20 Engine Guide: Specs, Reliability & Problems"
+     }
+    ],
+    "symptomes": "Niveau d'huile qui baisse anormalement (besoin d'appoint fréquent), voyant de pression/niveau d'huile, fumée bleue à l'échappement à l'accélération. Lié à l'usure des segments de piston, à l'encrassement des cylindres ou à des joints de soupape défaillants.",
+    "km_typique": "à partir d'environ 150 000 km, plus fréquent sur les moteurs produits avant 2010",
+    "url_source": [
+     "https://dailydriven.ro/fr/sur-le-moteur-mr20de-de-nissan",
+     "https://moteurgarage.com/moteur-nissan-mr20de-2-0-l-problemes-et-fiabilite/",
+     "https://docteurmoteurs.com/moteur-nissan-renault-mr20de-m4r-2-0/",
+     "https://autopartswd.com/nissan-mr20-engine-guide/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Distension et bruit de la chaîne de distribution / usure du tendeur",
+    "organe": "Distribution (chaîne, tendeur, guides)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-nissan-renault-mr20de-m4r-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://www.enginecode.uk/nissan/mr20de-specs",
+      "title": "Nissan MR20DE Engine Specs, Issues & Identification | Specs, Issues, Models | EngineCode.uk"
+     },
+     {
+      "url": "https://www.motorreviewer.com/engine.php?engine_id=16",
+      "title": "Nissan 2.0L MR20DE Engine Specs, Problems, Reliability, Oil, Info"
+     },
+     {
+      "url": "https://globusks.ru/en/problemy-dvigatelya-mr20-nissan-qashqai-j11-rastyazhenie-cepi-grm-v-dvigatele/",
+      "title": null
+     }
+    ],
+    "symptomes": "Ralenti instable, à-coups, perte de puissance, bruit de cliquetis ou de cliquetis métallique au niveau de la distribution. Le moteur étant un moteur à interférence, une chaîne qui casse ou saute entraîne un contact pistons/soupapes.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-nissan-renault-mr20de-m4r-2-0/",
+     "https://www.enginecode.uk/nissan/mr20de-specs",
+     "https://www.motorreviewer.com/engine.php?engine_id=16",
+     "https://globusks.ru/en/problemy-dvigatelya-mr20-nissan-qashqai-j11-rastyazhenie-cepi-grm-v-dvigatele/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Fissures de la culasse au niveau des puits de bougies",
+    "organe": "Culasse (aluminium)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://dailydriven.ro/fr/sur-le-moteur-mr20de-de-nissan",
+      "title": null
+     },
+     {
+      "url": "https://www.motorreviewer.com/engine.php?engine_id=16",
+      "title": "Nissan 2.0L MR20DE Engine Specs, Problems, Reliability, Oil, Info"
+     },
+     {
+      "url": "http://mywikimotors.com/mr20de/",
+      "title": "Nissan MR20DE Engine | Oil capacity, reliability, tuning"
+     },
+     {
+      "url": "https://mymotorlist.com/engines/nissan/mr20de-m4r/",
+      "title": "Engine Nissan MR20DE: specifications, characteristics, oil, performance"
+     }
+    ],
+    "symptomes": "Apparition de fissures au niveau du filetage des bougies, souvent causées par un serrage excessif ou un remplacement des bougies moteur chaud. Peut entraîner une fuite de liquide de refroidissement à travers les fissures et des ratés d'allumage (misfire).",
+    "km_typique": null,
+    "url_source": [
+     "https://dailydriven.ro/fr/sur-le-moteur-mr20de-de-nissan",
+     "https://www.motorreviewer.com/engine.php?engine_id=16",
+     "http://mywikimotors.com/mr20de/",
+     "https://mymotorlist.com/engines/nissan/mr20de-m4r/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Défaillance de la vanne de commande des volets du collecteur d'admission",
+    "organe": "Collecteur d'admission / actionneur électrique",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.enginecode.uk/nissan/mr20de-specs",
+      "title": "Nissan MR20DE Engine Specs, Issues & Identification | Specs, Issues, Models | EngineCode.uk"
+     }
+    ],
+    "symptomes": "Voyant moteur allumé, perte de couple à bas régime, mauvaise consommation de carburant, ralenti irrégulier, lié au grippage ou à la panne du moteur électrique commandant les volets du collecteur.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.enginecode.uk/nissan/mr20de-specs"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Jeu aux soupapes à régler (absence de poussoirs hydrauliques)",
+    "organe": "Culbuterie / soupapes",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.motorreviewer.com/engine.php?engine_id=16",
+      "title": "Nissan 2.0L MR20DE Engine Specs, Problems, Reliability, Oil, Info"
+     },
+     {
+      "url": "http://mywikimotors.com/mr20de/",
+      "title": "Nissan MR20DE Engine | Oil capacity, reliability, tuning"
+     },
+     {
+      "url": "https://cararac.com/blog/nissan-sentra-2-l-engine-problems-durability.html",
+      "title": null
+     },
+     {
+      "url": "https://globusks.ru/en/problemy-dvigatelya-mr20-nissan-qashqai-j11-rastyazhenie-cepi-grm-v-dvigatele/",
+      "title": null
+     }
+    ],
+    "symptomes": "Bruit de cliquetis métallique provenant du haut moteur, pouvant apparaître dès 50 000 km ; le MR20DE n'a pas de poussoirs hydrauliques, le jeu aux soupapes se règle par rondelles de réglage (cales) à intervalle régulier.",
+    "km_typique": "dès 50 000 km, contrôle recommandé tous les 60 000 miles (~96 000 km)",
+    "url_source": [
+     "https://www.motorreviewer.com/engine.php?engine_id=16",
+     "http://mywikimotors.com/mr20de/",
+     "https://cararac.com/blog/nissan-sentra-2-l-engine-problems-durability.html",
+     "https://globusks.ru/en/problemy-dvigatelya-mr20-nissan-qashqai-j11-rastyazhenie-cepi-grm-v-dvigatele/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "1c01d25d-5fa7-474c-8027-1cd4bd5fb4e0",
+  "marque": "Nissan",
+  "famille_moteur": "MR16DDT",
+  "famille_norm": "MR16DDT",
+  "annee_debut": 2010,
+  "annee_fin": 2020,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Défaillance du turbocompresseur (encrassement des conduits d'huile / manque de lubrification)",
+    "organe": "Turbocompresseur",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.carchecker.pro/reports/nissan_qashqai_j11_1.6_digt.html",
+      "title": null
+     },
+     {
+      "url": "https://au7o.io/known-issues/nissan-juke?year=2016",
+      "title": null
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/",
+      "title": null
+     }
+    ],
+    "symptomes": "Perte de puissance, fumée à l'échappement, sifflement anormal du turbo ; souvent lié à un calaminage des conduits d'alimentation/retour d'huile qui prive les paliers du turbo de lubrification, notamment après un arrêt moteur immédiat suite à une conduite soutenue (autoroute, remorquage).",
+    "km_typique": null,
+    "url_source": [
+     "https://www.carchecker.pro/reports/nissan_qashqai_j11_1.6_digt.html",
+     "https://au7o.io/known-issues/nissan-juke?year=2016",
+     "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 3000,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Distension de la chaîne de distribution et usure du tendeur",
+    "organe": "Distribution (chaîne et tendeur)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://enginefinders.co.uk/nissan-mr16ddt-petrol-engine",
+      "title": "Rebuilt Nissan 1.6L DIG-T Turbo Petrol Engine for Sale"
+     },
+     {
+      "url": "https://au7o.io/known-issues/nissan-juke?year=2016",
+      "title": null
+     },
+     {
+      "url": "https://mymotorlist.com/engines/nissan/mr16ddt/",
+      "title": "Engine Nissan MR16DDT: specifications, characteristics, oil, performance"
+     },
+     {
+      "url": "https://enginecrux.com/nissan-1-6l-turbocharged-engine-specs-reliability/",
+      "title": null
+     }
+    ],
+    "symptomes": "Cliquetis/bruit de chaîne au démarrage à froid, ralenti irrégulier, et à terme risque de saut de calage si non traité. Favorisé par des intervalles de vidange trop longs ou une huile de qualité insuffisante.",
+    "km_typique": "jusqu'à 100 000 km",
+    "url_source": [
+     "https://enginefinders.co.uk/nissan-mr16ddt-petrol-engine",
+     "https://au7o.io/known-issues/nissan-juke?year=2016",
+     "https://mymotorlist.com/engines/nissan/mr16ddt/",
+     "https://enginecrux.com/nissan-1-6l-turbocharged-engine-specs-reliability/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement carbone des soupapes d'admission (moteur à injection directe)",
+    "organe": "Culasse / soupapes d'admission",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://enginefinders.co.uk/nissan-mr16ddt-petrol-engine",
+      "title": "Rebuilt Nissan 1.6L DIG-T Turbo Petrol Engine for Sale"
+     },
+     {
+      "url": "https://www.torquecars.com/nissan/mr16ddt-tuning.php",
+      "title": "All you need to know about tuning the Nissan MR16DDT engine!"
+     },
+     {
+      "url": "https://www.carchecker.pro/reports/nissan_qashqai_j11_1.6_digt.html",
+      "title": null
+     }
+    ],
+    "symptomes": "Perte de puissance, à-coups, ralenti instable et surconsommation de carburant liés à l'accumulation de dépôts de calamine sur les soupapes d'admission, typique des moteurs à injection directe essence ; traité par nettoyage (walnut blasting) ou dépose/nettoyage de culasse.",
+    "km_typique": null,
+    "url_source": [
+     "https://enginefinders.co.uk/nissan-mr16ddt-petrol-engine",
+     "https://www.torquecars.com/nissan/mr16ddt-tuning.php",
+     "https://www.carchecker.pro/reports/nissan_qashqai_j11_1.6_digt.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Défaillance de la pompe à carburant immergée",
+    "organe": "Pompe à carburant (réservoir)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/",
+      "title": null
+     },
+     {
+      "url": "https://silnikologia.com/silnik-nissan-mr16ddt-1-6-dig-t/",
+      "title": null
+     }
+    ],
+    "symptomes": "Chute de la poussée moteur et activation du mode dégradé ; panne parfois survenue pendant la période de garantie sur les premiers modèles.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/",
+     "https://silnikologia.com/silnik-nissan-mr16ddt-1-6-dig-t/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Capteur de débit d'air (MAF/AFM) défaillant ou encrassé",
+    "organe": "Capteur de débit d'air massique",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/",
+      "title": null
+     },
+     {
+      "url": "https://silnikologia.com/silnik-nissan-mr16ddt-1-6-dig-t/",
+      "title": null
+     },
+     {
+      "url": "https://mymotorlist.com/engines/nissan/mr16ddt/",
+      "title": "Engine Nissan MR16DDT: specifications, characteristics, oil, performance"
+     },
+     {
+      "url": "https://www.torquecars.com/nissan/mr16ddt-tuning.php",
+      "title": "All you need to know about tuning the Nissan MR16DDT engine!"
+     }
+    ],
+    "symptomes": "Réduction inattendue de la poussée moteur, activation du mode dégradé, à-coups ; lectures incorrectes nécessitant nettoyage ou remplacement du capteur.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/",
+     "https://silnikologia.com/silnik-nissan-mr16ddt-1-6-dig-t/",
+     "https://mymotorlist.com/engines/nissan/mr16ddt/",
+     "https://www.torquecars.com/nissan/mr16ddt-tuning.php"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Joints du collecteur d'admission / corps de papillon et joint sous le capteur de pression carburant (fuite, premiers modèles)",
+    "organe": "Joints d'admission et de rampe de carburant",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/",
+      "title": null
+     },
+     {
+      "url": "https://silnikologia.com/silnik-nissan-mr16ddt-1-6-dig-t/",
+      "title": null
+     }
+    ],
+    "symptomes": "Fuite au niveau des joints du collecteur d'admission et du papillon, et du joint situé sous le capteur de pression de carburant, rencontrée sur les premiers exemplaires et traitée par remplacement sous garantie constructeur.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-nissan-mr16ddt-1-6-dig-t/",
+     "https://silnikologia.com/silnik-nissan-mr16ddt-1-6-dig-t/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": "Premiers Nissan Juke 1.6 DIG-T MR16DDT (non précisé par la source)",
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "52df166c-3dde-4a15-b07f-ee8067db4752",
+  "marque": "Peugeot",
+  "famille_moteur": "EB2DT",
+  "famille_norm": "EB2DT",
+  "annee_debut": 2014,
+  "annee_fin": 2022,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Courroie de distribution humide : dégradation prématurée et risque de casse",
+    "organe": "Distribution (courroie immergée dans l'huile moteur)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+      "title": null
+     },
+     {
+      "url": "https://chaine-courroie.com/puretech/peugeot-208-i-1-2-puretech",
+      "title": "Courroie distribution 208 PureTech : EB2F ou EB2DT, tout change | Chaine-courroie.com"
+     },
+     {
+      "url": "https://chaine-courroie.com/puretech/quand-changer-courroie-puretech",
+      "title": "Changement préventif PureTech : à quel kilométrage intervenir ? | Chaine-courroie.com"
+     }
+    ],
+    "symptomes": "Courroie qui se désagrège, se détend ou s'effrite au contact prolongé de l'huile ; bruit de cliquetis au démarrage ou à l'accélération ; moteur qui cale à froid sans raison apparente et redémarrage parfois impossible ; voyant pression d'huile qui s'allume brièvement ; codes défaut OBD P0341, P0011, P0014 ou P0521 ; dans les cas avancés, perte de puissance liée au tendeur de distribution ou casse complète de la distribution. Remède : remplacement de la courroie (et de la crépine si elle est colmatée). Si elle n'est pas remplacée à l'échéance : risque de casse moteur.",
+    "km_typique": "60 000 à 150 000 km (premiers symptômes fréquents entre 60 000 et 100 000 km)",
+    "url_source": [
+     "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+     "https://chaine-courroie.com/puretech/peugeot-208-i-1-2-puretech",
+     "https://chaine-courroie.com/puretech/quand-changer-courroie-puretech"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_vehicules": null,
+    "cout_indicatif_eur_max": 750,
+    "cout_indicatif_eur_min": 400
+   },
+   {
+    "titre": "Encrassement de la crépine d'huile par débris de courroie et baisse de pression d'huile",
+    "organe": "Circuit de lubrification (crépine / pompe à huile)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+      "title": null
+     },
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/peugeot-2008-i-1-2-puretech-110-eb2dt",
+      "title": "Peugeot 2008 I 1.2 PureTech 110 : fiabilité et conseils"
+     },
+     {
+      "url": "https://chaine-courroie.com/puretech/peugeot-208-i-1-2-puretech",
+      "title": "Courroie distribution 208 PureTech : EB2F ou EB2DT, tout change | Chaine-courroie.com"
+     }
+    ],
+    "symptomes": "Débris issus de la dégradation de la courroie de distribution qui colmatent la crépine de la pompe à huile, provoquant une baisse de pression d'huile et une lubrification insuffisante de l'arbre à cames et des éléments mobiles ; code défaut pression d'huile au diagnostic.",
+    "km_typique": "60 000 à 100 000 km",
+    "url_source": [
+     "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+     "https://carverif.fr/blogs/fiabilite-voitures/peugeot-2008-i-1-2-puretech-110-eb2dt",
+     "https://chaine-courroie.com/puretech/peugeot-208-i-1-2-puretech"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_vehicules": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement des soupapes d'admission (dépôts de calamine)",
+    "organe": "Culasse / soupapes d'admission",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/",
+      "title": null
+     }
+    ],
+    "symptomes": "Accumulation de suie/calamine sur les soupapes d'admission du fait de l'injection directe (absence de rinçage par le carburant), entraînant une réduction progressive de la puissance et des performances du moteur.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/citroen-peugeot-eb2dt-1-2-puretech-110/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_vehicules": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "18dd553e-b24d-412b-8525-4f59c2e9d666",
+  "marque": "Peugeot",
+  "famille_moteur": "EB2ADTS",
+  "famille_norm": "EB2ADTS",
+  "annee_debut": 2016,
+  "annee_fin": 2022,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Défaut canister / circuit de mise à l'air du réservoir carburant entraînant à-coups moteur",
+    "organe": "Canister (filtre à charbon actif) / réservoir carburant",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8",
+      "title": "Véracité des problèmes de courroie EB2ADT(S) | Page 8 | Forum Peugeot"
+     }
+    ],
+    "symptomes": "À-coups moteur et perte de puissance, ralenti instable, voyant moteur allumé avec message 'faire réparer votre véhicule', diagnostic orientant vers un défaut de conception du réservoir/canister qualifié de vice caché par les intervenants du forum.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_vehicules": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Usure prématurée des bougies d'allumage / ratés moteur associés",
+    "organe": "Bougies d'allumage",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8",
+      "title": "Véracité des problèmes de courroie EB2ADT(S) | Page 8 | Forum Peugeot"
+     },
+     {
+      "url": "https://www.forum-peugeot.com/Forum/threads/choix-moteur.117413/",
+      "title": "Choix Moteur | Forum Peugeot"
+     }
+    ],
+    "symptomes": "Ralenti instable, moteur qui broute, à-coups et perte de puissance récurrents après remplacement des bougies, voyant moteur allumé.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8",
+     "https://www.forum-peugeot.com/Forum/threads/choix-moteur.117413/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_vehicules": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Sur-remplissage du carter d'huile constaté après vidange en réseau Peugeot",
+    "organe": "Niveau d'huile moteur / procédure de vidange",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8",
+      "title": "Véracité des problèmes de courroie EB2ADT(S) | Page 8 | Forum Peugeot"
+     }
+    ],
+    "symptomes": "Niveau d'huile supérieur au maximum de jauge juste après une vidange effectuée en concession, observé sur plusieurs exemplaires avant et après 2017 ; nécessite une vérification et une purge de l'excédent.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.forum-peugeot.com/Forum/threads/v%C3%A9racit%C3%A9-des-probl%C3%A8mes-de-courroie-eb2adt-s.27996/page-8"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_vehicules": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "61db6f06-ba13-4f51-88e8-2903b3696a1f",
+  "marque": "Peugeot",
+  "famille_moteur": "EB2F",
+  "famille_norm": "EB2F",
+  "annee_debut": 2012,
+  "annee_fin": null,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Dégradation de la courroie de distribution en bain d'huile (Belt in Oil)",
+    "organe": "Distribution / courroie bain d'huile",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+      "title": null
+     },
+     {
+      "url": "https://club.auto-doc.fr/forum/topic/probleme-de-moteur-12-puretech-82/",
+      "title": null
+     },
+     {
+      "url": "https://www.mastercovering.fr/fiabilite-moteur-1-2-puretech-82-avis-conseils/",
+      "title": "Fiabilité Du 1.2 PureTech 82 : Faut-Il Craindre Ce Moteur PSA ?"
+     },
+     {
+      "url": "https://www.ntn-snr.com/sites/default/files/2023-03/TECHinfo%201.2%20PureTech%20Atmo.pdf",
+      "title": null
+     }
+    ],
+    "symptomes": "La courroie de distribution, immergée en permanence dans l'huile moteur, se désagrège progressivement sous l'effet des additifs du lubrifiant. Les résidus de caoutchouc viennent colmater la crépine d'aspiration de la pompe à huile et, selon certaines sources généralistes sur la famille EB2, peuvent également obstruer la pompe à vide d'assistance au freinage. Cela provoque une chute de pression d'huile (voyant allumé), un encrassement des arbres à cames et, si la panne n'est pas traitée à temps, ",
+    "km_typique": "40 000-100 000 km",
+    "url_source": [
+     "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+     "https://club.auto-doc.fr/forum/topic/probleme-de-moteur-12-puretech-82/",
+     "https://www.mastercovering.fr/fiabilite-moteur-1-2-puretech-82-avis-conseils/",
+     "https://www.ntn-snr.com/sites/default/files/2023-03/TECHinfo%201.2%20PureTech%20Atmo.pdf"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 2100,
+    "cout_indicatif_eur_min": 800
+   },
+   {
+    "titre": "Surconsommation d'huile moteur (usure des segments)",
+    "organe": "Segmentation / pistons",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+      "title": null
+     },
+     {
+      "url": "https://www.mastercovering.fr/fiabilite-moteur-1-2-puretech-82-avis-conseils/",
+      "title": "Fiabilité Du 1.2 PureTech 82 : Faut-Il Craindre Ce Moteur PSA ?"
+     },
+     {
+      "url": "https://www.moninspection.fr/guide-fiabilite-moteur/avis-fiabilite-moteur-1-2-puretech-82-cv",
+      "title": "Avis et fiabilité du moteur 1.2 PureTech 82 cv"
+     },
+     {
+      "url": "https://www.garagegine.fr/essais/peugeot-208-1-2-puretech-82-fiabilite/",
+      "title": "Peugeot 208 1.2 PureTech 82 fiabilité : défauts et conseils"
+     }
+    ],
+    "symptomes": "Consommation d'huile anormalement élevée, pouvant nécessiter des appoints fréquents entre vidanges, liée à l'usure des segments de pistons ; aggravée par la contamination de l'huile issue de la dégradation de la courroie de distribution. Nécessite une surveillance régulière du niveau d'huile.",
+    "km_typique": "50 000-120 000 km",
+    "url_source": [
+     "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+     "https://www.mastercovering.fr/fiabilite-moteur-1-2-puretech-82-avis-conseils/",
+     "https://www.moninspection.fr/guide-fiabilite-moteur/avis-fiabilite-moteur-1-2-puretech-82-cv",
+     "https://www.garagegine.fr/essais/peugeot-208-1-2-puretech-82-fiabilite/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 300,
+    "cout_indicatif_eur_min": 200
+   },
+   {
+    "titre": "Capteurs défaillants (sonde lambda, capteur de cliquetis)",
+    "organe": "Capteurs moteur / gestion électronique",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.autotonic.org/peugeot-208-puretech-fiabilite/",
+      "title": null
+     }
+    ],
+    "symptomes": "Défaillance de la sonde lambda ou du capteur de cliquetis pouvant entraîner des à-coups ou une gestion moteur erratique.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.autotonic.org/peugeot-208-puretech-fiabilite/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "e53a63a2-22fb-4936-8a85-d540d34db96f",
+  "marque": "Peugeot",
+  "famille_moteur": "EP6",
+  "famille_norm": "EP6",
+  "annee_debut": 2006,
+  "annee_fin": 2016,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Encrassement des soupapes d'admission (calamine)",
+    "organe": "Soupapes d'admission / circuit de ventilation carter",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.occasion-moteur.com/post/moteur-1-6-thp-ep6-prince-d-occasion-fiabilit%C3%A9-et-pi%C3%A8ges",
+      "title": null
+     },
+     {
+      "url": "https://www.megaturbo.fr/blog/105-fiabilite-1-6-thp",
+      "title": "Fiabilité 1.6 THP : faut-il fuir ce moteur PSA-BMW ?"
+     },
+     {
+      "url": "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/",
+      "title": "Moteur 1.6 THP : est-il vraiment fiable ? Notre bilan complet"
+     }
+    ],
+    "symptomes": "Ralenti instable, perte de puissance, moteur qui \"s'étouffe\", dépôts de calamine sur les soupapes d'admission dus à l'injection directe qui n'arrose que les pistons et non les soupapes.",
+    "km_typique": "80 000 à 100 000 km",
+    "url_source": [
+     "https://www.occasion-moteur.com/post/moteur-1-6-thp-ep6-prince-d-occasion-fiabilit%C3%A9-et-pi%C3%A8ges",
+     "https://www.megaturbo.fr/blog/105-fiabilite-1-6-thp",
+     "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 800,
+    "cout_indicatif_eur_min": 400
+   },
+   {
+    "titre": "Défaillance de la pompe haute pression (HPFP)",
+    "organe": "Pompe à carburant haute pression",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://mytracks.fr/blog/moteur-1-6-thp-fiabilite",
+      "title": "Moteur 1.6 thp fiabilité et problèmes"
+     },
+     {
+      "url": "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/",
+      "title": "Moteur 1.6 THP : est-il vraiment fiable ? Notre bilan complet"
+     }
+    ],
+    "symptomes": "Perte de puissance notable, voyant moteur allumé, fragilité de la membrane de la pompe haute pression.",
+    "km_typique": "environ 80 000 km",
+    "url_source": [
+     "https://mytracks.fr/blog/moteur-1-6-thp-fiabilite",
+     "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 1200,
+    "cout_indicatif_eur_min": 800
+   },
+   {
+    "titre": "Turbo à géométrie variable grippé/encrassé",
+    "organe": "Turbocompresseur à géométrie variable",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://journal-auto-moto.fr/moteur-1-6-thp-fiabilite-et-problemes-courants/",
+      "title": "Moteur 1.6 THP : Fiabilité et problèmes courants &#8211; Journal Auto Moto"
+     },
+     {
+      "url": "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/",
+      "title": "Moteur 1.6 THP : est-il vraiment fiable ? Notre bilan complet"
+     }
+    ],
+    "symptomes": "Perte de puissance, fumées à l'échappement, grippage de la géométrie variable.",
+    "km_typique": "environ 80 000 km",
+    "url_source": [
+     "https://journal-auto-moto.fr/moteur-1-6-thp-fiabilite-et-problemes-courants/",
+     "https://essaisduclub.fr/moteur-1-6-thp-fiabilite-avis-et-problemes-frequents/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 2000,
+    "cout_indicatif_eur_min": 1200
+   },
+   {
+    "titre": "Fuite de pompe à eau / boîtier d'eau",
+    "organe": "Pompe à eau / boîtier d'eau (thermostat)",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/peugeot-208-gti-1-6-thp-caracteristiques",
+      "title": "Peugeot 208 I GTi 1.6 THP : Fiabilité et Avis"
+     }
+    ],
+    "symptomes": "Fuite de liquide de refroidissement, pompe à eau et boîtier d'eau plastique fragiles, problème documenté jusqu'en octobre 2012 sur certaines séries.",
+    "km_typique": null,
+    "url_source": [
+     "https://carverif.fr/blogs/fiabilite-voitures/peugeot-208-gti-1-6-thp-caracteristiques"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "c58ac4a6-eea9-4e40-a830-346344050cc5",
+  "marque": "Peugeot",
+  "famille_moteur": "DW12",
+  "famille_norm": "DW12",
+  "annee_debut": 2000,
+  "annee_fin": null,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Usure et rupture de la chaîne de distribution interne (entre arbres à cames)",
+    "organe": "Distribution - chaîne reliant les arbres à cames",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-peugeot-citroen-2-2-hdi-dw12/",
+      "title": null
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-citroen-peugeot-dw12ted4-dw12ated4-2-2-hdi/",
+      "title": null
+     }
+    ],
+    "symptomes": "Bruits métalliques, ratés moteur ; sur les toutes premières productions la chaîne entre arbres à cames s'est parfois rompue, avec désynchronisation de la distribution. Les pignons d'arbre à cames peuvent aussi tourner lors d'un démarrage poussé ou par grand froid. Si la chaîne n'est pas contrôlée/remplacée à temps : risque de casse moteur par désynchronisation.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-peugeot-citroen-2-2-hdi-dw12/",
+     "https://docteurmoteurs.com/moteur-citroen-peugeot-dw12ted4-dw12ated4-2-2-hdi/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Grippage / acidification des injecteurs dans la culasse",
+    "organe": "Injection - injecteurs diesel",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-citroen-peugeot-dw12ted4-dw12ated4-2-2-hdi/",
+      "title": null
+     },
+     {
+      "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+      "title": "Moteur 2.2 HDi : Fiabilité & Durée de vie"
+     }
+    ],
+    "symptomes": "Les injecteurs s'acidifient et se collent progressivement dans la culasse ; leur dépose en atelier nécessite parfois l'usage d'un outillage hydraulique et peut endommager la culasse elle-même. Sur la version bi-turbo DW12BTED4, les injecteurs figurent aussi parmi les points de fragilité identifiés.",
+    "km_typique": "au-delà de 100 000 km",
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-citroen-peugeot-dw12ted4-dw12ated4-2-2-hdi/",
+     "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Défaillance du turbocompresseur et de son actuateur",
+    "organe": "Suralimentation - turbocompresseur et doseur d'air",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+      "title": "Moteur 2.2 HDi : Fiabilité & Durée de vie"
+     },
+     {
+      "url": "https://moteurgarage.com/moteur-peugeot-dw12uted-2-2-hdi-problemes-et-statistiques/",
+      "title": null
+     }
+    ],
+    "symptomes": "Perte de puissance, surconsommation, parfois fonctionnement erratique ; les actuateurs de turbo (doseurs d'air) tombent souvent en panne, de même que les turbos eux-mêmes par manque de lubrification. Sur le DW12BTED4 bi-turbo, le système séquentiel est signalé comme fragile.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+     "https://moteurgarage.com/moteur-peugeot-dw12uted-2-2-hdi-problemes-et-statistiques/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Colmatage du filtre à particules et système additif Cérine (DW12TED4)",
+    "organe": "Dépollution - FAP et réservoir d'additif Cérine",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+      "title": "Moteur 2.2 HDi : Fiabilité & Durée de vie"
+     },
+     {
+      "url": "https://gebrauchtwagenberater.de/psa-hdi-probleme/",
+      "title": "PSA HDi (DW-12): Wie haltbar ist der Peugeot-Diesel?"
+     }
+    ],
+    "symptomes": "Message \"niveau additif faible\", colmatage progressif du FAP surtout en usage urbain/trajets courts, nécessitant une recharge d'additif ou, à terme, un remplacement du filtre.",
+    "km_typique": "autour de 160 000 km pour le remplacement du FAP",
+    "url_source": [
+     "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+     "https://gebrauchtwagenberater.de/psa-hdi-probleme/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 1000,
+    "cout_indicatif_eur_min": 150
+   },
+   {
+    "titre": "Encrassement de la vanne EGR",
+    "organe": "Dépollution - vanne EGR",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+      "title": "Moteur 2.2 HDi : Fiabilité & Durée de vie"
+     },
+     {
+      "url": "https://gebrauchtwagenberater.de/psa-hdi-probleme/",
+      "title": "PSA HDi (DW-12): Wie haltbar ist der Peugeot-Diesel?"
+     }
+    ],
+    "symptomes": "Encrassement par les suies, perte de puissance, voyant moteur allumé ; phénomène accentué par les trajets courts et l'usage urbain, décrit comme un peu plus marqué sur le DW-12 que sur d'autres diesels selon les retours de forums.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+     "https://gebrauchtwagenberater.de/psa-hdi-probleme/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 500,
+    "cout_indicatif_eur_min": 300
+   }
+  ]
+ },
+ {
+  "id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille_moteur": "EA288",
+  "famille_norm": "EA288",
+  "annee_debut": 2012,
+  "annee_fin": 2020,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Encrassement / défaillance de la vanne EGR",
+    "organe": "Vanne EGR et refroidisseur EGR",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://vag-perf.fr/news-nouveautes/moteur-2-0-tdi-ea288-guide-complet-fiabilite-problemes-et-preparation/",
+      "title": null
+     },
+     {
+      "url": "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/",
+      "title": "VW 2.0 TDI Engine Problems: Reliability & Common Failures UK"
+     },
+     {
+      "url": "https://autoscore.pro/engine/2.0-tdi-ea288-",
+      "title": null
+     }
+    ],
+    "symptomes": "Ralenti instable, voyant moteur allumé, perte de puissance, surconsommation, parfois passage en mode dégradé ; sur certains EA288 le refroidisseur EGR peut se percer en interne et laisser entrer du liquide de refroidissement dans l'échappement.",
+    "km_typique": "100 000 - 150 000 km (usage urbain intensif)",
+    "url_source": [
+     "https://vag-perf.fr/news-nouveautes/moteur-2-0-tdi-ea288-guide-complet-fiabilite-problemes-et-preparation/",
+     "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/",
+     "https://autoscore.pro/engine/2.0-tdi-ea288-"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": 1300,
+    "cout_indicatif_eur_min": 150
+   },
+   {
+    "titre": "Colmatage du filtre à particules (FAP)",
+    "organe": "FAP / système de régénération",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://vag-perf.fr/news-nouveautes/moteur-2-0-tdi-ea288-guide-complet-fiabilite-problemes-et-preparation/",
+      "title": null
+     },
+     {
+      "url": "https://www.moto-a2.fr/blogs/voiture/fiabilite-moteur-20-tdi-150-volkswagen-generations-et-pannes/",
+      "title": "Fiabilité moteur 2.0 TDI 150 Volkswagen : générations et pannes"
+     },
+     {
+      "url": "https://www.torquecars.com/volkswagen/2-0-tdi-ea288-revision-problems.php",
+      "title": "Common EA288 VW 2.0 TDi Did They Sort The Probelms"
+     }
+    ],
+    "symptomes": "Régénération incomplète ou impossible sur trajets courts répétés, voyant FAP, perte de puissance ; favorisé par un usage urbain sans grands trajets autoroutiers.",
+    "km_typique": null,
+    "url_source": [
+     "https://vag-perf.fr/news-nouveautes/moteur-2-0-tdi-ea288-guide-complet-fiabilite-problemes-et-preparation/",
+     "https://www.moto-a2.fr/blogs/voiture/fiabilite-moteur-20-tdi-150-volkswagen-generations-et-pannes/",
+     "https://www.torquecars.com/volkswagen/2-0-tdi-ea288-revision-problems.php"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": 1500,
+    "cout_indicatif_eur_min": 300
+   },
+   {
+    "titre": "Pannes du système SCR/AdBlue (capteur NOx, module doseur/injecteur d'urée)",
+    "organe": "Système SCR / AdBlue (capteur NOx, dosing module, pompe AdBlue)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://autocopilot.fr/motorisations/2-0-tdi-ea288",
+      "title": "2.0 TDI EA288 : fiabilité, problèmes, à éviter (2026)"
+     },
+     {
+      "url": "https://autoscore.pro/engine/2.0-tdi-ea288-evo",
+      "title": "2.0 TDI (EA288 Evo) Reliability & Problems | Autoscore"
+     },
+     {
+      "url": "https://www.moto-a2.fr/blogs/voiture/fiabilite-moteur-20-tdi-150-volkswagen-generations-et-pannes/",
+      "title": "Fiabilité moteur 2.0 TDI 150 Volkswagen : générations et pannes"
+     },
+     {
+      "url": "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/",
+      "title": "VW 2.0 TDI Engine Problems: Reliability & Common Failures UK"
+     }
+    ],
+    "symptomes": "Voyant moteur, messages d'erreur, mode dégradé avec limitation de puissance, compteur de redémarrages avant blocage au démarrage si le niveau AdBlue ou le système n'est pas réparé ; cristallisation possible de l'injecteur d'urée en cas d'inactivité prolongée.",
+    "km_typique": "80 000 - 120 000 km",
+    "url_source": [
+     "https://autocopilot.fr/motorisations/2-0-tdi-ea288",
+     "https://autoscore.pro/engine/2.0-tdi-ea288-evo",
+     "https://www.moto-a2.fr/blogs/voiture/fiabilite-moteur-20-tdi-150-volkswagen-generations-et-pannes/",
+     "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": 1200,
+    "cout_indicatif_eur_min": 300
+   },
+   {
+    "titre": "Pompe à eau interruptible défaillante (vanne N489 / bague de coulissement grippée)",
+    "organe": "Pompe à eau mécanique interruptible et vanne de liquide de refroidissement pour culasse N489",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.etoilecollections.fr/moteur-2-0-tdi-fiabilite/",
+      "title": "Tout sur le Moteur 2.0 TDI : Fiabilité vraiment légendaire ?!"
+     },
+     {
+      "url": "https://www.vag-technique.fr/threads/pompe-%C3%A0-eau-interruptible-sur-1-6-o%C3%B9-2-0tdi.2619/",
+      "title": "Question - Pompe à eau interruptible sur 1.6 où 2.0TDI - VAG-Technique.fr"
+     },
+     {
+      "url": "https://www.vag-technique.fr/ext_files/ssp/vw/SSP_514_La_nouvelle_gamme_de_moteurs_diesel_EA288.pdf",
+      "title": null
+     }
+    ],
+    "symptomes": "La bague de coulissement de la pompe peut se gripper, empêchant la circulation normale du liquide de refroidissement et provoquant un risque de surchauffe moteur ; Volkswagen a modifié certaines séries en obstruant le conduit de la vanne N489 pour supprimer la fonction interruptible après des cas de surchauffe sur 1.6 et 2.0 TDI. Remède : remplacement de la pompe à eau, 400 € à 700 € selon etoilecollections.fr, souvent couplé au changement de la courroie de distribution.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.etoilecollections.fr/moteur-2-0-tdi-fiabilite/",
+     "https://www.vag-technique.fr/threads/pompe-%C3%A0-eau-interruptible-sur-1-6-o%C3%B9-2-0tdi.2619/",
+     "https://www.vag-technique.fr/ext_files/ssp/vw/SSP_514_La_nouvelle_gamme_de_moteurs_diesel_EA288.pdf"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": 700,
+    "cout_indicatif_eur_min": 400
+   },
+   {
+    "titre": "Problèmes d'actionneur du turbo à géométrie variable",
+    "organe": "Turbocompresseur à géométrie variable (actionneur, wastegate)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.tauntonautomobiles.com/problems/2-0-tdi-common-problems",
+      "title": "Taunton Automobiles | VW Finance, Remapping & Repairs"
+     },
+     {
+      "url": "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/",
+      "title": "VW 2.0 TDI Engine Problems: Reliability & Common Failures UK"
+     }
+    ],
+    "symptomes": "Sous-suralimentation, mode dégradé, à distinguer d'une vraie panne de turbo : souvent un actionneur ou une durite de pression défaillants plutôt que le turbo lui-même.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.tauntonautomobiles.com/problems/2-0-tdi-common-problems",
+     "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Usure prématurée du volant moteur bi-masse",
+    "organe": "Volant moteur bi-masse",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.etoilecollections.fr/moteur-2-0-tdi-fiabilite/",
+      "title": "Tout sur le Moteur 2.0 TDI : Fiabilité vraiment légendaire ?!"
+     },
+     {
+      "url": "https://keramotor.fr/fiabilite-du-moteur-2-0-tdi-150-volkswagen-ce-quil-faut-savoir/",
+      "title": "Fiabilité du moteur 2.0 TDI 150 Volkswagen : ce qu'il faut savoir"
+     }
+    ],
+    "symptomes": "Vibrations et bruits caractéristiques au ralenti, problème hérité des générations précédentes mais présent avec une fréquence moindre sur l'EA288.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.etoilecollections.fr/moteur-2-0-tdi-fiabilite/",
+     "https://keramotor.fr/fiabilite-du-moteur-2-0-tdi-150-volkswagen-ce-quil-faut-savoir/"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": 2500,
+    "cout_indicatif_eur_min": 1500
+   },
+   {
+    "titre": "Défaillance de la pompe haute pression Bosch CP4 (carburant contaminé)",
+    "organe": "Pompe haute pression d'injection CP4",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://autocopilot.fr/motorisations/2-0-tdi-ea288",
+      "title": "2.0 TDI EA288 : fiabilité, problèmes, à éviter (2026)"
+     }
+    ],
+    "symptomes": "Sensible à un gasoil de mauvaise qualité ou contenant de l'eau ; en cas de défaillance, des éclats métalliques contaminent tout le circuit carburant (injecteurs, rampe commune, canalisations), panne non systématique mais irréversible une fois déclenchée.",
+    "km_typique": null,
+    "url_source": [
+     "https://autocopilot.fr/motorisations/2-0-tdi-ea288"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": 6000,
+    "cout_indicatif_eur_min": 4000
+   },
+   {
+    "titre": "Fuite du joint spi d'arbre à cames côté distribution",
+    "organe": "Joint spi d'arbre à cames / courroie de distribution",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteurs-diesel-2-0-tdi-de-la-serie-ea288-audi-vw/",
+      "title": null
+     }
+    ],
+    "symptomes": "Fuite d'huile au niveau du joint d'arbre à cames pouvant projeter de l'huile sur la courroie de distribution et réduire sa durée de vie.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteurs-diesel-2-0-tdi-de-la-serie-ea288-audi-vw/"
+    ],
+    "date_consultee": "2026-10-21",
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "7ac232cc-7d62-4fe1-8507-9c5510ffe606",
+  "marque": "Volkswagen",
+  "famille_moteur": "CRBC",
+  "famille_norm": "CRBC",
+  "annee_debut": 2012,
+  "annee_fin": 2016,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Surpressions et pertes de liquide de refroidissement (vase d'expansion)",
+    "organe": "Circuit de refroidissement",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://forums.audipassion.com/topic/235394-surpressions-ldr-sur-tdi-150-2013/",
+      "title": "Surpressions LDR sur TDI 150 (2013) - A3 8V / A3 Sportback / A3 Cabriolet - (2012 à 2020) - AudiPassion [4Legend.com]"
+     },
+     {
+      "url": "https://www.forum-audi.com/topic-2852-probleme-perte-de-liquide-de-refroidissement.html",
+      "title": "Problème perte de liquide de refroidissement (Page 1) / A3 8V / Forum-audi.com"
+     }
+    ],
+    "symptomes": "Surpressions aléatoires dans le vase d'expansion, projections de liquide de refroidissement dans le passage de roue et côté distribution, niveau de liquide qui chute brutalement notamment après une régénération de FAP ; diagnostics orientant parfois vers le radiateur, le collecteur d'admission ou un mélange avec les gaz d'échappement sans cause unique clairement identifiée par les ateliers.",
+    "km_typique": "120 000 - 205 000 km",
+    "url_source": [
+     "https://forums.audipassion.com/topic/235394-surpressions-ldr-sur-tdi-150-2013/",
+     "https://www.forum-audi.com/topic-2852-probleme-perte-de-liquide-de-refroidissement.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Défaillance du capteur de pression différentielle du FAP",
+    "organe": "Filtre à particules / capteur de pression différentielle",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.forumgolf7.fr/forum/viewtopic.php?style=6&t=24055",
+      "title": "Problème capteur pression de fap golf 7 tdi 150 - Forum Golf 7"
+     },
+     {
+      "url": "https://www.auto-doc.fr/info/problemes-du-moteur-20-tdi-150-ch",
+      "title": null
+     }
+    ],
+    "symptomes": "Perte de puissance sur autoroute et allumage du témoin moteur suite à un défaut remonté sur le capteur de pression différentielle du FAP ; cas de capteur fondu et méconnaissable nécessitant un remplacement, le moteur CRBC figurant explicitement dans la liste des codes moteur concernés par ce capteur à deux entrées selon les versions.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.forumgolf7.fr/forum/viewtopic.php?style=6&t=24055",
+     "https://www.auto-doc.fr/info/problemes-du-moteur-20-tdi-150-ch"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Bruits moteur à froid et incidents de distribution (chaîne/calage, sifflement échappement-turbo)",
+    "organe": "Distribution / ligne d'échappement-turbo",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.vwaudiforum.co.uk/forum/showthread.php/201607-A3-2-0-TDi-CRBC-timing-amongst-other-issues",
+      "title": null
+     },
+     {
+      "url": "https://www.tlemcen-electronic.com/forum/m-canique-g-n-rale/99458-question-moteur-crbc-2-0-tdi-150-a.html",
+      "title": null
+     },
+     {
+      "url": "https://www.forumgolf7.fr/forum/viewtopic.php?t=15940",
+      "title": "Bruit moteur au démarrage tdi 150. - Forum Golf 7"
+     }
+    ],
+    "symptomes": "Bruit de claquement ou de grippement à froid côté distribution disparaissant après quelques minutes ou en montée en régime ; sur un cas documenté, rupture de la courroie d'accessoires ayant fait sauter des dents de la chaîne de distribution avec déréglage du calage et impact pistons/soupapes nécessitant une culasse reconditionnée ; également sifflement intermittent à l'accélération évoquant un joint de collecteur d'échappement ou le turbo, nécessitant une dépose complète (FAP/EGR/turbo) pour inv",
+    "km_typique": "18 000 - 137 000 km",
+    "url_source": [
+     "https://www.vwaudiforum.co.uk/forum/showthread.php/201607-A3-2-0-TDi-CRBC-timing-amongst-other-issues",
+     "https://www.tlemcen-electronic.com/forum/m-canique-g-n-rale/99458-question-moteur-crbc-2-0-tdi-150-a.html",
+     "https://www.forumgolf7.fr/forum/viewtopic.php?t=15940"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-26",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "e9f9a303-84ee-402b-934e-9abc7c88c97e",
+  "marque": "BMW",
+  "famille_moteur": "B47",
+  "famille_norm": "B47",
+  "annee_debut": 2014,
+  "annee_fin": 2021,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Encrassement et fissuration du refroidisseur/vanne EGR (risque de fuite de liquide de refroidissement, rappel sécurité incendie)",
+    "organe": "Vanne et refroidisseur EGR",
+    "gravite": "securite",
+    "sources": [
+     {
+      "url": "https://www.bimmergarage.co.uk/bmw-b47-common-issues/",
+      "title": "BMW b47 common issues | Bimmer Garage"
+     },
+     {
+      "url": "https://www.bimmergarage.co.uk/bmw-b47-engine-problems/",
+      "title": "Bmw b47 engine problems | Bimmer Garage"
+     },
+     {
+      "url": "https://www.euroracingparts.fr/en/blogs/guide-dachat-pour-bmw/guide-dachat-moteur-bmw-b47-quelle-fiabilite",
+      "title": "(BUYING GUIDE) BMW B47 engine: How reliable is it? &ndash; Euro Racing Parts"
+     },
+     {
+      "url": "https://bimmer.ai/bmw-engines/b47/",
+      "title": "BMW B47 Engine Reliability Guide: Common Problems & UK Buyer Advice | Bimmer.AI"
+     }
+    ],
+    "symptomes": "Voyant moteur allumé, perte de puissance, mode dégradé (limp mode), ralenti instable, surconsommation, baisse du niveau de liquide de refroidissement, fumée excessive ; dans les cas documentés par rappel, risque d'incendie lié à une fuite de liquide de refroidissement sur le refroidisseur EGR",
+    "km_typique": "40 000 à 150 000 km",
+    "url_source": [
+     "https://www.bimmergarage.co.uk/bmw-b47-common-issues/",
+     "https://www.bimmergarage.co.uk/bmw-b47-engine-problems/",
+     "https://www.euroracingparts.fr/en/blogs/guide-dachat-pour-bmw/guide-dachat-moteur-bmw-b47-quelle-fiabilite",
+     "https://bimmer.ai/bmw-engines/b47/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "rappel_portee": null,
+    "date_consultee": "2026-10-27",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Usure / étirement de la chaîne de distribution",
+    "organe": "Chaîne de distribution, tendeur et patins",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.bimmergarage.co.uk/bmw-b47-common-issues/",
+      "title": "BMW b47 common issues | Bimmer Garage"
+     },
+     {
+      "url": "https://quickenginesolution.co.uk/blogs/b47-engine-reliability-longevity-known-issues/",
+      "title": "BMW B47 Engine Reliability, Longevity & Known Issues - UK"
+     },
+     {
+      "url": "https://bimmer.ai/bmw-engines/b47/",
+      "title": "BMW B47 Engine Reliability Guide: Common Problems & UK Buyer Advice | Bimmer.AI"
+     },
+     {
+      "url": "https://www.bimmer-mag.com/issues-with-n47-and-b47-engines/",
+      "title": "Top 7 Common Issues With N47 and B47 Engines and How to Fix Them - Bimmer Mag"
+     }
+    ],
+    "symptomes": "Cliquetis au démarrage à froid, bruit métallique à l'arrière du moteur, ratés d'allumage, codes défaut liés au calage ; dans les cas extrêmes non traités, casse moteur",
+    "km_typique": "80 000 à 150 000 km (surtout sur les premiers blocs B47 2014-2016)",
+    "url_source": [
+     "https://www.bimmergarage.co.uk/bmw-b47-common-issues/",
+     "https://quickenginesolution.co.uk/blogs/b47-engine-reliability-longevity-known-issues/",
+     "https://bimmer.ai/bmw-engines/b47/",
+     "https://www.bimmer-mag.com/issues-with-n47-and-b47-engines/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-27",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "c8204040-0a0c-4731-b372-f9783e207b8b",
+  "marque": "Toyota",
+  "famille_moteur": "2ZR-FXE",
+  "famille_norm": "2ZRFXE",
+  "annee_debut": 2009,
+  "annee_fin": 2022,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Défaillance du joint de culasse à fort kilométrage (Prius Gen3)",
+    "organe": "Joint de culasse",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://bobistheoilguy.com/forums/threads/2011-prius-head-gasket-failure-at-185k-summary.305542/",
+      "title": null
+     }
+    ],
+    "symptomes": "Perte de liquide de refroidissement dans un cylindre, piston humide de liquide de refroidissement visible à l'endoscopie, parfois léger cliquetis moteur. Observé sur des Prius 2010-2015 à fort kilométrage. Remède : remplacement du joint de culasse (révision disponible chez Toyota).",
+    "km_typique": "environ 185 000 km (cas documenté)",
+    "url_source": [
+     "https://bobistheoilguy.com/forums/threads/2011-prius-head-gasket-failure-at-185k-summary.305542/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement du circuit EGR (vibrations, ratés, code défaut P0401)",
+    "organe": "Vanne et refroidisseur EGR",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://toyota-club.net/files/faq/19-09-30_faq_zr-engine_eng.htm",
+      "title": "Toyota ZR series engines"
+     }
+    ],
+    "symptomes": "Vibrations au ralenti, bruit de cliquetis à froid côté boîte, accumulation de calamine dans la vanne EGR, code défaut P0401. Remède selon bulletin technique Toyota : remplacement de la vanne EGR, reprogrammation ECU et modification du câblage.",
+    "km_typique": null,
+    "url_source": [
+     "https://toyota-club.net/files/faq/19-09-30_faq_zr-engine_eng.htm"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Codes défaut liés à la purge VSV/PCV et mélange carburant (P0A0F, P3190, P3191, P0171)",
+    "organe": "Vanne VSV de purge / circuit PCV",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://toyota-club.net/files/faq/19-09-30_faq_zr-engine_eng.htm",
+      "title": "Toyota ZR series engines"
+     }
+    ],
+    "symptomes": "Déconnexion de la ligne purge VSV/PCV au niveau du corps de papillon, codes défauts P0A0F, P3190, P3191, P0171. Remède selon bulletin technique : remplacement de la vanne VSV de purge et reprogrammation de l'ECM.",
+    "km_typique": null,
+    "url_source": [
+     "https://toyota-club.net/files/faq/19-09-30_faq_zr-engine_eng.htm"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Dégradation de la batterie haute tension (hors moteur thermique mais associée au groupe motopropulseur hybride)",
+    "organe": "Batterie hybride haute tension",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.oscar-racing.fr/fiabilite-toyota-corolla-hybride-moteurs-a-eviter/",
+      "title": "Fiabilité Toyota Corolla Hybride : Les 3 Moteurs à éviter"
+     }
+    ],
+    "symptomes": "Perte progressive de capacité de la batterie haute tension au-delà de 150 000 km, nécessitant un reconditionnement ou remplacement. Le bloc thermique 2ZR-FXE lui-même atteint souvent 300 000 à 400 000 km sans intervention lourde selon les retours propriétaires.",
+    "km_typique": "au-delà de 150 000 km",
+    "url_source": [
+     "https://www.oscar-racing.fr/fiabilite-toyota-corolla-hybride-moteurs-a-eviter/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 4000,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Difficulté de démarrage à froid par temps très froid (CT200h)",
+    "organe": "Collecteur d'admission",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://toyota-club.net/files/faq/19-09-30_faq_zr-engine_eng.htm",
+      "title": "Toyota ZR series engines"
+     }
+    ],
+    "symptomes": "Codes défaut P2111 et P0A0F par températures ambiantes inférieures à -5°C. Remède selon bulletin technique Toyota : remplacement du collecteur d'admission (référence pièce révisée).",
+    "km_typique": null,
+    "url_source": [
+     "https://toyota-club.net/files/faq/19-09-30_faq_zr-engine_eng.htm"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "8e8ded23-b8fa-455d-be24-64adb94d63ed",
+  "marque": "Toyota",
+  "famille_moteur": "2ZR-FE",
+  "famille_norm": "2ZRFE",
+  "annee_debut": 2007,
+  "annee_fin": 2019,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Consommation d'huile excessive (segments/pistons, moteurs 2008-2011)",
+    "organe": "Pistons et segments",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://8020automotive.com/the-3-most-common-toyota-2zr-fe-engine-problems/",
+      "title": "The 3 Most Common Toyota 2ZR-FE Engine Problems"
+     },
+     {
+      "url": "https://low-offset.com/toyota/2zr-fe-engine/",
+      "title": "Toyota 2ZR-FE Engine: Common Problems & Reliability | Low Offset"
+     },
+     {
+      "url": "https://www.toyotanation.com/threads/block-issues-with-2zrfe-no-explanation-from-toyota.1664444/",
+      "title": "Block issues with 2zrfe (no explanation from Toyota) | Toyota Forum"
+     },
+     {
+      "url": "http://www.corollaforum.com/threads/2zr-fe-oil-consumption-fixed.6279/",
+      "title": null
+     }
+    ],
+    "symptomes": "Appoints d'huile fréquents entre vidanges, fumée bleue à l'échappement (surtout au démarrage ou en accélération), voyant de pression d'huile pouvant s'allumer sur les cas avancés. Concerne surtout les premiers blocs 2008-2011. Toyota a publié un bulletin technique fin 2008 proposant une mise à jour et, si besoin, un remplacement des pistons/segments sous garantie.",
+    "km_typique": "100 000 - 200 000 km (plus fréquent en haut kilométrage)",
+    "url_source": [
+     "https://8020automotive.com/the-3-most-common-toyota-2zr-fe-engine-problems/",
+     "https://low-offset.com/toyota/2zr-fe-engine/",
+     "https://www.toyotanation.com/threads/block-issues-with-2zrfe-no-explanation-from-toyota.1664444/",
+     "http://www.corollaforum.com/threads/2zr-fe-oil-consumption-fixed.6279/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Défaillance de la pompe à eau",
+    "organe": "Pompe à eau / circuit de refroidissement",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://enginescope.gr/engine/toyota-2zr/",
+      "title": "Toyota 2ZR-FE/2ZR-FAE Reliability — BUY 82/100 | EngineScope"
+     },
+     {
+      "url": "https://8020automotive.com/the-3-most-common-toyota-2zr-fe-engine-problems/",
+      "title": "The 3 Most Common Toyota 2ZR-FE Engine Problems"
+     },
+     {
+      "url": "https://low-offset.com/toyota/2zr-fe-engine/",
+      "title": "Toyota 2ZR-FE Engine: Common Problems & Reliability | Low Offset"
+     }
+    ],
+    "symptomes": "Fuite de liquide de refroidissement à l'avant du moteur, niveau de liquide qui baisse, bruit de sifflement, risque de surchauffe si non traité. Panne jugée relativement peu fréquente mais récurrente sur ce moteur.",
+    "km_typique": null,
+    "url_source": [
+     "https://enginescope.gr/engine/toyota-2zr/",
+     "https://8020automotive.com/the-3-most-common-toyota-2zr-fe-engine-problems/",
+     "https://low-offset.com/toyota/2zr-fe-engine/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": 275
+   },
+   {
+    "titre": "Rupture de guide/chaîne de distribution (moteur à calage interférent)",
+    "organe": "Chaîne de distribution et guides",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.toyotanation.com/threads/2010-matrix-2zr-fe-lost-compression.1721760/",
+      "title": "2010 Matrix 2ZR-FE lost compression | Toyota Forum"
+     },
+     {
+      "url": "https://low-offset.com/toyota/2zr-fe-engine/",
+      "title": "Toyota 2ZR-FE Engine: Common Problems & Reliability | Low Offset"
+     }
+    ],
+    "symptomes": "Cas documentés de guide de chaîne de distribution sectionné entraînant un déraillement/saut de calage, perte de compression sur plusieurs cylindres, arrêt moteur brutal sans préavis. Le 2ZR-FE étant un moteur à calage interférent, une rupture de chaîne entraîne des dégâts moteur majeurs (contact pistons/soupapes), pouvant nécessiter le remplacement du moteur.",
+    "km_typique": "150 000 - 270 000 km",
+    "url_source": [
+     "https://www.toyotanation.com/threads/2010-matrix-2zr-fe-lost-compression.1721760/",
+     "https://low-offset.com/toyota/2zr-fe-engine/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "5ea6a9fd-7bd3-4dc4-b629-40b009488144",
+  "marque": "Ford",
+  "famille_moteur": "SIGMA",
+  "famille_norm": "SIGMA",
+  "annee_debut": 2010,
+  "annee_fin": 2017,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Fuites de liquide de refroidissement (durites, boîtier de thermostat) favorisant la surchauffe",
+    "organe": "Circuit de refroidissement (durites, boîtier de thermostat)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.go-parts.com/garage/thermostat-housing-ford-fiesta-ford-escape-ford-transit-connect-2013-2019",
+      "title": null
+     },
+     {
+      "url": "https://www.pistonheads.com/gassing/topic.asp?h=0&f=129&t=1869515",
+      "title": "Ford 1.6 Ecoboost engine issues - Page 1 - Ford - PistonHeads UK"
+     },
+     {
+      "url": "https://lesechos-agera.fr/moteur-ford-ecoboost/",
+      "title": "Moteur EcoBoost Ford : Quel bilan en terme de fiabilité? - Les echos de l'économie"
+     }
+    ],
+    "symptomes": "Des durites en plastique rigide se fissurent ou s'usent avec le temps, et le boîtier de thermostat constitue un point de fuite fréquent sur ce moteur. La perte de liquide de refroidissement qui en résulte peut passer inaperçue jusqu'à l'apparition de symptômes de surchauffe (voyant au tableau de bord, perte de puissance), avec un risque d'enchaînement vers la fissuration de la culasse si le niveau n'est pas contrôlé à temps.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.go-parts.com/garage/thermostat-housing-ford-fiesta-ford-escape-ford-transit-connect-2013-2019",
+     "https://www.pistonheads.com/gassing/topic.asp?h=0&f=129&t=1869515",
+     "https://lesechos-agera.fr/moteur-ford-ecoboost/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Fuites d'huile moteur (joints de cache-culbuteurs, carter, joints d'arbre à cames)",
+    "organe": "Joints moteur",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://cararac.com/blog/ford-fiesta-1-6-engine-problems-durability.html",
+      "title": "2011-2019 Ford Fiesta 1.6L Sigma Engine: Longevity, Problems, and Specs"
+     },
+     {
+      "url": "https://www.justanswer.co.uk/ford/8k795-reliable-ford-engine-sigma-1595cc-i4.html",
+      "title": null
+     }
+    ],
+    "symptomes": "Apparition de traces d'huile sous le véhicule, odeur de brûlé en roulant, et à terme baisse du niveau d'huile pouvant accélérer l'usure du moteur si elle n'est pas corrigée. Signalé comme un des problèmes courants rencontrés sur ce moteur dans la durée.",
+    "km_typique": null,
+    "url_source": [
+     "https://cararac.com/blog/ford-fiesta-1-6-engine-problems-durability.html",
+     "https://www.justanswer.co.uk/ford/8k795-reliable-ford-engine-sigma-1595cc-i4.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "5055e2bc-e31c-4e60-b5a0-73cab5508d63",
+  "marque": "Hyundai",
+  "famille_moteur": "G3LC",
+  "famille_norm": "G3LC",
+  "annee_debut": 2015,
+  "annee_fin": 2020,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Durit de dépression du servofrein pouvant se fissurer (i20)",
+    "organe": "Freinage (assistance)",
+    "gravite": "securite",
+    "sources": [
+     {
+      "url": "https://enginescope.gr/engine/hk-kappa-10/",
+      "title": "Hyundai/Kia Kappa 1.0 T-GDI (G3LC) Reliability — BUY 84/100 | EngineScope"
+     }
+    ],
+    "symptomes": "Sifflement provenant du compartiment moteur, pédale de frein plus dure ; un routage incorrect de la durite de dépression peut entraîner sa fissuration par vibration et réduire l'assistance au freinage. Réparation gratuite chez le concessionnaire.",
+    "km_typique": null,
+    "url_source": [
+     "https://enginescope.gr/engine/hk-kappa-10/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "rappel_portee": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 0,
+    "cout_indicatif_eur_min": 0
+   },
+   {
+    "titre": "Bruit de chaîne de distribution / tendeur hydraulique défaillant",
+    "organe": "Distribution (chaîne)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.carchecker.pro/reports/hyundai_kona_os_1.0_tgdi.html",
+      "title": null
+     },
+     {
+      "url": "https://mymotorlist.com/engines/hyundai/g3lc/",
+      "title": "Engine Hyundai-Kia G3LC: specifications, characteristics, oil, performance"
+     },
+     {
+      "url": "https://www.engineexplained.com/hyundai-g3lc-1-0-l-engine-review/",
+      "title": null
+     }
+    ],
+    "symptomes": "Cliquetis métallique au démarrage à froid pouvant durer de 1 à 30 secondes, lié à une perte de pression hydraulique du tendeur pendant la nuit ; sur les moteurs antérieurs à 2020, la chaîne peut frotter contre le couvercle de distribution et générer des particules métalliques contaminant l'huile. Si le cliquetis persiste au-delà de 5 secondes, remplacement de la chaîne, du tendeur, des guides et souvent du couvercle.",
+    "km_typique": "jusqu'à ~100 000 km pour un usage soutenu",
+    "url_source": [
+     "https://www.carchecker.pro/reports/hyundai_kona_os_1.0_tgdi.html",
+     "https://mymotorlist.com/engines/hyundai/g3lc/",
+     "https://www.engineexplained.com/hyundai-g3lc-1-0-l-engine-review/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement des injecteurs et calamine sur soupapes d'admission (injection directe)",
+    "organe": "Injection / admission",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://enginescope.gr/engine/hk-kappa-10/",
+      "title": "Hyundai/Kia Kappa 1.0 T-GDI (G3LC) Reliability — BUY 84/100 | EngineScope"
+     },
+     {
+      "url": "https://www.otomoto.pl/news/1-0-t-gdi-g3lc-usterki-opinie-problemy",
+      "title": "1.0 T-GDi (G3LC): usterki, opinie, problemy | OTOMOTO News"
+     },
+     {
+      "url": "https://autoscore.pro/engine/1.0-t-gdi-kappa",
+      "title": "1.0 T-GDI (Kappa) Reliability & Problems | Autoscore"
+     }
+    ],
+    "symptomes": "Ralenti irrégulier, hésitation à l'accélération, codes de raté d'allumage, surconsommation de carburant ; dépôts de calamine liés à l'absence de lavage des soupapes par le carburant propre à l'injection directe.",
+    "km_typique": "environ 80 000 km",
+    "url_source": [
+     "https://enginescope.gr/engine/hk-kappa-10/",
+     "https://www.otomoto.pl/news/1-0-t-gdi-g3lc-usterki-opinie-problemy",
+     "https://autoscore.pro/engine/1.0-t-gdi-kappa"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 700,
+    "cout_indicatif_eur_min": 300
+   },
+   {
+    "titre": "Fuite d'huile au turbocompresseur et bruit d'actionneur",
+    "organe": "Turbocompresseur",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://enginescope.gr/engine/hk-kappa-10/",
+      "title": "Hyundai/Kia Kappa 1.0 T-GDI (G3LC) Reliability — BUY 84/100 | EngineScope"
+     },
+     {
+      "url": "https://www.otomoto.pl/news/1-0-t-gdi-g3lc-usterki-opinie-problemy",
+      "title": "1.0 T-GDi (G3LC): usterki, opinie, problemy | OTOMOTO News"
+     }
+    ],
+    "symptomes": "Suintement d'huile autour du turbo, bruit de cliquetis provenant de la timonerie du turbo ; signalé par un test polonais, confirmé comme petits soucis de jeunesse sur les premières versions de l'actionneur électronique de wastegate.",
+    "km_typique": null,
+    "url_source": [
+     "https://enginescope.gr/engine/hk-kappa-10/",
+     "https://www.otomoto.pl/news/1-0-t-gdi-g3lc-usterki-opinie-problemy"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Défaillance précoce des bobines d'allumage",
+    "organe": "Allumage",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.carchecker.pro/reports/hyundai_kona_os_1.0_tgdi.html",
+      "title": null
+     }
+    ],
+    "symptomes": "Ratés d'allumage (codes P0300/P0301-P0303), ralenti irrégulier, perte de puissance ; les conditions humides semblent accélérer les pannes. Remplacement unitaire peu coûteux et facile d'accès.",
+    "km_typique": "25 000 à 40 000 km",
+    "url_source": [
+     "https://www.carchecker.pro/reports/hyundai_kona_os_1.0_tgdi.html"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 50,
+    "cout_indicatif_eur_min": 30
+   },
+   {
+    "titre": "Sensibilité à la surchauffe / fuites du circuit de refroidissement",
+    "organe": "Refroidissement",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://mymotorlist.com/engines/hyundai/g3lc/",
+      "title": "Engine Hyundai-Kia G3LC: specifications, characteristics, oil, performance"
+     }
+    ],
+    "symptomes": "Le moteur supporte mal la surchauffe : les joints peuvent brunir et des fuites importantes apparaître si le circuit de refroidissement n'est pas correctement entretenu ; risque accru si le niveau du radiateur n'est pas surveillé.",
+    "km_typique": null,
+    "url_source": [
+     "https://mymotorlist.com/engines/hyundai/g3lc/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Risque de préallumage à basse vitesse (LSPI)",
+    "organe": "Bloc moteur / pistons",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://autoscore.pro/engine/1.0-t-gdi-kappa",
+      "title": "1.0 T-GDI (Kappa) Reliability & Problems | Autoscore"
+     }
+    ],
+    "symptomes": "Phénomène de préallumage à basse vitesse propre aux moteurs downsizés turbo à injection directe, pouvant endommager bielles/pistons en cas d'huile inadaptée ; nécessite l'usage d'une huile homologée anti-LSPI.",
+    "km_typique": "environ 60 000 km",
+    "url_source": [
+     "https://autoscore.pro/engine/1.0-t-gdi-kappa"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 3500,
+    "cout_indicatif_eur_min": 1500
+   }
+  ]
+ },
+ {
+  "id": "a8a06dc0-8b80-4ca7-9f43-3e73eec0ea9d",
+  "marque": "Hyundai",
+  "famille_moteur": "G4LD",
+  "famille_norm": "G4LD",
+  "annee_debut": 2015,
+  "annee_fin": 2023,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Allongement / bruit de chaîne de distribution",
+    "organe": "Distribution (chaîne)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://otoba.ru/dvigatel/hyundai/g4ld.html",
+      "title": "G4LD - двигатель Hyundai 1.4 T-GDI | Otoba.ru"
+     },
+     {
+      "url": "https://ma-voiture-doccasion.fr/blog/fiabilite-hyundai",
+      "title": "Fiabilité Hyundai : guide occasion pour acheter en confiance | Ma Voiture d&#x27;Occasion"
+     },
+     {
+      "url": "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/",
+      "title": null
+     }
+    ],
+    "symptomes": "Cliquetis métallique au démarrage à froid pendant quelques secondes, bruit qui peut s'accentuer avec le kilométrage ; la chaîne a tendance à s'allonger avec l'âge, notamment en cas d'utilisation fréquente du moteur jusqu'à la coupure haut régime. Si le jeu n'est pas corrigé : risque de saut de distribution et de casse moteur.",
+    "km_typique": "env. 100 000 km",
+    "url_source": [
+     "https://otoba.ru/dvigatel/hyundai/g4ld.html",
+     "https://ma-voiture-doccasion.fr/blog/fiabilite-hyundai",
+     "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 1500,
+    "cout_indicatif_eur_min": 800
+   },
+   {
+    "titre": "Consommation d'huile excessive",
+    "organe": "Bloc moteur / segmentation / joint de culasse",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/",
+      "title": null
+     },
+     {
+      "url": "https://www.vousconduire.fr/fiabilite-moteur-1-4-t-gdi/",
+      "title": "Account Suspended"
+     },
+     {
+      "url": "https://ma-voiture-doccasion.fr/blog/fiabilite-hyundai",
+      "title": "Fiabilité Hyundai : guide occasion pour acheter en confiance | Ma Voiture d&#x27;Occasion"
+     }
+    ],
+    "symptomes": "Niveau d'huile qui baisse plus vite que la normale entre deux vidanges, parfois sans fumée ni fuite visible apparente ; attribuée par les sources à une usure des segments de piston ou à des joints de culasse fragiles. Nécessite une surveillance régulière du niveau pour éviter des dommages internes.",
+    "km_typique": "au-delà de 60 000 km",
+    "url_source": [
+     "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/",
+     "https://www.vousconduire.fr/fiabilite-moteur-1-4-t-gdi/",
+     "https://ma-voiture-doccasion.fr/blog/fiabilite-hyundai"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Surchauffe moteur / turbo et fuites de liquide de refroidissement",
+    "organe": "Circuit de refroidissement / turbocompresseur",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/",
+      "title": null
+     },
+     {
+      "url": "https://www.vousconduire.fr/fiabilite-moteur-1-4-t-gdi/",
+      "title": "Account Suspended"
+     }
+    ],
+    "symptomes": "Sifflements et perte de performance du turbo, notamment après des trajets urbains répétés ; fuites de liquide de refroidissement au niveau des joints de culasse, durites ou pompe à eau pouvant entraîner une surchauffe. Les sources conseillent de laisser tourner le moteur quelques instants avant extinction pour refroidir le turbo après usage soutenu.",
+    "km_typique": null,
+    "url_source": [
+     "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/",
+     "https://www.vousconduire.fr/fiabilite-moteur-1-4-t-gdi/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement des injecteurs / pertes de puissance",
+    "organe": "Injection directe essence",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/evaluation-detailee-hyundai-i30-pd-essence-1-4-tgdi-140",
+      "title": "Hyundai i30 PD Essence 1.4 T-GDi 140 : fiabilité"
+     },
+     {
+      "url": "https://www.vousconduire.fr/fiabilite-moteur-1-4-t-gdi/",
+      "title": "Account Suspended"
+     }
+    ],
+    "symptomes": "Pertes de puissance à l'accélération, ralenti instable, parfois odeur d'essence ; attribué à l'encrassement des injecteurs, phénomène courant sur les moteurs à injection directe. Un nettoyage ou remplacement des injecteurs résout généralement le problème.",
+    "km_typique": "60 000 à 100 000 km",
+    "url_source": [
+     "https://carverif.fr/blogs/fiabilite-voitures/evaluation-detailee-hyundai-i30-pd-essence-1-4-tgdi-140",
+     "https://www.vousconduire.fr/fiabilite-moteur-1-4-t-gdi/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Ratés d'allumage (bougies / bobines)",
+    "organe": "Allumage",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/",
+      "title": null
+     }
+    ],
+    "symptomes": "Ratés d'allumage liés à des bougies usées ou des bobines défectueuses, pouvant affecter les performances et augmenter la consommation de carburant.",
+    "km_typique": null,
+    "url_source": [
+     "https://moteurgarage.com/moteur-hyundai-g4ld-1-4-l-problemes-et-fiabilite/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Boîte de vitesses DCT7 associée : à-coups et usure d'embrayage",
+    "organe": "Transmission DCT7 (double embrayage, associée au 1.4 T-GDi)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/evaluation-detailee-hyundai-i30-pd-essence-1-4-tgdi-140",
+      "title": "Hyundai i30 PD Essence 1.4 T-GDi 140 : fiabilité"
+     },
+     {
+      "url": "https://carverif.fr/blogs/fiabilite-voitures/hyundai-i30-pd-essence-14-t-gdi",
+      "title": "Hyundai i30 (PD) Essence 1.4 T-GDi : fiabilité"
+     }
+    ],
+    "symptomes": "À-coups à basse vitesse et comportement d'embrayage jugé critiquable sur les premiers exemplaires de la DCT7 associée au 1.4 T-GDi ; mises à jour logicielles effectuées par Hyundai. Remplacement d'embrayage documenté à 90 000 km.",
+    "km_typique": "dès 50 000 km, embrayage vers 90 000 km",
+    "url_source": [
+     "https://carverif.fr/blogs/fiabilite-voitures/evaluation-detailee-hyundai-i30-pd-essence-1-4-tgdi-140",
+     "https://carverif.fr/blogs/fiabilite-voitures/hyundai-i30-pd-essence-14-t-gdi"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 1000,
+    "cout_indicatif_eur_min": 1000
+   }
+  ]
+ },
+ {
+  "id": "416f175c-db09-441c-a300-e028ae87d039",
+  "marque": "Hyundai",
+  "famille_moteur": "G4FD",
+  "famille_norm": "G4FD",
+  "annee_debut": 2010,
+  "annee_fin": 2018,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Encrassement carbone des soupapes d'admission",
+    "organe": "Admission / injection directe",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://v-trade.nl/en/2024/12/19/hyundai-kia-1-6-gdi-engine-with-code-g4fd/",
+      "title": "Hyundai/Kia 1.6 GDI Engine (G4FD): Features and Tips"
+     },
+     {
+      "url": "https://mymotorlist.com/engines/hyundai/g4fd/",
+      "title": "Engine Hyundai-Kia G4FD: specifications, characteristics, oil, performance"
+     },
+     {
+      "url": "https://autopartswd.com/hyundai-g4fd-engine-guide/",
+      "title": "Hyundai G4FD Engine: Specs, Problems & Reliability Guide"
+     }
+    ],
+    "symptomes": "Ralenti instable, difficultés de démarrage, perte de puissance, à-coups, surconsommation de carburant. Typique des moteurs à injection directe où le carburant ne lave plus le dos des soupapes d'admission.",
+    "km_typique": "environ 65 000 à 130 000 km (40 000-80 000 miles)",
+    "url_source": [
+     "https://v-trade.nl/en/2024/12/19/hyundai-kia-1-6-gdi-engine-with-code-g4fd/",
+     "https://mymotorlist.com/engines/hyundai/g4fd/",
+     "https://autopartswd.com/hyundai-g4fd-engine-guide/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Usure du tendeur de chaîne de distribution",
+    "organe": "Distribution (chaîne et tendeur hydraulique)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://autopartswd.com/hyundai-g4fd-engine-guide/",
+      "title": "Hyundai G4FD Engine: Specs, Problems & Reliability Guide"
+     },
+     {
+      "url": "https://en.1xmatch.com/avtotachki/dvigatel-hyundai-g4fd/",
+      "title": "1xmatch - ставки на спорт и спортивные справочники"
+     },
+     {
+      "url": "https://mymotorlist.com/engines/hyundai/g4fd/",
+      "title": "Engine Hyundai-Kia G4FD: specifications, characteristics, oil, performance"
+     }
+    ],
+    "symptomes": "Cliquetis/bruit de cliquetis au démarrage à froid qui s'atténue après chauffe, codes défaut de corrélation d'arbre à cames possibles. Le tendeur plastique/hydraulique se dégrade avec le temps, aggravé par des vidanges espacées ou une viscosité d'huile incorrecte. Risque de casse moteur si la chaîne saute, le moteur étant du type à interférence.",
+    "km_typique": "100 000 à 150 000 km",
+    "url_source": [
+     "https://autopartswd.com/hyundai-g4fd-engine-guide/",
+     "https://en.1xmatch.com/avtotachki/dvigatel-hyundai-g4fd/",
+     "https://mymotorlist.com/engines/hyundai/g4fd/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Consommation d'huile excessive (segments de pistons)",
+    "organe": "Pistons / segmentation",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://autopartswd.com/hyundai-g4fd-engine-guide/",
+      "title": "Hyundai G4FD Engine: Specs, Problems & Reliability Guide"
+     },
+     {
+      "url": "https://mymotorlist.com/engines/hyundai/g4fd/",
+      "title": "Engine Hyundai-Kia G4FD: specifications, characteristics, oil, performance"
+     }
+    ],
+    "symptomes": "Niveau d'huile bas entre les vidanges, fumée bleue à l'accélération, encrassement des bougies par résidus d'huile. Lié à une conception de segments de piston à tension insuffisante sur les premiers blocs ; Hyundai a publié des bulletins techniques recommandant des segments et clapets PCV mis à jour sur les moteurs 2012-2014.",
+    "km_typique": null,
+    "url_source": [
+     "https://autopartswd.com/hyundai-g4fd-engine-guide/",
+     "https://mymotorlist.com/engines/hyundai/g4fd/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": 2014,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": 2012,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "0921efc0-7d08-4f06-99f2-b8bf8f88c36f",
+  "marque": "Hyundai",
+  "famille_moteur": "G4KD",
+  "famille_norm": "G4KD",
+  "annee_debut": 2010,
+  "annee_fin": 2018,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Usure/rayures des parois de cylindre avec consommation d'huile élevée",
+    "organe": "Bloc moteur / cylindres - segmentation pistons",
+    "gravite": "casse",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-kia-hyundai-g4kd-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://motordinamico.com/motor-kia-hyundai-g4kd-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://www.enginedna.com/kia-hyundai-g4kd-2-0-engine/",
+      "title": null
+     },
+     {
+      "url": "https://autopartswd.com/g4kd-engine-guide/",
+      "title": "G4KD Engine: Specs, Problems, Reliability & Applications"
+     }
+    ],
+    "symptomes": "Cliquetis métallique à froid puis permanent en s'aggravant, consommation d'huile anormalement élevée, rayures (parfois profondes) sur les parois de cylindre constatées au démontage ; les particules métalliques générées contaminent ensuite la pompe à huile et les arbres à cames. Le remède décrit par les sources est une révision moteur avec réalésage du bloc (cotes réparation) ou alésage sous piston standard.",
+    "km_typique": "100 000 - 150 000 km, parfois plus tôt",
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-kia-hyundai-g4kd-2-0/",
+     "https://motordinamico.com/motor-kia-hyundai-g4kd-2-0/",
+     "https://www.enginedna.com/kia-hyundai-g4kd-2-0-engine/",
+     "https://autopartswd.com/g4kd-engine-guide/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Usure de la chaîne de distribution et de son tendeur (séries pré-2014)",
+    "organe": "Distribution - chaîne et tendeur",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.enginecode.uk/hyundai/g4kd-specs",
+      "title": "Hyundai G4KD Engine Specs, Issues & Identification | Specs, Issues, Models | EngineCode.uk"
+     },
+     {
+      "url": "https://autopartswd.com/g4kd-engine-guide/",
+      "title": "G4KD Engine: Specs, Problems, Reliability & Applications"
+     },
+     {
+      "url": "https://www.enginefinder.co.za/blog/problems/g4kd-engine-problems/",
+      "title": "G4KD Engine Problems: Complete Hyundai-Kia 2.0L Troubleshooting Guide"
+     }
+    ],
+    "symptomes": "Bruit de cliquetis/cliquetis de chaîne, ralenti irrégulier, tendeur usé prématurément ; favorisé par des vidanges espacées et une conduite en charge. Sur les blocs postérieurs à 2014 le tendeur a été mis à jour.",
+    "km_typique": "avant 100 000 km sur les blocs les plus anciens (2010-2014)",
+    "url_source": [
+     "https://www.enginecode.uk/hyundai/g4kd-specs",
+     "https://autopartswd.com/g4kd-engine-guide/",
+     "https://www.enginefinder.co.za/blog/problems/g4kd-engine-problems/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement de l'actionneur CVVT par boues d'huile / rampe d'admission à clapets grippée",
+    "organe": "Distribution variable (CVVT) et collecteur d'admission",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.enginecode.uk/hyundai/g4kd-specs",
+      "title": "Hyundai G4KD Engine Specs, Issues & Identification | Specs, Issues, Models | EngineCode.uk"
+     }
+    ],
+    "symptomes": "Défauts du phaseur d'arbre à cames (CVVT) liés à l'accumulation de boues d'huile, clapets de collecteur d'admission qui se grippent, pertes de puissance et ralenti irrégulier.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.enginecode.uk/hyundai/g4kd-specs"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Fuite au joint de cache-culbuteurs",
+    "organe": "Cache-culbuteurs / joint de cache-culbuteurs",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://www.enginecode.uk/hyundai/g4kd-specs",
+      "title": "Hyundai G4KD Engine Specs, Issues & Identification | Specs, Issues, Models | EngineCode.uk"
+     }
+    ],
+    "symptomes": "Odeur d'huile, suintement d'huile près des puits de bougies, résidus d'huile sur les bobines d'allumage, provoqués par un joint durci avec l'âge et un cache plastique qui se déforme sous les cycles thermiques.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.enginecode.uk/hyundai/g4kd-specs"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Sifflement du roulement du compresseur de climatisation",
+    "organe": "Compresseur de climatisation",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-kia-hyundai-g4kd-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://motordinamico.com/motor-kia-hyundai-g4kd-2-0/",
+      "title": null
+     }
+    ],
+    "symptomes": "Sifflement audible provenant du compresseur de climatisation, résolu par le remplacement du roulement ou du compresseur.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-kia-hyundai-g4kd-2-0/",
+     "https://motordinamico.com/motor-kia-hyundai-g4kd-2-0/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "76f40987-27eb-4f33-8e95-bacde8de9011",
+  "marque": "Volvo",
+  "famille_moteur": "D4204T",
+  "famille_norm": "D4204T",
+  "annee_debut": 2012,
+  "annee_fin": null,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Colmatage du filtre à particules (FAP/DPF)",
+    "organe": "Filtre à particules / post-traitement",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.engineexplained.com/volvo-d4204t8-2-0-l-engine-review/",
+      "title": null
+     }
+    ],
+    "symptomes": "Perte de puissance, régénérations fréquentes ou incomplètes, message \"filtre à particules plein\", surconsommation de carburant, surconsommation d'huile par dilution — favorisé par une utilisation majoritairement urbaine ou sur courts trajets.",
+    "km_typique": null,
+    "url_source": [
+     "https://www.engineexplained.com/volvo-d4204t8-2-0-l-engine-review/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 1500,
+    "cout_indicatif_eur_min": 500
+   },
+   {
+    "titre": "Collecteur d'admission plastique : dépôts de carbone et risque de fonte",
+    "organe": "Collecteur d'admission",
+    "gravite": "securite",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t8-2-0/",
+      "title": null
+     }
+    ],
+    "symptomes": "Accumulation importante de dépôts carbonés dans l'admission ; en cas de fuite au niveau du clapet d'admission, la température augmente localement et peut faire fondre/déformer le collecteur en plastique, déclenchant un mode dégradé et le voyant moteur. Une source qualifie ce défaut de risque d'incendie dans les cas extrêmes.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-volvo-d4204t8-2-0/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Fissures/ruptures de durites turbo, intercooler et raccords de refroidissement",
+    "organe": "Durites turbocompresseur / intercooler / système PowerPulse",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t23-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t14-2-0-d-bi-turbo/",
+      "title": null
+     }
+    ],
+    "symptomes": "Les tuyaux en caoutchouc du turbocompresseur, de l'intercooler et du système PowerPulse se fissurent ou cassent sous la chaleur et la pression, provoquant perte de suralimentation, codes défaut et perte de puissance ; sur certains D4204T14, un raccord près de la pompe à vide (lié au tuyau EGR) se casse et provoque une fuite de liquide de refroidissement.",
+    "km_typique": null,
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-volvo-d4204t23-2-0/",
+     "https://docteurmoteurs.com/moteur-volvo-d4204t14-2-0-d-bi-turbo/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Fuite d'huile au joint de cache-soupapes et au turbocompresseur",
+    "organe": "Joint de cache-soupapes / joint turbo",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t14-2-0-d-bi-turbo/",
+      "title": null
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t8-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://www.engineexplained.com/volvo-d4204t8-2-0-l-engine-review/",
+      "title": null
+     }
+    ],
+    "symptomes": "À partir d'environ 150 000 km, apparition de suintements d'huile sous le cache-soupacpes et au niveau des joints du turbocompresseur, nécessitant des appoints d'huile plus fréquents.",
+    "km_typique": "150000+",
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-volvo-d4204t14-2-0-d-bi-turbo/",
+     "https://docteurmoteurs.com/moteur-volvo-d4204t8-2-0/",
+     "https://www.engineexplained.com/volvo-d4204t8-2-0-l-engine-review/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Surconsommation d'huile importante pouvant aller jusqu'à une défaillance de joint de culasse",
+    "organe": "Joint de culasse / étanchéité cylindres",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t14-2-0-d-bi-turbo/",
+      "title": null
+     }
+    ],
+    "symptomes": "Cas documentés de surconsommation d'huile très élevée (jusqu'à environ 1 litre tous les 1300 km), attribuée selon les cas à une étanchéité insuffisante des cylindres ou au joint d'étanchéité du turbo ; un cas rapporté après surchauffe (bypass EGR) a nécessité le remplacement du joint de culasse suite à une fuite entre deux cylindres adjacents.",
+    "km_typique": "100000-150000",
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-volvo-d4204t14-2-0-d-bi-turbo/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Courroie de distribution : remplacement périodique impératif",
+    "organe": "Distribution (courroie)",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t8-2-0/",
+      "title": null
+     },
+     {
+      "url": "https://docteurmoteurs.com/moteur-volvo-d4204t23-2-0/",
+      "title": null
+     }
+    ],
+    "symptomes": "Courroie de distribution conçue pour une durée de vie d'environ 120 000 km ; si elle n'est pas remplacée à l'échéance et qu'elle casse, les soupapes entrent en contact avec les pistons, entraînant des réparations importantes pouvant aller jusqu'à la destruction de la culasse.",
+    "km_typique": "120000",
+    "url_source": [
+     "https://docteurmoteurs.com/moteur-volvo-d4204t8-2-0/",
+     "https://docteurmoteurs.com/moteur-volvo-d4204t23-2-0/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ },
+ {
+  "id": "3d3cc2c6-5abf-4329-8d90-bbe96b048aa6",
+  "marque": "Volvo",
+  "famille_moteur": "B4204T",
+  "famille_norm": "B4204T",
+  "annee_debut": 2014,
+  "annee_fin": null,
+  "statut": "generee",
+  "pannes": [
+   {
+    "titre": "Consommation d'huile excessive / usure des segments de piston",
+    "organe": "bloc moteur - segmentation des pistons",
+    "gravite": "casse",
+    "sources": [
+     {
+      "url": "https://www.volvov40club.com/threads/2015-t5-engine-serial.38621/",
+      "title": "2015 T5 Engine Serial | Volvo V40 Forums"
+     },
+     {
+      "url": "https://volvoforums.com/forum/volvo-s60-v60-10/engine-rebuild-engine-replace-small-budget-108502/",
+      "title": null
+     },
+     {
+      "url": "https://www.swedespeed.com/threads/highest-miles-on-a-b4204t11-2-0t.641280/",
+      "title": "Highest Miles on a B4204T11 2.0T | SwedeSpeed - Volvo Performance Forum"
+     }
+    ],
+    "symptomes": "Baisse rapide du niveau d'huile entre les vidanges, voyant moteur, dans les cas avancés perte de compression sur un cylindre (misfire) pouvant nécessiter une réparation moteur ou un remplacement complet",
+    "km_typique": "80 000 - 150 000 km",
+    "url_source": [
+     "https://www.volvov40club.com/threads/2015-t5-engine-serial.38621/",
+     "https://volvoforums.com/forum/volvo-s60-v60-10/engine-rebuild-engine-replace-small-budget-108502/",
+     "https://www.swedespeed.com/threads/highest-miles-on-a-b4204t11-2-0t.641280/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": 3500,
+    "cout_indicatif_eur_min": 1500
+   },
+   {
+    "titre": "Courroie de distribution immergée dans l'huile (dégradation et obstruction de la crépine)",
+    "organe": "distribution - courroie humide",
+    "gravite": "majeure",
+    "sources": [
+     {
+      "url": "https://www.aepspieces.com/post/moteur-volvo-2-0-b4204t-d-occasion-versions-drive-e-applications-et-fiabilite",
+      "title": null
+     }
+    ],
+    "symptomes": "Dégradation progressive de la courroie en fonction du temps plus que du kilométrage ; les résidus peuvent obstruer la crépine de pompe à huile ; en cas de rupture, risque de déformation des soupapes",
+    "km_typique": "100 000 - 120 000 km",
+    "url_source": [
+     "https://www.aepspieces.com/post/moteur-volvo-2-0-b4204t-d-occasion-versions-drive-e-applications-et-fiabilite"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Encrassement / défaillance des injecteurs à injection directe",
+    "organe": "système d'injection directe",
+    "gravite": "mineure",
+    "sources": [
+     {
+      "url": "https://volvoforums.com/forum/volvo-xc60-51/b4204t11-fuel-injector-replace-117066/",
+      "title": null
+     }
+    ],
+    "symptomes": "Ralenti irrégulier, perte de puissance, ratés d'allumage, surconsommation de carburant ; remplacement d'injecteur diagnostiqué chez certains propriétaires",
+    "km_typique": null,
+    "url_source": [
+     "https://volvoforums.com/forum/volvo-xc60-51/b4204t11-fuel-injector-replace-117066/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   },
+   {
+    "titre": "Casse de piston (détérioration moteur documentée en usage réel)",
+    "organe": "bloc moteur - pistons",
+    "gravite": "casse",
+    "sources": [
+     {
+      "url": "https://www.swedespeed.com/threads/highest-miles-on-a-b4204t11-2-0t.641280/",
+      "title": "Highest Miles on a B4204T11 2.0T | SwedeSpeed - Volvo Performance Forum"
+     }
+    ],
+    "symptomes": "Rupture ou endommagement de piston constaté sur des moteurs à kilométrage encore modéré (dès 80 000 km dans un cas documenté), nécessitant le remplacement complet du moteur",
+    "km_typique": "80 000 - 90 000 km",
+    "url_source": [
+     "https://www.swedespeed.com/threads/highest-miles-on-a-b4204t11-2-0t.641280/"
+    ],
+    "rappel_code": null,
+    "rappel_date": null,
+    "date_consultee": "2026-10-29",
+    "rappel_annee_fin": null,
+    "rappel_vehicules": null,
+    "rappel_annee_debut": null,
+    "cout_indicatif_eur_max": null,
+    "cout_indicatif_eur_min": null
+   }
+  ]
+ }
+]

@@ -45,7 +45,10 @@ const a = (n) => args.includes(n)
 const ESTIMER = a('--estimer')
 const APPLIQUER = a('--appliquer')
 const BUDGET = Number(flag('--budget', '9')) || 9
-const PLAFOND_CUMUL = 15
+// Sprint 24, campagne 3 : `--compteur` et `--plafond-cumul` font compter ce
+// run sur le plafond dédié aux crédits (40 €), sans toucher au compteur
+// historique de la campagne du 8 nov.
+const PLAFOND_CUMUL = Number(flag('--plafond-cumul', '15')) || 15
 const FICHE_UNE = flag('--fiche')
 // ⚠️ LA CAMPAGNE SE JOUE PAR LOTS (décision d'Utku du 8 nov. 2026) : 20 pannes,
 // mur de 4 € par lot, puis arrêt avec le RENDEMENT. Un lot qui rend moins de
@@ -54,7 +57,7 @@ const FICHE_UNE = flag('--fiche')
 const MAX_PANNES = Number(flag('--max-pannes', '0')) || 0
 const SEUIL_RENDEMENT = 0.15
 const FICHIER = args.find((x) => x.endsWith('.json')) ?? 'fiches.json'
-const COMPTEUR = '.resourcage-cout.json'
+const COMPTEUR = flag('--compteur', '.resourcage-cout.json')
 const JOURNAL = 'docs/resourcage-fiches-journal.json'
 const RAPPORT = 'docs/resourcage-fiches-resultats.json'
 

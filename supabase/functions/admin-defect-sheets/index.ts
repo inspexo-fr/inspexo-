@@ -147,6 +147,28 @@ serve(async (req: Request) => {
         );
       }
 
+      // ── SPRINT 24, campagne 2 — INSCRIRE LA REVÉRIFICATION D'UNE PRISE ───
+      // Ajoute (ou remplace) le champ `verification` d'une prise désignée par
+      // son texte EXACT. Rien d'autre ne bouge ; aucune prise n'est retirée.
+      if (Array.isArray(body.verifier_prises)) {
+        const { data: row } = await admin.from("defect_sheets").select("prises_en_charge").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const liste = (Array.isArray(row.prises_en_charge) ? row.prises_en_charge : []) as Array<Record<string, unknown>>;
+        const avant = JSON.parse(JSON.stringify(liste));
+        const marquees: string[] = [], introuvables: string[] = [];
+        for (const v of body.verifier_prises.slice(0, 60)) {
+          const texte = String(v?.texte ?? "").replace(/\s+/g, " ").trim();
+          const x = liste.find((p) => String(p?.texte ?? "").replace(/\s+/g, " ").trim() === texte);
+          if (!x || !["a_jour", "a_reverifier"].includes(v?.statut) || !/^\d{4}-\d{2}-\d{2}$/.test(String(v?.le ?? ""))) { introuvables.push(texte.slice(0, 80)); continue; }
+          x.verification = { statut: v.statut, le: String(v.le), motif: v.motif ? String(v.motif).slice(0, 200) : null };
+          marquees.push(texte.slice(0, 80));
+        }
+        if (marquees.length === 0) return new Response(JSON.stringify({ error: "aucune prise marquée", introuvables }), { status: 400, headers: cors });
+        const { error: e12 } = await admin.from("defect_sheets").update({ ...fields, prises_en_charge: liste }).eq("id", body.id);
+        if (e12) return new Response(JSON.stringify({ error: e12.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ marquees: marquees.length, introuvables, prises_avant: avant }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
       // ── SPRINT 24, campagne 1 — AJOUTER UN COÛT PUBLIÉ À UNE PANNE ──────
       //
       // ADDITIF : une panne qui a DÉJÀ un coût n'est jamais modifiée. Le coût

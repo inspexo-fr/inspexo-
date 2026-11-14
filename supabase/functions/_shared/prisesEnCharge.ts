@@ -19,6 +19,9 @@ export type PriseEnCharge = {
   periode: { debut: number; fin: number; texte: string } | null;
   pays: string[];
   urls: string[];
+  /** SPRINT 24, campagne 2 — dernière vérification (juge sans cache). Une
+   *  prise n'est jamais retirée : « a_reverifier » la signale. */
+  verification?: { statut: "a_jour" | "a_reverifier"; le: string; motif: string | null };
 };
 
 const TYPES = new Set(["garantie", "campagne", "rappel"]);
@@ -49,7 +52,11 @@ export function sanitizePrisesEnCharge(brut: unknown): PriseEnCharge[] {
     const cle = texte.toLowerCase();
     if (vus.has(cle)) continue;
     vus.add(cle);
-    out.push({ type: e.type, texte, periode, pays, urls });
+    const v = e?.verification;
+    const verification = v && (v.statut === "a_jour" || v.statut === "a_reverifier") && /^\d{4}-\d{2}-\d{2}$/.test(String(v.le ?? ""))
+      ? { statut: v.statut, le: String(v.le), motif: v.motif ? String(v.motif).slice(0, 200) : null }
+      : undefined;
+    out.push({ type: e.type, texte, periode, pays, urls, ...(verification ? { verification } : {}) });
   }
   return out;
 }

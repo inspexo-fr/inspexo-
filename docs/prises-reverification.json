@@ -1,0 +1,946 @@
+{
+ "unites": [
+  {
+   "uid": "A-NISSAN-HR12DDT-04#1",
+   "fiche": "Renault H5FT",
+   "type": "campagne",
+   "partie": "Pas de rappel imposé: reprogrammation Nissan du module de gestion moteur (réponses ministérielles, Que Choisir)",
+   "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE26444.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que le constructeur Nissan a effectué une reprogrammation du module de gestion moteur, sans mention d'un rappel imposé, concernant précisément les moteurs essence 1.2 type H5Ft pour Nissan (35 604 véhicules).",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-NISSAN-HR12DDT-04#2",
+   "fiche": "Renault H5FT",
+   "type": "campagne",
+   "partie": "Pas de rappel imposé: prise en charge financière au cas par cas (réponses ministérielles, Que Choisir)",
+   "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE26444.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique qu'en complément des dispositifs techniques, une prise en charge financière selon des critères objectifs a été appliquée par les constructeurs, incluant Nissan, sans mention d'un rappel imposé.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-05",
+   "fiche": "Peugeot EB2",
+   "type": "garantie",
+   "partie": "Extension de garantie Stellantis 10 ans / 175 000 km (courroie de distribution et surconsommation d'huile), en place",
+   "url": "https://www.caradisiac.com/le-moteur-puretech-profite-d-une-extension-de-garantie-208069.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que Stellantis propose une extension de garantie de 10 ans / 175 000 km pour les moteurs PureTech suite aux problèmes de consommation excessive d'huile liés à la dégradation prématurée de la courroie de distribution.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-06",
+   "fiche": "Peugeot EB2",
+   "type": "campagne",
+   "partie": "Plate-forme d'indemnisation rétroactive Stellantis (stellantis-support.com), ouverte",
+   "url": "https://www.largus.fr/actualite-automobile/moteur-1-2-puretech-stellantis-lancera-bientot-une-plate-forme-d-indemnisation-30037499.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que Stellantis a ouvert le 16 janvier 2025 une plate-forme de réclamation pour les dépenses engagées entre le 1er janvier 2022 et le 31 décembre 2024 (initialement jusqu'au 18 mars 2024) sur les moteurs PureTech, correspondant à l'indemnisation rétroactive décrite.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-07",
+   "fiche": "Peugeot EB2",
+   "type": "rappel",
+   "partie": "Rappels courroie de distribution / pompe à vide (perte d'assistance de freinage): campagnes",
+   "url": "https://www.largus.fr/actualite-automobile/moteur-12-puretech-psa-quand-remplacer-la-courroie-de-distribution-10590390.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit explicitement les campagnes de rappel sur le 1.2 PureTech turbo concernant la dégradation de la courroie de distribution dont les résidus colmatent la pompe à vide, provoquant une perte d'assistance de freinage.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-08#1",
+   "fiche": "Peugeot EB2",
+   "type": "rappel",
+   "partie": "Rappel gicleurs de refroidissement par jet d'huile (1.2 PureTech 82 ch): véhicules en France",
+   "url": "https://journalauto.com/constructeurs/puretech-stellantis-doit-rappeler-68-000-voitures/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que Stellantis rappelle 68 000 véhicules en France équipés du moteur 1.2 PureTech 82 ch en raison d'un défaut des buses de refroidissement par jet d'huile.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-08#2",
+   "fiche": "Peugeot EB2",
+   "type": "rappel",
+   "partie": "Rappel gicleurs de refroidissement par jet d'huile (1.2 PureTech 82 ch): risque de départ de feu",
+   "url": "https://journalauto.com/constructeurs/puretech-stellantis-doit-rappeler-68-000-voitures/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que le dysfonctionnement peut générer un risque de projection d'huile sur le pot d'échappement pouvant causer de la fumée, voire un départ de feu.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-09",
+   "fiche": "Peugeot EB2",
+   "type": "campagne",
+   "partie": "Actions judiciaires PureTech: action collective et plaintes pénales (UFC-Que Choisir)",
+   "url": "https://journalauto.com/constructeurs/moteurs-1-2-puretech-pres-de-900-automobilistes-portent-plainte-contre-stellantis/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme qu'une plainte pénale collective de 883 automobilistes a été déposée le 14 février 2025 auprès du procureur de Versailles contre Stellantis pour des pannes des moteurs 1.2 PureTech, ce qui correspond à l'action collective et aux plaintes pénales mentionnées.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-21",
+   "fiche": "Renault K9K",
+   "type": "campagne",
+   "partie": "Actions en atelier Renault/Dacia/Nissan sur la courroie de distribution 1.5 dCi — non assimilées à un rappel",
+   "url": "https://www.largus.fr/actualite-automobile/courroie-de-distribution-des-ennuis-a-la-chaine-3823379_p_2.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit plusieurs 'actions en atelier' (décembre 2011, avril 2013) pour la courroie de distribution du 1.5 dCi K9K, terme qui désigne une mesure non assimilée à un rappel officiel.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-23",
+   "fiche": "Renault K9K",
+   "type": "campagne",
+   "partie": "Campagne de service Nissan (reprogrammation) sur Qashqai 1 1.5 dCi 110 contre la surchauffe du FAP",
+   "url": "https://www.largus.fr/actualite-automobile/nissan-qashqai-1-2007-2014-ca-sent-le-roussi-pour-le-fap-8310384.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que Nissan a lancé une campagne de service (reprogrammation) sur les Qashqai 1.5 dCi 110 produits du 1er septembre 2010 au 6 décembre 2013 en raison d'un risque de surchauffe et de détérioration du FAP.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-24",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel: tous les Kadjar 1.5 dCi — reprogrammation de la gestion antipollution (et remplacement du piège à NOx)",
+   "url": "https://www.caradisiac.com/fiabilite-du-renault-kadjar-la-maxi-fiche-occasion-de-caradisiac-186486.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel d'octobre 2016 pour tous les modèles 1.5 dCi fabriqués jusqu'au 2 juillet 2015 pour reprogrammation de la gestion antipollution et remplacement du piège à NOx.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-25",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel (Dacia diesel): blocage de la clé de contact dans le barillet pouvant endommager le démarreur",
+   "url": "https://www.caradisiac.com/fiabilite-du-dacia-duster-2-la-maxi-fiche-occasion-de-caradisiac-195834.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel de janvier 2021 pour les modèles diesels Duster 2 fabriqués entre septembre 2017 et avril 2018, concernant un risque de blocage de la clé de contact dans le barillet pouvant endommager le démarreur ou provoquer un incendie.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-26",
+   "fiche": "Renault K9K",
+   "type": "garantie",
+   "partie": "Prise en charge constructeur à 100 % (pièces et main-d'œuvre) de la pompe à urée AdBlue — véhicules de moins de 5 ans et de moins de 200 000 km",
+   "url": "https://www.largus.fr/actualite-automobile/renault-blue-dci-prise-en-charge-de-la-defaillance-du-reservoir-d-adblue-30029363.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que l'opération de remplacement de la pompe d'urée et son joint est 'prise en charge à 100 % (pièces et main-d'œuvre) pour les véhicules de moins de 5 ans et moins de 200 000 km', ce qui correspond exactement à l'affirmation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-33",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel (Captur): diesels Euro 6b — filtre à particules (avec piège à NOx) remplacé et pilotage reprogrammé",
+   "url": "https://www.caradisiac.com/fiabilite-du-renault-captur-la-maxi-fiche-occasion-de-caradisiac-166405.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel d'octobre 2016 pour les Captur diesel Euro6b produits entre février et septembre 2015, avec remplacement du FAP incluant le piège à NOx et reprogrammation de sa gestion.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-34",
+   "fiche": "Renault K9K",
+   "type": "garantie",
+   "partie": "Non-démarrage par givre du refroidisseur d'air (1.5 dCi / 1.6 dCi): réparations prises en charge par Renault hors garantie sur les véhicules de moins de 5 ans ou de moins de 150 000 km",
+   "url": "https://www.largus.fr/actualite-automobile/renault-15-dci-et-16-dci-probleme-de-demarrage-sur-les-diesels-9932390.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que pour les véhicules hors garantie constructeur, 'Renault prend en charge les réparations sur les véhicules âgés de moins de 5 ans ou affichant moins de 150 000 km', ce qui correspond exactement à l'affirmation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-35#1",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel (Allemagne, relevé par l'ADAC) Nissan Juke 1.5 dCi: poulie de la pompe haute pression mal alignée — la courroie de distribution travaille de travers (calage moteur)",
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique pour le 1.5 dCi (rappel 3/2014) que la fixation/alignement de la poulie de la pompe haute pression n'est pas exacte, provoquant un fonctionnement en biais de la courroie de distribution.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-35#2",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel (Allemagne, relevé par l'ADAC) Nissan Juke 1.5 dCi: s'use prématurément et peut casser (calage moteur)",
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que la courroie de distribution ainsi mal alignée s'use prématurément et peut se rompre, entraînant un calage moteur.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-36#1",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel (Allemagne, relevé par l'ADAC) Nissan Juke turbo-diesel: support du capteur de pression de suralimentation mal laminé — fuite",
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit pour les moteurs turbo-diesel (rappel 2/2012) que le processus de laminage du support du capteur de pression de suralimentation n'a pas été réalisé correctement, provoquant une fuite au niveau du support.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-36#2",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel (Allemagne, relevé par l'ADAC) Nissan Juke turbo-diesel: signal faux",
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que cette fuite fait que le capteur transmet un signal faux au calculateur moteur.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-36#3",
+   "fiche": "Renault K9K",
+   "type": "rappel",
+   "partie": "Rappel (Allemagne, relevé par l'ADAC) Nissan Juke turbo-diesel: démarrage difficile et calage",
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0420-nissan-juke-2010-2019-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que ce signal faux peut provoquer des problèmes de démarrage et un arrêt soudain du moteur (calage).",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-K9K-37",
+   "fiche": "Renault K9K",
+   "type": "garantie",
+   "partie": "Consommation d'huile du 1.5 Blue dCi (K9K Gen8): remplacement du moteur selon une grille de prise en charge constructeur (« plan satisfaction client »)",
+   "url": "https://www.largus.fr/guide-achat-occasion/dacia/duster/avis-fiabilite-dacia-duster-ii-hjd-30038702.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne exactement « Consommation d'huile (+ de 0,5 l/1 000 km) sur K9K Gen8 du 01/05/2018 au 14/03/2020 » avec pour remède « Reprogrammation du calculateur d'injection, voire moteur à remplacer (grille de prise en charge depuis 2022) ».",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-11#1",
+   "fiche": "Peugeot EB2",
+   "type": "rappel",
+   "partie": "Hybride 48V: rappel pour risque d'incendie (filtre à particules essence trop proche du démarreur 48V)",
+   "url": "https://www.quechoisir.org/actualite-stellantis-des-dizaines-de-milliers-de-voitures-concernees-par-plusieurs-rappels-n175390/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit exactement ce rappel : le filtre à particules essence trop proche (moins de 10 mm) du capuchon de protection du démarreur 48V, pouvant provoquer une infiltration d'eau, un arc électrique et un incendie, sur la version hybride MHEV 48V du Turbo 100 (110/145 ou 100/136 ch).",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-EB2-11#2",
+   "fiche": "Peugeot EB2",
+   "type": "rappel",
+   "partie": "Hybride 48V: véhicules en France",
+   "url": "https://www.quechoisir.org/actualite-stellantis-des-dizaines-de-milliers-de-voitures-concernees-par-plusieurs-rappels-n175390/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page donne un décompte précis des véhicules concernés en France (211 725 voitures hybrides réparties par marques), confirmant que le rappel concerne des véhicules vendus en France.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-04#1",
+   "fiche": "BMW N47",
+   "type": "campagne",
+   "partie": "Action technique BMW officieuse (sans courrier aux propriétaires): tendeur remplacé systématiquement",
+   "url": "https://www.quechoisir.org/actualite-moteurs-diesel-bmw-toujours-aussi-fragiles-n7927/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "non_soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que BMW a adressé une note interne de service en janvier 2015 préconisant le remplacement systématique du tendeur de chaîne (et de la chaîne si nécessaire) sur le moteur N47, sans mention d'un courrier officiel aux propriétaires.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-04#2",
+   "fiche": "BMW N47",
+   "type": "campagne",
+   "partie": "Action technique BMW officieuse (sans courrier aux propriétaires): contrôle de l'allongement de la chaîne au-delà de 75 000 km et remplacement des chaînes si nécessaire — uniquement lors d'un passage dans le réseau",
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-bmw-problemes-de-chaine-de-distribution-sur-le-20-diesel-6313385_p_2.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que sur les véhicules de plus de 75 000 km le réseau contrôle l'allongement de la chaîne et procède au remplacement si nécessaire, et précise que cette action n'est réalisée que lors du passage dans le réseau sans courrier préalable aux propriétaires.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-05#1",
+   "fiche": "BMW N47",
+   "type": "garantie",
+   "partie": "Prise en charge hors garantie de la chaîne de distribution: BMW dit prendre « généralement » les frais à sa charge si l'entretien a été scrupuleusement suivi",
+   "url": "https://www.quechoisir.org/actualite-moteur-diesel-bmw-chaine-de-distribution-fragile-n11281/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que BMW « prend généralement tous les frais à sa charge » pour ces réparations, à condition que « l'entretien ait été réalisé en respectant scrupuleusement les indications de BMW ».",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-05#2",
+   "fiche": "BMW N47",
+   "type": "garantie",
+   "partie": "Prise en charge hors garantie de la chaîne de distribution: mais participations variables (0 à 100 %) et refus fréquents",
+   "url": "https://www.quechoisir.org/actualite-moteurs-diesel-bmw-la-galere-des-frais-de-reparation-n46060/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit des participations variables (40%, 50%, non précisé pour d'autres) et de nombreux refus de prise en charge (dépassement kilométrique, facture manquante, mauvaise foi), ce qui correspond à des participations de 0 à 100% et des refus fréquents.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-07#1",
+   "fiche": "BMW N47",
+   "type": "rappel",
+   "partie": "Rappels du réchauffeur de gazole / de filtre à carburant: chauffage permanent",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-31/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit deux rappels (09/2011 et 08/2013) sur la BMW Série 1 Diesel où une connexion défectueuse de la chauffe du filtre à carburant provoque un chauffage permanent après le démarrage.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-07#2",
+   "fiche": "BMW N47",
+   "type": "rappel",
+   "partie": "Rappels du réchauffeur de gazole / de filtre à carburant: batterie déchargée",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-31/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique explicitement que ce chauffage permanent 'führt dann entweder zum Entleeren der Batterie' (entraîne une décharge de la batterie).",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-07#3",
+   "fiche": "BMW N47",
+   "type": "rappel",
+   "partie": "Rappels du réchauffeur de gazole / de filtre à carburant: échauffement du connecteur",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-31/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "non_soutenue",
+   "votes": [
+    "non_soutenue",
+    "non_soutenue"
+   ],
+   "justification": "La page mentionne un problème de contact/connexion défectueuse pouvant mener à un 'Schmorbrand' (combustion/feu) dans le compartiment moteur, mais ne décrit pas un 'échauffement du connecteur' comme panne distincte mentionnée explicitement.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_reverifier",
+   "motif": "verdict non_soutenue (était soutenue)"
+  },
+  {
+   "uid": "E-BMW-N47-08",
+   "fiche": "BMW N47",
+   "type": "rappel",
+   "partie": "Rappel du refroidisseur EGR (fuite interne de liquide de refroidissement → dépôts inflammables, dégâts au collecteur d'admission, risque d'incendie) — moteur N47T nommé par le bulletin BMW déposé à la NHTSA (rappel 18V-755)",
+   "url": "https://static.nhtsa.gov/odi/rcl/2018/RCRIT-18V755-0780.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit le rappel 18V-755 pour le moteur N47T (F30 328d, F31 328d, F25 X3 xDrive28d, entre autres) concernant une fuite interne de liquide de refroidissement dans le refroidisseur EGR pouvant créer des dépôts inflammables, des dommages localisés au système d'admission et un risque accru d'incendie.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-14#1",
+   "fiche": "BMW N47",
+   "type": "rappel",
+   "partie": "Rappels: défaut au niveau de l'arbre à cames privant la pompe à vide de lubrification → perte possible de l'assistance au freinage",
+   "url": "https://www.caradisiac.com/bmw-x1-e84-2009-2015-la-fiche-fiabilite-express-de-caradisiac-195148.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que sur une série d'X1 diesel de 2012 à 2014, un défaut au niveau de l'arbre à cames pourrait générer une absence de lubrification de la pompe à vide, entraînant une perte d'assistance au freinage.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N47-14#2",
+   "fiche": "BMW N47",
+   "type": "rappel",
+   "partie": "Rappels: pose d'un anneau de verrouillage",
+   "url": "https://www.caradisiac.com/bmw-x1-e84-2009-2015-la-fiche-fiabilite-express-de-caradisiac-195148.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que l'incident est résolu par la pose d'un anneau de verrouillage de disque d'étanchéité d'arbre à cames.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.5-1.6-TDCI-04#1",
+   "fiche": "Peugeot DV6",
+   "type": "campagne",
+   "partie": "Rappels Fiesta 1.6 TDCi: remplacement du FAP non conforme",
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Ford-Fiesta-5-en-occasion-95446.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel de juin 2010 pour 340 versions 1.6 TDCi avec FAP concernant le remplacement du FAP si non conforme.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.5-1.6-TDCI-04#2",
+   "fiche": "Peugeot DV6",
+   "type": "campagne",
+   "partie": "Rappels Fiesta 1.6 TDCi: canalisation de gazole",
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Ford-Fiesta-5-en-occasion-95446.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique un rappel de juillet 2009 pour 58 exemplaires 1.6 TDCi pouvant avoir une canalisation de gazole non conforme.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.5-1.6-TDCI-04#3",
+   "fiche": "Peugeot DV6",
+   "type": "campagne",
+   "partie": "Rappels Fiesta 1.6 TDCi: goujons de support moteur",
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Ford-Fiesta-5-en-occasion-95446.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page cite un rappel d'octobre 2008 pour 3814 exemplaires 1.6 TDCI concernant le contrôle du serrage des goujons de support moteur.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV6-10#1",
+   "fiche": "Peugeot DV6",
+   "type": "garantie",
+   "partie": "Prise en charge Stellantis du réservoir d'AdBlue: 100 % des pièces avant 5 ans ou 150 000 km",
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/2008/avis-fiabilite-peugeot-2008-i-30038970.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique pour le 1.6 BlueHDi, voyant d'urée allumé, réservoir à changer avec 'Prise en charge totale (5 ans ou 150 000 km)'.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV6-10#2",
+   "fiche": "Peugeot DV6",
+   "type": "garantie",
+   "partie": "Prise en charge Stellantis du réservoir d'AdBlue: dégressive de 5 à 8 ans jusqu'à 210 000 km",
+   "url": "https://www.largus.fr/guide-achat-occasion/peugeot/2008/avis-fiabilite-peugeot-2008-i-30038970.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise aussi une 'prise en charge partielle (véhicules âgés de 5 à 8 ans et/ou plus de 150 000 km à moins de 210 000 km)' pour le réservoir d'AdBlue du 1.6 BlueHDi.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV6-16",
+   "fiche": "Peugeot DV6",
+   "type": "rappel",
+   "partie": "C4 Cactus diesel: rappel d' pour risque de fuite d'huile du turbo sur des pièces chaudes",
+   "url": "https://www.caradisiac.com/fiabilite-de-la-citroen-c4-cactus-la-maxi-fiche-occasion-de-caradisiac-191983.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne explicitement un rappel d'avril 2016 pour 'risque de fuite d'huile du turbo sur des pièces chaudes du moteur, sur les modèles fabriqués entre le 7 janvier et le 23 février 2016'.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "H-PSA-DV6-18#1",
+   "fiche": "Peugeot DV6",
+   "type": "rappel",
+   "partie": "Rappels 1.6 HDi: capteur de régime et gestion moteur du 110 ch (207) (307 1.6 HDi 110, rappel d')",
+   "url": "https://www.caradisiac.com/Peugeot-40287.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel de juillet 2007 pour remplacement du capteur de régime sur une série de 1.6 HDI et reprogrammation du boîtier de gestion moteur des HDI 110 ch pour un manque de puissance, correspondant bien au capteur de régime et à la gestion moteur du 110 ch.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "H-PSA-DV6-18#2",
+   "fiche": "Peugeot DV6",
+   "type": "rappel",
+   "partie": "Rappels 1.6 HDi: gestion électronique de la vanne EGR (207 et 307) (307 1.6 HDi 110, rappel d')",
+   "url": "https://www.caradisiac.com/Peugeot-40133.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "non_soutenue",
+   "votes": [
+    "non_soutenue",
+    "soutenue",
+    "non_soutenue"
+   ],
+   "justification": "La page mentionne pour la 307 (sans préciser 207) des 'possibles soucis sur la vanne EGR' pour les moteurs 1.6 HDi 90 et 110 fabriqués jusqu'en juillet 2006, mais elle ne parle à aucun moment d'un rappel officiel ni d'une gestion électronique de la vanne EGR, ni de la 207.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_reverifier",
+   "motif": "verdict non_soutenue (était soutenue)"
+  },
+  {
+   "uid": "D-FORD-2.0-TDCI-02#1",
+   "fiche": "Peugeot DW10",
+   "type": "campagne",
+   "partie": "Rappel: reprogrammation et élargissement des tolérances du module de gestion moteur (2.0 TDCi)",
+   "url": "https://www.caradisiac.com/fiabilite-du-ford-kuga-2-la-maxi-fiche-occasion-de-caradisiac-112283.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel d'octobre 2014 pour « reprogrammation et élargissement des valeurs de tolérance du module de gestion moteur » concernant les moteurs 2.0 diesel TDCi du Kuga 2.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DW10-02#1",
+   "fiche": "Peugeot DW10",
+   "type": "garantie",
+   "partie": "Prise en charge Stellantis du réservoir d'AdBlue: 100 % des pièces avant 5 ans ou 150 000 km",
+   "url": "https://www.largus.fr/guide-achat-occasion/citroen/c5-aircross/avis-fiabilite-citroen-c5-aircross-i-30038717.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique pour le 2.0 BlueHDi que le témoin du réservoir d'AdBlue allumé entraîne un changement du réservoir avec 'prise en charge totale (5 ans ou 150 000 km)'.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DW10-02#2",
+   "fiche": "Peugeot DW10",
+   "type": "garantie",
+   "partie": "Prise en charge Stellantis du réservoir d'AdBlue: dégressive de 5 à 8 ans jusqu'à 210 000 km",
+   "url": "https://www.largus.fr/guide-achat-occasion/citroen/c5-aircross/avis-fiabilite-citroen-c5-aircross-i-30038717.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que la prise en charge est 'partielle (véhicule âgé de 5 à 8 ans et/ou plus de 150 000 km et moins de 210 000 km)' pour le réservoir d'AdBlue du 2.0 BlueHDi.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DW10-03",
+   "fiche": "Peugeot DW10",
+   "type": "rappel",
+   "partie": "2.0 BlueHDi: risque de fissuration du filtre à particules — rappel devéhicules en France",
+   "url": "https://www.largus.fr/actualite-automobile/moteur-2-0-bluehdi-des-fap-a-remplacer-chez-citroen-ds-opel-peugeot-30025875.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme un rappel officiel sur le 2.0 BlueHDi (DW10) concernant la vérification et le remplacement du filtre à particules en cas d'accumulation de suie, pour les véhicules C4 Picasso II/Spacetourer, C5 Aircross et DS 7 Crossback dans les périodes citées.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DW10-06#2",
+   "fiche": "Peugeot DW10",
+   "type": "rappel",
+   "partie": "2.0 HDi 163: autres rappels 2.0 HDi sur 308 (pompe à vide, tuyau de carburant)",
+   "url": "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-peugeot-308-acheter-2360367.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page liste bien un rappel de novembre 2010 pour le clapet de pompe à vide sur 13600 versions 2.0 HDi, ainsi qu'un rappel de février 2011 pour la protection du tuyau de carburant sur 12000 versions 2.0 HDi.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "H-PSA-DW10-17#3",
+   "fiche": "Peugeot DW10",
+   "type": "rappel",
+   "partie": "Rappel (307 2.0 HDi 90/110): Xsara Picasso 2.0 HDi 90: défaut du réservoir de carburant",
+   "url": "https://www.caradisiac.com/Fiabilite-45721.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "mauvais_moteur",
+   "votes": [
+    "mauvais_moteur",
+    "mauvais_moteur"
+   ],
+   "justification": "La page confirme le rappel Xsara Picasso 2.0 HDi 90 pour défaut du réservoir à carburant mais ne mentionne aucun rappel équivalent pour la 307 2.0 HDi 90/110, et précise des motorisations (1.6 HDi 110/92 ch) différentes de celles citées pour cette même Xsara Picasso.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_reverifier",
+   "motif": "verdict mauvais_moteur (était soutenue)"
+  }
+ ]
+}
