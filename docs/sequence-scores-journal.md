@@ -725,3 +725,6 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   restreinte ; G4KD en simple note), 2 pannes (H4M, H4D) ; sauvegarde avant
   écriture ; simulation par défaut. Puis 4 références × 1 (mur 0,45 €).
 - Prérequis : merge de `sprint24-session` puis déploiement (règle 0 sexies).
+- Feu vert d'Utku : merge de `sprint24-session`, redéploiement, main =
+  production, Vercel ; puis session de jeton (simulation montrée avant
+  `--ecrire`).
