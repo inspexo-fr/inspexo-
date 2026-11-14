@@ -658,3 +658,26 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
 - 116 prises × page, 74 pages × moteur à juger. Déploiement annoncé : dump,
   migration, `sources-externes` (option `sans_cache`, secret d'éval).
   Mur **9 €** (estimation 4 à 6 €).
+- ⚠️ Premier lancement : `sources-externes` en BOOT_ERROR (`verifSource.ts`
+  ne ré-exportait pas `archiverCacheVerif`), 0 € dépensé. Corrigé, et nouveau
+  test `tests/imports-exports.test.mjs` (555 noms importés vérifiés ; il mord
+  sur ce défaut — contre-épreuve faite).
+- **Résultat** : 116 prise × page revérifiées, **110 à jour, 6 à revérifier**,
+  **1,988 €** / 9 €. Les 6 : BMW N47 réchauffeur de gazole (ADAC, non
+  soutenue 2/2) ; Peugeot DV6 EGR 207/307 (non soutenue 2/1) ; Peugeot DW10
+  réservoir 307 (mauvais moteur 2/2 : la page ne vise que le Xsara Picasso) ;
+  Mini N18 rappel Cooper S/JCW (non soutenue 2/2) ; Mercedes OM651 rappel KBA
+  (non soutenue 2/2) ; Hyundai G4KD règlement US (page en 403 à notre
+  contrôle, mais lue et soutenue 2/2 par le juge : probablement un blocage
+  des robots). Liste complète : `docs/prises-reverification.json`. Aucune
+  prise retirée ; l'inscription en fiche (`verifier_prises`) attend une
+  session de jeton. Crédits : 3,64 € / 40 €.
+
+## Crédits API — campagne 3 : fiches sous le seuil
+- 25 pages /moteur sous le seuil (hors doublons canoniques), 106 pannes non
+  confirmées de la bonne version ; EA824 et EB2DTS EXCLUS (moteurs des
+  références S7 et 308 : y confirmer une panne changerait leur score).
+  100 pannes, dont 18 déjà jouées le 8 nov. (sautées) ⇒ 82.
+- Lots de 20, mur 4 € par lot, arrêt si un lot rend moins de 15 %.
+  Compteur : plafond crédits 40 €. Écriture (`--appliquer`) en session de
+  jeton seulement.

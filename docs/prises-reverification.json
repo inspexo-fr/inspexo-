@@ -941,6 +941,1387 @@
    "verifie_le": "2026-11-14",
    "statut": "a_reverifier",
    "motif": "verdict mauvais_moteur (était soutenue)"
+  },
+  {
+   "uid": "A-RENAULT-H5FT-07",
+   "fiche": "Renault H5FT",
+   "type": "rappel",
+   "partie": "Rappel: reprogrammation des calculateurs d'injection et UPC (risque de dépression insuffisante au collecteur) sur Mégane 3 / Scénic 3 TCe 115",
+   "url": "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Renault-Megane-3-en-occasion-105588.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne littéralement un rappel de septembre 2012 des modèles 1.2 TCe 115 fabriqués jusqu'au 8 août 2012 pour reprogrammation du calculateur d'injection et du calculateur UPC, en raison d'un risque de niveau de dépression au collecteur insuffisant.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-H5FT-08#1",
+   "fiche": "Renault H5FT",
+   "type": "campagne",
+   "partie": "Pas de rappel officiel: nouvelle calibration",
+   "url": "https://www.assemblee-nationale.fr/dyn/15/questions/QANR5L15QE26444.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme explicitement qu'aucun rappel officiel ne s'est produit et que Renault-Dacia a défini une nouvelle calibration sur les moteurs 1.2 H5Ft à compter de juin 2015 pour limiter la surconsommation d'huile.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-H5FT-09#1",
+   "fiche": "Renault H5FT",
+   "type": "campagne",
+   "partie": "Contentieux collectif « Motorgate »: action collective",
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-1-2-tce-et-1-2-puretech-les-associations-de-victimes-interpellent-emmanuel-macron-30031466.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que les possesseurs de véhicules 1.2 TCe/DIG-T ont enclenché une action collective baptisée « Motorgate » en référence au Dieselgate.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-H5FT-09#2",
+   "fiche": "Renault H5FT",
+   "type": "campagne",
+   "partie": "Contentieux collectif « Motorgate »: référé ordonnant la communication de documents internes (appel Renault)",
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-1-2-tce-et-1-2-puretech-les-associations-de-victimes-interpellent-emmanuel-macron-30031466.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que des décisions rendues en référé le 14 mars 2023 ont enjoint Renault à communiquer des documents sensibles, et que Renault a fait appel, avec audience devant la Cour d'appel de Versailles.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-H5FT-09#3",
+   "fiche": "Renault H5FT",
+   "type": "campagne",
+   "partie": "Contentieux collectif « Motorgate »: plainte pénale à Nanterre",
+   "url": "https://www.largus.fr/actualite-automobile/fiabilite-1-2-tce-et-1-2-puretech-les-associations-de-victimes-interpellent-emmanuel-macron-30031466.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que les propriétaires concernés ont déposé une plainte pour tromperie aggravée, pratiques commerciales trompeuses et mise en danger de la vie d'autrui entre les mains du Procureur de la République de Nanterre.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-H5FT-10#1",
+   "fiche": "Renault H5FT",
+   "type": "garantie",
+   "partie": "OTS Renault/Dacia: remplacement du moteur si consommation > 0,5 l/1 000 km (au premier terme échu)",
+   "url": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que l'OTS fait mesurer la consommation d'huile après 1000 km et remplacer le moteur si elle est supérieure à 0,5 l aux 1000 km.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-H5FT-10#2",
+   "fiche": "Renault H5FT",
+   "type": "garantie",
+   "partie": "OTS Renault/Dacia: pour les véhicules de moins de 10 ans ou de 100 000 km (au premier terme échu)",
+   "url": "https://www.largus.fr/actualite-automobile/consommation-dhuile-nissanrenault-12-tce-creation-dun-collectif-9704390.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que la prise en charge concerne les véhicules de moins de 10 ans ou de 100 000 km, au premier terme échu.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N14-N18-06#1",
+   "fiche": "Mini N18",
+   "type": "rappel",
+   "partie": "Rappel: la pompe à eau auxiliaire (refroidissement du turbo) peut surchauffer — risque d'incendie du circuit électrique",
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0162-mini-mini-2006-2015-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "non_soutenue",
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel de 01/2012 indiquant que la pompe à eau de refroidissement peut surchauffer et provoquer un risque local d'incendie, ce qui correspond à l'affirmation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N14-N18-06#2",
+   "fiche": "Mini N18",
+   "type": "rappel",
+   "partie": "Rappel: environ Cooper S et JCW en France",
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "non_soutenue",
+   "votes": [
+    "non_soutenue",
+    "non_soutenue"
+   ],
+   "justification": "La page mentionne un rappel pompe à eau concernant environ 11 000 Cooper S et JCW produites entre mars 2006 et janvier 2011, mais cette affirmation 1 ne précise pas l'objet du rappel et reste trop vague pour être confirmée telle quelle.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_reverifier",
+   "motif": "verdict non_soutenue (était soutenue)"
+  },
+  {
+   "uid": "E-BMW-N14-N18-08#1",
+   "fiche": "Mini N18",
+   "type": "rappel",
+   "partie": "Rappel d': souci de sonde de température du liquide de refroidissement (pouvant générer des particules métalliques)",
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique qu'en août 2012 un rappel concerne un 'souci au niveau de la sonde de température du liquide de refroidissement' pour des Mini essence, ce qui correspond à l'affirmation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N14-N18-08#2",
+   "fiche": "Mini N18",
+   "type": "rappel",
+   "partie": "Rappel d': remplacement du tuyau de refroidissement par un modèle à sonde intégrée — Mini essence selon Caradisiac",
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise qu'il faut 'remplacer soit la sonde, soit le tuyau de liquide de refroidissement entre le radiateur et le thermostat par un tuyau avec une sonde de température intégrée', ce qui correspond au remplacement décrit.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N14-N18-09#1",
+   "fiche": "Mini N18",
+   "type": "rappel",
+   "partie": "Rappel d': le boîtier de la pompe à eau auxiliaire peut se fissurer",
+   "url": "https://www.caradisiac.com/mini-clubman-2007-2014-la-fiche-fiabilite-express-de-caradisiac-194613.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique qu'en avril 2012, sur une série de Clubman fabriquée entre mars et avril 2011, le boîtier de la pompe à eau auxiliaire peut se fissurer.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-BMW-N14-N18-09#2",
+   "fiche": "Mini N18",
+   "type": "rappel",
+   "partie": "Rappel d': remplacement du boîtier",
+   "url": "https://www.caradisiac.com/mini-clubman-2007-2014-la-fiche-fiabilite-express-de-caradisiac-194613.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que ce rappel consiste au remplacement du boîtier de la pompe à eau auxiliaire.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-02#1",
+   "fiche": "Peugeot DV5",
+   "type": "garantie",
+   "partie": "Couverture spéciale chaîne 1.5 BlueHDi: 5 ans/150 000 km",
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-630-000-vehicules-et-etend-la-couverture-a-10-ans-30041132.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que la couverture établie à 5 ans ou 150 000 km date de juillet 2022, correspondant à l'étape initiale de la garantie chaîne.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-02#2",
+   "fiche": "Peugeot DV5",
+   "type": "garantie",
+   "partie": "Couverture spéciale chaîne 1.5 BlueHDi: 7 ans/180 000 km",
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-630-000-vehicules-et-etend-la-couverture-a-10-ans-30041132.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que la couverture est passée à 7 ans ou 180 000 km en janvier 2025.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-02#3",
+   "fiche": "Peugeot DV5",
+   "type": "garantie",
+   "partie": "Couverture spéciale chaîne 1.5 BlueHDi: puis 10 ans/240 000 km",
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-630-000-vehicules-et-etend-la-couverture-a-10-ans-30041132.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que dès juillet 2025, Stellantis porte la couverture à 10 ans ou 240 000 km.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-03#2",
+   "fiche": "Peugeot DV5",
+   "type": "rappel",
+   "partie": "Campagnes chaîne 1.5 BlueHDi: puis rappel avec diagnostic audio",
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-630-000-vehicules-et-etend-la-couverture-a-10-ans-30041132.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que les ateliers ont pour consigne de réaliser un diagnostic audio via une application spécifique avant d'effectuer les travaux de modernisation du moteur si besoin.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-03#1",
+   "fiche": "Peugeot DV5",
+   "type": "rappel",
+   "partie": "Campagnes chaîne 1.5 BlueHDi: « mise à jour préventive » (plus de 760 000 courriers)",
+   "url": "https://www.largus.fr/actualite-automobile/casse-chaine-1-5-bluehdi-pas-de-plate-forme-d-indemnisation-pour-le-moment-30038450.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que le 27 septembre 2024, Citroën et Peugeot ont lancé une campagne de rappel dite de « mise à jour préventive » auprès de 761 807 clients propriétaires d'un 1.5 BlueHDi produit entre le 01/01/2018 et le 31/12/2021.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-05",
+   "fiche": "Peugeot DV5",
+   "type": "rappel",
+   "partie": "Rappel pompe à eau (poulie pouvant glisser sur son axe et désaligner la courroie de distribution): véhicules en France",
+   "url": "https://www.largus.fr/actualite-automobile/rappel-stellantis-plus-de-13-000-vehicules-1-5-bluehdi-concernes-par-un-probleme-de-pompe-a-eau-30046287.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme un rappel Stellantis sur les 1.5 BlueHDi (DV5) produits d'octobre 2025 à février 2026 pour un glissement de la poulie de la pompe à eau pouvant désaligner la courroie de distribution, concernant 13 237 véhicules en France.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-06",
+   "fiche": "Peugeot DV5",
+   "type": "rappel",
+   "partie": "Rappel rampe d'injection commune (risque de fuite de gazole): véhicules en France",
+   "url": "https://www.largus.fr/actualite-automobile/1-5-bluehdi-stellantis-rappelle-plusieurs-milliers-de-vehicules-pour-un-probleme-a-l-injection-30045923.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme un rappel en France (6 028 véhicules) pour les moteurs 1.5 BlueHDi DV5 à cause d'un mauvais positionnement du cône sur la rampe d'injection commune pouvant entraîner une fuite de carburant, produits entre juillet et octobre 2025.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-07",
+   "fiche": "Peugeot DV5",
+   "type": "rappel",
+   "partie": "Rappel risque de calage en roulant — 1.5 BlueHDi 130 EAT8 (logiciel moteur): véhicules en France",
+   "url": "https://www.largus.fr/actualite-automobile/citroen-ds-peugeot-un-rappel-pour-les-risques-de-calage-du-1-5-bluehdi-eat8-30025965.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme un rappel pour risque de calage en roulant sur le 1.5 BlueHDi 130 EAT8, concernant précisément les C5 Aircross, DS 7 Crossback et 508 produits entre 2018 et 2020 en France, suite à une non-conformité logicielle corrigée par reprogrammation du calculateur moteur.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-09#1",
+   "fiche": "Peugeot DV5",
+   "type": "garantie",
+   "partie": "Prise en charge Stellantis du réservoir d'AdBlue: 100 % des pièces avant 5 ans ou 150 000 km",
+   "url": "https://www.largus.fr/guide-achat-occasion/citroen/c5-aircross/avis-fiabilite-citroen-c5-aircross-i-30038717.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique pour le réservoir d'AdBlue sur le 1.5 BlueHDi une 'Prise en charge totale (5 ans ou 150 000 km)'.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "B-PSA-DV5-09#2",
+   "fiche": "Peugeot DV5",
+   "type": "garantie",
+   "partie": "Prise en charge Stellantis du réservoir d'AdBlue: dégressive de 5 à 8 ans jusqu'à 210 000 km",
+   "url": "https://www.largus.fr/guide-achat-occasion/citroen/c5-aircross/avis-fiabilite-citroen-c5-aircross-i-30038717.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne une 'prise en charge partielle (véhicule âgé de 5 à 8 ans et/ou plus de 150 000 km et moins de 210 000 km)' pour le réservoir d'AdBlue, ce qui correspond à une prise en charge dégressive de 5 à 8 ans jusqu'à 210 000 km.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-01#1",
+   "fiche": "Volkswagen EA189",
+   "type": "rappel",
+   "partie": "Dieselgate – rappel EA189: mise à jour logicielle (1.2 et 2.0 TDI)",
+   "url": "https://www.volkswagen.at/information-zu-ea189-dieselmotoren",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que les moteurs 1,2 et 2,0 litres reçoivent un software-update dans le cadre du rappel EA189.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-01#2",
+   "fiche": "Volkswagen EA189",
+   "type": "rappel",
+   "partie": "Dieselgate – rappel EA189: logiciel + « transformateur de flux » devant le débitmètre (1.6 TDI)",
+   "url": "https://www.volkswagen.at/information-zu-ea189-dieselmotoren",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique explicitement que le moteur 1,6 litre EA189 reçoit un 'Strömungsgleichrichter' (transformateur/redresseur de flux) devant le débitmètre d'air en plus du logiciel.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-01#3",
+   "fiche": "Volkswagen EA189",
+   "type": "rappel",
+   "partie": "Dieselgate – rappel EA189: gratuit",
+   "url": "https://www.volkswagen.at/information-zu-ea189-dieselmotoren",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page dit clairement 'Ist die Umrüstung kostenlos? Ja, die Kosten werden von Volkswagen übernommen', confirmant la gratuité du rappel.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-03#1",
+   "fiche": "Volkswagen EA189",
+   "type": "garantie",
+   "partie": "« Mesure de confiance » VW après la mise à jour EA189: prise en charge de composants EGR / injection / post-traitement pendant 24 mois après l'intervention",
+   "url": "https://www.volkswagen.at/information-zu-ea189-dieselmotoren",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que la 'Vertrauensbildende Maßnahme' couvre les réclamations liées à certaines pièces du moteur et du système de dépollution pendant 24 mois après l'intervention technique.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-03#2",
+   "fiche": "Volkswagen EA189",
+   "type": "garantie",
+   "partie": "« Mesure de confiance » VW après la mise à jour EA189: jusqu'à 250 000 km",
+   "url": "https://www.volkswagen.at/information-zu-ea189-dieselmotoren",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que cette mesure de confiance s'applique jusqu'à un kilométrage total maximal de 250 000 km, selon le critère atteint en premier.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-01#4",
+   "fiche": "Volkswagen EA189",
+   "type": "rappel",
+   "partie": "Dieselgate – rappel EA189: validé par le KBA;véhicules en France",
+   "url": "https://annualreport2016.volkswagenag.com/group-management-report/diesel-issue/eu28-and-rest-of-the-world/print.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme que le KBA a validé les solutions techniques (rappel) pour les moteurs EA189 1.2/1.6/2.0 l, dont le 1.6 TDI et le 2.0 TDI, ce qui soutient l'affirmation d'un rappel EA189 validé par le KBA.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-13",
+   "fiche": "Volkswagen EA189",
+   "type": "rappel",
+   "partie": "Rappel des conduites haute pression de carburant du 2.0 TDI common rail (fissures par vibrations → fuite de gazole)",
+   "url": "https://www.autobild.de/artikel/vw-golf-vi-gebrauchtwagen-test-3798221.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique explicitement que sur le 2.0 TDI fabriqué entre octobre 2008 et novembre 2010, des fissures par vibrations ('Schwingungsrisse') peuvent survenir sur les conduites de carburant haute pression ('Kraftstoff-Hochdruckleitungen'), ce qui correspond à l'affirmation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-14",
+   "fiche": "Volkswagen EA189",
+   "type": "rappel",
+   "partie": "Rappel: commutateur magnétique du démarreur (ressort de rappel cassé → alimentation permanente, surchauffe, risque d'incendie) – 1.6 / 2.0 TDI",
+   "url": "https://assets.adac.de/Autodatenbank/GWInfo/gw0174-vw-golf-vi-2008-2012-diesel-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel de février 2018 pour les 1.6 et 2.0 TDI concernant un bruch ou une schiefstellung de la ressort de rappel (Rückstellfeder) du commutateur magnétique (Magnetschalter) pouvant causer une Dauerbestromung, une surchauffe et un risque d'incendie (Brandgefahr).",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "C-VAG-EA189-1.6-2.0TDI-15",
+   "fiche": "Volkswagen EA189",
+   "type": "rappel",
+   "partie": "Rappel: 1.2 TDI 75 common rail – vibrations transmises au couvercle du filtre à carburant (risque de fuite de gazole)",
+   "url": "https://www.caradisiac.com/soyez-prudents-si-vous-achetez-une-seat-ibiza-4-en-occasion-218738.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme le rappel de novembre 2014 sur les Ibiza 1.2 TDI 75 ch Common Rail (2010-2014) pour des vibrations transmises au couvercle du filtre à carburant pouvant provoquer des fuites de carburant.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.0-ECOBOOST-02",
+   "fiche": "Ford FOX",
+   "type": "campagne",
+   "partie": "Enquête NHTSA (Engineering Analysis) sur la courroie de distribution humide; Ford réduit l'intervalle US de 150 000 miles/10 ans à 100 000 miles/6 ans",
+   "url": "https://www.auto-motor-und-sport.de/verkehr/nhtsa-sieht-unzumutbares-risiko-ford-oelzahnriemen-kann-motor-lahmlegen/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme l'enquête NHTSA en 'Engineering Analysis' sur le moteur 1,0 EcoBoost à courroie de distribution en bain d'huile (Fiesta 2014-2017, Focus 2015-2018, EcoSport 2018-2021) et indique que Ford réduit l'intervalle de 150 000 miles/10 ans à 100 000 miles/6 ans.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.0-ECOBOOST-03",
+   "fiche": "Ford FOX",
+   "type": "campagne",
+   "partie": "Rappel NHTSA 23V905 / Ford 23S64 (USA): tendeur et courroie d'entraînement de la pompe à huile — perte de pression d'huile",
+   "url": "https://www.consumerreports.org/cars/car-recalls-defects/ford-ecosport-and-focus-recalled-for-engine-issues-a8600857471",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme le rappel NHTSA 23V905 / Ford 23S64 pour la Ford EcoSport 2018-2022 et Focus 2016-2018 avec moteur 1.0 EcoBoost et boîte automatique, concernant le tendeur de courroie de la pompe à huile pouvant fracturer et causer une perte de pression d'huile.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.0-ECOBOOST-09",
+   "fiche": "Ford FOX",
+   "type": "campagne",
+   "partie": "Rappel: risque de fuite d'huile moteur",
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-ford-fiesta-vi-exempte-de-gros-reproches-204603.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne un rappel d'avril 2023 pour 'risque de fuite d'huile sur les modèles produits entre le 2 août 2019 et le 21 mars 2022', ce qui correspond exactement à la période de production du moteur 1.0 EcoBoost visé.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.5-ECOBOOST-01",
+   "fiche": "Ford DRAGON",
+   "type": "campagne",
+   "partie": "Rappel: plateau de pression d'embrayage pouvant se rompre (risque d'anomalie de transmission et d'incendie) — modèles EcoBoost à boîte manuelle",
+   "url": "https://www.caradisiac.com/fiabilite-de-la-ford-mondeo-4-la-maxi-fiche-occasion-de-caradisiac-190769.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne 'Décembre 2019. Rappel des modèles Ecoboost fabriqués jusqu'en juin 2016, pour un risque de rupture du plateau de pression d'embrayage', correspondant au rappel décrit.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "D-FORD-1.6-ECOBOOST-01",
+   "fiche": "Ford SIGMA",
+   "type": "campagne",
+   "partie": "Rappel sécurité (UK: 15 200) — manque de liquide de refroidissement, surchauffe localisée de la culasse, fissure, fuite d'huile sous pression, risque d'incendie; pose d'un capteur de niveau de liquide",
+   "url": "https://www.largus.fr/actualite-automobile/rappel-ford-16-ecoboostscti-risque-de-surchauffe-de-culasse-10799390.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit exactement ce scénario : manque de liquide de refroidissement, surchauffe localisée de la culasse, fissure, fuite d'huile sous pression, risque d'incendie, et pose d'un capteur de liquide de refroidissement comme solution du rappel sur le 1.6 Ecoboost/SCTi.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC-03#1",
+   "fiche": "Hyundai G3LC",
+   "type": "campagne",
+   "partie": "Rappel Hyundai 61DT02 (Safety Gate SR/01776/26): durite d'admission mal acheminée pouvant vibrer et se fissurer",
+   "url": "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1296-rappels-hyundai.php",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme pour l'i20 (2014-2020), rappel SR/01776/26 code 61DT02, versions 1.0 T-GDI, qu'un tuyau d'aspiration mal acheminé peut vibrer puis se fissurer.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC-03#2",
+   "fiche": "Hyundai G3LC",
+   "type": "campagne",
+   "partie": "Rappel Hyundai 61DT02 (Safety Gate SR/01776/26): réduisant l'assistance au freinage",
+   "url": "https://www.fiches-auto.fr/articles-auto/rappels-constructeurs/s-1296-rappels-hyundai.php",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que cette fissure du tuyau d'aspiration peut réduire l'efficacité du freinage, ce qui correspond à l'affirmation d'une assistance au freinage réduite.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-1.0-TGDI-KAPPA-G3LC-04",
+   "fiche": "Hyundai G3LC",
+   "type": "campagne",
+   "partie": "Rappel 51DT07 (SR/03401/25): pompe à carburant interne défaillante -> impossibilité de démarrage ou perte de puissance",
+   "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/rappels%202025.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page cite exactement le rappel 51DT07 (SR/03401/25) pour HYUNDAI I20 / BAYON / I20N (BC3/BC3 CUV/BC3N) produites du 01/06/2021 au 04/01/2023, indiquant qu'un problème interne de la pompe à carburant pourrait engendrer une impossibilité de démarrage ou une perte de puissance.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-02#1",
+   "fiche": "Hyundai G4FD",
+   "type": "campagne",
+   "partie": "Rappel Kia SC176 (NHTSA 19V-120): surchauffe du catalyseur -> particules dans les cylindres -> dommages pistons",
+   "url": "https://static.nhtsa.gov/odi/rcl/2019/RCMN-19V120-3267.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit exactement cette chaîne de causalité : surchauffe du catalyseur, particules de substrat entrant dans la chambre de combustion, puis dommages aux pistons.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-02#2",
+   "fiche": "Hyundai G4FD",
+   "type": "campagne",
+   "partie": "Rappel Kia SC176 (NHTSA 19V-120): rupture de bielle",
+   "url": "https://static.nhtsa.gov/odi/rcl/2019/RCMN-19V120-3267.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que les dommages aux pistons peuvent causer la rupture de la bielle ('piston connecting rod breakage').",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-02#3",
+   "fiche": "Hyundai G4FD",
+   "type": "campagne",
+   "partie": "Rappel Kia SC176 (NHTSA 19V-120): risque de calage ou d'incendie",
+   "url": "https://static.nhtsa.gov/odi/rcl/2019/RCMN-19V120-3267.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne explicitement un risque accru de calage du moteur ou d'incendie ('increase the risk of an engine stall or fire').",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-1.6-GDI-GAMMA-G4FD-03",
+   "fiche": "Hyundai G4FD",
+   "type": "campagne",
+   "partie": "Campagne d'amélioration Transports Canada 2021204: mise à jour du module de commande moteur pour détecter une panne imminente",
+   "url": "https://recalls-rappels.canada.ca/fr/avis-rappel/numero-rappel-transports-canada-2021204",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme le rappel Transports Canada 2021204 pour Kia Soul 2012-2016 équipés du moteur 1.6 L GDI, consistant en une mise à jour du module de commande du moteur pour détecter les problèmes potentiels avant une panne.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-03",
+   "fiche": "Hyundai G4KD",
+   "type": "campagne",
+   "partie": "Règlement collectif US (In re: Hyundai and Kia Engine Litigation): extension de garantie à vie TXXI + logiciel KSDS (Service Campaign 953, DTC P1326)",
+   "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10178174-0001.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme l'extension de garantie à vie (Warranty Extension TXXI) conditionnée à la mise à jour logicielle KSDS (Service Campaign 953) et liée au code DTC P1326, pour les véhicules Theta II GDI listés (Sonata 2011-2018+2019, Santa Fe Sport 2013-2018+2019, Tucson 2014/2015/2018+2019).",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-04",
+   "fiche": "Hyundai G4KD",
+   "type": "campagne",
+   "partie": "Règlement collectif US (Engine Litigation II): garantie étendue 15 ans/150 000 miles + KSDS gratuit sur Theta II 2.4 MPI/MPI hybride (et Nu 2.0 GDI, Gamma 1.6 GDI)",
+   "url": "https://www.kiamedia.com/us/en/media/pressreleases/19400/kia-america-and-hyundai-motor-america-resolve-engine-litigation",
+   "en_ligne": 403,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme un règlement de recours collectif (In re: Hyundai and Kia Engine Litigation II) incluant une garantie étendue de 15 ans/150 000 miles et l'installation gratuite du logiciel KSDS pour les moteurs Theta II MPI 2.4L et Theta II MPI Hybrid 2.4L, ainsi que Nu GDI 2.0L et Gamma GDI 1.6L.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_reverifier",
+   "motif": "page 403"
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-06",
+   "fiche": "Hyundai G4KD",
+   "type": "campagne",
+   "partie": "Rappel Hyundai 198 (dossier NHTSA EA21-003): inspection/remplacement moteur pour usure prématurée des coussinets de bielle (Theta II 2.4 MPI & hybride, Nu 2.0 GDI hybride, Gamma 1.6 GDI)",
+   "url": "https://static.nhtsa.gov/odi/inv/2021/INRD-EA21003-18044.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme le rappel Hyundai 198 pour inspection/remplacement du moteur en cas d'usure prématurée des coussinets de bielle sur les Santa Fe 2012 (Theta II 2.4 MPI), Sonata Hybrid 2011-2013 (Theta II 2.4 MPI hybride) et Sonata Hybrid 2016 (Nu 2.0 GDI hybride), conformément à l'affirmation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "F-HYUNDAI-KIA-2.0-2.4-THETA-II-07",
+   "fiche": "Hyundai G4KD",
+   "type": "campagne",
+   "partie": "Rappel Kia 230047 (France): contrôle des vibrations moteur et remplacement des moteurs à coussinets de bielle usés sur d'anciennes Optima Hybrid",
+   "url": "https://www.largus.fr/actualite-automobile/rappel-kia-optima-hybrid-des-moteurs-remplaces-sur-d-anciens-exemplaires-30029484.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page confirme le rappel Kia code 230047 en France sur les Kia Optima Hybrid 2.0 produites entre février 2011 et février 2012, avec vérification des vibrations moteur et remplacement du bloc essence en cas d'usure des coussinets de bielle.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-M270-OM651-01#1",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel: le raccord de la conduite de dépression du servofrein peut casser — effort accru à la pédale",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mercedes-benz-a-klasse-276/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit un rappel de juillet 2017 pour le M270 et l'OM651 (04.2011-01.2015) où le raccord de la conduite de dépression du servofrein peut casser, entraînant un effort accru à la pédale de frein.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-M270-OM651-01#2",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel: remplacement de la conduite",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/mercedes-benz-a-klasse-276/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que pour ce même rappel, la conduite de dépression du servofrein (Unterdruckleitung) est remplacée chez les véhicules concernés.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-01#1",
+   "fiche": "Mercedes OM651",
+   "type": "campagne",
+   "partie": "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): remplacement des injecteurs dans le cadre d'une opération de satisfaction clientèle",
+   "url": "https://www.largus.fr/actualite-automobile/mercedes-classe-c-classe-e-et-glk-rates-a-l-allumage-165454.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que la solution en après-vente consiste à remplacer les injecteurs, pris en garantie, dans le cadre d'une opération dite de satisfaction client.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-01#2",
+   "fiche": "Mercedes OM651",
+   "type": "campagne",
+   "partie": "Injecteurs piézoélectriques Delphi défaillants (défaut d'assemblage sur une série de pièces): sans rappel officiel",
+   "url": "https://www.largus.fr/actualite-automobile/mercedes-classe-c-classe-e-et-glk-rates-a-l-allumage-165454.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise explicitement qu'il ne s'agit pas d'une campagne de rappel officielle mais d'une opération de satisfaction client sans envoi de courrier.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-03#1",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel: joint défectueux du tendeur de chaîne de distribution — le tendeur peut tomber en panne",
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique pour le rappel 1/2015 OM651 : 'Wegen einer defekten Dichtung am Steuerkettenspanner kann dieser ausfallen', soit un joint défectueux du tendeur de chaîne pouvant tomber en panne.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-03#2",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel: la chaîne détendue sauter et le moteur casser",
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que cela mène à 'eine gelockerten Steuerkette, die überspringen kann, was in Folge zum Motorschaden führt', soit la chaîne qui saute et le moteur qui casse.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-03#3",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel: remplacement du joint",
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que les concessionnaires 'tauschen den fehlerhaften Dichtring gegen eine verbesserte Version aus', donc un remplacement du joint.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-05#1",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel d': conduites haute pression de carburant des quatre-cylindres diesel — défaut de matière",
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "Le rappel 4/2016 mentionne 'Wegen eines Materialfehlers der Kraftstoff-Hochdruck-Leitungen' sur les moteurs diesel 4 cylindres, correspondant à un défaut de matière des conduites haute pression.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-05#2",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel d': fissures et fuite de gazole possibles",
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que ce défaut peut entraîner 'Rissbildung und damit verbundenem Kraftstoffaustritt', soit fissures et fuite de gazole.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-05#3",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel d': remplacement des conduites",
+   "url": "https://assets.adac.de/image/upload/Autodatenbank/GWInfo/gw0358-mercedes-benz-c-klasse-2014-2023-diesel-bericht.pdf",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que 'Die Händler erneuern die betreffenden Kraftstoff-Hochdruckleitungen', soit un remplacement des conduites.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-04",
+   "fiche": "Mercedes OM651",
+   "type": "garantie",
+   "partie": "Tendeur de chaîne de distribution: Daimler a élargi à titre préventif sa période de geste commercial (Kulanz) et monte une pièce améliorée",
+   "url": "https://www.autobild.de/artikel/mercedes-220-cdi-und-250-cdi-2795392.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique que pour le tendeur de chaîne de distribution défaillant, Daimler a « den Kulanzzeitraum vorsorglich erweitert » (élargi à titre préventif la période de geste commercial) et installe un composant amélioré en cas de réparation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM651-06#1",
+   "fiche": "Mercedes OM651",
+   "type": "rappel",
+   "partie": "Rappel officiel ordonné par le KBA pour dispositifs d'invalidation illicites: la mesure de service volontaire devient un rappel obligatoire",
+   "url": "https://journalauto.com/constructeurs/mercedes-benz-contraint-de-rappeler-pres-de-800-000-vehicules-diesel-en-europe/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "non_soutenue",
+   "votes": [
+    "non_soutenue",
+    "non_soutenue"
+   ],
+   "justification": "La page confirme un rappel ordonné par le ministère allemand des Transports pour 774 000 véhicules diesel Mercedes (Vito, Classe C) soupçonnés de logiciel truqueur, mais elle ne mentionne ni le KBA explicitement, ni la notion de mesure volontaire transformée en rappel obligatoire, ni le moteur OM651 spécifiquement.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_reverifier",
+   "motif": "verdict non_soutenue (était soutenue)"
+  },
+  {
+   "uid": "E-MERCEDES-OM654-01#1",
+   "fiche": "Mercedes OM654",
+   "type": "rappel",
+   "partie": "Rappel: défaut d'étanchéité entre le circuit de refroidissement et le circuit de dépression au niveau de la pompe de refroidissement",
+   "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique explicitement 'Un défaut d'étanchéité entre le circuit de liquide de refroidissement et le circuit de dépression a été décelé' au niveau de la pompe de refroidissement, sur les moteurs OM654/OM656 concernés.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM654-01#2",
+   "fiche": "Mercedes OM654",
+   "type": "rappel",
+   "partie": "Rappel: avec une fuite",
+   "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page évoque 'une possible fuite de liquide de refroidissement' et des véhicules 'pouvant être victimes de fuites', ce qui correspond à l'affirmation d'une fuite.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM654-01#3",
+   "fiche": "Mercedes OM654",
+   "type": "rappel",
+   "partie": "Rappel: voire un incendie dans les cas les plus graves",
+   "url": "https://www.largus.fr/actualite-automobile/rappel-mercedes-un-correctif-suspendu-faute-de-pieces-de-rechange-10823393.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page mentionne explicitement 'dans les cas les plus graves, le risque qu'un incendie se déclenche'.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-MERCEDES-OM654-02",
+   "fiche": "Mercedes OM654",
+   "type": "rappel",
+   "partie": "Rappel: le bras du tendeur de courroie de la pompe à eau peut présenter un jeu trop important — risque de surchauffe du moteur",
+   "url": "https://www.caradisiac.com/maxi-fiche-fiabilite-mercedes-classe-c-iv-le-fond-et-la-forme-200462.htm",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit exactement ce rappel de novembre 2021 : jeu excessif du bras du tendeur de courroie de la pompe à eau avec risque de surchauffe moteur, pour les modèles produits du 4 septembre 2018 au 17 mars 2021.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "A-RENAULT-H4BT-09",
+   "fiche": "Renault H4BT",
+   "type": "rappel",
+   "partie": "Rappel (Twingo III): 9 987 versions TCe 90 — mauvaise calibration du calculateur d'injection",
+   "url": "https://www.largus.fr/guide-achat-occasion/renault/twingo/avis-fiabilite-renault-twingo-iii-c07-30039496.html",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page indique « Mars 2016 Sont concernés : 9 987 versions TCe 90 fabriquées jusqu'au 01/06/2015 Motifs : Mauvaise calibration du calculateur d'injection », ce qui correspond exactement à l'affirmation.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-VOLVO-D4204T-ANCIEN-2.0D-136-CH-01#1",
+   "fiche": "Volvo D4204T",
+   "type": "rappel",
+   "partie": "Rappel: le clapet anti-retour de la pompe à vide du système de freinage peut ne pas s'ouvrir par temps froid",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s70-v70-xc70-323/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit exactement ce rappel : le clapet anti-retour (Rückschlagventil) de la pompe à vide du système de freinage peut ne pas s'ouvrir par basses températures, pour la variante 2.0D (D4204T) construite du 01.11.2008 au 12.03.2009.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-VOLVO-D4204T-ANCIEN-2.0D-136-CH-01#2",
+   "fiche": "Volvo D4204T",
+   "type": "rappel",
+   "partie": "Rappel: moteur froid — freinage plus dur",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s70-v70-xc70-323/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise que dans ce cas le frein reste fonctionnel mais nécessite une pression de pédale nettement plus élevée, ce qui correspond à un freinage plus dur à moteur froid.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-VOLVO-DIESEL-2012-2019-MOTEUR-NON-CODE-02#1",
+   "fiche": "Volvo D4204T",
+   "type": "rappel",
+   "partie": "Rappel: air emprisonné lors du remplissage du liquide de refroidissement → refroidissement insuffisant de composants du moteur",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s70-v70-xc70-323/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page décrit exactement ce rappel : 'Eine unzureichende Kühlung, verursacht durch Lufteinschlüsse beim Einfüllen von Kühlflüssigkeit... unzureichende Kühlung der Motorkomponenten' pour les moteurs diesel 2012-2016.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
+  },
+  {
+   "uid": "E-VOLVO-DIESEL-2012-2019-MOTEUR-NON-CODE-02#2",
+   "fiche": "Volvo D4204T",
+   "type": "rappel",
+   "partie": "Rappel: pose d'un tuyau de purge",
+   "url": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/volvo-s70-v70-xc70-323/",
+   "en_ligne": 200,
+   "ancien": "soutenue",
+   "nouveau": "soutenue",
+   "votes": [
+    "soutenue",
+    "soutenue"
+   ],
+   "justification": "La page précise l'abhilfe : 'Im Rahmen der Rückrufaktion muss ein Entlüftungsschlauch verbaut werden', soit la pose d'un tuyau de purge.",
+   "lisible": true,
+   "erreur": null,
+   "verifie_le": "2026-11-14",
+   "statut": "a_jour",
+   "motif": null
   }
  ]
 }
