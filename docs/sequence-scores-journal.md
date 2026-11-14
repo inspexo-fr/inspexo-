@@ -704,3 +704,24 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
 - N47 réchauffeur, Mini N18, OM651 KBA, DV6 EGR : `atlas-builder` (déjà en
   production depuis main) cherche une autre source portante, jugée. Sans
   source : prise MASQUÉE en session de jeton, jamais supprimée.
+- **Résultat** (0,672 €) : DV6 EGR ⇒ nouvelle source L'Argus (gardée) ;
+  Mini N18 ⇒ seule source trouvée NHTSA (étrangère : ne confirme pas une prise
+  « en France ») ⇒ masquée ; N47 réchauffeur ⇒ aucune (le juge : ces rappels
+  visent le M57) ⇒ masquée ; OM651 KBA ⇒ aucune ⇒ masquée. DW10 ⇒ restreinte
+  au Xsara Picasso ; G4KD ⇒ à jour, contrôle de présence bloqué (403).
+- Code (branche `sprint24-session`, NON mergée) : `masquee` et `restreinte_a`
+  sur les prises, appliqués partout par `priseVisible` (dossier, stock, pages
+  modèle, comptage d'indexation) ; rappel masqué ⇒ question du VIN ;
+  opérations admin `verifier_prises` et `corriger_prises` (additives).
+
+## Campagne 2 bis — coûts par comparateur (décision d'Utku du 14 nov.)
+- Condition : la source PORTANTE de la panne doit nommer une opération
+  précise. Relecture gratuite des pages : 3 pannes sur ~29 seulement (DV5
+  kit de pompe à eau, DW10 réservoir AdBlue, OM654 arbres à cames) ⇒ au
+  mieux ~10 %, sous le seuil de 15 % ⇒ **arrêt AVANT toute dépense (0 €)**.
+
+## Session de jeton préparée : `scripts/session-jeton-sprint24b.mjs`
+- 116 dates de vérification, 5 corrections (3 masquées, 1 source ajoutée, 1
+  restreinte ; G4KD en simple note), 2 pannes (H4M, H4D) ; sauvegarde avant
+  écriture ; simulation par défaut. Puis 4 références × 1 (mur 0,45 €).
+- Prérequis : merge de `sprint24-session` puis déploiement (règle 0 sexies).
