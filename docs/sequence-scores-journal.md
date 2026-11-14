@@ -697,3 +697,10 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   production ; une éval qui exige la prod se demande avant de déployer.
 - Merge puis redéploiement de toutes les fonctions que nomme
   `fonctions-a-redeployer.mjs`, vérification main = production, Vercel.
+- **Fait** : 10 fonctions redéployées, main = production (14 fonctions, 0
+  migration en écart), Vercel réussi, sitemap 111.
+
+## 14 nov. — 4 prises « à revérifier » : autre source (mur 1 €)
+- N47 réchauffeur, Mini N18, OM651 KBA, DV6 EGR : `atlas-builder` (déjà en
+  production depuis main) cherche une autre source portante, jugée. Sans
+  source : prise MASQUÉE en session de jeton, jamais supprimée.

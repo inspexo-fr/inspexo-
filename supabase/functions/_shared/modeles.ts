@@ -15,7 +15,7 @@
 //
 // Module PUR (tests/modeles.test.mjs).
 import { sourcesPortentLEntree, urlsDeLaPanne } from "./atlasSource.ts";
-import { sanitizePrisesEnCharge, MENTION_CONTEXTE, MENTION_FRANCE } from "./prisesEnCharge.ts";
+import { priseVisible, sanitizePrisesEnCharge, MENTION_CONTEXTE, MENTION_FRANCE } from "./prisesEnCharge.ts";
 import { titreSansRappelOfficiel } from "./rappelsApplicables.ts";
 import { decisionVariante, varianteVehicule } from "./variantes.ts";
 
@@ -216,6 +216,7 @@ export function composerPage(
       });
     }
     const prises = sanitizePrisesEnCharge(fiche.prises_en_charge)
+      .filter((x) => priseVisible(x, page.modele))
       .filter((x) => x.periode !== null)
       .filter((x) => !nommeUnAutreVehicule(x.texte, page, catalogue))
       .map((x) => {
