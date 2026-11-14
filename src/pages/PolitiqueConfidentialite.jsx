@@ -687,6 +687,12 @@ export default function PolitiqueConfidentialite() {
               Stripe de l'abonnement, son statut et sa date de fin, pour la durée de l'abonnement puis le temps
               des obligations comptables. Le paiement est traité par Stripe&nbsp;; nous ne voyons jamais la carte.
             </li>
+            <li>
+              <strong>Journal des retours</strong>&nbsp;: les retours que vous saisissez (votre référence de stock, date,
+              kilométrage, famille moteur, pièce, coût, qui a payé, commentaire) ne sont visibles que de vous. Nous
+              n'en publions et n'en affichons aucune statistique. Ils sont effacés avec votre compte, ou ligne par
+              ligne à votre demande.
+            </li>
           </ul>
 
           <h2 className="legal-h2">7. Vos droits</h2>

@@ -5,8 +5,8 @@
 //          liste avant validation.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { sourcesPortentLEntree } from "../_shared/atlasSource.ts";
-import { sanitizePannes } from "../_shared/defectSheets.ts";
+import { coutUtilisable, sourcesPortentLEntree } from "../_shared/atlasSource.ts";
+import { montantPresent, sanitizePannes } from "../_shared/defectSheets.ts";
 import { fusionnerPlan } from "../_shared/planEntretien.ts";
 import { couvertureValide } from "../_shared/couverture.ts";
 import { fusionnerPrisesEnCharge } from "../_shared/prisesEnCharge.ts";
@@ -145,6 +145,73 @@ serve(async (req: Request) => {
           JSON.stringify({ pannes_touchees: touchees, sources_ajoutees: ajoutees, inconnues }),
           { headers: { ...cors, "Content-Type": "application/json" } },
         );
+      }
+
+      // ── SPRINT 24, campagne 2 — INSCRIRE LA REVÉRIFICATION D'UNE PRISE ───
+      // Ajoute (ou remplace) le champ `verification` d'une prise désignée par
+      // son texte EXACT. Rien d'autre ne bouge ; aucune prise n'est retirée.
+      if (Array.isArray(body.verifier_prises)) {
+        const { data: row } = await admin.from("defect_sheets").select("prises_en_charge").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const liste = (Array.isArray(row.prises_en_charge) ? row.prises_en_charge : []) as Array<Record<string, unknown>>;
+        const avant = JSON.parse(JSON.stringify(liste));
+        const marquees: string[] = [], introuvables: string[] = [];
+        for (const v of body.verifier_prises.slice(0, 60)) {
+          const texte = String(v?.texte ?? "").replace(/\s+/g, " ").trim();
+          const x = liste.find((p) => String(p?.texte ?? "").replace(/\s+/g, " ").trim() === texte);
+          if (!x || !["a_jour", "a_reverifier"].includes(v?.statut) || !/^\d{4}-\d{2}-\d{2}$/.test(String(v?.le ?? ""))) { introuvables.push(texte.slice(0, 80)); continue; }
+          x.verification = { statut: v.statut, le: String(v.le), motif: v.motif ? String(v.motif).slice(0, 200) : null };
+          marquees.push(texte.slice(0, 80));
+        }
+        if (marquees.length === 0) return new Response(JSON.stringify({ error: "aucune prise marquée", introuvables }), { status: 400, headers: cors });
+        const { error: e12 } = await admin.from("defect_sheets").update({ ...fields, prises_en_charge: liste }).eq("id", body.id);
+        if (e12) return new Response(JSON.stringify({ error: e12.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ marquees: marquees.length, introuvables, prises_avant: avant }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
+      // ── SPRINT 24, campagne 1 — AJOUTER UN COÛT PUBLIÉ À UNE PANNE ──────
+      //
+      // ADDITIF : une panne qui a DÉJÀ un coût n'est jamais modifiée. Le coût
+      // n'entre que si : la page est de rang portant et peut chiffrer
+      // (`coutUtilisable`), elle est relue ICI et contient LITTÉRALEMENT les
+      // deux montants et l'extrait cité (`montantPresent`). Le juge (2 votes,
+      // +1 en cas de désaccord) a validé l'affirmation AVANT, côté campagne ;
+      // son verdict est consigné avec la date. Les pannes d'avant sont rendues
+      // pour le retour arrière.
+      if (Array.isArray(body.ajouter_cout)) {
+        const { data: row } = await admin.from("defect_sheets").select("pannes").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const pannes = (Array.isArray(row.pannes) ? row.pannes : []) as Array<Record<string, unknown>>;
+        const avant = JSON.parse(JSON.stringify(pannes));
+        const norm = (t: string) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
+        const faits: string[] = [];
+        const refus: Array<{ titre: string; motif: string }> = [];
+        for (const a of body.ajouter_cout.slice(0, 20)) {
+          const titre = String(a?.panne_titre ?? "").trim();
+          const p = pannes.find((x) => String(x?.titre ?? "").trim() === titre);
+          const min = Number(a?.min), max = Number(a?.max);
+          const url = String(a?.url ?? "");
+          const extrait = String(a?.extrait ?? "").slice(0, 400);
+          if (!p) { refus.push({ titre, motif: "panne introuvable" }); continue; }
+          if (typeof p.cout_indicatif_eur_min === "number") { refus.push({ titre, motif: "coût déjà présent" }); continue; }
+          if (!(min > 0 && max >= min && max < 100000)) { refus.push({ titre, motif: "montants invalides" }); continue; }
+          if (!/^https:\/\/\S{8,500}$/i.test(url) || !sourcesPortentLEntree([url]) || !coutUtilisable([url])) { refus.push({ titre, motif: "source non portante" }); continue; }
+          if (a?.juge !== "soutenue") { refus.push({ titre, motif: "non validé par le juge" }); continue; }
+          const texte = await texteDeLaPageComplet(url, 50).catch(() => null);
+          if (!texte) { refus.push({ titre, motif: "page illisible" }); continue; }
+          if (!montantPresent(texte, min) || !montantPresent(texte, max)) { refus.push({ titre, motif: "montant absent de la page" }); continue; }
+          if (extrait && !norm(texte).includes(norm(extrait).slice(0, 80))) { refus.push({ titre, motif: "extrait absent de la page" }); continue; }
+          p.cout_indicatif_eur_min = min;
+          p.cout_indicatif_eur_max = max;
+          p.cout_source = { url, extrait, verifie_le: new Date().toISOString().slice(0, 10), juge: "soutenue" };
+          const urls = Array.isArray(p.url_source) ? p.url_source as string[] : [];
+          if (!urls.includes(url)) p.url_source = [...urls, url];
+          faits.push(titre);
+        }
+        if (faits.length === 0) return new Response(JSON.stringify({ error: "aucun coût ajouté", refus }), { status: 400, headers: cors });
+        const { error: e11 } = await admin.from("defect_sheets").update({ ...fields, pannes }).eq("id", body.id);
+        if (e11) return new Response(JSON.stringify({ error: e11.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ ajoutes: faits, refus, pannes_avant: avant }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
 
       // ── SPRINT 24 — RETIRER LES PANNES D'UNE AUTRE VERSION ─────────────

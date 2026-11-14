@@ -39,6 +39,7 @@ const CHEMIN_NOTATION = [
   'supabase/functions/_shared/negociation.ts',
   'supabase/functions/_shared/marche.ts',
   'supabase/functions/_shared/dedupPannes.ts',
+  'supabase/functions/_shared/catalogue.ts',
   'supabase/functions/_shared/entretienDeclare.ts',
   'supabase/functions/_shared/graviteRemede.ts',
   'supabase/functions/_shared/warrantyPrograms.ts',

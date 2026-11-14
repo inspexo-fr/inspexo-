@@ -600,3 +600,100 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   94 publiées en France, ~17 avec des conditions écrites. Moteurs courants :
   **36 pannes confirmées sur 45 sans coût**. Pages /moteur sous le seuil
   d'indexation : 26 sur 45.
+
+## Sprint 24 — campagne 0 : catalogue sorti de `score` (13 nov. 2026, branche `sprint24-atlas`)
+- Méthode validée par Utku : diff OCTET PAR OCTET du catalogue avant/après,
+  puis 4 références × 1 (score et verdict identiques). Une sortie complète de
+  `score` ne peut pas être identique au bit près : le modèle varie d'un
+  passage à l'autre à code constant.
+- `buildCatalogue`, `extractCostRange`, `CatalogueEntry` déplacés de `score`
+  vers `_shared/catalogue.ts`, corps recopié à l'identique (seuls trois mots
+  `export` ajoutés — vérifié par diff du code).
+- Diff du résultat : 10 cas (les 4 références avec leur fiche réelle, tirée de
+  la sauvegarde de prod du soir, les 4 marques sans fiche, Mercedes-Benz,
+  sans marque) ⇒ **sortie IDENTIQUE octet pour octet**, sha256
+  `c806069de353bc6d9e1cc462e41589abbef6ed857e78e0f4bfbf6cce3726f320` avant
+  comme après.
+- Déploiement annoncé : `score` ; puis 4 références × 1, mur 0,45 € (budget du
+  chantier : 1 €).
+- **Fait** : `score` déployée (refactor seul). **4 références identiques** :
+  S7 rouge 39, 308 orange 55, Mercedes vert 73, Clio II orange 51 (0,357 €).
+- Stock : reprend l'atlas par la MÊME construction (`buildCatalogue`) et les
+  mêmes filtres que le dossier (doublons fusionnés — fusion identique mot
+  pour mot à celle de `score`, testé —, code moteur ou caisse étranger écarté,
+  atlas sans source publique ou non visé par la saisie ⇒ question). Chaque
+  montant porte « selon <source> ». Testé : la Clio IV 1.5 dCi K9K reprend
+  « injecteurs Delphi » avec son coût sourcé.
+- Journal des retours (A) : table `retours_stock` (RLS, aucune policy, aucun
+  droit direct), RPC filtrées sur le compte, vue agrégée admin seulement,
+  aucune statistique affichée ; bouton « Qui paie cette panne ? » présent,
+  inactif jusqu'au sprint 25. Essai local : 12/12 (dont « un autre pro ne
+  voit rien », « sans formule pro : refusé »).
+- Déploiement annoncé : dump prod, migration `20261201120000`, fonction
+  `stock`. Sans effet sur le score.
+
+## Crédits API — campagne 1 : coûts manquants (14 nov. 2026, plafond dédié 40 €)
+- Relevé gratuit : 36 pannes confirmées sans coût sur les moteurs courants ;
+  leurs propres pages ne publient AUCUN coût de réparation (une seule phrase
+  chiffrée, et c'est un prix de véhicule). Rappels et OTS exclus (pris en
+  charge par le constructeur).
+- Méthode : `atlas-builder` (recherche ciblée sur le coût) → relecture
+  gratuite, les deux montants LITTÉRALEMENT sur la page → juge (2 votes + 1,
+  silence ≠ vote). Rien n'est écrit en base sans session de jeton
+  (`ajouter_cout`, additif, revérifie la page avant d'écrire).
+- Lot pilote : 10 pannes, mur **3,50 €** ; compteur `.credits-cout.json`.
+- **Résultat du pilote** : **0 coût validé sur 10 pannes**, 1,648 €. La
+  recherche n'a trouvé aucune page portante publiant un prix de réparation
+  pour ces défauts (presse et constructeurs ne chiffrent pas). Campagne
+  ARRÊTÉE après le pilote, à soumettre à Utku (comparateurs de garages, forums
+  ≥ 3 hôtes ?). Opération admin `ajouter_cout` prête (additive, revérifie la
+  page) mais rien à écrire.
+
+## Crédits API — campagne 2 : revérification des 116 prises en charge
+- Décision d'Utku : juge SANS cache ; ancien verdict ARCHIVÉ avec sa date
+  (`verif_cache_archive`, migration `20261202120000`) ; archive manquée ⇒
+  aucune écriture. Page disparue ou verdict qui n'est plus « soutenue » ⇒
+  « à revérifier », liste pour Utku (`docs/prises-reverification.json`).
+  Aucun retrait.
+- 116 prises × page, 74 pages × moteur à juger. Déploiement annoncé : dump,
+  migration, `sources-externes` (option `sans_cache`, secret d'éval).
+  Mur **9 €** (estimation 4 à 6 €).
+- ⚠️ Premier lancement : `sources-externes` en BOOT_ERROR (`verifSource.ts`
+  ne ré-exportait pas `archiverCacheVerif`), 0 € dépensé. Corrigé, et nouveau
+  test `tests/imports-exports.test.mjs` (555 noms importés vérifiés ; il mord
+  sur ce défaut — contre-épreuve faite).
+- **Résultat** : 116 prise × page revérifiées, **110 à jour, 6 à revérifier**,
+  **1,988 €** / 9 €. Les 6 : BMW N47 réchauffeur de gazole (ADAC, non
+  soutenue 2/2) ; Peugeot DV6 EGR 207/307 (non soutenue 2/1) ; Peugeot DW10
+  réservoir 307 (mauvais moteur 2/2 : la page ne vise que le Xsara Picasso) ;
+  Mini N18 rappel Cooper S/JCW (non soutenue 2/2) ; Mercedes OM651 rappel KBA
+  (non soutenue 2/2) ; Hyundai G4KD règlement US (page en 403 à notre
+  contrôle, mais lue et soutenue 2/2 par le juge : probablement un blocage
+  des robots). Liste complète : `docs/prises-reverification.json`. Aucune
+  prise retirée ; l'inscription en fiche (`verifier_prises`) attend une
+  session de jeton. Crédits : 3,64 € / 40 €.
+
+## Crédits API — campagne 3 : fiches sous le seuil
+- 25 pages /moteur sous le seuil (hors doublons canoniques), 106 pannes non
+  confirmées de la bonne version ; EA824 et EB2DTS EXCLUS (moteurs des
+  références S7 et 308 : y confirmer une panne changerait leur score).
+  100 pannes, dont 18 déjà jouées le 8 nov. (sautées) ⇒ 82.
+- Lots de 20, mur 4 € par lot, arrêt si un lot rend moins de 15 %.
+  Compteur : plafond crédits 40 €. Écriture (`--appliquer`) en session de
+  jeton seulement.
+- **Résultat du lot 1** : **2 pannes confirmées sur 20 (10 %)** — Renault H4M
+  (boîte hybride E-Tech, source éditoriale) et Renault H4D (usure de la
+  chaîne, presse) —, **3,072 €** / 4 €. **Sous le seuil de 15 % : la
+  campagne s'arrête.** 43 pannes non jouées, restées questions au vendeur.
+  Même après écriture, H4M et H4D resteraient sous le seuil d'indexation
+  (1 panne confirmée, 0 prise datée) : **0 page passe au-dessus du seuil.**
+  Écriture (`--appliquer`) en attente d'une session de jeton.
+- **Total crédits : 6,71 € / 40 €** (campagne 1 : 1,648 € ; campagne 2 :
+  1,988 € ; campagne 3 : 3,072 €). Références non rejouées : rien n'a été
+  écrit en base qui touche le score.
+
+## 14 nov. 2026 — merge de `sprint24-atlas` (feu vert d'Utku)
+- Règle ajoutée à CLAUDE.md (0 sexies) : aucun code absent de main en
+  production ; une éval qui exige la prod se demande avant de déployer.
+- Merge puis redéploiement de toutes les fonctions que nomme
+  `fonctions-a-redeployer.mjs`, vérification main = production, Vercel.

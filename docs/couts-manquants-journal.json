@@ -1,0 +1,132 @@
+[
+ {
+  "famille": "K9K",
+  "marque": "Renault",
+  "titre": "Grippage de la pompe d'injection Delphi et contamination des injecteurs",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:07:19.328Z"
+ },
+ {
+  "famille": "K9K",
+  "marque": "Renault",
+  "titre": "Casse de la courroie de distribution",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:07:28.900Z"
+ },
+ {
+  "famille": "K9K",
+  "marque": "Renault",
+  "titre": "Suintement d'huile au niveau de l'échangeur de suralimentation",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:07:39.714Z"
+ },
+ {
+  "famille": "K9K",
+  "marque": "Renault",
+  "titre": "Casse moteur par blocage du clapet de la pompe à huile",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:08:11.027Z"
+ },
+ {
+  "famille": "H5FT",
+  "marque": "Renault",
+  "titre": "Surconsommation d'huile liée à la segmentation des pistons, pouvant conduire à la casse moteur",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:08:31.494Z"
+ },
+ {
+  "famille": "H5FT",
+  "marque": "Renault",
+  "titre": "Usure prématurée de la chaîne de distribution, tendeur et déphaseurs d'arbre à cames",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:08:56.515Z"
+ },
+ {
+  "famille": "R9M",
+  "marque": "Renault",
+  "titre": "Fissuration du carter-cylindre entraînant la casse moteur",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:09:22.564Z"
+ },
+ {
+  "famille": "R9M",
+  "marque": "Renault",
+  "titre": "Non-démarrage par temps froid et humide (givre du refroidisseur d'air, démarreur bloqué)",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:09:49.589Z"
+ },
+ {
+  "famille": "DV6",
+  "marque": "Peugeot",
+  "titre": "Défaillance / fuite des injecteurs",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:10:23.347Z"
+ },
+ {
+  "famille": "DV6",
+  "marque": "Peugeot",
+  "titre": "Usure prématurée du volant moteur bi-masse",
+  "propose": null,
+  "retenu": null,
+  "refus": [
+   {
+    "motif": "aucun coût publié trouvé"
+   }
+  ],
+  "le": "2026-11-14T05:10:39.000Z"
+ }
+]
