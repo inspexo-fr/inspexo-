@@ -29,6 +29,7 @@ import { memeDefaut } from "./dedupPannes.ts";
 import { seuilKmPanne } from "./bareme.ts";
 import type { FactureAPrevoir, LigneFacture } from "./factureAPrevoir.ts";
 import { buildCatalogue, fusionnerEntrees } from "./catalogue.ts";
+import { priseVisible, sanitizePrisesEnCharge } from "./prisesEnCharge.ts";
 import { dedupliquerCatalogue } from "./dedupPannes.ts";
 import { atlasConfirme, codeEtranger, questionSansSource, sansSourcePublique } from "./pannesApplicables.ts";
 
@@ -292,7 +293,7 @@ export function rjSynthetique(v: VehiculeStock, fiche: any, confirmees: PanneSto
       operations_non_faites: v.operations_non_faites,
     },
     pannes_connues: confirmees,
-    prises_en_charge: Array.isArray(fiche?.prises_en_charge) ? fiche.prises_en_charge : [],
+    prises_en_charge: sanitizePrisesEnCharge(fiche?.prises_en_charge).filter((x) => priseVisible(x, v.modele)),
   };
 }
 

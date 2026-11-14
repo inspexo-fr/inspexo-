@@ -22,7 +22,26 @@ export type PriseEnCharge = {
   /** SPRINT 24, campagne 2 — dernière vérification (juge sans cache). Une
    *  prise n'est jamais retirée : « a_reverifier » la signale. */
   verification?: { statut: "a_jour" | "a_reverifier"; le: string; motif: string | null };
+  /** Décision d'Utku du 14 nov. 2026 : une prise que plus aucune source
+   *  portante n'atteste est MASQUÉE partout, jamais supprimée. */
+  masquee?: { le: string; motif: string };
+  /** Prise restreinte aux véhicules que la page source NOMME (ex. DW10 :
+   *  Xsara Picasso seulement). Vide ou absent : pas de restriction. */
+  restreinte_a?: string[];
 };
+
+const normV = (t: string) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+
+/** La prise s'affiche-t-elle pour ce modèle ? Masquée : jamais. Restreinte :
+ *  seulement si le modèle est connu et nommé par la restriction. */
+export function priseVisible(x: PriseEnCharge, modele: string | null | undefined): boolean {
+  if (x.masquee) return false;
+  if (x.restreinte_a && x.restreinte_a.length > 0) {
+    const m = normV(String(modele ?? ""));
+    return m.length > 0 && x.restreinte_a.some((r) => { const n = normV(r); return n.length > 0 && ` ${m} `.includes(` ${n} `); });
+  }
+  return true;
+}
 
 const TYPES = new Set(["garantie", "campagne", "rappel"]);
 const anneeOk = (n: unknown): n is number => typeof n === "number" && Number.isInteger(n) && n >= 1980 && n <= 2035;
@@ -56,7 +75,11 @@ export function sanitizePrisesEnCharge(brut: unknown): PriseEnCharge[] {
     const verification = v && (v.statut === "a_jour" || v.statut === "a_reverifier") && /^\d{4}-\d{2}-\d{2}$/.test(String(v.le ?? ""))
       ? { statut: v.statut, le: String(v.le), motif: v.motif ? String(v.motif).slice(0, 200) : null }
       : undefined;
-    out.push({ type: e.type, texte, periode, pays, urls, ...(verification ? { verification } : {}) });
+    const m = e?.masquee;
+    const masquee = m && /^\d{4}-\d{2}-\d{2}$/.test(String(m.le ?? "")) ? { le: String(m.le), motif: String(m.motif ?? "").slice(0, 200) } : undefined;
+    const restreinte_a = (Array.isArray(e?.restreinte_a) ? e.restreinte_a : [])
+      .filter((r: unknown): r is string => typeof r === "string" && r.trim().length > 1).map((r: string) => r.trim().slice(0, 60)).slice(0, 8);
+    out.push({ type: e.type, texte, periode, pays, urls, ...(verification ? { verification } : {}), ...(masquee ? { masquee } : {}), ...(restreinte_a.length ? { restreinte_a } : {}) });
   }
   return out;
 }
@@ -80,8 +103,9 @@ export const MENTION_CONTEXTE = "Information de contexte publiée hors de France
 
 /** Ce que l'acheteur voit : uniquement si l'année du véhicule tombe dans la
  *  période écrite (une période absente est dite comme telle). */
-export function prisesAffichables(liste: unknown, annee: number | null): PriseAffichee[] {
+export function prisesAffichables(liste: unknown, annee: number | null, modele: string | null = null): PriseAffichee[] {
   return sanitizePrisesEnCharge(liste)
+    .filter((x) => priseVisible(x, modele))
     .filter((x) => !x.periode || (annee != null && annee >= x.periode.debut && annee <= x.periode.fin))
     .map((x) => {
       const france = x.pays.includes("FR");

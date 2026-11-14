@@ -310,12 +310,23 @@ titre('5. Prises en charge : affichage seulement (sprint 23 f, décision du 11 n
   }
   // Dans score : exactement l'import et la ligne du résultat affiché.
   const lignesCode = (src) => src.split('\n').filter((l) => PEC.test(l) && !/^\s*\/\//.test(l))
-  const autorisee = (l) => /^import \{ prisesAffichables \} from "\.\.\/_shared\/prisesEnCharge\.ts";$/.test(l.trim()) ||
-    // Sprint 24 : la même ligne, filtrée (autre version, autre véhicule) — elle
-    // alimente toujours le seul champ affiché `prises_en_charge`.
-    /^prises_en_charge: prisesAffichables\(sheet\?\.prises_en_charge \?\? \[\], v\.annee_modele \?\? null\)(?:\.filter\(\(x\) =>)?,?$/.test(l.trim())
-  const verifierScore = (src) => { const l = lignesCode(src); return l.length === 2 && l.every(autorisee) }
+  const autorisee = (l) => /^import \{ prisesAffichables(?:, sanitizePrisesEnCharge)? \} from "\.\.\/_shared\/prisesEnCharge\.ts";$/.test(l.trim()) ||
+    // Sprint 24 : la même ligne, filtrée (autre version, autre véhicule,
+    // prise masquée ou restreinte) — elle alimente toujours le seul champ
+    // affiché `prises_en_charge`.
+    /^prises_en_charge: prisesAffichables\(sheet\?\.prises_en_charge \?\? \[\], v\.annee_modele \?\? null(?:, v\.modele \?\? null)?\)(?:\.filter\(\(x\) =>)?,?$/.test(l.trim()) ||
+    // Sprint 24 (14 nov.) : un rappel MASQUÉ ne fait que poser la question du
+    // VIN (drapeau `rappelSansSourcePortante`, contrôlé ci-dessous).
+    /^if \(sanitizePrisesEnCharge\(sheet\?\.prises_en_charge \?\? \[\]\)\.some\(\(x\) => x\.masquee && x\.type === "rappel"\)\) \{$/.test(l.trim())
+  const verifierScore = (src) => { const l = lignesCode(src); return l.length >= 2 && l.length <= 3 && l.every(autorisee) }
   ok(verifierScore(readFileSync('supabase/functions/score/index.ts', 'utf8')), 'score : seulement l’import et la ligne du résultat affiché')
+  {
+    // Le drapeau posé par un rappel masqué ne sert QU'À la question du VIN.
+    const src = readFileSync('supabase/functions/score/index.ts', 'utf8')
+    const usages = src.split('\n').filter((l) => /rappelSansSourcePortante/.test(l) && !/^\s*\/\//.test(l)).map((l) => l.trim())
+    ok(usages.every((l) => /^let rappelSansSourcePortante = false;$|rappelSansSourcePortante = true;$|^if \(rappelSansSourcePortante && !questions\.includes\(QUESTION_RAPPEL_VIN\)\) \{$/.test(l)),
+      'le drapeau des rappels masqués ne sert qu’à la question du VIN', usages.join(' | '))
+  }
   // Contre-épreuve : une lecture par la note serait détectée.
   ok(!verifierScore(readFileSync('supabase/functions/score/index.ts', 'utf8') + '\n    faits.prises = prisesAffichables(sheet.prises_en_charge, null);'),
     'le contrôle MORD : une lecture des prises en charge par les faits est détectée')

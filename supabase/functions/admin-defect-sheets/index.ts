@@ -169,6 +169,43 @@ serve(async (req: Request) => {
         return new Response(JSON.stringify({ marquees: marquees.length, introuvables, prises_avant: avant }), { headers: { ...cors, "Content-Type": "application/json" } });
       }
 
+      // ── SPRINT 24 — CORRIGER UNE PRISE (décisions d'Utku du 14 nov. 2026) ─
+      //   masquer       : plus aucune source portante ⇒ masquée PARTOUT,
+      //                   jamais supprimée (`masquee`, motif daté) ;
+      //   restreindre   : limitée aux véhicules que la page source NOMME ;
+      //   ajouter_source: une autre source PORTANTE, jugée, rejoint ses URL.
+      // Prise désignée par son texte EXACT. Les prises d'avant sont rendues.
+      if (Array.isArray(body.corriger_prises)) {
+        const { data: row } = await admin.from("defect_sheets").select("prises_en_charge").eq("id", body.id).maybeSingle();
+        if (!row) return new Response(JSON.stringify({ error: "Sheet not found" }), { status: 400, headers: cors });
+        const liste = (Array.isArray(row.prises_en_charge) ? row.prises_en_charge : []) as Array<Record<string, unknown>>;
+        const avant = JSON.parse(JSON.stringify(liste));
+        const faites: string[] = [], refus: Array<{ texte: string; motif: string }> = [];
+        const le = new Date().toISOString().slice(0, 10);
+        for (const c of body.corriger_prises.slice(0, 20)) {
+          const texte = String(c?.texte ?? "").replace(/\s+/g, " ").trim();
+          const x = liste.find((p) => String(p?.texte ?? "").replace(/\s+/g, " ").trim() === texte);
+          if (!x) { refus.push({ texte: texte.slice(0, 80), motif: "introuvable" }); continue; }
+          if (c?.action === "masquer") {
+            x.masquee = { le, motif: String(c?.motif ?? "plus de source portante").slice(0, 200) };
+          } else if (c?.action === "restreindre") {
+            const v = (Array.isArray(c?.vehicules) ? c.vehicules : []).filter((t: unknown): t is string => typeof t === "string" && t.trim().length > 1).map((t: string) => t.trim().slice(0, 60)).slice(0, 8);
+            if (!v.length) { refus.push({ texte: texte.slice(0, 80), motif: "aucun véhicule" }); continue; }
+            x.restreinte_a = v;
+          } else if (c?.action === "ajouter_source") {
+            const url = String(c?.url ?? "");
+            if (!/^https:\/\/\S{8,500}$/i.test(url) || !sourcesPortentLEntree([url])) { refus.push({ texte: texte.slice(0, 80), motif: "source non portante" }); continue; }
+            const urls = Array.isArray(x.urls) ? x.urls as string[] : [];
+            if (!urls.includes(url)) x.urls = [...urls, url].slice(0, 4);
+          } else { refus.push({ texte: texte.slice(0, 80), motif: "action inconnue" }); continue; }
+          faites.push(`${c.action} : ${texte.slice(0, 60)}`);
+        }
+        if (faites.length === 0) return new Response(JSON.stringify({ error: "aucune correction", refus }), { status: 400, headers: cors });
+        const { error: e13 } = await admin.from("defect_sheets").update({ ...fields, prises_en_charge: liste }).eq("id", body.id);
+        if (e13) return new Response(JSON.stringify({ error: e13.message }), { status: 500, headers: cors });
+        return new Response(JSON.stringify({ faites, refus, prises_avant: avant }), { headers: { ...cors, "Content-Type": "application/json" } });
+      }
+
       // ── SPRINT 24, campagne 1 — AJOUTER UN COÛT PUBLIÉ À UNE PANNE ──────
       //
       // ADDITIF : une panne qui a DÉJÀ un coût n'est jamais modifiée. Le coût

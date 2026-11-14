@@ -1,0 +1,42 @@
+[
+ {
+  "fiche": "BMW N47",
+  "partie": "Rappels du réchauffeur de gazole / de filtre à carburant: échauffement du connecteur",
+  "ancienne": "https://www.adac.de/rund-ums-fahrzeug/auto-kaufen-verkaufen/gebrauchtwagenkauf/gebrauchtwageninfos/bmw-1er-reihe-31/",
+  "trouve": false,
+  "nouvelles": [],
+  "motif": "Les rappels NHTSA (13V-339, 11V-441) et Transports Canada (2013266) pour échauffement du connecteur du réchauffeur de gazole/filtre à carburant visent explicitement le moteur M57Y (BMW X5/E70, 6 cylindres), et non le N47 ; les seuls rappels nommant réellement le N47 (18V-755, 21V-907) concernent un défaut distinct, le refroidisseur EGR, pas le réchauffeur de carburant.",
+  "decision": "masquer"
+ },
+ {
+  "fiche": "Peugeot DV6",
+  "partie": "Rappels 1.6 HDi: gestion électronique de la vanne EGR (207 et 307) (307 1.6 HDi 110, rappel d')",
+  "ancienne": "https://www.caradisiac.com/Peugeot-40133.htm",
+  "trouve": true,
+  "nouvelles": [
+   "https://www.largus.fr/actualite-automobile/peugeot-207-et-307-16-hdi-139461.html"
+  ],
+  "motif": "",
+  "decision": "garder (nouvelle source)"
+ },
+ {
+  "fiche": "Mini N18",
+  "partie": "Rappel: environ Cooper S et JCW en France",
+  "ancienne": "https://www.caradisiac.com/maxi-fiche-fiabilite-mini-ii-fruits-a-pepins-203638.htm",
+  "trouve": true,
+  "nouvelles": [
+   "https://static.nhtsa.gov/odi/rcl/2018/RCMN-18V248-2189.pdf"
+  ],
+  "motif": "",
+  "decision": "garder (nouvelle source)"
+ },
+ {
+  "fiche": "Mercedes OM651",
+  "partie": "Rappel officiel ordonné par le KBA pour dispositifs d'invalidation illicites: la mesure de service volontaire devient un rappel obligatoire",
+  "ancienne": "https://journalauto.com/constructeurs/mercedes-benz-contraint-de-rappeler-pres-de-800-000-vehicules-diesel-en-europe/",
+  "trouve": false,
+  "nouvelles": [],
+  "motif": "aucune_source_retenue",
+  "decision": "masquer"
+ }
+]

@@ -76,7 +76,7 @@ import TABLE_FAMILLES from "../_shared/famillesMoteur.json" with { type: "json" 
 // Noms des véhicules connus, pour écarter une prise en charge qui en nomme un autre.
 const CATALOGUE_VEHICULES = indexerModeles((TABLE_FAMILLES as { familles: FamilleMoteur[] }).familles).map((p) => ({ marque: p.marque, modele: p.modele }));
 // Affichage seulement : jamais lu par la note (tests/independance-score.test.mjs).
-import { prisesAffichables } from "../_shared/prisesEnCharge.ts";
+import { prisesAffichables, sanitizePrisesEnCharge } from "../_shared/prisesEnCharge.ts";
 // SPRINT 23 lot 2 — signaux d'arnaque : AFFICHAGE SEULEMENT, jamais dans les faits du barème.
 import { detecterSignauxArnaque } from "../_shared/securiteTransaction.ts";
 import {
@@ -2720,6 +2720,12 @@ serve(async (req: Request) => {
     for (const q of questionsVariante) {
       if (!questions.includes(q)) questions.splice(Math.min(4, questions.length), 0, q);
     }
+    // SPRINT 24 (décision d'Utku du 14 nov. 2026) — un RAPPEL masqué faute de
+    // source portante (prise en charge de la fiche) suit la même règle : la
+    // question du VIN, jamais l'affirmation.
+    if (sanitizePrisesEnCharge(sheet?.prises_en_charge ?? []).some((x) => x.masquee && x.type === "rappel")) {
+      rappelSansSourcePortante = true;
+    }
     if (rappelSansSourcePortante && !questions.includes(QUESTION_RAPPEL_VIN)) {
       questions.splice(Math.min(4, questions.length), 0, QUESTION_RAPPEL_VIN);
     }
@@ -3620,7 +3626,7 @@ serve(async (req: Request) => {
       // SPRINT 24 — une prise en charge qui nomme une autre version (cylindrée,
       // puissance) ou un autre véhicule n'est pas affichée sur CE dossier.
       // Affichage seul : `prisesEnCharge` reste hors du chemin de notation.
-      prises_en_charge: prisesAffichables(sheet?.prises_en_charge ?? [], v.annee_modele ?? null).filter((x) =>
+      prises_en_charge: prisesAffichables(sheet?.prises_en_charge ?? [], v.annee_modele ?? null, v.modele ?? null).filter((x) =>
         decisionVariante(x.texte, varianteVehicule({ cylindree: moteur.cylindree, motorisation: vehiculePublic.motorisation ?? moteur.label })).statut === "applicable" &&
         !nommeUnAutreVehicule(x.texte, { marque: String(vehiculePublic.marque ?? ""), modele: String(vehiculePublic.modele ?? ""), generation: null, slug_marque: "", slug: "", familles: [] }, CATALOGUE_VEHICULES)
       ),

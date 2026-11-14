@@ -29,6 +29,8 @@ export function estIndexable(nPortees: number, nPrisesDatees: number): boolean {
 export function prisesDateesPropres(brut: unknown, nomCommercial: string): number {
   const version = varianteVehicule({ motorisation: nomCommercial });
   return sanitizePrisesEnCharge(brut)
+    // Masquée ou restreinte à certains modèles : pas « propre » à la page moteur.
+    .filter((x) => !x.masquee && !(x.restreinte_a && x.restreinte_a.length))
     .filter((x) => x.periode !== null && x.pays.includes("FR"))
     .filter((x) => decisionVariante(x.texte, version).statut === "applicable")
     .length;
