@@ -1,0 +1,384 @@
+{
+ "le": "2026-11-13T23:10:11.390Z",
+ "pannes": [
+  {
+   "marque": "Renault",
+   "famille": "K9K",
+   "titre": "Grippage de la pompe d'injection Delphi et contamination des injecteurs",
+   "organe": "Système d'injection (pompe haute pression Delphi, injecteurs)",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/diesels-psarenault-la-liste-des-pannes-recurrentes-depuis-2010-9554392.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "K9K",
+   "titre": "Casse de la courroie de distribution",
+   "organe": "Distribution (courroie)",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/diesels-psarenault-la-liste-des-pannes-recurrentes-depuis-2010-9554392.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "K9K",
+   "titre": "Suintement d'huile au niveau de l'échangeur de suralimentation",
+   "organe": "Échangeur de suralimentation (intercooler)",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/diesels-psarenault-la-liste-des-pannes-recurrentes-depuis-2010-9554392.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "K9K",
+   "titre": "Casse moteur par blocage du clapet de la pompe à huile",
+   "organe": "Pompe à huile / filtre à huile",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/diesels-psarenault-la-liste-des-pannes-recurrentes-depuis-2010-9554392.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "H5FT",
+   "titre": "Surconsommation d'huile liée à la segmentation des pistons, pouvant conduire à la casse moteur",
+   "organe": "Segments de piston / lubrification",
+   "urls": [
+    "https://www.planeterenault.com/1-gamme/45-moteurs/5157-h5ft-tce-120/",
+    "https://www.quechoisir.org/actualite-moteur-1-2-renault-400-000-voitures-en-danger-n67215/"
+   ],
+   "candidats": [
+    {
+     "url": "https://www.planeterenault.com/1-gamme/45-moteurs/5157-h5ft-tce-120/",
+     "rang": "editorial",
+     "lisible": false
+    }
+   ]
+  },
+  {
+   "marque": "Renault",
+   "famille": "H5FT",
+   "titre": "Usure prématurée de la chaîne de distribution, tendeur et déphaseurs d'arbre à cames",
+   "organe": "Distribution (chaîne, tendeur, déphaseurs VVT)",
+   "urls": [],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "R9M",
+   "titre": "Fissuration du carter-cylindre entraînant la casse moteur",
+   "organe": "carter-cylindre",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/renault-espace-talisman-et-trafic-risque-de-casse-du-moteur-16-dci-9928390.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "R9M",
+   "titre": "OTS Renault pour fissure du carter-cylindre (hors garantie)",
+   "organe": "carter-cylindre",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/renault-espace-talisman-et-trafic-risque-de-casse-du-moteur-16-dci-9928390.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "R9M",
+   "titre": "Non-démarrage par temps froid et humide (givre du refroidisseur d'air, démarreur bloqué)",
+   "organe": "démarreur / refroidisseur d'air",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/renault-15-dci-et-16-dci-probleme-de-demarrage-sur-les-diesels-9932390.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "R9M",
+   "titre": "Rappel : risque de surchauffe avec voyant « risque casse moteur » (boîtier d'eau)",
+   "organe": "boîtier d'eau / refroidissement",
+   "urls": [
+    "https://www.caradisiac.com/maxi-fiche-fiabilite-que-vaut-le-renault-scenic-3-en-occasion-106472.htm"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "R9M",
+   "titre": "Rappel : tuyau EGR haute pression pouvant se fissurer",
+   "organe": "EGR",
+   "urls": [
+    "https://www.caradisiac.com/la-renault-espace-5-est-il-aussi-catastrophique-qu-on-le-pense-niveau-fiabilite-220797.htm"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Renault",
+   "famille": "R9M",
+   "titre": "Rappel : risque de perte d'assistance au freinage",
+   "organe": "freinage (assistance liée au moteur)",
+   "urls": [
+    "https://www.caradisiac.com/la-renault-espace-5-est-il-aussi-catastrophique-qu-on-le-pense-niveau-fiabilite-220797.htm"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DV6",
+   "titre": "Défaillance / fuite des injecteurs",
+   "organe": "Injecteurs common rail",
+   "urls": [],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DV6",
+   "titre": "Usure prématurée du volant moteur bi-masse",
+   "organe": "Volant moteur bi-masse",
+   "urls": [],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DV5",
+   "titre": "Casse de la chaîne interne d'entraînement des arbres à cames",
+   "organe": "Distribution - chaîne interne entre arbres à cames (7 mm)",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/peugeot-citroen-ds-opel-probleme-de-casse-sur-le-15-diesel-dv5-11079390.html",
+    "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-2526-fiabilite-15-bluehdi.php"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DV5",
+   "titre": "Défaut de la poulie de pompe à eau pouvant décaler la distribution (rappel consécutif sur moteurs déjà équipés de la chaîne renforcée)",
+   "organe": "Poulie de pompe à eau / synchronisation distribution",
+   "urls": [
+    "https://www.fiches-auto.fr/articles-auto/fiabilite-moteurs-diesel/s-2526-fiabilite-15-bluehdi.php"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DV5",
+   "titre": "Pannes du système de dépollution AdBlue (SCR) : cristallisation d'urée, réservoir/injecteur à remplacer",
+   "organe": "Système SCR / réservoir et injecteur AdBlue",
+   "urls": [
+    "https://www.caradisiac.com/commentaires/fiabilite-du-1-5-bluehdi-si-mauvaise-qu-on-le-dit-200704.htm"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DV5",
+   "titre": "Fuites d'huile au niveau du plan de joint de la demi-culasse",
+   "organe": "Demi-culasse / plan de joint",
+   "urls": [
+    "https://www.caradisiac.com/commentaires/fiabilite-du-1-5-bluehdi-si-mauvaise-qu-on-le-dit-200704.htm"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "EB2DT",
+   "titre": "Surconsommation d'huile moteur avec le kilométrage",
+   "organe": "Bloc moteur (segments de piston)",
+   "urls": [],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "EB2DTS",
+   "titre": "Surconsommation d'huile moteur",
+   "organe": "Segmentation pistons / circuit de lubrification",
+   "urls": [],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "EP6",
+   "titre": "Consommation d'huile excessive",
+   "organe": "Segmentation des pistons / circuit de retour d'huile du turbo",
+   "urls": [],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DW10",
+   "titre": "Défaut du réservoir et de la pompe à urée AdBlue (système SCR)",
+   "organe": "Dépollution SCR / réservoir AdBlue",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/fiabilite-bluehdi-occasion-tout-savoir-sur-les-defauts-du-reservoir-d-uree-30028913.html",
+    "https://rappel.conso.gouv.fr/fiche-rappel/47679/rapex",
+    "https://www.largus.fr/actualite-automobile/rappel-adblue-peugeot-plus-de-13-000-vehicules-concernes-par-un-defaut-de-conformite-40001617.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Peugeot",
+   "famille": "DW10",
+   "titre": "Casse de l'axe de la pompe haute pression",
+   "organe": "Pompe d'injection haute pression",
+   "urls": [],
+   "candidats": []
+  },
+  {
+   "marque": "Fiat",
+   "famille": "SDE",
+   "titre": "Injecteurs défaillants sur les diesels (1.3 MJT)",
+   "organe": "injecteurs",
+   "urls": [
+    "https://www.caradisiac.com/Maxi-fiche-fiabilite-que-vaut-la-Fiat-Grande-Punto-en-occasion-99196.htm"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Fiat",
+   "famille": "SDE",
+   "titre": "Fuite de liquide de refroidissement par le vase d'expansion / joint de culasse (rappel Fiat 500 1.3 Multijet)",
+   "organe": "joint de culasse / vase d'expansion",
+   "urls": [
+    "https://www.caradisiac.com/Fiat-40429.htm",
+    "https://www.largus.fr/actualite-automobile/voiture-d-occasion-quelle-fiat-500-acheter-2925372.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Fiat",
+   "famille": "SDE",
+   "titre": "Encrassement du filtre à particules en usage urbain (1.3 Multijet)",
+   "organe": "filtre à particules",
+   "urls": [
+    "https://www.caradisiac.com/fiat-500-mini-et-volkswagen-new-beetle-premier-prix-des-neo-retro-sans-souci-190247.htm"
+   ],
+   "candidats": [
+    {
+     "url": "https://www.caradisiac.com/fiat-500-mini-et-volkswagen-new-beetle-premier-prix-des-neo-retro-sans-souci-190247.htm",
+     "rang": "presse",
+     "mots_communs": 1,
+     "phrase": "6 000 € pour un diesel de 75 ch Le chèque d'entrée passe à 6 000 € minimum pour une 1.3 Multijet d'au moins dix ans."
+    },
+    {
+     "url": "https://www.caradisiac.com/fiat-500-mini-et-volkswagen-new-beetle-premier-prix-des-neo-retro-sans-souci-190247.htm",
+     "rang": "presse",
+     "mots_communs": 1,
+     "phrase": "Ainsi, un négociant propose une Lounge 1.3 Multijet 75 ch de janvier 2009 pour 6 000 €."
+    },
+    {
+     "url": "https://www.caradisiac.com/fiat-500-mini-et-volkswagen-new-beetle-premier-prix-des-neo-retro-sans-souci-190247.htm",
+     "rang": "presse",
+     "mots_communs": 1,
+     "phrase": "Pour 500 € de plus, nous avons repéré une 1.3 Multijet 95 ch Sport."
+    }
+   ]
+  },
+  {
+   "marque": "Audi",
+   "famille": "EA288",
+   "titre": "Fuite du joint spi d'arbre à cames imbibant la courroie de distribution",
+   "organe": "Distribution / joint spi arbre à cames",
+   "urls": [
+    "https://www.largus.fr/guide-achat/voitures-occasion-les-moteurs-diesels-les-moins-fiables-depuis-2010-1114143-12409502-diapo.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Volkswagen",
+   "famille": "EA189",
+   "titre": "Filtre à particules (FAP) colmaté / capteur de pression FAP",
+   "organe": "Ligne d'échappement - FAP et capteur de pression différentielle",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/fiabilite-12-16-20-tdi-volkswagen-15-defauts-pris-en-charge-par-le-groupe-audi-seat-skoda-9068390.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Volkswagen",
+   "famille": "EA888",
+   "titre": "Surconsommation d'huile par usure/conception des segments racleurs",
+   "organe": "Pistons / segments racleurs",
+   "urls": [
+    "https://www.autobild.de/artikel/oel-saufende-tfsi-motoren-11525331.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Volkswagen",
+   "famille": "EA888",
+   "titre": "Rupture des ressorts de rappel du variateur d'arbre à cames avec dégâts culasse/bloc",
+   "organe": "Variateur d'arbre à cames (distribution variable)",
+   "urls": [
+    "https://www.autobild.de/artikel/vw-golf-vi-gebrauchtwagen-test-3798221.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Volkswagen",
+   "famille": "EA888",
+   "titre": "Tige de commande du turbocompresseur désolidarisée",
+   "organe": "Turbocompresseur / tige de commande (wastegate)",
+   "urls": [
+    "https://www.autobild.de/artikel/vw-golf-vi-gebrauchtwagen-test-3798221.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Volkswagen",
+   "famille": "EA888",
+   "titre": "Fuites de liquide de refroidissement sur éléments plastiques du circuit",
+   "organe": "Circuit de refroidissement (radiateur, boîtier de thermostat, pompe à eau)",
+   "urls": [
+    "https://www.autobild.de/artikel/vw-golf-schwachstellen-maengel-staerken-28207053.html",
+    "https://www.largus.fr/guide-achat-occasion/volkswagen/t-roc/avis-fiabilite-volkswagen-t-roc-i-30039740.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Volkswagen",
+   "famille": "EA888",
+   "titre": "Rappel : défaut d'étanchéité du circuit de carburant, risque de fuite et d'incendie",
+   "organe": "Circuit de carburant",
+   "urls": [
+    "https://www.caradisiac.com/une-volkswagen-coccinelle-d-occasion-sympa-mais-attention-a-la-fiabilite-221321.htm"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Mercedes",
+   "famille": "OM651",
+   "titre": "Rappel officiel : joint/bague d'étanchéité du tendeur de chaîne de distribution défectueux (fuite d'huile moteur, risque d'incendie)",
+   "organe": "Tendeur de chaîne de distribution (joint/bague d'étanchéité)",
+   "urls": [
+    "https://static.nhtsa.gov/odi/rcl/2015/RCMN-15V351-5763.pdf",
+    "https://static.nhtsa.gov/odi/rcl/2014/RCMN-14V762-6169.pdf",
+    "https://static.nhtsa.gov/odi/tsbs/2014/SB-10071492-2280.pdf"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Mercedes",
+   "famille": "OM651",
+   "titre": "Allongement de la chaîne de distribution / usure du tendeur",
+   "organe": "Chaîne de distribution et tendeur",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/mercedes-18-et-21-diesel-om651-souci-de-chaine-de-distribution-10431390.html"
+   ],
+   "candidats": []
+  },
+  {
+   "marque": "Mercedes",
+   "famille": "OM654",
+   "titre": "Usure prématurée des culbuteurs et des arbres à cames (admission)",
+   "organe": "Culbuterie (linguets/culbuteurs à rouleau et galet côté échappement) et arbres à cames",
+   "urls": [
+    "https://www.largus.fr/actualite-automobile/fiabilite-mercedes-20-diesel-om654-usure-des-culbuteurs-10556402.html"
+   ],
+   "candidats": []
+  }
+ ]
+}

@@ -631,3 +631,30 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
   voit rien », « sans formule pro : refusé »).
 - Déploiement annoncé : dump prod, migration `20261201120000`, fonction
   `stock`. Sans effet sur le score.
+
+## Crédits API — campagne 1 : coûts manquants (14 nov. 2026, plafond dédié 40 €)
+- Relevé gratuit : 36 pannes confirmées sans coût sur les moteurs courants ;
+  leurs propres pages ne publient AUCUN coût de réparation (une seule phrase
+  chiffrée, et c'est un prix de véhicule). Rappels et OTS exclus (pris en
+  charge par le constructeur).
+- Méthode : `atlas-builder` (recherche ciblée sur le coût) → relecture
+  gratuite, les deux montants LITTÉRALEMENT sur la page → juge (2 votes + 1,
+  silence ≠ vote). Rien n'est écrit en base sans session de jeton
+  (`ajouter_cout`, additif, revérifie la page avant d'écrire).
+- Lot pilote : 10 pannes, mur **3,50 €** ; compteur `.credits-cout.json`.
+- **Résultat du pilote** : **0 coût validé sur 10 pannes**, 1,648 €. La
+  recherche n'a trouvé aucune page portante publiant un prix de réparation
+  pour ces défauts (presse et constructeurs ne chiffrent pas). Campagne
+  ARRÊTÉE après le pilote, à soumettre à Utku (comparateurs de garages, forums
+  ≥ 3 hôtes ?). Opération admin `ajouter_cout` prête (additive, revérifie la
+  page) mais rien à écrire.
+
+## Crédits API — campagne 2 : revérification des 116 prises en charge
+- Décision d'Utku : juge SANS cache ; ancien verdict ARCHIVÉ avec sa date
+  (`verif_cache_archive`, migration `20261202120000`) ; archive manquée ⇒
+  aucune écriture. Page disparue ou verdict qui n'est plus « soutenue » ⇒
+  « à revérifier », liste pour Utku (`docs/prises-reverification.json`).
+  Aucun retrait.
+- 116 prises × page, 74 pages × moteur à juger. Déploiement annoncé : dump,
+  migration, `sources-externes` (option `sans_cache`, secret d'éval).
+  Mur **9 €** (estimation 4 à 6 €).

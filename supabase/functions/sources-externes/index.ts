@@ -21,6 +21,7 @@ import { surveillerSilences } from "../_shared/alerteJuge.ts";
 import { controlerPage } from "../_shared/precontrole.ts";
 import {
   cleVerif,
+  archiverCacheVerif,
   ecrireCacheVerif,
   lireCacheVerif,
   MAX_TEXTE_SOURCE,
@@ -191,7 +192,10 @@ serve(async (req: Request) => {
       BRUTS = body.debug === true && (await evalSecretMatches(req)) ? [] : null;
 
       const cles = await Promise.all(affs.map((a: { texte: string }) => cleVerif(url, a.texte, moteurCle)));
-      const enCache = await lireCacheVerif(admin, cles);
+      // Campagne 2 : revérification SANS cache, réservée au secret d'éval ;
+      // l'ancien verdict est archivé avant d'être remplacé.
+      const SANS_CACHE = body.sans_cache === true && (await evalSecretMatches(req));
+      const enCache = SANS_CACHE ? new Map() : await lireCacheVerif(admin, cles);
       const verdicts: Record<string, { verdict: string; justification: string | null; depuis_cache: boolean; votes?: string[]; lecture?: string; a_departager?: boolean; votes_detail?: Array<{ verdict: string; justification: string | null }> }> = {};
       const DEUX_SEULEMENT = body.deux_seulement === true;
       const DEPARTAGER = body.departager === true;
@@ -220,6 +224,7 @@ serve(async (req: Request) => {
             ...(r.a_departager ? { a_departager: true, votes_detail: r.votes_detail } : {}) };
           if (r.fiable) aEcrire.push({ cle: cles[i], url, affirmation: affs[i].texte, moteur: moteurCle, verdict: r.verdict, justification: r.justification, votes: r.votes, modele: r.modele });
         });
+        if (SANS_CACHE) await archiverCacheVerif(admin, aEcrire.map((x) => x.cle), "revérification campagne 2 (sprint 24)");
         await ecrireCacheVerif(admin, aEcrire);
       };
       if (aJuger.length) {

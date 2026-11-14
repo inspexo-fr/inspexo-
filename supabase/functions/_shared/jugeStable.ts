@@ -276,3 +276,20 @@ export async function departager(
   });
   return { resultats, usages: r3?.usage ? [r3.usage] : [], silences };
 }
+
+/** SPRINT 24, campagne 2 (décision d'Utku du 14 nov. 2026) — avant qu'une
+ *  revérification sans cache ne remplace un verdict, l'ancien est ARCHIVÉ
+ *  avec sa date : jamais écrasé sans trace. */
+// deno-lint-ignore no-explicit-any
+export async function archiverCacheVerif(db: any, cles: string[], motif: string): Promise<number> {
+  if (cles.length === 0) return 0;
+  const { data, error } = await db.from("verif_cache")
+    .select("cle, url, affirmation, moteur, verdict, justification, votes, modele, juge_le").in("cle", cles);
+  if (error) { console.error("verif_cache archive (lecture):", error.message); throw new Error("archive_impossible"); }
+  const lignes = (data ?? []) as Array<Record<string, unknown>>;
+  if (lignes.length === 0) return 0;
+  const { error: e2 } = await db.from("verif_cache_archive").insert(lignes.map((l) => ({ ...l, motif: motif.slice(0, 200) })));
+  // Une archive manquée interdit l'écriture : on n'écrase jamais sans trace.
+  if (e2) { console.error("verif_cache archive (écriture):", e2.message); throw new Error("archive_impossible"); }
+  return lignes.length;
+}

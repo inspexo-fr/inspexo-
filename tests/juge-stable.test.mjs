@@ -121,7 +121,14 @@ ok(/VERIF_SYSTEM/.test(atlas) && /VERIF_TOOL/.test(atlas), 'atlas-builder : mêm
 const ecritures = [...atlas.matchAll(/\.from\("([a-z_]+)"\)/g)].map((m) => m[1])
 eq([...new Set(ecritures)], [], 'atlas-builder n’adresse aucune table en direct (le cache passe par verifSource)')
 const vs = readFileSync('supabase/functions/_shared/jugeStable.ts', 'utf8')
-eq([...new Set([...vs.matchAll(/\.from\("([a-z_]+)"\)/g)].map((m) => m[1]))], ['verif_cache'], 'le juge stable ne touche que verif_cache')
+eq([...new Set([...vs.matchAll(/\.from\("([a-z_]+)"\)/g)].map((m) => m[1]))], ['verif_cache', 'verif_cache_archive'], 'le juge stable ne touche que verif_cache et son archive (campagne 2, sprint 24)')
+// L'archive n'est écrite que par archiverCacheVerif, et toujours AVANT l'écriture du nouveau verdict.
+{
+  const se = readFileSync(new URL('../supabase/functions/sources-externes/index.ts', import.meta.url), 'utf8')
+  ok(se.indexOf('if (SANS_CACHE) await archiverCacheVerif(') > 0 && se.indexOf('if (SANS_CACHE) await archiverCacheVerif(') < se.indexOf('await ecrireCacheVerif(admin, aEcrire)'), 'sans cache : l’ancien verdict est archivé AVANT d’être remplacé')
+  ok(/const SANS_CACHE = body\.sans_cache === true && \(await evalSecretMatches\(req\)\)/.test(se), 'le mode sans cache est réservé au secret d’éval')
+  ok(/throw new Error\("archive_impossible"\)/.test(vs), 'une archive manquée interdit l’écriture (jamais écrasé sans trace)')
+}
 ok(!/^import /m.test(vs), 'jugeStable.ts : aucun import (testable hors ligne)')
 const mig = readFileSync('supabase/migrations/20261125120000_sprint22_juge_cout.sql', 'utf8')
 ok(/revoke all on public\.verif_cache from anon, authenticated/.test(mig), 'verif_cache : aucun droit à anon ni authenticated')
