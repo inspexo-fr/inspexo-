@@ -1292,5 +1292,616 @@
   "cout_eur": 0.189,
   "motif": "aucune page proposée par la recherche",
   "erreur": null
+ },
+ {
+  "fiche": "Peugeot DW12",
+  "fiche_id": "c58ac4a6-eea9-4e40-a830-346344050cc5",
+  "marque": "Peugeot",
+  "famille": "DW12",
+  "annees": "2000",
+  "titre": "Grippage / acidification des injecteurs dans la culasse",
+  "symptomes": "Les injecteurs s'acidifient et se collent progressivement dans la culasse ; leur dépose en atelier nécessite parfois l'usage d'un outillage hydraulique et peut endommager la culasse elle-même. Sur la version bi-turbo DW12BTED4, les injecteurs figurent aussi parmi les points de fragilité identifiés.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/moteur-citroen-peugeot-dw12ted4-dw12ated4-2-2-hdi/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0861,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DW12",
+  "fiche_id": "c58ac4a6-eea9-4e40-a830-346344050cc5",
+  "marque": "Peugeot",
+  "famille": "DW12",
+  "annees": "2000",
+  "titre": "Défaillance du turbocompresseur et de son actuateur",
+  "symptomes": "Perte de puissance, surconsommation, parfois fonctionnement erratique ; les actuateurs de turbo (doseurs d'air) tombent souvent en panne, de même que les turbos eux-mêmes par manque de lubrification. Sur le DW12BTED4 bi-turbo, le système séquentiel est signalé comme fragile.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://moteurgarage.com/moteur-peugeot-dw12uted-2-2-hdi-problemes-et-statistiques/",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1811,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DW12",
+  "fiche_id": "c58ac4a6-eea9-4e40-a830-346344050cc5",
+  "marque": "Peugeot",
+  "famille": "DW12",
+  "annees": "2000",
+  "titre": "Colmatage du filtre à particules et système additif Cérine (DW12TED4)",
+  "symptomes": "Message \"niveau additif faible\", colmatage progressif du FAP surtout en usage urbain/trajets courts, nécessitant une recharge d'additif ou, à terme, un remplacement du filtre.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://gebrauchtwagenberater.de/psa-hdi-probleme/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1949,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Peugeot DW12",
+  "fiche_id": "c58ac4a6-eea9-4e40-a830-346344050cc5",
+  "marque": "Peugeot",
+  "famille": "DW12",
+  "annees": "2000",
+  "titre": "Encrassement de la vanne EGR",
+  "symptomes": "Encrassement par les suies, perte de puissance, voyant moteur allumé ; phénomène accentué par les trajets courts et l'usage urbain, décrit comme un peu plus marqué sur le DW-12 que sur d'autres diesels selon les retours de forums.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.auto-platinium.com/blogs/398-fiabilite-2-2-hdi",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://gebrauchtwagenberater.de/psa-hdi-probleme/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.086,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4M",
+  "fiche_id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille": "H4M",
+  "annees": "2012-2023",
+  "titre": "Surconsommation d'huile moteur",
+  "symptomes": "Appoint d'huile plus fréquent qu'attendu entre deux vidanges ; chez certains véhicules le phénomène apparaît dès un kilométrage modéré, chez d'autres plutôt après 120 000-150 000 km. Cause évoquée : particularité de construction sur certaines séries (notamment avant 2019) ou usure des joints de soupapes et segments de piston.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+    "rang": "hors_sujet"
+   },
+   {
+    "url": "https://autoinsight.com.ua/resurs-dviguna-renault-h4m-1-6-skilki-sluzhit-motor-ta-yaki-mae-problemi/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.motobenzyna.pl/silniki/5405-silnik-1-6-16v-sce-102km.html",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.engineexplained.com/renault-h4m-1-6l-engine-review-and-insights/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.2161,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4M",
+  "fiche_id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille": "H4M",
+  "annees": "2012-2023",
+  "titre": "Tendeur de chaîne de distribution",
+  "symptomes": "Le tendeur hydraulique ne monte pas immédiatement en pression au démarrage ; la chaîne de distribution elle-même est réputée durable (constructeur annonce au moins 150 000 km, retours d'usage évoquant plus de 250 000 km), mais le tendeur peut créer des bruits et des dysfonctionnements à kilométrage élevé.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+    "rang": "hors_sujet"
+   },
+   {
+    "url": "https://motorist.expert/renault/h4m.html",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0981,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4M",
+  "fiche_id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille": "H4M",
+  "annees": "2012-2023",
+  "titre": "Encrassement / dysfonctionnement de la vanne EGR",
+  "symptomes": "À-coups à l'accélération, perte de puissance, codes défaut calculateur ; cause généralement l'encrassement par la calamine, favorisé par un usage urbain répété.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+    "rang": "hors_sujet"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0884,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4M",
+  "fiche_id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille": "H4M",
+  "annees": "2012-2023",
+  "titre": "Ralenti instable",
+  "symptomes": "Oscillations de régime moteur et vibrations perceptibles au ralenti, généralement liées à un papillon encrassé, un capteur MAP défaillant ou une vanne EGR colmatée.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+    "rang": "hors_sujet"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0837,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4M",
+  "fiche_id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille": "H4M",
+  "annees": "2012-2023",
+  "titre": "Thermostat défaillant",
+  "symptomes": "Chauffage habitacle insuffisant et montée en température du moteur anormalement lente, le thermostat restant bloqué en position ouverte.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://uvoz.info/odrzavanje-i-servis-renault-motora-1-6-sce-h4m/",
+    "rang": "hors_sujet"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.1792,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4M",
+  "fiche_id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille": "H4M",
+  "annees": "2012-2023",
+  "titre": "Réglage du jeu aux soupapes accéléré sur véhicules équipés GPL",
+  "symptomes": "Sur les véhicules fonctionnant au GPL (y compris installation d'origine), le jeu aux soupapes se dérègle plus rapidement qu'en usage essence pur, nécessitant des contrôles/réglages plus fréquents ; une source polonaise chiffre l'opération à environ 1000 PLN (frais non convertis faute de taux fiable à la date de la source).",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://francuskie.pl/1-6-16v-sce-h4m-jeden-z-ostatnich-wolnossacych-silnikow-w-gamie-renault-opinie-eksploatacja-awaryjnosc/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.motobenzyna.pl/silniki/5405-silnik-1-6-16v-sce-102km.html",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://francuskie.pl/1-6-16v-sce-h4m-jeden-z-ostatnich-wolnossacych-silnikow-w-gamie-renault-opinie-eksploatacja-awaryjnosc/",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://selected.pl/luz-zaworowy-w-silniku-dacia-1-6-sce-h4m-kiedy-regulacja-jest-konieczna-i-jakie-daje-objawy/",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.0992,
+  "motif": "rang_non_portant ×2",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4M",
+  "fiche_id": "14839ed0-4286-411b-919c-f71a6da3e6fc",
+  "marque": "Renault",
+  "famille": "H4M",
+  "annees": "2012-2023",
+  "titre": "Fuite/défaillance de la boîte hybride multimode (E-Tech, groupe motopropulseur basé sur H4M)",
+  "symptomes": "Un joint (simmering) mal réalisé entre la boîte hybride et le moteur électrique laisse passer l'huile en interne ; au mieux seul le capteur de température est endommagé, au pire le moteur électrique peut tomber en panne et immobiliser le véhicule. Signes à surveiller : voyant hybride, perte de motricité, odeur d'huile chaude, mode dégradé. Renault a mis en place des opérations de contrôle d'étanchéité en atelier.",
+  "gravite": "casse",
+  "sources_actuelles": [
+   {
+    "url": "https://carverif.fr/blogs/fiabilite-voitures/renault-arkana-1-6-e-tech-hybrid-145-h4m",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://carverif.fr/blogs/fiabilite-voitures/renault-clio-v-1-6-e-tech-hybrid-145-h4m",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://www.motohybryda.pl/silniki/silnik-renault-1-6-16v-e-tech-hybrid-143km-h4m.html",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://malykh.blogspot.com/2024/11/renault-e-tech-16-hybrid-deadly-trouble.html",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://www.fiches-auto.fr/articles-auto/fiabilite-hybride/s-2995-fiabilite-de-l-hybride-renault-e-tech.php",
+    "rang": "editorial",
+    "titre": "Fiabilité de l'hybride Renault E-Tech"
+   }
+  ],
+  "ecartees": [
+   {
+    "url": "https://www.auto-infos.fr/article/renault-rappelle-pres-de-156-000-hybrides-e-tech-pour-un-controle-d-etancheite.288243",
+    "motif": "rang_non_portant",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.largus.fr/actualite-automobile/fiabilite-renault-1-6-e-tech-remplacement-de-la-boite-hybride-pour-eradiquer-un-bruit-30039544.html",
+    "motif": "mauvais_moteur",
+    "justification": "La page traite du système hybride 1.6 E-Tech (sans embrayage, à crabots) des Clio 5, Captur 2, Mégane 4 et Arkana, et non du moteur H4M 2012-2023, bien qu'elle mentionne effectivement une fuite d'huile entre la boîte et le moteur électrique et une opération de contrôle/réparation."
+   },
+   {
+    "url": "https://www.planeterenault.com/1-gamme/45-moteurs/1597-actualite-automobile/12322--nouvelle-ots-pour-moteur-hybride-1-6-e-tech/",
+    "motif": "non_soutenue",
+    "justification": "La page évoque une OTS précédente sur un joint de boîte de vitesse potentiellement défectueux mais ne décrit pas ce défaut en détail, et l'OTS détaillée dans l'article concerne en réalité une sonde de température surévaluant la valeur réelle (erreur de calcul, sans fuite d'huile ni panne du moteur électrique), ce qui ne correspond pas au scénario de fuite interne via un joint mal réalisé décrit da"
+   }
+  ],
+  "gravite_apres": "majeure",
+  "cout_eur": 0.3199,
+  "motif": null,
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4D",
+  "fiche_id": "1167124e-89dd-4e15-b3be-9eb696b070d5",
+  "marque": "Renault",
+  "famille": "H4D",
+  "annees": "2014",
+  "titre": "Usure prématurée de la chaîne de distribution",
+  "symptomes": "Chaîne de distribution qui se détend avec le kilométrage, bruit métallique à froid ; remplacement parfois nécessaire dès 100 000-120 000 km alors qu'elle est annoncée pour durer la vie du véhicule. Si elle n'est pas remplacée à temps : risque de saut de dents et de casse moteur.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://forum-auto.caradisiac.com/topic/537986-qualit%C3%A9-du-moteur-tce-90-ch/page/2/",
+    "rang": "forum"
+   },
+   {
+    "url": "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://mymotorlist.com/engines/renault/h4d/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": true,
+  "sources_trouvees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/renault-dacia-pourquoi-la-chaine-de-distribution-s-allonge-sur-les-0-9-tce-1-0-tce-et-1-2-tce-30039408.html",
+    "rang": "presse",
+    "titre": "Renault-Dacia. Pourquoi la chaîne de distribution s'allonge sur les 0.9 TCe, 1.0 TCe et 1.2 TCe ? - L'Argus"
+   }
+  ],
+  "ecartees": [],
+  "gravite_apres": "majeure",
+  "cout_eur": 0.1159,
+  "motif": null,
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4D",
+  "fiche_id": "1167124e-89dd-4e15-b3be-9eb696b070d5",
+  "marque": "Renault",
+  "famille": "H4D",
+  "annees": "2014",
+  "titre": "Défaut de traction corrigé par mise à jour du calculateur (ECU)",
+  "symptomes": "Défaillances de traction/motricité rapportées la première année de commercialisation du H4Dt, corrigées par une mise à jour du micrologiciel de l'ECU fin 2019 selon les sources consultées.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://en.avtotachki.com/dvigateli-renault-h4d-h4dt/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://docteurmoteurs.com/renault-h4dt-1-0-tce-100-ch-dacia/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0934,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Renault H4D",
+  "fiche_id": "1167124e-89dd-4e15-b3be-9eb696b070d5",
+  "marque": "Renault",
+  "famille": "H4D",
+  "annees": "2014",
+  "titre": "Surconsommation d'huile après 100 000 km",
+  "symptomes": "Augmentation de la consommation d'huile au-delà de 100 000 km, attribuée par les sources consultées à une usure des segments racleurs d'huile ; nécessite une surveillance régulière du niveau.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/moteur-renault-h4d-1-0-sce/",
+    "rang": "compilation"
+   },
+   {
+    "url": "https://mymotorlist.com/engines/renault/h4d/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.0895,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Encrassement / défaillance de la vanne EGR",
+  "symptomes": "Ralenti instable, voyant moteur allumé, perte de puissance, surconsommation, parfois passage en mode dégradé ; sur certains EA288 le refroidisseur EGR peut se percer en interne et laisser entrer du liquide de refroidissement dans l'échappement.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://vag-perf.fr/news-nouveautes/moteur-2-0-tdi-ea288-guide-complet-fiabilite-problemes-et-preparation/",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://autoscore.pro/engine/2.0-tdi-ea288-",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.2036,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Colmatage du filtre à particules (FAP)",
+  "symptomes": "Régénération incomplète ou impossible sur trajets courts répétés, voyant FAP, perte de puissance ; favorisé par un usage urbain sans grands trajets autoroutiers.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://vag-perf.fr/news-nouveautes/moteur-2-0-tdi-ea288-guide-complet-fiabilite-problemes-et-preparation/",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://www.moto-a2.fr/blogs/voiture/fiabilite-moteur-20-tdi-150-volkswagen-generations-et-pannes/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://www.torquecars.com/volkswagen/2-0-tdi-ea288-revision-problems.php",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0.2091,
+  "motif": "aucune page proposée par la recherche",
+  "erreur": null
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Pannes du système SCR/AdBlue (capteur NOx, module doseur/injecteur d'urée)",
+  "symptomes": "Voyant moteur, messages d'erreur, mode dégradé avec limitation de puissance, compteur de redémarrages avant blocage au démarrage si le niveau AdBlue ou le système n'est pas réparé ; cristallisation possible de l'injecteur d'urée en cas d'inactivité prolongée.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://autocopilot.fr/motorisations/2-0-tdi-ea288",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://autoscore.pro/engine/2.0-tdi-ea288-evo",
+    "rang": "vendeur"
+   },
+   {
+    "url": "https://www.moto-a2.fr/blogs/voiture/fiabilite-moteur-20-tdi-150-volkswagen-generations-et-pannes/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://enginefinders.co.uk/blog/vw-2-0-tdi-engine-problems-reliability/",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://static.nhtsa.gov/odi/tsbs/2016/MC-10130130-9999.pdf",
+    "motif": "hors_sujet"
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.3321,
+  "motif": "hors_sujet ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Usure prématurée du volant moteur bi-masse",
+  "symptomes": "Vibrations et bruits caractéristiques au ralenti, problème hérité des générations précédentes mais présent avec une fréquence moindre sur l'EA288.",
+  "gravite": "mineure",
+  "sources_actuelles": [
+   {
+    "url": "https://www.etoilecollections.fr/moteur-2-0-tdi-fiabilite/",
+    "rang": "inconnu"
+   },
+   {
+    "url": "https://keramotor.fr/fiabilite-du-moteur-2-0-tdi-150-volkswagen-ce-quil-faut-savoir/",
+    "rang": "inconnu"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://www.largus.fr/actualite-automobile/audiseatskodavolkswagen-premiers-soucis-pour-le-moteur-14-tdi-9117391.html",
+    "motif": "mauvais_moteur",
+    "justification": "La page traite spécifiquement du moteur trois-cylindres 1.4 TDI (famille EA288) jusqu'à fin octobre 2015, et non du moteur EA288 2012-2020 en général, alors que l'affirmation vise une fréquence moindre sur l'EA288 sans préciser cette motorisation spécifique."
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.2189,
+  "motif": "mauvais_moteur ×1",
+  "erreur": null
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Défaillance de la pompe haute pression Bosch CP4 (carburant contaminé)",
+  "symptomes": "Sensible à un gasoil de mauvaise qualité ou contenant de l'eau ; en cas de défaillance, des éclats métalliques contaminent tout le circuit carburant (injecteurs, rampe commune, canalisations), panne non systématique mais irréversible une fois déclenchée.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://autocopilot.fr/motorisations/2-0-tdi-ea288",
+    "rang": "vendeur"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [],
+  "gravite_apres": null,
+  "cout_eur": 0,
+  "motif": "appel en échec : TimeoutError: The operation was aborted due to timeout",
+  "erreur": "TimeoutError: The operation was aborted due to timeout"
+ },
+ {
+  "fiche": "Volkswagen EA288",
+  "fiche_id": "3701c59a-b9f7-47a5-adb3-a0e299ef4f70",
+  "marque": "Volkswagen",
+  "famille": "EA288",
+  "annees": "2012-2020",
+  "titre": "Fuite du joint spi d'arbre à cames côté distribution",
+  "symptomes": "Fuite d'huile au niveau du joint d'arbre à cames pouvant projeter de l'huile sur la courroie de distribution et réduire sa durée de vie.",
+  "gravite": "majeure",
+  "sources_actuelles": [
+   {
+    "url": "https://docteurmoteurs.com/moteurs-diesel-2-0-tdi-de-la-serie-ea288-audi-vw/",
+    "rang": "compilation"
+   }
+  ],
+  "porte": false,
+  "sources_trouvees": [],
+  "ecartees": [
+   {
+    "url": "https://static.nhtsa.gov/odi/tsbs/2020/MC-10174054-0001.pdf",
+    "motif": "hors_sujet"
+   }
+  ],
+  "gravite_apres": null,
+  "cout_eur": 0.1765,
+  "motif": "hors_sujet ×1",
+  "erreur": null
  }
 ]

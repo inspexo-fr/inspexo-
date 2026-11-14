@@ -1,22 +1,25 @@
 {
- "date": "2026-11-08",
- "fiches_visees": 20,
- "pannes_visees": 105,
- "pannes_jouees": 37,
+ "date": "2026-11-14",
+ "fiches_visees": 23,
+ "pannes_visees": 100,
+ "pannes_jouees": 57,
  "pannes_jouees_ce_run": 20,
- "pannes_non_jouees": 68,
- "pannes_portees": 4,
+ "pannes_non_jouees": 43,
+ "pannes_portees": 8,
  "fiches_sauvees": [
   "Peugeot EB2DT",
+  "Peugeot EB2DTS",
   "BMW N47",
   "Toyota 2ZR-FXE",
-  "Peugeot EB2ADTS"
+  "Peugeot EB2ADTS",
+  "Renault H4M",
+  "Renault H4D"
  ],
- "cout_eur": 3.484,
+ "cout_eur": 3.072,
  "mur": null,
  "lot_jouees": 20,
- "lot_portees": 1,
- "lot_rendement": 0.05,
+ "lot_portees": 2,
+ "lot_rendement": 0.1,
  "fin_de_lot": true,
  "retirees": [
   {
@@ -33,16 +36,6 @@
    "fiche": "Peugeot EB2DT",
    "titre": "Encrassement des soupapes d'admission (dépôts de calamine)",
    "motif": "aucune page proposée par la recherche"
-  },
-  {
-   "fiche": "Peugeot EB2DTS",
-   "titre": "Courroie de distribution « humide » : dégradation, contamination du circuit d'huile et risque de casse moteur",
-   "motif": "rang_non_portant ×1, non_soutenue ×3"
-  },
-  {
-   "fiche": "Peugeot EB2DTS",
-   "titre": "Surconsommation d'huile moteur",
-   "motif": "rang_non_portant ×1, non_soutenue ×2"
   },
   {
    "fiche": "Renault H4D",
@@ -183,6 +176,96 @@
    "fiche": "Peugeot DW12",
    "titre": "Usure et rupture de la chaîne de distribution interne (entre arbres à cames)",
    "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DW12",
+   "titre": "Grippage / acidification des injecteurs dans la culasse",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DW12",
+   "titre": "Défaillance du turbocompresseur et de son actuateur",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DW12",
+   "titre": "Colmatage du filtre à particules et système additif Cérine (DW12TED4)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Peugeot DW12",
+   "titre": "Encrassement de la vanne EGR",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Renault H4M",
+   "titre": "Surconsommation d'huile moteur",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Renault H4M",
+   "titre": "Tendeur de chaîne de distribution",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Renault H4M",
+   "titre": "Encrassement / dysfonctionnement de la vanne EGR",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Renault H4M",
+   "titre": "Ralenti instable",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Renault H4M",
+   "titre": "Thermostat défaillant",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Renault H4M",
+   "titre": "Réglage du jeu aux soupapes accéléré sur véhicules équipés GPL",
+   "motif": "rang_non_portant ×2"
+  },
+  {
+   "fiche": "Renault H4D",
+   "titre": "Défaut de traction corrigé par mise à jour du calculateur (ECU)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Renault H4D",
+   "titre": "Surconsommation d'huile après 100 000 km",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Encrassement / défaillance de la vanne EGR",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Colmatage du filtre à particules (FAP)",
+   "motif": "aucune page proposée par la recherche"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Pannes du système SCR/AdBlue (capteur NOx, module doseur/injecteur d'urée)",
+   "motif": "hors_sujet ×1"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Usure prématurée du volant moteur bi-masse",
+   "motif": "mauvais_moteur ×1"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Défaillance de la pompe haute pression Bosch CP4 (carburant contaminé)",
+   "motif": "appel en échec : TimeoutError: The operation was aborted due to timeout"
+  },
+  {
+   "fiche": "Volkswagen EA288",
+   "titre": "Fuite du joint spi d'arbre à cames côté distribution",
+   "motif": "hors_sujet ×1"
   }
  ]
 }

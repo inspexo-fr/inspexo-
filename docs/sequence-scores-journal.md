@@ -681,3 +681,13 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
 - Lots de 20, mur 4 € par lot, arrêt si un lot rend moins de 15 %.
   Compteur : plafond crédits 40 €. Écriture (`--appliquer`) en session de
   jeton seulement.
+- **Résultat du lot 1** : **2 pannes confirmées sur 20 (10 %)** — Renault H4M
+  (boîte hybride E-Tech, source éditoriale) et Renault H4D (usure de la
+  chaîne, presse) —, **3,072 €** / 4 €. **Sous le seuil de 15 % : la
+  campagne s'arrête.** 43 pannes non jouées, restées questions au vendeur.
+  Même après écriture, H4M et H4D resteraient sous le seuil d'indexation
+  (1 panne confirmée, 0 prise datée) : **0 page passe au-dessus du seuil.**
+  Écriture (`--appliquer`) en attente d'une session de jeton.
+- **Total crédits : 6,71 € / 40 €** (campagne 1 : 1,648 € ; campagne 2 :
+  1,988 € ; campagne 3 : 3,072 €). Références non rejouées : rien n'a été
+  écrit en base qui touche le score.
