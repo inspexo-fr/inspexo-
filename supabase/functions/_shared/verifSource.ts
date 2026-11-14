@@ -56,6 +56,7 @@ export {
   type AppelJuge,
   cleBrute,
   cleVerif,
+  archiverCacheVerif,
   ecrireCacheVerif,
   lireCacheVerif,
   majorite,
