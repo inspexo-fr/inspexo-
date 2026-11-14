@@ -691,3 +691,9 @@ après déploiement (mur 0,45 €). Déploiement à annoncer avec le merge :
 - **Total crédits : 6,71 € / 40 €** (campagne 1 : 1,648 € ; campagne 2 :
   1,988 € ; campagne 3 : 3,072 €). Références non rejouées : rien n'a été
   écrit en base qui touche le score.
+
+## 14 nov. 2026 — merge de `sprint24-atlas` (feu vert d'Utku)
+- Règle ajoutée à CLAUDE.md (0 sexies) : aucun code absent de main en
+  production ; une éval qui exige la prod se demande avant de déployer.
+- Merge puis redéploiement de toutes les fonctions que nomme
+  `fonctions-a-redeployer.mjs`, vérification main = production, Vercel.

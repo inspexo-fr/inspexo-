@@ -2877,6 +2877,8 @@ Les profils d'experts fictifs et leurs chiffres ont été **retirés du site** (
 
 0 quater. **Toute nouvelle RPC destinée au front porte un `grant execute … to anon` (ou `to authenticated`) EXPLICITE.** Depuis la migration `20261113120000`, les droits par défaut du rôle `postgres` dans `public` ne donnent plus ni SELECT sur les tables ni EXECUTE sur les fonctions. Un accès public est donc une **décision écrite**, jamais un héritage. Une RPC sans grant ne sera pas appelable : c'est le bon sens de l'échec. ⚠️ Corollaire : une fonction qu'on ne destine PAS au front ne reçoit aucun grant — et si elle est appelée depuis une autre fonction, celle-ci doit être `SECURITY DEFINER` (sinon `current_user` est l'appelant, qui n'a plus EXECUTE).
 
+0 sexies. **Aucun code absent de main ne part en production — fonctions edge et migrations comprises** (règle d'Utku du 14 nov. 2026). On merge d'abord, on déploie ensuite. Si une éval exige du code en production avant le merge, on DEMANDE à Utku avant de déployer. Constat qui l'a motivée : le 14 nov., `score`, `stock`, `sources-externes`, `admin-defect-sheets` et deux migrations tournaient en production depuis une branche non mergée.
+
 1. **Variables d'environnement** : Clés API dans `.env.local` uniquement, JAMAIS dans le code
 2. **Supabase RLS** : Row Level Security sur TOUTES les tables
 3. **Logique sensible côté serveur** : Calcul de prix, webhooks Stripe, appels API Anthropic → Supabase Edge Functions ou Vercel Serverless, JAMAIS côté client
